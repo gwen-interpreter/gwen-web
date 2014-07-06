@@ -1,0 +1,44 @@
+/*
+ * Copyright 2014 Brady Wood, Branko Juric
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+   Feature: Specific google search
+   
+  Scenario: Configure google home page
+       When I am on the google home page
+       Then the url will be "http://google.com"
+        And the search field can be located by name "q"
+        And the search results can be located by id "ires"
+
+  @StepDef     
+  Scenario: I search for "gwen interpreter"
+    Given I enter "gwen interpreter" in the search field
+      And I submit the search field
+      
+  @StepDef     
+  Scenario: I do a google search for "gwen interpreter"
+      Given I navigate to the google home page
+       When I search for "gwen interpreter"
+       Then the search results should be displayed
+        And the page title should be "gwen interpreter - Google Search"
+        
+  @StepDef     
+  Scenario: google it
+      Given I navigate to the google home page
+       When I enter my search term attribute in the search field
+        And I submit the search field
+       Then the search results should be displayed
+        And the page title should contain my search term attribute
+       

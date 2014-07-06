@@ -1,0 +1,58 @@
+/*
+ * Copyright 2014 Brady Wood, Branko Juric
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+   Feature: flood io meta
+  
+  Scenario: Define global locators
+      Given the heading can be located by javascript return ($('h2')).toArray()[0];
+        And the next button can be located by class name "btn"
+   
+  Scenario: Define start page element locators
+       When I am on the start page
+       Then the url will be "https://challengers.flood.io/start"
+        And the Start button can be located by javascript return ($('[value=Start]')).toArray()[0];
+        And the share the results link can be located by link text "share the results."
+        And the my load test link can be located by link text "MyLoadTest.com"
+
+  Scenario: Define step 2 page element locators
+       When I am on the step 2 page
+       Then the how old are you dropdown can be located by id "challenger_age"
+
+ Scenario: Define step 3 page element locators
+       When I am on the step 3 page
+       Then the largest value textfield can be located by id "challenger_largest_order"
+        And the largest radio value can be located by javascript return $('.radio:contains("'+Math.max.apply(Math, $('.radio').map(function(i, x) { return parseInt($(x).text()); })) + '")').toArray()[0];
+        And the largest value textfield can be located by id "challenger_largest_order"
+        
+  Scenario: Define step 5 page element locators
+       When I am on the step 5 page
+       Then the one time token can be located by javascript return $('.token').toArray()[0]
+        And the one time token textfield can be located by id "challenger_one_time_token"
+        
+  Scenario: Completed Challenge
+    When I am on the challenge completed page
+     And the Start Again button can be located by class name "btn"
+     
+  @StepDef
+  Scenario: I select and enter the largest order value
+      Given I enter the largest radio value in the largest value textfield
+        And I click the largest radio value
+  
+  @StepDef
+  Scenario: I enter the one time token
+      Given I wait for the one time token textvalue for 5 seconds
+        And I enter the one time token in the one time token textfield
+             
