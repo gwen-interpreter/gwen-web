@@ -4,18 +4,14 @@ Getting Started with gwen-web
 Prerequisites
 -------------
 
-Please ensure that you have the following installed before proceeding:
-
- - Java 1.6 or later
- - A web browser (Firefox, Safari, Chrome, or IE)
+> Please ensure that you have [installed](../README.md#user-content-building-and-installing-from-source) 
+> gwen-web before proceeding.
  
 Introducing the Console
 -----------------------
 
-The easiest way to get started with Gwen is to launch the console and have a 
-play. In this guide we will be using the gwen-web interpreter. Download 
-the latest gwen-web distributable and extract it to a location on 
-your local drive.
+The easiest way to get started with gwen-wb is to launch the console and have 
+a play.
 
 ### Multiple browser support
 
@@ -40,7 +36,7 @@ home directory is much more convenient since Gwen knows where to find it.
 
 ### Launching gwen-web
 
-Open a command prompt to the bin directory where you extracted gwen-web and 
+Open a command prompt to the bin directory where you installed gwen-web and 
 type `gwen-web` (or `./gwen-web` on unix systems) and hit enter. This will 
 launch the console REPL which will prompt you to start entering steps.
 
@@ -51,7 +47,7 @@ launch the console REPL which will prompt you to start entering steps.
   \__, | \_/\_/ \___|_| |_|   `    
   |___/                            
 
-Welcome to gwen-web! v0.1.0-SNAPSHOT
+Welcome to gwen-web!
 
 INFO - Initialising environment context
 INFO - Chrome web driver configured
