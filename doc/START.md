@@ -10,7 +10,7 @@ Prerequisites
 Introducing the Console
 -----------------------
 
-The easiest way to get started with gwen-wb is to launch the console and have 
+The easiest way to get started with gwen-web is to launch the console and have 
 a play.
 
 ### Multiple browser support
