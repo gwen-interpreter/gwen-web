@@ -20,13 +20,13 @@ import java.util.concurrent.TimeUnit
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.firefox.FirefoxDriver
-import org.openqa.selenium.firefox.FirefoxProfile
 import org.openqa.selenium.ie.InternetExplorerDriver
 import org.openqa.selenium.safari.SafariDriver
 import gwen.Predefs.Kestrel
 import gwen.eval.EnvContext
 import gwen.gwenSetting
 import gwen.eval.ScopedData
+import org.openqa.selenium.firefox.FirefoxProfile
 
 /**
  * Defines the web environment context. This includes the configured selenium web
@@ -39,7 +39,7 @@ class WebEnvContext(val driverName: String) extends EnvContext {
   /**
    * Provides access to the user scopes.
    */
-  def featureScopes = dataScope("feature")
+  def featureScopes = dataScope(ScopedData.GlobalScopeName)
 
   /**
    * Provides access to the page scopes.
@@ -65,10 +65,11 @@ class WebEnvContext(val driverName: String) extends EnvContext {
    * 			the name of the driver to get
    */
   private[web] def loadWebDriver(driverName: String): WebDriver = driverName match {
-    case "Firefox" =>
+    case "Firefox" => { 
       val profile = new FirefoxProfile();
-      profile.setPreference("general.useragent.override", "iPhone");
+      gwenSetting.getOpt("general.useragent.override").foreach {  profile.setPreference("general.useragent.override", _ ) }
       new FirefoxDriver(profile);
+    }
     case "IE" => new InternetExplorerDriver
     case "Chrome" => new ChromeDriver
     case "Safari" => new SafariDriver
