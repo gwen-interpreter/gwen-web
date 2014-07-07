@@ -44,5 +44,5 @@
         And I click the next button
        Then I am on the congratulations page
         And the congratulations information text should be "Congratulations, your scripting skills are impressive! Please share your test plan with us at support@flood.io and we'll publish your results."
-#        And the Start Again button should be invisible
+
        
