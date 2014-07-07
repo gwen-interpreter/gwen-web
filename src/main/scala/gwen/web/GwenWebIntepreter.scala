@@ -52,7 +52,7 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
    */
   override def init(options: GwenOptions) = 
     new WebEnvContext(
-      gwenSetting("gwen.web.browser") tap { webdriver =>
+      gwenSetting.get("gwen.web.browser") tap { webdriver =>
         logger.info(s"$webdriver web driver configured")
 	  }
     )

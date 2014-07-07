@@ -53,7 +53,7 @@ class WebEnvContext(val driverName: String) extends EnvContext {
   lazy val webDriver: WebDriver = {
     loadWebDriver(driverName) tap { webdriver =>
       isWebDriverSet = true;
-      val wait = gwenSetting("gwen.web.wait.seconds").toLong
+      val wait = gwenSetting.get("gwen.web.wait.seconds").toLong
       webdriver.manage().timeouts().implicitlyWait(wait, TimeUnit.SECONDS)
     }
   }
