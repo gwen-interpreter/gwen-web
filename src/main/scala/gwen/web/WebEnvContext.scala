@@ -39,7 +39,7 @@ class WebEnvContext(val driverName: String) extends EnvContext {
   /**
    * Provides access to the user scopes.
    */
-  def featureScopes = dataScope(ScopedData.GlobalScopeName)
+  def featureScopes = dataScope("feature")
 
   /**
    * Provides access to the page scopes.

@@ -34,7 +34,7 @@ class WebEnvContextTest extends FlatSpec with ShouldMatchers with MockitoSugar {
 
   "New web env context" should "have global feature scope" in {
     val env = newEnv
-    env.featureScopes.current.get.scope should be ("global")
+    env.featureScopes.current.get.scope should be ("feature")
     env.featureScopes.current.get.name should be ("global") 
   }
   
@@ -49,7 +49,7 @@ class WebEnvContextTest extends FlatSpec with ShouldMatchers with MockitoSugar {
     env.featureScopes.get("firstName") should be ("Gwen")
     env.reset
     env.featureScopes.getOpt("firstName") should be (None)
-    env.featureScopes.current.get.scope should be ("global")
+    env.featureScopes.current.get.scope should be ("feature")
     env.featureScopes.current.get.name should be ("global")
   }
   
@@ -72,7 +72,7 @@ class WebEnvContextTest extends FlatSpec with ShouldMatchers with MockitoSugar {
     val env = newEnv
     env.featureScopes.set("firstName", "Gwen")
     env.featureScopes.get("firstName") should be ("Gwen")
-    env.toJson.toString should be ("""{"data":[{"global":[{"scope":"global","atts":[{"firstName":"Gwen"}]}]}]}""")
+    env.toJson.toString should be ("""{"data":[{"feature":[{"scope":"global","atts":[{"firstName":"Gwen"}]}]}]}""")
   }
   
   "Bound page scope attribute" should "show up in JSON string" in {
