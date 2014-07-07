@@ -24,7 +24,7 @@ Perform the following to build and install gwen-web:
 2. Download and install [Java SDK 1.6 or later](http://www.oracle.com/technetwork/java/javase/downloads/index.html) 
    - Note Java 8 is not recommended at this time of writing
 3. Download and install the latest [sbt](http://www.scala-sbt.org/) version 
-4. Change to the directory where your cloned/downloaded the source
+4. Change to the directory where you cloned/downloaded the source
 5. Run `sbt test` to compile and run all tests and verify that all is OK
 6. Run `sbt universal:packageBin` to build the distributable ZIP
    - This will create a _gwen-web-[version].zip_ file in the 
