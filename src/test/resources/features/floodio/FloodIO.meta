@@ -46,6 +46,10 @@
     When I am on the challenge completed page
      And the Start Again button can be located by class name "btn"
      
+  Scenario: Congratulations
+    When I am on the congratulations page
+     And the congratulations information can be located by class name "lead"
+     
   @StepDef
   Scenario: I select and enter the largest order value
       Given I enter the largest radio value in the largest value textfield
