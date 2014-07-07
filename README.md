@@ -12,9 +12,7 @@ Core Requirements
 Building and Installing from Source
 -----------------------------------
 
-The best way install gwen-web is through a distributable zip archive. Perform 
-the following to create a distributable zip and extract it to your local 
-drive: 
+Perform the following to build and install gwen-web: 
 
 1. Either:
    - Download a [Git client](http://git-scm.com/downloads) and clone this 
