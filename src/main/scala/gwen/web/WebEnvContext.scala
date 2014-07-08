@@ -27,10 +27,12 @@ import gwen.eval.EnvContext
 import gwen.gwenSetting
 import gwen.eval.ScopedData
 import org.openqa.selenium.firefox.FirefoxProfile
+import org.openqa.selenium.remote.DesiredCapabilities
+import org.openqa.selenium.chrome.ChromeOptions
 
 /**
  * Defines the web environment context. This includes the configured selenium web
- * driver instance and the user and page scopes.
+ * driver instance and the feature and page scopes.
  *
  *  @author Branko Juric
  */
@@ -39,7 +41,7 @@ class WebEnvContext(val driverName: String) extends EnvContext {
   /**
    * Provides access to the user scopes.
    */
-  def featureScopes = dataScope(ScopedData.GlobalScopeName)
+  def featureScopes = dataScope("feature")
 
   /**
    * Provides access to the page scopes.
@@ -53,8 +55,9 @@ class WebEnvContext(val driverName: String) extends EnvContext {
   lazy val webDriver: WebDriver = {
     loadWebDriver(driverName) tap { webdriver =>
       isWebDriverSet = true;
-      val wait = gwenSetting.get("gwen.web.wait.seconds").toLong
-      webdriver.manage().timeouts().implicitlyWait(wait, TimeUnit.SECONDS)
+      gwenSetting.getOpt("gwen.web.wait.seconds") foreach { wait =>
+        webdriver.manage().timeouts().implicitlyWait(wait.toLong, TimeUnit.SECONDS)
+      }
     }
   }
 
@@ -64,14 +67,27 @@ class WebEnvContext(val driverName: String) extends EnvContext {
    * @param driverName
    * 			the name of the driver to get
    */
-  private[web] def loadWebDriver(driverName: String): WebDriver = driverName match {
-    case "Firefox" => { 
-      val profile = new FirefoxProfile();
-      gwenSetting.getOpt("general.useragent.override").foreach {  profile.setPreference("general.useragent.override", _ ) }
-      new FirefoxDriver(profile);
-    }
-    case "IE" => new InternetExplorerDriver
-    case "Chrome" => new ChromeDriver
+  private[web] def loadWebDriver(driverName: String): WebDriver = 
+    loadWebDriver(driverName, gwenSetting.getOpt("gwen.web.useragent"))
+  
+  /**
+   * Gets the selenium webdriver.
+   *
+   * @param driverName
+   * 			the name of the driver to get
+   * @param userAgent
+   * 			optional user agent to set in header
+   */
+  private def loadWebDriver(driverName: String, userAgent: Option[String]): WebDriver = driverName match {
+    case "Firefox" => 
+      userAgent.fold(new FirefoxDriver) { agent =>
+        new FirefoxDriver(new FirefoxProfile() tap { _.setPreference("general.useragent.override", agent) })
+      }
+    case "IE" => new InternetExplorerDriver()
+    case "Chrome" =>
+      userAgent.fold(new ChromeDriver) { agent =>
+        new ChromeDriver(new ChromeOptions() tap { _.addArguments(s"--user-agent=$agent") })
+      }
     case "Safari" => new SafariDriver
     case _ => sys.error(s"Unsupported webdriver: $driverName")
   }

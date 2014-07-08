@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- Feature: Complete the flood io challenge.
+ Feature: Complete the flood io challenge
   
   Scenario: Complete step 1
       Given I navigate to the start page
@@ -42,7 +42,15 @@
       Given I am on the step 5 page
        When I enter the one time token
         And I click the next button
-       Then I am on the congratulations page
-        And the congratulations information text should be "Congratulations, your scripting skills are impressive! Please share your test plan with us at support@flood.io and we'll publish your results."
+       Then the heading text should be "You're Done!"
 
+  /* 
+   *  The following property must be set in the <user home dir>/gwen.properties file: 
+   *    gwen.web.useragent = I AM ROBOT
+   *  This property is used to set the User-Agent header to "I AM ROBOT" so that floodio 
+   *  knows that gwen is not a human.
+   */
+  Scenario: Verify robot completion
+      Given I am on the challenge completed page
+       Then the lead paragraph text should contain "Congratulations, your scripting skills are impressive"
        

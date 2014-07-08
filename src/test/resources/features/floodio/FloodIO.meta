@@ -42,13 +42,9 @@
        Then the one time token can be located by javascript return $('.token').toArray()[0]
         And the one time token textfield can be located by id "challenger_one_time_token"
         
-  Scenario: Completed Challenge
+  Scenario: Completed page element locators
     When I am on the challenge completed page
-     And the Start Again button can be located by class name "btn"
-     
-  Scenario: Congratulations
-    When I am on the congratulations page
-     And the congratulations information can be located by class name "lead"
+    Then the lead paragraph can be located by class name "lead"
      
   @StepDef
   Scenario: I select and enter the largest order value
