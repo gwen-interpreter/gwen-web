@@ -39,3 +39,39 @@ Getting Started
 
 See our [getting started](doc/START.md) user guide for a quick introduction 
 and tutorial.
+
+***
+
+Mail Group
+----------
+
+All announcements and discussions are posted and broadcast to all members of 
+the following mail group. You are welcome to visit and subscribe to receive 
+notifications or get involved.
+
+- [gwen-interpreter](https://groups.google.com/d/forum/gwen-interpreter) 
+
+Contributions
+-------------
+
+New capabilities, improvements, and fixes are all valid candidates for 
+contribution. Submissions can be made using pull requests. Each submission 
+is reviewed and verified by the project's committer's before being integrated 
+and released to the community. We ask that all code submissions include unit 
+tests or coverage through an existing or newly created sample feature file. 
+
+By sending a pull request, we assume that you agree to release your work under 
+the license that covers this software.
+
+License
+-------
+
+Copyright 2014 Brady Wood, Branko Juric
+
+This software is open sourced under the 
+[Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt).
+
+See also: [LICENSE](LICENSE)
+
+This project has dependencies on other open source projects, all of which are 
+listed in the [NOTICE](NOTICE) file.

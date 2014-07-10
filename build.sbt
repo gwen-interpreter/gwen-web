@@ -51,4 +51,13 @@ libraryDependencies += "net.java.dev.jna" % "jna-platform" % "4.1.0"
 
 packageArchetype.java_application
 
+mappings in (Compile, packageBin) ++= Seq(
+  file("LICENSE") -> "LICENSE",
+  file("NOTICE") -> "NOTICE"
+)
+
+mappings in Universal += file("LICENSE") -> "LICENSE" 
+
+mappings in Universal += file("NOTICE") -> "NOTICE" 
+
 mappings in Universal ++= directory("src/test/resources/features")
