@@ -26,7 +26,7 @@ Perform the following to build and install gwen-web:
 3. Download and install the latest [sbt](http://www.scala-sbt.org/) version 
 4. Change to the directory where you cloned/downloaded the source
 5. Run `sbt test` to compile and run all tests and verify that all is OK
-6. Run `sbt universal:packageBin` to build the distributable ZIP
+6. Run `sbt universal:package-bin` to build the distributable ZIP
    - This will create a _gwen-web-[version].zip_ file in the 
      _target/universal_ folder relative to your current directory
 7. Extract the generated ZIP to a desired location on your local drive

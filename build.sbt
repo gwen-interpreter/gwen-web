@@ -1,3 +1,6 @@
+import com.typesafe.sbt.SbtNativePackager._
+import NativePackagerHelper._
+
 name := "gwen-web"
 
 description := "Gwen Web Engine"
@@ -48,14 +51,4 @@ libraryDependencies += "net.java.dev.jna" % "jna-platform" % "4.1.0"
 
 packageArchetype.java_application
 
-mappings in Universal <++= (com.typesafe.sbt.packager.Keys.makeBashScript in Universal, normalizedName in Universal) map { (script, name) =>
-  for {
-    s <- script.toSeq
-  } yield s -> ("bin/gwen-web") 
-}
-
-mappings in Universal <++= (com.typesafe.sbt.packager.Keys.makeBatScript in Universal, normalizedName in Universal) map { (script, name) =>
-  for {
-    s <- script.toSeq
-  } yield s -> ("bin/gwen-web.bat") 
-}
+mappings in Universal ++= directory("src/test/resources/features")
