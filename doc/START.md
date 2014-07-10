@@ -68,7 +68,7 @@ the [Flood IO script challenge](https://challengers.flood.io/start)
 The flood io challenge will put any automation script through a series of 
 tasks to determine its capabilities.  From clicking buttons, selecting 
 dropdowns, calculating maximum radio option and finally to its ability to 
-copy text from one dom element to another.
+wait for an ajax call and copy text from one dom element to another.
 
 Before starting this challenge, please take the time to click through the 
 challenge manually to familiarize yourself with the task at hand.
@@ -81,17 +81,17 @@ which will be explained later)
 Next issue the following command in your command prompt / shell
 
 ```
-gwen ../FloodIO.feature
+gwen-web ../features/floodio/FloodIO.feature
 ```
 
 This has now started the flood io automation.
 
-When you get to the end of this challenge you may that the You're Done actually
-mentions that you have just walked through the test manually.  This step has 
-also been setup to verify the capabilities of the robot.  How do we get around
-it?  gwen has a setting in the user.home/gwen.properties that allows you to
-control what user-agent you are.  For this test we need to specify I AM ROBOT
-in order for the test to pass as a robot.
+When you get to the end of this challenge you may find that the You're Done 
+page actually mentions that you have just walked through the test manually.  
+This step has also been setup to verify the capabilities of the robot.  How 
+do we get around it?  Gwen has a setting in the user.home/gwen.properties 
+that allows you to control what user-agent you are.  For this test we need 
+to specify I AM ROBOT in order for the test to pass as a robot.
 
 ```
 gwen.web.useragent = I AM ROBOT
