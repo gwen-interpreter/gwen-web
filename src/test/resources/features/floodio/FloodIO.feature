@@ -44,12 +44,6 @@
         And I click the next button
        Then the heading text should be "You're Done!"
 
-  /* 
-   *  The following property must be set in the <user home dir>/gwen.properties file: 
-   *    gwen.web.useragent = I AM ROBOT
-   *  This property is used to set the User-Agent header to "I AM ROBOT" so that floodio 
-   *  knows that gwen is not a human.
-   */
   Scenario: Verify robot completion
       Given I am on the challenge completed page
        Then the lead paragraph text should contain "Congratulations, your scripting skills are impressive"

@@ -153,6 +153,9 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
       case r"""my role is "?(.+?)"?$role""" => 
         env.featureScopes.addScope(role)
         
+      case r"""my "?(.+?)"?$setting setting (?:is|will be) "?(.+?)"?$$$value""" => 
+        sys.props += ((setting, value))
+        
       case r"""my "?(.+?)"?$attribute attribute (?:is|will be) "?(.+?)"?$$$value""" => 
         env.featureScopes.set(attribute, value)
         

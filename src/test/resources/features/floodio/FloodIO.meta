@@ -16,6 +16,9 @@
 
    Feature: flood io meta
   
+  Scenario: Initialise user agent
+      Given my gwen.web.useragent setting is "I AM ROBOT" 
+  
   Scenario: Define global locators
       Given the heading can be located by javascript return ($('h2')).toArray()[0];
         And the next button can be located by class name "btn"

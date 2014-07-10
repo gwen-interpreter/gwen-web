@@ -86,17 +86,6 @@ gwen-web ../features/floodio/FloodIO.feature
 
 This has now started the flood io automation.
 
-When you get to the end of this challenge you may find that the You're Done 
-page actually mentions that you have just walked through the test manually.  
-This step has also been setup to verify the capabilities of the robot.  How 
-do we get around it?  Gwen has a setting in the user.home/gwen.properties 
-that allows you to control what user-agent you are.  For this test we need 
-to specify I AM ROBOT in order for the test to pass as a robot.
-
-```
-gwen.web.useragent = I AM ROBOT
-```
-
 That is it, you have now run your first automated test using gwen.  
 
 In the next update, I will be walking you through the finer details of the web
