@@ -1,5 +1,3 @@
-import com.typesafe.sbt.SbtNativePackager._
-import NativePackagerHelper._
 
 name := "gwen-web"
 
@@ -60,4 +58,7 @@ mappings in Universal += file("LICENSE") -> "LICENSE"
 
 mappings in Universal += file("NOTICE") -> "NOTICE" 
 
-mappings in Universal ++= directory("src/test/resources/features")
+mappings in Universal <++= (packageBin in Compile, target ) map { (_, target) =>
+  val dir = file("src/test/resources/features")
+  (dir.***) pair relativeTo(dir.getParentFile)
+}
