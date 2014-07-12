@@ -21,6 +21,6 @@ import org.scalatest.junit.JUnitRunner
 class FloodIOTest extends WebEngineTestCase {
 
   "Flood features" should "evaluate" in {
-    interpret("/features/floodio")
+    interpret("features/floodio")
   }
 }

@@ -59,6 +59,6 @@ mappings in Universal += file("LICENSE") -> "LICENSE"
 mappings in Universal += file("NOTICE") -> "NOTICE" 
 
 mappings in Universal <++= (packageBin in Compile, target ) map { (_, target) =>
-  val dir = file("src/test/resources/features")
+  val dir = file("./features")
   (dir.***) pair relativeTo(dir.getParentFile)
 }

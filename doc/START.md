@@ -34,32 +34,6 @@ as a parameter to Gwen using the `-p` option (but you'll have to do it every
 time you invoke Gwen). Putting it in the gwen.properties file in your user 
 home directory is much more convenient since Gwen knows where to find it. 
 
-### Launching gwen-web
-
-Open a command prompt to the bin directory where you installed gwen-web and 
-type `gwen-web` (or `./gwen-web` on unix systems) and hit enter. This will 
-launch the console REPL which will prompt you to start entering steps.
-
-```
-   __ ___      _____ _ __     _    
-  / _` \ \ /\ / / _ \ '_ \   { \," 
- | (_| |\ V  V /  __/ | | | {_`/   
-  \__, | \_/\_/ \___|_| |_|   `    
-  |___/                            
-
-Welcome to gwen-web!
-
-INFO - Initialising environment context
-INFO - Chrome web driver configured
-INFO - WebEnvContext initialised
-
-REPL Console
-
-Enter steps to evaluate or type exit to quit..
-
-gwen>_
-```
-
 ### Flood IO Challenge
 Before walking you through gwen's web engine in detail, we have included a 
 feature and a meta file allowing you to see a gwen in action whilst it automates
@@ -75,13 +49,14 @@ challenge manually to familiarize yourself with the task at hand.
 
 We have included the feature and its meta file for you in the zip (both of 
 which will be explained later) 
-  - [floodio.feature](../src/test/resources/features/floodio/FloodIO.feature)
-  - [floodio.meta](../src/test/resources/features/floodio/FloodIO.meta) 
+  - [floodio.feature](../features/floodio/FloodIO.feature)
+  - [floodio.meta](../features/floodio/FloodIO.meta) 
 
-Next issue the following command in your command prompt / shell
+Next, open a command prompt / shell in the _bin_ directory and issue the 
+following command:
 
 ```
-gwen-web ../features/floodio/FloodIO.feature
+gwen-web -b ../features/floodio
 ```
 
 This has now started the flood io automation.

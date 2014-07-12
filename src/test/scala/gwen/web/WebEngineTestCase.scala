@@ -28,9 +28,6 @@ trait WebEngineTestCase extends FlatSpec {
   
   def interpret(featureFilepath: String, metaFilepath: Option[String] = None) {
     
-    val absoluteFile = new File(getClass().getResource(featureFilepath).getFile())
-    val relativePath = new File(".").toURI().relativize(absoluteFile.toURI()).getPath();
-    
     val options = GwenOptions(
       true,
       false,
@@ -38,7 +35,7 @@ trait WebEngineTestCase extends FlatSpec {
       None, 
       Nil,
       metaFilepath map { filepath => new File(getClass().getResource(filepath).getFile()) },
-      List(new File(relativePath)))
+      List(new File(featureFilepath)))
 
       
     val intepreter = new GwenWebInterpreter
