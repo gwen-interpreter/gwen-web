@@ -14,16 +14,16 @@ Building and Installing from Source
 
 Perform the following to build and install gwen-web: 
 
-1. Either:
+1. Download and install [Java SDK 1.6 or later](http://www.oracle.com/technetwork/java/javase/downloads/index.html) 
+   - Note Java 8 is not recommended at this time of writing
+2. Download and install the latest [sbt](http://www.scala-sbt.org/) version
+3. Either:
    - Download a [Git client](http://git-scm.com/downloads) and clone this 
      repository using one of the following (SSH or HTTPS) URLs: 
      - `git@github.com:gwen-interpreter/gwen-web.git`
      - `https://github.com/gwen-interpreter/gwen-web.git`
    - Or click the Download ZIP link on this GitHub project page to download 
-     the source archive and extract it to a local folder 
-2. Download and install [Java SDK 1.6 or later](http://www.oracle.com/technetwork/java/javase/downloads/index.html) 
-   - Note Java 8 is not recommended at this time of writing
-3. Download and install the latest [sbt](http://www.scala-sbt.org/) version 
+     the source archive and extract it to a local folder  
 4. Change to the directory where you cloned/downloaded the source
 5. Run `sbt test` to compile and run all tests and verify that all is OK
 6. Run `sbt universal:package-bin` to build the distributable ZIP
@@ -58,7 +58,7 @@ New capabilities, improvements, and fixes are all valid candidates for
 contribution. Submissions can be made using pull requests. Each submission 
 is reviewed and verified by the project's committer's before being integrated 
 and released to the community. We ask that all code submissions include unit 
-tests or coverage through an existing or newly created sample feature file. 
+tests or sample test features providing relevant coverage.
 
 By sending a pull request, we assume that you agree to release your work under 
 the license that covers this software.
