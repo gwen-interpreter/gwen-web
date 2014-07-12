@@ -56,6 +56,6 @@
   
   @StepDef
   Scenario: I enter the one time token
-      Given I wait for the one time token textvalue for 5 seconds
+      Given I wait for the one time token text
         And I enter the one time token in the one time token textfield
              

@@ -162,21 +162,29 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
       case r"""the url will be "?(.+?)"?$$$url""" => 
         env.pageScopes.set("navigation/url", url)   
         
-      //search for and use the element's textvalue to determine wait
-      case r"""I wait for ((?:[^"]).+?(?:[^"]))$element textvalue for (.+?)$seconds second(?:s?)""" =>
-        val dynamicElement = new WebDriverWait(env.webDriver, seconds.toInt).until(
-            new ExpectedCondition[Boolean] {
-               override def apply(d: WebDriver) = getElementText(locate(env, element)).length() > 0
-            }
-        )  
+      //search for and use the element's text to determine wait
+      case r"""I wait for ((?:[^"]).+?(?:[^"]))$element text for (.+?)$seconds second(?:s?)""" =>
+        waitUntil(seconds.toInt, env) {
+          getElementText(locate(env, element)).length() > 0
+        }
+        
+      //search for and use the element's text to determine wait
+      case r"""I wait for ((?:[^"]).+?(?:[^"]))$element text""" =>
+        waitUntil(Integer.MAX_VALUE, env) {
+          getElementText(locate(env, element)).length() > 0
+        }
         
       //search for and use the element's visibility/availability(on the page) to determine wait
       case r"""I wait for ((?:[^"]).+?(?:[^"]))$element for (.+?)$seconds second(?:s?)""" =>
-        val dynamicElement = new WebDriverWait(env.webDriver, seconds.toInt).until(
-            new ExpectedCondition[WebElement] {
-               override def apply(d: WebDriver) = locate(env, element)
-            }
-        )
+        waitUntil(seconds.toInt, env) {
+          locateOpt(env, element).isDefined
+        }
+        
+      //search for and use the element's visibility/availability(on the page) to determine wait
+      case r"""I wait for ((?:[^"]).+?(?:[^"]))$$$element""" =>
+       waitUntil(Integer.MAX_VALUE.toInt, env) {
+         locateOpt(env, element).isDefined
+       }
       
       case r"""I enter my ((?:[^"]).+?(?:[^"]))$attribute attribute in "?(.+?)"?$$$element""" =>
         
@@ -239,6 +247,14 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
       case _ => super.evaluate(step, env)
       
     }
+  }
+  
+  private def waitUntil(timeoutSecs: Int, env: WebEnvContext)(until: => Boolean) {
+    new WebDriverWait(env.webDriver, timeoutSecs).until(
+      new ExpectedCondition[Boolean] {
+        override def apply(driver: WebDriver): Boolean = until
+      }
+    )  
   }
   
   /**
