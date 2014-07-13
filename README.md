@@ -24,15 +24,14 @@ Perform the following to build and install gwen-web:
      - `https://github.com/gwen-interpreter/gwen-web.git`
    - Or click the Download ZIP link on this GitHub project page to download 
      the source archive and extract it to a local folder  
-4. Change to the directory where you cloned/downloaded the source
-5. Run `sbt test` to compile and run all tests and verify that all is OK
-6. Run `sbt universal:package-bin` to build the distributable ZIP
+4. Change to the directory where you cloned/downloaded the source and run 
+   `sbt universal:package-bin` to build the distributable ZIP
    - This will create a _gwen-web-[version].zip_ file in the 
      _target/universal_ folder relative to your current directory
-7. Extract the generated ZIP to a desired location on your local drive
+5. Extract the generated ZIP to a desired location on your local drive
    - This will create a project folder named _gwen-web-[version]_ in that 
      location
-8. You are now ready to start using gwen-web!
+6. You are now ready to start using gwen-web!
 
 Getting Started
 ---------------

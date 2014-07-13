@@ -20,13 +20,13 @@
       Given my gwen.web.useragent setting is "I AM ROBOT" 
   
   Scenario: Define global locators
-      Given the heading can be located by javascript return ($('h2')).toArray()[0];
+      Given the heading can be located by tag name "h2"
         And the next button can be located by class name "btn"
    
   Scenario: Define start page element locators
        When I am on the start page
        Then the url will be "https://challengers.flood.io/start"
-        And the Start button can be located by javascript return ($('[value=Start]')).toArray()[0];
+        And the Start button can be located by name "commit"
         And the share the results link can be located by link text "share the results."
         And the my load test link can be located by link text "MyLoadTest.com"
 
@@ -42,7 +42,7 @@
         
   Scenario: Define step 5 page element locators
        When I am on the step 5 page
-       Then the one time token can be located by javascript return $('.token').toArray()[0]
+       Then the one time token can be located by css selector ".token"
         And the one time token textfield can be located by id "challenger_one_time_token"
         
   Scenario: Completed page element locators
