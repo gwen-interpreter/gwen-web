@@ -225,7 +225,7 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
         assert(webElement.isDisplayed(), s"Cannot $action invisible '$element' element")
         assert(webElement.isEnabled(), s"Cannot $action disabled '$element' element")
         action match {
-          case "click" => webElement.click; Thread.sleep(gwenSetting.get("gwen.web.wait.seconds").toInt * 1000)
+          case "click" => webElement.click
           case "submit" => webElement.submit
           case "tick" | "check" if (!webElement.isSelected()) => webElement.click()
           case "untick" | "uncheck" if (webElement.isSelected()) => webElement.click()
