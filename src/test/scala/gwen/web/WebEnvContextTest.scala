@@ -98,7 +98,7 @@ class WebEnvContextTest extends FlatSpec with ShouldMatchers with MockitoSugar {
     
     // reference 1t time should setup implicit wait time
     env.webDriver
-    verify(mockWebDriverTimeouts).implicitlyWait(5L, TimeUnit.SECONDS)
+    verify(mockWebDriverTimeouts).implicitlyWait(3L, TimeUnit.SECONDS)
     
     // calling close multiple times should call quit only once
     env.close()

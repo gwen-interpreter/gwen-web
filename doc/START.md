@@ -7,12 +7,6 @@ Prerequisites
 > Please ensure that you have [installed](../README.md#user-content-building-and-installing-from-source) 
 > gwen-web before proceeding.
  
-Introducing the Console
------------------------
-
-The easiest way to get started with gwen-web is to launch the console and have 
-a play.
-
 ### Multiple browser support
 
 Gwen-web uses Firefox as the default browser. If you would like to use a 
@@ -35,8 +29,9 @@ time you invoke Gwen). Putting it in the gwen.properties file in your user
 home directory is much more convenient since Gwen knows where to find it. 
 
 ### Flood IO Challenge
+
 Before walking you through gwen's web engine in detail, we have included a 
-feature and a meta file allowing you to see a gwen in action whilst it automates
+feature and a meta file allowing you to see Gwen in action whilst it automates
 the [Flood IO script challenge](https://challengers.flood.io/start)
 
 The flood io challenge will put any automation script through a series of 

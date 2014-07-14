@@ -165,7 +165,7 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
         
       //search for and use the element's text to determine wait
       case r"""I wait for ((?:[^"]).+?(?:[^"]))$element text""" =>
-        waitUntil(Integer.MAX_VALUE, env) {
+        waitUntil(gwenSetting.get("gwen.web.wait.seconds").toInt, env) {
           getElementText(locate(env, element)).length() > 0
         }
         
@@ -177,7 +177,7 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
         
       //search for and use the element's visibility/availability(on the page) to determine wait
       case r"""I wait for ((?:[^"]).+?(?:[^"]))$$$element""" =>
-       waitUntil(Integer.MAX_VALUE.toInt, env) {
+       waitUntil(gwenSetting.get("gwen.web.wait.seconds").toInt, env) {
          locateOpt(env, element).isDefined
        }
       
@@ -225,7 +225,7 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
         assert(webElement.isDisplayed(), s"Cannot $action invisible '$element' element")
         assert(webElement.isEnabled(), s"Cannot $action disabled '$element' element")
         action match {
-          case "click" => webElement.click
+          case "click" => webElement.click; Thread.sleep(gwenSetting.get("gwen.web.wait.seconds").toInt * 1000)
           case "submit" => webElement.submit
           case "tick" | "check" if (!webElement.isSelected()) => webElement.click()
           case "untick" | "uncheck" if (webElement.isSelected()) => webElement.click()
