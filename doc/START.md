@@ -23,9 +23,9 @@ directory and set the following property to one of the values shown:
 
 ### Gwen properties
 
-You can also store this property in any properties file you wish and pass it 
-as a parameter to Gwen using the `-p` option (but you'll have to do it every 
-time you invoke Gwen). Putting it in the gwen.properties file in your user 
+You can also store this property in any properties file you wish and pass that 
+file to Gwen using the `-p` option (but you'll have to do it every 
+time you invoke Gwen). Putting the gwen.properties file in your user 
 home directory is much more convenient since Gwen knows where to find it. 
 
 ### Flood IO Challenge
