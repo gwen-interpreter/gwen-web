@@ -114,7 +114,6 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
         
       case r""""?(.+?)"?$element text should (be|contain)$operator my "?(.+?)"?$attribute attribute""" =>
         val webElement = locate(env, element)
-        assert(webElement.isDisplayed(), s"Cannot access text of invisible '$element' element")
         val actual = getElementText(webElement)
         env.pageScopes.set(s"$element/text", actual)
         doFeatureScopeAction(attribute, env) { expected => 
@@ -128,7 +127,6 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
         
       case r""""?(.+?)"?$element text should (be|contain)$operator "?(.+?)"?$$$expected""" =>
         val webElement = locate(env, element)
-        assert(webElement.isDisplayed(), s"Cannot access text of invisible '$element' element")
         val actual = getElementText(webElement)
         env.pageScopes.set(s"$element/text", actual)
         compare(expected, actual, operator)
@@ -182,13 +180,8 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
        }
       
       case r"""I enter my ((?:[^"]).+?(?:[^"]))$attribute attribute in "?(.+?)"?$$$element""" =>
-        
         val webElement = locate(env, element)
-        assert(webElement.isDisplayed(), s"Cannot enter text in invisible '$element' element")
-        assert(webElement.isEnabled(), s"Cannot enter text in disabled '$element' element")
-        
         val sValue = env.featureScopes.get(attribute);
-        
         webElement.sendKeys(sValue)
         env.pageScopes.set(s"$element/text", sValue)
         
@@ -197,8 +190,6 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
        */
       case r"""I enter ((?:[^"]).+?(?:[^"]))$attribute in "?(.+?)"?$$$element""" =>
         val webElement = locate(env, element)
-        assert(webElement.isDisplayed(), s"Cannot enter text in invisible '$element' element")
-        assert(webElement.isEnabled(), s"Cannot enter text in disabled '$element' element")
         val sValue = getElementText(locate(env, attribute))
         webElement.sendKeys(sValue)
         env.pageScopes.set(s"$element/text", sValue)
@@ -208,22 +199,16 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
        */
       case r"""I enter "(.+?)"$value in "?(.+?)"?$$$element""" =>
         val webElement = locate(env, element)
-        assert(webElement.isDisplayed(), s"Cannot enter text in invisible '$element' element")
-        assert(webElement.isEnabled(), s"Cannot enter text in disabled '$element' element")
         webElement.sendKeys(value)
         env.pageScopes.set(s"$element/text", value)
         
       case r"""I select "?(.+?)"?$value in "?(.+?)"?$$$element""" =>
         val webElement = locate(env, element)
-        assert(webElement.isDisplayed(), s"Cannot enter text in invisible '$element' element")
-        assert(webElement.isEnabled(), s"Cannot enter text in disabled '$element' element")
         new Select(webElement).selectByVisibleText(value)
         env.pageScopes.set(s"$element/select", value)
         
       case r"""I (click|submit|tick|check|untick|uncheck)$action "?(.+?)"?$$$element""" =>
         val webElement = locate(env, element)
-        assert(webElement.isDisplayed(), s"Cannot $action invisible '$element' element")
-        assert(webElement.isEnabled(), s"Cannot $action disabled '$element' element")
         action match {
           case "click" => webElement.click
           case "submit" => webElement.submit
