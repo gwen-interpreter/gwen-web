@@ -121,6 +121,7 @@ class WebElementLocatorTest extends FlatSpec with ShouldMatchers with MockitoSug
     when(mockWebDriver.manage()).thenReturn(mockWebDriverOptions)
     when(mockWebDriverOptions.timeouts()).thenReturn(mockWebDriverTimeouts)
     doReturn(mockWebElement).when(mockWebDriver).executeScript(locatorValue)
+    when(mockWebElement.isDisplayed()).thenReturn(true);
     
     locate(env, "username") should be (mockWebElement)
     
@@ -132,7 +133,6 @@ class WebElementLocatorTest extends FlatSpec with ShouldMatchers with MockitoSug
     }
     
     verify(mockWebDriver, times(2)).executeScript(locatorValue)
-    
 	
   }
   
@@ -157,6 +157,7 @@ class WebElementLocatorTest extends FlatSpec with ShouldMatchers with MockitoSug
     when(mockWebDriver.manage()).thenReturn(mockWebDriverOptions)
     when(mockWebDriverOptions.timeouts()).thenReturn(mockWebDriverTimeouts)
     when(mockWebDriver.findElement(by)).thenReturn(mockWebElement)
+    when(mockWebElement.isDisplayed()).thenReturn(true)
 
     locate(env, "username") should be (mockWebElement)
     
