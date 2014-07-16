@@ -97,7 +97,7 @@ trait WebElementLocator {
 	
 	private def moveToIfNotDisplayed(env: WebEnvContext, webElement: Option[WebElement]) = webElement foreach { element =>
       if (!element.isDisplayed()) {
-        new Actions(env.webDriver).moveToElement(element)
+        env.webDriver.asInstanceOf[JavascriptExecutor].executeScript("arguments[0].scrollIntoView(true);")
       }
 	}
 	
