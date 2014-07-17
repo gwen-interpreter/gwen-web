@@ -17,8 +17,11 @@
 package gwen.web
 
 import org.openqa.selenium.By
-import org.openqa.selenium.WebElement
 import org.openqa.selenium.JavascriptExecutor
+import org.openqa.selenium.WebElement
+import org.openqa.selenium.interactions.Actions
+
+import gwen.Predefs.Kestrel
 
 /**
  * Locates web elements using the selenium web driver.
@@ -77,16 +80,27 @@ trait WebElementLocator {
 	  }
 	}
 	
-	private def getElement(env: WebEnvContext, by: By): Option[WebElement] = Option(env.webDriver.findElement(by))
+	private def getElement(env: WebEnvContext, by: By): Option[WebElement] = Option(env.webDriver.findElement(by)) tap {
+	  moveToIfNotDisplayed(env, _)
+	}
 	  
 	private def getElementByJavaScript(env: WebEnvContext, element: String, javascript: String): Option[WebElement] = 
-	  env.webDriver.asInstanceOf[JavascriptExecutor].executeScript(javascript) match {
+	  (env.webDriver.asInstanceOf[JavascriptExecutor].executeScript(javascript) match {
 	    case elem @ _ :: _ => Some(elem.asInstanceOf[WebElement])
 	    case elem => Option(elem) match {
 	      case Some(elem) => Some(elem.asInstanceOf[WebElement])
 	      case None => None
 	    }
+	  }) tap {
+	    moveToIfNotDisplayed(env, _)
 	  }
+	
+	private def moveToIfNotDisplayed(env: WebEnvContext, webElement: Option[WebElement]) = webElement foreach { element =>
+      if (!element.isDisplayed()) {
+        env.webDriver.asInstanceOf[JavascriptExecutor].executeScript("arguments[0].scrollIntoView(true);")
+      }
+	}
+	
 }
 
 class LocatorBindingException(element: String, causeMsg: String) extends Exception(s"Could not locate web element: ${element}, ${causeMsg}")
