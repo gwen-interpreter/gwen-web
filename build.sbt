@@ -37,7 +37,7 @@ libraryDependencies += "org.scalatest" %% "scalatest" % "2.1.7" % "test"
 
 libraryDependencies += "org.mockito" % "mockito-all" % "1.9.5" % "test"
 
-libraryDependencies += "org.seleniumhq.selenium" % "selenium-java" % "2.42.1" excludeAll(
+libraryDependencies += "org.seleniumhq.selenium" % "selenium-java" % "2.42.2" excludeAll(
   ExclusionRule(organization = "org.seleniumhq.selenium", name = "selenium-htmlunit-driver"),
   ExclusionRule(organization = "net.java.dev.jna", name = "jna"),
   ExclusionRule(organization = "net.java.dev.jna", name = "jna-platform")
