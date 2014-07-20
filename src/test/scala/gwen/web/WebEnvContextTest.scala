@@ -16,15 +16,18 @@
 
 package gwen.web
 
-import org.scalatest.matchers.ShouldMatchers
-import org.scalatest.FunSuite
-import org.scalatest.junit.JUnitRunner
-import play.api.libs.json.Json
-import org.openqa.selenium.WebDriver
-import org.scalatest.mock.MockitoSugar
-import org.mockito.Mockito._
 import java.util.concurrent.TimeUnit
+
+import org.mockito.Matchers.anyLong
+import org.mockito.Matchers.same
+import org.mockito.Mockito.never
+import org.mockito.Mockito.times
+import org.mockito.Mockito.verify
+import org.mockito.Mockito.when
+import org.openqa.selenium.WebDriver
 import org.scalatest.FlatSpec
+import org.scalatest.matchers.ShouldMatchers
+import org.scalatest.mock.MockitoSugar
 
 class WebEnvContextTest extends FlatSpec with ShouldMatchers with MockitoSugar {
   
@@ -98,7 +101,7 @@ class WebEnvContextTest extends FlatSpec with ShouldMatchers with MockitoSugar {
     
     // reference 1t time should setup implicit wait time
     env.webDriver
-    verify(mockWebDriverTimeouts).implicitlyWait(3L, TimeUnit.SECONDS)
+    verify(mockWebDriverTimeouts).implicitlyWait(anyLong, same(TimeUnit.SECONDS))
     
     // calling close multiple times should call quit only once
     env.close()

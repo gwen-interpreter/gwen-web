@@ -34,13 +34,13 @@ class WebElementLocatorTest extends FlatSpec with ShouldMatchers with MockitoSug
   val mockWebDriverTimeouts = mock[WebDriver.Timeouts]
   
   "Attempt to locate unbound element "should "throw locator binding not found error" in {
-    shouldFailWithLocatorBindingError("username", newEnv, "Could not locate web element: username, locator binding not found: username/locator")
+    shouldFailWithLocatorBindingError("username", newEnv, "Could not locate web element: username, locator type binding not found: username/locator")
   }
   
   "Attempt to locate element with unbound locator" should "throw locator not found error" in {
     val env = newEnv
     env.pageScopes.addScope("login").set("username/locator", "id")
-    shouldFailWithLocatorBindingError("username", env, "Could not locate web element: username, locator not bound: username/locator/id")
+    shouldFailWithLocatorBindingError("username", env, "Could not locate web element: username, locator expression binding not bound: username/locator/id")
   }
   
   "Attempt to locate element with unsupported locator" should "throw unsuported locator error" in {
@@ -120,6 +120,7 @@ class WebElementLocatorTest extends FlatSpec with ShouldMatchers with MockitoSug
     
     when(mockWebDriver.manage()).thenReturn(mockWebDriverOptions)
     when(mockWebDriverOptions.timeouts()).thenReturn(mockWebDriverTimeouts)
+    doReturn(true).when(mockWebDriver).executeScript("return document.readyState")
     doReturn(mockWebElement).when(mockWebDriver).executeScript(locatorValue)
     when(mockWebElement.isDisplayed()).thenReturn(true);
     

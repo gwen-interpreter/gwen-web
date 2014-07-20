@@ -71,28 +71,27 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
     
     step.expression match {
     
-      case r"""I navigate to the "?(.+?)"?$page page""" =>
-        env.webDriver.get(env.pageScopes.getIn(page, "navigation/url"))
-        env.pageScopes.addScope(page)
+      case r"""I navigate to the "?(.+?)"?$pageScope page""" =>
+        env.webDriver.get(env.pageScopes.getIn(pageScope, "navigation/url"))
+        env.pageScopes.addScope(pageScope)
         
       case r"""I navigate to "?(.+?)"?$$$url""" =>
         env.pageScopes.addScope(url)
         env.webDriver.get(url)
         
-      case r"""I am on the "?(.+?)"?$page page""" => 
+      case r"""I am on the "?(.+?)"?$pageScope page""" => 
         env.pageScopes.current match {
           case None => 
-            env.pageScopes.addScope(page)
+            env.pageScopes.addScope(pageScope)
           case Some(scope) =>
-            if (scope.name != page) {
-              env.pageScopes.addScope(page)
+            if (scope.name != pageScope) {
+              env.pageScopes.addScope(pageScope)
             }
         }
-        
   
-      case r""""?(.+?)"?$element can be located by "?(id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)"?$locatorType "?(.+?)"?$$$locatorValue""" =>
-        env.pageScopes.set(s"$element/locator", locatorType);
-        env.pageScopes.set(s"$element/locator/$locatorType", locatorValue)
+      case r""""?(.+?)"?$element can be located by "?(id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)"?$locator "?(.+?)"?$$$expression""" =>
+        env.pageScopes.set(s"$element/locator", locator);
+        env.pageScopes.set(s"$element/locator/$locator", expression)
         
       case r"""the page title should (be|contain)$operator my "?(.+?)"?$attribute attribute""" =>
         val actual = env.webDriver.getTitle()
@@ -157,25 +156,25 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
         
       //search for and use the element's text to determine wait
       case r"""I wait for ((?:[^"]).+?(?:[^"]))$element text for (.+?)$seconds second(?:s?)""" =>
-        waitUntil(seconds.toInt, env) {
+        env.wait(seconds.toInt) {
           getElementText(locate(env, element)).length() > 0
         }
         
       //search for and use the element's text to determine wait
       case r"""I wait for ((?:[^"]).+?(?:[^"]))$element text""" =>
-        waitUntil(gwenSetting.get("gwen.web.wait.seconds").toInt, env) {
+        env.wait(gwenSetting.get("gwen.web.wait.seconds").toInt) {
           getElementText(locate(env, element)).length() > 0
         }
         
       //search for and use the element's visibility/availability(on the page) to determine wait
       case r"""I wait for ((?:[^"]).+?(?:[^"]))$element for (.+?)$seconds second(?:s?)""" =>
-        waitUntil(seconds.toInt, env) {
+        env.wait(seconds.toInt) {
           locateOpt(env, element).isDefined
         }
         
       //search for and use the element's visibility/availability(on the page) to determine wait
       case r"""I wait for ((?:[^"]).+?(?:[^"]))$$$element""" =>
-       waitUntil(gwenSetting.get("gwen.web.wait.seconds").toInt, env) {
+       env.wait(gwenSetting.get("gwen.web.wait.seconds").toInt) {
          locateOpt(env, element).isDefined
        }
       
@@ -227,14 +226,6 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
       case _ => super.evaluate(step, env)
       
     }
-  }
-  
-  private def waitUntil(timeoutSecs: Int, env: WebEnvContext)(until: => Boolean) {
-    new WebDriverWait(env.webDriver, timeoutSecs).until(
-      new ExpectedCondition[Boolean] {
-        override def apply(driver: WebDriver): Boolean = until
-      }
-    )  
   }
   
   /**

@@ -17,18 +17,20 @@
 package gwen.web
 
 import java.util.concurrent.TimeUnit
+
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.chrome.ChromeDriver
+import org.openqa.selenium.chrome.ChromeOptions
 import org.openqa.selenium.firefox.FirefoxDriver
+import org.openqa.selenium.firefox.FirefoxProfile
 import org.openqa.selenium.ie.InternetExplorerDriver
 import org.openqa.selenium.safari.SafariDriver
+import org.openqa.selenium.support.ui.ExpectedCondition
+import org.openqa.selenium.support.ui.WebDriverWait
+
 import gwen.Predefs.Kestrel
 import gwen.eval.EnvContext
 import gwen.gwenSetting
-import gwen.eval.ScopedData
-import org.openqa.selenium.firefox.FirefoxProfile
-import org.openqa.selenium.remote.DesiredCapabilities
-import org.openqa.selenium.chrome.ChromeOptions
 
 /**
  * Defines the web environment context. This includes the configured selenium web
@@ -101,6 +103,20 @@ class WebEnvContext(val driverName: String) extends EnvContext {
       webDriver.quit()
       isWebDriverSet = false
     }
+  }
+  
+  /**
+   * Waits until a given condition is ready.
+   * 
+   * @param timeoutSecs the number of seconds to wait before timing out
+   * @param until the boolean condition to wait for (until true)
+   */
+  def wait(timeoutSecs: Int)(until: => Boolean) {
+    new WebDriverWait(webDriver, timeoutSecs).until(
+      new ExpectedCondition[Boolean] {
+        override def apply(driver: WebDriver): Boolean = until
+      }
+    )  
   }
 
 }
