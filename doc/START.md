@@ -51,7 +51,7 @@ Next, open a command prompt / shell in the _bin_ directory and issue the
 following command:
 
 ```
-gwen-web -b ../features/floodio
+gwen -b ../features/floodio
 ```
 
 This has now started the flood io automation.
