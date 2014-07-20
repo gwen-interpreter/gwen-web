@@ -15,6 +15,10 @@
  */
  Feature: Complete the flood io challenge
   
+  @Robot
+  Scenario: Initialise user agent
+      Given my gwen.web.useragent setting is "I AM ROBOT" 
+      
   Scenario: Complete step 1
       Given I navigate to the start page
        Then the heading text should be "Welcome"
@@ -44,6 +48,7 @@
         And I click the next button
        Then the heading text should be "You're Done!"
 
+  @Robot
   Scenario: Verify robot completion
       Given I am on the challenge completed page
        Then the lead paragraph text should contain "Congratulations, your scripting skills are impressive"
