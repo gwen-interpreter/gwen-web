@@ -47,11 +47,24 @@ which will be explained later)
   - [floodio.feature](../features/floodio/FloodIO.feature)
   - [floodio.meta](../features/floodio/FloodIO.meta) 
 
+
+Note that the floodio challenge requires that the user agent header be set to 
+"I AM ROBOT". Gwen currently supports automating the setting of this header for 
+the Firefox and Chrome browsers only. 
+ 
 Next, open a command prompt / shell in the _bin_ directory and issue the 
-following command:
+following command if you are using Firefox or Chrome:
 
 ```
 gwen -b ../features/floodio
+```
+
+Otherwise, if you are using Safari or IE, then you will need to issue the 
+following command instead to skip over the robot steps since there is no 
+programmatic support for setting the user agent header in those drivers.
+
+```
+gwen -b -t ~@Robot ../features/floodio
 ```
 
 This has now started the flood io automation.
