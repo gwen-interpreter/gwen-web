@@ -216,6 +216,14 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
         }
         env.pageScopes.set(s"$element/action", action)
         
+        // sleep if wait time is configured for this element action
+        env.pageScopes.getOpt(s"$element/$action/wait") foreach { secs => 
+          Thread.sleep(secs.toLong * 1000)
+        }
+        
+      case r"""I wait "?([0-9]+?)"?$duration second(?:s?) when "?(.+?)"?$element is (click|submitt|tick|check|untick|uncheck)${action}ed""" =>
+        env.pageScopes.set(s"$element/$action/wait", duration)
+        
       case r"""I wait "?([0-9]+?)"?$duration second(?:s?)""" =>
         Thread.sleep(duration.toLong * 1000)
         

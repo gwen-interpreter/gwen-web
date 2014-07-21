@@ -19,11 +19,13 @@
   Scenario: Define global locators
       Given the heading can be located by tag name "h2"
         And the next button can be located by class name "btn"
+        And I wait 2 seconds when the next button is clicked
    
   Scenario: Define start page element locators
        When I am on the start page
        Then the url will be "https://challengers.flood.io/start"
         And the Start button can be located by name "commit"
+        And I wait 2 seconds when the Start button is clicked
         And the share the results link can be located by link text "share the results."
         And the my load test link can be located by link text "MyLoadTest.com"
 
