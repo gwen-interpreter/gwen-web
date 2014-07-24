@@ -1,8 +1,14 @@
 gwen-web
 ========
 
-A [Gwen](https://github.com/gwen-interpreter/gwen) web engine for 
-automating web activities.
+Introduction
+------------
+Welcome to [Gwen](https://github.com/gwen-interpreter/gwen) web.  Gwen web is a web engine used 
+for automating browsers via an interactive console.  The goal of gwen web is really to bring 
+an interactive style to web automation and to provide the user with immediate 
+visual feedback rather than after [batch processing](http://en.wikipedia.org/wiki/Batch_processing).
+ 
+
 
 Core Requirements
 -----------------
