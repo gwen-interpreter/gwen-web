@@ -17,8 +17,11 @@
 package gwen.web
 
 import java.util.concurrent.TimeUnit
-
+import org.openqa.selenium.JavascriptExecutor
+import org.openqa.selenium.OutputType
+import org.openqa.selenium.TakesScreenshot
 import org.openqa.selenium.WebDriver
+import org.openqa.selenium.WebElement
 import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.chrome.ChromeOptions
 import org.openqa.selenium.firefox.FirefoxDriver
@@ -27,10 +30,17 @@ import org.openqa.selenium.ie.InternetExplorerDriver
 import org.openqa.selenium.safari.SafariDriver
 import org.openqa.selenium.support.ui.ExpectedCondition
 import org.openqa.selenium.support.ui.WebDriverWait
-
 import gwen.Predefs.Kestrel
+import gwen.dsl.Failed
+import gwen.dsl.Step
 import gwen.eval.EnvContext
 import gwen.gwenSetting
+import java.io.File
+import org.apache.commons.io.FileUtils
+import org.apache.http.util.ExceptionUtils
+import java.io.PrintWriter
+import java.io.StringWriter
+import org.openqa.selenium.TimeoutException
 
 /**
  * Defines the web environment context. This includes the configured selenium web
@@ -112,11 +122,48 @@ class WebEnvContext(val driverName: String) extends EnvContext {
    * @param until the boolean condition to wait for (until true)
    */
   def wait(timeoutSecs: Int)(until: => Boolean) {
-    new WebDriverWait(webDriver, timeoutSecs).until(
-      new ExpectedCondition[Boolean] {
-        override def apply(driver: WebDriver): Boolean = until
-      }
-    )  
+    try {
+      new WebDriverWait(webDriver, timeoutSecs).until(
+        new ExpectedCondition[Boolean] {
+          override def apply(driver: WebDriver): Boolean = until
+        }
+      )
+    } catch {
+      case timeout: TimeoutException => throw timeout.getCause();
+    }
+  }
+  
+  /**
+   * Highlights (blinks) a Webdriver element.
+    In pure javascript, as suggested by https://github.com/alp82.
+   */
+  def highlight(element: WebElement) {
+    webDriver.asInstanceOf[JavascriptExecutor].executeScript("""
+        element = arguments[0];
+        original_style = element.getAttribute('style');
+        element.setAttribute('style', original_style + "; background: yellow; border: 2px solid red;");
+        setTimeout(function(){
+            element.setAttribute('style', original_style);
+        }, 300);
+    """, element)
+  }
+  
+  def captureScreenshot(): File =  
+    webDriver.asInstanceOf[TakesScreenshot].getScreenshotAs(OutputType.FILE) tap { screenshot =>
+      logger.info(s"Captured screenshot to file ${screenshot.getAbsolutePath()}")
+    }
+  
+  /**
+   * Fail callback.
+   * 
+   * @param step 
+   * 			the step that failed
+   * @param failed
+   * 			the failed status
+   */
+  override def fail(failedStep: Step, failure: Failed): Step = {
+    val step = super.fail(failedStep, failure)
+    Step(step.keyword, step.expression, failure, ("Screenshot", captureScreenshot) :: step.attachments)
   }
 
 }

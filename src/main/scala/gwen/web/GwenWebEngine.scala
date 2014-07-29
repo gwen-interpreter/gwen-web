@@ -17,12 +17,8 @@
 package gwen.web
 
 import org.openqa.selenium.By
-import org.openqa.selenium.JavascriptExecutor
-import org.openqa.selenium.WebDriver
 import org.openqa.selenium.WebElement
-import org.openqa.selenium.support.ui.ExpectedCondition
 import org.openqa.selenium.support.ui.Select
-import org.openqa.selenium.support.ui.WebDriverWait
 
 import gwen.Predefs.Kestrel
 import gwen.dsl.Step
@@ -228,27 +224,12 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
         Thread.sleep(duration.toLong * 1000)
         
       case r"""I highlight ((?:[^"]).+?(?:[^"]))$$$element""" =>
-        highlight(env, locate(env, element))
+        env.highlight(locate(env, element))
         
         
       case _ => super.evaluate(step, env)
       
     }
-  }
-  
-  /**
-   * Highlights (blinks) a Webdriver element.
-    In pure javascript, as suggested by https://github.com/alp82.
-   */
-  private def highlight(env: WebEnvContext, element: WebElement) {
-    env.webDriver.asInstanceOf[JavascriptExecutor].executeScript("""
-        element = arguments[0];
-        original_style = element.getAttribute('style');
-        element.setAttribute('style', original_style + "; background: yellow; border: 2px solid red;");
-        setTimeout(function(){
-            element.setAttribute('style', original_style);
-        }, 300);
-    """, element)
   }
   
   private def compare(expected: String, actual: String, operator: String) = operator match {
