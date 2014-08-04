@@ -3,11 +3,22 @@ gwen-web
 
 Introduction
 ------------
-Welcome to [Gwen](https://github.com/gwen-interpreter/gwen) web.  Gwen web is a web engine used 
-for automating browsers via an interactive console.  The goal of gwen web is really to bring 
-an interactive style to web automation and to provide the user with immediate 
-visual feedback rather than after [batch processing](http://en.wikipedia.org/wiki/Batch_processing).
+Gwen web is an engine which allows teams to automate web browsers using 
+language instead of code.  It aims to bring an interactive capability to
+automation testing by providing users with an approach to verify commands 
+and debug tests before committing them to an automation cycle.  
  
+Once the tests have been confirmed and committed, gwen web is able to either 
+run the tests sequentially alternatively in parallel.  In addition gwen web is
+able to target specific browsers including Firefox, Chrome, IE and Safari.
+
+Finally gwen web will create a summary report detailing the status of each 
+test (passed and failed), the time taken to execute each step, screenshots 
+on failures, current environment variables and meta information.
+
+Gwen web is the first of many engines that has been powered by the 
+[gwen](https://github.com/gwen-interpreter/gwen) interpreter
+
 
 
 Core Requirements
