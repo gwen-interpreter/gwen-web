@@ -11,9 +11,9 @@ organizationHomepage := Some(url("http://gweninterpreter.org"))
 
 startYear := Some(2014)
 
-scalaVersion := "2.11.1"
+scalaVersion := "2.11.2"
 
-crossScalaVersions := Seq("2.11.1", "2.10.4")
+crossScalaVersions := Seq("2.11.2", "2.10.4")
 
 scalacOptions += "-feature"
 
@@ -33,7 +33,7 @@ resolvers += "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositor
 
 libraryDependencies += "org.gweninterpreter" %% "gwen" % "0.1.0-SNAPSHOT" withSources()
 
-libraryDependencies += "org.scalatest" %% "scalatest" % "2.1.7" % "test"
+libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.1" % "test"
 
 libraryDependencies += "org.mockito" % "mockito-all" % "1.9.5" % "test"
 
