@@ -148,22 +148,13 @@ class WebEnvContext(val driverName: String) extends EnvContext {
     """, element)
   }
   
-  def captureScreenshot(): File =  
-    webDriver.asInstanceOf[TakesScreenshot].getScreenshotAs(OutputType.FILE) tap { screenshot =>
-      logger.info(s"Captured screenshot to file ${screenshot.getAbsolutePath()}")
-    }
-  
   /**
-   * Fail callback.
+   * Includes a screenshot in the list of failure attachments.
    * 
-   * @param step 
-   * 			the step that failed
    * @param failed
    * 			the failed status
    */
-  override def fail(failedStep: Step, failure: Failed): Step = {
-    val step = super.fail(failedStep, failure)
-    Step(step.keyword, step.expression, failure, ("Screenshot", captureScreenshot) :: step.attachments)
-  }
-
+  override def createAttachments(failure: Failed): List[(String, File)] =
+    ("Screenshot", webDriver.asInstanceOf[TakesScreenshot].getScreenshotAs(OutputType.FILE)) :: super.createAttachments(failure)
+    
 }
