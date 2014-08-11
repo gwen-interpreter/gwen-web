@@ -68,8 +68,8 @@ Example:		And the Start button can be located by tag name "submit"
 
 Sample DSLs
 
-| DSL Sample       | Purpose 
-| ------------- |:-------------:|
+| DSL Sample       | Purpose 	|
+| ------------- |-------------|
 | I navigate to the "text" page 		 					| right-aligned |
 | I navigate to "http://abc" url							| Will lookup the navigation/url |
 |															| in the meta against a specified page, and actually set | 
