@@ -14,30 +14,31 @@ Feature:
 [@tag]
 Scenario:
  Given <expression>
+ 
   When <expression>
+  
   Then <expression>
+  
    And <expression>
+   
    But <expression>
 
 
 Console Command Arguments 
 -------------------------
 The following arguments can be supplied when starting gwen web.
-
---version					-	gwen version information
---help						-	this help menu
--b, --batch	<dir>			-	batch mode, will load both features and meta non-interactively
--p, --properties <file> 	-	configurable gwen properties
--r, --report <dir>			-	generated reporting location
--m, --metafeature <file>	-	overriding metedata during test execution
--t, --tags @ | ~@ inc/exc	-	ability to filter test selection.
-<feature file, files, and 
-   or dir>					-	Individually listed features
-   								execute in order
-   							-	Directory
-   								execute all features in sub folders
-   								additionally sources all meta
-   								specific to the directory scope
+| Command      | Description	|
+| ------------- |-------------|
+|--version	| gwen version information |
+|--help | this help menu |
+| -b, --batch <dir> | batch mode, will load both features and meta non-interactively |
+| -p, --properties <file> |	configurable gwen properties |
+| -r, --report <dir> | generated reporting location |
+| -m, --metafeature <file> | overriding metedata during test execution |
+| -t, --tags @ || ~@ inc/exc | ability to filter test selection. |
+| <feature file, files, and or dir> | Individually listed features execute in order |
+|	| Directory
+|   | execute all features in sub folders additionally sources all meta	specific to the directory scope |
    								
 Console Command
 ---------------   								
