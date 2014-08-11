@@ -36,8 +36,8 @@ The following arguments can be supplied when starting gwen web.
 | -p, --properties <file> |	configurable gwen properties |
 | -r, --report <dir> | generated reporting location |
 | -m, --metafeature <file> | overriding metedata during test execution |
-| -t, --tags @ || ~@ inc/exc | ability to filter test selection. |
-| <feature file, files, and or dir> | Individually listed features execute in order |
+| -t, --tags @ \| ~@ inc/exc | ability to filter test selection. |
+| feature file, files, and or dir | Individually listed features execute in order |
 |	| Directory
 |   | execute all features in sub folders additionally sources all meta	specific to the directory scope |
    								
