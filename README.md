@@ -20,6 +20,15 @@ Gwen web is the first of many engines that has been powered by the
 [gwen](https://github.com/gwen-interpreter/gwen) interpreter
 
 
+Sample Introductory Video
+-------------------------
+Here is a video that shows an example of gwen web automating over the flood io challenge.  
+It shows loading features and meta in batch, and later shows highlighting the browser
+interactively.
+
+[![gwen web interactive demo](http://img.youtube.com/vi/ILgFtp4OrUI/0.jpg)](https://www.youtube.com/watch?v=ILgFtp4OrUI)
+
+
 Cheat Sheet
 ----------------
 Please see our [cheat sheet](doc/CHEATSHEET.md) for a list of commands and sample dsl statements
