@@ -71,9 +71,7 @@ Sample DSLs
 | DSL Sample       | Purpose 	|
 | ------------- |-------------|
 | I navigate to the "text" page 		 					| right-aligned |
-| I navigate to "http://abc" url							| Will lookup the navigation/url |
-|															| in the meta against a specified page, and actually set | 
-|															| the url in the browser window |
+| I navigate to "http://abc" url							| Will lookup the navigation/url in the meta against a specified page, and actually set the url in the browser window |
 | I am on the "text" page									| centered      |
 | <scoped elem> can be located by <locator> "xx"			| centered      |
 | the page title should (be|contain) my <scoped var>
