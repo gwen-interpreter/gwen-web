@@ -45,10 +45,12 @@ Console Command
 ---------------   								
 The following commands are available within the gwen interactive console.
 
-env							-	dump the environment scope to the console
-tab							-	when nothing has been entered on the console will display
-								And     But     Given   Then    When    env     exit
-exit						-	will close the current browser (if open) and exit the console.
+| console command | description |
+| --------------- | ----------- |
+| env 			  | dump the environment scope to the console |
+| tab			  |	when nothing has been entered on the console will display |
+| 				  | And     But     Given   Then    When    env     exit |
+| exit			  |	will close the current browser (if open) and exit the console. |
 
 WebElement Locators
 -----------------
@@ -64,11 +66,15 @@ locate by
 -	javascript
 
 Example:		And the Start button can be located by tag name "submit"
+
 				And the Start button can be located by class name "btn"
+				
 				And the Start button can be located by id "btn432"
+				
 
 
 Sample DSLs
+--------------------
 
 | DSL Sample       | Purpose 	|
 | ------------- |-------------|
