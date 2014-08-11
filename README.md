@@ -20,6 +20,11 @@ Gwen web is the first of many engines that has been powered by the
 [gwen](https://github.com/gwen-interpreter/gwen) interpreter
 
 
+Cheat Sheet
+----------------
+Please see our [cheat sheet](doc/CHEATSHEET.md) for a list of commands and sample dsl statements
+
+
 
 Core Requirements
 -----------------
