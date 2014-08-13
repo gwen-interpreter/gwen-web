@@ -5,12 +5,12 @@ Introduction
 ------------
 Gwen web is an engine which allows teams to automate web browsers using 
 language instead of code.  It aims to bring an interactive capability to
-automation testing by providing users with an approach to verify commands 
+automation testing by providing users with an ability to verify commands 
 and debug tests before committing them to an automation cycle.  
  
-Once the tests have been confirmed and committed, gwen web is able to either 
-run the tests sequentially alternatively in parallel.  In addition gwen web is
-able to target specific browsers including Firefox, Chrome, IE and Safari.
+Once the tests have been confirmed, gwen web is able to run the tests 
+sequentially or in parallel.  gwen web can be used to target different types
+of browsers including Firefox, Chrome, IE and Safari.
 
 Finally gwen web will create a summary report detailing the status of each 
 test (passed and failed), the time taken to execute each step, screenshots 
@@ -20,11 +20,25 @@ Gwen web is the first of many engines that has been powered by the
 [gwen](https://github.com/gwen-interpreter/gwen) interpreter
 
 
+Key Features
+------------
+- Tests are written in plain English
+- Tests can be run in batch mode or interactively
+- Tests can be run sequentially or in parallel
+- Interactive console allows verifying before running
+- Cross Browser Support
+- No coding
+ 
 Sample Introductory Video
 -------------------------
-Here is a video that shows an example of gwen web automating over the flood io challenge.  
-It shows loading features and meta in batch, and later shows highlighting the browser
-interactively.
+Here is a video that shows an example of gwen web automating over the [flood.io scripting challenge] (https://challengers.flood.io/start)
+The video first shows batch mode (-b option) where it runs a command, parsing in a report 
+location, and a directory (containing both a feature file and meta file).  Once triggered, 
+the tests are executed in sequential order on a local chrome browser with a html report generated
+at the end.  
+
+Next the video shows gwen running in an interactive mode, enabling users to test locators 
+by highlighting the elements in the browser as they type.
 
 [![gwen web interactive demo](http://img.youtube.com/vi/ILgFtp4OrUI/0.jpg)](https://www.youtube.com/watch?v=ILgFtp4OrUI)
 
@@ -32,6 +46,7 @@ interactively.
 Cheat Sheet
 ----------------
 Please see our [cheat sheet](doc/CHEATSHEET.md) for a list of commands and sample dsl statements
+
 
 
 
