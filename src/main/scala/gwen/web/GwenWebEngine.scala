@@ -75,15 +75,8 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
         env.pageScopes.addScope(url)
         env.webDriver.get(url)
         
-      case r"""I am on the "?(.+?)"?$pageScope page""" => 
-        env.pageScopes.current match {
-          case None => 
-            env.pageScopes.addScope(pageScope)
-          case Some(scope) =>
-            if (scope.name != pageScope) {
-              env.pageScopes.addScope(pageScope)
-            }
-        }
+      case r"""I am on the "?(.+?)"?$pageScope page""" =>
+        env.pageScopes.addScope(pageScope)
   
       case r""""?(.+?)"?$element can be located by "?(id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)"?$locator "?(.+?)"?$$$expression""" =>
         env.pageScopes.set(s"$element/locator", locator);
