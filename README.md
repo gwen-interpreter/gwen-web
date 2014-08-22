@@ -51,8 +51,10 @@ Mentions
 --------
 - 2013+,  [Selenium WebDriver](http://docs.seleniumhq.org/docs/03_webdriver.jsp) which gwen web uses
   to interact and control the browsers.
+
 (The following mentions are on the gwen (the core interpreter) page and have been included here as they also 
 played a part in gwen web)
+
 - 2013-2014, [Mick Grigg](http://au.linkedin.com/in/mickgrigg) for 
   involving us in your side project and supporting us in open sourcing this 
   interpreter which we built as part of that. 
