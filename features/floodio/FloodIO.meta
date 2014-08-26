@@ -26,8 +26,6 @@
        Then the url will be "https://challengers.flood.io/start"
         And the Start button can be located by name "commit"
         And I wait 2 seconds when the Start button is clicked
-        And the share the results link can be located by link text "share the results."
-        And the my load test link can be located by link text "MyLoadTest.com"
 
   Scenario: Define step 2 page element locators
        When I am on the step 2 page
@@ -35,14 +33,14 @@
 
  Scenario: Define step 3 page element locators
        When I am on the step 3 page
-       Then the largest value textfield can be located by id "challenger_largest_order"
-        And the largest radio value can be located by javascript return $('.radio:contains("'+Math.max.apply(Math, $('.radio').map(function(i, x) { return parseInt($(x).text()); })) + '")').toArray()[0];
-        And the largest value textfield can be located by id "challenger_largest_order"
+       Then the largest order value field can be located by id "challenger_largest_order"
+        And the largest order value can be located by javascript "return $('.radio:contains(' + Math.max.apply(Math, $.map($('.radio'), function(x) { return parseInt($(x).text()); })) + ')').get(0);"
+        And the largest order value field can be located by id "challenger_largest_order"
         
   Scenario: Define step 5 page element locators
        When I am on the step 5 page
        Then the one time token can be located by css selector ".token"
-        And the one time token textfield can be located by id "challenger_one_time_token"
+        And the one time token field can be located by id "challenger_one_time_token"
         
   Scenario: Completed page element locators
     When I am on the challenge completed page
@@ -50,11 +48,11 @@
      
   @StepDef
   Scenario: I select and enter the largest order value
-      Given I enter the largest radio value in the largest value textfield
-        And I click the largest radio value
+      Given I enter the largest order value in the largest order value field
+        And I click the largest order value
   
   @StepDef
   Scenario: I enter the one time token
       Given I wait for the one time token text
-        And I enter the one time token in the one time token textfield
+        And I enter the one time token in the one time token field
              
