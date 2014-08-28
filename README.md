@@ -42,27 +42,15 @@ by highlighting the elements in the browser as they type.
 
 [![gwen web interactive demo](http://img.youtube.com/vi/ILgFtp4OrUI/0.jpg)](https://www.youtube.com/watch?v=ILgFtp4OrUI)
 
+Getting Started
+---------------
+
+See our [getting started](doc/START.md) user guide for a quick introduction 
+and tutorial.
 
 Cheat Sheet
 ----------------
 Please see our [cheat sheet](doc/CHEATSHEET.md) for a list of commands and sample dsl statements
-
-Mentions
---------
-- 2013+,  [Selenium WebDriver](http://docs.seleniumhq.org/docs/03_webdriver.jsp) which gwen web uses
-  to interact and control the browsers.
-
-(The following mentions are on the gwen (the core interpreter) page and have been included here as they also 
-played a part in gwen web)
-
-- 2013-2014, [Mick Grigg](http://au.linkedin.com/in/mickgrigg) for 
-  involving us in your side project and supporting us in open sourcing this 
-  interpreter which we built as part of that. 
-- 2014, [Arun Datta](http://au.linkedin.com/in/arundatta) for reviewing our 
-  pre-release documentation and providing valuable feedback.
-
-Thanks again also to Nascent Creative for the awesome logo.
-
 
 
 Core Requirements
@@ -93,14 +81,6 @@ Perform the following to build and install gwen-web:
    - This will create a project folder named _gwen-web-[version]_ in that 
      location
 6. You are now ready to start using gwen-web!
-
-Getting Started
----------------
-
-See our [getting started](doc/START.md) user guide for a quick introduction 
-and tutorial.
-
-***
 
 Mail Group
 ----------
@@ -135,3 +115,26 @@ See also: [LICENSE](LICENSE)
 
 This project has dependencies on other open source projects, all of which are 
 listed in the [NOTICE](NOTICE) file.
+
+Mentions
+--------
+- 2013+,  [Selenium WebDriver](http://docs.seleniumhq.org/docs/03_webdriver.jsp) which gwen web uses
+  to interact and control the browsers.
+
+(The following mentions are on the gwen (the core interpreter) page and have been included here as they also 
+played a part in gwen web)
+
+- 2013-2014, [Mick Grigg](http://au.linkedin.com/in/mickgrigg) for 
+  involving us in your side project and supporting us in open sourcing this 
+  interpreter which we built as part of that. 
+- 2014, [Arun Datta](http://au.linkedin.com/in/arundatta) for reviewing our 
+  pre-release documentation and providing valuable feedback.
+
+Thanks again also to Nascent Creative for the awesome logo.
+
+Blogs and Articles
+------------------
+
+- [Page Objects Begone](http://warpedjavaguy.wordpress.com/2014/08/27/page-objects-begone/)
+
+***
