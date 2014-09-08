@@ -41,6 +41,7 @@ import org.apache.http.util.ExceptionUtils
 import java.io.PrintWriter
 import java.io.StringWriter
 import org.openqa.selenium.TimeoutException
+import gwen.eval.DataScopes
 
 /**
  * Defines the web environment context. This includes the configured selenium web
@@ -48,7 +49,7 @@ import org.openqa.selenium.TimeoutException
  *
  *  @author Branko Juric
  */
-class WebEnvContext(val driverName: String) extends EnvContext {
+class WebEnvContext(val driverName: String, val dataScopes: DataScopes) extends EnvContext(dataScopes) {
 
   /**
    * Provides access to the user scopes.

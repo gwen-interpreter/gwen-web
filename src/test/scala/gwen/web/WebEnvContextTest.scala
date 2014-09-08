@@ -17,7 +17,6 @@
 package gwen.web
 
 import java.util.concurrent.TimeUnit
-
 import org.mockito.Matchers.anyLong
 import org.mockito.Matchers.same
 import org.mockito.Mockito.never
@@ -28,6 +27,7 @@ import org.openqa.selenium.WebDriver
 import org.scalatest.FlatSpec
 import org.scalatest.matchers.ShouldMatchers
 import org.scalatest.mock.MockitoSugar
+import gwen.eval.DataScopes
 
 class WebEnvContextTest extends FlatSpec with ShouldMatchers with MockitoSugar {
   
@@ -109,7 +109,7 @@ class WebEnvContextTest extends FlatSpec with ShouldMatchers with MockitoSugar {
     verify(mockWebDriver, times(1)).quit()
   }
   
-  def newEnv = new WebEnvContext("Firefox") {
+  def newEnv = new WebEnvContext("Firefox", new DataScopes()) {
     override private[web] def loadWebDriver(driverName: String): WebDriver = mockWebDriver
   }
   

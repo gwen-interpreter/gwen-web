@@ -25,6 +25,7 @@ import org.scalatest.matchers.ShouldMatchers
 import org.scalatest.mock.MockitoSugar
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.FlatSpec
+import gwen.eval.DataScopes
 
 class WebElementLocatorTest extends FlatSpec with ShouldMatchers with MockitoSugar with WebElementLocator {
 
@@ -173,7 +174,7 @@ class WebElementLocatorTest extends FlatSpec with ShouldMatchers with MockitoSug
     
   }
   
-  private def newEnv = new WebEnvContext("Firefox") {
+  private def newEnv = new WebEnvContext("Firefox", new DataScopes()) {
     override private[web] def loadWebDriver(driverName: String): WebDriver = mockWebDriver
   }
   

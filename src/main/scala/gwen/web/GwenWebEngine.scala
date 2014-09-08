@@ -19,12 +19,12 @@ package gwen.web
 import org.openqa.selenium.By
 import org.openqa.selenium.WebElement
 import org.openqa.selenium.support.ui.Select
-
 import gwen.Predefs.Kestrel
 import gwen.dsl.Step
 import gwen.eval.EvalEngine
 import gwen.eval.GwenOptions
 import gwen.gwenSetting
+import gwen.eval.DataScopes
 
 
 /**
@@ -40,12 +40,15 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
    * 
    * @param options
    * 			command line options
+   * @param dataScopes
+   * 			initial data scopes
    */
-  override def init(options: GwenOptions) = 
+  override def init(options: GwenOptions, dataScopes: DataScopes) = 
     new WebEnvContext(
       gwenSetting.get("gwen.web.browser") tap { webdriver =>
         logger.info(s"$webdriver web driver configured")
-	  }
+	  },
+	  dataScopes
     )
   
  
