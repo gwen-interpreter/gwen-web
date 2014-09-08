@@ -26,7 +26,7 @@ Key Features
 - Tests can be run in batch mode or interactively
 - Tests can be run sequentially or in parallel
 - Interactive console allows verifying before running
-- [Cross Browser Support](doc/BROWSERS.md)
+- Cross Browser Support
 - No coding
  
 Sample Introductory Video
