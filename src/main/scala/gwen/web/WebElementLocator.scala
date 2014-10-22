@@ -17,11 +17,9 @@
 package gwen.web
 
 import org.openqa.selenium.By
-import org.openqa.selenium.JavascriptExecutor
 import org.openqa.selenium.WebElement
-import org.openqa.selenium.interactions.Actions
 import gwen.Predefs.Kestrel
-import gwen.gwenSetting
+import java.util.ArrayList
 
 /**
  * Locates web elements using the selenium web driver.
@@ -63,14 +61,14 @@ trait WebElementLocator {
         env.pageScopes.getOpt(expressionBinding) match {
             case Some(expression) => 
               locator match {
-                case "id" => getElement(env, By.id(expression))
-                case "name" => getElement(env, By.name(expression))
-                case "tag name" => getElement(env, By.tagName(expression))
-                case "css selector" => getElement(env, By.cssSelector(expression))
-                case "xpath" => getElement(env, By.xpath(expression))
-                case "class name" => getElement(env, By.className(expression))
-                case "link text" => getElement(env, By.linkText(expression))
-                case "partial link text" => getElement(env, By.partialLinkText(expression))
+                case "id" => getElement(env, element, By.id(expression))
+                case "name" => getElement(env, element, By.name(expression))
+                case "tag name" => getElement(env, element, By.tagName(expression))
+                case "css selector" => getElement(env, element, By.cssSelector(expression))
+                case "xpath" => getElement(env, element, By.xpath(expression))
+                case "class name" => getElement(env, element, By.className(expression))
+                case "link text" => getElement(env, element, By.linkText(expression))
+                case "partial link text" => getElement(env, element, By.partialLinkText(expression))
                 case "javascript" => getElementByJavaScript(env, element, s"$expression")
                 case _ => throw new LocatorBindingException(element, s"unsupported locator: ${locator}")
               }
@@ -86,8 +84,8 @@ trait WebElementLocator {
    * @param env the web environment context
    * @param by the by locator
    */
-  private def getElement(env: WebEnvContext, by: By): Option[WebElement] = Option(env.webDriver.findElement(by)) tap {
-    moveToIfNotDisplayed(env, _)
+  private def getElement(env: WebEnvContext, element: String, by: By): Option[WebElement] = Option(env.webDriver.findElement(by)) tap {
+    moveToIfNotDisplayed(env, element, _)
   }
     
   /**
@@ -97,16 +95,26 @@ trait WebElementLocator {
    * @param env the web environment context
    * @param javascipt the javascript expression for returning the element
    */
-  private def getElementByJavaScript(env: WebEnvContext, element: String, javascript: String): Option[WebElement] =
-    (env.webDriver.asInstanceOf[JavascriptExecutor].executeScript(javascript) match {
-      case elem @ _ :: _ => Some(elem.asInstanceOf[WebElement])
-      case elem => Option(elem) match {
-        case Some(elem) => Some(elem.asInstanceOf[WebElement])
-        case None => None
+  private def getElementByJavaScript(env: WebEnvContext, element: String, javascript: String): Option[WebElement] = {
+    var elem: Option[WebElement] = None
+	var isMovedTo = false
+	env.waitUntil(s"Timed out attempting to locate $element") {
+      val result = env.executeScript(s"return $javascript")
+      elem = (result match {
+        case elems: ArrayList[_] => 
+          if (!elems.isEmpty()) Option(elems.get(0).asInstanceOf[WebElement])
+          else None
+        case elem => Option(elem) match {
+          case Some(elem) => Option(elem.asInstanceOf[WebElement])
+          case None => None
+        }
+      }) tap { webElement =>
+        isMovedTo = moveToIfNotDisplayed(env, element, webElement)
       }
-    }) tap {
-      moveToIfNotDisplayed(env, _)
-    }
+	  elem.isDefined && isMovedTo
+	}
+	elem
+  }
   
   /**
    * Physically scrolls to the given web element so it is visible in the browser.
@@ -114,10 +122,27 @@ trait WebElementLocator {
    * @param env the web environment context
    * @param webElement the webElement to scroll to (if not None)
    */
-  private def moveToIfNotDisplayed(env: WebEnvContext, webElement: Option[WebElement]) = webElement foreach { element =>
-      if (!element.isDisplayed()) {
-        env.webDriver.asInstanceOf[JavascriptExecutor].executeScript("arguments[0].scrollIntoView(true);")
+  private def moveToIfNotDisplayed(env: WebEnvContext, element: String, webElement: Option[WebElement]): Boolean = {
+    webElement foreach { elem =>
+      if (!elem.isDisplayed()) {
+        env.waitUntil(s"Timed out attempting to move to $element") {
+          env.executeScript("""
+            var elem = arguments[0]; 
+            if (typeof elem !== 'undefined' && elem != null) { 
+              elem.scrollIntoView(true);
+              return true;
+            } else {
+              return false;
+            }
+          """).asInstanceOf[Boolean]
+        }
       }
+    }
+    webElement map (_.isDisplayed()) getOrElse(false) tap { gotIt =>
+      if (gotIt) {
+        webElement foreach { env.highlight(_) }
+      }
+    }
   }
   
 }

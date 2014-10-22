@@ -26,8 +26,9 @@ import org.scalatest.mock.MockitoSugar
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.FlatSpec
 import gwen.eval.DataScopes
+import org.scalatest.Matchers
 
-class WebElementLocatorTest extends FlatSpec with ShouldMatchers with MockitoSugar with WebElementLocator {
+class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar with WebElementLocator {
 
   val mockWebDriver = mock[FirefoxDriver]
   val mockWebElement = mock[WebElement]

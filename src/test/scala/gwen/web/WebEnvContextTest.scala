@@ -28,8 +28,9 @@ import org.scalatest.FlatSpec
 import org.scalatest.matchers.ShouldMatchers
 import org.scalatest.mock.MockitoSugar
 import gwen.eval.DataScopes
+import org.scalatest.Matchers
 
-class WebEnvContextTest extends FlatSpec with ShouldMatchers with MockitoSugar {
+class WebEnvContextTest extends FlatSpec with Matchers with MockitoSugar {
   
   val mockWebDriver = mock[WebDriver]
   val mockWebDriverOptions = mock[WebDriver.Options]

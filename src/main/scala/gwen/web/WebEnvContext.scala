@@ -73,36 +73,35 @@ class WebEnvContext(val driverName: String, val dataScopes: DataScopes) extends 
       }
     }
   }
-
-  /**
-   * Gets the selenium webdriver.
-   *
-   * @param driverName
-   * 			the name of the driver to get
-   */
-  private[web] def loadWebDriver(driverName: String): WebDriver = 
-    loadWebDriver(driverName, gwenSetting.getOpt("gwen.web.useragent"))
   
   /**
    * Gets the selenium webdriver.
    *
    * @param driverName
    * 			the name of the driver to get
-   * @param userAgent
-   * 			optional user agent to set in header
    */
-  private def loadWebDriver(driverName: String, userAgent: Option[String]): WebDriver = driverName match {
-    case "Firefox" => 
-      userAgent.fold(new FirefoxDriver) { agent =>
-        new FirefoxDriver(new FirefoxProfile() tap { _.setPreference("general.useragent.override", agent) })
-      }
-    case "IE" => new InternetExplorerDriver()
-    case "Chrome" =>
-      userAgent.fold(new ChromeDriver) { agent =>
-        new ChromeDriver(new ChromeOptions() tap { _.addArguments(s"--user-agent=$agent") })
-      }
-    case "Safari" => new SafariDriver
-    case _ => sys.error(s"Unsupported webdriver: $driverName")
+  private[web] def loadWebDriver(driverName: String): WebDriver = {
+    val userAgent = gwenSetting.getOpt("gwen.web.useragent")
+	val authorizePlugins = gwenSetting.getOpt("gwen.authorize.plugins")
+    driverName.toLowerCase() match {
+      case "firefox" => 
+        userAgent.fold(new FirefoxDriver) { agent =>
+          new FirefoxDriver(new FirefoxProfile() tap { _.setPreference("general.useragent.override", agent) })
+        }
+      case "ie" => new InternetExplorerDriver()
+      case "chrome" =>
+        new ChromeDriver(new ChromeOptions() tap { options =>
+	      userAgent foreach { agent => options.addArguments(s"--user-agent=$agent") }
+		  authorizePlugins foreach { authorize => 
+		    if (authorize.toBoolean) {
+		      options.addArguments(s"--always-authorize-plugins") 
+			}
+		  }
+	      options.addArguments("--test-type")
+	    })
+      case "safari" => new SafariDriver
+      case _ => sys.error(s"Unsupported webdriver: $driverName")
+    }
   }
 
   /**
@@ -116,37 +115,62 @@ class WebEnvContext(val driverName: String, val dataScopes: DataScopes) extends 
     }
   }
   
+  def executeScript(javascript: String): Any = 
+    webDriver.asInstanceOf[JavascriptExecutor].executeScript(javascript) tap { result =>
+      logger.debug(s"Evaluating javascript: $javascript")
+    }
+  
   /**
-   * Waits until a given condition is ready.
+   * Waits until a given condition is ready. Errors with given error 
+   * message if times out after "gwen.web.wait.seconds".
    * 
-   * @param timeoutSecs the number of seconds to wait before timing out
-   * @param until the boolean condition to wait for (until true)
+   * @param error the error message to report if condition times out
+   * @param condition the boolean condition to wait for (until true)
    */
-  def wait(timeoutSecs: Int)(until: => Boolean) {
+  def waitUntil(error: String)(condition: => Boolean) {
+    waitUntil(error, gwenSetting.get("gwen.web.wait.seconds").toInt) { condition }
+  }
+  
+  /**
+   * Waits until a given condition is ready for a given number of seconds. 
+   * Errors with given error message if times out.
+   * 
+   * @param error the error message to report if condition times out
+   * @param timeoutSecs the number of seconds to wait before timing out
+   * @param condition the boolean condition to wait for (until true)
+   */
+  def waitUntil(error: String, timeoutSecs: Int)(condition: => Boolean) {
     try {
       new WebDriverWait(webDriver, timeoutSecs).until(
         new ExpectedCondition[Boolean] {
-          override def apply(driver: WebDriver): Boolean = until
+          override def apply(driver: WebDriver): Boolean = condition
         }
       )
     } catch {
-      case timeout: TimeoutException => throw timeout.getCause();
+      case e: TimeoutException => sys.error(error)
     }
   }
   
   /**
    * Highlights (blinks) a Webdriver element.
-    In pure javascript, as suggested by https://github.com/alp82.
+   * In pure javascript, as suggested by https://github.com/alp82.
+   *
+   * @param element
+   * 			the element to highlight
+   * @param msecs
+   * 			the time in milliseconds to keep the highlight active
    */
   def highlight(element: WebElement) {
-    webDriver.asInstanceOf[JavascriptExecutor].executeScript("""
+    val msecs = gwenSetting.getOpt("gwen.web.highlight.msces").getOrElse("200").toLong
+    webDriver.asInstanceOf[JavascriptExecutor].executeScript(s"""
         element = arguments[0];
         original_style = element.getAttribute('style');
-        element.setAttribute('style', original_style + "; background: yellow; border: 2px solid red;");
+        element.setAttribute('style', original_style + "; background: yellow; border: 2px solid gold;");
         setTimeout(function(){
             element.setAttribute('style', original_style);
-        }, 300);
+        }, ${msecs});
     """, element)
+    Thread.sleep(msecs)
   }
   
   /**
