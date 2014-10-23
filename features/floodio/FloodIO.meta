@@ -48,11 +48,11 @@
      
   @StepDef
   Scenario: I select and enter the largest order value
-      Given I enter the largest order value in the largest order value field
+      Given I type the largest order value in the largest order value field
         And I click the largest order value
   
   @StepDef
   Scenario: I enter the one time token
       Given I wait for the one time token text
-        And I enter the one time token in the one time token field
+        And I type the one time token in the one time token field
              

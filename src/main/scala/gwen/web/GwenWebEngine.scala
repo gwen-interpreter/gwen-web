@@ -91,7 +91,7 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
         compare("title", expected, getTitle(env), operator)
         
       case r"""the page title should (be|contain)$operator my (.+?)$$$attribute""" =>
-        doFeatureScopeAction(attribute, env) { expected => 
+        env.featureScopes.get(attribute) tap { expected => 
           compare("title", expected, getTitle(env), operator) 
         }
         
@@ -105,7 +105,7 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
         compare(element, expected, getElementText(element, env), operator)
         
       case r"""(.+?)$element text should (be|contain)$operator my (.+?)$$$attribute""" =>
-        doFeatureScopeAction(attribute, env) { expected => 
+        env.featureScopes.get(attribute) tap { expected => 
           compare(element, expected, getElementText(element, env), operator) 
         }
         
@@ -123,9 +123,6 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
           case "disabled" => assert(!webElement.isEnabled(), s"$element should be $state")
         }
         bindAndWait(element, state, "true", env)
-        
-      case r"""my role is "(.+?)"$role""" => 
-        env.featureScopes.addScope(role)
         
       case r"""my (.+?)$setting setting (?:is|will be) "(.+?)"$$$value""" => 
         sys.props += ((setting, value))
@@ -161,14 +158,14 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
         locate(env, element).sendKeys(Keys.RETURN)
 		bindAndWait(element, "enter", "true", env)
 
-      case r"""I enter "(.+?)"$value in (.+?)$$$element""" =>
-        sendKeys(element, value, env)
+      case r"""I (enter|type)$action "(.+?)"$value in (.+?)$$$element""" =>
+        sendKeys(element, action, value, env)
         
-      case r"""I enter my (.+?)$attribute in (.+?)$$$element""" =>
-        sendKeys(element, env.featureScopes.get(attribute), env)
+      case r"""I (enter|type)$action my (.+?)$attribute in (.+?)$$$element""" =>
+        sendKeys(element, action, env.featureScopes.get(attribute), env)
         
-      case r"""I enter (.+?)$source in (.+?)$$$target""" =>
-        sendKeys(target, getElementText(source, env), env)
+      case r"""I (enter|type)$action (.+?)$source in (.+?)$$$target""" =>
+        sendKeys(target, action, getElementText(source, env), env)
 
       case r"""I select "(.+?)"$value in (.+?)$$$element""" =>
         env.waitUntil(s"Timed out attempting to select '$value' in $element") {
@@ -177,7 +174,7 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
 		}
         
       case r"""I select my (.+?)$attribute in (.+?)$$$element""" =>
-	    doFeatureScopeAction(attribute, env) { value => 
+	    env.featureScopes.get(attribute) tap { value => 
 		  env.waitUntil(s"Timed out attempting to select '$value' in $element") {
 		    selectByVisibleText(element, value, env)
 			true
@@ -197,11 +194,11 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
           true
         }
         
-      case r"""I wait ([0-9]+?)$duration second(?:s?) when (.+?)$element is (click|submit(?:t)|tick|check|untick|uncheck|select|enter)${action}ed""" =>
-        env.pageScopes.set(s"$element/$action/wait", duration)
+      case r"""I wait ([0-9]+?)$duration second(?:s?) when (.+?)$element is (clicked|submitted|checked|unchecked|selected|typed|entered)$$$event""" =>
+        env.pageScopes.set(s"$element/${eventToAction(event)}/wait", duration)
         
-      case r"""I wait until "(.+?)"$condition when (.+?)$element is (click|submit(?:t)|tick|check|untick|uncheck|select|enter)${action}ed""" =>
-        env.pageScopes.set(s"$element/$action/condition", condition)
+      case r"""I wait until "(.+?)"$condition when (.+?)$element is (clicked|submitted|checked|unchecked|selected|typed|entered)$$$event""" =>
+        env.pageScopes.set(s"$element/${eventToAction(event)}/condition", condition)
         
       case r"""I wait ([0-9]+?)$duration second(?:s?)""" =>
         Thread.sleep(duration.toLong * 1000)
@@ -218,14 +215,6 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
     case "be" => assert(expected.equals(actual), s"Expected $element '$expected' but was '$actual'")
     case "contain" => assert(actual.contains(expected), s"$element '$actual' expected to contain '$expected' but does not")
     case _ => sys.error(s"Unsupported operator: ${operator}")
-  }
-  
-  private def doFeatureScopeAction(attribute: String, env: WebEnvContext)(action: (String) => Unit) {
-    action(env.featureScopes.get(attribute))
-  }
-  
-  private def doPageScopeAction(attribute: String, env: WebEnvContext)(action: (String) => Unit) {
-    action(env.pageScopes.get(attribute))
   }
   
   private def getTitle(env: WebEnvContext): String = env.webDriver.getTitle() tap { title =>
@@ -245,10 +234,14 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
     }
   }
   
-  private def sendKeys(element: String, value: String, env: WebEnvContext) {
+  private def sendKeys(element: String, action: String, value: String, env: WebEnvContext) {
     val webElement = locate(env, element)
     webElement.sendKeys(value)
-    bindAndWait(element, "text", value, env)
+    bindAndWait(element, "type", value, env)
+    if (action == "enter") {
+      webElement.sendKeys(Keys.RETURN)
+	  bindAndWait(element, "enter", "true", env)
+    }
   }
   
   private def selectByVisibleText(element: String, value: String, env: WebEnvContext) {
@@ -277,6 +270,16 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
 	    }
 	  }
     }
+  }
+  
+  private def eventToAction(event: String): String = event match {
+    case "clicked"   => "click"
+    case "submitted" => "submit" 
+    case "checked"   => "check" 
+    case "unchecked" => "uncheck" 
+    case "selected"  => "selected" 
+    case "typed"     => "type" 
+    case "entered"   => "enter"
   }
   
 }

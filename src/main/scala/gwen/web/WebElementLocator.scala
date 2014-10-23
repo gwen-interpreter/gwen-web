@@ -20,6 +20,11 @@ import org.openqa.selenium.By
 import org.openqa.selenium.WebElement
 import gwen.Predefs.Kestrel
 import java.util.ArrayList
+import org.openqa.selenium.TimeoutException
+import scala.util.Failure
+import scala.util.Success
+import scala.util.Try
+
 
 /**
  * Locates web elements using the selenium web driver.
@@ -84,8 +89,8 @@ trait WebElementLocator {
    * @param env the web environment context
    * @param by the by locator
    */
-  private def getElement(env: WebEnvContext, element: String, by: By): Option[WebElement] = Option(env.webDriver.findElement(by)) tap {
-    moveToIfNotDisplayed(env, element, _)
+  private def getElement(env: WebEnvContext, element: String, by: By): Option[WebElement] = Option(env.webDriver.findElement(by)) flatMap {
+    moveTo(env, element, _)
   }
     
   /**
@@ -96,24 +101,28 @@ trait WebElementLocator {
    * @param javascipt the javascript expression for returning the element
    */
   private def getElementByJavaScript(env: WebEnvContext, element: String, javascript: String): Option[WebElement] = {
-    var elem: Option[WebElement] = None
-	var isMovedTo = false
-	env.waitUntil(s"Timed out attempting to locate $element") {
-      val result = env.executeScript(s"return $javascript")
-      elem = (result match {
-        case elems: ArrayList[_] => 
-          if (!elems.isEmpty()) Option(elems.get(0).asInstanceOf[WebElement])
-          else None
-        case elem => Option(elem) match {
-          case Some(elem) => Option(elem.asInstanceOf[WebElement])
-          case None => None
-        }
-      }) tap { webElement =>
-        isMovedTo = moveToIfNotDisplayed(env, element, webElement)
+    Try {
+      try {
+    	var elem: Option[WebElement] = None
+  	    env.waitUntil(s"Timed out attempting to locate $element") {
+          elem = (env.executeScript(s"return $javascript") match {
+            case elems: ArrayList[_] => 
+              if (!elems.isEmpty()) Option(elems.get(0).asInstanceOf[WebElement])
+              else None
+            case elem => Option(elem) match {
+              case Some(elem) => Option(elem.asInstanceOf[WebElement])
+              case None => None
+            }
+          }) flatMap { webElement =>
+            moveTo(env, element, webElement)
+          }
+          elem.isDefined
+	    }
+  	    elem
+      } catch {
+        case e: TimeoutException => None
       }
-	  elem.isDefined && isMovedTo
-	}
-	elem
+	} get
   }
   
   /**
@@ -122,26 +131,25 @@ trait WebElementLocator {
    * @param env the web environment context
    * @param webElement the webElement to scroll to (if not None)
    */
-  private def moveToIfNotDisplayed(env: WebEnvContext, element: String, webElement: Option[WebElement]): Boolean = {
-    webElement foreach { elem =>
-      if (!elem.isDisplayed()) {
-        env.waitUntil(s"Timed out attempting to move to $element") {
-          env.executeScript("""
-            var elem = arguments[0]; 
-            if (typeof elem !== 'undefined' && elem != null) { 
-              elem.scrollIntoView(true);
-              return true;
-            } else {
-              return false;
-            }
-          """).asInstanceOf[Boolean]
-        }
+  private def moveTo(env: WebEnvContext, element: String, webElement: WebElement): Option[WebElement] = {
+    if (!webElement.isDisplayed()) {
+      env.waitUntil(s"Timed out attempting to move to $element") {
+        env.executeScript("""
+          var elem = arguments[0]; 
+          if (typeof elem !== 'undefined' && elem != null) { 
+            elem.scrollIntoView(true);
+            return true;
+          } else {
+            return false;
+          }
+        """).asInstanceOf[Boolean]
       }
     }
-    webElement map (_.isDisplayed()) getOrElse(false) tap { gotIt =>
-      if (gotIt) {
-        webElement foreach { env.highlight(_) }
-      }
+    if (webElement.isDisplayed()) {
+      env.highlight(webElement)
+      Some(webElement)
+    } else {
+      None
     }
   }
   
