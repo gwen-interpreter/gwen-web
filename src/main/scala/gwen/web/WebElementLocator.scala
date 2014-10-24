@@ -104,7 +104,7 @@ trait WebElementLocator {
     Try {
       try {
     	var elem: Option[WebElement] = None
-  	    env.waitUntil(s"Timed out attempting to locate $element") {
+  	    env.waitUntil(s"locating $element") {
           elem = (env.executeScript(s"return $javascript") match {
             case elems: ArrayList[_] => 
               if (!elems.isEmpty()) Option(elems.get(0).asInstanceOf[WebElement])
@@ -133,7 +133,7 @@ trait WebElementLocator {
    */
   private def moveTo(env: WebEnvContext, element: String, webElement: WebElement): Option[WebElement] = {
     if (!webElement.isDisplayed()) {
-      env.waitUntil(s"Timed out attempting to move to $element") {
+      env.waitUntil(s"moving to $element") {
         env.executeScript("""
           var elem = arguments[0]; 
           if (typeof elem !== 'undefined' && elem != null) { 

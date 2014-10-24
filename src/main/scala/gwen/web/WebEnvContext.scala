@@ -121,25 +121,25 @@ class WebEnvContext(val driverName: String, val dataScopes: DataScopes) extends 
     }
   
   /**
-   * Waits until a given condition is ready. Errors with given error 
-   * message if times out after "gwen.web.wait.seconds".
+   * Waits until a given condition is ready. Errors if times out 
+   * after "gwen.web.wait.seconds".
    * 
-   * @param error the error message to report if condition times out
+   * @param reason the reason for waiting (used to report timeout error)
    * @param condition the boolean condition to wait for (until true)
    */
-  def waitUntil(error: String)(condition: => Boolean) {
-    waitUntil(error, gwenSetting.get("gwen.web.wait.seconds").toInt) { condition }
+  def waitUntil(reason: String)(condition: => Boolean) {
+    waitUntil(reason, gwenSetting.get("gwen.web.wait.seconds").toInt) { condition }
   }
   
   /**
    * Waits until a given condition is ready for a given number of seconds. 
-   * Errors with given error message if times out.
+   * Errors on given timeout out seconds.
    * 
-   * @param error the error message to report if condition times out
+   * @param reason the reason for waiting (used to report timeout error)
    * @param timeoutSecs the number of seconds to wait before timing out
    * @param condition the boolean condition to wait for (until true)
    */
-  def waitUntil(error: String, timeoutSecs: Int)(condition: => Boolean) {
+  def waitUntil(reason: String, timeoutSecs: Int)(condition: => Boolean) {
     try {
       new WebDriverWait(webDriver, timeoutSecs).until(
         new ExpectedCondition[Boolean] {
@@ -147,7 +147,7 @@ class WebEnvContext(val driverName: String, val dataScopes: DataScopes) extends 
         }
       )
     } catch {
-      case e: TimeoutException => throw new TimeoutException(error, e)
+      case e: TimeoutException => throw new TimeoutException(s"Timed out $reason", e)
     }
   }
   
@@ -168,9 +168,8 @@ class WebEnvContext(val driverName: String, val dataScopes: DataScopes) extends 
         element.setAttribute('style', original_style + "; background: yellow; border: 2px solid gold;");
         setTimeout(function(){
             element.setAttribute('style', original_style);
-        }, ${msecs});
-    """, element)
-    Thread.sleep(msecs)
+        }, ${msecs});""", element)
+    Thread.sleep(msecs);
   }
   
   /**

@@ -135,22 +135,22 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
         
       //search for and use the element's text to determine wait
       case r"""I wait for (.+?)$element text for (.+?)$seconds second(?:s?)""" =>
-        env.waitUntil(s"Timed out waiting for $element text after $seconds second(s)", seconds.toInt) {
+        env.waitUntil(s"waiting for $element text after $seconds second(s)", seconds.toInt) {
           getElementText(element, env).length() > 0
         } 
         
       case r"""I wait for (.+?)$element text""" =>
-        env.waitUntil(s"Timed out waiting for $element text") {
+        env.waitUntil(s"waiting for $element text") {
           getElementText(element, env).length() > 0
         }
         
       case r"""I wait for (.+?)$element for (.+?)$seconds second(?:s?)""" =>
-        env.waitUntil(s"Timed out waiting for $element after $seconds second(s)", seconds.toInt) {
+        env.waitUntil(s"waiting for $element after $seconds second(s)", seconds.toInt) {
           locateOpt(env, element).isDefined
         }
         
       case r"""I wait for (.+?)$$$element""" =>
-       env.waitUntil(s"Timed out waiting for $element") {
+       env.waitUntil(s"waiting for $element") {
          locateOpt(env, element).isDefined
        }
        
@@ -168,21 +168,21 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
         sendKeys(target, action, getElementText(source, env), env)
 
       case r"""I select "(.+?)"$value in (.+?)$$$element""" =>
-        env.waitUntil(s"Timed out attempting to select '$value' in $element") {
+        env.waitUntil(s"selecting '$value' in $element") {
           selectByVisibleText(element, value, env)
 		  true
 		}
         
       case r"""I select my (.+?)$attribute in (.+?)$$$element""" =>
 	    env.featureScopes.get(attribute) tap { value => 
-		  env.waitUntil(s"Timed out attempting to select '$value' in $element") {
+		  env.waitUntil(s"selecting '$value' in $element") {
 		    selectByVisibleText(element, value, env)
 			true
 		  }
         }
         
       case r"""I (click|submit|check|uncheck)$action (.+?)$$$element""" =>
-        env.waitUntil(s"Timed out attempting to $action $element") {
+        env.waitUntil(s"trying to $action $element") {
           val webElement = locate(env, element)
           action match {
             case "click" => webElement.click
@@ -262,7 +262,7 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
 	// wait for javascript post condition if one is configured for this action
 	env.pageScopes.getOpt(s"$element/$action/condition") foreach { javascript =>
 	  logger.info(s"Waiting for ${javascript} to return true..")
-	  env.waitUntil(s"Timed out waiting for $element post-$action condition to be satisifed") {
+	  env.waitUntil(s"waiting for $element post-$action condition to be satisifed") {
 	    env.executeScript(s"return $javascript").asInstanceOf[Boolean] tap { satisfied =>
 	      if (satisfied) {
 	        Thread.sleep(gwenSetting.getOpt("gwen.web.animations.delay.msecs").getOrElse("200").toLong)
