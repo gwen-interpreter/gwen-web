@@ -89,7 +89,7 @@ trait WebElementLocator {
    * @param env the web environment context
    * @param by the by locator
    */
-  private def getElement(env: WebEnvContext, element: String, by: By): Option[WebElement] = Option(env.webDriver.findElement(by)) flatMap {
+  private def getElement(env: WebEnvContext, element: String, by: By): Option[WebElement] = Option(env.webDriver.findElement(by)) map {
     moveTo(env, element, _)
   }
     
@@ -113,7 +113,7 @@ trait WebElementLocator {
               case Some(elem) => Option(elem.asInstanceOf[WebElement])
               case None => None
             }
-          }) flatMap { webElement =>
+          }) map { webElement =>
             moveTo(env, element, webElement)
           }
           elem.isDefined
@@ -131,7 +131,7 @@ trait WebElementLocator {
    * @param env the web environment context
    * @param webElement the webElement to scroll to (if not None)
    */
-  private def moveTo(env: WebEnvContext, element: String, webElement: WebElement): Option[WebElement] = {
+  private def moveTo(env: WebEnvContext, element: String, webElement: WebElement): WebElement = {
     if (!webElement.isDisplayed()) {
       env.waitUntil(s"moving to $element") {
         env.executeScript("""
@@ -145,12 +145,7 @@ trait WebElementLocator {
         """).asInstanceOf[Boolean]
       }
     }
-    if (webElement.isDisplayed()) {
-      env.highlight(webElement)
-      Some(webElement)
-    } else {
-      None
-    }
+    webElement tap { env.highlight(_) } 
   }
   
 }
