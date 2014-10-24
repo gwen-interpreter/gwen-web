@@ -161,7 +161,7 @@ class WebEnvContext(val driverName: String, val dataScopes: DataScopes) extends 
    * 			the time in milliseconds to keep the highlight active
    */
   def highlight(element: WebElement) {
-    val msecs = gwenSetting.getOpt("gwen.web.highlight.msces").getOrElse("200").toLong
+    val msecs = gwenSetting.getOpt("gwen.web.throttle.msecs").getOrElse("200").toLong
     webDriver.asInstanceOf[JavascriptExecutor].executeScript(s"""
         element = arguments[0];
         original_style = element.getAttribute('style');

@@ -265,7 +265,7 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
 	  env.waitUntil(s"waiting for $element post-$action condition to be satisifed") {
 	    env.executeScript(s"return $javascript").asInstanceOf[Boolean] tap { satisfied =>
 	      if (satisfied) {
-	        Thread.sleep(gwenSetting.getOpt("gwen.web.animations.delay.msecs").getOrElse("200").toLong)
+	        Thread.sleep(gwenSetting.getOpt("gwen.web.throttle.msecs").getOrElse("200").toLong)
 	      }
 	    }
 	  }
