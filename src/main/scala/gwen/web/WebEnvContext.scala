@@ -164,8 +164,7 @@ class WebEnvContext(val driverName: String, val dataScopes: DataScopes) extends 
       element = arguments[0];
       type = element.getAttribute('type');
       if (('radio' == type || 'checkbox' == type) && element.parentElement.getElementsByTagName('input').length == 1){
-          element = element.parentElement;
-        }
+        element = element.parentElement;
       }
       original_style = element.getAttribute('style');
       element.setAttribute('style', original_style + "; ${style}");
