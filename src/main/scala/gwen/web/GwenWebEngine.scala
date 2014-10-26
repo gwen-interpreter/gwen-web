@@ -16,17 +16,15 @@
 
 package gwen.web
 
-import org.openqa.selenium.By
 import org.openqa.selenium.Keys
-import org.openqa.selenium.WebElement
 import org.openqa.selenium.support.ui.Select
+
 import gwen.Predefs.Kestrel
 import gwen.dsl.Step
 import gwen.eval.DataScopes
 import gwen.eval.EvalEngine
 import gwen.eval.GwenOptions
 import gwen.gwenSetting
-import org.openqa.selenium.TimeoutException
 
 
 /**
@@ -95,16 +93,10 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
           compare("title", expected, getTitle(env), operator) 
         }
         
-      case r"""I switch to (.+?)$element frame by source""" =>
-        env.webDriver.switchTo().frame(env.webDriver.findElement(By.cssSelector("iframe[src='" + element + "']")))
-        
-      case r"""I switch to the default frame""" =>
-        env.webDriver.switchTo().defaultContent()
-
-      case r"""(.+?)$element text should (be|contain)$operator "(.+?)"$$$expected""" =>
+      case r"""(.+?)$element should (be|contain)$operator "(.+?)"$$$expected""" =>
         compare(element, expected, getElementText(element, env), operator)
         
-      case r"""(.+?)$element text should (be|contain)$operator my (.+?)$$$attribute""" =>
+      case r"""(.+?)$element should (be|contain)$operator my (.+?)$$$attribute""" =>
         env.featureScopes.get(attribute) tap { expected => 
           compare(element, expected, getElementText(element, env), operator) 
         }
