@@ -16,14 +16,15 @@
 
 package gwen.web
 
-import org.openqa.selenium.By
-import org.openqa.selenium.WebElement
-import gwen.Predefs.Kestrel
 import java.util.ArrayList
-import org.openqa.selenium.TimeoutException
-import scala.util.Failure
-import scala.util.Success
+
 import scala.util.Try
+
+import org.openqa.selenium.By
+import org.openqa.selenium.TimeoutException
+import org.openqa.selenium.WebElement
+
+import gwen.Predefs.Kestrel
 
 
 /**
