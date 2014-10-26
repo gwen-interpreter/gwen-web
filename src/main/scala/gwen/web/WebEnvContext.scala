@@ -16,10 +16,13 @@
 
 package gwen.web
 
+import java.io.File
 import java.util.concurrent.TimeUnit
+
 import org.openqa.selenium.JavascriptExecutor
 import org.openqa.selenium.OutputType
 import org.openqa.selenium.TakesScreenshot
+import org.openqa.selenium.TimeoutException
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.WebElement
 import org.openqa.selenium.chrome.ChromeDriver
@@ -30,18 +33,12 @@ import org.openqa.selenium.ie.InternetExplorerDriver
 import org.openqa.selenium.safari.SafariDriver
 import org.openqa.selenium.support.ui.ExpectedCondition
 import org.openqa.selenium.support.ui.WebDriverWait
+
 import gwen.Predefs.Kestrel
 import gwen.dsl.Failed
-import gwen.dsl.Step
+import gwen.eval.DataScopes
 import gwen.eval.EnvContext
 import gwen.gwenSetting
-import java.io.File
-import org.apache.commons.io.FileUtils
-import org.apache.http.util.ExceptionUtils
-import java.io.PrintWriter
-import java.io.StringWriter
-import org.openqa.selenium.TimeoutException
-import gwen.eval.DataScopes
 
 /**
  * Defines the web environment context. This includes the configured selenium web
@@ -161,14 +158,20 @@ class WebEnvContext(val driverName: String, val dataScopes: DataScopes) extends 
    * 			the time in milliseconds to keep the highlight active
    */
   def highlight(element: WebElement) {
-    val msecs = gwenSetting.getOpt("gwen.web.throttle.msecs").getOrElse("200").toLong
+	val msecs = gwenSetting.getOpt("gwen.web.throttle.msecs").getOrElse("200").toLong
+    val style = gwenSetting.getOpt("gwen.web.highlight.style").getOrElse("background: yellow; border: 2px solid gold;") 
     webDriver.asInstanceOf[JavascriptExecutor].executeScript(s"""
-        element = arguments[0];
-        original_style = element.getAttribute('style');
-        element.setAttribute('style', original_style + "; background: yellow; border: 2px solid gold;");
-        setTimeout(function(){
-            element.setAttribute('style', original_style);
-        }, ${msecs});""", element)
+      element = arguments[0];
+      type = element.getAttribute('type');
+      if (('radio' == type || 'checkbox' == type) && element.parentElement.getElementsByTagName('input').length == 1){
+          element = element.parentElement;
+        }
+      }
+      original_style = element.getAttribute('style');
+      element.setAttribute('style', original_style + "; ${style}");
+      setTimeout(function(){
+          element.setAttribute('style', original_style);
+      }, ${msecs});""", element)
     Thread.sleep(msecs);
   }
   
