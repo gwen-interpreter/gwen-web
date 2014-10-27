@@ -62,9 +62,6 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
    * 			the step to evaluate
    * @param env
    * 			the web environment context
-   * @return
-   * 			`Try.Success(step)` if the evaluation is successful, or
-   *            `Try.Failure(error)` otherwise
    */
   override def evaluate(step: Step, env: WebEnvContext): Unit = {
     
@@ -85,35 +82,33 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
         env.pageScopes.set(s"$element/locator", locator);
         env.pageScopes.set(s"$element/locator/$locator", expression)
 
-      case r"""the page title should (be|contain)$operator "(.+?)"$$$expected""" =>
-        compare("title", expected, getTitle(env), operator)
+      case r"""the page title should( not)?$negation (be|contain)$operator "(.+?)"$$$expected""" =>
+        compare("title", expected, getTitle(env), operator, Option(negation).isDefined)
         
-      case r"""the page title should (be|contain)$operator my (.+?)$$$attribute""" =>
-        env.featureScopes.get(attribute) tap { expected => 
-          compare("title", expected, getTitle(env), operator) 
-        }
+      case r"""the page title should( not)?$negation (be|contain)$operator my (.+?)$$$attribute""" =>
+        compare("title", env.featureScopes.get(attribute), getTitle(env), operator, Option(negation).isDefined) 
         
-      case r"""(.+?)$element should (be|contain)$operator "(.+?)"$$$expected""" =>
-        compare(element, expected, getElementText(element, env), operator)
+      case r"""(.+?)$element should( not)?$negation (be|contain)$operator "(.+?)"$$$expected""" =>
+        compare(element, expected, getElementText(element, env), operator, Option(negation).isDefined)
         
-      case r"""(.+?)$element should (be|contain)$operator my (.+?)$$$attribute""" =>
-        env.featureScopes.get(attribute) tap { expected => 
-          compare(element, expected, getElementText(element, env), operator) 
-        }
+      case r"""(.+?)$element should( not)?$negation (be|contain)$operator my (.+?)$$$attribute""" =>
+        compare(element, env.featureScopes.get(attribute), getElementText(element, env), operator, Option(negation).isDefined) 
         
       case r"""I capture (.+?)$element text""" =>
         env.featureScopes.set(element, getElementText(element, env))
         
-      case r"""(.+?)$element should be (displayed|hidden|checked|unchecked|enabled|disabled)$$$state""" =>
+      case r"""(.+?)$element should( not)?$negation be (displayed|hidden|checked|unchecked|enabled|disabled)$$$state""" =>
         val webElement = locate(env, element)
-        state match {
-          case "displayed" => assert(webElement.isDisplayed(), s"$element should be $state")
-          case "hidden" => assert(!webElement.isDisplayed(), s"$element should be $state")
-          case "checked" => assert(webElement.isSelected(), s"$element should be $state")
-          case "unchecked" => assert(!webElement.isSelected(), s"$element should be $state")
-          case "enabled" => assert(webElement.isEnabled(), s"$element should be $state")
-          case "disabled" => assert(!webElement.isEnabled(), s"$element should be $state")
+        val result = state match {
+          case "displayed" => webElement.isDisplayed()
+          case "hidden"    => !webElement.isDisplayed()
+          case "checked"   => webElement.isSelected()
+          case "unchecked" => !webElement.isSelected()
+          case "enabled"   => webElement.isEnabled()
+          case "disabled"  => !webElement.isEnabled()
         }
+        if (!Option(negation).isDefined) assert(result,  s"$element should be $state")
+        else assert(!result,  s"$element should not be $state")
         bindAndWait(element, state, "true", env)
         
       case r"""my (.+?)$setting setting (?:is|will be) "(.+?)"$$$value""" => 
@@ -125,7 +120,6 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
       case r"""the url will be "(.+?)"$$$url""" => 
         env.pageScopes.set("navigation/url", url)   
         
-      //search for and use the element's text to determine wait
       case r"""I wait for (.+?)$element text for (.+?)$seconds second(?:s?)""" =>
         env.waitUntil(s"waiting for $element text after $seconds second(s)", seconds.toInt) {
           getElementText(element, env).length() > 0
@@ -203,11 +197,15 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
     }
   }
   
-  private def compare(element: String, expected: String, actual: String, operator: String) = operator match {
-    case "be" => assert(expected.equals(actual), s"Expected $element '$expected' but was '$actual'")
-    case "contain" => assert(actual.contains(expected), s"$element '$actual' expected to contain '$expected' but does not")
-    case _ => sys.error(s"Unsupported operator: ${operator}")
-  }
+  
+  private def compare(element: String, expected: String, actual: String, operator: String, negate: Boolean) = 
+    (operator match {
+      case "be"      => expected.equals(actual)
+      case "contain" => actual.contains(expected)
+    }) tap { result =>
+      if (!negate) assert(result, s"$element '$actual' should $operator '$expected'")
+      else assert(!result, s"$element should not $operator '$expected'")
+    } 
   
   private def getTitle(env: WebEnvContext): String = env.webDriver.getTitle() tap { title =>
     bindAndWait("page", "title", title, env)
