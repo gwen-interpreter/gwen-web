@@ -1,3 +1,5 @@
+![Gwen-web](https://github.com/gwen-interpreter/gwen/blob/master/doc/img/gwen-attractor.png)
+
 gwen-web
 ========
 
