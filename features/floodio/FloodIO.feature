@@ -21,35 +21,35 @@
       
   Scenario: Complete step 1
       Given I navigate to the start page
-       Then the heading text should be "Welcome"
+       Then the heading should be "Welcome"
        When I click the Start button
-       Then the heading text should be "Step 2"
+       Then the heading should be "Step 2"
 
   Scenario: Complete step 2
       Given I am on the step 2 page
        When I select "21" in the how old are you dropdown
         And I click the next button
-       Then the heading text should be "Step 3"
+       Then the heading should be "Step 3"
        
   Scenario: Complete step 3
       Given I am on the step 3 page
        When I select and enter the largest order value
         And I click the next button
-       Then the heading text should be "Step 4"
+       Then the heading should be "Step 4"
    
   Scenario: Complete step 4
       Given I am on the step 4 page
        When I click the next button
-       Then the heading text should be "Step 5"
+       Then the heading should be "Step 5"
 
   Scenario: Complete step 5
       Given I am on the step 5 page
        When I enter the one time token
         And I click the next button
-       Then the heading text should be "You're Done!"
+       Then the heading should be "You're Done!"
 
   @Robot
   Scenario: Verify robot completion
       Given I am on the challenge completed page
-       Then the lead paragraph text should contain "Congratulations, your scripting skills are impressive"
+       Then the lead paragraph should contain "Congratulations, your scripting skills are impressive"
        

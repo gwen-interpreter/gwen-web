@@ -116,14 +116,13 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar wit
   "Attempt to locate existing element by javascript" should "return the element" in {
     
     val locator = "javascript"
-    val locatorValue = "return document.getElementById('username');"
+    val locatorValue = "document.getElementById('username')"
     val env = newEnv
     env.pageScopes.addScope("login").set("username/locator", locator).set(s"username/locator/${locator}", locatorValue)
     
     when(mockWebDriver.manage()).thenReturn(mockWebDriverOptions)
     when(mockWebDriverOptions.timeouts()).thenReturn(mockWebDriverTimeouts)
-    doReturn(true).when(mockWebDriver).executeScript("return document.readyState")
-    doReturn(mockWebElement).when(mockWebDriver).executeScript(locatorValue)
+    doReturn(mockWebElement).when(mockWebDriver).executeScript(s"return $locatorValue")
     when(mockWebElement.isDisplayed()).thenReturn(true);
     
     locate(env, "username") should be (mockWebElement)
@@ -135,7 +134,7 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar wit
       	fail("Excpected Some(webElement) but got None")
     }
     
-    verify(mockWebDriver, times(2)).executeScript(locatorValue)
+    verify(mockWebDriver, times(2)).executeScript(s"return $locatorValue")
 	
   }
   

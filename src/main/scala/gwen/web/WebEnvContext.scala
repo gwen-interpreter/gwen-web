@@ -112,8 +112,8 @@ class WebEnvContext(val driverName: String, val dataScopes: DataScopes) extends 
     }
   }
   
-  def executeScript(javascript: String): Any = 
-    webDriver.asInstanceOf[JavascriptExecutor].executeScript(javascript) tap { result =>
+  def executeScript(javascript: String, params: Any*): Any = 
+    webDriver.asInstanceOf[JavascriptExecutor].executeScript(javascript, params.map(_.asInstanceOf[AnyRef]) : _*) tap { result =>
       logger.debug(s"Evaluating javascript: $javascript")
     }
   
@@ -160,17 +160,7 @@ class WebEnvContext(val driverName: String, val dataScopes: DataScopes) extends 
   def highlight(element: WebElement) {
 	val msecs = gwenSetting.getOpt("gwen.web.throttle.msecs").getOrElse("200").toLong
     val style = gwenSetting.getOpt("gwen.web.highlight.style").getOrElse("background: yellow; border: 2px solid gold;") 
-    webDriver.asInstanceOf[JavascriptExecutor].executeScript(s"""
-      element = arguments[0];
-      type = element.getAttribute('type');
-      if (('radio' == type || 'checkbox' == type) && element.parentElement.getElementsByTagName('input').length == 1){
-        element = element.parentElement;
-      }
-      original_style = element.getAttribute('style');
-      element.setAttribute('style', original_style + "; ${style}");
-      setTimeout(function(){
-          element.setAttribute('style', original_style);
-      }, ${msecs});""", element)
+    executeScript(s"element = arguments[0]; type = element.getAttribute('type'); if (('radio' == type || 'checkbox' == type) && element.parentElement.getElementsByTagName('input').length == 1) { element = element.parentElement; } original_style = element.getAttribute('style'); element.setAttribute('style', original_style + '; ${style}'); setTimeout(function() { element.setAttribute('style', original_style); }, ${msecs});", element)
     Thread.sleep(msecs);
   }
   
