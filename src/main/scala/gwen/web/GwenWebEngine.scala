@@ -68,7 +68,7 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
     step.expression match {
     
       case r"""I navigate to the (.+?)$pageScope page""" =>
-        env.webDriver.get(env.pageScopes.getIn(pageScope, "navigation/url"))
+        env.webDriver.get(env.pageScopes.getIn(pageScope, "url"))
         env.pageScopes.addScope(pageScope)
         
       case r"""I navigate to "(.+?)"$$$url""" =>
@@ -85,16 +85,16 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
       case r"""the page title should( not)?$negation (be|contain)$operator "(.+?)"$$$expected""" =>
         compare("title", expected, getTitle(env), operator, Option(negation).isDefined)
         
-      case r"""the page title should( not)?$negation (be|contain)$operator my (.+?)$$$attribute""" =>
+      case r"""the page title should( not)?$negation (be|contain)$operator (.+?)$$$attribute""" =>
         compare("title", env.featureScopes.get(attribute), getTitle(env), operator, Option(negation).isDefined) 
         
       case r"""(.+?)$element should( not)?$negation (be|contain)$operator "(.+?)"$$$expected""" =>
         compare(element, expected, getElementText(element, env), operator, Option(negation).isDefined)
         
-      case r"""(.+?)$element should( not)?$negation (be|contain)$operator my (.+?)$$$attribute""" =>
+      case r"""(.+?)$element should( not)?$negation (be|contain)$operator (.+?)$$$attribute""" =>
         compare(element, env.featureScopes.get(attribute), getElementText(element, env), operator, Option(negation).isDefined) 
         
-      case r"""I capture (.+?)$element text""" =>
+      case r"""I capture (.+?)$element""" =>
         env.featureScopes.set(element, getElementText(element, env))
         
       case r"""(.+?)$element should( not)?$negation be (displayed|hidden|checked|unchecked|enabled|disabled)$$$state""" =>
@@ -111,14 +111,14 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
         else assert(!result,  s"$element should not be $state")
         bindAndWait(element, state, "true", env)
         
+      case r"""the url will be "(.+?)"$$$url""" => 
+        env.pageScopes.set("url", url)   
+        
       case r"""my (.+?)$setting setting (?:is|will be) "(.+?)"$$$value""" => 
         sys.props += ((setting, value))
         
-      case r"""my (.+?)$attribute (?:is|will be) "(.+?)"$$$value""" => 
+      case r"""(.+?)$attribute (?:is|will be) "(.+?)"$$$value""" => 
         env.featureScopes.set(attribute, value)
-        
-      case r"""the url will be "(.+?)"$$$url""" => 
-        env.pageScopes.set("navigation/url", url)   
         
       case r"""I wait for (.+?)$element text for (.+?)$seconds second(?:s?)""" =>
         env.waitUntil(s"waiting for $element text after $seconds second(s)", seconds.toInt) {
@@ -147,19 +147,16 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
       case r"""I (enter|type)$action "(.+?)"$value in (.+?)$$$element""" =>
         sendKeys(element, action, value, env)
         
-      case r"""I (enter|type)$action my (.+?)$attribute in (.+?)$$$element""" =>
+      case r"""I (enter|type)$action (.+?)$attribute in (.+?)$$$element""" =>
         sendKeys(element, action, env.featureScopes.get(attribute), env)
         
-      case r"""I (enter|type)$action (.+?)$source in (.+?)$$$target""" =>
-        sendKeys(target, action, getElementText(source, env), env)
-
       case r"""I select "(.+?)"$value in (.+?)$$$element""" =>
         env.waitUntil(s"selecting '$value' in $element") {
           selectByVisibleText(element, value, env)
 		  true
 		}
         
-      case r"""I select my (.+?)$attribute in (.+?)$$$element""" =>
+      case r"""I select (.+?)$attribute in (.+?)$$$element""" =>
 	    env.featureScopes.get(attribute) tap { value => 
 		  env.waitUntil(s"selecting '$value' in $element") {
 		    selectByVisibleText(element, value, env)
@@ -185,6 +182,11 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
         
       case r"""I wait until "(.+?)"$condition when (.+?)$element is (clicked|submitted|checked|unchecked|selected|typed|entered)$$$event""" =>
         env.pageScopes.set(s"$element/${eventToAction(event)}/condition", condition)
+        
+      case r"""I wait until "(.+?)"$$$condition""" =>
+        env.waitUntil(s"waiting for condition '$condition' to be satisifed") {
+	      env.executeScript(s"return $condition").asInstanceOf[Boolean]
+	    }
         
       case r"""I wait ([0-9]+?)$duration second(?:s?)""" =>
         Thread.sleep(duration.toLong * 1000)
