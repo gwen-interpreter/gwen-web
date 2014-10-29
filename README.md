@@ -3,6 +3,8 @@
 gwen-web
 ========
 
+> A gwen engine for web automation.
+
 Introduction
 ------------
 Gwen web is an engine which allows teams to automate web browsers using 
@@ -109,10 +111,12 @@ Copyright 2014 Brady Wood, Branko Juric
 This software is open sourced under the 
 [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt).
 
-See also: [LICENSE](LICENSE)
+See also: [LICENSE](LICENSE).
 
 This project has dependencies on other open source projects, all of which are 
 listed in the [NOTICE](NOTICE) file.
+
+Open sourced 28 June 2014 03:27 pm AEST
 
 Mentions
 --------
