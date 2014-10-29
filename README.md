@@ -18,8 +18,8 @@ Finally gwen web will create a summary report detailing the status of each
 test (passed and failed), the time taken to execute each step, screenshots 
 on failures, current environment variables and meta information.
 
-Gwen web is the first of many engines that has been powered by the 
-[gwen](https://github.com/gwen-interpreter/gwen) interpreter
+Gwen web is the first engine to be powered by the 
+[gwen-interpreter](https://github.com/gwen-interpreter/gwen).
 
 
 Key Features
