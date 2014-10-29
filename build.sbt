@@ -1,3 +1,4 @@
+import com.typesafe.sbt.packager.archetypes._
 
 name := "gwen-web"
 
@@ -37,6 +38,8 @@ libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.1" % "test"
 
 libraryDependencies += "org.mockito" % "mockito-all" % "1.9.5" % "test"
 
+libraryDependencies += "com.google.code.findbugs" % "jsr305" % "2.0.1" % "compile" 
+
 libraryDependencies += "org.seleniumhq.selenium" % "selenium-java" % "2.42.2" excludeAll(
   ExclusionRule(organization = "org.seleniumhq.selenium", name = "selenium-htmlunit-driver"),
   ExclusionRule(organization = "net.java.dev.jna", name = "jna"),
@@ -47,12 +50,24 @@ libraryDependencies += "net.java.dev.jna" % "jna" % "4.1.0"
 
 libraryDependencies += "net.java.dev.jna" % "jna-platform" % "4.1.0"
 
-packageArchetype.java_application
-
 mappings in (Compile, packageBin) ++= Seq(
   file("LICENSE") -> "LICENSE",
   file("NOTICE") -> "NOTICE"
 )
+
+packageArchetype.java_application
+
+packagerSettings
+
+JavaAppPackaging.settings
+
+deploymentSettings
+
+publish <<= publish.dependsOn(publish in Universal)
+
+publishLocal <<= publishLocal.dependsOn(publishLocal in Universal)
+
+name in Universal := name.value + "_" + scalaBinaryVersion.value 
 
 mappings in Universal += file("LICENSE") -> "LICENSE" 
 
