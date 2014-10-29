@@ -29,20 +29,7 @@ Key Features
 - Tests can be run sequentially or in parallel
 - Interactive console allows verifying before running
 - Cross Browser Support
-- No coding
- 
-Sample Introductory Video
--------------------------
-Here is a video that shows an example of gwen web automating over the [flood.io scripting challenge] (https://challengers.flood.io/start)
-The video first shows batch mode (-b option) where it runs a command, parsing in a report 
-location, and a directory (containing both a feature file and meta file).  Once triggered, 
-the tests are executed in sequential order on a local chrome browser with a html report generated
-at the end.  
-
-Next the video shows gwen running in an interactive mode, enabling users to test locators 
-by highlighting the elements in the browser as they type.
-
-[![gwen web interactive demo](http://img.youtube.com/vi/ILgFtp4OrUI/0.jpg)](https://www.youtube.com/watch?v=ILgFtp4OrUI)
+- No development
 
 Getting Started
 ---------------
