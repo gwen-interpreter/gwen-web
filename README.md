@@ -1,12 +1,8 @@
 ![Gwen-web](https://github.com/gwen-interpreter/gwen/blob/master/doc/img/gwen-attractor.png)
 
-gwen-web
-========
+The gwen-web Engine
+===================
 
-> A gwen engine for web automation.
-
-Introduction
-------------
 Gwen web is an engine which allows teams to automate web browsers using 
 language instead of code.  It aims to bring an interactive capability to
 automation testing by providing users with an ability to verify commands 
