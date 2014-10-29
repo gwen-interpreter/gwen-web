@@ -30,27 +30,24 @@ Key Features
 - Interactive console allows verifying before running
 - Cross Browser Support
 - No development
-
-Getting Started
----------------
-
-See our [getting started](doc/START.md) user guide for a quick introduction 
-and tutorial.
-
-Cheat Sheet
-----------------
-Please see our [cheat sheet](doc/CHEATSHEET.md) for a list of commands and sample dsl statements
-
-
+ 
 Core Requirements
 -----------------
 
 - Java 1.6 or later
+- A web browser (Chrome, Firefox, Safari, or IE)
+- A native web driver (for Chrome and IE only)
 
-Building and Installing from Source
------------------------------------
+Installation
+------------
 
-Perform the following to build and install gwen-web: 
+### Installing a binary release
+
+Coming soon!
+
+### Building and Installing from Source
+
+Perform the following to build and install gwen-web from source: 
 
 1. Download and install [Java SDK 1.6 or later](http://www.oracle.com/technetwork/java/javase/downloads/index.html) 
    - Note Java 8 is not recommended at this time of writing
@@ -60,7 +57,7 @@ Perform the following to build and install gwen-web:
      repository using one of the following (SSH or HTTPS) URLs: 
      - `git@github.com:gwen-interpreter/gwen-web.git`
      - `https://github.com/gwen-interpreter/gwen-web.git`
-   - Or click the Download ZIP link on this GitHub project page to download 
+   - Or click the Download ZIP link on this project page to download 
      the source archive and extract it to a local folder  
 4. Change to the directory where you cloned/downloaded the source and run 
    `sbt universal:package-bin` to build the distributable ZIP
@@ -70,6 +67,18 @@ Perform the following to build and install gwen-web:
    - This will create a project folder named _gwen-web-[version]_ in that 
      location
 6. You are now ready to start using gwen-web!
+
+Usage
+-----
+
+### Getting Started
+
+See our [getting started](doc/START.md) user guide for a quick introduction 
+and tutorial.
+
+### Cheat Sheet
+
+Please see our [cheat sheet](doc/CHEATSHEET.md) for a list of commands and sample dsl statements
 
 Mail Group
 ----------
