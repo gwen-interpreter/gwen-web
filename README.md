@@ -36,12 +36,12 @@ Core Requirements
 
 - Java 1.6 or later
 - A web browser (Chrome, Firefox, Safari, or IE)
-- A native web driver (for Chrome and IE only)
+- A native web driver (required for Chrome and IE only)
 
 Installation
 ------------
 
-### Installing a binary release
+### Installing a Binary Release
 
 Coming soon!
 
