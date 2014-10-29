@@ -67,9 +67,5 @@ programmatic support for setting the user agent header in those drivers.
 gwen -b -t ~@Robot ../features/floodio
 ```
 
-This has now started the flood io automation.
+This will start and complete the flood io challenge.
 
-That is it, you have now run your first automated test using gwen.  
-
-In the next update, I will be walking you through the finer details of the web
-engine and how meta can be used to setup context.
