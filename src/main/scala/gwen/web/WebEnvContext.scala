@@ -144,7 +144,7 @@ class WebEnvContext(val driverName: String, val dataScopes: DataScopes) extends 
         }
       )
     } catch {
-      case e: TimeoutException => throw new TimeoutException(s"Timed out $reason", e)
+      case e: TimeoutException => throw new TimeoutException(s"Timed out ${reason}.", e)
     }
   }
   

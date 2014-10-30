@@ -247,13 +247,13 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
     
     // sleep if wait time is configured for this action
 	env.pageScopes.getOpt(s"$element/$action/wait") foreach { secs => 
-	  logger.info(s"Waiting for ${secs} second(s)..")
+	  logger.debug(s"Waiting for ${secs} second(s)..")
       Thread.sleep(secs.toLong * 1000)
     }
 	
 	// wait for javascript post condition if one is configured for this action
 	env.pageScopes.getOpt(s"$element/$action/condition") foreach { javascript =>
-	  logger.info(s"Waiting for ${javascript} to return true..")
+	  logger.debug(s"Waiting for condition to return true: ${javascript}")
 	  env.waitUntil(s"waiting for $element post-$action condition to be satisifed") {
 	    env.executeScript(s"return $javascript").asInstanceOf[Boolean] tap { satisfied =>
 	      if (satisfied) {
@@ -269,7 +269,7 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
     case "submitted" => "submit" 
     case "checked"   => "check" 
     case "unchecked" => "uncheck" 
-    case "selected"  => "selected" 
+    case "selected"  => "select" 
     case "typed"     => "type" 
     case "entered"   => "enter"
   }

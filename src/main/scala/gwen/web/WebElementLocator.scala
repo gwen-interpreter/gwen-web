@@ -146,4 +146,4 @@ trait WebElementLocator {
 /**
  * Thrown when a web element cannot be located
  */
-class LocatorBindingException(element: String, causeMsg: String) extends Exception(s"Could not locate web element: ${element}, ${causeMsg}")
+class LocatorBindingException(element: String, causeMsg: String) extends Exception(s"Could not locate ${element}: ${causeMsg}")
