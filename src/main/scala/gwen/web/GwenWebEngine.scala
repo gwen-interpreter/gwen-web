@@ -86,16 +86,16 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
         compare("title", expected, getTitle(env), operator, Option(negation).isDefined)
         
       case r"""the page title should( not)?$negation (be|contain)$operator (.+?)$$$attribute""" =>
-        compare("title", env.featureScopes.get(attribute), getTitle(env), operator, Option(negation).isDefined) 
+        compare("title", env.featureScope.get(attribute), getTitle(env), operator, Option(negation).isDefined) 
         
       case r"""(.+?)$element should( not)?$negation (be|contain)$operator "(.+?)"$$$expected""" =>
         compare(element, expected, getElementText(element, env), operator, Option(negation).isDefined)
         
       case r"""(.+?)$element should( not)?$negation (be|contain)$operator (.+?)$$$attribute""" =>
-        compare(element, env.featureScopes.get(attribute), getElementText(element, env), operator, Option(negation).isDefined) 
+        compare(element, env.featureScope.get(attribute), getElementText(element, env), operator, Option(negation).isDefined) 
         
       case r"""I capture (.+?)$element""" =>
-        env.featureScopes.set(element, getElementText(element, env))
+        env.featureScope.set(element, getElementText(element, env))
         
       case r"""(.+?)$element should( not)?$negation be (displayed|hidden|checked|unchecked|enabled|disabled)$$$state""" =>
         val webElement = locate(env, element)
@@ -118,25 +118,25 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
         sys.props += ((setting, value))
         
       case r"""(.+?)$attribute (?:is|will be) "(.+?)"$$$value""" => 
-        env.featureScopes.set(attribute, value)
+        env.featureScope.set(attribute, value)
         
       case r"""I wait for (.+?)$element text for (.+?)$seconds second(?:s?)""" =>
-        env.waitUntil(s"waiting for $element text after $seconds second(s)", seconds.toInt) {
+        env.waitUntil(s"Waiting for $element text after $seconds second(s)", seconds.toInt) {
           getElementText(element, env).length() > 0
         } 
         
       case r"""I wait for (.+?)$element text""" =>
-        env.waitUntil(s"waiting for $element text") {
+        env.waitUntil(s"Waiting for $element text") {
           getElementText(element, env).length() > 0
         }
         
       case r"""I wait for (.+?)$element for (.+?)$seconds second(?:s?)""" =>
-        env.waitUntil(s"waiting for $element after $seconds second(s)", seconds.toInt) {
+        env.waitUntil(s"Waiting for $element after $seconds second(s)", seconds.toInt) {
           locateOpt(env, element).isDefined
         }
         
       case r"""I wait for (.+?)$$$element""" =>
-       env.waitUntil(s"waiting for $element") {
+       env.waitUntil(s"Waiting for $element") {
          locateOpt(env, element).isDefined
        }
        
@@ -148,24 +148,29 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
         sendKeys(element, action, value, env)
         
       case r"""I (enter|type)$action (.+?)$attribute in (.+?)$$$element""" =>
-        sendKeys(element, action, env.featureScopes.get(attribute), env)
+        sendKeys(element, action, env.featureScope.get(attribute), env)
         
       case r"""I select "(.+?)"$value in (.+?)$$$element""" =>
-        env.waitUntil(s"selecting '$value' in $element") {
+        env.waitUntil(s"Selecting '$value' in $element") {
           selectByVisibleText(element, value, env)
 		  true
 		}
         
       case r"""I select (.+?)$attribute in (.+?)$$$element""" =>
-	    env.featureScopes.get(attribute) tap { value => 
-		  env.waitUntil(s"selecting '$value' in $element") {
+	    env.featureScope.get(attribute) tap { value => 
+		  env.waitUntil(s"Selecting '$value' in $element") {
 		    selectByVisibleText(element, value, env)
 			true
 		  }
         }
         
       case r"""I (click|submit|check|uncheck)$action (.+?)$$$element""" =>
-        env.waitUntil(s"trying to $action $element") {
+        env.waitUntil(s"${action match {
+            case "click" => "Clicking"
+            case "submit" => "Submitting"
+            case "check" => "Checking"
+            case "uncheck" => "Unchecking"
+          }} $element") {
           val webElement = locate(env, element)
           action match {
             case "click" => webElement.click
@@ -184,7 +189,7 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
         env.pageScopes.set(s"$element/${eventToAction(event)}/condition", condition)
         
       case r"""I wait until "(.+?)"$$$condition""" =>
-        env.waitUntil(s"waiting for condition '$condition' to be satisifed") {
+        env.waitUntil(s"Waiting for condition '$condition' to be satisifed") {
 	      env.executeScript(s"return $condition").asInstanceOf[Boolean]
 	    }
         
@@ -247,14 +252,14 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
     
     // sleep if wait time is configured for this action
 	env.pageScopes.getOpt(s"$element/$action/wait") foreach { secs => 
-	  logger.debug(s"Waiting for ${secs} second(s)..")
+	  logger.info(s"Waiting for ${secs} second(s) (post-$action wait)")
       Thread.sleep(secs.toLong * 1000)
     }
 	
 	// wait for javascript post condition if one is configured for this action
 	env.pageScopes.getOpt(s"$element/$action/condition") foreach { javascript =>
-	  logger.debug(s"Waiting for condition to return true: ${javascript}")
-	  env.waitUntil(s"waiting for $element post-$action condition to be satisifed") {
+	  logger.debug(s"Waiting for script to return true: ${javascript}")
+	  env.waitUntil(s"Waiting for post-$action condition to be satisifed") {
 	    env.executeScript(s"return $javascript").asInstanceOf[Boolean] tap { satisfied =>
 	      if (satisfied) {
 	        Thread.sleep(gwenSetting.getOpt("gwen.web.throttle.msecs").getOrElse("200").toLong)

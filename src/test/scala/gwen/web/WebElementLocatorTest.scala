@@ -27,6 +27,7 @@ import org.scalatest.junit.JUnitRunner
 import org.scalatest.FlatSpec
 import gwen.eval.DataScopes
 import org.scalatest.Matchers
+import org.openqa.selenium.TimeoutException
 
 class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar with WebElementLocator {
 
@@ -149,6 +150,45 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar wit
       locateOpt(env, element)
     }
     e.getMessage should be (expectedMsg)
+  }
+  
+  "Timeout on locating element by javascript" should "throw error" in {
+    
+    val locator = "javascript"
+    val locatorValue = "document.getElementById('username')"
+    val env = newEnv
+    env.pageScopes.addScope("login").set("username/locator", locator).set(s"username/locator/${locator}", locatorValue)
+    
+    val timeoutError = new TimeoutException();
+    when(mockWebDriver.manage()).thenReturn(mockWebDriverOptions)
+    when(mockWebDriverOptions.timeouts()).thenReturn(mockWebDriverTimeouts)
+    doThrow(timeoutError).when(mockWebDriver).executeScript(s"return $locatorValue")
+    
+    val e = intercept[TimeoutOnWaitException] {
+      locate(env, "username")
+    }
+    e.getMessage should be ("Timed out locating username.")
+    
+    verify(mockWebDriver, atLeastOnce()).executeScript(s"return $locatorValue")
+	
+  }
+  
+  "Timeout on locating optional element by javascript" should "return None" in {
+    
+    val locator = "javascript"
+    val locatorValue = "document.getElementById('username')"
+    val env = newEnv
+    env.pageScopes.addScope("login").set("username/locator", locator).set(s"username/locator/${locator}", locatorValue)
+    
+    val timeoutError = new TimeoutException();
+    when(mockWebDriver.manage()).thenReturn(mockWebDriverOptions)
+    when(mockWebDriverOptions.timeouts()).thenReturn(mockWebDriverTimeouts)
+    doThrow(timeoutError).when(mockWebDriver).executeScript(s"return $locatorValue")
+    
+    locateOpt(env, "username") should be (None)
+    
+    verify(mockWebDriver, atLeastOnce()).executeScript(s"return $locatorValue")
+	
   }
   
   private def shouldFindWebElement(locator: String, locatorValue: String, by: By) {

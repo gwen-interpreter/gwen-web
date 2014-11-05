@@ -18,7 +18,6 @@ package gwen.web
 
 import java.io.File
 import java.util.concurrent.TimeUnit
-
 import org.openqa.selenium.JavascriptExecutor
 import org.openqa.selenium.OutputType
 import org.openqa.selenium.TakesScreenshot
@@ -33,12 +32,12 @@ import org.openqa.selenium.ie.InternetExplorerDriver
 import org.openqa.selenium.safari.SafariDriver
 import org.openqa.selenium.support.ui.ExpectedCondition
 import org.openqa.selenium.support.ui.WebDriverWait
-
 import gwen.Predefs.Kestrel
 import gwen.dsl.Failed
 import gwen.eval.DataScopes
 import gwen.eval.EnvContext
 import gwen.gwenSetting
+import gwen.eval.ScopedData
 
 /**
  * Defines the web environment context. This includes the configured selenium web
@@ -49,14 +48,14 @@ import gwen.gwenSetting
 class WebEnvContext(val driverName: String, val dataScopes: DataScopes) extends EnvContext(dataScopes) {
 
   /**
-   * Provides access to the user scopes.
-   */
-  def featureScopes = dataScope("feature")
-
-  /**
    * Provides access to the page scopes.
    */
   def pageScopes = dataScope("page")
+  
+   /**
+   * Provides access to the global feature scope.
+   */
+  def featureScope = dataScope("feature")
 
   /**
    * Selenium web driver (lazily loaded).
@@ -138,13 +137,14 @@ class WebEnvContext(val driverName: String, val dataScopes: DataScopes) extends 
    */
   def waitUntil(reason: String, timeoutSecs: Int)(condition: => Boolean) {
     try {
+      logger.info(reason)
       new WebDriverWait(webDriver, timeoutSecs).until(
         new ExpectedCondition[Boolean] {
           override def apply(driver: WebDriver): Boolean = condition
         }
       )
     } catch {
-      case e: TimeoutException => throw new TimeoutException(s"Timed out ${reason}.", e)
+      case e: TimeoutException => throw new TimeoutOnWaitException(reason);
     }
   }
   
@@ -174,3 +174,8 @@ class WebEnvContext(val driverName: String, val dataScopes: DataScopes) extends 
     ("Screenshot", webDriver.asInstanceOf[TakesScreenshot].getScreenshotAs(OutputType.FILE)) :: super.createAttachments(failure)
     
 }
+
+/**
+ * Thrown when a fluent wait times out
+ */
+class TimeoutOnWaitException(reason: String) extends Exception(s"Timed out ${reason.head.toLower}${reason.tail}.")

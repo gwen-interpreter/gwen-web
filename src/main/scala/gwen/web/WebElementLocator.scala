@@ -18,10 +18,7 @@ package gwen.web
 
 import java.util.ArrayList
 
-import scala.util.Try
-
 import org.openqa.selenium.By
-import org.openqa.selenium.TimeoutException
 import org.openqa.selenium.WebElement
 
 import gwen.Predefs.Kestrel
@@ -44,7 +41,7 @@ trait WebElementLocator {
    *  @return 
    *      the found element (errors if not found)
    */
-  def locate(env: WebEnvContext, element: String): WebElement = locateOpt(env, element) match {
+  def locate(env: WebEnvContext, element: String): WebElement = locateElement(env, element) match {
     case Some(webElement) => webElement
     case None => throw new NoSuchElementException(s"Web element not found: ${element}")
   }
@@ -59,7 +56,23 @@ trait WebElementLocator {
    * @return 
    *       Some(element) if found, None otherwise
    */
-  def locateOpt(env: WebEnvContext, element: String): Option[WebElement] = {
+  def locateOpt(env: WebEnvContext, element: String): Option[WebElement] = try {
+    locateElement(env, element)
+  } catch {
+    case e: TimeoutOnWaitException => None
+  }
+  
+  /**
+   * Locates a bound web element.
+   * 
+   * @param env
+   *      the web environment context
+   * @param element
+   *      the name of the element to locate
+   * @return 
+   *       Some(element) if found, None otherwise
+   */
+  private def locateElement(env: WebEnvContext, element: String): Option[WebElement] = {
     val locatorBinding = s"$element/locator";
     env.pageScopes.getOpt(locatorBinding) match {
       case Some(locator) =>
@@ -102,28 +115,22 @@ trait WebElementLocator {
    * @param javascipt the javascript expression for returning the element
    */
   private def getElementByJavaScript(env: WebEnvContext, element: String, javascript: String): Option[WebElement] = {
-    Try {
-      try {
-    	var elem: Option[WebElement] = None
-  	    env.waitUntil(s"locating $element") {
-          elem = (env.executeScript(s"return $javascript") match {
-            case elems: ArrayList[_] => 
-              if (!elems.isEmpty()) Option(elems.get(0).asInstanceOf[WebElement])
-              else None
-            case elem => Option(elem) match {
-              case Some(elem) => Option(elem.asInstanceOf[WebElement])
-              case None => None
-            }
-          }) map { webElement =>
-            moveTo(env, element, webElement)
-          }
-          elem.isDefined
-	    }
-  	    elem
-      } catch {
-        case e: TimeoutException => None
+    var elem: Option[WebElement] = None
+  	env.waitUntil(s"Locating $element") {
+      elem = (env.executeScript(s"return $javascript") match {
+        case elems: ArrayList[_] => 
+          if (!elems.isEmpty()) Option(elems.get(0).asInstanceOf[WebElement])
+          else None
+        case elem => Option(elem) match {
+          case Some(elem) => Option(elem.asInstanceOf[WebElement])
+          case None => None
+        }
+      }) map { webElement =>
+        moveTo(env, element, webElement)
       }
-	} get
+      elem.isDefined
+	}
+  	elem
   }
   
   /**
@@ -134,7 +141,7 @@ trait WebElementLocator {
    */
   private def moveTo(env: WebEnvContext, element: String, webElement: WebElement): WebElement = {
     if (!webElement.isDisplayed()) {
-      env.waitUntil(s"moving to $element") {
+      env.waitUntil(s"Moving to $element") {
         env.executeScript("var elem = arguments[0]; if (typeof elem !== 'undefined' && elem != null) { elem.scrollIntoView(true); return true; } else return false;").asInstanceOf[Boolean]
       }
     }
@@ -147,3 +154,4 @@ trait WebElementLocator {
  * Thrown when a web element cannot be located
  */
 class LocatorBindingException(element: String, causeMsg: String) extends Exception(s"Could not locate ${element}: ${causeMsg}")
+
