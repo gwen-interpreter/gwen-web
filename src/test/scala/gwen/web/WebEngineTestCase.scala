@@ -26,7 +26,7 @@ import gwen.eval.GwenOptions
 
 trait WebEngineTestCase extends FlatSpec {
   
-  def interpret(featureFilepath: String, metaFilepath: Option[String] = None) {
+  def interpret(featureFilepath: String, metaFilepaths: List[String] = Nil) {
     
     val options = GwenOptions(
       true,
@@ -34,7 +34,7 @@ trait WebEngineTestCase extends FlatSpec {
       Some(new File("target/report")), 
       None, 
       Nil,
-      metaFilepath map { filepath => new File(getClass().getResource(filepath).getFile()) },
+      metaFilepaths map { filepath => new File(getClass().getResource(filepath).getFile()) },
       List(new File(featureFilepath)))
 
       
