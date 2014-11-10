@@ -117,6 +117,9 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
       case r"""my (.+?)$setting setting (?:is|will be) "(.+?)"$$$value""" => 
         sys.props += ((setting, value))
         
+      case r"""(.+?)$attribute will be derived by javascript "(.+?)"$$$expression""" =>
+	    env.featureScope.set(attribute, env.executeScript(s"return $expression").asInstanceOf[String])
+        
       case r"""(.+?)$attribute (?:is|will be) "(.+?)"$$$value""" => 
         env.featureScope.set(attribute, value)
         
