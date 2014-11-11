@@ -1,12 +1,14 @@
 ![Gwen-web](https://github.com/gwen-interpreter/gwen/blob/master/doc/img/gwen-attractor.png)
 
-The gwen-web Engine
-===================
+gwen-web
+========
 
-Gwen web is an engine which allows teams to automate web browsers using 
-language instead of code.  It aims to bring an interactive capability to
-automation testing by providing users with an ability to verify commands 
-and debug tests before committing them to an automation cycle.  
+Gwen-web is a web automation engine that runs inside the 
+[gwen-interpreter](https://github.com/gwen-interpreter/gwen).
+It allows teams to automate web browsers using language instead of code.  
+It aims to bring an interactive capability to automation testing by 
+providing users with an ability to verify commands and debug tests before 
+committing them to an automation cycle.  
  
 Once the tests have been confirmed, gwen web is able to run the tests 
 sequentially or in parallel.  gwen web can be used to target different types
@@ -15,10 +17,6 @@ of browsers including Firefox, Chrome, IE and Safari.
 Finally gwen web will create a summary report detailing the status of each 
 test (passed and failed), the time taken to execute each step, screenshots 
 on failures, current environment variables and meta information.
-
-Gwen web is the first engine to be powered by the 
-[gwen-interpreter](https://github.com/gwen-interpreter/gwen).
-
 
 Key Features
 ------------
