@@ -94,6 +94,9 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
       case r"""(.+?)$element should( not)?$negation (be|contain)$operator (.+?)$$$attribute""" =>
         compare(element, env.featureScope.get(attribute), getElementText(element, env), operator, Option(negation).isDefined) 
         
+      case r"""I capture (.+?)$element as (.+?)$attribute""" =>
+        env.featureScope.set(attribute, getElementText(element, env))
+        
       case r"""I capture (.+?)$element""" =>
         env.featureScope.set(element, getElementText(element, env))
         
@@ -152,6 +155,12 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
         
       case r"""I (enter|type)$action (.+?)$attribute in (.+?)$$$element""" =>
         sendKeys(element, action, env.featureScope.get(attribute), env)
+        
+      case r"""I select the (\d+?)$index(st|nd|rd|th)$suffix option in (.+?)$$$element""" =>
+        env.waitUntil(s"Selecting '$index$suffix' option in $element") {
+          selectByIndex(element, index.toInt, env)
+		  true
+		}
         
       case r"""I select "(.+?)"$value in (.+?)$$$element""" =>
         env.waitUntil(s"Selecting '$value' in $element") {
@@ -248,6 +257,13 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
     val webElement = locate(env, element)
     new Select(webElement).selectByVisibleText(value)
     bindAndWait(element, "select", value, env)
+  }
+  
+  private def selectByIndex(element: String, index: Int, env: WebEnvContext) {
+    val webElement = locate(env, element)
+    val select = new Select(webElement)
+    select.selectByIndex(index)
+    bindAndWait(element, "select", select.getFirstSelectedOption().getText(), env)
   }
 
   private def bindAndWait(element: String, action: String, value: String, env: WebEnvContext) {

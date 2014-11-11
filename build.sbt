@@ -2,7 +2,7 @@ import com.typesafe.sbt.packager.archetypes._
 
 name := "gwen-web"
 
-description := "Gwen Web Engine"
+description := "A Gherkin evaluation engine for automating online activities and web application testing."
 
 version := "0.1.0-SNAPSHOT"
 
@@ -67,7 +67,7 @@ publish <<= publish.dependsOn(publish in Universal)
 
 publishLocal <<= publishLocal.dependsOn(publishLocal in Universal)
 
-name in Universal := name.value + "_" + scalaBinaryVersion.value 
+name in Universal := name.value + "_" + scalaBinaryVersion.value
 
 mappings in Universal += file("LICENSE") -> "LICENSE" 
 
