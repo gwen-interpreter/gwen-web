@@ -51,11 +51,6 @@ class WebEnvContext(val driverName: String, val dataScopes: DataScopes) extends 
    * Provides access to the page scopes.
    */
   def pageScopes = dataScope("page")
-  
-   /**
-   * Provides access to the global feature scope.
-   */
-  def featureScope = dataScope("feature")
 
   /**
    * Selenium web driver (lazily loaded).
