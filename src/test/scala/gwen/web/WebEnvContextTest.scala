@@ -35,26 +35,10 @@ class WebEnvContextTest extends FlatSpec with Matchers with MockitoSugar {
   val mockWebDriver = mock[WebDriver]
   val mockWebDriverOptions = mock[WebDriver.Options]
   val mockWebDriverTimeouts = mock[WebDriver.Timeouts]
-
-  "New web env context" should "have global feature scope" in {
-    val env = newEnv
-    env.featureScope.current.get.scope should be ("feature")
-    env.featureScope.current.get.name should be ("global") 
-  }
   
   "New web env context" should "have 'global' page scope" in {
     val env = newEnv
     env.pageScopes.current.get.name should be ("global")
-  }
-  
-  "Bound feature scope attribute" should "be removed after reset" in {
-    val env = newEnv
-    env.featureScope.set("firstName", "Gwen")
-    env.featureScope.get("firstName") should be ("Gwen")
-    env.reset
-    env.featureScope.getOpt("firstName") should be (None)
-    env.featureScope.current.get.scope should be ("feature")
-    env.featureScope.current.get.name should be ("global")
   }
   
   "Bound page scope attribute" should "be recreated after reset" in {
@@ -70,13 +54,6 @@ class WebEnvContextTest extends FlatSpec with Matchers with MockitoSugar {
   "toJson on new env context" should "be empty" in {
     val env = newEnv
     env.toJson.toString should be ("""{"env -all":{"data":[]}}""")
-  }
-  
-  "Bound feature scope attribute" should "show up in JSON string" in {
-    val env = newEnv
-    env.featureScope.set("firstName", "Gwen")
-    env.featureScope.get("firstName") should be ("Gwen")
-    env.toJson.toString should be ("""{"env -all":{"data":[{"feature":[{"scope":"global","atts":[{"firstName":"Gwen"}]}]}]}}""")
   }
   
   "Bound page scope attribute" should "show up in JSON string" in {
