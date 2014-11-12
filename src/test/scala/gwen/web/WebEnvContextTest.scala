@@ -61,7 +61,8 @@ class WebEnvContextTest extends FlatSpec with Matchers with MockitoSugar {
     env.pageScopes.addScope("login")
     env.pageScopes.set("username", "Gwen")
     env.pageScopes.get("username") should be ("Gwen")
-    env.toJson.toString should be ("""{"env -all":{"data":[{"page":[{"scope":"global","atts":[]},{"scope":"login","atts":[{"username":"Gwen"}]}]}]}}""")
+    env.toJson.toString should be ("""{"env -all":{"data":[{"page":[{"scope":"login","atts":[{"username":"Gwen"}]}]}]}}""")
+                                      
   }
   
   "Closing new web env context without referencing webdriver" should "not close web driver" in {

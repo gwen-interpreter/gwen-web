@@ -156,9 +156,9 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
       case r"""I (enter|type)$action (.+?)$attribute in (.+?)$$$element""" =>
         sendKeys(element, action, env.featureScope.get(attribute), env)
         
-      case r"""I select the (\d+?)$index(st|nd|rd|th)$suffix option in (.+?)$$$element""" =>
-        env.waitUntil(s"Selecting '$index$suffix' option in $element") {
-          selectByIndex(element, index.toInt, env)
+      case r"""I select the (\d+?)$position(st|nd|rd|th)$suffix option in (.+?)$$$element""" =>
+        env.waitUntil(s"Selecting '${position}${suffix}' option in $element") {
+          selectByIndex(element, position.toInt - 1, env)
 		  true
 		}
         
