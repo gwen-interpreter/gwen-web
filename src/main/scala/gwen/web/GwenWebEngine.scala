@@ -217,7 +217,13 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
   }
   
   private def getAttribute(name: String, env: WebEnvContext): String = 
-    env.scopes.getOpt(name).getOrElse(env.executeScript(s"return ${env.scopes.get(s"$name/javascript")}").asInstanceOf[String])
+    env.scopes.getOpt(name) match {
+      case Some(value) => value
+      case _ => env.scopes.getOpt(s"$name/javascript") match {
+        case Some(expression) => env.executeScript(s"return $expression").asInstanceOf[String]
+        case _ => env.scopes.get(name)
+      }
+    } 
   
   private def compare(element: String, expected: String, actual: String, operator: String, negate: Boolean) = 
     (operator match {
