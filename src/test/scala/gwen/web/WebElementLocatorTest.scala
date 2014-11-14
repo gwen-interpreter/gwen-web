@@ -16,18 +16,22 @@
 
 package gwen.web
 
-import org.mockito.Mockito._
+import org.mockito.Mockito.atLeastOnce
+import org.mockito.Mockito.doReturn
+import org.mockito.Mockito.doThrow
+import org.mockito.Mockito.times
+import org.mockito.Mockito.verify
+import org.mockito.Mockito.when
 import org.openqa.selenium.By
+import org.openqa.selenium.TimeoutException
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.WebElement
 import org.openqa.selenium.firefox.FirefoxDriver
-import org.scalatest.matchers.ShouldMatchers
-import org.scalatest.mock.MockitoSugar
-import org.scalatest.junit.JUnitRunner
 import org.scalatest.FlatSpec
-import gwen.eval.DataScopes
 import org.scalatest.Matchers
-import org.openqa.selenium.TimeoutException
+import org.scalatest.mock.MockitoSugar
+
+import gwen.eval.ScopedDataStack
 
 class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar with WebElementLocator {
 
@@ -42,20 +46,20 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar wit
   
   "Attempt to locate element with unbound locator" should "throw locator not found error" in {
     val env = newEnv
-    env.pageScopes.addScope("login").set("username/locator", "id")
+    env.scopes.addScope("login").set("username/locator", "id")
     shouldFailWithLocatorBindingError("username", env, "Could not locate username: locator expression binding not bound: username/locator/id")
   }
   
   "Attempt to locate element with unsupported locator" should "throw unsuported locator error" in {
     val env = newEnv
-    env.pageScopes.addScope("login").set("username/locator", "unknown").set("username/locator/unknown", "funkyness")
+    env.scopes.addScope("login").set("username/locator", "unknown").set("username/locator/unknown", "funkyness")
     shouldFailWithLocatorBindingError("username", env, "Could not locate username: unsupported locator: unknown")
   }
   
   "Attempt to locate non existent element" should "throw no such element error" in {
     
     val env = newEnv
-    env.pageScopes.addScope("login").set("middleName/locator", "id").set("middleName/locator/id", "mname")
+    env.scopes.addScope("login").set("middleName/locator", "id").set("middleName/locator/id", "mname")
     
     when(mockWebDriver.manage()).thenReturn(mockWebDriverOptions)
     when(mockWebDriverOptions.timeouts()).thenReturn(mockWebDriverTimeouts)
@@ -70,7 +74,7 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar wit
   "Attempt to locate non existent element by Opt" should "return None" in {
     
     val env = newEnv
-    env.pageScopes.addScope("login").set("middleName/locator", "id").set("middleName/locator/id", "mname")
+    env.scopes.addScope("login").set("middleName/locator", "id").set("middleName/locator/id", "mname")
     
     when(mockWebDriver.manage()).thenReturn(mockWebDriverOptions)
     when(mockWebDriverOptions.timeouts()).thenReturn(mockWebDriverTimeouts)
@@ -119,7 +123,7 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar wit
     val locator = "javascript"
     val locatorValue = "document.getElementById('username')"
     val env = newEnv
-    env.pageScopes.addScope("login").set("username/locator", locator).set(s"username/locator/${locator}", locatorValue)
+    env.scopes.addScope("login").set("username/locator", locator).set(s"username/locator/${locator}", locatorValue)
     
     when(mockWebDriver.manage()).thenReturn(mockWebDriverOptions)
     when(mockWebDriverOptions.timeouts()).thenReturn(mockWebDriverTimeouts)
@@ -157,7 +161,7 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar wit
     val locator = "javascript"
     val locatorValue = "document.getElementById('username')"
     val env = newEnv
-    env.pageScopes.addScope("login").set("username/locator", locator).set(s"username/locator/${locator}", locatorValue)
+    env.scopes.addScope("login").set("username/locator", locator).set(s"username/locator/${locator}", locatorValue)
     
     val timeoutError = new TimeoutException();
     when(mockWebDriver.manage()).thenReturn(mockWebDriverOptions)
@@ -178,7 +182,7 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar wit
     val locator = "javascript"
     val locatorValue = "document.getElementById('username')"
     val env = newEnv
-    env.pageScopes.addScope("login").set("username/locator", locator).set(s"username/locator/${locator}", locatorValue)
+    env.scopes.addScope("login").set("username/locator", locator).set(s"username/locator/${locator}", locatorValue)
     
     val timeoutError = new TimeoutException();
     when(mockWebDriver.manage()).thenReturn(mockWebDriverOptions)
@@ -194,7 +198,7 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar wit
   private def shouldFindWebElement(locator: String, locatorValue: String, by: By) {
     
     val env = newEnv
-    env.pageScopes.addScope("login").set("username/locator", locator).set(s"username/locator/${locator}", locatorValue)
+    env.scopes.addScope("login").set("username/locator", locator).set(s"username/locator/${locator}", locatorValue)
     
     when(mockWebDriver.manage()).thenReturn(mockWebDriverOptions)
     when(mockWebDriverOptions.timeouts()).thenReturn(mockWebDriverTimeouts)
@@ -214,7 +218,7 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar wit
     
   }
   
-  private def newEnv = new WebEnvContext("Firefox", new DataScopes()) {
+  private def newEnv = new WebEnvContext("Firefox", new ScopedDataStack()) {
     override private[web] def loadWebDriver(driverName: String): WebDriver = mockWebDriver
   }
   

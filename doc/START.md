@@ -42,8 +42,7 @@ wait for an ajax call and copy text from one dom element to another.
 Before starting this challenge, please take the time to click through the 
 challenge manually to familiarize yourself with the task at hand.
 
-We have included the feature and its meta file for you in the zip (both of 
-which will be explained later) 
+We have included the feature and its meta file for you in the zip 
   - [floodio.feature](../features/floodio/FloodIO.feature)
   - [floodio.meta](../features/floodio/FloodIO.meta) 
 

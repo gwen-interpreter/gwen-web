@@ -21,9 +21,9 @@ import org.openqa.selenium.support.ui.Select
 
 import gwen.Predefs.Kestrel
 import gwen.dsl.Step
-import gwen.eval.DataScopes
 import gwen.eval.EvalEngine
 import gwen.eval.GwenOptions
+import gwen.eval.ScopedDataStack
 import gwen.gwenSetting
 
 
@@ -40,15 +40,15 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
    * 
    * @param options
    * 			command line options
-   * @param dataScopes
+   * @param scopes
    * 			initial data scopes
    */
-  override def init(options: GwenOptions, dataScopes: DataScopes) = 
+  override def init(options: GwenOptions, scopes: ScopedDataStack) = 
     new WebEnvContext(
       gwenSetting.get("gwen.web.browser") tap { webdriver =>
         logger.info(s"$webdriver web driver configured")
 	  },
-	  dataScopes
+	  scopes
     )
   
  
@@ -68,31 +68,31 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
     step.expression match {
     
       case r"""I navigate to the (.+?)$pageScope page""" =>
-        env.webDriver.get(env.pageScopes.getIn(pageScope, "url"))
-        env.pageScopes.addScope(pageScope)
+        env.webDriver.get(env.scopes.getIn(pageScope, "url"))
+        env.scopes.addScope(pageScope)
         
       case r"""I navigate to "(.+?)"$$$url""" =>
-        env.pageScopes.addScope(url)
+        env.scopes.addScope(url)
         env.webDriver.get(url)
         
       case r"""I am on the (.+?)$pageScope page""" =>
-        env.pageScopes.addScope(pageScope)
+        env.scopes.addScope(pageScope)
   
       case r"""(.+?)$element can be located by (id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)$locator "(.+?)"$$$expression""" =>
-        env.pageScopes.set(s"$element/locator", locator);
-        env.pageScopes.set(s"$element/locator/$locator", expression)
+        env.scopes.set(s"$element/locator", locator);
+        env.scopes.set(s"$element/locator/$locator", expression)
 
       case r"""the page title should( not)?$negation (be|contain)$operator "(.+?)"$$$expected""" =>
         compare("title", expected, getTitle(env), operator, Option(negation).isDefined)
         
       case r"""the page title should( not)?$negation (be|contain)$operator (.+?)$$$attribute""" =>
-        compare("title", env.featureScope.get(attribute), getTitle(env), operator, Option(negation).isDefined) 
+        compare("title", getAttribute(attribute, env), getTitle(env), operator, Option(negation).isDefined) 
         
       case r"""(.+?)$element should( not)?$negation (be|contain)$operator "(.+?)"$$$expected""" =>
         compare(element, expected, getElementText(element, env), operator, Option(negation).isDefined)
         
       case r"""(.+?)$element should( not)?$negation (be|contain)$operator (.+?)$$$attribute""" =>
-        compare(element, env.featureScope.get(attribute), getElementText(element, env), operator, Option(negation).isDefined) 
+        compare(element, getAttribute(attribute, env), getElementText(element, env), operator, Option(negation).isDefined) 
         
       case r"""I capture (.+?)$element as (.+?)$attribute""" =>
         env.featureScope.set(attribute, getElementText(element, env))
@@ -115,13 +115,13 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
         bindAndWait(element, state, "true", env)
         
       case r"""the url will be "(.+?)"$$$url""" => 
-        env.pageScopes.set("url", url)   
+        env.scopes.set("url", url)   
         
       case r"""my (.+?)$setting setting (?:is|will be) "(.+?)"$$$value""" => 
         sys.props += ((setting, value))
         
-      case r"""(.+?)$attribute will be derived by javascript "(.+?)"$$$expression""" =>
-	    env.featureScope.set(attribute, env.executeScript(s"return $expression").asInstanceOf[String])
+      case r"""(.+?)$attribute (?:is|will be) defined by javascript "(.+?)"$$$expression""" =>
+	    env.scopes.set(s"$attribute/javascript", expression)
         
       case r"""(.+?)$attribute (?:is|will be) "(.+?)"$$$value""" => 
         env.featureScope.set(attribute, value)
@@ -154,7 +154,7 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
         sendKeys(element, action, value, env)
         
       case r"""I (enter|type)$action (.+?)$attribute in (.+?)$$$element""" =>
-        sendKeys(element, action, env.featureScope.get(attribute), env)
+        sendKeys(element, action, getAttribute(attribute, env), env)
         
       case r"""I select the (\d+?)$position(st|nd|rd|th)$suffix option in (.+?)$$$element""" =>
         env.waitUntil(s"Selecting '${position}${suffix}' option in $element") {
@@ -169,7 +169,7 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
 		}
         
       case r"""I select (.+?)$attribute in (.+?)$$$element""" =>
-	    env.featureScope.get(attribute) tap { value => 
+	    getAttribute(attribute, env) tap { value => 
 		  env.waitUntil(s"Selecting '$value' in $element") {
 		    selectByVisibleText(element, value, env)
 			true
@@ -195,14 +195,14 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
         }
         
       case r"""I wait ([0-9]+?)$duration second(?:s?) when (.+?)$element is (clicked|submitted|checked|unchecked|selected|typed|entered)$$$event""" =>
-        env.pageScopes.set(s"$element/${eventToAction(event)}/wait", duration)
+        env.scopes.set(s"$element/${eventToAction(event)}/wait", duration)
         
-      case r"""I wait until "(.+?)"$condition when (.+?)$element is (clicked|submitted|checked|unchecked|selected|typed|entered)$$$event""" =>
-        env.pageScopes.set(s"$element/${eventToAction(event)}/condition", condition)
+      case r"""I wait until (.+?)$condition when (.+?)$element is (clicked|submitted|checked|unchecked|selected|typed|entered)$$$event""" =>
+        env.scopes.set(s"$element/${eventToAction(event)}/condition", condition)
         
-      case r"""I wait until "(.+?)"$$$condition""" =>
-        env.waitUntil(s"Waiting for condition '$condition' to be satisifed") {
-	      env.executeScript(s"return $condition").asInstanceOf[Boolean]
+      case r"""I wait until (.+?)$$$condition""" =>
+        env.waitUntil(s"Waiting until $condition") {
+	      env.executeScript(s"return ${env.scopes.get(s"$condition/javascript")}").asInstanceOf[Boolean]
 	    }
         
       case r"""I wait ([0-9]+?)$duration second(?:s?)""" =>
@@ -216,6 +216,8 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
     }
   }
   
+  private def getAttribute(name: String, env: WebEnvContext): String = 
+    env.scopes.getOpt(name).getOrElse(env.executeScript(s"return ${env.scopes.get(s"$name/javascript")}").asInstanceOf[String])
   
   private def compare(element: String, expected: String, actual: String, operator: String, negate: Boolean) = 
     (operator match {
@@ -267,18 +269,19 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
   }
 
   private def bindAndWait(element: String, action: String, value: String, env: WebEnvContext) {
-    env.pageScopes.set(s"$element/$action", value)
+    env.scopes.set(s"$element/$action", value)
     
     // sleep if wait time is configured for this action
-	env.pageScopes.getOpt(s"$element/$action/wait") foreach { secs => 
+	env.scopes.getOpt(s"$element/$action/wait") foreach { secs => 
 	  logger.info(s"Waiting for ${secs} second(s) (post-$action wait)")
       Thread.sleep(secs.toLong * 1000)
     }
 	
 	// wait for javascript post condition if one is configured for this action
-	env.pageScopes.getOpt(s"$element/$action/condition") foreach { javascript =>
+	env.scopes.getOpt(s"$element/$action/condition") foreach { condition =>
+	  val javascript = env.scopes.get(s"$condition/javascript")
 	  logger.debug(s"Waiting for script to return true: ${javascript}")
-	  env.waitUntil(s"Waiting for post-$action condition to be satisifed") {
+	  env.waitUntil(s"Waiting until $condition (post-$action condition)") {
 	    env.executeScript(s"return $javascript").asInstanceOf[Boolean] tap { satisfied =>
 	      if (satisfied) {
 	        Thread.sleep(gwenSetting.getOpt("gwen.web.throttle.msecs").getOrElse("200").toLong)

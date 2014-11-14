@@ -17,6 +17,7 @@
 package gwen.web
 
 import java.util.concurrent.TimeUnit
+
 import org.mockito.Matchers.anyLong
 import org.mockito.Matchers.same
 import org.mockito.Mockito.never
@@ -25,10 +26,10 @@ import org.mockito.Mockito.verify
 import org.mockito.Mockito.when
 import org.openqa.selenium.WebDriver
 import org.scalatest.FlatSpec
-import org.scalatest.matchers.ShouldMatchers
-import org.scalatest.mock.MockitoSugar
-import gwen.eval.DataScopes
 import org.scalatest.Matchers
+import org.scalatest.mock.MockitoSugar
+
+import gwen.eval.ScopedDataStack
 
 class WebEnvContextTest extends FlatSpec with Matchers with MockitoSugar {
   
@@ -36,32 +37,32 @@ class WebEnvContextTest extends FlatSpec with Matchers with MockitoSugar {
   val mockWebDriverOptions = mock[WebDriver.Options]
   val mockWebDriverTimeouts = mock[WebDriver.Timeouts]
   
-  "New web env context" should "have 'global' page scope" in {
+  "New web env context" should "have 'feature' scope" in {
     val env = newEnv
-    env.pageScopes.current.get.name should be ("global")
+    env.scopes.current.scope should be ("feature")
   }
   
-  "Bound page scope attribute" should "be recreated after reset" in {
+  "Bound scope attribute" should "be recreated after reset" in {
     val env = newEnv
-    env.pageScopes.addScope("login")
-    env.pageScopes.set("username", "Gwen")
-    env.pageScopes.get("username") should be ("Gwen")
+    env.scopes.addScope("login")
+    env.scopes.set("username", "Gwen")
+    env.scopes.get("username") should be ("Gwen")
     env.reset
-    env.pageScopes.current.get.name should be ("global")
-    env.pageScopes.getOpt("username") should be (None)
+    env.scopes.current.scope should be ("feature")
+    env.scopes.getOpt("username") should be (None)
   }
   
-  "toJson on new env context" should "be empty" in {
+  "json on new env context" should "be empty" in {
     val env = newEnv
-    env.toJson.toString should be ("""{"env -all":{"data":[]}}""")
+    env.json.toString should be ("""{"scopes":[{"scope":"feature","atts":[]}]}""")
   }
   
-  "Bound page scope attribute" should "show up in JSON string" in {
+  "Bound scope attribute" should "show up in JSON string" in {
     val env = newEnv
-    env.pageScopes.addScope("login")
-    env.pageScopes.set("username", "Gwen")
-    env.pageScopes.get("username") should be ("Gwen")
-    env.toJson.toString should be ("""{"env -all":{"data":[{"page":[{"scope":"login","atts":[{"username":"Gwen"}]}]}]}}""")
+    env.scopes.addScope("login")
+    env.scopes.set("username", "Gwen")
+    env.scopes.get("username") should be ("Gwen")
+    env.json.toString should be ("""{"scopes":[{"scope":"feature","atts":[]},{"scope":"login","atts":[{"username":"Gwen"}]}]}""")
                                       
   }
   
@@ -88,7 +89,7 @@ class WebEnvContextTest extends FlatSpec with Matchers with MockitoSugar {
     verify(mockWebDriver, times(1)).quit()
   }
   
-  def newEnv = new WebEnvContext("Firefox", new DataScopes()) {
+  def newEnv = new WebEnvContext("Firefox", new ScopedDataStack()) {
     override private[web] def loadWebDriver(driverName: String): WebDriver = mockWebDriver
   }
   

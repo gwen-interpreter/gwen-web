@@ -18,6 +18,7 @@ package gwen.web
 
 import java.io.File
 import java.util.concurrent.TimeUnit
+
 import org.openqa.selenium.JavascriptExecutor
 import org.openqa.selenium.OutputType
 import org.openqa.selenium.TakesScreenshot
@@ -32,12 +33,12 @@ import org.openqa.selenium.ie.InternetExplorerDriver
 import org.openqa.selenium.safari.SafariDriver
 import org.openqa.selenium.support.ui.ExpectedCondition
 import org.openqa.selenium.support.ui.WebDriverWait
+
 import gwen.Predefs.Kestrel
 import gwen.dsl.Failed
-import gwen.eval.DataScopes
 import gwen.eval.EnvContext
+import gwen.eval.ScopedDataStack
 import gwen.gwenSetting
-import gwen.eval.ScopedData
 
 /**
  * Defines the web environment context. This includes the configured selenium web
@@ -45,12 +46,7 @@ import gwen.eval.ScopedData
  *
  *  @author Branko Juric
  */
-class WebEnvContext(val driverName: String, val dataScopes: DataScopes) extends EnvContext(dataScopes) {
-
-  /**
-   * Provides access to the page scopes.
-   */
-  def pageScopes = dataScope("page")
+class WebEnvContext(val driverName: String, val scopes: ScopedDataStack) extends EnvContext(scopes) {
 
   /**
    * Selenium web driver (lazily loaded).
@@ -106,6 +102,14 @@ class WebEnvContext(val driverName: String, val dataScopes: DataScopes) extends 
     }
   }
   
+  /**
+   * Executes a javascript expression.
+   * 
+   * @param javascript
+   * 			the script expression to execute
+   * @param params
+   * 			optional parameters to script expression
+   */
   def executeScript(javascript: String, params: Any*): Any = 
     webDriver.asInstanceOf[JavascriptExecutor].executeScript(javascript, params.map(_.asInstanceOf[AnyRef]) : _*) tap { result =>
       logger.debug(s"Evaluating javascript: $javascript")

@@ -74,10 +74,10 @@ trait WebElementLocator {
    */
   private def locateElement(env: WebEnvContext, element: String): Option[WebElement] = {
     val locatorBinding = s"$element/locator";
-    env.pageScopes.getOpt(locatorBinding) match {
+    env.scopes.getOpt(locatorBinding) match {
       case Some(locator) =>
         val expressionBinding = s"$element/locator/$locator"
-        env.pageScopes.getOpt(expressionBinding) match {
+        env.scopes.getOpt(expressionBinding) match {
             case Some(expression) => 
               locator match {
                 case "id" => getElement(env, element, By.id(expression))
