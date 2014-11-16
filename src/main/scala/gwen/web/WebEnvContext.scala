@@ -70,7 +70,7 @@ class WebEnvContext(val driverName: String, val scopes: ScopedDataStack) extends
   private[web] def loadWebDriver(driverName: String): WebDriver = {
     val userAgent = gwenSetting.getOpt("gwen.web.useragent")
 	val authorizePlugins = gwenSetting.getOpt("gwen.authorize.plugins")
-    driverName.toLowerCase() match {
+    (driverName.toLowerCase() match {
       case "firefox" => 
         userAgent.fold(new FirefoxDriver) { agent =>
           new FirefoxDriver(new FirefoxProfile() tap { _.setPreference("general.useragent.override", agent) })
@@ -88,7 +88,14 @@ class WebEnvContext(val driverName: String, val scopes: ScopedDataStack) extends
 	    })
       case "safari" => new SafariDriver
       case _ => sys.error(s"Unsupported webdriver: $driverName")
+    }) tap { driver =>
+      gwenSetting.getOpt("gwen.web.maximize") foreach { maximize =>
+      	if (maximize.toBoolean) {
+      	  driver.manage().window().maximize() 
+      	}
+      }
     }
+    
   }
 
   /**
