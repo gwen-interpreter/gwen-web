@@ -4,13 +4,13 @@ Getting Started with gwen-web
 Prerequisites
 -------------
 
-> Please ensure that you have [installed](../README.md#user-content-building-and-installing-from-source) 
+> Please ensure that you have [installed](../README.md#installation) 
 > gwen-web before proceeding.
  
 ### Multiple browser support
 
 Gwen-web uses Firefox as the default browser. If you would like to use a 
-different browser, then create a gwen.properties file in your user home 
+different browser, then create a _gwen.properties_ file in your user home 
 directory and set the following property to one of the values shown: 
 
     gwen.web.browser = Firefox | Safari | Chrome | IE

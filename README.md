@@ -39,11 +39,16 @@ Installation
 
 ### Installing a Binary Release
 
-Coming soon!
+Perform the following to download and install the latest build:
+
+1. Download and extract the following zip to a desired location on your drive:
+   - [gwen-web_2.11-0.1.0-SNAPSHOT.zip](https://oss.sonatype.org/content/repositories/snapshots/org/gweninterpreter/gwen-web_2.11/0.1.0-SNAPSHOT/gwen-web_2.11-0.1.0-SNAPSHOT.zip)
+   - A folder named _gwen-web-[version]_ will be installed 
+2. [Start using gwen-web](doc/START.md)
 
 ### Building and Installing from Source
 
-Perform the following to build and install gwen-web from source: 
+Perform the following if you would like to build and install gwen-web from source: 
 
 1. Download and install [Java SDK 1.6 or later](http://www.oracle.com/technetwork/java/javase/downloads/index.html) 
    - Note Java 8 is not recommended at this time of writing
@@ -62,7 +67,7 @@ Perform the following to build and install gwen-web from source:
 5. Extract the generated ZIP to a desired location on your local drive
    - This will create a project folder named _gwen-web-[version]_ in that 
      location
-6. You are now ready to start using gwen-web!
+6. [Start using gwen-web](doc/START.md)
 
 Usage
 -----

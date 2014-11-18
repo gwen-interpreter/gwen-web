@@ -20,7 +20,44 @@ scalacOptions += "-feature"
 
 scalacOptions += "-language:postfixOps"
 
+scalacOptions += "-deprecation"
+
+publishMavenStyle := true
+
+publishTo := {
+  val nexus = "https://oss.sonatype.org/"
+  if (isSnapshot.value)
+    Some("snapshots" at nexus + "content/repositories/snapshots")
+  else
+    Some("releases"  at nexus + "service/local/staging/deploy/maven2")
+}
+
+pomIncludeRepository := { _ => false }
+
+publishArtifact in Test := false
+
 licenses += "Apache License, Version 2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0.html")
+
+homepage := Some(url("http://gwen-interpreter.github.io/gwen-web/"))
+
+pomExtra := (
+  <scm>
+    <connection>scm:git:git@github.com:gwen-interpreter/gwen-web.git</connection>
+    <developerConnection>scm:git:git@github.com:gwen-interpreter/gwen-web.git</developerConnection>
+    <url>git@github.com:gwen-interpreter/gwen-web.git</url>
+  </scm>
+  <developers>
+    <developer>
+      <id>bjuric</id>
+      <name>Branko Juric</name>
+      <url>https://github.com/bjuric</url>
+    </developer>
+    <developer>
+      <id>bradywood</id>
+      <name>Brady Wood</name>
+      <url>https://github.com/bradywood</url>
+    </developer>
+  </developers>)
 
 EclipseKeys.createSrc := EclipseCreateSrc.Default + EclipseCreateSrc.Resource
 
@@ -57,17 +94,21 @@ mappings in (Compile, packageBin) ++= Seq(
 
 packageArchetype.java_application
 
-packagerSettings
+val packageZip = taskKey[File]("package-zip")
 
-JavaAppPackaging.settings
+packageZip := (baseDirectory in Compile).value / "target" / "universal" / (name.value + "-" + version.value + ".zip")
 
-deploymentSettings
+artifact in (Universal, packageZip) ~= { (art:Artifact) => art.copy(`type` = "zip", extension = "zip") }
 
-publish <<= publish.dependsOn(publish in Universal)
+addArtifact(artifact in (Universal, packageZip), packageZip in Universal)
 
-publishLocal <<= publishLocal.dependsOn(publishLocal in Universal)
+publish <<= (publish) dependsOn (packageBin in Universal)
 
-name in Universal := name.value + "_" + scalaBinaryVersion.value
+publishM2 <<= (publishM2) dependsOn (packageBin in Universal)
+
+publishLocal <<= (publishLocal) dependsOn (packageBin in Universal)
+
+PgpKeys.publishSigned <<= (PgpKeys.publishSigned) dependsOn (packageBin in Universal)
 
 mappings in Universal += file("LICENSE") -> "LICENSE" 
 
