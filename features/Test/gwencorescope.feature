@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- Feature: Test that "" is accessible outside of gwen-core.
+ Feature: Test that calling is accessible outside of gwen-core.
       
   Scenario: Test calling an external process and validate it worked.
-      Given I execute system process "ls -la > ~/lsla.txt"
-      Then I execute system process "expr `cat a.txt |wc -l` > 0"
+      Given I execute a unix system process "export TMP='Hello World';/Users/bradywood/gwen-web/scripts/echoTXT.sh > /Users/bradywood/gwen-web/scripts/echoTXT.out"
+      Then I execute system process "wc -l /Users/bradywood/gwen-web/scripts/echoTXT.out"
