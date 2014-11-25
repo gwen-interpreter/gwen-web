@@ -187,8 +187,8 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
           action match {
             case "click" => webElement.click
             case "submit" => webElement.submit
-            case "check" if (!webElement.isSelected()) => webElement.click()
-            case "uncheck" if (webElement.isSelected()) => webElement.click()
+            case "check" if (!webElement.isSelected()) => webElement.sendKeys(Keys.SPACE)
+            case "uncheck" if (webElement.isSelected()) => webElement.sendKeys(Keys.SPACE)
           }
           bindAndWait(element, action, "true", env)
           true
