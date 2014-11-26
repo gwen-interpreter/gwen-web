@@ -19,31 +19,59 @@
   Scenario: Define global locators
       Given the heading can be located by tag name "h2"
         And the next button can be located by class name "btn"
-        And I wait 2 seconds when the next button is clicked
-   
-  Scenario: Define start page element locators
+  
+  Scenario: Initialise start page
        When I am on the start page
        Then the url will be "https://challengers.flood.io/start"
+  
+  @StepDef 
+  Scenario: I should be on the start page
+      Given I am on the start page
+        And the page has loaded is defined by javascript "$('h2').text().trim() == 'Welcome'"
+       When I wait until the page has loaded
+       Then the heading should be "Welcome"
         And the Start button can be located by name "commit"
-        And I wait 2 seconds when the Start button is clicked
 
-  Scenario: Define step 2 page element locators
-       When I am on the step 2 page
-       Then the how old are you dropdown can be located by id "challenger_age"
+  @StepDef
+  Scenario: I should be on the step 2 page
+      Given I am on the step 2 page
+        And the page has loaded is defined by javascript "$('h2').text().trim() == 'Step 2'"
+       When I wait until the page has loaded
+       Then the heading should be "Step 2"
+        And the how old are you dropdown can be located by id "challenger_age"
 
- Scenario: Define step 3 page element locators
-       When I am on the step 3 page
-       Then the largest order value field can be located by id "challenger_largest_order"
+ @StepDef
+ Scenario: I should be on the step 3 page
+      Given I am on the step 3 page
+        And the page has loaded is defined by javascript "$('h2').text().trim() == 'Step 3'"
+       When I wait until the page has loaded
+       Then the heading should be "Step 3"
+        And the largest order value field can be located by id "challenger_largest_order"
         And the largest order value can be located by javascript "$('.radio:contains(' + Math.max.apply(Math, $.map($('.radio'), function(x) { return parseInt($(x).text()); })) + ')').get(0);"
+      
+  @StepDef  
+  Scenario: I should be on the step 4 page
+      Given I am on the step 4 page
+        And the page has loaded is defined by javascript "$('h2').text().trim() == 'Step 4'"
+       When I wait until the page has loaded
+       Then the heading should be "Step 4"
         
-  Scenario: Define step 5 page element locators
+  @StepDef
+  Scenario: I should be on the step 5 page
        When I am on the step 5 page
-       Then the one time token can be located by css selector ".token"
+        And the page has loaded is defined by javascript "$('h2').text().trim() == 'Step 5'"
+       When I wait until the page has loaded
+       Then the heading should be "Step 5"
+        And the one time token can be located by css selector ".token"
         And the one time token field can be located by id "challenger_one_time_token"
         
-  Scenario: Completed page element locators
-    When I am on the challenge completed page
-    Then the lead paragraph can be located by class name "lead"
+  @StepDef
+  Scenario: I should be on the challenge completed page
+      Given I am on the challenge completed page
+        And the page has loaded is defined by javascript "$('h2').text().trim() == "You're Done!""
+       When I wait until the page has loaded
+       Then the heading should be "You're Done!"
+       And the lead paragraph can be located by class name "lead"
      
   @StepDef
   Scenario: I select and enter the largest order value

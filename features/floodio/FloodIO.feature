@@ -25,32 +25,32 @@
       
   Scenario: Complete step 1
       Given I navigate to the start page
-       Then the heading should be "Welcome"
+       Then I should be on the start page
        When I click the Start button
-       Then the heading should be "Step 2"
+       Then I should be on the step 2 page
 
   Scenario: Complete step 2
       Given I am on the step 2 page
        When I select "21" in the how old are you dropdown
         And I click the next button
-       Then the heading should be "Step 3"
+       Then I should be on the step 3 page
        
   Scenario: Complete step 3
       Given I am on the step 3 page
        When I select and enter the largest order value
         And I click the next button
-       Then the heading should be "Step 4"
+       Then I should be on the step 4 page
    
   Scenario: Complete step 4
       Given I am on the step 4 page
        When I click the next button
-       Then the heading should be "Step 5"
+       Then I should be on the step 5 page
 
   Scenario: Complete step 5
       Given I am on the step 5 page
        When I enter the one time token
         And I click the next button
-       Then the heading should be "You're Done!"
+       Then I should be on the challenge completed page
 
   @Robot
   Scenario: Verify robot completion
