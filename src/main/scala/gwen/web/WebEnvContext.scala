@@ -71,10 +71,19 @@ class WebEnvContext(val driverName: String, val scopes: ScopedDataStack) extends
     val userAgent = gwenSetting.getOpt("gwen.web.useragent")
 	val authorizePlugins = gwenSetting.getOpt("gwen.authorize.plugins")
     (driverName.toLowerCase() match {
-      case "firefox" => 
-        userAgent.fold(new FirefoxDriver) { agent =>
-          new FirefoxDriver(new FirefoxProfile() tap { _.setPreference("general.useragent.override", agent) })
-        }
+      case "firefox" =>
+        new FirefoxDriver(new FirefoxProfile() tap { profile =>
+          userAgent foreach { agent =>
+            profile.setPreference("general.useragent.override", agent)
+          }
+          profile.setAcceptUntrustedCertificates(true);
+          authorizePlugins foreach { authorize => 
+	        if (authorize.toBoolean) {
+              profile.setPreference("security.enable_java", true);
+              profile.setPreference("plugin.state.java", 2);
+            }
+          }
+        })
       case "ie" => new InternetExplorerDriver()
       case "chrome" =>
         new ChromeDriver(new ChromeOptions() tap { options =>
