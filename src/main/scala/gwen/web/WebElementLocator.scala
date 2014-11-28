@@ -141,9 +141,7 @@ trait WebElementLocator {
    */
   private def moveTo(env: WebEnvContext, element: String, webElement: WebElement): WebElement = {
     if (!webElement.isDisplayed()) {
-      env.waitUntil(s"Moving to $element") {
-        env.executeScript("var elem = arguments[0]; if (typeof elem !== 'undefined' && elem != null) { elem.scrollIntoView(true); return true; } else return false;").asInstanceOf[Boolean]
-      }
+      env.executeScript("var elem = arguments[0]; if (typeof elem !== 'undefined' && elem != null) { elem.scrollIntoView(true); }")
     }
     webElement tap { env.highlight(_) } 
   }
