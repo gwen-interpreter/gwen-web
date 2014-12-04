@@ -82,13 +82,13 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
         env.scopes.set(s"$element/locator", locator);
         env.scopes.set(s"$element/locator/$locator", expression)
 
-      case r"""the page title should( not)?$negation (be|contain)$operator "(.+?)"$$$expected""" =>
+      case r"""the page title should( not)?$negation (be|contain)$operator "(.*?)"$$$expected""" =>
         compare("title", expected, getTitle(env), operator, Option(negation).isDefined)
         
       case r"""the page title should( not)?$negation (be|contain)$operator (.+?)$$$attribute""" =>
         compare("title", getAttribute(attribute, env), getTitle(env), operator, Option(negation).isDefined) 
         
-      case r"""(.+?)$element should( not)?$negation (be|contain)$operator "(.+?)"$$$expected""" =>
+      case r"""(.+?)$element should( not)?$negation (be|contain)$operator "(.*?)"$$$expected""" =>
         compare(element, expected, getElementText(element, env), operator, Option(negation).isDefined)
         
       case r"""(.+?)$element should( not)?$negation (be|contain)$operator (.+?)$$$attribute""" =>
@@ -117,13 +117,13 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
       case r"""the url will be "(.+?)"$$$url""" => 
         env.scopes.set("url", url)   
         
-      case r"""my (.+?)$setting setting (?:is|will be) "(.+?)"$$$value""" => 
+      case r"""my (.+?)$setting setting (?:is|will be) "(.*?)"$$$value""" => 
         sys.props += ((setting, value))
         
       case r"""(.+?)$attribute (?:is|will be) defined by javascript "(.+?)"$$$expression""" =>
 	    env.scopes.set(s"$attribute/javascript", expression)
         
-      case r"""(.+?)$attribute (?:is|will be) "(.+?)"$$$value""" => 
+      case r"""(.+?)$attribute (?:is|will be) "(.*?)"$$$value""" => 
         env.featureScope.set(attribute, value)
         
       case r"""I wait for (.+?)$element text for (.+?)$seconds second(?:s?)""" =>
@@ -150,7 +150,7 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
         locate(env, element).sendKeys(Keys.RETURN)
 		bindAndWait(element, "enter", "true", env)
 
-      case r"""I (enter|type)$action "(.+?)"$value in (.+?)$$$element""" =>
+      case r"""I (enter|type)$action "(.*?)"$value in (.+?)$$$element""" =>
         sendKeys(element, action, value, env)
         
       case r"""I (enter|type)$action (.+?)$attribute in (.+?)$$$element""" =>
@@ -162,7 +162,7 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
 		  true
 		}
         
-      case r"""I select "(.+?)"$value in (.+?)$$$element""" =>
+      case r"""I select "(.*?)"$value in (.+?)$$$element""" =>
         env.waitUntil(s"Selecting '$value' in $element") {
           selectByVisibleText(element, value, env)
 		  true
