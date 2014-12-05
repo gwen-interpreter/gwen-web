@@ -18,6 +18,11 @@ Finally gwen web will create a summary report detailing the status of each
 test (passed and failed), the time taken to execute each step, screenshots 
 on failures, current environment variables and meta information.
 
+Blogs and Articles
+------------------
+
+- [Page Objects Begone](http://warpedjavaguy.wordpress.com/2014/08/27/page-objects-begone/)
+
 Key Features
 ------------
 - Tests are written in plain English
@@ -132,10 +137,5 @@ played a part in gwen web)
   pre-release documentation and providing valuable feedback.
 
 Thanks again also to Nascent Creative for the awesome logo.
-
-Blogs and Articles
-------------------
-
-- [Page Objects Begone](http://warpedjavaguy.wordpress.com/2014/08/27/page-objects-begone/)
 
 ***
