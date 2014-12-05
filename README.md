@@ -10,26 +10,25 @@ It aims to bring an interactive capability to automation testing by
 providing users with an ability to verify commands and debug tests before 
 committing them to an automation cycle.  
  
-Once the tests have been confirmed, gwen web is able to run the tests 
-sequentially or in parallel.  gwen web can be used to target different types
+Once the tests have been confirmed, gwen-web is able to run the tests 
+sequentially or in parallel.  It can also target different types
 of browsers including Firefox, Chrome, IE and Safari.
 
-Finally gwen web will create a summary report detailing the status of each 
-test (passed and failed), the time taken to execute each step, screenshots 
-on failures, current environment variables and meta information.
+Reports showing the status of each test execution (passed and failed), the time taken to execute each step, screenshots 
+on failures, current environment variables and meta information can also be generated.
 
 Blogs and Articles
 ------------------
 
-- [Page Objects Begone](http://warpedjavaguy.wordpress.com/2014/08/27/page-objects-begone/)
+- [Page Objects Begone](http://warpedjavaguy.wordpress.com/2014/08/27/page-objects-begone/) - See how gwen-web does away with page objects and why they are no longer necessary.
 
 Key Features
 ------------
-- Tests are written in plain English
+- Tests are written in plain text
 - Tests can be run in batch mode or interactively
 - Tests can be run sequentially or in parallel
 - Interactive console allows verifying before running
-- Cross Browser Support
+- Cross browser support
 - No development
  
 Core Requirements
