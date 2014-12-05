@@ -5,10 +5,11 @@ gwen-web
 
 Gwen-web is a web automation engine that runs inside the 
 [gwen-interpreter](https://github.com/gwen-interpreter/gwen). 
-It allows teams to automate web browsers using language instead 
-of code. It aims to bring an interactive capability to automation 
-testing by providing users with an ability to verify commands and 
-debug tests before committing them to an automation cycle.  
+It allows teams to automate front end web tests by writing 
+acceptance specifications instead of code. It aims to bring 
+an interactive capability to automation testing by providing 
+users with an ability to verify commands and debug tests before 
+committing them to an automation cycle.  
  
 Once the tests have been confirmed, gwen-web is able to run the tests 
 sequentially or in parallel.  It can also target different types
@@ -28,7 +29,7 @@ necessary.
 
 Key Features
 ------------
-- Tests are written in plain text
+- Tests are plain text acceptance specifications
 - Tests can be run in batch mode or interactively
 - Tests can be run sequentially or in parallel
 - Interactive console allows verifying before running
