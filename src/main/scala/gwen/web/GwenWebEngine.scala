@@ -18,13 +18,15 @@ package gwen.web
 
 import org.openqa.selenium.Keys
 import org.openqa.selenium.support.ui.Select
-
 import gwen.Predefs.Kestrel
 import gwen.dsl.Step
 import gwen.eval.EvalEngine
 import gwen.eval.GwenOptions
 import gwen.eval.ScopedDataStack
 import gwen.gwenSetting
+import scala.util.Try
+import scala.util.Success
+import scala.util.Failure
 
 
 /**
@@ -89,10 +91,10 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
         compare("title", getAttribute(attribute, env), getTitle(env), operator, Option(negation).isDefined) 
         
       case r"""(.+?)$element should( not)?$negation (be|contain)$operator "(.*?)"$$$expected""" =>
-        compare(element, expected, getElementText(element, env), operator, Option(negation).isDefined)
+        compare(element, expected, getElementTextOrAttribute(element, env), operator, Option(negation).isDefined)
         
       case r"""(.+?)$element should( not)?$negation (be|contain)$operator (.+?)$$$attribute""" =>
-        compare(element, getAttribute(attribute, env), getElementText(element, env), operator, Option(negation).isDefined) 
+        compare(element, getAttribute(attribute, env), getElementTextOrAttribute(element, env), operator, Option(negation).isDefined) 
         
       case r"""I capture (.+?)$element as (.+?)$attribute""" =>
         env.featureScope.set(attribute, getElementText(element, env))
@@ -237,6 +239,15 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
   private def getTitle(env: WebEnvContext): String = env.webDriver.getTitle() tap { title =>
     bindAndWait("page", "title", title, env)
   }
+  
+  private def getElementTextOrAttribute(element: String, env: WebEnvContext): String = 
+    Try(getElementText(element, env)) match {
+      case Success(text) => text
+      case Failure(e1) => Try(getAttribute(element, env)) match {
+        case Success(text) => text
+        case Failure(e2) => sys.error(s"${e1.getMessage()} and ${e2.getMessage()}")
+      }
+    }
   
   private def getElementText(element: String, env: WebEnvContext): String = { 
     val webElement = locate(env, element)
