@@ -4,23 +4,27 @@ gwen-web
 ========
 
 Gwen-web is a web automation engine that runs inside the 
-[gwen-interpreter](https://github.com/gwen-interpreter/gwen).
-It allows teams to automate web browsers using language instead of code.  
-It aims to bring an interactive capability to automation testing by 
-providing users with an ability to verify commands and debug tests before 
-committing them to an automation cycle.  
+[gwen-interpreter](https://github.com/gwen-interpreter/gwen). 
+It allows teams to automate web browsers using language instead 
+of code. It aims to bring an interactive capability to automation 
+testing by providing users with an ability to verify commands and 
+debug tests before committing them to an automation cycle.  
  
 Once the tests have been confirmed, gwen-web is able to run the tests 
 sequentially or in parallel.  It can also target different types
 of browsers including Firefox, Chrome, IE and Safari.
 
-Reports showing the status of each test execution (passed and failed), the time taken to execute each step, screenshots 
-on failures, current environment variables and meta information can also be generated.
+Reports showing the status of each test execution (passed and failed), 
+the time taken to execute each step, screenshots 
+on failures, current environment variables and meta information can 
+also be generated.
 
 Blogs and Articles
 ------------------
 
-- [Page Objects Begone](http://warpedjavaguy.wordpress.com/2014/08/27/page-objects-begone/) - See how gwen-web does away with page objects and why they are no longer necessary.
+- [Page Objects Begone](http://warpedjavaguy.wordpress.com/2014/08/27/page-objects-begone/) - 
+See how gwen-web does away with page objects and why they are no longer 
+necessary.
 
 Key Features
 ------------
