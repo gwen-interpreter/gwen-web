@@ -23,7 +23,7 @@ Blogs and Articles
 ------------------
 
 - [Page Objects Begone](http://warpedjavaguy.wordpress.com/2014/08/27/page-objects-begone/) - 
-See how gwen-web does away with page objects and why they are no longer 
+See how gwen-web does away with page objects and why coding them is no longer 
 necessary.
 
 Key Features
@@ -87,7 +87,8 @@ and tutorial.
 
 ### Cheat Sheet
 
-Please see our [cheat sheet](doc/CHEATSHEET.md) for a list of commands and sample dsl statements
+Please see our [cheat sheet](doc/CHEATSHEET.md) for a list of REPL commands 
+and supported DSL statements.
 
 Mail Group
 ----------
