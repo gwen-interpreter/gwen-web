@@ -6,7 +6,7 @@ gwen-web
 _A Given-When-Then web automation tool._
 
 Gwen-web is a web automation engine that runs inside the 
-[gwen-interpreter](https://github.com/gwen-interpreter/gwen). 
+[gwen](https://github.com/gwen-interpreter/gwen) interpreter. 
 It allows teams to automate front end web tests by writing 
 acceptance specifications instead of code. It aims to bring 
 an interactive capability to automation testing by providing 
