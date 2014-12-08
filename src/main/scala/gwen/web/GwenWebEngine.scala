@@ -30,6 +30,8 @@ import scala.util.Failure
 import javax.xml.xpath.XPathFactory
 import org.xml.sax.InputSource
 import java.io.StringReader
+import org.openqa.selenium.WebElement
+import org.openqa.selenium.StaleElementReferenceException
 
 
 /**
@@ -72,16 +74,16 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
     
     step.expression match {
     
-      case r"""I navigate to the (.+?)$pageScope page""" =>
-        env.webDriver.get(env.scopes.getIn(pageScope, "url"))
-        env.scopes.addScope(pageScope)
+      case r"""I navigate to the (.+?)$$$name""" =>
+        env.webDriver.get(env.scopes.getIn(name, "url"))
+        env.scopes.addScope(name)
         
       case r"""I navigate to "(.+?)"$$$url""" =>
         env.scopes.addScope(url)
         env.webDriver.get(url)
         
-      case r"""I am on the (.+?)$pageScope page""" =>
-        env.scopes.addScope(pageScope)
+      case r"""I am on the (.+?)$$$name""" =>
+        env.scopes.addScope(name)
   
       case r"""(.+?)$element can be located by (id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)$locator "(.+?)"$$$expression""" =>
         env.scopes.set(s"$element/locator", locator);
@@ -106,18 +108,19 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
         env.featureScope.set(element, getElementText(element, env))
         
       case r"""(.+?)$element should( not)?$negation be (displayed|hidden|checked|unchecked|enabled|disabled)$$$state""" =>
-        val webElement = locate(env, element)
-        val result = state match {
-          case "displayed" => webElement.isDisplayed()
-          case "hidden"    => !webElement.isDisplayed()
-          case "checked"   => webElement.isSelected()
-          case "unchecked" => !webElement.isSelected()
-          case "enabled"   => webElement.isEnabled()
-          case "disabled"  => !webElement.isEnabled()
+        withWebElement(env, element) { webElement =>
+          val result = state match {
+            case "displayed" => webElement.isDisplayed()
+            case "hidden"    => !webElement.isDisplayed()
+            case "checked"   => webElement.isSelected()
+            case "unchecked" => !webElement.isSelected()
+            case "enabled"   => webElement.isEnabled()
+            case "disabled"  => !webElement.isEnabled()
+          }
+          if (!Option(negation).isDefined) assert(result,  s"$element should be $state")
+          else assert(!result,  s"$element should not be $state")
+          bindAndWait(element, state, "true", env)
         }
-        if (!Option(negation).isDefined) assert(result,  s"$element should be $state")
-        else assert(!result,  s"$element should not be $state")
-        bindAndWait(element, state, "true", env)
         
       case r"""the url will be "(.+?)"$$$url""" => 
         env.scopes.set("url", url)   
@@ -188,14 +191,15 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
             case "check" => "Checking"
             case "uncheck" => "Unchecking"
           }} $element") {
-          val webElement = locate(env, element)
-          action match {
-            case "click" => webElement.click
-            case "submit" => webElement.submit
-            case "check" if (!webElement.isSelected()) => webElement.sendKeys(Keys.SPACE)
-            case "uncheck" if (webElement.isSelected()) => webElement.sendKeys(Keys.SPACE)
+          withWebElement(env, element) { webElement =>
+            action match {
+              case "click" => webElement.click
+              case "submit" => webElement.submit
+              case "check" if (!webElement.isSelected()) => webElement.sendKeys(Keys.SPACE)
+              case "uncheck" if (webElement.isSelected()) => webElement.sendKeys(Keys.SPACE)
+            }
+            bindAndWait(element, action, "true", env)
           }
-          bindAndWait(element, action, "true", env)
           true
         }
         
@@ -204,6 +208,11 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
         
       case r"""I wait until (.+?)$condition when (.+?)$element is (clicked|submitted|checked|unchecked|selected|typed|entered)$$$event""" =>
         env.scopes.set(s"$element/${eventToAction(event)}/condition", condition)
+        
+      case r"""I wait until "(.+?)$javascript"""" =>
+        env.waitUntil(s"Waiting until $javascript") {
+	      env.executeScript(s"return $javascript").asInstanceOf[Boolean]
+	    }
         
       case r"""I wait until (.+?)$$$condition""" =>
         env.waitUntil(s"Waiting until $condition") {
@@ -254,40 +263,43 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
       }
     }
   
-  private def getElementText(element: String, env: WebEnvContext): String = { 
-    val webElement = locate(env, element)
-    (Option(webElement.getAttribute("value")) match {
-      case Some(value) => value
-      case None => Option(webElement.getAttribute("text")) match {
+  private def getElementText(element: String, env: WebEnvContext): String = 
+    withWebElement(env, element) { webElement =>
+      (Option(webElement.getAttribute("value")) match {
         case Some(value) => value
-        case None => webElement.getText()
+        case None => Option(webElement.getAttribute("text")) match {
+          case Some(value) => value
+          case None => webElement.getText()
+        }
+      }) tap { text => 
+        bindAndWait(element, "text", text, env)
       }
-    }) tap { text => 
-      bindAndWait(element, "text", text, env)
     }
-  }
   
   private def sendKeys(element: String, action: String, value: String, env: WebEnvContext) {
-    val webElement = locate(env, element)
-    webElement.sendKeys(value)
-    bindAndWait(element, "type", value, env)
-    if (action == "enter") {
-      webElement.sendKeys(Keys.RETURN)
-	  bindAndWait(element, "enter", "true", env)
+    withWebElement(env, element) { webElement =>
+      webElement.sendKeys(value)
+      bindAndWait(element, "type", value, env)
+      if (action == "enter") {
+        webElement.sendKeys(Keys.RETURN)
+	    bindAndWait(element, "enter", "true", env)
+      }
     }
   }
   
   private def selectByVisibleText(element: String, value: String, env: WebEnvContext) {
-    val webElement = locate(env, element)
-    new Select(webElement).selectByVisibleText(value)
-    bindAndWait(element, "select", value, env)
+    withWebElement(env, element) { webElement =>
+      new Select(webElement).selectByVisibleText(value)
+      bindAndWait(element, "select", value, env)
+    }
   }
   
   private def selectByIndex(element: String, index: Int, env: WebEnvContext) {
-    val webElement = locate(env, element)
-    val select = new Select(webElement)
-    select.selectByIndex(index)
-    bindAndWait(element, "select", select.getFirstSelectedOption().getText(), env)
+    withWebElement(env, element) { webElement =>
+      val select = new Select(webElement)
+      select.selectByIndex(index)
+      bindAndWait(element, "select", select.getFirstSelectedOption().getText(), env)
+    }
   }
 
   private def bindAndWait(element: String, action: String, value: String, env: WebEnvContext) {
@@ -321,6 +333,14 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
     case "selected"  => "select" 
     case "typed"     => "type" 
     case "entered"   => "enter"
+  }
+  
+  private def withWebElement[T](env: WebEnvContext, element: String)(f: WebElement => T): T = {
+     try {
+       f(locate(env, element))
+     } catch {
+       case e: StaleElementReferenceException => f(locate(env, element))
+     }
   }
   
 }

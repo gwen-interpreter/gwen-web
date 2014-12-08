@@ -17,11 +17,10 @@
 package gwen.web
 
 import java.util.ArrayList
-
 import org.openqa.selenium.By
 import org.openqa.selenium.WebElement
-
 import gwen.Predefs.Kestrel
+import org.openqa.selenium.StaleElementReferenceException
 
 
 /**
@@ -78,22 +77,35 @@ trait WebElementLocator {
       case Some(locator) =>
         val expressionBinding = s"$element/locator/$locator"
         env.scopes.getOpt(expressionBinding) match {
-            case Some(expression) => 
-              locator match {
-                case "id" => getElement(env, element, By.id(expression))
-                case "name" => getElement(env, element, By.name(expression))
-                case "tag name" => getElement(env, element, By.tagName(expression))
-                case "css selector" => getElement(env, element, By.cssSelector(expression))
-                case "xpath" => getElement(env, element, By.xpath(expression))
-                case "class name" => getElement(env, element, By.className(expression))
-                case "link text" => getElement(env, element, By.linkText(expression))
-                case "partial link text" => getElement(env, element, By.partialLinkText(expression))
-                case "javascript" => getElementByJavaScript(env, element, s"$expression")
-                case _ => throw new LocatorBindingException(element, s"unsupported locator: ${locator}")
+            case Some(expression) =>
+              try {
+                findElementByLocator(env, element, locator, expression)
+              } catch {
+                case e: StaleElementReferenceException =>
+                  // attempt to locate one more time on stale element exception
+                  findElementByLocator(env, element, locator, expression)
               }
             case None => throw new LocatorBindingException(element, s"locator expression binding not bound: ${expressionBinding}")
           }
       case None => throw new LocatorBindingException(element, s"locator type binding not found: ${locatorBinding}")
+    }
+  }
+  
+  /**
+   * Finds an element by the given locator expression.
+   */
+  private def findElementByLocator(env: WebEnvContext, element: String, locator: String, expression: String): Option[WebElement] = {
+    locator match {
+      case "id" => getElement(env, element, By.id(expression))
+      case "name" => getElement(env, element, By.name(expression))
+      case "tag name" => getElement(env, element, By.tagName(expression))
+      case "css selector" => getElement(env, element, By.cssSelector(expression))
+      case "xpath" => getElement(env, element, By.xpath(expression))
+      case "class name" => getElement(env, element, By.className(expression))
+      case "link text" => getElement(env, element, By.linkText(expression))
+      case "partial link text" => getElement(env, element, By.partialLinkText(expression))
+      case "javascript" => getElementByJavaScript(env, element, s"$expression")
+      case _ => throw new LocatorBindingException(element, s"unsupported locator: ${locator}")
     }
   }
   
@@ -112,6 +124,7 @@ trait WebElementLocator {
    * visible in the browser, then the element is brought into view by scrolling to it.
    * 
    * @param env the web environment context
+   * @param element the element 
    * @param javascipt the javascript expression for returning the element
    */
   private def getElementByJavaScript(env: WebEnvContext, element: String, javascript: String): Option[WebElement] = {
