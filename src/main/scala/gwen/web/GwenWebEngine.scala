@@ -27,6 +27,9 @@ import gwen.gwenSetting
 import scala.util.Try
 import scala.util.Success
 import scala.util.Failure
+import javax.xml.xpath.XPathFactory
+import org.xml.sax.InputSource
+import java.io.StringReader
 
 
 /**
@@ -84,16 +87,16 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
         env.scopes.set(s"$element/locator", locator);
         env.scopes.set(s"$element/locator/$locator", expression)
 
-      case r"""the page title should( not)?$negation (be|contain)$operator "(.*?)"$$$expected""" =>
-        compare("title", expected, getTitle(env), operator, Option(negation).isDefined)
+      case r"""the page title should( not)?$negation (be|contain|match regex|match xpath)$operator "(.*?)"$$$expression""" =>
+        compare("title", expression, getTitle(env), operator, Option(negation).isDefined)
         
-      case r"""the page title should( not)?$negation (be|contain)$operator (.+?)$$$attribute""" =>
+      case r"""the page title should( not)?$negation (be|contain|match regex|match xpath)$operator (.+?)$$$attribute""" =>
         compare("title", getAttribute(attribute, env), getTitle(env), operator, Option(negation).isDefined) 
         
-      case r"""(.+?)$element should( not)?$negation (be|contain)$operator "(.*?)"$$$expected""" =>
-        compare(element, expected, getElementTextOrAttribute(element, env), operator, Option(negation).isDefined)
+      case r"""(.+?)$element should( not)?$negation (be|contain|match regex|match xpath)$operator "(.*?)"$$$expression""" =>
+        compare(element, expression, getElementTextOrAttribute(element, env), operator, Option(negation).isDefined)
         
-      case r"""(.+?)$element should( not)?$negation (be|contain)$operator (.+?)$$$attribute""" =>
+      case r"""(.+?)$element should( not)?$negation (be|contain|match regex|match xpath)$operator (.+?)$$$attribute""" =>
         compare(element, getAttribute(attribute, env), getElementTextOrAttribute(element, env), operator, Option(negation).isDefined) 
         
       case r"""I capture (.+?)$element as (.+?)$attribute""" =>
@@ -227,13 +230,15 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
       }
     } 
   
-  private def compare(element: String, expected: String, actual: String, operator: String, negate: Boolean) = 
+  private def compare(element: String, expression: String, actual: String, operator: String, negate: Boolean) = 
     (operator match {
-      case "be"      => expected.equals(actual)
-      case "contain" => actual.contains(expected)
+      case "be"      => expression.equals(actual)
+      case "contain" => actual.contains(expression)
+      case "match regex" => actual.matches(expression)
+      case "match xpath" => !XPathFactory.newInstance().newXPath().evaluate(expression,new InputSource(new StringReader(actual))).isEmpty()
     }) tap { result =>
-      if (!negate) assert(result, s"$element '$actual' should $operator '$expected'")
-      else assert(!result, s"$element should not $operator '$expected'")
+      if (!negate) assert(result, s"$element '$actual' should $operator '$expression'")
+      else assert(!result, s"$element should not $operator '$expression'")
     } 
   
   private def getTitle(env: WebEnvContext): String = env.webDriver.getTitle() tap { title =>
