@@ -9,7 +9,7 @@
    - Source Dependencies -
 
    scala 
-      Version 2.11.2, 1.10.4
+      Version 2.11.4, 2.10.4
       Copyright (c) 2002-2014 EPFL
       Copyright (c) 2011-2014 Typesafe, Inc.
       Scala license 
@@ -41,7 +41,7 @@
       http://www.scalatest.org
       
    mockito
-      Version 1.9.5
+      Version 1.10.14
       Copyright (c) 2007 Mockito contributors
       MIT License
       https://github.com/mockito/mockito/blob/master/LICENSE

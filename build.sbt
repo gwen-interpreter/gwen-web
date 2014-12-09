@@ -2,9 +2,7 @@ import com.typesafe.sbt.packager.archetypes._
 
 name := "gwen-web"
 
-description := "A Gherkin evaluation engine for automating online activities and web application testing."
-
-version := "0.1.0-SNAPSHOT"
+description := "An acceptance driven web automation engine."
 
 organization := "org.gweninterpreter"
 
@@ -12,9 +10,9 @@ organizationHomepage := Some(url("http://gweninterpreter.org"))
 
 startYear := Some(2014)
 
-scalaVersion := "2.11.2"
+scalaVersion := "2.11.4"
 
-crossScalaVersions := Seq("2.11.2", "2.10.4")
+crossScalaVersions := Seq("2.11.4", "2.10.4")
 
 scalacOptions += "-feature"
 
@@ -73,7 +71,7 @@ libraryDependencies += "org.gweninterpreter" %% "gwen" % "0.1.0-SNAPSHOT" withSo
 
 libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.1" % "test"
 
-libraryDependencies += "org.mockito" % "mockito-all" % "1.9.5" % "test"
+libraryDependencies += "org.mockito" % "mockito-all" % "1.10.14" % "test"
 
 libraryDependencies += "com.google.code.findbugs" % "jsr305" % "2.0.1" % "compile" 
 
