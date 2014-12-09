@@ -24,6 +24,7 @@ import org.openqa.selenium.OutputType
 import org.openqa.selenium.TakesScreenshot
 import org.openqa.selenium.TimeoutException
 import org.openqa.selenium.WebDriver
+import org.openqa.selenium.WebDriverException
 import org.openqa.selenium.WebElement
 import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.chrome.ChromeOptions
@@ -46,7 +47,7 @@ import gwen.gwenSetting
  *
  *  @author Branko Juric
  */
-class WebEnvContext(val driverName: String, val scopes: ScopedDataStack) extends EnvContext(scopes) {
+class WebEnvContext(val driverName: String, val scopes: ScopedDataStack) extends EnvContext(scopes) with WebElementLocator {
 
   /**
    * Selenium web driver (lazily loaded).
@@ -128,7 +129,10 @@ class WebEnvContext(val driverName: String, val scopes: ScopedDataStack) extends
    */
   def executeScript(javascript: String, params: Any*): Any = 
     webDriver.asInstanceOf[JavascriptExecutor].executeScript(javascript, params.map(_.asInstanceOf[AnyRef]) : _*) tap { result =>
-      logger.debug(s"Evaluating javascript: $javascript")
+      logger.debug(s"Evaluated javascript: $javascript")
+      if (result.isInstanceOf[Boolean] && result.asInstanceOf[Boolean]) {
+	    Thread.sleep(gwenSetting.getOpt("gwen.web.throttle.msecs").getOrElse("200").toLong)
+	  }
     }
   
   /**
@@ -187,6 +191,24 @@ class WebEnvContext(val driverName: String, val scopes: ScopedDataStack) extends
    */
   override def createAttachments(failure: Failed): List[(String, File)] =
     ("Screenshot", webDriver.asInstanceOf[TakesScreenshot].getScreenshotAs(OutputType.FILE)) :: super.createAttachments(failure)
+   
+  /**
+   * Performs a function on a web element and transparently re-locates elements and 
+   * re-attempts the function if the web driver is and the dynamically changing DOM 
+   * in the browser are out of sync.
+   * 
+   * @param element 
+   * 			the element reference to perform the action on
+   * @param f
+   * 			the function to perform on the element
+   */
+  def withWebElement[T](element: String)(f: WebElement => T): T = {
+     try {
+       f(locate(this, element))
+     } catch {
+       case _: WebDriverException => f(locate(this, element))
+     }
+  }
     
 }
 

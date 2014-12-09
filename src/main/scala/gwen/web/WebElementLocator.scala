@@ -20,7 +20,7 @@ import java.util.ArrayList
 import org.openqa.selenium.By
 import org.openqa.selenium.WebElement
 import gwen.Predefs.Kestrel
-import org.openqa.selenium.StaleElementReferenceException
+import org.openqa.selenium.WebDriverException
 
 
 /**
@@ -81,8 +81,8 @@ trait WebElementLocator {
               try {
                 findElementByLocator(env, element, locator, expression)
               } catch {
-                case e: StaleElementReferenceException =>
-                  // attempt to locate one more time on stale element exception
+                case e: WebDriverException =>
+                  // attempt to locate one more time on web driver exception
                   findElementByLocator(env, element, locator, expression)
               }
             case None => throw new LocatorBindingException(element, s"locator expression binding not bound: ${expressionBinding}")
