@@ -199,29 +199,34 @@ class WebEnvContext(val driverName: String, val scopes: ScopedDataStack) extends
    
   /**
    * Performs a function on a web element and transparently re-locates elements and 
-   * re-attempts the function if the web driver is and the dynamically changing DOM 
-   * in the browser are out of sync.  If the `gwen.web.capture.screenshots` setting 
-   * is set then the current screenshot is also attached.
+   * re-attempts the function if the web driver throws an exception.
    * 
    * @param element 
    * 			the element reference to perform the action on
    * @param f
    * 			the function to perform on the element
    */
-  def withWebElement[T](element: String)(f: WebElement => T): T = {
+  def withWebElement[T](element: String)(f: WebElement => T): T =
      try {
        f(locate(this, element))
      } catch {
        case _: WebDriverException => f(locate(this, element))
-     } finally {
-       gwenSetting.getOpt("gwen.web.capture.screenshots") foreach { withScreenshot =>
-      	if (withScreenshot.toBoolean) {
-      	  addAttachment(captureScreenshot)
-      	}
-      }
      }
+
+  /**
+   * Invokes the given function before and then captures the current browser
+   * screenshot if the gwen.web.catpure.screenshots setting is set.
+   */
+  def withScreenShot(f: => Unit): Unit = { 
+    f
+    gwenSetting.getOpt("gwen.web.capture.screenshots") foreach { enabled =>
+      if (enabled.toBoolean) {
+        Thread.sleep(gwenSetting.getOpt("gwen.web.throttle.msecs").getOrElse("200").toLong)
+      	addAttachment(captureScreenshot)
+      }
+    }
   }
-    
+  
 }
 
 /**
