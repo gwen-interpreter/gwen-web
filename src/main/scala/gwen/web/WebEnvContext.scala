@@ -184,18 +184,24 @@ class WebEnvContext(val driverName: String, val scopes: ScopedDataStack) extends
   }
   
   /**
-   * Includes a screenshot in the list of failure attachments.
+   * Includes a screenshot in the list of error attachments.
    * 
    * @param failed
    * 			the failed status
    */
-  override def createAttachments(failure: Failed): List[(String, File)] =
-    ("Screenshot", webDriver.asInstanceOf[TakesScreenshot].getScreenshotAs(OutputType.FILE)) :: super.createAttachments(failure)
+  override def createErrorAttachments(failure: Failed): List[(String, File)] =
+    captureScreenshot :: super.createErrorAttachments(failure)
+    
+  /**
+   * Captures and returns the current screenshot as an attachment (name-file pair).
+   */
+  private def captureScreenshot = ("Screenshot", webDriver.asInstanceOf[TakesScreenshot].getScreenshotAs(OutputType.FILE))
    
   /**
    * Performs a function on a web element and transparently re-locates elements and 
    * re-attempts the function if the web driver is and the dynamically changing DOM 
-   * in the browser are out of sync.
+   * in the browser are out of sync.  If the `gwen.web.capture.screenshots` setting 
+   * is set then the current screenshot is also attached.
    * 
    * @param element 
    * 			the element reference to perform the action on
@@ -207,6 +213,12 @@ class WebEnvContext(val driverName: String, val scopes: ScopedDataStack) extends
        f(locate(this, element))
      } catch {
        case _: WebDriverException => f(locate(this, element))
+     } finally {
+       gwenSetting.getOpt("gwen.web.capture.screenshots") foreach { withScreenshot =>
+      	if (withScreenshot.toBoolean) {
+      	  addAttachment(captureScreenshot)
+      	}
+      }
      }
   }
     
