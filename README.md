@@ -50,10 +50,11 @@ Installation
 
 Perform the following to download and install the latest build:
 
-1. Download and extract the following zip to a desired location on your drive:
-   - [gwen-web_2.11-0.1.0-SNAPSHOT.zip](https://oss.sonatype.org/content/repositories/snapshots/org/gweninterpreter/gwen-web_2.11/0.1.0-SNAPSHOT/gwen-web_2.11-0.1.0-SNAPSHOT.zip)
-   - A folder named _gwen-web-[version]_ will be installed 
-2. [Start using gwen-web](doc/START.md)
+1. Download the latest published zip from 
+   the [gwen-web repository](https://oss.sonatype.org/content/repositories/snapshots/org/gweninterpreter/gwen-web_2.11) 
+2. Extract the zip to a desired location on your local drive:
+   - A folder named _gwen-web-[version]_ will be created
+3. [Start using gwen-web](doc/START.md)
 
 ### Building and Installing from Source
 
