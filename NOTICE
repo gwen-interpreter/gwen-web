@@ -16,8 +16,8 @@
       http://www.scala-lang.org/license.html
       http://www.scala-lang.org
          
-   gwen-interpreter
-      Version 1.0.0 (latest.integration)
+   gwen
+      Version 1.0.0
       Copyright (c) 2014 Branko Juric, Brady Wood 
       Apache License, Version 2.0
       https://github.com/gwen-interpreter/gwen/LICENSE
