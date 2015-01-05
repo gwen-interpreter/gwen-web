@@ -1,3 +1,6 @@
+// sbt-pgp uses BouncyCastle 1.49, sbt-native-packager uses 1.5.1, force former in latter to avoid conflict in publishSigned task
+dependencyOverrides += "org.bouncycastle" % "bcpg-jdk15on" % "1.49"
+
 addSbtPlugin("com.typesafe.sbteclipse" % "sbteclipse-plugin" % "2.5.0")
 
 addSbtPlugin("com.typesafe.sbt" % "sbt-native-packager" % "0.8.0-RC2")
