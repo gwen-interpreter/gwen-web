@@ -14,15 +14,15 @@
 # limitations under the License.
 #
 
-   Feature: flood io meta
+   Feature: floodio meta
   
-  Scenario: Define global locators
+  Scenario: Initialise
       Given the heading can be located by tag name "h2"
         And the next button can be located by class name "btn"
-  
-  Scenario: Initialise start page
-       When I am on the start page
-       Then the url will be "https://challengers.flood.io/start"
+       
+  @StepDef
+  Scenario: I launch the floodio challenge
+      Given I navigate to "https://challengers.flood.io/start"
   
   @StepDef 
   Scenario: I should be on the start page

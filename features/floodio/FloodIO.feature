@@ -14,18 +14,21 @@
 # limitations under the License.
 #
 
- Feature: Complete the flood io challenge
+ Feature: Complete the floodio challenge
      As a gwen user
-   I want to automate the floodio challenge
-  So that I can verify that it works
+     I want to automate the floodio challenge
+     So that I can verify that it works
   
   @Robot
   Scenario: Initialise user agent
       Given my gwen.web.useragent setting is "I AM ROBOT" 
       
-  Scenario: Complete step 1
-      Given I navigate to the start page
+  Scenario: Launch the challenge
+      Given I launch the floodio challenge
        Then I should be on the start page
+       
+  Scenario: Complete step 1
+      Given I am on the start page
        When I click the Start button
        Then I should be on the step 2 page
 
@@ -51,7 +54,7 @@
        When I enter the one time token
         And I click the next button
        Then I should be on the challenge completed page
-
+       
   @Robot
   Scenario: Verify robot completion
       Given I am on the challenge completed page
