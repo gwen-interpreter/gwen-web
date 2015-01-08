@@ -68,3 +68,9 @@ gwen -b -t ~@Robot ../features/floodio
 
 This will start and complete the flood io challenge.
 
+Next Steps
+==========
+
+See [blogs and articles](../README.md#blogs-and-articles) for more 
+details.
+

@@ -17,15 +17,12 @@
 package gwen.web
 
 import java.io.StringReader
-
 import scala.util.Failure
 import scala.util.Success
 import scala.util.Try
-
 import org.openqa.selenium.Keys
 import org.openqa.selenium.support.ui.Select
 import org.xml.sax.InputSource
-
 import gwen.Predefs.Kestrel
 import gwen.dsl.Step
 import gwen.eval.EvalEngine
@@ -33,6 +30,8 @@ import gwen.eval.GwenOptions
 import gwen.eval.ScopedDataStack
 import gwen.gwenSetting
 import javax.xml.xpath.XPathFactory
+import javax.xml.namespace.NamespaceContext
+import java.util.Iterator
 
 
 /**
@@ -271,7 +270,22 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
       case "be"      => expression.equals(actual)
       case "contain" => actual.contains(expression)
       case "match regex" => actual.matches(expression)
-      case "match xpath" => !XPathFactory.newInstance().newXPath().evaluate(expression,new InputSource(new StringReader(actual))).isEmpty()
+      case "match xpath" => 
+        expression match {
+          case r"""(.+?)$expr where (.+?)$$$namespaces""" =>
+            val xPath = XPathFactory.newInstance().newXPath()
+            xPath.setNamespaceContext(new NamespaceContext() { 
+              def getNamespaceURI(prefix: String): String = {
+                val mappings = namespaces.split(",").map(_.split("=")).map(pair => (pair(0).trim, pair(1).trim)).toMap
+                return mappings.getOrElse(prefix, sys.error(s"Unknown namespace prefix: $prefix"));
+              }
+              def getPrefix(uri: String): String = null
+              def getPrefixes(uri: String): Iterator[String] = null
+            });
+            !xPath.evaluate(expr, new InputSource(new StringReader(actual))).isEmpty()
+          case _ =>
+            !XPathFactory.newInstance().newXPath().evaluate(expression, new InputSource(new StringReader(actual))).isEmpty()
+        }
     }) tap { result =>
       if (!negate) assert(result, s"$element '$actual' should $operator '$expression'")
       else assert(!result, s"$element should not $operator '$expression'")
