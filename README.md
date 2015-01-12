@@ -27,7 +27,7 @@ Blogs and Articles
 See how gwen-web does away with page objects and why coding them is no longer 
 necessary.
 - [Automation By Meta](http://warpedjavaguy.wordpress.com/2015/01/12/automation-by-meta/) - 
-A top down approach to achieving cross browser automation using meta as glue.
+A top down approach to achieving cross browser automation where the meta is the glue.
 
 Key Features
 ------------
