@@ -26,6 +26,8 @@ Blogs and Articles
 - [Page Objects Begone](http://warpedjavaguy.wordpress.com/2014/08/27/page-objects-begone/) - 
 See how gwen-web does away with page objects and why coding them is no longer 
 necessary.
+- [Automation By Meta](http://warpedjavaguy.wordpress.com/2015/01/12/automation-by-meta/) - 
+A top down approach to achieving cross browser automation using meta as glue.
 
 Key Features
 ------------
