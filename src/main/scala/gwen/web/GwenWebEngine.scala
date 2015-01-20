@@ -98,6 +98,22 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
       case r"""the page title should( not)?$negation (be|contain|match regex|match xpath)$operator (.+?)$$$attribute""" => env.withScreenShot {
         compare("title", getAttribute(attribute, env), getTitle(env), operator, Option(negation).isDefined) 
       }
+      
+      case r"""(.+?)$element should( not)?$negation be (displayed|hidden|checked|unchecked|enabled|disabled)$$$state""" => env.withScreenShot {
+        env.withWebElement(element) { webElement =>
+          val result = state match {
+            case "displayed" => webElement.isDisplayed()
+            case "hidden"    => !webElement.isDisplayed()
+            case "checked"   => webElement.isSelected()
+            case "unchecked" => !webElement.isSelected()
+            case "enabled"   => webElement.isEnabled()
+            case "disabled"  => !webElement.isEnabled()
+          }
+          if (!Option(negation).isDefined) assert(result,  s"$element should be $state")
+          else assert(!result,  s"$element should not be $state")
+          bindAndWait(element, state, "true", env)
+        }
+      }
         
       case r"""(.+?)$element should( not)?$negation (be|contain|match regex|match xpath)$operator "(.*?)"$$$expression""" => env.withScreenShot {
         compare(element, expression, getAttributeOrElementText(element, env), operator, Option(negation).isDefined)
@@ -113,22 +129,6 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
         
       case r"""I capture (.+?)$element""" => env.withScreenShot {
         getElementText(element, env)
-      }
-        
-      case r"""(.+?)$element should( not)?$negation be (displayed|hidden|checked|unchecked|enabled|disabled)$$$state""" => env.withScreenShot {
-        env.withWebElement(element) { webElement =>
-          val result = state match {
-            case "displayed" => webElement.isDisplayed()
-            case "hidden"    => !webElement.isDisplayed()
-            case "checked"   => webElement.isSelected()
-            case "unchecked" => !webElement.isSelected()
-            case "enabled"   => webElement.isEnabled()
-            case "disabled"  => !webElement.isEnabled()
-          }
-          if (!Option(negation).isDefined) assert(result,  s"$element should be $state")
-          else assert(!result,  s"$element should not be $state")
-          bindAndWait(element, state, "true", env)
-        }
       }
         
       case r"""the url will be "(.+?)"$$$url""" => 
