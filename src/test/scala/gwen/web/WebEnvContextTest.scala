@@ -33,17 +33,18 @@ import gwen.eval.ScopedDataStack
 
 class WebEnvContextTest extends FlatSpec with Matchers with MockitoSugar {
   
-  val mockWebDriver = mock[WebDriver]
   val mockWebDriverOptions = mock[WebDriver.Options]
   val mockWebDriverTimeouts = mock[WebDriver.Timeouts]
   
   "New web env context" should "have 'feature' scope" in {
-    val env = newEnv
+    val mockWebDriver = mock[WebDriver]
+    val env = newEnv(mockWebDriver)
     env.scopes.current.scope should be ("feature")
   }
   
   "Bound scope attribute" should "be recreated after reset" in {
-    val env = newEnv
+    val mockWebDriver = mock[WebDriver]
+    val env = newEnv(mockWebDriver)
     env.scopes.addScope("login")
     env.scopes.set("username", "Gwen")
     env.scopes.get("username") should be ("Gwen")
@@ -53,12 +54,14 @@ class WebEnvContextTest extends FlatSpec with Matchers with MockitoSugar {
   }
   
   "json on new env context" should "be empty" in {
-    val env = newEnv
+    val mockWebDriver = mock[WebDriver]
+    val env = newEnv(mockWebDriver)
     env.json.toString should be ("""{"scopes":[{"scope":"feature","atts":[]}]}""")
   }
   
   "Bound scope attribute" should "show up in JSON string" in {
-    val env = newEnv
+    val mockWebDriver = mock[WebDriver]
+    val env = newEnv(mockWebDriver)
     env.scopes.addScope("login")
     env.scopes.set("username", "Gwen")
     env.scopes.get("username") should be ("Gwen")
@@ -66,22 +69,46 @@ class WebEnvContextTest extends FlatSpec with Matchers with MockitoSugar {
                                       
   }
   
-  "Closing new web env context without referencing webdriver" should "not close web driver" in {
-    val env = newEnv
+  "Closing new web env context without referencing webdriver" should "not quit web driver" in {
+    val mockWebDriver = mock[WebDriver]
+    val env = newEnv(mockWebDriver)
     env.close()
-    verify(mockWebDriver, never()).close()
+    verify(mockWebDriver, never()).quit()
   }
   
-  "Referencing webdriver" should "initialise with implicit wait and close correctly" in {
+  "Closing new web env context after referencing webdriver" should "quit web driver" in {
+    val mockWebDriver = mock[WebDriver]
+    val env = newEnv(mockWebDriver)
+    env.webDriver
+    env.close()
+    verify(mockWebDriver).quit()
+  }
+  
+  "Resetting new web env context without referencing webdriver" should "not quit web driver" in {
+    val mockWebDriver = mock[WebDriver]
+    val env = newEnv(mockWebDriver)
+    env.reset()
+    verify(mockWebDriver, never()).quit()
+  }
+  
+  "Resetting new web env context after referencing webdriver" should "quit web driver" in {
+    val mockWebDriver = mock[WebDriver]
+    val env = newEnv(mockWebDriver)
+    env.webDriver
+    env.reset()
+    verify(mockWebDriver).quit()
+  }
+  
+  "Referencing webdriver" should "should close only once after creation" in {
 	
-    val env = newEnv
+    val mockWebDriver = mock[WebDriver]
+    val env = newEnv(mockWebDriver)
 
     when(mockWebDriver.manage()).thenReturn(mockWebDriverOptions)
     when(mockWebDriverOptions.timeouts()).thenReturn(mockWebDriverTimeouts)
     
-    // reference 1t time should setup implicit wait time
+    // reference 1st time to force creation
     env.webDriver
-    verify(mockWebDriverTimeouts).implicitlyWait(anyLong, same(TimeUnit.SECONDS))
     
     // calling close multiple times should call quit only once
     env.close()
@@ -89,8 +116,8 @@ class WebEnvContextTest extends FlatSpec with Matchers with MockitoSugar {
     verify(mockWebDriver, times(1)).quit()
   }
   
-  def newEnv = new WebEnvContext("Firefox", new ScopedDataStack()) {
-    override private[web] def loadWebDriver(driverName: String): WebDriver = mockWebDriver
+  def newEnv(driver: WebDriver) = new WebEnvContext("Firefox", new ScopedDataStack()) {
+    override private[web] def loadWebDriver(driverName: String): WebDriver = driver
   }
   
 }

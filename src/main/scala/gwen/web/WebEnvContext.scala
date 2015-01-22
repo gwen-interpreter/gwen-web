@@ -52,14 +52,13 @@ class WebEnvContext(val driverName: String, val scopes: ScopedDataStack) extends
   /**
    * Selenium web driver (lazily loaded).
    */
-  private var isWebDriverSet = false
-  lazy val webDriver: WebDriver = {
-    loadWebDriver(driverName) tap { webdriver =>
-      isWebDriverSet = true;
-      gwenSetting.getOpt("gwen.web.wait.seconds") foreach { wait =>
-        webdriver.manage().timeouts().implicitlyWait(wait.toLong, TimeUnit.SECONDS)
-      }
-    }
+  private var _webDriver: Option[WebDriver] = None
+  def webDriver: WebDriver = _webDriver match {
+    case None => 
+      _webDriver = Some(loadWebDriver(driverName))
+      _webDriver.get
+    case _ => 
+      _webDriver.get
   }
   
   /**
@@ -99,6 +98,9 @@ class WebEnvContext(val driverName: String, val scopes: ScopedDataStack) extends
       case "safari" => new SafariDriver
       case _ => sys.error(s"Unsupported webdriver: $driverName")
     }) tap { driver =>
+      gwenSetting.getOpt("gwen.web.wait.seconds") foreach { wait =>
+        driver.manage().timeouts().implicitlyWait(wait.toLong, TimeUnit.SECONDS)
+      }
       gwenSetting.getOpt("gwen.web.maximize") foreach { maximize =>
       	if (maximize.toBoolean) {
       	  driver.manage().window().maximize() 
@@ -107,16 +109,22 @@ class WebEnvContext(val driverName: String, val scopes: ScopedDataStack) extends
     }
     
   }
+  
+   /**
+   * Resets the current context and closes the web driver session.
+   */
+  override def reset() {
+    super.reset()
+    close()
+  }
 
   /**
    * Closes this context and the web driver (if it has loaded).  Once closed,
    * this context should not be used again.
    */
   override def close() {
-    if (isWebDriverSet) {
-      webDriver.quit()
-      isWebDriverSet = false
-    }
+    _webDriver foreach { _.quit() }
+    _webDriver = None
   }
   
   /**
