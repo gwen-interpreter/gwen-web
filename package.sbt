@@ -1,4 +1,8 @@
+import com.typesafe.sbt.packager.Keys._
+
 packageArchetype.java_application
+
+scriptClasspath := Seq("*")
 
 val packageZip = taskKey[File]("package-zip")
 
