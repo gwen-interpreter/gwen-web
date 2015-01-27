@@ -22,8 +22,12 @@ directory and set the following property to one of the values shown:
   respectively and install it on your system path.
 
 - Alternatively you can set the following in the gwen.properties as per below.
+```
     (chrome)  webdriver.chrome.driver = /path/to/chromedriver/executable
+```
+```
     (IE)      webdriver.ie.driver = c:/path/to/IEDriverServer.exe
+```
 
 ### Gwen properties
 
