@@ -66,21 +66,24 @@ Perform the following if you would like to build and install gwen-web from sourc
 1. Download and install [Java SDK 1.6 or later](http://www.oracle.com/technetwork/java/javase/downloads/index.html) 
    - Note Java 8 is not recommended at this time of writing
 2. Download and install the latest [sbt](http://www.scala-sbt.org/) version
-3. Either:
-   - Download a [Git client](http://git-scm.com/downloads) and clone this 
-     repository using one of the following (SSH or HTTPS) URLs: 
+3. Download a [Git client](http://git-scm.com/downloads).
+4. Clone the gwen source repository using one of the following (SSH or HTTPS) URLs: 
+     - `git@github.com:gwen-interpreter/gwen.git`
+     - `https://github.com/gwen-interpreter/gwen.git`
+4. Change to the directory where you cloned the gwen source and run 
+   `sbt publish-local` to build the gwen binary and publish it to 
+   your local repository
+5. Clone the gwen-web source repository using one of the following (SSH or HTTPS) URLs: 
      - `git@github.com:gwen-interpreter/gwen-web.git`
      - `https://github.com/gwen-interpreter/gwen-web.git`
-   - Or click the Download ZIP link on this project page to download 
-     the source archive and extract it to a local folder  
-4. Change to the directory where you cloned/downloaded the source and run 
+6. Change to the directory where you cloned the gwen-web source and run 
    `sbt universal:package-bin` to build the distributable ZIP
    - This will create a _gwen-web-[version].zip_ file in the 
      _target/universal_ folder relative to your current directory
-5. Extract the generated ZIP to a desired location on your local drive
+7. Extract the generated ZIP to a desired location on your local drive
    - This will create a project folder named _gwen-web-[version]_ in that 
      location
-6. [Start using gwen-web](doc/START.md)
+8. [Start using gwen-web](doc/START.md)
 
 Usage
 -----

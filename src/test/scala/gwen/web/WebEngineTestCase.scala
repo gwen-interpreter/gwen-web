@@ -32,7 +32,7 @@ trait WebEngineTestCase extends FlatSpec {
       true,
       false,
       Some(new File("target/report")), 
-      None, 
+      Nil, 
       Nil,
       metaFilepaths map { filepath => new File(getClass().getResource(filepath).getFile()) },
       List(new File(featureFilepath)))

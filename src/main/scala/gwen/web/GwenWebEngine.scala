@@ -74,18 +74,24 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
     
     step.expression match {
     
+      case r"""I am on the (.+?)$$$name""" =>
+        env.scopes.addScope(name)
+        
       case r"""I navigate to the (.+?)$$$name""" => env.withScreenShot {
     	env.scopes.addScope(name)
-        env.webDriver.get(env.scopes.getIn(name, "url"))
+        env.webDriver.get(getAttribute("url", env))
       }
         
       case r"""I navigate to "(.+?)"$$$url""" => env.withScreenShot {
         env.scopes.addScope(url)
         env.webDriver.get(url)
       }
+      
+      case r"""the url will be defined by (?:property|setting) "(.+?)"$$$property""" => 
+        env.scopes.set("url/property", property)
         
-      case r"""I am on the (.+?)$$$name""" =>
-        env.scopes.addScope(name)
+      case r"""the url will be "(.+?)"$$$url""" => 
+        env.scopes.set("url", url)   
   
       case r"""(.+?)$element can be located by (id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)$locator "(.+?)"$$$expression""" =>
         env.scopes.set(s"$element/locator", locator);
@@ -131,14 +137,14 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
         getElementText(element, env)
       }
         
-      case r"""the url will be "(.+?)"$$$url""" => 
-        env.scopes.set("url", url)   
+      case r"""my (.+?)$property (?:property|setting) (?:is|will be) "(.*?)"$$$value""" => 
+        sys.props += ((property, value))
         
-      case r"""my (.+?)$setting setting (?:is|will be) "(.*?)"$$$value""" => 
-        sys.props += ((setting, value))
-        
-      case r"""(.+?)$attribute (?:is|will be) defined by javascript "(.+?)"$$$expression""" =>
-	    env.scopes.set(s"$attribute/javascript", expression)
+      case r"""(.+?)$attribute (?:is|will be) defined by (javascript|property|setting)$attrType "(.+?)"$$$expression""" =>
+        (attrType match {
+          case "javascript" => env.scopes.current
+          case _ => env.featureScope
+        }).set(s"$attribute/$attrType", expression)
         
       case r"""(.+?)$attribute (?:is|will be) "(.*?)"$$$value""" => 
         env.featureScope.set(attribute, value)
@@ -245,7 +251,7 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
         Thread.sleep(duration.toLong * 1000)
       }
         
-      case r"""I highlight (.+?)$$$element""" =>
+      case r"""I (?:highlight|locate) (.+?)$$$element""" =>
         env.highlight(locate(env, element))
         
       case _ => super.evaluate(step, env)
@@ -259,8 +265,14 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
       case _ => env.scopes.getOpt(s"$name/text") match {
         case Some(value) => value
         case _ => env.scopes.getOpt(s"$name/javascript") match {
-          case Some(expression) => env.executeScript(s"return $expression").asInstanceOf[String]
-          case _ => env.scopes.get(name)
+          case Some(javascript) => env.executeScript(s"return $javascript").asInstanceOf[String]
+          case _ => env.scopes.getOpt(s"$name/property") match {
+            case Some(property) => gwenSetting.get(property)
+            case _ => env.scopes.getOpt(s"$name/setting") match {
+              case Some(setting) => gwenSetting.get(setting)
+              case _ => env.scopes.get(name)
+            }
+          }
         }
       }
     } 
