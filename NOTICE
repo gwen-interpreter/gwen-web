@@ -2,23 +2,23 @@
                                   gwen-web
                                   ========
                                
-                    Copyright 2014 Brady Wood, Branko Juric
+                  Copyright 2014-2015 Brady Wood, Branko Juric
 
    This product depends on the following open source projects:
    
    - Source Dependencies -
 
    scala 
-      Version 2.11.4, 2.10.4
-      Copyright (c) 2002-2014 EPFL
-      Copyright (c) 2011-2014 Typesafe, Inc.
+      Version 2.11.5, 2.10.4
+      Copyright (c) 2002-2015 EPFL
+      Copyright (c) 2011-2015 Typesafe, Inc.
       Scala license 
       http://www.scala-lang.org/license.html
       http://www.scala-lang.org
          
    gwen
-      Version 1.0.0
-      Copyright (c) 2014 Branko Juric, Brady Wood 
+      Version 1.0.0-968651c9a02272b8f70ad0717cb1a587b77656e0
+      Copyright (c) 2014-2015 Branko Juric, Brady Wood 
       Apache License, Version 2.0
       https://github.com/gwen-interpreter/gwen/LICENSE
       https://github.com/gwen-interpreter/gwen
