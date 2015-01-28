@@ -38,7 +38,7 @@ resolvers += "Typesafe Repo" at "http://repo.typesafe.com/typesafe/releases/"
 
 resolvers += "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"
 
-libraryDependencies += "org.gweninterpreter" %% "gwen" % "1.0.0-acac37ed3a4db7591df997f7717aa6ee39046852" withSources()
+libraryDependencies += "org.gweninterpreter" %% "gwen" % "1.0.0-968651c9a02272b8f70ad0717cb1a587b77656e0" withSources()
 
 libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.1" % "test"
 

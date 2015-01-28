@@ -145,13 +145,13 @@ class WebEnvContext(val driverName: String, val scopes: ScopedDataStack) extends
   
   /**
    * Waits until a given condition is ready. Errors if times out 
-   * after "gwen.web.wait.seconds".
+   * after "gwen.web.wait.seconds" (default is 10 seconds)
    * 
    * @param reason the reason for waiting (used to report timeout error)
    * @param condition the boolean condition to wait for (until true)
    */
   def waitUntil(reason: String)(condition: => Boolean) {
-    waitUntil(reason, gwenSetting.get("gwen.web.wait.seconds").toInt) { condition }
+    waitUntil(reason, gwenSetting.getOpt("gwen.web.wait.seconds").getOrElse("10").toInt) { condition }
   }
   
   /**
