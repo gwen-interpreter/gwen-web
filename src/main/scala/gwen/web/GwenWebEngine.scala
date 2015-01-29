@@ -52,7 +52,7 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
    */
   override def init(options: GwenOptions, scopes: ScopedDataStack) = 
     new WebEnvContext(
-      gwenSetting.get("gwen.web.browser") tap { webdriver =>
+      gwenSetting.getOpt("gwen.web.browser").getOrElse("firefox") tap { webdriver =>
         logger.info(s"$webdriver web driver configured")
 	  },
 	  scopes
@@ -87,8 +87,8 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
         env.webDriver.get(url)
       }
       
-      case r"""the url will be defined by (?:property|setting) "(.+?)"$$$property""" => 
-        env.scopes.set("url/property", property)
+      case r"""the url will be defined by (?:property|setting) "(.+?)"$$$name""" => 
+        env.scopes.set("url", gwenSetting.get(name))
         
       case r"""the url will be "(.+?)"$$$url""" => 
         env.scopes.set("url", url)   
@@ -137,14 +137,14 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
         getElementText(element, env)
       }
         
-      case r"""my (.+?)$property (?:property|setting) (?:is|will be) "(.*?)"$$$value""" => 
-        sys.props += ((property, value))
+      case r"""my (.+?)$name (?:property|setting) (?:is|will be) "(.*?)"$$$value""" =>
+        gwenSetting.add(name, value)
         
       case r"""(.+?)$attribute (?:is|will be) defined by (javascript|property|setting)$attrType "(.+?)"$$$expression""" =>
-        (attrType match {
-          case "javascript" => env.scopes.current
-          case _ => env.featureScope
-        }).set(s"$attribute/$attrType", expression)
+        attrType match {
+          case "javascript" => env.scopes.set(s"$attribute/javascript", expression)
+          case _ => env.featureScope.set(attribute, gwenSetting.get(expression))
+        }
         
       case r"""(.+?)$attribute (?:is|will be) "(.*?)"$$$value""" => 
         env.featureScope.set(attribute, value)
@@ -266,13 +266,7 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
         case Some(value) => value
         case _ => env.scopes.getOpt(s"$name/javascript") match {
           case Some(javascript) => env.executeScript(s"return $javascript").asInstanceOf[String]
-          case _ => env.scopes.getOpt(s"$name/property") match {
-            case Some(property) => gwenSetting.get(property)
-            case _ => env.scopes.getOpt(s"$name/setting") match {
-              case Some(setting) => gwenSetting.get(setting)
-              case _ => env.scopes.get(name)
-            }
-          }
+          case _ => env.scopes.get(name)
         }
       }
     } 
