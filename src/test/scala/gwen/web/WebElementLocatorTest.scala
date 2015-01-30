@@ -171,7 +171,7 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar wit
     val e = intercept[TimeoutOnWaitException] {
       locate(env, "username")
     }
-    e.getMessage should be ("Timed out locating username.")
+    e.getMessage should be ("Timed out waiting.")
     
     verify(mockWebDriver, atLeastOnce()).executeScript(s"return $locatorValue")
 	

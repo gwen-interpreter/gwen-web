@@ -21,6 +21,6 @@ import org.scalatest.junit.JUnitRunner
 class AutomationByMetaTest extends WebEngineTestCase {
 
   "AutomationByMeta blog features" should "evaluate" in {
-    interpret("features/blogs/automationByMeta")
+    interpretNoReport("features/blogs/automationByMeta")
   }
 }

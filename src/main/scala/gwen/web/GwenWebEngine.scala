@@ -210,13 +210,8 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
       }
         
       case r"""I (click|submit|check|uncheck)$action (.+?)$$$element""" => env.withScreenShot {
-        env.waitUntil(s"${action match {
-            case "click" => "Clicking"
-            case "submit" => "Submitting"
-            case "check" => "Checking"
-            case "uncheck" => "Unchecking"
-          }} $element") {
-          env.withWebElement(element) { webElement =>
+        env.waitUntil {
+          env.withWebElement(action, element) { webElement =>
             action match {
               case "click" => webElement.click
               case "submit" => webElement.submit

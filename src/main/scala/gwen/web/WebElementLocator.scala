@@ -21,14 +21,14 @@ import org.openqa.selenium.By
 import org.openqa.selenium.WebElement
 import gwen.Predefs.Kestrel
 import org.openqa.selenium.WebDriverException
-
+import com.typesafe.scalalogging.slf4j.LazyLogging
 
 /**
  * Locates web elements using the selenium web driver.
  * 
  * @author Branko Juric, Brady Wood
  */
-trait WebElementLocator {
+trait WebElementLocator extends LazyLogging {
   
   /**
    * Locates a bound web element.
@@ -78,6 +78,7 @@ trait WebElementLocator {
         val expressionBinding = s"$element/locator/$locator"
         env.scopes.getOpt(expressionBinding) match {
             case Some(expression) =>
+              logger.info(s"Locating $element")
               try {
                 findElementByLocator(env, element, locator, expression)
               } catch {
@@ -129,7 +130,7 @@ trait WebElementLocator {
    */
   private def getElementByJavaScript(env: WebEnvContext, element: String, javascript: String): Option[WebElement] = {
     var elem: Option[WebElement] = None
-  	env.waitUntil(s"Locating $element") {
+  	env.waitUntil {
       elem = (env.executeScript(s"return $javascript") match {
         case elems: ArrayList[_] => 
           if (!elems.isEmpty()) Option(elems.get(0).asInstanceOf[WebElement])

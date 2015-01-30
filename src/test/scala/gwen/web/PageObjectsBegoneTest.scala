@@ -21,6 +21,6 @@ import org.scalatest.junit.JUnitRunner
 class PageObjectsBegoneTest extends WebEngineTestCase {
 
   "PageObjectsBegone blog features" should "evaluate" in {
-    interpret("features/blogs/pageObjectsBegone")
+    interpretNoReport("features/blogs/pageObjectsBegone")
   }
 }

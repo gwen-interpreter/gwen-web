@@ -155,6 +155,16 @@ class WebEnvContext(val driverName: String, val scopes: ScopedDataStack) extends
   }
   
   /**
+   * Waits until a given condition is ready. Errors if times out 
+   * after "gwen.web.wait.seconds" (default is 10 seconds)
+   * 
+   * @param condition the boolean condition to wait for (until true)
+   */
+  def waitUntil(condition: => Boolean) {
+    waitUntil(gwenSetting.getOpt("gwen.web.wait.seconds").getOrElse("10").toInt) { condition }
+  }
+  
+  /**
    * Waits until a given condition is ready for a given number of seconds. 
    * Errors on given timeout out seconds.
    * 
@@ -163,15 +173,38 @@ class WebEnvContext(val driverName: String, val scopes: ScopedDataStack) extends
    * @param condition the boolean condition to wait for (until true)
    */
   def waitUntil(reason: String, timeoutSecs: Int)(condition: => Boolean) {
+    waitUntil(Some(reason), timeoutSecs)(condition)
+  }
+  
+  /**
+   * Waits until a given condition is ready for a given number of seconds. 
+   * Errors on given timeout out seconds.
+   * 
+   * @param timeoutSecs the number of seconds to wait before timing out
+   * @param condition the boolean condition to wait for (until true)
+   */
+  def waitUntil(timeoutSecs: Int)(condition: => Boolean) {
+    waitUntil(None, timeoutSecs)(condition)
+  }
+  
+  /**
+   * Waits until a given condition is ready for a given number of seconds. 
+   * Errors on given timeout out seconds.
+   * 
+   * @param reason optional reason for waiting (used to report timeout error)
+   * @param timeoutSecs the number of seconds to wait before timing out
+   * @param condition the boolean condition to wait for (until true)
+   */
+  private def waitUntil(reason: Option[String], timeoutSecs: Int)(condition: => Boolean) {
     try {
-      logger.info(reason)
+      reason foreach { logger.info(_) }
       new WebDriverWait(webDriver, timeoutSecs).until(
         new ExpectedCondition[Boolean] {
           override def apply(driver: WebDriver): Boolean = condition
         }
       )
     } catch {
-      case e: TimeoutException => throw new TimeoutOnWaitException(reason);
+      case e: TimeoutException => throw new TimeoutOnWaitException(reason.getOrElse("waiting"));
     }
   }
   
@@ -209,14 +242,51 @@ class WebEnvContext(val driverName: String, val scopes: ScopedDataStack) extends
    * Performs a function on a web element and transparently re-locates elements and 
    * re-attempts the function if the web driver throws an exception.
    * 
+   * @param action 
+   * 			the action string
+   * @param element 
+   * 			the element reference to perform the action on
+   * @param f
+   * 			the function to perform on the element
+   */
+  def withWebElement[T](action: String, element: String)(f: WebElement => T): T =
+     withWebElement(Some(action), element)(f)
+  
+  /**
+   * Performs a function on a web element and transparently re-locates elements and 
+   * re-attempts the function if the web driver throws an exception.
+   * 
    * @param element 
    * 			the element reference to perform the action on
    * @param f
    * 			the function to perform on the element
    */
   def withWebElement[T](element: String)(f: WebElement => T): T =
+     withWebElement(None, element)(f)
+     
+  /**
+   * Performs a function on a web element and transparently re-locates elements and 
+   * re-attempts the function if the web driver throws an exception.
+   * 
+   * @param action 
+   * 			optional action string
+   * @param element 
+   * 			the element reference to perform the action on
+   * @param f
+   * 			the function to perform on the element
+   */
+  private def withWebElement[T](action: Option[String], element: String)(f: WebElement => T): T =
      try {
-       f(locate(this, element))
+       val webElement = locate(this, element)
+       action.foreach { actionString =>
+         logger.info(s"${actionString match {
+           case "click" => "Clicking"
+           case "submit" => "Submitting"
+           case "check" => "Checking"
+           case "uncheck" => "Unchecking"
+         }} $element")
+       }
+       f(webElement)
      } catch {
        case _: WebDriverException => f(locate(this, element))
      }
