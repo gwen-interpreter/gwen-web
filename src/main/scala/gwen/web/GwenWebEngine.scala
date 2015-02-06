@@ -290,7 +290,7 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
       case "be"      => expression.equals(actual)
       case "contain" => actual.contains(expression)
       case "match regex" => actual.matches(expression)
-      case "match xpath" => evaluateXPath(expression, actual, env).isEmpty()
+      case "match xpath" => !evaluateXPath(expression, actual, env).isEmpty()
     }) tap { result =>
       if (!negate) assert(result, s"$element '$actual' should $operator '$expression'")
       else assert(!result, s"$element should not $operator '$expression'")
@@ -394,9 +394,10 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
       f(XPathFactory.newInstance().newXPath(), expression)  
   }
   
-  private def evaluateXPath(xpath: String, source: String, env: WebEnvContext): String = withXPath(xpath) { (xPath, expr) =>
-    xPath.evaluate(expr, new InputSource(new StringReader(getAttributeOrElementText(source, env)))) 
-  }
+  private def evaluateXPath(xpath: String, source: String, env: WebEnvContext): String = 
+    withXPath(xpath) { (xPath, expr) =>
+      xPath.evaluate(expr, new InputSource(new StringReader(source))) 
+    }
   
   private def evaluateRegex(regex: String, source: String, env: WebEnvContext): String = 
     regex.r.findFirstMatchIn(source).getOrElse(sys.error(s"'Regex match '$regex' not found in '$source'")).group(1)
