@@ -32,6 +32,7 @@ import gwen.gwenSetting
 import javax.xml.xpath.XPathFactory
 import javax.xml.namespace.NamespaceContext
 import java.util.Iterator
+import javax.xml.xpath.XPath
 
 
 /**
@@ -98,11 +99,11 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
         env.scopes.set(s"$element/locator/$locator", expression)
 
       case r"""the page title should( not)?$negation (be|contain|match regex|match xpath)$operator "(.*?)"$$$expression""" => env.withScreenShot {
-        compare("title", expression, getTitle(env), operator, Option(negation).isDefined)
+        compare("title", expression, getTitle(env), operator, Option(negation).isDefined, env)
       }
         
       case r"""the page title should( not)?$negation (be|contain|match regex|match xpath)$operator (.+?)$$$attribute""" => env.withScreenShot {
-        compare("title", getAttribute(attribute, env), getTitle(env), operator, Option(negation).isDefined) 
+        compare("title", getAttribute(attribute, env), getTitle(env), operator, Option(negation).isDefined, env) 
       }
       
       case r"""(.+?)$element should( not)?$negation be (displayed|hidden|checked|unchecked|enabled|disabled)$$$state""" => env.withScreenShot {
@@ -122,13 +123,31 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
       }
         
       case r"""(.+?)$element should( not)?$negation (be|contain|match regex|match xpath)$operator "(.*?)"$$$expression""" => env.withScreenShot {
-        compare(element, expression, getAttributeOrElementText(element, env), operator, Option(negation).isDefined)
+        compare(element, expression, getAttributeOrElementText(element, env), operator, Option(negation).isDefined, env)
       }
         
       case r"""(.+?)$element should( not)?$negation (be|contain|match regex|match xpath)$operator (.+?)$$$attribute""" => env.withScreenShot {
-        compare(element, getAttribute(attribute, env), getAttributeOrElementText(element, env), operator, Option(negation).isDefined) 
+        compare(element, getAttribute(attribute, env), getAttributeOrElementText(element, env), operator, Option(negation).isDefined, env) 
       }
-        
+      
+      case r"""I capture (.+?)$name from (.+?)$source by (xpath|regex)$operator "(.+?)"$$$expression""" => env.withScreenShot {
+        val input = getAttributeOrElementText(source, env)
+        (operator match {
+          case "xpath" => evaluateXPath(expression, input, env)
+          case "regex" => evaluateRegex(expression, input, env)
+        }) tap { value =>
+          env.featureScope.set(name, value)
+        }
+      }
+      
+      case r"""I capture the current URL""" => env.withScreenShot {
+        env.featureScope.set("the current URL", env.webDriver.getCurrentUrl())
+      }
+      
+      case r"""I capture the current URL as (.+?)$name""" => env.withScreenShot {
+        env.featureScope.set(name, env.webDriver.getCurrentUrl())
+      }
+      
       case r"""I capture (.+?)$element as (.+?)$attribute""" => env.withScreenShot {
         env.featureScope.set(attribute, getElementText(element, env))
       }
@@ -266,27 +285,12 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
       }
     } 
   
-  private def compare(element: String, expression: String, actual: String, operator: String, negate: Boolean) = 
+  private def compare(element: String, expression: String, actual: String, operator: String, negate: Boolean, env: WebEnvContext) = 
     (operator match {
       case "be"      => expression.equals(actual)
       case "contain" => actual.contains(expression)
       case "match regex" => actual.matches(expression)
-      case "match xpath" => 
-        expression match {
-          case r"""(.+?)$expr where (.+?)$$$namespaces""" =>
-            val xPath = XPathFactory.newInstance().newXPath()
-            xPath.setNamespaceContext(new NamespaceContext() { 
-              def getNamespaceURI(prefix: String): String = {
-                val mappings = namespaces.split(",").map(_.split("=")).map(pair => (pair(0).trim, pair(1).trim)).toMap
-                return mappings.getOrElse(prefix, sys.error(s"Unknown namespace prefix: $prefix"));
-              }
-              def getPrefix(uri: String): String = null
-              def getPrefixes(uri: String): Iterator[String] = null
-            });
-            !xPath.evaluate(expr, new InputSource(new StringReader(actual))).isEmpty()
-          case _ =>
-            !XPathFactory.newInstance().newXPath().evaluate(expression, new InputSource(new StringReader(actual))).isEmpty()
-        }
+      case "match xpath" => evaluateXPath(expression, actual, env).isEmpty()
     }) tap { result =>
       if (!negate) assert(result, s"$element '$actual' should $operator '$expression'")
       else assert(!result, s"$element should not $operator '$expression'")
@@ -372,5 +376,29 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
     case "typed"     => "type" 
     case "entered"   => "enter"
   }
+  
+  private def withXPath[T](expression: String)(f: (XPath, String) => T): T = expression match {
+    case r"""(.+?)$expr where (.+?)$$$namespaces""" =>
+      val xPath = XPathFactory.newInstance().newXPath() tap { xPath =>
+        xPath.setNamespaceContext(new NamespaceContext() { 
+          def getNamespaceURI(prefix: String): String = {
+            val mappings = namespaces.split(",").map(_.split("=")).map(pair => (pair(0).trim, pair(1).trim)).toMap
+            return mappings.getOrElse(prefix, sys.error(s"Unknown namespace prefix: $prefix"));
+          }
+          def getPrefix(uri: String): String = null
+          def getPrefixes(uri: String): Iterator[String] = null
+        })
+      }
+      f(xPath, expr)
+    case _ =>
+      f(XPathFactory.newInstance().newXPath(), expression)  
+  }
+  
+  private def evaluateXPath(xpath: String, source: String, env: WebEnvContext): String = withXPath(xpath) { (xPath, expr) =>
+    xPath.evaluate(expr, new InputSource(new StringReader(getAttributeOrElementText(source, env)))) 
+  }
+  
+  private def evaluateRegex(regex: String, source: String, env: WebEnvContext): String = 
+    regex.r.findFirstMatchIn(source).getOrElse(sys.error(s"'Regex match '$regex' not found in '$source'")).group(1)
   
 }
