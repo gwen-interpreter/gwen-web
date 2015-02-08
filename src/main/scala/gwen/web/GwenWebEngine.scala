@@ -412,6 +412,9 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
       // resolve concatenation: "prefix" + binding + "suffix"
       case r"""(.+?)$prefix"\s*\+\s*(.+?)$binding\s*\+\s*"(.+?)$suffix""" => 
         resolve(Step(step.keyword, s"$prefix${getBoundValue(binding, env)}$suffix"), env)
+      // resolve concatenation: "prefix" + binding
+      case r"""(.+?)$prefix"\s*\+\s*(.+?)$binding\s*""" => 
+        resolve(Step(step.keyword, s"""$prefix${getBoundValue(binding, env)}""""), env)
       case _ => step
     }
   }
