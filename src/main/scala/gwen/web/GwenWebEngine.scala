@@ -33,6 +33,7 @@ import javax.xml.xpath.XPathFactory
 import javax.xml.namespace.NamespaceContext
 import java.util.Iterator
 import javax.xml.xpath.XPath
+import scala.annotation.tailrec
 
 
 /**
@@ -73,7 +74,7 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
    */
   override def evaluate(step: Step, env: WebEnvContext): Unit = {
     
-    step.expression match {
+    resolve(step, env).expression match {
     
       case r"""I am on the (.+?)$$$name""" =>
         env.scopes.addScope(name)
@@ -123,15 +124,15 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
       }
         
       case r"""(.+?)$element should( not)?$negation (be|contain|match regex|match xpath)$operator "(.*?)"$$$expression""" => env.withScreenShot {
-        compare(element, expression, getAttributeOrElementText(element, env), operator, Option(negation).isDefined, env)
+        compare(element, expression, getBoundValue(element, env), operator, Option(negation).isDefined, env)
       }
         
       case r"""(.+?)$element should( not)?$negation (be|contain|match regex|match xpath)$operator (.+?)$$$attribute""" => env.withScreenShot {
-        compare(element, getAttribute(attribute, env), getAttributeOrElementText(element, env), operator, Option(negation).isDefined, env) 
+        compare(element, getAttribute(attribute, env), getBoundValue(element, env), operator, Option(negation).isDefined, env) 
       }
       
       case r"""I capture (.+?)$name from (.+?)$source by (xpath|regex)$operator "(.+?)"$$$expression""" => env.withScreenShot {
-        val input = getAttributeOrElementText(source, env)
+        val input = getBoundValue(source, env)
         (operator match {
           case "xpath" => evaluateXPath(expression, input, env)
           case "regex" => evaluateRegex(expression, input, env)
@@ -300,12 +301,15 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
     bindAndWait("page", "title", title, env)
   }
   
-  private def getAttributeOrElementText(element: String, env: WebEnvContext): String = 
-    Try(getAttribute(element, env)) match {
+  private def getBoundValue(binding: String, env: WebEnvContext): String = 
+    Try(getAttribute(binding, env)) match {
       case Success(text) => text
-      case Failure(e1) => Try(getElementText(element, env)) match {
+      case Failure(e1) => Try(getElementText(binding, env)) match {
         case Success(text) => text
-        case Failure(e2) => sys.error(s"${e1.getMessage()} and ${e2.getMessage()}")
+        case Failure(e2) => gwenSetting.getOpt(binding) match { 
+          case Some(text) => text
+          case _ => sys.error(s"Bound value not found: ${binding}")
+        }
       }
     }
   
@@ -401,5 +405,15 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
   
   private def evaluateRegex(regex: String, source: String, env: WebEnvContext): String = 
     regex.r.findFirstMatchIn(source).getOrElse(sys.error(s"'Regex match '$regex' not found in '$source'")).group(1)
+    
+  @tailrec
+  private def resolve(step: Step, env: WebEnvContext): Step = {
+    step.expression match {
+      // resolve concatenation: "prefix" + binding + "suffix"
+      case r"""(.+?)$prefix"\s*\+\s*(.+?)$binding\s*\+\s*"(.+?)$suffix""" => 
+        resolve(Step(step.keyword, s"$prefix${getBoundValue(binding, env)}$suffix"), env)
+      case _ => step
+    }
+  }
   
 }
