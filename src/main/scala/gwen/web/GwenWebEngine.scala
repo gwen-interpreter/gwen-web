@@ -17,23 +17,22 @@
 package gwen.web
 
 import java.io.StringReader
-import scala.util.Failure
-import scala.util.Success
-import scala.util.Try
+import java.util.Iterator
+
 import org.openqa.selenium.Keys
 import org.openqa.selenium.support.ui.Select
 import org.xml.sax.InputSource
+
 import gwen.Predefs.Kestrel
+import gwen.Predefs.RegexContext
 import gwen.dsl.Step
 import gwen.eval.EvalEngine
 import gwen.eval.GwenOptions
 import gwen.eval.ScopedDataStack
 import gwen.gwenSetting
-import javax.xml.xpath.XPathFactory
 import javax.xml.namespace.NamespaceContext
-import java.util.Iterator
 import javax.xml.xpath.XPath
-import scala.annotation.tailrec
+import javax.xml.xpath.XPathFactory
 
 
 /**
@@ -74,14 +73,14 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
    */
   override def evaluate(step: Step, env: WebEnvContext): Unit = {
     
-    resolve(step, env).expression match {
+   step.expression match {
     
       case r"""I am on the (.+?)$$$name""" =>
         env.scopes.addScope(name)
         
       case r"""I navigate to the (.+?)$$$name""" => env.withScreenShot {
     	env.scopes.addScope(name)
-        env.webDriver.get(getAttribute("url", env))
+        env.webDriver.get(env.getAttribute("url"))
       }
         
       case r"""I navigate to "(.+?)"$$$url""" => env.withScreenShot {
@@ -104,7 +103,7 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
       }
         
       case r"""the page title should( not)?$negation (be|contain|match regex|match xpath)$operator (.+?)$$$attribute""" => env.withScreenShot {
-        compare("title", getAttribute(attribute, env), getTitle(env), operator, Option(negation).isDefined, env) 
+        compare("title", env.getAttribute(attribute), getTitle(env), operator, Option(negation).isDefined, env) 
       }
       
       case r"""(.+?)$element should( not)?$negation be (displayed|hidden|checked|unchecked|enabled|disabled)$$$state""" => env.withScreenShot {
@@ -119,20 +118,20 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
           }
           if (!Option(negation).isDefined) assert(result,  s"$element should be $state")
           else assert(!result,  s"$element should not be $state")
-          bindAndWait(element, state, "true", env)
+          env.bindAndWait(element, state, "true")
         }
       }
         
       case r"""(.+?)$element should( not)?$negation (be|contain|match regex|match xpath)$operator "(.*?)"$$$expression""" => env.withScreenShot {
-        compare(element, expression, getBoundValue(element, env), operator, Option(negation).isDefined, env)
+        compare(element, expression, env.getBoundValue(element), operator, Option(negation).isDefined, env)
       }
         
       case r"""(.+?)$element should( not)?$negation (be|contain|match regex|match xpath)$operator (.+?)$$$attribute""" => env.withScreenShot {
-        compare(element, getAttribute(attribute, env), getBoundValue(element, env), operator, Option(negation).isDefined, env) 
+        compare(element, env.getAttribute(attribute), env.getBoundValue(element), operator, Option(negation).isDefined, env) 
       }
       
       case r"""I capture (.+?)$name from (.+?)$source by (xpath|regex)$operator "(.+?)"$$$expression""" => env.withScreenShot {
-        val input = getBoundValue(source, env)
+        val input = env.getBoundValue(source)
         (operator match {
           case "xpath" => evaluateXPath(expression, input, env)
           case "regex" => evaluateRegex(expression, input, env)
@@ -150,11 +149,11 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
       }
       
       case r"""I capture (.+?)$element as (.+?)$attribute""" => env.withScreenShot {
-        env.featureScope.set(attribute, getElementText(element, env))
+        env.featureScope.set(attribute, env.getElementText(element))
       }
         
       case r"""I capture (.+?)$element""" => env.withScreenShot {
-        getElementText(element, env)
+        env.getElementText(element)
       }
         
       case r"""my (.+?)$name (?:property|setting) (?:is|will be) "(.*?)"$$$value""" =>
@@ -171,13 +170,13 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
         
       case r"""I wait for (.+?)$element text for (.+?)$seconds second(?:s?)""" => env.withScreenShot {
         env.waitUntil(s"Waiting for $element text after $seconds second(s)", seconds.toInt) {
-          getElementText(element, env).length() > 0
+          env.getElementText(element).length() > 0
         } 
       }
         
       case r"""I wait for (.+?)$element text""" => env.withScreenShot {
         env.waitUntil(s"Waiting for $element text") {
-          getElementText(element, env).length() > 0
+          env.getElementText(element).length() > 0
         }
       }
         
@@ -195,7 +194,7 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
        
       case r"""I press enter in "?(.+?)"?$$$element""" => env.withScreenShot {
         locate(env, element).sendKeys(Keys.RETURN)
-		bindAndWait(element, "enter", "true", env)
+		env.bindAndWait(element, "enter", "true")
       }
 
       case r"""I (enter|type)$action "(.*?)"$value in (.+?)$$$element""" => env.withScreenShot {
@@ -203,7 +202,7 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
       }
         
       case r"""I (enter|type)$action (.+?)$attribute in (.+?)$$$element""" => env.withScreenShot {
-        sendKeys(element, action, getAttribute(attribute, env), env)
+        sendKeys(element, action, env.getAttribute(attribute), env)
       }
         
       case r"""I select the (\d+?)$position(st|nd|rd|th)$suffix option in (.+?)$$$element""" => env.withScreenShot {
@@ -221,7 +220,7 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
       }
         
       case r"""I select (.+?)$attribute in (.+?)$$$element""" => env.withScreenShot {
-	    getAttribute(attribute, env) tap { value => 
+	    env.getAttribute(attribute) tap { value => 
 		  env.waitUntil(s"Selecting '$value' in $element") {
 		    selectByVisibleText(element, value, env)
 			true
@@ -238,7 +237,7 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
               case "check" if (!webElement.isSelected()) => webElement.sendKeys(Keys.SPACE)
               case "uncheck" if (webElement.isSelected()) => webElement.sendKeys(Keys.SPACE)
             }
-            bindAndWait(element, action, "true", env)
+            env.bindAndWait(element, action, "true")
           }
           true
         }
@@ -274,18 +273,6 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
     }
   }
   
-  private def getAttribute(name: String, env: WebEnvContext): String = 
-    env.scopes.getOpt(name) match {
-      case Some(value) => value
-      case _ => env.scopes.getOpt(s"$name/text") match {
-        case Some(value) => value
-        case _ => env.scopes.getOpt(s"$name/javascript") match {
-          case Some(javascript) => env.executeScript(s"return $javascript").asInstanceOf[String]
-          case _ => env.scopes.get(name)
-        }
-      }
-    } 
-  
   private def compare(element: String, expression: String, actual: String, operator: String, negate: Boolean, env: WebEnvContext) = 
     (operator match {
       case "be"      => expression.equals(actual)
@@ -298,41 +285,16 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
     } 
   
   private def getTitle(env: WebEnvContext): String = env.webDriver.getTitle() tap { title =>
-    bindAndWait("page", "title", title, env)
+    env.bindAndWait("page", "title", title)
   }
-  
-  private def getBoundValue(binding: String, env: WebEnvContext): String = 
-    Try(getAttribute(binding, env)) match {
-      case Success(text) => text
-      case Failure(e1) => Try(getElementText(binding, env)) match {
-        case Success(text) => text
-        case Failure(e2) => gwenSetting.getOpt(binding) match { 
-          case Some(text) => text
-          case _ => sys.error(s"Bound value not found: ${binding}")
-        }
-      }
-    }
-  
-  private def getElementText(element: String, env: WebEnvContext): String = 
-    env.withWebElement(element) { webElement =>
-      (Option(webElement.getAttribute("value")) match {
-        case Some(value) => value
-        case None => Option(webElement.getAttribute("text")) match {
-          case Some(value) => value
-          case None => webElement.getText()
-        }
-      }) tap { text => 
-        bindAndWait(element, "text", text, env)
-      }
-    }
   
   private def sendKeys(element: String, action: String, value: String, env: WebEnvContext) {
     env.withWebElement(element) { webElement =>
       webElement.sendKeys(value)
-      bindAndWait(element, "type", value, env)
+      env.bindAndWait(element, "type", value)
       if (action == "enter") {
         webElement.sendKeys(Keys.RETURN)
-	    bindAndWait(element, "enter", "true", env)
+	    env.bindAndWait(element, "enter", "true")
       }
     }
   }
@@ -340,7 +302,7 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
   private def selectByVisibleText(element: String, value: String, env: WebEnvContext) {
     env.withWebElement(element) { webElement =>
       new Select(webElement).selectByVisibleText(value)
-      bindAndWait(element, "select", value, env)
+      env.bindAndWait(element, "select", value)
     }
   }
   
@@ -348,29 +310,10 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
     env.withWebElement(element) { webElement =>
       val select = new Select(webElement)
       select.selectByIndex(index)
-      bindAndWait(element, "select", select.getFirstSelectedOption().getText(), env)
+      env.bindAndWait(element, "select", select.getFirstSelectedOption().getText())
     }
   }
 
-  private def bindAndWait(element: String, action: String, value: String, env: WebEnvContext) {
-    env.scopes.set(s"$element/$action", value)
-    
-    // sleep if wait time is configured for this action
-	env.scopes.getOpt(s"$element/$action/wait") foreach { secs => 
-	  logger.info(s"Waiting for ${secs} second(s) (post-$action wait)")
-      Thread.sleep(secs.toLong * 1000)
-    }
-	
-	// wait for javascript post condition if one is configured for this action
-	env.scopes.getOpt(s"$element/$action/condition") foreach { condition =>
-	  val javascript = env.scopes.get(s"$condition/javascript")
-	  logger.debug(s"Waiting for script to return true: ${javascript}")
-	  env.waitUntil(s"Waiting until $condition (post-$action condition)") {
-	    env.executeScript(s"return $javascript").asInstanceOf[Boolean]
-	  }
-    }
-  }
-  
   private def eventToAction(event: String): String = event match {
     case "clicked"   => "click"
     case "submitted" => "submit" 
@@ -405,18 +348,5 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
   
   private def evaluateRegex(regex: String, source: String, env: WebEnvContext): String = 
     regex.r.findFirstMatchIn(source).getOrElse(sys.error(s"'Regex match '$regex' not found in '$source'")).group(1)
-    
-  @tailrec
-  private def resolve(step: Step, env: WebEnvContext): Step = {
-    step.expression match {
-      // resolve concatenation: "prefix" + binding + "suffix"
-      case r"""(.+?)$prefix"\s*\+\s*(.+?)$binding\s*\+\s*"(.+?)$suffix""" => 
-        resolve(Step(step.keyword, s"$prefix${getBoundValue(binding, env)}$suffix"), env)
-      // resolve concatenation: "prefix" + binding
-      case r"""(.+?)$prefix"\s*\+\s*(.+?)$binding\s*""" => 
-        resolve(Step(step.keyword, s"""$prefix${getBoundValue(binding, env)}""""), env)
-      case _ => step
-    }
-  }
   
 }

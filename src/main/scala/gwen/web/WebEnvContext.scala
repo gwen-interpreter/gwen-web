@@ -19,6 +19,10 @@ package gwen.web
 import java.io.File
 import java.util.concurrent.TimeUnit
 
+import scala.util.Failure
+import scala.util.Success
+import scala.util.Try
+
 import org.openqa.selenium.JavascriptExecutor
 import org.openqa.selenium.OutputType
 import org.openqa.selenium.TakesScreenshot
@@ -36,7 +40,9 @@ import org.openqa.selenium.support.ui.ExpectedCondition
 import org.openqa.selenium.support.ui.WebDriverWait
 
 import gwen.Predefs.Kestrel
+import gwen.Predefs.RegexContext
 import gwen.dsl.Failed
+import gwen.dsl.Step
 import gwen.eval.EnvContext
 import gwen.eval.ScopedDataStack
 import gwen.gwenSetting
@@ -302,6 +308,80 @@ class WebEnvContext(val driverName: String, val scopes: ScopedDataStack) extends
         Thread.sleep(gwenSetting.getOpt("gwen.web.throttle.msecs").getOrElse("200").toLong)
       	addAttachment(captureScreenshot)
       }
+    }
+  }
+  
+  /**
+   * Substitutes dynamic data in concatenated string literals.
+   * 
+   * @param step the step to resolve
+   * @return the resolved step
+   */
+  override def resolve(step: Step): Step = {
+    step.expression match {
+      // resolve concatenation: "prefix" + binding + "suffix"
+      case r"""(.+?)$prefix"\s*\+\s*(.+?)$binding\s*\+\s*"(.+?)$suffix""" => 
+        resolve(Step(step.keyword, s"$prefix${getBoundValue(binding)}$suffix"))
+      // resolve concatenation: "prefix" + binding
+      case r"""(.+?)$prefix"\s*\+\s*(.+?)$binding\s*""" => 
+        resolve(Step(step.keyword, s"""$prefix${getBoundValue(binding)}""""))
+      case _ => step
+    }
+  }
+  
+  def getBoundValue(binding: String): String = 
+    Try(getAttribute(binding)) match {
+      case Success(text) => text
+      case Failure(e1) => Try(getElementText(binding)) match {
+        case Success(text) => text
+        case Failure(e2) => gwenSetting.getOpt(binding) match { 
+          case Some(text) => text
+          case _ => sys.error(s"Bound value not found: ${binding}")
+        }
+      }
+    }
+  
+  def getElementText(element: String): String = 
+    withWebElement(element) { webElement =>
+      (Option(webElement.getAttribute("value")) match {
+        case Some(value) => value
+        case None => Option(webElement.getAttribute("text")) match {
+          case Some(value) => value
+          case None => webElement.getText()
+        }
+      }) tap { text => 
+        bindAndWait(element, "text", text)
+      }
+    }
+  
+  def getAttribute(name: String): String = 
+    scopes.getOpt(name) match {
+      case Some(value) => value
+      case _ => scopes.getOpt(s"$name/text") match {
+        case Some(value) => value
+        case _ => scopes.getOpt(s"$name/javascript") match {
+          case Some(javascript) => executeScript(s"return $javascript").asInstanceOf[String]
+          case _ => scopes.get(name)
+        }
+      }
+    }
+  
+  def bindAndWait(element: String, action: String, value: String) {
+    scopes.set(s"$element/$action", value)
+    
+    // sleep if wait time is configured for this action
+	scopes.getOpt(s"$element/$action/wait") foreach { secs => 
+	  logger.info(s"Waiting for ${secs} second(s) (post-$action wait)")
+      Thread.sleep(secs.toLong * 1000)
+    }
+	
+	// wait for javascript post condition if one is configured for this action
+	scopes.getOpt(s"$element/$action/condition") foreach { condition =>
+	  val javascript = scopes.get(s"$condition/javascript")
+	  logger.debug(s"Waiting for script to return true: ${javascript}")
+	  waitUntil(s"Waiting until $condition (post-$action condition)") {
+	    executeScript(s"return $javascript").asInstanceOf[Boolean]
+	  }
     }
   }
   
