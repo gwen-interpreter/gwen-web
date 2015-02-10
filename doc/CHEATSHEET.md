@@ -1,130 +1,84 @@
 Gwen Web Manual
-=============================
+===============
 
-Feature Guide 
+Invoking Gwen
 -------------
-The following items are available to enter in test features.  Gwen does not distinguish 
-between given, when and then's however it does help tests with structure.
 
-[@tag]
-Feature:
+Usage: `gwen-web-install-dir/bin/gwen.sh|gwen.bat` `[options]` `[<feature paths>]`
 
-[Background]
-
-[@tag]
-Scenario:
- Given <expression>
- 
-  When <expression>
-  
-  Then <expression>
-  
-   And <expression>
-   
-   But <expression>
-
-
-Console Command Arguments 
--------------------------
-The following arguments can be supplied when starting gwen web.
-
-| Command      | Description	|
+| Option      | Description	|
 | ------------- |-------------|
-|--version	| gwen version information |
-|--help | this help menu |
-| -b, --batch <dir> | batch mode, will load both features and meta non-interactively |
-| -p, --properties <file> |	configurable gwen properties |
-| -r, --report <dir> | generated reporting location |
-| -m, --metafeature <file> | overriding metedata during test execution |
-| -t, --tags @ or ~@ inc/exc | ability to filter test selection. |
-| feature file, files, and or dir | Individually listed features execute in order |
-|	| Directory
-|   | execute all features in sub folders additionally sources all meta	specific to the directory scope |
+|--version	| Prints the implementation version |
+|--help | Prints the usage text |
+| -b, --batch | batch mode, will exit gwen session after executing features. Absence of this switch launches REPL mode. |
+| -p, --properties `<files>` | Comma separated list of properties file paths |
+| -r, --report `<dir>` | generated reporting location |
+| -m, --meta `<files>` | Comma separated list of meta file paths |
+| -t, --tags `<tags>`| Comma separated list of @include or ~@exclude tags |
+| `<feature paths>` | Space separated list of feature file and/or directory paths |
    								
-Console Command
----------------   								
-The following commands are available within the gwen interactive console.
+REPL Commands
+-------------
+   								
+The following commands are available within the gwen REPL console.
 
 | console command | description |
 | --------------- | ----------- |
-| env 			  | dump the environment scope to the console |
+| env 			  | dump the currently visible environment scope to the console |
+| env -a		  | dump the entire environment scope to the console |
+| env -f		  | dump the global feature scope to the console |
 | tab			  |	when nothing has been entered on the console will display |
 | 				  | And     But     Given   Then    When    env     exit |
 | exit			  |	will close the current browser (if open) and exit the console. |
 
-WebElement Locators
------------------
-locate by
--	id
--	name
--	tag name
--	css selector
--	xpath
--	class name
--	link text
--	partial link text
--	javascript
+Feature Files
+-------------
 
-Example:		And the Start button can be located by tag name "submit"
+All feature files must conform to the [Gherkin standard for feature files](https://github.com/cucumber/cucumber/wiki/Feature-Introduction).
 
-				And the Start button can be located by class name "btn"
-				
-				And the Start button can be located by id "btn432"
-				
+Supported DSL
+-------------
 
+The following steps are supported. Each one must be prefixed by one of the keyword literals: `Given`, `When`, `Then`, `And`, or `But`
 
-Sample DSLs
---------------------
-
-| DSL Sample       | Purpose 	|
-| ------------- |-------------|
-| I navigate to the "text" page 		 					| Will lookup the navigation/url in the meta against a specified page, and actually set the url in the browser window |
-| I navigate to "http://abc" url							| Will use the literal in the browser window |
-| I am on the "text" page									| Will set the current scope to the literal.  If the current scope is not the target then a new scope is created. |
-| <scoped elem> can be located by <locator> "xx"			| Will set the <scoped elem> to be found by a locator in the page scope |
-| the page title should (be|contain) my <scoped var>		| |
-| the page title should be "text"							| Will verify that the page title is set to the literal |
-| I switch to "frmsrc" frame by source						| using a css selector will switch the webdriver to the iframe determined by specified iframe[src] |
-| I switch to the default frame								| will switch back to the default context in selenium webdriver (required after switching to iframe) |
-| <scoped elem> text should (be|contain) my <scoped var>	| |
-| I capture <scoped elem> text								| will retrieve the element in the page scope and set its text value in the global scope |
-| <scoped elem> text should (be|contain) "text"				| will retrieve the element in the page scope and verify its contents against the literal |
-| <scoped elem> should be <actionA>							| will retrieve the element in the page scope and perform on of actionA's |
-| my role is "text"											| will create a new feature scope |
-| my "text" setting (is|will be) "text"						| sets sys.prop |
-| my "text" attribute (is|will be) "text"					| sets a literal in the feature scope to be that of a value |
-| the url will be "http://abc"								| sets a url literal in the page scope to be that of a url. (does not action url, just sets scope) |
-| I wait for <scoped elem> text for 99 second(s)			| waits for x seconds for the text of the element (found in the page scope) to appear |
-| I wait for <scoped elem> text								| waits for the text of the element (found in the page scope) to appear, reads properties for gwen.web.wait.seconds, or defaults to 3 seconds |
-| I wait for <scoped elem> for 99 second(s)					| waits for x seconds for the element (found in the page scope) to appear |
-| I wait for <scoped elem>									| waits for x seconds for the element (found in the page scope) to appear, reads properties for gwen.web.wait.seconds, or defaults to 3 seconds |
-| I wait 99 second(s)										| waits x seconds |
-| I enter my <scoped elem> attribute in <scoped elem 2>		| finds a value in feature scope and sets it against the scoped locator |
-| I enter <scoped elem> in <scoped elem 2>					| retrieves the text value of an element in page scope and uses that to set scoped elem 2 |
-| I enter "text" in <scoped elem>							| enters the literal into the scoped element |
-| I select "text" in <scoped elem>							| selects a value in the dropdown scoped element |
-| I <actionB> <scoped elem>									| performs actionB on scoped element |
-| I highlight <scoped elem>									| highlights in the browser the scoped element |
+| Step | Description | Parameters |
+| ---- | ----------- | ---------- |
+| I am on the `<page>` | Puts the given page in scope | `<page>` = the name of the page to put in scope |
+| the url will be "`<url>`" | Binds the given URL to the current page scope | `<url>` = the URL |
+| the url will be defined by `property|setting` "`<name>`" | Binds the URL defined in the named property to the current page scope | `<name>` = name of property containing the URL |
+| I navigate to the `<page>` | Opens the browser to the URL bound to the given page | `<page>` = the name of the page to navigate to |
+| I navigate to "`<url>`" | Opens the browser to the given URL | `<url>` = the URL to navigate to |
+| `<element>` can be located by `id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript` "`<expression>`" | Creates a web element locator binding | `<element>` = name of web element, `<expression>` = the lookup expression |
+| the page title `should|should not` `be|contain|match regex|match xpath` "`<expression>`" | Checks that the page title matches or does not match a given expression | `<expression>` = the expression to match against |
+| the page title `should|should not` `be|contain|match regex|match xpath` `<attribute>` | Checks that the page title matches or does not match a bound attribute value | `<attribute>` = the attribute to match against | 
+| `<element>` `should|should not` be `displayed|hidden|checked|unchecked|enabled|disabled` | Checks that an element should or should not be in a given state | `<element>` = the web element to check |
+| `<element>` `should|should not` `be|contain|match regex|match xpath` "`<expression>`" | Checks that the text value of an element matches or does not match a given expression | `<element>` = the web element to check, `<expression>` = the expression to match against |
+| `<element>` `should|should not` `be|contain|match regex|match xpath` `<attribute>` | Checks that the text value of an element matches or does not match a bound attribute | `<element>` = the web element to check, `<attribute>` = the name of the bound attribute containing the value to match against |
+| I capture `<target>` from `<source>` by `xpath|regex` "`<expression>`" | Extracts and binds a value from one attribute into another | `<target>` = the attribute to store the captured value into, `<source>` = the attribute to extract the value from, `<expression>` = the extractor expression |
+| I capture the current URL | Binds the current browser URL to an attribute named URL in the current page scope |  |
+| I capture the current URL as `<attribute>` | Binds the current browser URL to a named attribute in the current page scope | `<attribute>` = the attribute to bind the URL to |
+| I capture `<element>` as `<attribute>` | Captures the text value of an element and binds it to a named attribute | `<element>` = the web element to capture the text of, `<attribute>` = the name of the attribute to bind the value to |
+| I capture `<element>` | Captures the text value of an element and binds it to an attribute of the same name | `<element>` = the web element to capture the text of, and the name of the attribute to bind the value to |
+| my `<name>` `property|setting` `is|will be` "`<value>`" | Binds a given value to a system property | `<name>` = the name of the system property to set, `<value>` = the value to set |
+| `<attribute>` `is|will be` defined by `javascript|property|setting` "`<expression>`" | Evaluates an expression and binds its value to a named attribute.  The evaluation occurs when the attribute is referenced. | `<attribute>` = the name of the attribute to bind the value to, `<expression>` = the expression that will yield the value to bind |
+| `<attribute>` `is|will be` "`<value>`" | Binds a given value to a named attribute | `<attribute>` = the name of the attribute to bind the value to, `<value>` = the value to bind |
+| I wait for `<element>` text for `<duration>` `second|seconds` | Waits a given number of seconds for an element's text to be loaded | `<element>` = the element to wait for text on, `<duration>` = the number of seconds to wait before timing out |
+| I wait for `<element>` text | Waits for an elements text to be loaded | `<element>` = the element to wait for text on (timeout occurs after configured `gwen.web.wait.seconds`, or 10 seconds by default) |
+| I wait for `<element>` for `<duration>` `second|seconds` | Waits a given number of seconds for a web element to be available on the page | `<element>` = the web element to wait for, `<duration>` = the number of seconds to wait before timing out |
+| I wait for `<element>` | Waits for a web element to be available on the page | `<element>` = the web element to wait for (timeout occurs after configured `gwen.web.wait.seconds`, or 10 seconds by default) |
+| I press enter in `<element>` | Sends the enter key to a web element (emulates user pressing enter in the element) | `<element>` = the element to send the enter key to |
+| I `enter|type` "`<value>`" in `<element>` | Types or enters a value into a field (`type` just types the value, `enter` types the value and then sends the enter key to element) | `<value>` = the value to type or enter, `<element>` = the web element to type or enter the value into |
+| I `enter|type` `<attribute>` in `<element>` | Types or enters a bound attribute value into a field (`type` just types the value, `enter` types the value and then sends the enter key to element) | `<attribute>` = the name of the attribute containing the value to type or enter, `<element>` = the web element to type or enter the value into |
+| I select the `<position>st|nd|rd|th` option in `<element>` | Selects the option in a dropdown at a given position | `<position>` = the position of the option to select (1=first, 2=2nd, etc..), `<element>` = the dropdown element to select |
+| I select "`<value>`" in `<element>` | Selects the option (by value) in a dropdown containing the given value | `<value>` = the value to select, `<element>` = the dropdown element to select | 
+| I select `<attribute>` in `<element>` | Selects the option (by value) in a dropdown containing a bound attribute value | `<attribute>` = the name of the attribute containing the value to select, `<element>` = the dropdown element to select |
+| I `click|submit|check|uncheck` `<element>` | Performs the specified action on an element | `<element>` = the element to perform the action on |
+| I wait `<duration>` `second|seconds` when `<element>` is `clicked|submitted|checked|unchecked|selected|typed|entered` | Waits a given number of seconds after performing an action on an element | `<duration>` = the number of seconds to wait, `<element>` = the element the action was performed on |
+| I wait until `<condition>` when `<element>` is `clicked|submitted|checked|unchecked|selected|typed|entered` | Waits for a condition to be true after performing an action on an element | `<condition>` = the name of the bound attribute containing the javascript condition expression, `<element>` = the element the action was performed on |
+| I wait until "`<javascript>`" | Waits until the given javascript expression returns true on the current page | `<javascript>` = the javascript predicate expression |
+| I wait until `<condition>` | Waits until a condition is true on the current page | `<condition>` = the name of the bound attribute containing the javascript condition expression |
+| I wait `<duration>` `second|seconds` | Waits for a given number of seconds to lapse | `<duration>` = the number of seconds to wait |
+| I `highlight|locate` `<element>` | Locates and highlights the given element on the current page | `<element>` = the element to highlight |
 
 
-Key - ActionA, ActionB
-Where actionA and actionB are mentioned in the table above, please see below for possible values.
 
-| name       | Action 	|
-| ------------- |-------------|
-| actionA | visible |
-|         | displayed |
-|         | invisible |
-|         | hidden |
-|         | checked |
-|         | ticked |
-|         | unchecked |
-|         | unticked |
-|         | enabled |
-|         | disabled |
-| actionB | click |
-|         | submit |
-|         | tick |
-|         | check |
-|         | untick |
-|         | uncheck |

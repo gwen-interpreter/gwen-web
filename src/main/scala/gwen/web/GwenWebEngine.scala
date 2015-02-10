@@ -75,11 +75,11 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
     
    step.expression match {
     
-      case r"""I am on the (.+?)$$$name""" =>
-        env.scopes.addScope(name)
+      case r"""I am on the (.+?)$$$page""" =>
+        env.scopes.addScope(page)
         
-      case r"""I navigate to the (.+?)$$$name""" => env.withScreenShot {
-    	env.scopes.addScope(name)
+      case r"""I navigate to the (.+?)$$$page""" => env.withScreenShot {
+    	env.scopes.addScope(page)
         env.webDriver.get(env.getAttribute("url"))
       }
         
@@ -192,7 +192,7 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
        }
       }
        
-      case r"""I press enter in "?(.+?)"?$$$element""" => env.withScreenShot {
+      case r"""I press enter in (.+?)$$$element""" => env.withScreenShot {
         locate(env, element).sendKeys(Keys.RETURN)
 		env.bindAndWait(element, "enter", "true")
       }
