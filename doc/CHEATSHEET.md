@@ -6,38 +6,33 @@ Invoking Gwen
 
 Usage: `gwen-web-install-dir/bin/gwen.sh|gwen.bat` `[options]` `[<feature paths>]`
 
-| Option      | Description	|
-| ------------- |-------------|
-|--version	| Prints the implementation version |
-|--help | Prints the usage text |
-| -b, --batch | batch mode, will exit gwen session after executing features. Absence of this switch launches REPL mode. |
+| Option                     | Description |
+| -------------------------- |-------------|
+|--version                   | Prints the implementation version |
+|--help                      | Prints the usage text |
+| -b, --batch                | batch mode, will exit gwen session after executing features. Absence of this switch launches REPL mode. |
 | -p, --properties `<files>` | Comma separated list of properties file paths |
-| -r, --report `<dir>` | generated reporting location |
-| -m, --meta `<files>` | Comma separated list of meta file paths |
-| -t, --tags `<tags>`| Comma separated list of @include or ~@exclude tags |
-| `<feature paths>` | Space separated list of feature file and/or directory paths |
-   								
+| -r, --report `<dir>`       | generated reporting location |
+| -m, --meta `<files>`       | Comma separated list of meta file paths |
+| -t, --tags `<tags>`        | Comma separated list of @include or ~@exclude tags |
+| `<feature paths>`          | Space separated list of feature files and/or directories (feature suites) to evaluate |
+
 REPL Commands
 -------------
-   								
+
 The following commands are available within the gwen REPL console.
 
 | console command | description |
 | --------------- | ----------- |
-| env 			  | dump the currently visible environment scope to the console |
-| env -a		  | dump the entire environment scope to the console |
-| env -f		  | dump the global feature scope to the console |
-| tab			  |	when nothing has been entered on the console will display |
-| 				  | And     But     Given   Then    When    env     exit |
-| exit			  |	will close the current browser (if open) and exit the console. |
-
-Feature Files
--------------
-
-All feature files must conform to the [Gherkin standard for feature files](https://github.com/cucumber/cucumber/wiki/Feature-Introduction).
+| `env`           | dump the currently visible environment scope to the console |
+| `env -a`        | dump the entire environment scope to the console |
+| `env -f`        | dump the global feature scope to the console |
+| `exit`          | will close the current browser (if open) and exit the console. |
 
 Supported DSL
 -------------
+
+All feature files must conform to the [Gherkin standard for feature files](https://github.com/cucumber/cucumber/wiki/Feature-Introduction).
 
 The following steps are supported. Each one must be prefixed by one of the keyword literals: `Given`, `When`, `Then`, `And`, or `But`
 
@@ -52,9 +47,9 @@ The following steps are supported. Each one must be prefixed by one of the keywo
 | the page title `should|should not` `be|contain|match regex|match xpath` "`<expression>`" | Checks that the page title matches or does not match a given expression | `<expression>` = the expression to match against |
 | the page title `should|should not` `be|contain|match regex|match xpath` `<attribute>` | Checks that the page title matches or does not match a bound attribute value | `<attribute>` = the attribute to match against | 
 | `<element>` `should|should not` be `displayed|hidden|checked|unchecked|enabled|disabled` | Checks that an element should or should not be in a given state | `<element>` = the web element to check |
-| `<element>` `should|should not` `be|contain|match regex|match xpath` "`<expression>`" | Checks that the text value of an element matches or does not match a given expression | `<element>` = the web element to check, `<expression>` = the expression to match against |
-| `<element>` `should|should not` `be|contain|match regex|match xpath` `<attribute>` | Checks that the text value of an element matches or does not match a bound attribute | `<element>` = the web element to check, `<attribute>` = the name of the bound attribute containing the value to match against |
-| I capture `<target>` from `<source>` by `xpath|regex` "`<expression>`" | Extracts and binds a value from one attribute into another | `<target>` = the attribute to store the captured value into, `<source>` = the attribute to extract the value from, `<expression>` = the extractor expression |
+| `<element|attribute>` `should|should not` `be|contain|match regex|match xpath` "`<expression>`" | Checks that the text value of an element matches or does not match a given expression | `<element|attribute>` = the web element or bound attribute to check, `<expression>` = the expression to match against |
+| `<element|attribute>` `should|should not` `be|contain|match regex|match xpath` `<attribute>` | Checks that the text value of an element matches or does not match a bound attribute | `<element|attribute>` = the web element or bound attribute to check, `<attribute>` = the name of the bound attribute containing the value to match against |
+| I capture `<attribute>` from `<element|attribute|property>` by `xpath|regex` "`<expression>`" | Extracts and binds a value from an element, attribute, or property setting into an attribute | `<attribute>` = the attribute to store the captured value into, `<element|attribute|property>` = the element, attribute, or property setting to extract the value from, `<expression>` = the extractor expression |
 | I capture the current URL | Binds the current browser URL to an attribute named URL in the current page scope |  |
 | I capture the current URL as `<attribute>` | Binds the current browser URL to a named attribute in the current page scope | `<attribute>` = the attribute to bind the URL to |
 | I capture `<element>` as `<attribute>` | Captures the text value of an element and binds it to a named attribute | `<element>` = the web element to capture the text of, `<attribute>` = the name of the attribute to bind the value to |
@@ -74,11 +69,10 @@ The following steps are supported. Each one must be prefixed by one of the keywo
 | I select `<attribute>` in `<element>` | Selects the option (by value) in a dropdown containing a bound attribute value | `<attribute>` = the name of the attribute containing the value to select, `<element>` = the dropdown element to select |
 | I `click|submit|check|uncheck` `<element>` | Performs the specified action on an element | `<element>` = the element to perform the action on |
 | I wait `<duration>` `second|seconds` when `<element>` is `clicked|submitted|checked|unchecked|selected|typed|entered` | Waits a given number of seconds after performing an action on an element | `<duration>` = the number of seconds to wait, `<element>` = the element the action was performed on |
-| I wait until `<condition>` when `<element>` is `clicked|submitted|checked|unchecked|selected|typed|entered` | Waits for a condition to be true after performing an action on an element | `<condition>` = the name of the bound attribute containing the javascript condition expression, `<element>` = the element the action was performed on |
+| I wait until `<condition>` when `<element>` is `clicked|submitted|checked|unchecked|selected|typed|entered` | Waits for a condition to be true after performing an action on an element | `<condition>` = the name of the bound attribute containing the javascript predicate expression, `<element>` = the element the action was performed on |
 | I wait until "`<javascript>`" | Waits until the given javascript expression returns true on the current page | `<javascript>` = the javascript predicate expression |
-| I wait until `<condition>` | Waits until a condition is true on the current page | `<condition>` = the name of the bound attribute containing the javascript condition expression |
+| I wait until `<condition>` | Waits until a condition is true on the current page | `<condition>` = the name of the bound attribute containing the javascript predicate expression |
 | I wait `<duration>` `second|seconds` | Waits for a given number of seconds to lapse | `<duration>` = the number of seconds to wait |
 | I `highlight|locate` `<element>` | Locates and highlights the given element on the current page | `<element>` = the element to highlight |
-
-
-
+| I execute system process "`<process>`" | Executes a local system process | <process> = the system process to execute |
+| I execute a unix system process "`<process>`" | Executes a local unix system process | <process> = the unix system process to execute |
