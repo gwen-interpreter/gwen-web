@@ -6,28 +6,29 @@ Invoking Gwen
 
 Usage: `gwen-web-install-dir/bin/gwen.sh|gwen.bat` `[options]` `[<feature paths>]`
 
-| Option                     | Description |
-| -------------------------- |-------------|
-|--version                   | Prints the implementation version |
-|--help                      | Prints the usage text |
-| -b, --batch                | batch mode, will exit gwen session after executing features. Absence of this switch launches REPL mode. |
-| -p, --properties `<files>` | Comma separated list of properties file paths |
-| -r, --report `<dir>`       | generated reporting location |
-| -m, --meta `<files>`       | Comma separated list of meta file paths |
-| -t, --tags `<tags>`        | Comma separated list of @include or ~@exclude tags |
-| `<feature paths>`          | Space separated list of feature files and/or directories (feature suites) to evaluate |
+| Option                         | Description |
+| ------------------------------ |-------------|
+| `--version  `                  | Prints the implementation version |
+| `--help`                       | Prints the usage text |
+| `-b`, `--batch`                | batch mode, will exit gwen session after executing features. Absence of this switch launches REPL mode. |
+| `-p`, `--properties` `<files>` | Comma separated list of properties file paths |
+| `-r`, `--report` `<dir>`       | generated reporting location |
+| `-m`, `--meta` `<files>`       | Comma separated list of meta file paths |
+| `-t`, `--tags` `<tags>`        | Comma separated list of @include or ~@exclude tags |
+| `-|`, `--parallel`             | Executes specified `<feature paths>` in parallel |
+| `<feature paths>`              | Space separated list of feature files and/or directories (feature suites) to evaluate |
 
 REPL Commands
 -------------
 
 The following commands are available within the gwen REPL console.
 
-| console command | description |
-| --------------- | ----------- |
-| `env`           | dump the currently visible environment scope to the console |
-| `env -a`        | dump the entire environment scope to the console |
-| `env -f`        | dump the global feature scope to the console |
-| `exit`          | will close the current browser (if open) and exit the console. |
+| Command                          | Description |
+| -------------------------------- | ----------- |
+| `env`, `env -v`, `env --visible` | dump the currently visible environment scope to the console |
+| `env -a`, `env --all`            | dump the entire environment scope to the console |
+| `env -f`, `env --feature`        | dump the global feature scope to the console |
+| `exit`,`quit`,`bye`              | will close the current browser (if open) and exit the console. |
 
 Supported DSL
 -------------
@@ -68,8 +69,8 @@ The following steps are supported. Each one must be prefixed by one of the keywo
 | I select "`<value>`" in `<element>` | Selects the option (by value) in a dropdown containing the given value | `<value>` = the value to select, `<element>` = the dropdown element to select | 
 | I select `<attribute>` in `<element>` | Selects the option (by value) in a dropdown containing a bound attribute value | `<attribute>` = the name of the attribute containing the value to select, `<element>` = the dropdown element to select |
 | I `click|submit|check|uncheck` `<element>` | Performs the specified action on an element | `<element>` = the element to perform the action on |
-| I wait `<duration>` `second|seconds` when `<element>` is `clicked|submitted|checked|unchecked|selected|typed|entered` | Waits a given number of seconds after performing an action on an element | `<duration>` = the number of seconds to wait, `<element>` = the element the action was performed on |
-| I wait until `<condition>` when `<element>` is `clicked|submitted|checked|unchecked|selected|typed|entered` | Waits for a condition to be true after performing an action on an element | `<condition>` = the name of the bound attribute containing the javascript predicate expression, `<element>` = the element the action was performed on |
+| I wait `<duration>` `second|seconds` when `<element>` is `clicked|submitted|checked|unchecked|selected|typed|entered` | Waits a given number of seconds after an action is performed on an element | `<duration>` = the number of seconds to wait, `<element>` = the element the action was performed on |
+| I wait until `<condition>` when `<element>` is `clicked|submitted|checked|unchecked|selected|typed|entered` | Waits for a condition to be true after an action is performed on an element | `<condition>` = the name of the bound attribute containing the javascript predicate expression, `<element>` = the element the action was performed on |
 | I wait until "`<javascript>`" | Waits until the given javascript expression returns true on the current page | `<javascript>` = the javascript predicate expression |
 | I wait until `<condition>` | Waits until a condition is true on the current page | `<condition>` = the name of the bound attribute containing the javascript predicate expression |
 | I wait `<duration>` `second|seconds` | Waits for a given number of seconds to lapse | `<duration>` = the number of seconds to wait |
