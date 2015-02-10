@@ -34,7 +34,7 @@ Supported DSL
 
 All feature files must conform to the [Gherkin standard for feature files](https://github.com/cucumber/cucumber/wiki/Feature-Introduction).
 
-The following steps are supported. Each one must be prefixed by one of the keyword literals: `Given`, `When`, `Then`, `And`, or `But`
+The following steps are supported. Each one must be prefixed by one of the keyword literals: `Given`, `When`, `Then`, `And`, or `But`.
 
 | Step | Description | Parameters |
 | ---- | ----------- | ---------- |
@@ -74,5 +74,5 @@ The following steps are supported. Each one must be prefixed by one of the keywo
 | I wait until `<condition>` | Waits until a condition is true on the current page | `<condition>` = the name of the bound attribute containing the javascript predicate expression |
 | I wait `<duration>` `second|seconds` | Waits for a given number of seconds to lapse | `<duration>` = the number of seconds to wait |
 | I `highlight|locate` `<element>` | Locates and highlights the given element on the current page | `<element>` = the element to highlight |
-| I execute system process "`<process>`" | Executes a local system process | <process> = the system process to execute |
-| I execute a unix system process "`<process>`" | Executes a local unix system process | <process> = the unix system process to execute |
+| I execute system process "`<process>`" | Executes a local system process | `<process>` = the system process to execute |
+| I execute a unix system process "`<process>`" | Executes a local unix system process | `<process>` = the unix system process to execute |
