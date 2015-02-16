@@ -20,8 +20,20 @@ the time taken to execute each step, screenshots
 on failures, current environment variables and meta information can 
 also be generated.
 
-Blogs and Articles
-------------------
+Usage
+-----
+
+### Getting Started
+
+See our [getting started](doc/START.md) user guide for a quick introduction 
+and tutorial.
+
+### Cheat Sheet
+
+Please see our [cheat sheet](doc/CHEATSHEET.md) for a list of REPL commands 
+and supported DSL statements.
+
+###Blogs and Articles
 
 - [Page Objects Begone](http://warpedjavaguy.wordpress.com/2014/08/27/page-objects-begone/) - 
 See how gwen-web does away with page objects and why coding them is no longer 
@@ -84,19 +96,6 @@ Perform the following if you would like to build and install gwen-web from sourc
    - This will create a project folder named _gwen-web-[version]_ in that 
      location
 8. [Start using gwen-web](doc/START.md)
-
-Usage
------
-
-### Getting Started
-
-See our [getting started](doc/START.md) user guide for a quick introduction 
-and tutorial.
-
-### Cheat Sheet
-
-Please see our [cheat sheet](doc/CHEATSHEET.md) for a list of REPL commands 
-and supported DSL statements.
 
 Mail Group
 ----------
