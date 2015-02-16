@@ -20,26 +20,17 @@ the time taken to execute each step, screenshots
 on failures, current environment variables and meta information can 
 also be generated.
 
-Usage
------
+User Guides
+-----------
 
-### Getting Started
-
-See our [getting started](doc/START.md) user guide for a quick introduction 
-and tutorial.
-
-### Cheat Sheet
-
-Please see our [cheat sheet](doc/CHEATSHEET.md) for a list of REPL commands 
-and supported DSL statements.
-
-###Blogs and Articles
-
-- [Page Objects Begone](http://warpedjavaguy.wordpress.com/2014/08/27/page-objects-begone/) - 
-See how gwen-web does away with page objects and why coding them is no longer 
-necessary.
-- [Automation By Meta](http://warpedjavaguy.wordpress.com/2015/01/12/automation-by-meta/) - 
-How to write a feature file and make it executable.
+- [Getting Started](doc/START.md)
+- [Cheat Sheet](doc/CHEATSHEET.md)
+- Blogs and Articles
+  - [Page Objects Begone](http://warpedjavaguy.wordpress.com/2014/08/27/page-objects-begone/) - 
+    See how gwen-web does away with page objects and why coding them is no longer 
+    necessary.
+  - [Automation By Meta](http://warpedjavaguy.wordpress.com/2015/01/12/automation-by-meta/) - 
+    How to write a feature file and make it executable.
 
 Key Features
 ------------
