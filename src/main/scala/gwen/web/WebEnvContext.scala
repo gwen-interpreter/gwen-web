@@ -360,7 +360,7 @@ class WebEnvContext(val driverName: String, val scopes: ScopedDataStack) extends
       case _ => scopes.getOpt(s"$name/text") match {
         case Some(value) => value
         case _ => scopes.getOpt(s"$name/javascript") match {
-          case Some(javascript) => executeScript(s"return $javascript").asInstanceOf[String]
+          case Some(javascript) => executeScript(s"return $javascript").toString
           case _ => scopes.get(name)
         }
       }
