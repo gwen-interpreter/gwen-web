@@ -286,7 +286,7 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
       case "be"      => expression.equals(actual)
       case "contain" => actual.contains(expression)
       case "match regex" => actual.matches(expression)
-      case "match xpath" => !evaluateXPath(expression, actual, "string", env).isEmpty()
+      case "match xpath" => !evaluateXPath(expression, actual, "text", env).isEmpty()
     }) tap { result =>
       if (!negate) assert(result, s"$element '$actual' should $operator '$expression'")
       else assert(!result, s"$element should not $operator '$expression'")
