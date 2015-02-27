@@ -142,7 +142,7 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
         }
       }
       
-      case r"""I capture text text in (.+?)$source by regex "(.+?)"$expression as (.+?)$$$name""" => env.withScreenShot {
+      case r"""I capture the text in (.+?)$source by regex "(.+?)"$expression as (.+?)$$$name""" => env.withScreenShot {
         evaluateRegex(expression, env.getBoundValue(source), env) tap { value =>
           env.featureScope.set(name, value)
         }
