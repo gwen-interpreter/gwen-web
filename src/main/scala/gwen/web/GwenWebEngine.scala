@@ -136,13 +136,14 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
         compare(element, env.getAttribute(attribute), env.getBoundValue(element), operator, Option(negation).isDefined, env) 
       }
       
-      case r"""I capture the (text|node|nodeset)$targetType in (.+?)$source by (xpath|regex)$operator "(.+?)"$expression as (.+?)$$$name""" => env.withScreenShot {
-        val input = env.getBoundValue(source)
-        (operator match {
-          
-          case "xpath" => evaluateXPath(expression, input, targetType, env)
-          case "regex" => evaluateRegex(expression, input, env)
-        }) tap { value =>
+      case r"""I capture the (text|node|nodeset)$targetType in (.+?)$source by xpath "(.+?)"$expression as (.+?)$$$name""" => env.withScreenShot {
+        evaluateXPath(expression, env.getBoundValue(source), targetType, env) tap { value =>
+          env.featureScope.set(name, value)
+        }
+      }
+      
+      case r"""I capture text text in (.+?)$source by regex "(.+?)"$expression as (.+?)$$$name""" => env.withScreenShot {
+        evaluateRegex(expression, env.getBoundValue(source), env) tap { value =>
           env.featureScope.set(name, value)
         }
       }
