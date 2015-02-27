@@ -17,12 +17,11 @@
 package gwen.web
 
 import java.io.StringReader
+import java.io.StringWriter
 import java.util.Iterator
-
 import org.openqa.selenium.Keys
 import org.openqa.selenium.support.ui.Select
 import org.xml.sax.InputSource
-
 import gwen.Predefs.Kestrel
 import gwen.Predefs.RegexContext
 import gwen.dsl.Step
@@ -33,6 +32,13 @@ import gwen.gwenSetting
 import javax.xml.namespace.NamespaceContext
 import javax.xml.xpath.XPath
 import javax.xml.xpath.XPathFactory
+import javax.xml.xpath.XPathConstants
+import javax.xml.transform.OutputKeys
+import javax.xml.transform.TransformerFactory
+import javax.xml.transform.dom.DOMSource
+import javax.xml.transform.stream.StreamResult
+import org.w3c.dom.Node
+import org.w3c.dom.NodeList
 
 
 /**
@@ -130,10 +136,11 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
         compare(element, env.getAttribute(attribute), env.getBoundValue(element), operator, Option(negation).isDefined, env) 
       }
       
-      case r"""I capture (.+?)$name from (.+?)$source by (xpath|regex)$operator "(.+?)"$$$expression""" => env.withScreenShot {
+      case r"""I capture the (text|node|nodeset)$targetType in (.+?)$source by (xpath|regex)$operator "(.+?)"$expression as (.+?)$$$name""" => env.withScreenShot {
         val input = env.getBoundValue(source)
         (operator match {
-          case "xpath" => evaluateXPath(expression, input, env)
+          
+          case "xpath" => evaluateXPath(expression, input, targetType, env)
           case "regex" => evaluateRegex(expression, input, env)
         }) tap { value =>
           env.featureScope.set(name, value)
@@ -278,7 +285,7 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
       case "be"      => expression.equals(actual)
       case "contain" => actual.contains(expression)
       case "match regex" => actual.matches(expression)
-      case "match xpath" => !evaluateXPath(expression, actual, env).isEmpty()
+      case "match xpath" => !evaluateXPath(expression, actual, "string", env).isEmpty()
     }) tap { result =>
       if (!negate) assert(result, s"$element '$actual' should $operator '$expression'")
       else assert(!result, s"$element should not $operator '$expression'")
@@ -341,12 +348,37 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
       f(XPathFactory.newInstance().newXPath(), expression)  
   }
   
-  private def evaluateXPath(xpath: String, source: String, env: WebEnvContext): String = 
+  private def evaluateXPath(xpath: String, source: String, targetType: String, env: WebEnvContext): String = 
     withXPath(xpath) { (xPath, expr) =>
-      xPath.evaluate(expr, new InputSource(new StringReader(source))) 
+      val qname = targetType match {
+        case "text" => XPathConstants.STRING
+        case "node" => XPathConstants.NODE
+        case "nodeset" => XPathConstants.NODESET
+        case _ => sys.error(s"Unsupported target XPath output type: $targetType (valid values are text|node|nodeset)")
+      }
+      val result = xPath.compile(expr).evaluate(new InputSource(new StringReader(source)), qname)
+      targetType match {
+        case "text" => result.toString
+        case "node" => nodeToString(result.asInstanceOf[Node])
+        case "nodeset" => nodeListToString(result.asInstanceOf[NodeList])
+      }
     }
   
-  private def evaluateRegex(regex: String, source: String, env: WebEnvContext): String = 
+  private def nodeToString(node: Node): String = {
+    val sw = new StringWriter()
+    val t = TransformerFactory.newInstance().newTransformer()
+    t.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes")
+    t.setOutputProperty(OutputKeys.INDENT, "yes")
+    t.transform(new DOMSource(node), new StreamResult(sw))
+    sw.toString
+  }
+  
+  private def nodeListToString(nodeList: NodeList): String = {
+    val result = for(i <- 0 to nodeList.getLength) yield nodeToString(nodeList.item(i))
+    result.mkString(sys.props("line.separator"))
+  }
+  
+  private def evaluateRegex(regex: String, source: String, env: WebEnvContext): String =  
     regex.r.findFirstMatchIn(source).getOrElse(sys.error(s"'Regex match '$regex' not found in '$source'")).group(1)
   
 }
