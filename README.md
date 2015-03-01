@@ -20,6 +20,22 @@ the time taken to execute each step, screenshots
 on failures, current environment variables and meta information can 
 also be generated.
 
+Key Features
+------------
+- Tests are plain text acceptance specifications
+- Tests can be run in batch mode or interactively
+- Tests can be run sequentially or in parallel
+- REPL console allows verifying before running
+- Cross browser support
+- No development
+ 
+Core Requirements
+-----------------
+
+- Java 1.6 or later
+- A web browser (Chrome, Firefox, Safari, or IE)
+- A native web driver (required for Chrome and IE only)
+
 User Guides
 -----------
 
@@ -32,22 +48,6 @@ User Guides
     necessary.
   - [Automation By Meta](http://warpedjavaguy.wordpress.com/2015/01/12/automation-by-meta/) - 
     How to write a feature file and make it executable.
-
-Key Features
-------------
-- Tests are plain text acceptance specifications
-- Tests can be run in batch mode or interactively
-- Tests can be run sequentially or in parallel
-- Interactive console allows verifying before running
-- Cross browser support
-- No development
- 
-Core Requirements
------------------
-
-- Java 1.6 or later
-- A web browser (Chrome, Firefox, Safari, or IE)
-- A native web driver (required for Chrome and IE only)
 
 Installation
 ------------
