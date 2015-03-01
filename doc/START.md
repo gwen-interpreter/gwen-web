@@ -15,25 +15,30 @@ directory and set the following property to one of the values shown:
 
     gwen.web.browser = Firefox | Safari | Chrome | IE
 
-- If you set this property to Chrome or IE, then you will need to download the 
+- If you use Chrome or IE, then you will need to download the 
   [Chrome web driver](http://code.google.com/p/selenium/wiki/ChromeDriver) 
   or 
   [IE web driver](https://code.google.com/p/selenium/wiki/InternetExplorerDriver) 
   respectively and install it on your system path.
 
-- Alternatively you can set the following in the gwen.properties as per below.
+- If you do not have permission to install the driver on your system path, 
+  then you can set the path to your downloaded driver location in your 
+  _gwen.properties_ file as shown below:
+  
 ```
-    (chrome)  webdriver.chrome.driver = /path/to/chromedriver/executable
-```
-```
+    (chrome)  webdriver.chrome.driver = /path/to/chromedriver
     (IE)      webdriver.ie.driver = c:/path/to/IEDriverServer.exe
 ```
 
+- If you want to use Safari, then you will need to install the latest [safari 
+  driver extension](http://selenium-release.storage.googleapis.com/index.html) 
+  in your browser.
+
 ### Gwen properties
 
-You can also store this property in any properties file you wish and pass that 
+You can also store settings in any properties file you wish and pass that 
 file to Gwen using the `-p` option (but you'll have to do it every 
-time you invoke Gwen). Putting the gwen.properties file in your user 
+time you invoke Gwen). Putting the _gwen.properties_ file in your user 
 home directory is much more convenient since Gwen knows where to find it. 
 
 ### Flood IO Challenge
@@ -59,11 +64,11 @@ Note that the floodio challenge requires that the user agent header be set to
 "I AM ROBOT". Gwen currently supports automating the setting of this header for 
 the Firefox and Chrome browsers only. 
  
-Next, open a command prompt / shell in the _bin_ directory and issue the 
-following command if you are using Firefox or Chrome:
+Next, open a command prompt / shell in your gwen installation directory and 
+issue the following command if you are using Firefox or Chrome:
 
 ```
-gwen -b ../features/floodio
+bin/gwen -b features/floodio
 ```
 
 Otherwise, if you are using Safari or IE, then you will need to issue the 
@@ -71,7 +76,7 @@ following command instead to skip over the robot steps since there is no
 programmatic support for setting the user agent header in those drivers.
 
 ```
-gwen -b -t ~@Robot ../features/floodio
+bin/gwen -b -t ~@Robot features/floodio
 ```
 
 This will start and complete the flood io challenge.
@@ -79,6 +84,5 @@ This will start and complete the flood io challenge.
 Next Steps
 ==========
 
-See [blogs and articles](../README.md#blogs-and-articles) for more 
-details.
+Read the [gwen-web user guides](../README.md#user-guides).
 

@@ -24,7 +24,7 @@
       https://github.com/gwen-interpreter/gwen
       
    selenium-java
-      Version 2.44.0
+      Version 2.45.0
       Copyright 2007-2009 Google Inc.
       Copyright 2007-2009 WebDriver committers
       Apache License, Version 2.0
@@ -68,7 +68,7 @@
      to endorse or promote products derived from this software without specific 
      prior written permission.
      
-   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS ÒAS ISÓ 
+   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS AS IS 
    AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE 
