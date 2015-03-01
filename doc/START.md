@@ -6,40 +6,6 @@ Prerequisites
 
 > Please ensure that you have [installed](../README.md#installation) 
 > gwen-web before proceeding.
- 
-### Multiple browser support
-
-Gwen-web uses Firefox as the default browser. If you would like to use a 
-different browser, then create a _gwen.properties_ file in your user home 
-directory and set the following property to one of the values shown: 
-
-    gwen.web.browser = Firefox | Safari | Chrome | IE
-
-- If you use Chrome or IE, then you will need to download the 
-  [Chrome web driver](http://code.google.com/p/selenium/wiki/ChromeDriver) 
-  or 
-  [IE web driver](https://code.google.com/p/selenium/wiki/InternetExplorerDriver) 
-  respectively and install it on your system path.
-
-- If you do not have permission to install the driver on your system path, 
-  then you can set the path to your downloaded driver location in your 
-  _gwen.properties_ file as shown below:
-  
-```
-    (chrome)  webdriver.chrome.driver = /path/to/chromedriver
-    (IE)      webdriver.ie.driver = c:/path/to/IEDriverServer.exe
-```
-
-- If you want to use Safari, then you will need to install the latest [safari 
-  driver extension](http://selenium-release.storage.googleapis.com/index.html) 
-  in your browser.
-
-### Gwen properties
-
-You can also store settings in any properties file you wish and pass that 
-file to Gwen using the `-p` option (but you'll have to do it every 
-time you invoke Gwen). Putting the _gwen.properties_ file in your user 
-home directory is much more convenient since Gwen knows where to find it. 
 
 ### Flood IO Challenge
 
