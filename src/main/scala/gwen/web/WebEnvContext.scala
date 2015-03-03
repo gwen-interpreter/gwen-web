@@ -343,12 +343,12 @@ class WebEnvContext(val driverName: String, val scopes: ScopedDataStack) extends
   
   def getElementText(element: String): String = 
     withWebElement(element) { webElement =>
-      (Option(webElement.getAttribute("value")) match {
-        case Some(value) => value
-        case None => Option(webElement.getAttribute("text")) match {
+      (Option(webElement.getText) match {
+        case None | Some("") => Option(webElement.getAttribute("text")) match {
+          case None | Some("") => webElement.getAttribute("value")
           case Some(value) => value
-          case None => webElement.getText()
         }
+        case Some(value) => value
       }) tap { text => 
         bindAndWait(element, "text", text)
       }
@@ -356,14 +356,14 @@ class WebEnvContext(val driverName: String, val scopes: ScopedDataStack) extends
   
   def getAttribute(name: String): String = 
     scopes.getOpt(name) match {
-      case Some(value) => value
-      case _ => scopes.getOpt(s"$name/text") match {
-        case Some(value) => value
-        case _ => scopes.getOpt(s"$name/javascript") match {
+      case None | Some("") => scopes.getOpt(s"$name/text") match {
+        case None | Some("") => scopes.getOpt(s"$name/javascript") match {
+          case None | Some("") => scopes.get(name)
           case Some(javascript) => executeScript(s"return $javascript").toString
-          case _ => scopes.get(name)
         }
+        case Some(value) => value
       }
+      case Some(value) => value
     }
   
   def bindAndWait(element: String, action: String, value: String) {
