@@ -157,11 +157,11 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
       }
       
       case r"""I capture (.+?)$element as (.+?)$attribute""" => env.withScreenShot {
-        env.featureScope.set(attribute, env.getElementText(element))
+        env.featureScope.set(attribute, env.getBoundValue(element))
       }
         
       case r"""I capture (.+?)$element""" => env.withScreenShot {
-        env.getElementText(element)
+        env.featureScope.set(element, env.getBoundValue(element))
       }
         
       case r"""my (.+?)$name (?:property|setting) (?:is|will be) "(.*?)"$$$value""" =>
