@@ -330,9 +330,9 @@ class WebEnvContext(val driverName: String, val scopes: ScopedDataStack) extends
   }
   
   def getBoundValue(binding: String): String = 
-    Try(getAttribute(binding)) match {
+    Try(getElementText(binding)) match {
       case Success(text) => text
-      case Failure(e1) => Try(getElementText(binding)) match {
+      case Failure(e1) => Try(getAttribute(binding)) match {
         case Success(text) => text
         case Failure(e2) => gwenSetting.getOpt(binding) match { 
           case Some(text) => text
