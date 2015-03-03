@@ -143,7 +143,7 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
       }
       
       case r"""I capture the text in (.+?)$source by regex "(.+?)"$expression as (.+?)$$$name""" => env.withScreenShot {
-        evaluateRegex(expression, env.getBoundValue(source), env) tap { value =>
+        evaluateRegex(expression, env.getBoundValue(source)) tap { value =>
           env.featureScope.set(name, value)
         }
       }
@@ -379,7 +379,7 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
     result.mkString(sys.props("line.separator"))
   }
   
-  private def evaluateRegex(regex: String, source: String, env: WebEnvContext): String =  
+  private def evaluateRegex(regex: String, source: String): String =  
     regex.r.findFirstMatchIn(source).getOrElse(sys.error(s"'Regex match '$regex' not found in '$source'")).group(1)
   
 }
