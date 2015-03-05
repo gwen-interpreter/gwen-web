@@ -18,11 +18,9 @@ package gwen.web
 
 import java.io.File
 import java.util.concurrent.TimeUnit
-
 import scala.util.Failure
 import scala.util.Success
 import scala.util.Try
-
 import org.openqa.selenium.JavascriptExecutor
 import org.openqa.selenium.OutputType
 import org.openqa.selenium.TakesScreenshot
@@ -38,14 +36,13 @@ import org.openqa.selenium.ie.InternetExplorerDriver
 import org.openqa.selenium.safari.SafariDriver
 import org.openqa.selenium.support.ui.ExpectedCondition
 import org.openqa.selenium.support.ui.WebDriverWait
-
 import gwen.Predefs.Kestrel
 import gwen.Predefs.RegexContext
 import gwen.dsl.Failed
 import gwen.dsl.Step
 import gwen.eval.EnvContext
 import gwen.eval.ScopedDataStack
-import gwen.gwenSetting
+import gwen.Settings
 
 /**
  * Defines the web environment context. This includes the configured selenium web
@@ -74,43 +71,31 @@ class WebEnvContext(val driverName: String, val scopes: ScopedDataStack) extends
    * 			the name of the driver to get
    */
   private[web] def loadWebDriver(driverName: String): WebDriver = {
-    val userAgent = gwenSetting.getOpt("gwen.web.useragent")
-	val authorizePlugins = gwenSetting.getOpt("gwen.authorize.plugins")
     (driverName.toLowerCase() match {
       case "firefox" =>
         new FirefoxDriver(new FirefoxProfile() tap { profile =>
-          userAgent foreach { agent =>
-            profile.setPreference("general.useragent.override", agent)
-          }
+          GwenWebSettings.`gwen.web.useragent` foreach { profile.setPreference("general.useragent.override", _) }
           profile.setAcceptUntrustedCertificates(true);
-          authorizePlugins foreach { authorize => 
-	        if (authorize.toBoolean) {
-              profile.setPreference("security.enable_java", true);
-              profile.setPreference("plugin.state.java", 2);
-            }
+	      if (GwenWebSettings.`gwen.authorize.plugins`) {
+            profile.setPreference("security.enable_java", true);
+            profile.setPreference("plugin.state.java", 2);
           }
         })
       case "ie" => new InternetExplorerDriver()
       case "chrome" =>
         new ChromeDriver(new ChromeOptions() tap { options =>
-	      userAgent foreach { agent => options.addArguments(s"--user-agent=$agent") }
-		  authorizePlugins foreach { authorize => 
-		    if (authorize.toBoolean) {
-		      options.addArguments(s"--always-authorize-plugins") 
-			}
+	      GwenWebSettings.`gwen.web.useragent` foreach { agent => options.addArguments(s"--user-agent=$agent") }
+          if (GwenWebSettings.`gwen.authorize.plugins`) {
+		    options.addArguments(s"--always-authorize-plugins") 
 		  }
 	      options.addArguments("--test-type")
 	    })
       case "safari" => new SafariDriver
       case _ => sys.error(s"Unsupported webdriver: $driverName")
     }) tap { driver =>
-      gwenSetting.getOpt("gwen.web.wait.seconds") foreach { wait =>
-        driver.manage().timeouts().implicitlyWait(wait.toLong, TimeUnit.SECONDS)
-      }
-      gwenSetting.getOpt("gwen.web.maximize") foreach { maximize =>
-      	if (maximize.toBoolean) {
-      	  driver.manage().window().maximize() 
-      	}
+      driver.manage().timeouts().implicitlyWait(GwenWebSettings.`gwen.web.wait.seconds`, TimeUnit.SECONDS)
+      if (GwenWebSettings.`gwen.web.maximize`) {
+        driver.manage().window().maximize() 
       }
     }
     
@@ -145,7 +130,7 @@ class WebEnvContext(val driverName: String, val scopes: ScopedDataStack) extends
     webDriver.asInstanceOf[JavascriptExecutor].executeScript(javascript, params.map(_.asInstanceOf[AnyRef]) : _*) tap { result =>
       logger.debug(s"Evaluated javascript: $javascript")
       if (result.isInstanceOf[Boolean] && result.asInstanceOf[Boolean]) {
-	    Thread.sleep(gwenSetting.getOpt("gwen.web.throttle.msecs").getOrElse("200").toLong)
+	    Thread.sleep(GwenWebSettings.`gwen.web.throttle.msecs`)
 	  }
     }
   
@@ -157,7 +142,7 @@ class WebEnvContext(val driverName: String, val scopes: ScopedDataStack) extends
    * @param condition the boolean condition to wait for (until true)
    */
   def waitUntil(reason: String)(condition: => Boolean) {
-    waitUntil(reason, gwenSetting.getOpt("gwen.web.wait.seconds").getOrElse("10").toInt) { condition }
+    waitUntil(reason, GwenWebSettings.`gwen.web.wait.seconds`) { condition }
   }
   
   /**
@@ -167,7 +152,7 @@ class WebEnvContext(val driverName: String, val scopes: ScopedDataStack) extends
    * @param condition the boolean condition to wait for (until true)
    */
   def waitUntil(condition: => Boolean) {
-    waitUntil(gwenSetting.getOpt("gwen.web.wait.seconds").getOrElse("10").toInt) { condition }
+    waitUntil(GwenWebSettings.`gwen.web.wait.seconds`) { condition }
   }
   
   /**
@@ -178,7 +163,7 @@ class WebEnvContext(val driverName: String, val scopes: ScopedDataStack) extends
    * @param timeoutSecs the number of seconds to wait before timing out
    * @param condition the boolean condition to wait for (until true)
    */
-  def waitUntil(reason: String, timeoutSecs: Int)(condition: => Boolean) {
+  def waitUntil(reason: String, timeoutSecs: Long)(condition: => Boolean) {
     waitUntil(Some(reason), timeoutSecs)(condition)
   }
   
@@ -189,7 +174,7 @@ class WebEnvContext(val driverName: String, val scopes: ScopedDataStack) extends
    * @param timeoutSecs the number of seconds to wait before timing out
    * @param condition the boolean condition to wait for (until true)
    */
-  def waitUntil(timeoutSecs: Int)(condition: => Boolean) {
+  def waitUntil(timeoutSecs: Long)(condition: => Boolean) {
     waitUntil(None, timeoutSecs)(condition)
   }
   
@@ -201,7 +186,7 @@ class WebEnvContext(val driverName: String, val scopes: ScopedDataStack) extends
    * @param timeoutSecs the number of seconds to wait before timing out
    * @param condition the boolean condition to wait for (until true)
    */
-  private def waitUntil(reason: Option[String], timeoutSecs: Int)(condition: => Boolean) {
+  private def waitUntil(reason: Option[String], timeoutSecs: Long)(condition: => Boolean) {
     try {
       reason foreach { logger.info(_) }
       new WebDriverWait(webDriver, timeoutSecs).until(
@@ -224,8 +209,8 @@ class WebEnvContext(val driverName: String, val scopes: ScopedDataStack) extends
    * 			the time in milliseconds to keep the highlight active
    */
   def highlight(element: WebElement) {
-	val msecs = gwenSetting.getOpt("gwen.web.throttle.msecs").getOrElse("200").toLong
-    val style = gwenSetting.getOpt("gwen.web.highlight.style").getOrElse("background: yellow; border: 2px solid gold;") 
+	val msecs = GwenWebSettings`gwen.web.throttle.msecs`
+    val style = GwenWebSettings.`gwen.web.highlight.style` 
     executeScript(s"element = arguments[0]; type = element.getAttribute('type'); if (('radio' == type || 'checkbox' == type) && element.parentElement.getElementsByTagName('input').length == 1) { element = element.parentElement; } original_style = element.getAttribute('style'); element.setAttribute('style', original_style + '; ${style}'); setTimeout(function() { element.setAttribute('style', original_style); }, ${msecs});", element)
     Thread.sleep(msecs);
   }
@@ -303,11 +288,9 @@ class WebEnvContext(val driverName: String, val scopes: ScopedDataStack) extends
    */
   def withScreenShot(f: => Unit): Unit = { 
     f
-    gwenSetting.getOpt("gwen.web.capture.screenshots") foreach { enabled =>
-      if (enabled.toBoolean) {
-        Thread.sleep(gwenSetting.getOpt("gwen.web.throttle.msecs").getOrElse("200").toLong)
-      	addAttachment(captureScreenshot)
-      }
+    if (GwenWebSettings.`gwen.web.capture.screenshots`) {
+      Thread.sleep(GwenWebSettings.`gwen.web.throttle.msecs`)
+      addAttachment(captureScreenshot)
     }
   }
   
@@ -334,7 +317,7 @@ class WebEnvContext(val driverName: String, val scopes: ScopedDataStack) extends
       case Success(text) => text
       case Failure(e1) => Try(getAttribute(binding)) match {
         case Success(text) => text
-        case Failure(e2) => gwenSetting.getOpt(binding) match { 
+        case Failure(e2) => Settings.getOpt(binding) match { 
           case Some(text) => text
           case _ => sys.error(s"Bound value not found: ${binding}")
         }

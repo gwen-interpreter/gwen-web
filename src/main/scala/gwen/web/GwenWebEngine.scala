@@ -28,7 +28,6 @@ import gwen.dsl.Step
 import gwen.eval.EvalEngine
 import gwen.eval.GwenOptions
 import gwen.eval.ScopedDataStack
-import gwen.gwenSetting
 import javax.xml.namespace.NamespaceContext
 import javax.xml.xpath.XPath
 import javax.xml.xpath.XPathFactory
@@ -39,6 +38,7 @@ import javax.xml.transform.dom.DOMSource
 import javax.xml.transform.stream.StreamResult
 import org.w3c.dom.Node
 import org.w3c.dom.NodeList
+import gwen.Settings
 
 
 /**
@@ -59,8 +59,8 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
    */
   override def init(options: GwenOptions, scopes: ScopedDataStack) = 
     new WebEnvContext(
-      gwenSetting.getOpt("gwen.web.browser").getOrElse("firefox") tap { webdriver =>
-        logger.info(s"$webdriver web driver configured")
+      GwenWebSettings.`gwen.web.browser` tap { browser =>
+        logger.info(s"Using $browser browser")
 	  },
 	  scopes
     )
@@ -95,7 +95,7 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
       }
       
       case r"""the url will be defined by (?:property|setting) "(.+?)"$$$name""" => 
-        env.scopes.set("url", gwenSetting.get(name))
+        env.scopes.set("url", Settings.get(name))
         
       case r"""the url will be "(.+?)"$$$url""" => 
         env.scopes.set("url", url)   
@@ -165,12 +165,12 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
       }
         
       case r"""my (.+?)$name (?:property|setting) (?:is|will be) "(.*?)"$$$value""" =>
-        gwenSetting.add(name, value)
+        Settings.add(name, value)
         
       case r"""(.+?)$attribute (?:is|will be) defined by (javascript|property|setting)$attrType "(.+?)"$$$expression""" =>
         attrType match {
           case "javascript" => env.scopes.set(s"$attribute/javascript", expression)
-          case _ => env.featureScope.set(attribute, gwenSetting.get(expression))
+          case _ => env.featureScope.set(attribute, Settings.get(expression))
         }
         
       case r"""(.+?)$attribute (?:is|will be) "(.*?)"$$$value""" => 
