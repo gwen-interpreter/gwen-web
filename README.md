@@ -32,7 +32,7 @@ Key Features
 Core Requirements
 -----------------
 
-- Java 1.6 or later
+- Java 6 or 7
 - A web browser (Chrome, Firefox, Safari, or IE)
 - A native web driver (required for Chrome and IE only)
 
@@ -67,7 +67,7 @@ Perform the following to download and install the latest build:
 
 Perform the following if you would like to build and install gwen-web from source: 
 
-1. Download and install [Java SDK 1.6 or later](http://www.oracle.com/technetwork/java/javase/downloads/index.html) 
+1. Download and install [Java SDK 6 or 7](http://www.oracle.com/technetwork/java/javase/downloads/index.html) 
 2. Download and install the latest [sbt](http://www.scala-sbt.org/) version
 3. Download a [Git client](http://git-scm.com/downloads).
 4. Clone the gwen source repository using one of the following (SSH or HTTPS) URLs: 
