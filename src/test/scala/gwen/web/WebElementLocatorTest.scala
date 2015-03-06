@@ -218,8 +218,8 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar wit
     
   }
   
-  private def newEnv = new WebEnvContext("Firefox", new ScopedDataStack()) {
-    override private[web] def loadWebDriver(driverName: String): WebDriver = mockWebDriver
+  private def newEnv = new WebEnvContext(new ScopedDataStack()) {
+    override val webDriver: WebDriver = mockWebDriver
   }
   
 }

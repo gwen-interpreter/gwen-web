@@ -16,29 +16,16 @@
 
 package gwen.web
 
-import java.io.StringReader
-import java.io.StringWriter
-import java.util.Iterator
 import org.openqa.selenium.Keys
-import org.openqa.selenium.support.ui.Select
-import org.xml.sax.InputSource
 import gwen.Predefs.Kestrel
 import gwen.Predefs.RegexContext
+import gwen.Settings
 import gwen.dsl.Step
 import gwen.eval.EvalEngine
 import gwen.eval.GwenOptions
 import gwen.eval.ScopedDataStack
-import javax.xml.namespace.NamespaceContext
-import javax.xml.xpath.XPath
-import javax.xml.xpath.XPathFactory
-import javax.xml.xpath.XPathConstants
-import javax.xml.transform.OutputKeys
-import javax.xml.transform.TransformerFactory
-import javax.xml.transform.dom.DOMSource
-import javax.xml.transform.stream.StreamResult
-import org.w3c.dom.Node
-import org.w3c.dom.NodeList
-import gwen.Settings
+import gwen.eval.support.XPathSupport
+import gwen.eval.support.SystemProcessSupport
 
 
 /**
@@ -47,7 +34,7 @@ import gwen.Settings
  * 
  * @author Branko Juric, Brady Wood
  */
-trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
+trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator with XPathSupport with SystemProcessSupport[WebEnvContext] {
   
   /**
    * Initialises and returns a new web environment context.
@@ -57,13 +44,7 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
    * @param scopes
    * 			initial data scopes
    */
-  override def init(options: GwenOptions, scopes: ScopedDataStack) = 
-    new WebEnvContext(
-      GwenWebSettings.`gwen.web.browser` tap { browser =>
-        logger.info(s"Using $browser browser")
-	  },
-	  scopes
-    )
+  override def init(options: GwenOptions, scopes: ScopedDataStack) = new WebEnvContext(scopes)
   
  
   
@@ -105,11 +86,11 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
         env.scopes.set(s"$element/locator/$locator", expression)
 
       case r"""the page title should( not)?$negation (be|contain|match regex|match xpath)$operator "(.*?)"$$$expression""" => env.withScreenShot {
-        compare("title", expression, getTitle(env), operator, Option(negation).isDefined, env)
+        compare("title", expression, env.getTitle, operator, Option(negation).isDefined, env)
       }
         
       case r"""the page title should( not)?$negation (be|contain|match regex|match xpath)$operator (.+?)$$$attribute""" => env.withScreenShot {
-        compare("title", env.getAttribute(attribute), getTitle(env), operator, Option(negation).isDefined, env) 
+        compare("title", env.getAttribute(attribute), env.getTitle, operator, Option(negation).isDefined, env) 
       }
       
       case r"""(.+?)$element should( not)?$negation be (displayed|hidden|checked|unchecked|enabled|disabled)$$$state""" => env.withScreenShot {
@@ -137,7 +118,7 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
       }
       
       case r"""I capture the (text|node|nodeset)$targetType in (.+?)$source by xpath "(.+?)"$expression as (.+?)$$$name""" => env.withScreenShot {
-        evaluateXPath(expression, env.getBoundValue(source), targetType, env) tap { value =>
+        evaluateXPath(expression, env.getBoundValue(source), XMLNodeType.withName(targetType)) tap { value =>
           env.featureScope.set(name, value)
         }
       }
@@ -206,23 +187,23 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
       }
 
       case r"""I (enter|type)$action "(.*?)"$value in (.+?)$$$element""" => env.withScreenShot {
-        sendKeys(element, action, value, env)
+        env.sendKeys(element, action, value)
       }
         
       case r"""I (enter|type)$action (.+?)$attribute in (.+?)$$$element""" => env.withScreenShot {
-        sendKeys(element, action, env.getAttribute(attribute), env)
+        env.sendKeys(element, action, env.getAttribute(attribute))
       }
         
       case r"""I select the (\d+?)$position(st|nd|rd|th)$suffix option in (.+?)$$$element""" => env.withScreenShot {
         env.waitUntil(s"Selecting '${position}${suffix}' option in $element") {
-          selectByIndex(element, position.toInt - 1, env)
+          env.selectByIndex(element, position.toInt - 1)
 		  true
 		}
       }
         
       case r"""I select "(.*?)"$value in (.+?)$$$element""" => env.withScreenShot {
         env.waitUntil(s"Selecting '$value' in $element") {
-          selectByVisibleText(element, value, env)
+          env.selectByVisibleText(element, value)
 		  true
 		}
       }
@@ -230,7 +211,7 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
       case r"""I select (.+?)$attribute in (.+?)$$$element""" => env.withScreenShot {
 	    env.getAttribute(attribute) tap { value => 
 		  env.waitUntil(s"Selecting '$value' in $element") {
-		    selectByVisibleText(element, value, env)
+		    env.selectByVisibleText(element, value)
 			true
 		  }
         }
@@ -252,10 +233,10 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
       }
         
       case r"""I wait ([0-9]+?)$duration second(?:s?) when (.+?)$element is (clicked|submitted|checked|unchecked|selected|typed|entered)$$$event""" =>
-        env.scopes.set(s"$element/${eventToAction(event)}/wait", duration)
+        env.scopes.set(s"$element/${WebElementActions.EventToAction(event)}/wait", duration)
         
       case r"""I wait until (.+?)$condition when (.+?)$element is (clicked|submitted|checked|unchecked|selected|typed|entered)$$$event""" =>
-        env.scopes.set(s"$element/${eventToAction(event)}/condition", condition)
+        env.scopes.set(s"$element/${WebElementActions.EventToAction(event)}/condition", condition)
         
       case r"""I wait until "(.+?)$javascript"""" => env.withScreenShot {
         env.waitUntil(s"Waiting until $javascript") {
@@ -286,100 +267,25 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator {
       case "be"      => expression.equals(actual)
       case "contain" => actual.contains(expression)
       case "match regex" => actual.matches(expression)
-      case "match xpath" => !evaluateXPath(expression, actual, "text", env).isEmpty()
+      case "match xpath" => !evaluateXPath(expression, actual, XMLNodeType.text).isEmpty()
     }) tap { result =>
       if (!negate) assert(result, s"$element '$actual' should $operator '$expression'")
       else assert(!result, s"$element should not $operator '$expression'")
     } 
   
-  private def getTitle(env: WebEnvContext): String = env.webDriver.getTitle() tap { title =>
-    env.bindAndWait("page", "title", title)
-  }
-  
-  private def sendKeys(element: String, action: String, value: String, env: WebEnvContext) {
-    env.withWebElement(element) { webElement =>
-      webElement.sendKeys(value)
-      env.bindAndWait(element, "type", value)
-      if (action == "enter") {
-        webElement.sendKeys(Keys.RETURN)
-	    env.bindAndWait(element, "enter", "true")
-      }
-    }
-  }
-  
-  private def selectByVisibleText(element: String, value: String, env: WebEnvContext) {
-    env.withWebElement(element) { webElement =>
-      new Select(webElement).selectByVisibleText(value)
-      env.bindAndWait(element, "select", value)
-    }
-  }
-  
-  private def selectByIndex(element: String, index: Int, env: WebEnvContext) {
-    env.withWebElement(element) { webElement =>
-      val select = new Select(webElement)
-      select.selectByIndex(index)
-      env.bindAndWait(element, "select", select.getFirstSelectedOption().getText())
-    }
-  }
-
-  private def eventToAction(event: String): String = event match {
-    case "clicked"   => "click"
-    case "submitted" => "submit" 
-    case "checked"   => "check" 
-    case "unchecked" => "uncheck" 
-    case "selected"  => "select" 
-    case "typed"     => "type" 
-    case "entered"   => "enter"
-  }
-  
-  private def withXPath[T](expression: String)(f: (XPath, String) => T): T = expression match {
-    case r"""(.+?)$expr where (.+?)$$$namespaces""" =>
-      val xPath = XPathFactory.newInstance().newXPath() tap { xPath =>
-        xPath.setNamespaceContext(new NamespaceContext() { 
-          def getNamespaceURI(prefix: String): String = {
-            val mappings = namespaces.split(",").map(_.split("=")).map(pair => (pair(0).trim, pair(1).trim)).toMap
-            return mappings.getOrElse(prefix, sys.error(s"Unknown namespace prefix: $prefix"));
-          }
-          def getPrefix(uri: String): String = null
-          def getPrefixes(uri: String): Iterator[String] = null
-        })
-      }
-      f(xPath, expr)
-    case _ =>
-      f(XPathFactory.newInstance().newXPath(), expression)  
-  }
-  
-  private def evaluateXPath(xpath: String, source: String, targetType: String, env: WebEnvContext): String = 
-    withXPath(xpath) { (xPath, expr) =>
-      val qname = targetType match {
-        case "text" => XPathConstants.STRING
-        case "node" => XPathConstants.NODE
-        case "nodeset" => XPathConstants.NODESET
-        case _ => sys.error(s"Unsupported target XPath output type: $targetType (valid values are text|node|nodeset)")
-      }
-      val result = xPath.compile(expr).evaluate(new InputSource(new StringReader(source)), qname)
-      targetType match {
-        case "text" => result.toString
-        case "node" => nodeToString(result.asInstanceOf[Node])
-        case "nodeset" => nodeListToString(result.asInstanceOf[NodeList])
-      }
-    }
-  
-  private def nodeToString(node: Node): String = {
-    val sw = new StringWriter()
-    val t = TransformerFactory.newInstance().newTransformer()
-    t.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes")
-    t.setOutputProperty(OutputKeys.INDENT, "yes")
-    t.transform(new DOMSource(node), new StreamResult(sw))
-    sw.toString
-  }
-  
-  private def nodeListToString(nodeList: NodeList): String = {
-    val result = for(i <- 0 to nodeList.getLength) yield nodeToString(nodeList.item(i))
-    result.mkString(sys.props("line.separator"))
-  }
-  
   private def evaluateRegex(regex: String, source: String): String =  
     regex.r.findFirstMatchIn(source).getOrElse(sys.error(s"'Regex match '$regex' not found in '$source'")).group(1)
   
+}
+
+object WebElementActions {
+  val EventToAction = Map(
+    "clicked"   -> "click",
+    "submitted" -> "submit", 
+    "checked"   -> "check", 
+    "unchecked" -> "uncheck", 
+    "selected"  -> "select", 
+    "typed"     -> "type", 
+    "entered"   -> "enter"
+  )
 }

@@ -43,6 +43,8 @@ import gwen.dsl.Step
 import gwen.eval.EnvContext
 import gwen.eval.ScopedDataStack
 import gwen.Settings
+import org.openqa.selenium.support.ui.Select
+import org.openqa.selenium.Keys
 
 /**
  * Defines the web environment context. This includes the configured selenium web
@@ -50,59 +52,11 @@ import gwen.Settings
  *
  *  @author Branko Juric
  */
-class WebEnvContext(val driverName: String, val scopes: ScopedDataStack) extends EnvContext(scopes) with WebElementLocator {
+class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with WebElementLocator with WebBrowser {
+  webBrowser: WebBrowser =>
 
-  /**
-   * Selenium web driver (lazily loaded).
-   */
-  private var _webDriver: Option[WebDriver] = None
-  def webDriver: WebDriver = _webDriver match {
-    case None => 
-      _webDriver = Some(loadWebDriver(driverName))
-      _webDriver.get
-    case _ => 
-      _webDriver.get
-  }
-  
-  /**
-   * Gets the selenium webdriver.
-   *
-   * @param driverName
-   * 			the name of the driver to get
-   */
-  private[web] def loadWebDriver(driverName: String): WebDriver = {
-    (driverName.toLowerCase() match {
-      case "firefox" =>
-        new FirefoxDriver(new FirefoxProfile() tap { profile =>
-          GwenWebSettings.`gwen.web.useragent` foreach { profile.setPreference("general.useragent.override", _) }
-          profile.setAcceptUntrustedCertificates(true);
-	      if (GwenWebSettings.`gwen.authorize.plugins`) {
-            profile.setPreference("security.enable_java", true);
-            profile.setPreference("plugin.state.java", 2);
-          }
-        })
-      case "ie" => new InternetExplorerDriver()
-      case "chrome" =>
-        new ChromeDriver(new ChromeOptions() tap { options =>
-	      GwenWebSettings.`gwen.web.useragent` foreach { agent => options.addArguments(s"--user-agent=$agent") }
-          if (GwenWebSettings.`gwen.authorize.plugins`) {
-		    options.addArguments(s"--always-authorize-plugins") 
-		  }
-	      options.addArguments("--test-type")
-	    })
-      case "safari" => new SafariDriver
-      case _ => sys.error(s"Unsupported webdriver: $driverName")
-    }) tap { driver =>
-      driver.manage().timeouts().implicitlyWait(GwenWebSettings.`gwen.web.wait.seconds`, TimeUnit.SECONDS)
-      if (GwenWebSettings.`gwen.web.maximize`) {
-        driver.manage().window().maximize() 
-      }
-    }
-    
-  }
-  
    /**
-   * Resets the current context and closes the web driver session.
+   * Resets the current context and closes the web browser.
    */
   override def reset() {
     super.reset()
@@ -110,12 +64,10 @@ class WebEnvContext(val driverName: String, val scopes: ScopedDataStack) extends
   }
 
   /**
-   * Closes this context and the web driver (if it has loaded).  Once closed,
-   * this context should not be used again.
+   * Quits the current web browser.
    */
   override def close() {
-    _webDriver foreach { _.quit() }
-    _webDriver = None
+    webBrowser.quit()
   }
   
   /**
@@ -365,6 +317,36 @@ class WebEnvContext(val driverName: String, val scopes: ScopedDataStack) extends
 	  waitUntil(s"Waiting until $condition (post-$action condition)") {
 	    executeScript(s"return $javascript").asInstanceOf[Boolean]
 	  }
+    }
+  }
+  
+  def getTitle: String = webDriver.getTitle() tap { title =>
+    bindAndWait("page", "title", title)
+  }
+  
+  def sendKeys(element: String, action: String, value: String) {
+    withWebElement(element) { webElement =>
+      webElement.sendKeys(value)
+      bindAndWait(element, "type", value)
+      if (action == "enter") {
+        webElement.sendKeys(Keys.RETURN)
+	    bindAndWait(element, "enter", "true")
+      }
+    }
+  }
+  
+  def selectByVisibleText(element: String, value: String) {
+    withWebElement(element) { webElement =>
+      new Select(webElement).selectByVisibleText(value)
+      bindAndWait(element, "select", value)
+    }
+  }
+  
+  def selectByIndex(element: String, index: Int) {
+    withWebElement(element) { webElement =>
+      val select = new Select(webElement)
+      select.selectByIndex(index)
+      bindAndWait(element, "select", select.getFirstSelectedOption().getText())
     }
   }
   
