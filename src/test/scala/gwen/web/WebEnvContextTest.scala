@@ -31,14 +31,14 @@ class WebEnvContextTest extends FlatSpec with Matchers with MockitoSugar {
   val mockWebDriverTimeouts = mock[WebDriver.Timeouts]
   
   "New web env context" should "have 'feature' scope" in {
-    val mockWebBrowser = mock[WebBrowser]
-    val env = newEnv(mockWebBrowser)
+    val mockDriverManager = mock[DriverManager]
+    val env = newEnv(mockDriverManager)
     env.scopes.current.scope should be ("feature")
   }
   
   "Bound scope attribute" should "be recreated after reset" in {
-    val mockWebBrowser = mock[WebBrowser]
-    val env = newEnv(mockWebBrowser)
+    val mockDriverManager = mock[DriverManager]
+    val env = newEnv(mockDriverManager)
     env.scopes.addScope("login")
     env.scopes.set("username", "Gwen")
     env.scopes.get("username") should be ("Gwen")
@@ -48,14 +48,14 @@ class WebEnvContextTest extends FlatSpec with Matchers with MockitoSugar {
   }
   
   "json on new env context" should "be empty" in {
-    val mockWebBrowser = mock[WebBrowser]
-    val env = newEnv(mockWebBrowser)
+    val mockDriverManager = mock[DriverManager]
+    val env = newEnv(mockDriverManager)
     env.json.toString should be ("""{"scopes":[{"scope":"feature","atts":[]}]}""")
   }
   
   "Bound scope attribute" should "show up in JSON string" in {
-    val mockWebBrowser = mock[WebBrowser]
-    val env = newEnv(mockWebBrowser)
+    val mockDriverManager = mock[DriverManager]
+    val env = newEnv(mockDriverManager)
     env.scopes.addScope("login")
     env.scopes.set("username", "Gwen")
     env.scopes.get("username") should be ("Gwen")
@@ -64,14 +64,14 @@ class WebEnvContextTest extends FlatSpec with Matchers with MockitoSugar {
   }
   
   "Resetting new web env context after referencing webdriver" should "quit the browser" in {
-    val mockWebBrowser = mock[WebBrowser]
-    val env = newEnv(mockWebBrowser)
+    val mockDriverManager = mock[DriverManager]
+    val env = newEnv(mockDriverManager)
     env.webDriver
     env.reset()
-    verify(mockWebBrowser).quit()
+    verify(mockDriverManager).quit()
   }
   
-  def newEnv(browser: WebBrowser) = {
+  def newEnv(browser: DriverManager) = {
    new WebEnvContext(new ScopedDataStack()) {
      override def webDriver: WebDriver = mock[WebDriver]
      override def close() { browser.quit() }

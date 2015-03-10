@@ -31,9 +31,9 @@ import com.typesafe.scalalogging.slf4j.LazyLogging
 import gwen.Predefs.Kestrel
 
 /**
- * Provides access to the web driver used to drive the web browser.
+ * Provides access to the web driver used to drive the browser.
  */
-trait WebBrowser extends LazyLogging {
+trait DriverManager extends LazyLogging {
 
   /**
    * Web driver (lazily loaded).
@@ -61,12 +61,14 @@ trait WebBrowser extends LazyLogging {
    */
   private[web] def loadWebDriver: WebDriver = {
     val driverName = GwenWebSettings.`gwen.web.browser` tap { browser =>
-        logger.info(s"Loading $browser web driver")
+      logger.info(s"Loading $browser web driver")
 	  }
     (driverName.toLowerCase() match {
       case "firefox" =>
         new FirefoxDriver(new FirefoxProfile() tap { profile =>
-          GwenWebSettings.`gwen.web.useragent` foreach { profile.setPreference("general.useragent.override", _) }
+          GwenWebSettings.`gwen.web.useragent` foreach { 
+            profile.setPreference("general.useragent.override", _)
+          }
           profile.setAcceptUntrustedCertificates(true);
 	      if (GwenWebSettings.`gwen.authorize.plugins`) {
             profile.setPreference("security.enable_java", true);
@@ -76,12 +78,14 @@ trait WebBrowser extends LazyLogging {
       case "ie" => new InternetExplorerDriver()
       case "chrome" =>
         new ChromeDriver(new ChromeOptions() tap { options =>
-	      GwenWebSettings.`gwen.web.useragent` foreach { agent => options.addArguments(s"--user-agent=$agent") }
+	        GwenWebSettings.`gwen.web.useragent` foreach { 
+            agent => options.addArguments(s"--user-agent=$agent") 
+          }
           if (GwenWebSettings.`gwen.authorize.plugins`) {
-		    options.addArguments(s"--always-authorize-plugins") 
-		  }
-	      options.addArguments("--test-type")
-	    })
+		        options.addArguments(s"--always-authorize-plugins") 
+		      }
+	        options.addArguments("--test-type")
+	      })
       case "safari" => new SafariDriver
       case _ => sys.error(s"Unsupported webdriver: $driverName")
     }) tap { driver =>

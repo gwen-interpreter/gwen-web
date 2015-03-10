@@ -46,8 +46,6 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator wit
    */
   override def init(options: GwenOptions, scopes: ScopedDataStack) = new WebEnvContext(scopes)
   
- 
-  
   /**
    * Evaluates a given step.  This method matches the incoming step against a 
    * set of supported steps and evaluates only those that are successfully 
@@ -159,13 +157,13 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator wit
         
       case r"""I wait for (.+?)$element text for (.+?)$seconds second(?:s?)""" => env.withScreenShot {
         env.waitUntil(s"Waiting for $element text after $seconds second(s)", seconds.toInt) {
-          env.getElementText(element).length() > 0
+          waitForText(element, env)
         } 
       }
         
       case r"""I wait for (.+?)$element text""" => env.withScreenShot {
         env.waitUntil(s"Waiting for $element text") {
-          env.getElementText(element).length() > 0
+          waitForText(element, env)
         }
       }
         
@@ -176,14 +174,14 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator wit
       }
         
       case r"""I wait for (.+?)$$$element""" => env.withScreenShot {
-       env.waitUntil(s"Waiting for $element") {
-         locateOpt(env, element).isDefined
-       }
+        env.waitUntil(s"Waiting for $element") {
+          locateOpt(env, element).isDefined
+        }
       }
        
       case r"""I press enter in (.+?)$$$element""" => env.withScreenShot {
         locate(env, element).sendKeys(Keys.RETURN)
-		env.bindAndWait(element, "enter", "true")
+		    env.bindAndWait(element, "enter", "true")
       }
 
       case r"""I (enter|type)$action "(.*?)"$value in (.+?)$$$element""" => env.withScreenShot {
@@ -197,23 +195,23 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator wit
       case r"""I select the (\d+?)$position(st|nd|rd|th)$suffix option in (.+?)$$$element""" => env.withScreenShot {
         env.waitUntil(s"Selecting '${position}${suffix}' option in $element") {
           env.selectByIndex(element, position.toInt - 1)
-		  true
-		}
+		      true
+		    }
       }
         
       case r"""I select "(.*?)"$value in (.+?)$$$element""" => env.withScreenShot {
         env.waitUntil(s"Selecting '$value' in $element") {
           env.selectByVisibleText(element, value)
-		  true
-		}
+		      true
+		    }
       }
         
       case r"""I select (.+?)$attribute in (.+?)$$$element""" => env.withScreenShot {
-	    env.getAttribute(attribute) tap { value => 
-		  env.waitUntil(s"Selecting '$value' in $element") {
-		    env.selectByVisibleText(element, value)
-			true
-		  }
+	      env.getAttribute(attribute) tap { value => 
+		      env.waitUntil(s"Selecting '$value' in $element") {
+		        env.selectByVisibleText(element, value)
+			      true
+		      }
         }
       }
         
@@ -240,14 +238,14 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator wit
         
       case r"""I wait until "(.+?)$javascript"""" => env.withScreenShot {
         env.waitUntil(s"Waiting until $javascript") {
-	      env.executeScript(s"return $javascript").asInstanceOf[Boolean]
-	    }
+	        env.executeScript(s"return $javascript").asInstanceOf[Boolean]
+	      }
       }
         
       case r"""I wait until (.+?)$$$condition""" => env.withScreenShot {
         env.waitUntil(s"Waiting until $condition") {
-	      env.executeScript(s"return ${env.scopes.get(s"$condition/javascript")}").asInstanceOf[Boolean]
-	    }
+	        env.executeScript(s"return ${env.scopes.get(s"$condition/javascript")}").asInstanceOf[Boolean]
+	      }
       }
         
       case r"""I wait ([0-9]+?)$duration second(?:s?)""" => env.withScreenShot {
@@ -260,6 +258,11 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator wit
       case _ => super.evaluate(step, env)
       
     }
+  }
+  
+  private def waitForText(element: String, env: WebEnvContext): Boolean = {
+    val text = env.getElementText(element)
+    text != null && text.length > 0
   }
   
   private def compare(element: String, expression: String, actual: String, operator: String, negate: Boolean, env: WebEnvContext) = 

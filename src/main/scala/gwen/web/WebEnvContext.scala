@@ -52,8 +52,7 @@ import org.openqa.selenium.Keys
  *
  *  @author Branko Juric
  */
-class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with WebElementLocator with WebBrowser {
-  webBrowser: WebBrowser =>
+class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with WebElementLocator with DriverManager {
 
    /**
    * Resets the current context and closes the web browser.
@@ -64,10 +63,10 @@ class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with
   }
 
   /**
-   * Quits the current web browser.
+   * Closes the current web driver.
    */
   override def close() {
-    webBrowser.quit()
+    quit()
   }
   
   /**

@@ -25,58 +25,58 @@ import org.scalatest.FlatSpec
 import org.scalatest.Matchers
 import org.scalatest.mock.MockitoSugar
 
-class WebBrowserTest extends FlatSpec with Matchers with MockitoSugar {
+class DriverManagerTest extends FlatSpec with Matchers with MockitoSugar {
   
   val mockWebDriverOptions = mock[WebDriver.Options]
   val mockWebDriverTimeouts = mock[WebDriver.Timeouts]
   
-  "Web driver" should "should quit on browser quit" in {
-    val browser = newBrowser()
-    val mockWebDriver = browser.webDriver
-    browser.quit()
+  "Web driver" should "should quit on manager quit" in {
+    val manager = newManager()
+    val mockWebDriver = manager.webDriver
+    manager.quit()
     verify(mockWebDriver).quit()
   }
   
-  "Quitting browser" should "create new webdriver on subsequent access" in {
+  "Quitting manager" should "create new webdriver on subsequent access" in {
     
-    val browser = newBrowser()
-    val webDriver1 = browser.webDriver
-    browser.quit()
-    val webDriver2 = browser.webDriver
+    val manager = newManager()
+    val webDriver1 = manager.webDriver
+    manager.quit()
+    val webDriver2 = manager.webDriver
     webDriver1 should not be (webDriver2)
   }
   
-  "Accessing web driver without closing browser" should "return the same web driver instance" in {
+  "Accessing web driver without closing manager" should "return the same web driver instance" in {
     
-    val browser = newBrowser()
-    val webDriver1 = browser.webDriver
-    val webDriver2 = browser.webDriver
+    val manager = newManager()
+    val webDriver1 = manager.webDriver
+    val webDriver2 = manager.webDriver
     webDriver1 should be (webDriver2)
   }
   
-  "Quitting the browser multiple times" should "quit the web driver only once" in {
+  "Quitting the manager multiple times" should "quit the web driver only once" in {
 	
-    val browser = newBrowser()
-    val mockWebDriver = browser.webDriver
+    val manager = newManager()
+    val mockWebDriver = manager.webDriver
 
-    // calling quit multiple times on browser should call quit on web driver just once
-    browser.quit()
-    browser.quit()
+    // calling quit multiple times on manager should call quit on web driver just once
+    manager.quit()
+    manager.quit()
     verify(mockWebDriver, times(1)).quit()
   }
   
-  "Quitting new browser without referencing webdriver" should "not quit the web driver" in {
+  "Quitting new manager without referencing webdriver" should "not quit the web driver" in {
     val mockWebDriver = mock[WebDriver]
-    val browser = newBrowser(mockWebDriver)
-    browser.quit()
+    val manager = newManager(mockWebDriver)
+    manager.quit()
     verify(mockWebDriver, never()).quit()
   }
   
-  private def newBrowser(): WebBrowser = new WebBrowser() {
+  private def newManager(): DriverManager = new DriverManager() {
     override private[web] def loadWebDriver: WebDriver = mock[WebDriver]
   }
   
-  private def newBrowser(driver: WebDriver): WebBrowser = new WebBrowser() {
+  private def newManager(driver: WebDriver): DriverManager = new DriverManager() {
     override private[web] def loadWebDriver: WebDriver = driver
   }
   
