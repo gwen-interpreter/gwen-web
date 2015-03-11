@@ -24,22 +24,19 @@ import org.openqa.selenium.WebDriverException
 import com.typesafe.scalalogging.slf4j.LazyLogging
 
 /**
- * Locates web elements using the selenium web driver.
- * 
- * @author Branko Juric, Brady Wood
- */
+  * Locates web elements using the selenium web driver.
+  * 
+  * @author Branko Juric, Brady Wood
+  */
 trait WebElementLocator extends LazyLogging {
   
   /**
-   * Locates a bound web element.
-   * 
-   *  @param env
-   *      the web environment context
-   *  @param element
-   *      the name of the element to locate
-   *  @return 
-   *      the found element (errors if not found)
-   */
+    * Locates a bound web element.
+    * 
+    *  @param env the web environment context
+    *  @param element the name of the element to locate
+    *  @return the found element (errors if not found)
+    */
   def locate(env: WebEnvContext, element: String): WebElement = locateElement(env, element) match {
     case Some(webElement) => webElement
     case None => throw new NoSuchElementException(s"Web element not found: ${element}")
@@ -48,12 +45,9 @@ trait WebElementLocator extends LazyLogging {
   /**
    * Locates a bound web element.
    * 
-   * @param env
-   *      the web environment context
-   * @param element
-   *      the name of the element to locate
-   * @return 
-   *       Some(element) if found, None otherwise
+   * @param env the web environment context
+   * @param element the name of the element to locate
+   * @return Some(element) if found, None otherwise
    */
   def locateOpt(env: WebEnvContext, element: String): Option[WebElement] = try {
     locateElement(env, element)
@@ -64,12 +58,9 @@ trait WebElementLocator extends LazyLogging {
   /**
    * Locates a bound web element.
    * 
-   * @param env
-   *      the web environment context
-   * @param element
-   *      the name of the element to locate
-   * @return 
-   *       Some(element) if found, None otherwise
+   * @param env the web environment context
+   * @param element the name of the element to locate
+   * @return Some(element) if found, None otherwise
    */
   private def locateElement(env: WebEnvContext, element: String): Option[WebElement] = {
     val locatorBinding = s"$element/locator";
@@ -92,9 +83,7 @@ trait WebElementLocator extends LazyLogging {
     }
   }
   
-  /**
-   * Finds an element by the given locator expression.
-   */
+  /** Finds an element by the given locator expression. */
   private def findElementByLocator(env: WebEnvContext, element: String, locator: String, expression: String): Option[WebElement] = {
     locator match {
       case "id" => getElement(env, element, By.id(expression))
@@ -111,26 +100,26 @@ trait WebElementLocator extends LazyLogging {
   }
   
   /**
-   * Gets a web element using the given by locator.
-   * 
-   * @param env the web environment context
-   * @param by the by locator
-   */
+    * Gets a web element using the given by locator.
+    * 
+    * @param env the web environment context
+    * @param by the by locator
+    */
   private def getElement(env: WebEnvContext, element: String, by: By): Option[WebElement] = Option(env.webDriver.findElement(by)) map {
     moveTo(env, element, _)
   }
     
   /**
-   * Gets a web element by the given javascript expression. If the web element is not 
-   * visible in the browser, then the element is brought into view by scrolling to it.
-   * 
-   * @param env the web environment context
-   * @param element the element 
-   * @param javascipt the javascript expression for returning the element
-   */
+    * Gets a web element by the given javascript expression. If the web element is not 
+    * visible in the browser, then the element is brought into view by scrolling to it.
+    * 
+    * @param env the web environment context
+    * @param element the element 
+    * @param javascipt the javascript expression for returning the element
+    */
   private def getElementByJavaScript(env: WebEnvContext, element: String, javascript: String): Option[WebElement] = {
     var elem: Option[WebElement] = None
-  	env.waitUntil {
+    env.waitUntil {
       elem = (env.executeScript(s"return $javascript") match {
         case elems: ArrayList[_] => 
           if (!elems.isEmpty()) Option(elems.get(0).asInstanceOf[WebElement])
@@ -143,16 +132,16 @@ trait WebElementLocator extends LazyLogging {
         moveTo(env, element, webElement)
       }
       elem.isDefined
-	}
-  	elem
+    }
+    elem
   }
   
   /**
-   * Physically scrolls to the given web element so it is visible in the browser.
-   * 
-   * @param env the web environment context
-   * @param webElement the webElement to scroll to (if not None)
-   */
+    * Physically scrolls to the given web element so it is visible in the browser.
+    * 
+    * @param env the web environment context
+    * @param webElement the webElement to scroll to (if not None)
+    */
   private def moveTo(env: WebEnvContext, element: String, webElement: WebElement): WebElement = {
     if (!webElement.isDisplayed()) {
       env.executeScript("var elem = arguments[0]; if (typeof elem !== 'undefined' && elem != null) { elem.scrollIntoView(true); }")
@@ -162,8 +151,6 @@ trait WebElementLocator extends LazyLogging {
   
 }
 
-/**
- * Thrown when a web element cannot be located
- */
+/** Thrown when a web element cannot be located. */
 class LocatorBindingException(element: String, causeMsg: String) extends Exception(s"Could not locate ${element}: ${causeMsg}")
 

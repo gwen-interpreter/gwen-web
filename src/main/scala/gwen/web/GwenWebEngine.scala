@@ -29,33 +29,29 @@ import gwen.eval.support.SystemProcessSupport
 
 
 /**
- * A web engine that uses the Selenium web driver
- * API to automate various web operations.
- * 
- * @author Branko Juric, Brady Wood
- */
+  * A web engine that uses the Selenium web driver
+  * API to automate various web operations.
+  * 
+  * @author Branko Juric, Brady Wood
+  */
 trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator with XPathSupport with SystemProcessSupport[WebEnvContext] {
   
   /**
-   * Initialises and returns a new web environment context.
-   * 
-   * @param options
-   * 			command line options
-   * @param scopes
-   * 			initial data scopes
-   */
+    * Initialises and returns a new web environment context.
+    * 
+    * @param options command line options
+    * @param scopes initial data scopes
+    */
   override def init(options: GwenOptions, scopes: ScopedDataStack) = new WebEnvContext(scopes)
   
   /**
-   * Evaluates a given step.  This method matches the incoming step against a 
-   * set of supported steps and evaluates only those that are successfully 
-   * matched.
-   *
-   * @param step
-   * 			the step to evaluate
-   * @param env
-   * 			the web environment context
-   */
+    * Evaluates a given step.  This method matches the incoming step against a 
+    * set of supported steps and evaluates only those that are successfully 
+    * matched.
+    *
+    * @param step the step to evaluate
+    * @param env the web environment context
+    */
   override def evaluate(step: Step, env: WebEnvContext): Unit = {
     
    step.expression match {
@@ -64,7 +60,7 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator wit
         env.scopes.addScope(page)
         
       case r"""I navigate to the (.+?)$$$page""" => env.withScreenShot {
-    	env.scopes.addScope(page)
+        env.scopes.addScope(page)
         env.webDriver.get(env.getAttribute("url"))
       }
         
@@ -181,7 +177,7 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator wit
        
       case r"""I press enter in (.+?)$$$element""" => env.withScreenShot {
         locate(env, element).sendKeys(Keys.RETURN)
-		    env.bindAndWait(element, "enter", "true")
+        env.bindAndWait(element, "enter", "true")
       }
 
       case r"""I (enter|type)$action "(.*?)"$value in (.+?)$$$element""" => env.withScreenShot {
@@ -195,23 +191,23 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator wit
       case r"""I select the (\d+?)$position(st|nd|rd|th)$suffix option in (.+?)$$$element""" => env.withScreenShot {
         env.waitUntil(s"Selecting '${position}${suffix}' option in $element") {
           env.selectByIndex(element, position.toInt - 1)
-		      true
-		    }
+          true
+        }
       }
         
       case r"""I select "(.*?)"$value in (.+?)$$$element""" => env.withScreenShot {
         env.waitUntil(s"Selecting '$value' in $element") {
           env.selectByVisibleText(element, value)
-		      true
-		    }
+          true
+        }
       }
         
       case r"""I select (.+?)$attribute in (.+?)$$$element""" => env.withScreenShot {
-	      env.getAttribute(attribute) tap { value => 
-		      env.waitUntil(s"Selecting '$value' in $element") {
-		        env.selectByVisibleText(element, value)
-			      true
-		      }
+        env.getAttribute(attribute) tap { value => 
+          env.waitUntil(s"Selecting '$value' in $element") {
+            env.selectByVisibleText(element, value)
+            true
+          }
         }
       }
         
@@ -238,14 +234,14 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator wit
         
       case r"""I wait until "(.+?)$javascript"""" => env.withScreenShot {
         env.waitUntil(s"Waiting until $javascript") {
-	        env.executeScript(s"return $javascript").asInstanceOf[Boolean]
-	      }
+          env.executeScript(s"return $javascript").asInstanceOf[Boolean]
+        }
       }
         
       case r"""I wait until (.+?)$$$condition""" => env.withScreenShot {
         env.waitUntil(s"Waiting until $condition") {
-	        env.executeScript(s"return ${env.scopes.get(s"$condition/javascript")}").asInstanceOf[Boolean]
-	      }
+          env.executeScript(s"return ${env.scopes.get(s"$condition/javascript")}").asInstanceOf[Boolean]
+        }
       }
         
       case r"""I wait ([0-9]+?)$duration second(?:s?)""" => env.withScreenShot {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2015 Brady Wood, Branko Juric
+ * Copyright 2015 Brady Wood, Branko Juric
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,7 +55,7 @@ class DriverManagerTest extends FlatSpec with Matchers with MockitoSugar {
   }
   
   "Quitting the manager multiple times" should "quit the web driver only once" in {
-	
+
     val manager = newManager()
     val mockWebDriver = manager.webDriver
 

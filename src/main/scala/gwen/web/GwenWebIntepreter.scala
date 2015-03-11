@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Branko Juric, Brady Wood
+ * Copyright 2014-2015 Branko Juric, Brady Wood
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,15 +20,15 @@ import gwen.eval.GwenInterpreter
 import gwen.eval.GwenApp
 
 /**
- * The gwen-web interpreter.
- * 
- * @author Branko Juric, Brady Wood
- */
+  * The gwen-web interpreter.
+  * 
+  * @author Branko Juric, Brady Wood
+  */
 class GwenWebInterpreter extends GwenInterpreter[WebEnvContext] with GwenWebEngine
 
 /**
- * The gwen-web standalone application.
- * 
- * @author Branko Juric, Brady Wood
- */
+  * The gwen-web standalone application.
+  * 
+  * @author Branko Juric, Brady Wood
+  */
 object GwenWebInterpreter extends GwenApp(new GwenWebInterpreter)

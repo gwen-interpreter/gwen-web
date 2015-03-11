@@ -87,35 +87,35 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar wit
   }
   
   "Attempt to locate existing element by id" should "return the element" in {
-	shouldFindWebElement("id", "uname", By.id("uname"))
+    shouldFindWebElement("id", "uname", By.id("uname"))
   }
   
   "Attempt to locate existing element by name" should "return the element" in {
-	shouldFindWebElement("name", "uname", By.name("uname"))
+    shouldFindWebElement("name", "uname", By.name("uname"))
   }
   
   "Attempt to locate existing element by tag name" should "return the element" in {
-	shouldFindWebElement("tag name", "input", By.tagName("input"))
+    shouldFindWebElement("tag name", "input", By.tagName("input"))
   }
   
   "Attempt to locate existing element by css selector" should "return the element" in {
-	shouldFindWebElement("css selector", ":focus", By.cssSelector(":focus"))
+    shouldFindWebElement("css selector", ":focus", By.cssSelector(":focus"))
   }
   
   "Attempt to locate existing element by xpath" should "return the element" in {
-	shouldFindWebElement("xpath", "//input[name='uname']", By.xpath("//input[name='uname']"))
+    shouldFindWebElement("xpath", "//input[name='uname']", By.xpath("//input[name='uname']"))
   }
   
   "Attempt to locate existing element by class name" should "return the element" in {
-	shouldFindWebElement("class name", ".userinput", By.className(".userinput"))
+    shouldFindWebElement("class name", ".userinput", By.className(".userinput"))
   }
   
   "Attempt to locate existing element by link text" should "return the element" in {
-	shouldFindWebElement("link text", "User name", By.linkText("User name"))
+    shouldFindWebElement("link text", "User name", By.linkText("User name"))
   }
   
   "Attempt to locate existing element by partial link text" should "return the element" in {
-	shouldFindWebElement("partial link text", "User", By.partialLinkText("User"))
+    shouldFindWebElement("partial link text", "User", By.partialLinkText("User"))
   }
   
   "Attempt to locate existing element by javascript" should "return the element" in {
@@ -136,11 +136,11 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar wit
       case Some(elem) => 
         elem should be (mockWebElement)
       case None =>
-      	fail("Excpected Some(webElement) but got None")
+        fail("Excpected Some(webElement) but got None")
     }
     
     verify(mockWebDriver, times(2)).executeScript(s"return $locatorValue")
-	
+
   }
   
   private def shouldFailWithLocatorBindingError(element: String, env: WebEnvContext, expectedMsg: String) {
@@ -174,7 +174,7 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar wit
     e.getMessage should be ("Timed out waiting.")
     
     verify(mockWebDriver, atLeastOnce()).executeScript(s"return $locatorValue")
-	
+
   }
   
   "Timeout on locating optional element by javascript" should "return None" in {
@@ -192,7 +192,7 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar wit
     locateOpt(env, "username") should be (None)
     
     verify(mockWebDriver, atLeastOnce()).executeScript(s"return $locatorValue")
-	
+
   }
   
   private def shouldFindWebElement(locator: String, locatorValue: String, by: By) {

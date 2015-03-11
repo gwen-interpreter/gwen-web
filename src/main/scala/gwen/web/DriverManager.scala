@@ -30,14 +30,10 @@ import com.typesafe.scalalogging.slf4j.LazyLogging
 
 import gwen.Predefs.Kestrel
 
-/**
- * Provides access to the web driver used to drive the browser.
- */
+/** Provides access to the web driver used to drive the browser. */
 trait DriverManager extends LazyLogging {
 
-  /**
-   * Web driver (lazily loaded).
-   */
+  /** Web driver (lazily loaded). */
   private[web] var _webDriver: Option[WebDriver] = None
   
   def webDriver: WebDriver = _webDriver match {
@@ -48,21 +44,17 @@ trait DriverManager extends LazyLogging {
       _webDriver.get
   }
   
-  /**
-   * Quits the browser and closes the web driver (if it has loaded).
-   */
+  /** Quits the browser and closes the web driver (if it has loaded). */
    def quit() {
     _webDriver foreach { _.quit() }
     _webDriver = None
   }
   
-  /**
-   * Loads the selenium webdriver.
-   */
+  /** Loads the selenium webdriver. */
   private[web] def loadWebDriver: WebDriver = {
     val driverName = GwenWebSettings.`gwen.web.browser` tap { browser =>
       logger.info(s"Loading $browser web driver")
-	  }
+    }
     (driverName.toLowerCase() match {
       case "firefox" =>
         new FirefoxDriver(new FirefoxProfile() tap { profile =>
@@ -70,7 +62,7 @@ trait DriverManager extends LazyLogging {
             profile.setPreference("general.useragent.override", _)
           }
           profile.setAcceptUntrustedCertificates(true);
-	      if (GwenWebSettings.`gwen.authorize.plugins`) {
+          if (GwenWebSettings.`gwen.authorize.plugins`) {
             profile.setPreference("security.enable_java", true);
             profile.setPreference("plugin.state.java", 2);
           }
@@ -78,14 +70,14 @@ trait DriverManager extends LazyLogging {
       case "ie" => new InternetExplorerDriver()
       case "chrome" =>
         new ChromeDriver(new ChromeOptions() tap { options =>
-	        GwenWebSettings.`gwen.web.useragent` foreach { 
+          GwenWebSettings.`gwen.web.useragent` foreach { 
             agent => options.addArguments(s"--user-agent=$agent") 
           }
           if (GwenWebSettings.`gwen.authorize.plugins`) {
-		        options.addArguments(s"--always-authorize-plugins") 
-		      }
-	        options.addArguments("--test-type")
-	      })
+            options.addArguments(s"--always-authorize-plugins") 
+          }
+          options.addArguments("--test-type")
+        })
       case "safari" => new SafariDriver
       case _ => sys.error(s"Unsupported webdriver: $driverName")
     }) tap { driver =>
