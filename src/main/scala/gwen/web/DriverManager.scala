@@ -46,7 +46,7 @@ trait DriverManager extends LazyLogging {
   
   /** Quits the browser and closes the web driver (if it has loaded). */
    def quit() {
-    _webDriver foreach { _.quit() }
+    _webDriver foreach { _.quit() } 
     _webDriver = None
   }
   
@@ -62,7 +62,7 @@ trait DriverManager extends LazyLogging {
             profile.setPreference("general.useragent.override", _)
           }
           profile.setAcceptUntrustedCertificates(true);
-          if (GwenWebSettings.`gwen.authorize.plugins`) {
+          if (GwenWebSettings.`gwen.web.authorize.plugins`) {
             profile.setPreference("security.enable_java", true);
             profile.setPreference("plugin.state.java", 2);
           }
@@ -73,7 +73,7 @@ trait DriverManager extends LazyLogging {
           GwenWebSettings.`gwen.web.useragent` foreach { 
             agent => options.addArguments(s"--user-agent=$agent") 
           }
-          if (GwenWebSettings.`gwen.authorize.plugins`) {
+          if (GwenWebSettings.`gwen.web.authorize.plugins`) {
             options.addArguments(s"--always-authorize-plugins") 
           }
           options.addArguments("--test-type")

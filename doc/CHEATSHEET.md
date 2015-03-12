@@ -30,6 +30,47 @@ The following commands are available within the gwen REPL console.
 | `env -f`, `env --feature`        | dump the global feature scope to the console |
 | `exit`,`quit`,`bye`              | will close the current browser (if open) and exit the console. |
 
+Configuration Settings:
+-----------------------
+
+The following settings can be used to configure certain runtime aspects. These can be defined in 
+your local `gwen.properties` files (located in your user home directory) or in a separate properties 
+file provided through the `-p|--properties` command line option.
+
+| Property/Setting               | Default value  | Supported Values | Description |
+| ------------------------------ | -------------- | ---------------- | ----------- |
+| `gwen.feature.failfast`        | true           | `true` to enable, `false` otherwise | Enables or disables fail fast mode at the feature level. If enabled, will fail a feature as soon as the first scenario in that feature fails before resuming with the next feature (if provided). Accepted values include:  |
+| `gwen.web.browser`             | firefox        | `firefox`, `chrome`, `safari`, or `ie` | Configures the target browser to use. |
+| `gwen.web.useragent`           |                | Any string literal | Set the user agent header in the browser to the literal specified. |
+| `gwen.web.authorize.plugins`   | false          | `true` to allow, `false` otherwise | Controls whether or to allow browser plugins to run (for example: Java applets). |
+| `gwen.web.wait.seconds`        | 10             | Number of seconds | Sets the maximum number of seconds the web driver should wait for web elements to become available before timing out. |
+| `gwen.web.maximize`            | false          | `true` to maximize, `false` otherwise | Controls whether or not the web driver should maximize the browser window. |
+| `gwen.web.throttle.msecs`      | 200            | Number of milliseconds | Sets the number of milliseconds to wait for the web driver and web browser to synchronize with each other between interactions. Also directly controls element highlighting duration. |
+| `gwen.web.highlight.style`     | background: yellow; border: 2px solid gold; | HTML style string | Sets the look and feel of element highlighting. |
+| `gwen.web.capture.screenshots` | false          | `true` to capture screenshots, `false` otherwise | Controls whether or not the web driver should capture screenshots for all steps that change page states. |
+
+In addition to the above settings, all selenium web driver system properties are also supported. For example, 
+all the [FireFox driver properties](https://code.google.com/p/selenium/wiki/FirefoxDriver#Important_System_Properties) 
+are supported. 
+
+### Native Web Drivers
+
+If you use Chrome or IE, then you will need to download the 
+[chrome web driver](http://chromedriver.storage.googleapis.com/index.html) 
+or [IE web driver server](http://selenium-release.storage.googleapis.com/index.html) 
+respectively and install it on your system path. If you do not have permission to 
+install the driver on your system path, then you can set the path to your 
+downloaded driver location in your _gwen.properties_ file as shown below:
+  
+```
+    (chrome)  webdriver.chrome.driver = /path/to/chromedriver
+    (ie)      webdriver.ie.driver = c:/path/to/IEDriverServer.exe
+```
+
+If you want to use Safari, then you will need to install the latest  
+[safari driver extension](http://selenium-release.storage.googleapis.com/index.html) 
+in your browser.
+
 Supported DSL
 -------------
 

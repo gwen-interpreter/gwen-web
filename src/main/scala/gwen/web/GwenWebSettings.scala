@@ -42,7 +42,7 @@ object GwenWebSettings {
     * Provides access to the `gwen.authorize.plugins` setting used to control whether 
     * or not the browser should authorize browser plugins. (default value is `false`).
     */
-  def `gwen.authorize.plugins`: Boolean = Settings.getOpt("gwen.authorize.plugins").getOrElse("false").toBoolean
+  def `gwen.web.authorize.plugins`: Boolean = Settings.getOpt("gwen.web.authorize.plugins").getOrElse("false").toBoolean
   
   /**
     * Provides access to the `gwen.web.wait.seconds` setting used to set the implicit 

@@ -61,7 +61,8 @@ Perform the following to download and install the latest build:
    - version 1.0.0 release (coming soon) 
 2. Extract the zip to a desired location on your local drive:
    - A folder named _gwen-web-[version]_ will be created
-3. [Set your target browser ](#set-target-browser)
+3. [Configure settings](doc/CHEATSHEET#configuration-settings) (optional)
+4. [start using gwen-web](doc/START.md) 
 
 ### Building and Installing from Source
 
@@ -86,7 +87,8 @@ Perform the following if you would like to build and install gwen-web from sourc
 7. Extract the generated ZIP to a desired location on your local drive
    - This will create a project folder named _gwen-web-[version]_ in that 
      location
-8. [Set your target browser ](#set-target-browser)
+8. [Configure settings](doc/CHEATSHEET#configuration-settings) (optional)
+9. [start using gwen-web](doc/START.md) 
 
 ### Set Target Browser
 
@@ -116,8 +118,6 @@ You can also store settings in any properties file you wish and pass that
 file to Gwen using the `-p` option (but you'll have to do it every 
 time you invoke Gwen). Putting the _gwen.properties_ file in your user 
 home directory is much more convenient since Gwen knows where to find it. 
-
-You are now ready to [start using gwen-web](doc/START.md)
 
 Mail Group
 ----------
