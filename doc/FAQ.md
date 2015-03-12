@@ -10,3 +10,9 @@ web driver to be installed).  To target a different browser, you will need to
 [configure](CHEATSHEET.md#configuration-settings) the `gwen.web.browser` setting 
 and install a [native web driver](CHEATSHEET.md#native-web-drivers).
 
+Do I need to develop page objects or compile any code?
+------------------------------------------------------
+No, gwen-web uses page scopes to emulate page objects and does away with 
+development and compilation altogether through a [prescribed DSL](CHEATSHEET.md#supported-dsl). 
+- See also: [Page Objects Begone](https://warpedjavaguy.wordpress.com/2014/08/27/page-objects-begone/)
+
