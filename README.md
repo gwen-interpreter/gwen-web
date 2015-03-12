@@ -48,6 +48,7 @@ User Guides
     necessary.
   - [Automation By Meta](http://warpedjavaguy.wordpress.com/2015/01/12/automation-by-meta/) - 
     How to write a feature file and make it executable.
+- [FAQ](doc/FAQ.md)
 
 Installation
 ------------
@@ -61,7 +62,7 @@ Perform the following to download and install the latest build:
    - version 1.0.0 release (coming soon) 
 2. Extract the zip to a desired location on your local drive:
    - A folder named _gwen-web-[version]_ will be created
-3. [Configure settings](doc/CHEATSHEET#configuration-settings) (optional)
+3. [Configure settings](doc/CHEATSHEET.md#configuration-settings) (optional)
 4. [start using gwen-web](doc/START.md) 
 
 ### Building and Installing from Source
@@ -87,7 +88,7 @@ Perform the following if you would like to build and install gwen-web from sourc
 7. Extract the generated ZIP to a desired location on your local drive
    - This will create a project folder named _gwen-web-[version]_ in that 
      location
-8. [Configure settings](doc/CHEATSHEET#configuration-settings) (optional)
+8. [Configure settings](doc/CHEATSHEET.md#configuration-settings) (optional)
 9. [start using gwen-web](doc/START.md) 
 
 ### Set Target Browser
