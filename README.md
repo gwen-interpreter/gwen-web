@@ -63,7 +63,7 @@ Perform the following to download and install the latest build:
 2. Extract the zip to a desired location on your local drive:
    - A folder named _gwen-web-[version]_ will be created
 3. [Configure settings](doc/CHEATSHEET.md#configuration-settings) (optional)
-4. [start using gwen-web](doc/START.md) 
+4. [Start using gwen-web](doc/START.md) 
 
 ### Building and Installing from Source
 
@@ -89,36 +89,7 @@ Perform the following if you would like to build and install gwen-web from sourc
    - This will create a project folder named _gwen-web-[version]_ in that 
      location
 8. [Configure settings](doc/CHEATSHEET.md#configuration-settings) (optional)
-9. [start using gwen-web](doc/START.md) 
-
-### Set Target Browser
-
-Gwen-web uses Firefox as the default browser. If you would like to use a 
-different browser, then create a _gwen.properties_ file in your user home 
-directory and set the following property to one of the values shown: 
-
-    gwen.web.browser = firefox | safari | chrome | ie
-
-- If you use Chrome or IE, then you will need to download the 
-  [chrome web driver](http://chromedriver.storage.googleapis.com/index.html) 
-  or [IE web driver server](http://selenium-release.storage.googleapis.com/index.html) 
-  respectively and install it on your system path. If you do not have permission to 
-  install the driver on your system path, then you can set the path to your 
-  downloaded driver location in your _gwen.properties_ file as shown below:
-  
-```
-    (chrome)  webdriver.chrome.driver = /path/to/chromedriver
-    (ie)      webdriver.ie.driver = c:/path/to/IEDriverServer.exe
-```
-
-- If you want to use Safari, then you will need to install the latest  
-  [safari driver extension](http://selenium-release.storage.googleapis.com/index.html) 
-  in your browser.
-
-You can also store settings in any properties file you wish and pass that 
-file to Gwen using the `-p` option (but you'll have to do it every 
-time you invoke Gwen). Putting the _gwen.properties_ file in your user 
-home directory is much more convenient since Gwen knows where to find it. 
+9. [Start using gwen-web](doc/START.md) 
 
 Mail Group
 ----------
