@@ -36,7 +36,7 @@ import gwen.eval.support.XPathSupport
   * 
   * @author Branko Juric, Brady Wood
   */
-trait WebEngine extends EvalEngine[WebEnvContext] with WebElementLocator with XPathSupport with RegexSupport with SystemProcessSupport[WebEnvContext] {
+trait WebEngine extends EvalEngine[WebEnvContext] with WebElementLocator with SystemProcessSupport[WebEnvContext] {
   
   /**
     * Initialises and returns a new web environment context.
@@ -82,11 +82,11 @@ trait WebEngine extends EvalEngine[WebEnvContext] with WebElementLocator with XP
         env.scopes.set(s"$element/locator/$locator", expression)
 
       case r"""the page title should( not)?$negation (be|contain|match regex|match xpath)$operator "(.*?)"$$$expression""" => env.withScreenShot {
-        compare("title", expression, env.getTitle, operator, Option(negation).isDefined)
+        compare("title", expression, env.getTitle, operator, Option(negation).isDefined, env)
       }
         
       case r"""the page title should( not)?$negation (be|contain|match regex|match xpath)$operator (.+?)$$$attribute""" => env.withScreenShot {
-        compare("title", env.getAttribute(attribute), env.getTitle, operator, Option(negation).isDefined) 
+        compare("title", env.getAttribute(attribute), env.getTitle, operator, Option(negation).isDefined, env) 
       }
       
       case r"""(.+?)$element should( not)?$negation be (displayed|hidden|checked|unchecked|enabled|disabled)$$$state""" => env.withScreenShot {
@@ -106,21 +106,21 @@ trait WebEngine extends EvalEngine[WebEnvContext] with WebElementLocator with XP
       }
         
       case r"""(.+?)$element should( not)?$negation (be|contain|match regex|match xpath)$operator "(.*?)"$$$expression""" => env.withScreenShot {
-        compare(element, expression, env.getBoundValue(element), operator, Option(negation).isDefined)
+        compare(element, expression, env.getBoundValue(element), operator, Option(negation).isDefined, env)
       }
         
       case r"""(.+?)$element should( not)?$negation (be|contain|match regex|match xpath)$operator (.+?)$$$attribute""" => env.withScreenShot {
-        compare(element, env.getAttribute(attribute), env.getBoundValue(element), operator, Option(negation).isDefined) 
+        compare(element, env.getAttribute(attribute), env.getBoundValue(element), operator, Option(negation).isDefined, env) 
       }
       
       case r"""I capture the (text|node|nodeset)$targetType in (.+?)$source by xpath "(.+?)"$expression as (.+?)$$$name""" => env.withScreenShot {
-        evaluateXPath(expression, env.getBoundValue(source), XMLNodeType.withName(targetType)) tap { value =>
+        env.evaluateXPath(expression, env.getBoundValue(source), env.XMLNodeType.withName(targetType)) tap { value =>
           env.featureScope.set(name, value)
         }
       }
       
       case r"""I capture the text in (.+?)$source by regex "(.+?)"$expression as (.+?)$$$name""" => env.withScreenShot {
-        extractByRegex(expression, env.getBoundValue(source)) tap { value =>
+        env.extractByRegex(expression, env.getBoundValue(source)) tap { value =>
           env.featureScope.set(name, value)
         }
       }
@@ -149,7 +149,17 @@ trait WebEngine extends EvalEngine[WebEnvContext] with WebElementLocator with XP
           case "javascript" => env.scopes.set(s"$attribute/javascript", expression)
           case _ => env.featureScope.set(attribute, Settings.get(expression))
         }
-        
+
+      case r"""(.+?)$attribute (?:is|will be) defined by the (text|node|nodeset)$targetType in (.+?)$source by xpath "(.+?)"$$$expression""" =>
+        env.scopes.set(s"$attribute/xpath/source", source)
+        env.scopes.set(s"$attribute/xpath/targetType", targetType)
+        env.scopes.set(s"$attribute/xpath/expression", expression)
+      
+      case r"""(.+?)$attribute (?:is|will be) defined in (.+?)$source by regex "(.+?)"$$$expression""" => env.withScreenShot {
+        env.scopes.set(s"$attribute/regex/source", source)
+        env.scopes.set(s"$attribute/regex/expression", expression)
+      }
+      
       case r"""(.+?)$attribute (?:is|will be) "(.*?)"$$$value""" => 
         env.featureScope.set(attribute, value)
         
@@ -266,14 +276,15 @@ trait WebEngine extends EvalEngine[WebEnvContext] with WebElementLocator with XP
     * @param actual the actual value of the element
     * @param operator the comparison operator
     * @param negate true to negate the result
+    * @param env the web environment context
     * @return true if the actual value matches the expected value
     */
-  private def compare(element: String, expected: String, actual: String, operator: String, negate: Boolean) = 
+  private def compare(element: String, expected: String, actual: String, operator: String, negate: Boolean, env: WebEnvContext) = 
     (operator match {
       case "be"      => expected.equals(actual)
       case "contain" => actual.contains(expected)
       case "match regex" => actual.matches(expected)
-      case "match xpath" => !evaluateXPath(expected, actual, XMLNodeType.text).isEmpty()
+      case "match xpath" => !env.evaluateXPath(expected, actual, env.XMLNodeType.text).isEmpty()
     }) tap { result =>
       if (!negate) assert(result, s"$element '$actual' should $operator '$expected'")
       else assert(!result, s"$element should not $operator '$expected'")

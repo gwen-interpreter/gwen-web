@@ -17,11 +17,9 @@
 package gwen.web
 
 import java.io.File
-
 import scala.util.Failure
 import scala.util.Success
 import scala.util.Try
-
 import org.openqa.selenium.JavascriptExecutor
 import org.openqa.selenium.Keys
 import org.openqa.selenium.OutputType
@@ -33,7 +31,6 @@ import org.openqa.selenium.WebElement
 import org.openqa.selenium.support.ui.ExpectedCondition
 import org.openqa.selenium.support.ui.Select
 import org.openqa.selenium.support.ui.WebDriverWait
-
 import gwen.Predefs.Kestrel
 import gwen.Predefs.RegexContext
 import gwen.Settings
@@ -41,6 +38,8 @@ import gwen.dsl.Failed
 import gwen.dsl.Step
 import gwen.eval.EnvContext
 import gwen.eval.ScopedDataStack
+import gwen.eval.support.RegexSupport
+import gwen.eval.support.XPathSupport
 
 /**
   * Defines the web environment context. This includes the configured selenium web
@@ -48,7 +47,7 @@ import gwen.eval.ScopedDataStack
   *
   *  @author Branko Juric
   */
-class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with WebElementLocator with DriverManager {
+class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with WebElementLocator with DriverManager with RegexSupport with XPathSupport {
 
    /** Resets the current context and closes the web browser. */
   override def reset() {
@@ -296,6 +295,8 @@ class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with
     *  - name
     *  - name/text
     *  - name/javascript
+    *  - name/xpath
+    *  - name/regex
     *  
     * @param name the name of the bound attribute to find
     */
@@ -303,7 +304,20 @@ class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with
     scopes.getOpt(name) match {
       case None | Some("") => scopes.getOpt(s"$name/text") match {
         case None | Some("") => scopes.getOpt(s"$name/javascript") match {
-          case None | Some("") => scopes.get(name)
+          case None | Some("") => scopes.getOpt(s"$name/xpath") match {
+            case None | Some("") => scopes.getOpt(s"$name/regex") match {
+              case None | Some("") => scopes.get(name)
+              case _ =>
+                val source = getBoundValue(scopes.get(s"$name/regex/source"))
+                val expression = getBoundValue(scopes.get(s"$name/regex/expression"))
+                extractByRegex(expression, source)
+            }
+            case _ =>
+              val source = getBoundValue(scopes.get(s"$name/xpath/source"))
+              val targetType = getBoundValue(scopes.get(s"$name/xpath/targetType"))
+              val expression = getBoundValue(scopes.get(s"$name/xpath/expression"))
+              evaluateXPath(expression, source, XMLNodeType.withName(targetType))
+          }
           case Some(javascript) => executeScript(s"return $javascript").toString
         }
         case Some(value) => value
