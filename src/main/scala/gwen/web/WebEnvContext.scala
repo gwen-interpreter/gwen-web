@@ -71,7 +71,7 @@ class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with
     webDriver.asInstanceOf[JavascriptExecutor].executeScript(javascript, params.map(_.asInstanceOf[AnyRef]) : _*) tap { result =>
       logger.debug(s"Evaluated javascript: $javascript")
       if (result.isInstanceOf[Boolean] && result.asInstanceOf[Boolean]) {
-        Thread.sleep(GwenWebSettings.`gwen.web.throttle.msecs`)
+        Thread.sleep(WebSettings.`gwen.web.throttle.msecs`)
       }
     }
   
@@ -83,7 +83,7 @@ class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with
     * @param condition the boolean condition to wait for (until true)
     */
   def waitUntil(reason: String)(condition: => Boolean) {
-    waitUntil(reason, GwenWebSettings.`gwen.web.wait.seconds`) { condition }
+    waitUntil(reason, WebSettings.`gwen.web.wait.seconds`) { condition }
   }
   
   /**
@@ -93,7 +93,7 @@ class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with
     * @param condition the boolean condition to wait for (until true)
     */
   def waitUntil(condition: => Boolean) {
-    waitUntil(GwenWebSettings.`gwen.web.wait.seconds`) { condition }
+    waitUntil(WebSettings.`gwen.web.wait.seconds`) { condition }
   }
   
   /**
@@ -150,8 +150,8 @@ class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with
     * @param element the element to highlight
     */
   def highlight(element: WebElement) {
-    val msecs = GwenWebSettings`gwen.web.throttle.msecs`
-    val style = GwenWebSettings.`gwen.web.highlight.style` 
+    val msecs = WebSettings`gwen.web.throttle.msecs`
+    val style = WebSettings.`gwen.web.highlight.style` 
     executeScript(s"element = arguments[0]; type = element.getAttribute('type'); if (('radio' == type || 'checkbox' == type) && element.parentElement.getElementsByTagName('input').length == 1) { element = element.parentElement; } original_style = element.getAttribute('style'); element.setAttribute('style', original_style + '; ${style}'); setTimeout(function() { element.setAttribute('style', original_style); }, ${msecs});", element)
     Thread.sleep(msecs);
   }
@@ -219,8 +219,8 @@ class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with
     */
   def withScreenShot(f: => Unit): Unit = { 
     f
-    if (GwenWebSettings.`gwen.web.capture.screenshots`) {
-      Thread.sleep(GwenWebSettings.`gwen.web.throttle.msecs`)
+    if (WebSettings.`gwen.web.capture.screenshots`) {
+      Thread.sleep(WebSettings.`gwen.web.throttle.msecs`)
       addAttachment(captureScreenshot)
     }
   }

@@ -52,7 +52,7 @@ trait DriverManager extends LazyLogging {
   
   /** Loads the selenium webdriver. */
   private[web] def loadWebDriver: WebDriver = {
-    val driverName = GwenWebSettings.`gwen.web.browser` tap { browser =>
+    val driverName = WebSettings.`gwen.web.browser` tap { browser =>
       logger.info(s"Loading $browser web driver")
     }
     (driverName.toLowerCase() match {
@@ -67,11 +67,11 @@ trait DriverManager extends LazyLogging {
   }
   
   private def firefox(): WebDriver = new FirefoxDriver(new FirefoxProfile() tap { profile =>
-    GwenWebSettings.`gwen.web.useragent` foreach { 
+    WebSettings.`gwen.web.useragent` foreach { 
       profile.setPreference("general.useragent.override", _)
     }
     profile.setAcceptUntrustedCertificates(true);
-    if (GwenWebSettings.`gwen.web.authorize.plugins`) {
+    if (WebSettings.`gwen.web.authorize.plugins`) {
       profile.setPreference("security.enable_java", true);
       profile.setPreference("plugin.state.java", 2);
     }
@@ -80,10 +80,10 @@ trait DriverManager extends LazyLogging {
   private def ie(): WebDriver = new InternetExplorerDriver()
   
   private def chrome(): WebDriver = new ChromeDriver(new ChromeOptions() tap { options =>
-    GwenWebSettings.`gwen.web.useragent` foreach { 
+    WebSettings.`gwen.web.useragent` foreach { 
       agent => options.addArguments(s"--user-agent=$agent") 
     }
-    if (GwenWebSettings.`gwen.web.authorize.plugins`) {
+    if (WebSettings.`gwen.web.authorize.plugins`) {
       options.addArguments(s"--always-authorize-plugins") 
     }
     options.addArguments("--test-type")
@@ -92,8 +92,8 @@ trait DriverManager extends LazyLogging {
   private def safari(): WebDriver = new SafariDriver()
   
   private def applyGlobalSettings(driver: WebDriver): Unit = {
-    driver.manage().timeouts().implicitlyWait(GwenWebSettings.`gwen.web.wait.seconds`, TimeUnit.SECONDS)
-    if (GwenWebSettings.`gwen.web.maximize`) {
+    driver.manage().timeouts().implicitlyWait(WebSettings.`gwen.web.wait.seconds`, TimeUnit.SECONDS)
+    if (WebSettings.`gwen.web.maximize`) {
       driver.manage().window().maximize() 
     }
   }

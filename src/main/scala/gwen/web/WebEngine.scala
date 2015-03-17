@@ -36,7 +36,7 @@ import gwen.eval.support.XPathSupport
   * 
   * @author Branko Juric, Brady Wood
   */
-trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator with XPathSupport with RegexSupport with SystemProcessSupport[WebEnvContext] {
+trait WebEngine extends EvalEngine[WebEnvContext] with WebElementLocator with XPathSupport with RegexSupport with SystemProcessSupport[WebEnvContext] {
   
   /**
     * Initialises and returns a new web environment context.

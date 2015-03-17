@@ -24,11 +24,11 @@ import gwen.eval.GwenApp
   * 
   * @author Branko Juric, Brady Wood
   */
-class GwenWebInterpreter extends GwenInterpreter[WebEnvContext] with GwenWebEngine
+class WebInterpreter extends GwenInterpreter[WebEnvContext] with WebEngine
 
 /**
   * The gwen-web standalone application.
   * 
   * @author Branko Juric, Brady Wood
   */
-object GwenWebInterpreter extends GwenApp(new GwenWebInterpreter)
+object WebInterpreter extends GwenApp(new WebInterpreter)
