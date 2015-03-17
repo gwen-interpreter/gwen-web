@@ -4,6 +4,10 @@ import com.typesafe.sbt.packager.archetypes._
 
 import SonatypeKeys._
 
+lazy val gwen = ProjectRef(file("../gwen"), "gwen")
+
+val gwenWeb = project in file(".") dependsOn(gwen) 
+
 name := "gwen-web"
 
 description := "An acceptance driven web automation engine."
@@ -37,8 +41,6 @@ javaSource in Test := baseDirectory.value / "src/test/scala"
 resolvers += "Typesafe Repo" at "http://repo.typesafe.com/typesafe/releases/"
 
 resolvers += "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"
-
-libraryDependencies += "org.gweninterpreter" %% "gwen" % "1.0.0-88e006e9888884849ebd9bb8fcb62e205c61998f" withSources()
 
 libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.1" % "test"
 

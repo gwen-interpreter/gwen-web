@@ -93,9 +93,9 @@ trait DriverManager extends LazyLogging {
   
   private def applyGlobalSettings(driver: WebDriver): Unit = {
     driver.manage().timeouts().implicitlyWait(GwenWebSettings.`gwen.web.wait.seconds`, TimeUnit.SECONDS)
-      if (GwenWebSettings.`gwen.web.maximize`) {
-        driver.manage().window().maximize() 
-      }
+    if (GwenWebSettings.`gwen.web.maximize`) {
+      driver.manage().window().maximize() 
+    }
   }
   
 }

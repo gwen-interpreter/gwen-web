@@ -70,17 +70,10 @@ Perform the following to download and install the latest build:
 Perform the following if you would like to build and install gwen-web from source: 
 
 1. Download and install [Java SDK 6 or 7](http://www.oracle.com/technetwork/java/javase/downloads/index.html) 
-2. Download and install the latest [sbt](http://www.scala-sbt.org/) version
-3. Download a [Git client](http://git-scm.com/downloads).
-4. Clone the gwen source repository using one of the following (SSH or HTTPS) URLs: 
-     - `git@github.com:gwen-interpreter/gwen.git`
-     - `https://github.com/gwen-interpreter/gwen.git`
-4. Change to the directory where you cloned the gwen source and run 
-   `sbt publish-local` to build the gwen binary and publish it to 
-   your local repository
-5. Clone the gwen-web source repository using one of the following (SSH or HTTPS) URLs: 
-     - `git@github.com:gwen-interpreter/gwen-web.git`
-     - `https://github.com/gwen-interpreter/gwen-web.git`
+2. Download a [Git client](http://git-scm.com/downloads)
+3. Clone the gwen source repository at https://github.com/gwen-interpreter/gwen 
+4. Clone the gwen-web source repository at https://github.com/gwen-interpreter/gwen-web
+5. Download and install the latest [sbt](http://www.scala-sbt.org/) version
 6. Change to the directory where you cloned the gwen-web source and run 
    `sbt universal:package-bin` to build the distributable ZIP
    - This will create a _gwen-web-[version].zip_ file in the 
@@ -90,6 +83,23 @@ Perform the following if you would like to build and install gwen-web from sourc
      location
 8. [Configure settings](doc/CHEATSHEET.md#configuration-settings) (optional)
 9. [Start using gwen-web](doc/START.md) 
+
+Development
+-----------
+
+If you would like to set up a local development environment and work on the 
+source, perform the following:
+
+1. Download and install [Java SDK 6 or 7](http://www.oracle.com/technetwork/java/javase/downloads/index.html) 
+2. Download a [Git client](http://git-scm.com/downloads)
+3. Clone the gwen source repository at https://github.com/gwen-interpreter/gwen 
+4. Clone the gwen-web source repository at https://github.com/gwen-interpreter/gwen-web
+5. Download and install the latest [sbt](http://www.scala-sbt.org/) version
+6. Change to the directory where you cloned the gwen-web source and run `sbt eclipse`
+7. Download and install the [Scala IDE](http://scala-ide.org/) for Scala 2.11.x
+8. Import the `gwen` and `gwen-web` projects into the Scala IDE
+
+***
 
 Mail Group
 ----------
