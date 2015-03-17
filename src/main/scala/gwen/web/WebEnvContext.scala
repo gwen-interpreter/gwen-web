@@ -17,38 +17,34 @@
 package gwen.web
 
 import java.io.File
-import java.util.concurrent.TimeUnit
+
 import scala.util.Failure
 import scala.util.Success
 import scala.util.Try
+
 import org.openqa.selenium.JavascriptExecutor
+import org.openqa.selenium.Keys
 import org.openqa.selenium.OutputType
 import org.openqa.selenium.TakesScreenshot
 import org.openqa.selenium.TimeoutException
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.WebDriverException
 import org.openqa.selenium.WebElement
-import org.openqa.selenium.chrome.ChromeDriver
-import org.openqa.selenium.chrome.ChromeOptions
-import org.openqa.selenium.firefox.FirefoxDriver
-import org.openqa.selenium.firefox.FirefoxProfile
-import org.openqa.selenium.ie.InternetExplorerDriver
-import org.openqa.selenium.safari.SafariDriver
 import org.openqa.selenium.support.ui.ExpectedCondition
+import org.openqa.selenium.support.ui.Select
 import org.openqa.selenium.support.ui.WebDriverWait
+
 import gwen.Predefs.Kestrel
 import gwen.Predefs.RegexContext
+import gwen.Settings
 import gwen.dsl.Failed
 import gwen.dsl.Step
 import gwen.eval.EnvContext
 import gwen.eval.ScopedDataStack
-import gwen.Settings
-import org.openqa.selenium.support.ui.Select
-import org.openqa.selenium.Keys
 
 /**
   * Defines the web environment context. This includes the configured selenium web
-  * driver instance and the feature and page scopes.
+  * driver instance, feature and page scopes, and web element functions.
   *
   *  @author Branko Juric
   */
@@ -66,10 +62,10 @@ class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with
   }
   
   /**
-    * Executes a javascript expression.
+    * Injects and executes a javascript on the current page.
     * 
     * @param javascript the script expression to execute
-    * @param params optional parameters to script expression
+    * @param params optional parameters to the script
     */
   def executeScript(javascript: String, params: Any*): Any = 
     webDriver.asInstanceOf[JavascriptExecutor].executeScript(javascript, params.map(_.asInstanceOf[AnyRef]) : _*) tap { result =>
@@ -80,7 +76,7 @@ class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with
     }
   
   /**
-    * Waits until a given condition is ready. Errors if times out 
+    * Waits for a given condition to be true. Errors on time out 
     * after "gwen.web.wait.seconds" (default is 10 seconds)
     * 
     * @param reason the reason for waiting (used to report timeout error)
@@ -91,7 +87,7 @@ class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with
   }
   
   /**
-    * Waits until a given condition is ready. Errors if times out 
+    * Waits or a given condition to be true. Errors on time out 
     * after "gwen.web.wait.seconds" (default is 10 seconds)
     * 
     * @param condition the boolean condition to wait for (until true)
@@ -101,8 +97,8 @@ class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with
   }
   
   /**
-    * Waits until a given condition is ready for a given number of seconds. 
-    * Errors on given timeout out seconds.
+    * Waits for a given condition to be true for a given number of seconds. 
+    * Errors after given timeout out seconds.
     * 
     * @param reason the reason for waiting (used to report timeout error)
     * @param timeoutSecs the number of seconds to wait before timing out
@@ -113,7 +109,7 @@ class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with
   }
   
   /**
-    * Waits until a given condition is ready for a given number of seconds. 
+    * Waits for a given condition to be true for a given number of seconds. 
     * Errors on given timeout out seconds.
     * 
     * @param timeoutSecs the number of seconds to wait before timing out
@@ -145,11 +141,13 @@ class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with
   }
   
   /**
-    * Highlights (blinks) a Webdriver element.
-    * In pure javascript, as suggested by https://github.com/alp82.
+    * Highlights and then un-highlights a browser element.
+    * Uses pure javascript, as suggested by https://github.com/alp82.
+    * The duration of the highlight lasts for `gwen.web.throttle.msecs`.
+    * The look and feel of the highlight is controlled by the 
+    * `gwen.web.highlight.style` setting.
     *
     * @param element the element to highlight
-    * @param msecs the time in milliseconds to keep the highlight active
     */
   def highlight(element: WebElement) {
     val msecs = GwenWebSettings`gwen.web.throttle.msecs`
@@ -159,7 +157,8 @@ class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with
   }
   
   /**
-    * Includes a screenshot in the list of error attachments.
+    * Creates a list of error attachments which includes the current 
+    * screenshot and all current error attachments.
     * 
     * @param failed the failed status
     */
@@ -167,7 +166,7 @@ class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with
     captureScreenshot :: super.createErrorAttachments(failure)
     
   /** Captures and returns the current screenshot as an attachment (name-file pair). */
-  private def captureScreenshot = ("Screenshot", webDriver.asInstanceOf[TakesScreenshot].getScreenshotAs(OutputType.FILE))
+  private def captureScreenshot: (String, File) = ("Screenshot", webDriver.asInstanceOf[TakesScreenshot].getScreenshotAs(OutputType.FILE))
    
   /**
     * Performs a function on a web element and transparently re-locates elements and 
@@ -215,8 +214,8 @@ class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with
      }
 
   /**
-    * Invokes the given function before and then captures the current browser
-    * screenshot if the gwen.web.catpure.screenshots setting is set.
+    * Invokes the given function `f` and then captures the current browser
+    * screenshot if the `gwen.web.catpure.screenshots` setting is set.
     */
   def withScreenShot(f: => Unit): Unit = { 
     f
@@ -227,7 +226,7 @@ class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with
   }
   
   /**
-    * Substitutes dynamic data in concatenated string literals.
+    * Resolves any string concatenations in the given step.
     * 
     * @param step the step to resolve
     * @return the resolved step
@@ -244,20 +243,41 @@ class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with
     }
   }
   
-  def getBoundValue(binding: String): String = 
-    Try(getElementText(binding)) match {
+  /**
+    * Gets a bound value from memory. A search for the value is made in 
+    * the following order and the first value found is returned:
+    *  - Web element text on the current page
+    *  - Currently active page scope
+    *  - The global feature scope
+    *  - Settings
+    *  
+    * @param name the name of the bound value to find
+    */
+  def getBoundValue(name: String): String = 
+    Try(getElementText(name)) match {
       case Success(text) => text
-      case Failure(e1) => Try(getAttribute(binding)) match {
+      case Failure(e1) => Try(getAttribute(name)) match {
         case Success(text) => text
-        case Failure(e2) => Settings.getOpt(binding) match { 
+        case Failure(e2) => Settings.getOpt(name) match { 
           case Some(text) => text
-          case _ => sys.error(s"Bound value not found: ${binding}")
+          case _ => sys.error(s"Bound value not found: ${name}")
         }
       }
     }
   
-  def getElementText(element: String): String = 
-    withWebElement(element) { webElement =>
+  /**
+    * Gets the text value of a web element on the current page. 
+    * A search for the text is made in the following order and the first value 
+    * found is returned:
+    *  - Web element text
+    *  - Web element text attribute
+    *  - Web element value attribute
+    * If a value is found, its value is bound to the current page 
+    * scope as `name/text`.
+    * @param name the name of the web element
+    */
+  def getElementText(name: String): String = 
+    withWebElement(name) { webElement =>
       (Option(webElement.getText) match {
         case None | Some("") => Option(webElement.getAttribute("text")) match {
           case None | Some("") => webElement.getAttribute("value")
@@ -265,10 +285,20 @@ class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with
         }
         case Some(value) => value
       }) tap { text => 
-        bindAndWait(element, "text", text)
+        bindAndWait(name, "text", text)
       }
     }
   
+  /**
+    * Gets a bound attribute value from memory. A search for the value is made 
+    * in the current and global feature scopes in the following order and the 
+    * first value found is returned:
+    *  - name
+    *  - name/text
+    *  - name/javascript
+    *  
+    * @param name the name of the bound attribute to find
+    */
   def getAttribute(name: String): String = 
     scopes.getOpt(name) match {
       case None | Some("") => scopes.getOpt(s"$name/text") match {
@@ -281,6 +311,14 @@ class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with
       case Some(value) => value
     }
   
+  /**
+    * Binds the given name and value to a given action (name/action=value) 
+    * and then waits for any bound post conditions to be satisfied.
+    * 
+    * @param name the name to bind the value to
+    * @param action the action to bind the value to
+    * @param value the value to bind
+    */
   def bindAndWait(element: String, action: String, value: String) {
     scopes.set(s"$element/$action", value)
     
@@ -300,21 +338,35 @@ class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with
     }
   }
   
+  /** Gets the title of the current page in the browser.*/
   def getTitle: String = webDriver.getTitle() tap { title =>
     bindAndWait("page", "title", title)
   }
   
-  def sendKeys(element: String, action: String, value: String) {
+  /**
+    * Sends a value to a web element (one character at a time).
+    * 
+    * @param element the name of the element to send the value to
+    * @param value the value to send
+    * @param sendEnterKey true to send the Enter key after sending the value
+    */
+  def sendKeys(element: String, value: String, sendEnterKey: Boolean) {
     withWebElement(element) { webElement =>
       webElement.sendKeys(value)
       bindAndWait(element, "type", value)
-      if (action == "enter") {
+      if (sendEnterKey) {
         webElement.sendKeys(Keys.RETURN)
         bindAndWait(element, "enter", "true")
       }
     }
   }
   
+  /**
+    * Selects a value in a dropdown (select control) by visible text.
+    * 
+    * @param element the name of the dropdown element (select control)
+    * @param value the value to select
+    */
   def selectByVisibleText(element: String, value: String) {
     withWebElement(element) { webElement =>
       new Select(webElement).selectByVisibleText(value)
@@ -322,12 +374,28 @@ class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with
     }
   }
   
+  /**
+    * Selects a value in a dropdown (select control) by index.
+    * 
+    * @param element the name of the dropdown element (select control)
+    * @param index the index to select (first index is 1)
+    */
   def selectByIndex(element: String, index: Int) {
     withWebElement(element) { webElement =>
       val select = new Select(webElement)
       select.selectByIndex(index)
       bindAndWait(element, "select", select.getFirstSelectedOption().getText())
     }
+  }
+  
+  /**
+    * Waits for text to appear in the given web element.
+    * 
+    * @param element the element to wait for text on 
+    */
+  def waitForText(element: String): Boolean = {
+    val text = getElementText(element)
+    text != null && text.length > 0
   }
   
 }
