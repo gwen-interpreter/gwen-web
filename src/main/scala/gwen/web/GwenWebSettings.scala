@@ -39,6 +39,11 @@ object GwenWebSettings {
   def `gwen.web.useragent`: Option[String] = Settings.getOpt("gwen.web.useragent")
   
   /**
+   * If set, allows gwen-web to connect to a remote webdriver.
+   */
+  def `seleniumAddress`: Option[String] = Settings.getOpt("seleniumAddress")
+  
+  /**
     * Provides access to the `gwen.authorize.plugins` setting used to control whether 
     * or not the browser should authorize browser plugins. (default value is `false`).
     */
