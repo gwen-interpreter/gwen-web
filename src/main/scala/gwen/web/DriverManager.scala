@@ -59,7 +59,6 @@ trait DriverManager extends LazyLogging {
     val seleniumAddress = GwenWebSettings.`seleniumAddress`
     (seleniumAddress match {
     	case Some(addr) => {
-    	    logger.info(s"HELLLLLLO WORLD!!")
     	    val capabilities = driverName.toLowerCase() match {
     	      case "firefox" => DesiredCapabilities.firefox
     	      case "chrome" => DesiredCapabilities.chrome

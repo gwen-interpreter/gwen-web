@@ -41,7 +41,7 @@ object GwenWebSettings {
   /**
    * If set, allows gwen-web to connect to a remote webdriver.
    */
-  def `seleniumAddress`: Option[String] = Settings.getOpt("seleniumAddress")
+  def `gwen.web.remote.url`: Option[String] = Settings.getOpt("gwen.web.remote.url")
   
   /**
     * Provides access to the `gwen.authorize.plugins` setting used to control whether 
