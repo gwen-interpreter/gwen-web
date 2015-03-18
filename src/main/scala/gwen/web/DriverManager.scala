@@ -56,8 +56,8 @@ trait DriverManager extends LazyLogging {
     val driverName = GwenWebSettings.`gwen.web.browser` tap { browser =>
       logger.info(s"Loading $browser web driver")
     }
-    val seleniumAddress = GwenWebSettings.`gwen.web.remote.url`
-    (seleniumAddress match {
+    val `gwen.web.remote.url` = GwenWebSettings.`gwen.web.remote.url`
+    (`gwen.web.remote.url` match {
     	case Some(addr) => {
     	    val capabilities = driverName.toLowerCase() match {
     	      case "firefox" => DesiredCapabilities.firefox
