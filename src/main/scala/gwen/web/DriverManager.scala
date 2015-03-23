@@ -60,10 +60,20 @@ trait DriverManager extends LazyLogging {
     (`gwen.web.remote.url` match {
     	case Some(addr) => {
     	    val capabilities = driverName.toLowerCase() match {
-    	      case "firefox" => DesiredCapabilities.firefox
-    	      case "chrome" => DesiredCapabilities.chrome
+    	      case "firefox" => DesiredCapabilities.firefox tap { capabilities =>
+    	        capabilities.setCapability(FirefoxDriver.PROFILE, firefoxProfile)
+    	      }
+    	      case "chrome" => DesiredCapabilities.chrome tap { capabilities =>
+    	        capabilities.setCapability(ChromeOptions.CAPABILITY, chromeOptions)
+    	      }
     	    }
     		capabilities.setJavascriptEnabled(true)
+
+    		//TODO 
+    		//profile override if the useragent is set.
+    		//set the untrusted certificates
+    		//etc..
+    		//mock the drivers, write tests
 	        //capabilities.setCapability("record-video", true)
 	        //capabilities.setCapability("build", sys.env("TRAVIS_BUILD_NUMBER"))
 	        //capabilities.setCapability("tunnel-identifier", sys.env("TRAVIS_JOB_NUMBER"))
@@ -87,7 +97,7 @@ trait DriverManager extends LazyLogging {
     	})
   }
   
-  private def firefox(): WebDriver = new FirefoxDriver(new FirefoxProfile() tap { profile =>
+  private def firefoxProfile() : FirefoxProfile = new FirefoxProfile() tap { profile =>
     GwenWebSettings.`gwen.web.useragent` foreach { 
       profile.setPreference("general.useragent.override", _)
     }
@@ -96,11 +106,9 @@ trait DriverManager extends LazyLogging {
       profile.setPreference("security.enable_java", true);
       profile.setPreference("plugin.state.java", 2);
     }
-  })
+  }
   
-  private def ie(): WebDriver = new InternetExplorerDriver()
-  
-  private def chrome(): WebDriver = new ChromeDriver(new ChromeOptions() tap { options =>
+  private def chromeOptions() : ChromeOptions = new ChromeOptions() tap { options =>
     GwenWebSettings.`gwen.web.useragent` foreach { 
       agent => options.addArguments(s"--user-agent=$agent") 
     }
@@ -108,9 +116,13 @@ trait DriverManager extends LazyLogging {
       options.addArguments(s"--always-authorize-plugins") 
     }
     options.addArguments("--test-type")
-  })
+  }
   
-
+  private def chrome(): WebDriver = new ChromeDriver(chromeOptions)
+  
+  private def firefox(): WebDriver = new FirefoxDriver(firefoxProfile)
+  
+  private def ie(): WebDriver = new InternetExplorerDriver()
   
   private def safari(): WebDriver = new SafariDriver()
   
