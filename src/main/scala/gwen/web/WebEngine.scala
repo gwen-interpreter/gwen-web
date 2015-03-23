@@ -17,6 +17,7 @@
 package gwen.web
 
 import org.openqa.selenium.Keys
+
 import gwen.Predefs.Kestrel
 import gwen.Predefs.RegexContext
 import gwen.Settings
@@ -24,8 +25,9 @@ import gwen.dsl.Step
 import gwen.eval.EvalEngine
 import gwen.eval.GwenOptions
 import gwen.eval.ScopedDataStack
-import gwen.eval.support.XPathSupport
+import gwen.eval.support.RegexSupport
 import gwen.eval.support.SystemProcessSupport
+import gwen.eval.support.XPathSupport
 
 
 /**
@@ -34,7 +36,7 @@ import gwen.eval.support.SystemProcessSupport
   * 
   * @author Branko Juric, Brady Wood
   */
-trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator with XPathSupport with SystemProcessSupport[WebEnvContext] {
+trait WebEngine extends EvalEngine[WebEnvContext] with WebElementLocator with SystemProcessSupport[WebEnvContext] {
   
   /**
     * Initialises and returns a new web environment context.
@@ -112,13 +114,13 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator wit
       }
       
       case r"""I capture the (text|node|nodeset)$targetType in (.+?)$source by xpath "(.+?)"$expression as (.+?)$$$name""" => env.withScreenShot {
-        evaluateXPath(expression, env.getBoundValue(source), XMLNodeType.withName(targetType)) tap { value =>
+        env.evaluateXPath(expression, env.getBoundValue(source), env.XMLNodeType.withName(targetType)) tap { value =>
           env.featureScope.set(name, value)
         }
       }
       
       case r"""I capture the text in (.+?)$source by regex "(.+?)"$expression as (.+?)$$$name""" => env.withScreenShot {
-        evaluateRegex(expression, env.getBoundValue(source)) tap { value =>
+        env.extractByRegex(expression, env.getBoundValue(source)) tap { value =>
           env.featureScope.set(name, value)
         }
       }
@@ -147,19 +149,29 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator wit
           case "javascript" => env.scopes.set(s"$attribute/javascript", expression)
           case _ => env.featureScope.set(attribute, Settings.get(expression))
         }
-        
+
+      case r"""(.+?)$attribute (?:is|will be) defined by the (text|node|nodeset)$targetType in (.+?)$source by xpath "(.+?)"$$$expression""" =>
+        env.scopes.set(s"$attribute/xpath/source", source)
+        env.scopes.set(s"$attribute/xpath/targetType", targetType)
+        env.scopes.set(s"$attribute/xpath/expression", expression)
+      
+      case r"""(.+?)$attribute (?:is|will be) defined in (.+?)$source by regex "(.+?)"$$$expression""" => env.withScreenShot {
+        env.scopes.set(s"$attribute/regex/source", source)
+        env.scopes.set(s"$attribute/regex/expression", expression)
+      }
+      
       case r"""(.+?)$attribute (?:is|will be) "(.*?)"$$$value""" => 
         env.featureScope.set(attribute, value)
         
       case r"""I wait for (.+?)$element text for (.+?)$seconds second(?:s?)""" => env.withScreenShot {
         env.waitUntil(s"Waiting for $element text after $seconds second(s)", seconds.toInt) {
-          waitForText(element, env)
+          env.waitForText(element)
         } 
       }
         
       case r"""I wait for (.+?)$element text""" => env.withScreenShot {
         env.waitUntil(s"Waiting for $element text") {
-          waitForText(element, env)
+          env.waitForText(element)
         }
       }
         
@@ -181,11 +193,11 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator wit
       }
 
       case r"""I (enter|type)$action "(.*?)"$value in (.+?)$$$element""" => env.withScreenShot {
-        env.sendKeys(element, action, value)
+        env.sendKeys(element, value, action == "enter")
       }
         
       case r"""I (enter|type)$action (.+?)$attribute in (.+?)$$$element""" => env.withScreenShot {
-        env.sendKeys(element, action, env.getAttribute(attribute))
+        env.sendKeys(element, env.getAttribute(attribute), action == "enter")
       }
         
       case r"""I select the (\d+?)$position(st|nd|rd|th)$suffix option in (.+?)$$$element""" => env.withScreenShot {
@@ -256,24 +268,27 @@ trait GwenWebEngine extends EvalEngine[WebEnvContext] with WebElementLocator wit
     }
   }
   
-  private def waitForText(element: String, env: WebEnvContext): Boolean = {
-    val text = env.getElementText(element)
-    text != null && text.length > 0
-  }
-  
-  private def compare(element: String, expression: String, actual: String, operator: String, negate: Boolean, env: WebEnvContext) = 
+  /**
+    * Compares the value of an element with an expected value.
+    * 
+    * @param element the name of the element to compare from
+    * @param expected the expected value, regex, or xpath
+    * @param actual the actual value of the element
+    * @param operator the comparison operator
+    * @param negate true to negate the result
+    * @param env the web environment context
+    * @return true if the actual value matches the expected value
+    */
+  private def compare(element: String, expected: String, actual: String, operator: String, negate: Boolean, env: WebEnvContext) = 
     (operator match {
-      case "be"      => expression.equals(actual)
-      case "contain" => actual.contains(expression)
-      case "match regex" => actual.matches(expression)
-      case "match xpath" => !evaluateXPath(expression, actual, XMLNodeType.text).isEmpty()
+      case "be"      => expected.equals(actual)
+      case "contain" => actual.contains(expected)
+      case "match regex" => actual.matches(expected)
+      case "match xpath" => !env.evaluateXPath(expected, actual, env.XMLNodeType.text).isEmpty()
     }) tap { result =>
-      if (!negate) assert(result, s"$element '$actual' should $operator '$expression'")
-      else assert(!result, s"$element should not $operator '$expression'")
+      if (!negate) assert(result, s"$element '$actual' should $operator '$expected'")
+      else assert(!result, s"$element should not $operator '$expected'")
     } 
-  
-  private def evaluateRegex(regex: String, source: String): String =  
-    regex.r.findFirstMatchIn(source).getOrElse(sys.error(s"'Regex match '$regex' not found in '$source'")).group(1)
   
 }
 

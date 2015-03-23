@@ -24,7 +24,7 @@ import gwen.Settings
   *
   * @author Branko Juric
   */
-object GwenWebSettings {
+object WebSettings {
   
   /**
     * Provides access to the `gwen.web.browser` setting used to set the target browser 

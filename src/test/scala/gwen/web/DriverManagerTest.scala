@@ -19,7 +19,6 @@ package gwen.web
 import org.mockito.Mockito.never
 import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
-import org.mockito.Mockito.when
 import org.openqa.selenium.WebDriver
 import org.scalatest.FlatSpec
 import org.scalatest.Matchers
@@ -27,10 +26,7 @@ import org.scalatest.mock.MockitoSugar
 
 class DriverManagerTest extends FlatSpec with Matchers with MockitoSugar {
   
-  val mockWebDriverOptions = mock[WebDriver.Options]
-  val mockWebDriverTimeouts = mock[WebDriver.Timeouts]
-  
-  "Web driver" should "should quit on manager quit" in {
+  "Web driver" should "quit on manager quit" in {
     val manager = newManager()
     val mockWebDriver = manager.webDriver
     manager.quit()

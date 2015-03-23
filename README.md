@@ -48,6 +48,7 @@ User Guides
     necessary.
   - [Automation By Meta](http://warpedjavaguy.wordpress.com/2015/01/12/automation-by-meta/) - 
     How to write a feature file and make it executable.
+- [FAQ](doc/FAQ.md)
 
 Installation
 ------------
@@ -61,25 +62,18 @@ Perform the following to download and install the latest build:
    - version 1.0.0 release (coming soon) 
 2. Extract the zip to a desired location on your local drive:
    - A folder named _gwen-web-[version]_ will be created
-3. [Configure settings](doc/CHEATSHEET#configuration-settings) (optional)
-4. [start using gwen-web](doc/START.md) 
+3. [Configure settings](doc/CHEATSHEET.md#configuration-settings) (optional)
+4. [Start using gwen-web](doc/START.md) 
 
 ### Building and Installing from Source
 
 Perform the following if you would like to build and install gwen-web from source: 
 
 1. Download and install [Java SDK 6 or 7](http://www.oracle.com/technetwork/java/javase/downloads/index.html) 
-2. Download and install the latest [sbt](http://www.scala-sbt.org/) version
-3. Download a [Git client](http://git-scm.com/downloads).
-4. Clone the gwen source repository using one of the following (SSH or HTTPS) URLs: 
-     - `git@github.com:gwen-interpreter/gwen.git`
-     - `https://github.com/gwen-interpreter/gwen.git`
-4. Change to the directory where you cloned the gwen source and run 
-   `sbt publish-local` to build the gwen binary and publish it to 
-   your local repository
-5. Clone the gwen-web source repository using one of the following (SSH or HTTPS) URLs: 
-     - `git@github.com:gwen-interpreter/gwen-web.git`
-     - `https://github.com/gwen-interpreter/gwen-web.git`
+2. Download a [Git client](http://git-scm.com/downloads)
+3. Clone the gwen source repository at https://github.com/gwen-interpreter/gwen 
+4. Clone the gwen-web source repository at https://github.com/gwen-interpreter/gwen-web
+5. Download and install the latest [sbt](http://www.scala-sbt.org/) version
 6. Change to the directory where you cloned the gwen-web source and run 
    `sbt universal:package-bin` to build the distributable ZIP
    - This will create a _gwen-web-[version].zip_ file in the 
@@ -87,37 +81,25 @@ Perform the following if you would like to build and install gwen-web from sourc
 7. Extract the generated ZIP to a desired location on your local drive
    - This will create a project folder named _gwen-web-[version]_ in that 
      location
-8. [Configure settings](doc/CHEATSHEET#configuration-settings) (optional)
-9. [start using gwen-web](doc/START.md) 
+8. [Configure settings](doc/CHEATSHEET.md#configuration-settings) (optional)
+9. [Start using gwen-web](doc/START.md) 
 
-### Set Target Browser
+Development
+-----------
 
-Gwen-web uses Firefox as the default browser. If you would like to use a 
-different browser, then create a _gwen.properties_ file in your user home 
-directory and set the following property to one of the values shown: 
+If you would like to set up a local development environment and work on the 
+source, perform the following:
 
-    gwen.web.browser = firefox | safari | chrome | ie
+1. Download and install [Java SDK 6 or 7](http://www.oracle.com/technetwork/java/javase/downloads/index.html) 
+2. Download a [Git client](http://git-scm.com/downloads)
+3. Clone the gwen source repository at https://github.com/gwen-interpreter/gwen 
+4. Clone the gwen-web source repository at https://github.com/gwen-interpreter/gwen-web
+5. Download and install the latest [sbt](http://www.scala-sbt.org/) version
+6. Change to the directory where you cloned the gwen-web source and run `sbt eclipse`
+7. Download and install the [Scala IDE](http://scala-ide.org/) for Scala 2.11.x
+8. Import the `gwen` and `gwen-web` projects into the Scala IDE
 
-- If you use Chrome or IE, then you will need to download the 
-  [chrome web driver](http://chromedriver.storage.googleapis.com/index.html) 
-  or [IE web driver server](http://selenium-release.storage.googleapis.com/index.html) 
-  respectively and install it on your system path. If you do not have permission to 
-  install the driver on your system path, then you can set the path to your 
-  downloaded driver location in your _gwen.properties_ file as shown below:
-  
-```
-    (chrome)  webdriver.chrome.driver = /path/to/chromedriver
-    (ie)      webdriver.ie.driver = c:/path/to/IEDriverServer.exe
-```
-
-- If you want to use Safari, then you will need to install the latest  
-  [safari driver extension](http://selenium-release.storage.googleapis.com/index.html) 
-  in your browser.
-
-You can also store settings in any properties file you wish and pass that 
-file to Gwen using the `-p` option (but you'll have to do it every 
-time you invoke Gwen). Putting the _gwen.properties_ file in your user 
-home directory is much more convenient since Gwen knows where to find it. 
+***
 
 Mail Group
 ----------

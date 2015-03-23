@@ -46,7 +46,7 @@ trait WebEngineTestCase extends FlatSpec {
       List(new File(featureFilepath)))
 
       
-    val intepreter = new GwenWebInterpreter
+    val intepreter = new WebInterpreter
     intepreter.execute(options, None) match {
       case Passed(_) => // woo hoo
       case Failed(_, error) => error.printStackTrace(); fail(error.getMessage())
