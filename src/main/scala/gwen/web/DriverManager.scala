@@ -85,9 +85,7 @@ trait DriverManager extends LazyLogging {
     //val accessKey = sys.env("SAUCE_ACCESS_KEY")
     // val hubURL = new URL(s"http://$username:$accessKey@localhost:4445/wd/hub")
     //val hubURL = new URL(s"http://localhost:44466/wd/hub")
-    val hubURL = new URL(addr)
-    val commandExecutor = new HttpCommandExecutor(hubURL)
-    new RemoteWebDriver(commandExecutor, capabilities)
+    remote(addr, capabilities)
   }
   
   private def localDriver(driverName: String): WebDriver = driverName match {
@@ -119,13 +117,16 @@ trait DriverManager extends LazyLogging {
     options.addArguments("--test-type")
   }
   
-  private def chrome(): WebDriver = new ChromeDriver(chromeOptions)
+  private[web] def chrome(): WebDriver = new ChromeDriver(chromeOptions)
   
-  private def firefox(): WebDriver = new FirefoxDriver(firefoxProfile)
+  private[web] def firefox(): WebDriver = new FirefoxDriver(firefoxProfile)
   
-  private def ie(): WebDriver = new InternetExplorerDriver()
+  private[web] def ie(): WebDriver = new InternetExplorerDriver()
   
-  private def safari(): WebDriver = new SafariDriver()
+  private[web] def safari(): WebDriver = new SafariDriver()
+  
+  private[web] def remote(hubUrl: String, capabilities: DesiredCapabilities): WebDriver =
+    new RemoteWebDriver(new HttpCommandExecutor(new URL(hubUrl)), capabilities)
   
   private def withGlobalSettings(driver: WebDriver): WebDriver = {
     driver.manage().timeouts().implicitlyWait(WebSettings.`gwen.web.wait.seconds`, TimeUnit.SECONDS)
