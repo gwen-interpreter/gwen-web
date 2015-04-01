@@ -68,7 +68,7 @@ class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with
     */
   def executeScript(javascript: String, params: Any*): Any = 
     webDriver.asInstanceOf[JavascriptExecutor].executeScript(javascript, params.map(_.asInstanceOf[AnyRef]) : _*) tap { result =>
-      logger.debug(s"Evaluated javascript: $javascript")
+      logger.debug(s"Evaluated javascript: $javascript, result='$result'")
       if (result.isInstanceOf[Boolean] && result.asInstanceOf[Boolean]) {
         Thread.sleep(WebSettings.`gwen.web.throttle.msecs`)
       }
@@ -253,7 +253,7 @@ class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with
     * @param name the name of the bound value to find
     */
   def getBoundValue(name: String): String = 
-    Try(getElementText(name)) match {
+    (Try(getElementText(name)) match {
       case Success(text) => text
       case Failure(e1) => Try(getAttribute(name)) match {
         case Success(text) => text
@@ -262,6 +262,8 @@ class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with
           case _ => sys.error(s"Bound value not found: ${name}")
         }
       }
+    }) tap { value =>
+      logger.debug(s"getBoundValue(${name})='${value}'")
     }
   
   /**
@@ -276,7 +278,7 @@ class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with
     * @param name the name of the web element
     */
   def getElementText(name: String): String = 
-    withWebElement(name) { webElement =>
+    (withWebElement(name) { webElement =>
       (Option(webElement.getText) match {
         case None | Some("") => Option(webElement.getAttribute("text")) match {
           case None | Some("") => webElement.getAttribute("value")
@@ -286,6 +288,8 @@ class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with
       }) tap { text => 
         bindAndWait(name, "text", text)
       }
+    }) tap { value =>
+      logger.debug(s"getElementText(${name})='${value}'")
     }
   
   /**
@@ -301,7 +305,7 @@ class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with
     * @param name the name of the bound attribute to find
     */
   def getAttribute(name: String): String = 
-    scopes.getOpt(name) match {
+    (scopes.getOpt(name) match {
       case None | Some("") => scopes.getOpt(s"$name/text") match {
         case None | Some("") => scopes.getOpt(s"$name/javascript") match {
           case None | Some("") => scopes.getOpt(s"$name/xpath") match {
@@ -323,6 +327,8 @@ class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with
         case Some(value) => value
       }
       case Some(value) => value
+    }) tap { value =>
+      logger.debug(s"getAttribute(${name})='${value}'")
     }
   
   /**
