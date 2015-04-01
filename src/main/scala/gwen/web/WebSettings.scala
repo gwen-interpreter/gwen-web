@@ -30,13 +30,19 @@ object WebSettings {
     * Provides access to the `gwen.web.browser` setting used to set the target browser 
     * (default value is `firefox`).
     */
-  def `gwen.web.browser`: String = Settings.getOpt("gwen.web.browser").getOrElse("firefox")
+  def `gwen.web.browser`: String = 
+    Settings.getOpt("gwen.web.browser").getOrElse("firefox")
   
   /**
     * Provides access to the `gwen.web.useragent` setting used to set the user agent header 
     * in the browser (currently only supported for firefox and chrome).
     */
   def `gwen.web.useragent`: Option[String] = Settings.getOpt("gwen.web.useragent")
+  
+  /**
+   * If set, allows gwen-web to connect to a remote webdriver.
+   */
+  def `gwen.web.remote.url`: Option[String] = Settings.getOpt("gwen.web.remote.url")
   
   /**
     * Provides access to the `gwen.authorize.plugins` setting used to control whether 

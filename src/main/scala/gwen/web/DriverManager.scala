@@ -17,7 +17,6 @@
 package gwen.web
 
 import java.util.concurrent.TimeUnit
-
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.chrome.ChromeOptions
@@ -25,10 +24,12 @@ import org.openqa.selenium.firefox.FirefoxDriver
 import org.openqa.selenium.firefox.FirefoxProfile
 import org.openqa.selenium.ie.InternetExplorerDriver
 import org.openqa.selenium.safari.SafariDriver
-
 import com.typesafe.scalalogging.slf4j.LazyLogging
-
 import gwen.Predefs.Kestrel
+import org.openqa.selenium.remote.RemoteWebDriver
+import org.openqa.selenium.remote.DesiredCapabilities
+import org.openqa.selenium.remote.HttpCommandExecutor
+import java.net.URL
 
 /** Provides access to the web driver used to drive the browser. */
 trait DriverManager extends LazyLogging {
@@ -51,22 +52,51 @@ trait DriverManager extends LazyLogging {
   }
   
   /** Loads the selenium webdriver. */
-  private[web] def loadWebDriver: WebDriver = {
-    val driverName = WebSettings.`gwen.web.browser` tap { browser =>
-      logger.info(s"Loading $browser web driver")
-    }
-    (driverName.toLowerCase() match {
-      case "firefox" => firefox()
-      case "ie" => ie()
-      case "chrome" => chrome()
-      case "safari" => safari()
-      case _ => sys.error(s"Unsupported webdriver: $driverName")
-    }) tap { driver =>
-      applyGlobalSettings(driver)
+  private[web] def loadWebDriver: WebDriver = withGlobalSettings {
+    val driverName = WebSettings.`gwen.web.browser`.toLowerCase
+    logger.info(s"Loading $driverName web driver")
+    WebSettings.`gwen.web.remote.url` match {
+    	case Some(addr) => remoteDriver(driverName, addr)
+      case None => localDriver(driverName)
     }
   }
   
-  private def firefox(): WebDriver = new FirefoxDriver(new FirefoxProfile() tap { profile =>
+  private def remoteDriver(driverName: String, addr: String): WebDriver = {
+    val capabilities = driverName match {
+      case "firefox" => 
+        DesiredCapabilities.firefox tap { capabilities =>
+          capabilities.setCapability(FirefoxDriver.PROFILE, firefoxProfile)
+        }
+      case "chrome" => DesiredCapabilities.chrome tap { capabilities =>
+        capabilities.setCapability(ChromeOptions.CAPABILITY, chromeOptions)
+      }
+    }
+    capabilities.setJavascriptEnabled(true)
+
+    //TODO
+    //profile override if the useragent is set.
+    //set the untrusted certificates
+    //etc..
+    //mock the drivers, write tests
+    //capabilities.setCapability("record-video", true)
+    //capabilities.setCapability("build", sys.env("TRAVIS_BUILD_NUMBER"))
+    //capabilities.setCapability("tunnel-identifier", sys.env("TRAVIS_JOB_NUMBER"))
+    //val username = sys.env("SAUCE_USERNAME")
+    //val accessKey = sys.env("SAUCE_ACCESS_KEY")
+    // val hubURL = new URL(s"http://$username:$accessKey@localhost:4445/wd/hub")
+    //val hubURL = new URL(s"http://localhost:44466/wd/hub")
+    remote(addr, capabilities)
+  }
+  
+  private def localDriver(driverName: String): WebDriver = driverName match {
+    case "firefox" => firefox()
+    case "ie" => ie()
+    case "chrome" => chrome()
+    case "safari" => safari()
+    case _ => sys.error(s"Unsupported webdriver: $driverName")
+  }
+  
+  private def firefoxProfile() : FirefoxProfile = new FirefoxProfile() tap { profile =>
     WebSettings.`gwen.web.useragent` foreach { 
       profile.setPreference("general.useragent.override", _)
     }
@@ -75,11 +105,9 @@ trait DriverManager extends LazyLogging {
       profile.setPreference("security.enable_java", true);
       profile.setPreference("plugin.state.java", 2);
     }
-  })
+  }
   
-  private def ie(): WebDriver = new InternetExplorerDriver()
-  
-  private def chrome(): WebDriver = new ChromeDriver(new ChromeOptions() tap { options =>
+  private def chromeOptions() : ChromeOptions = new ChromeOptions() tap { options =>
     WebSettings.`gwen.web.useragent` foreach { 
       agent => options.addArguments(s"--user-agent=$agent") 
     }
@@ -87,15 +115,25 @@ trait DriverManager extends LazyLogging {
       options.addArguments(s"--always-authorize-plugins") 
     }
     options.addArguments("--test-type")
-  })
+  }
   
-  private def safari(): WebDriver = new SafariDriver()
+  private[web] def chrome(): WebDriver = new ChromeDriver(chromeOptions)
   
-  private def applyGlobalSettings(driver: WebDriver): Unit = {
+  private[web] def firefox(): WebDriver = new FirefoxDriver(firefoxProfile)
+  
+  private[web] def ie(): WebDriver = new InternetExplorerDriver()
+  
+  private[web] def safari(): WebDriver = new SafariDriver()
+  
+  private[web] def remote(hubUrl: String, capabilities: DesiredCapabilities): WebDriver =
+    new RemoteWebDriver(new HttpCommandExecutor(new URL(hubUrl)), capabilities)
+  
+  private def withGlobalSettings(driver: WebDriver): WebDriver = {
     driver.manage().timeouts().implicitlyWait(WebSettings.`gwen.web.wait.seconds`, TimeUnit.SECONDS)
     if (WebSettings.`gwen.web.maximize`) {
       driver.manage().window().maximize() 
     }
+    driver
   }
   
 }
