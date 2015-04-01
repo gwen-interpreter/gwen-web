@@ -48,6 +48,7 @@ file provided through the `-p|--properties` command line option.
 | `gwen.web.throttle.msecs`      | 200            | Number of milliseconds | Sets the number of milliseconds to wait for the web driver and web browser to synchronize with each other between interactions. Also directly controls element highlighting duration. |
 | `gwen.web.highlight.style`     | background: yellow; border: 2px solid gold; | HTML style string | Sets the look and feel of element highlighting. |
 | `gwen.web.capture.screenshots` | false          | `true` to capture screenshots, `false` otherwise | Controls whether or not the web driver should capture screenshots for all steps that change page states. |
+| `gwen.web.remote.url`          |                | http://host:port/wd/hub | If set, allows gwen-web to connect to the remote webdriver at the specified URL. |
 
 In addition to the above settings, all selenium web driver system properties are also supported. For example, 
 all the [FireFox driver properties](https://code.google.com/p/selenium/wiki/FirefoxDriver#Important_System_Properties) 

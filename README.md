@@ -27,6 +27,7 @@ Key Features
 - Tests can be run sequentially or in parallel
 - REPL console allows verifying before running
 - Cross browser support
+- Remote web driver support
 - No development
  
 Core Requirements
