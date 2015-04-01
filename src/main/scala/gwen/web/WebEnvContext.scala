@@ -368,10 +368,14 @@ class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with
     * 
     * @param element the name of the element to send the value to
     * @param value the value to send
+    * @param clearFirst true to clear field first (if element is a text field)
     * @param sendEnterKey true to send the Enter key after sending the value
     */
-  def sendKeys(element: String, value: String, sendEnterKey: Boolean) {
+  def sendKeys(element: String, value: String, clearFirst: Boolean, sendEnterKey: Boolean) {
     withWebElement(element) { webElement =>
+      if (clearFirst) {
+        clearText(webElement, element)
+      }
       webElement.sendKeys(value)
       bindAndWait(element, "type", value)
       if (sendEnterKey) {
@@ -379,6 +383,15 @@ class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with
         bindAndWait(element, "enter", "true")
       }
     }
+  }
+  
+  def clearText(element: String) {
+    withWebElement(element) { clearText(_, element) }
+  }
+  
+  private def clearText(webElement: WebElement, name: String) {
+    webElement.clear()
+    bindAndWait(name, "clear", "true")
   }
   
   /**

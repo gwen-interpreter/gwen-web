@@ -24,7 +24,9 @@ import gwen.eval.GwenApp
   * 
   * @author Branko Juric, Brady Wood
   */
-class WebInterpreter extends GwenInterpreter[WebEnvContext] with WebEngine
+class WebInterpreter extends GwenInterpreter[WebEnvContext] with WebEngine {
+  override lazy val implName: String = Option(this.getClass.getPackage.getImplementationTitle).getOrElse("gwen-web")
+}
 
 /**
   * The gwen-web standalone application.

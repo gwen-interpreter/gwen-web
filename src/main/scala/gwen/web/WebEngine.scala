@@ -187,17 +187,21 @@ trait WebEngine extends EvalEngine[WebEnvContext] with WebElementLocator with Sy
         }
       }
        
+      case r"""I clear (.+?)$$$element""" => env.withScreenShot {
+        env.clearText(element)
+      }
+      
       case r"""I press enter in (.+?)$$$element""" => env.withScreenShot {
         locate(env, element).sendKeys(Keys.RETURN)
         env.bindAndWait(element, "enter", "true")
       }
 
       case r"""I (enter|type)$action "(.*?)"$value in (.+?)$$$element""" => env.withScreenShot {
-        env.sendKeys(element, value, action == "enter")
+        env.sendKeys(element, value, true, action == "enter")
       }
         
       case r"""I (enter|type)$action (.+?)$attribute in (.+?)$$$element""" => env.withScreenShot {
-        env.sendKeys(element, env.getAttribute(attribute), action == "enter")
+        env.sendKeys(element, env.getAttribute(attribute), true, action == "enter")
       }
         
       case r"""I select the (\d+?)$position(st|nd|rd|th)$suffix option in (.+?)$$$element""" => env.withScreenShot {
@@ -238,10 +242,10 @@ trait WebEngine extends EvalEngine[WebEnvContext] with WebElementLocator with Sy
         }
       }
         
-      case r"""I wait ([0-9]+?)$duration second(?:s?) when (.+?)$element is (clicked|submitted|checked|unchecked|selected|typed|entered)$$$event""" =>
+      case r"""I wait ([0-9]+?)$duration second(?:s?) when (.+?)$element is (clicked|submitted|checked|unchecked|selected|typed|entered|cleared)$$$event""" =>
         env.scopes.set(s"$element/${WebElementActions.EventToAction(event)}/wait", duration)
         
-      case r"""I wait until (.+?)$condition when (.+?)$element is (clicked|submitted|checked|unchecked|selected|typed|entered)$$$event""" =>
+      case r"""I wait until (.+?)$condition when (.+?)$element is (clicked|submitted|checked|unchecked|selected|typed|entered|cleared)$$$event""" =>
         env.scopes.set(s"$element/${WebElementActions.EventToAction(event)}/condition", condition)
         
       case r"""I wait until "(.+?)$javascript"""" => env.withScreenShot {
@@ -300,6 +304,7 @@ object WebElementActions {
     "unchecked" -> "uncheck", 
     "selected"  -> "select", 
     "typed"     -> "type", 
-    "entered"   -> "enter"
+    "entered"   -> "enter",
+    "cleared"   -> "clear"
   )
 }
