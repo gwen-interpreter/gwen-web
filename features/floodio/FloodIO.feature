@@ -41,4 +41,22 @@
   Scenario: Complete step 3
       Given I am on the step 3 page
        When I select and enter the largest order value
-        And I clear the largest order value field
+        And I click the next button
+       Then I should be on the step 4 page
+   
+  Scenario: Complete step 4
+      Given I am on the step 4 page
+       When I click the next button
+       Then I should be on the step 5 page
+
+  Scenario: Complete step 5
+      Given I am on the step 5 page
+       When I enter the one time token
+        And I click the next button
+       Then I should be on the challenge completed page
+       
+  @Robot
+  Scenario: Verify robot completion
+      Given I am on the challenge completed page
+       Then the lead paragraph should contain "Congratulations, your scripting skills are impressive"
+       
