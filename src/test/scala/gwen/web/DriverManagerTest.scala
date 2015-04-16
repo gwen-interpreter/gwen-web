@@ -30,6 +30,8 @@ import org.openqa.selenium.remote.RemoteWebDriver
 import org.scalatest.FlatSpec
 import org.scalatest.Matchers
 import org.scalatest.mock.MockitoSugar
+import gwen.Settings
+import gwen.UserOverrides
 
 class DriverManagerTest extends FlatSpec with Matchers with MockitoSugar {
   
@@ -149,11 +151,13 @@ class DriverManagerTest extends FlatSpec with Matchers with MockitoSugar {
   }
   
   private def withSetting[T](name: String, value: String)(f: => T):T = {
-    try {
-      sys.props += ((name, value))
-      f
-    } finally {
-      sys.props -= name
+    Settings.synchronized {
+      try {
+        sys.props += ((name, value))
+        f
+      } finally {
+        Settings.loadAll(UserOverrides.UserProperties.toList)
+      }
     }
   }
   
