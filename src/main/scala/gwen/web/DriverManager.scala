@@ -30,6 +30,7 @@ import org.openqa.selenium.remote.RemoteWebDriver
 import org.openqa.selenium.remote.DesiredCapabilities
 import org.openqa.selenium.remote.HttpCommandExecutor
 import java.net.URL
+import org.openqa.selenium.remote.CapabilityType
 
 /** Provides access to the web driver used to drive the browser. */
 trait DriverManager extends LazyLogging {
@@ -69,7 +70,9 @@ trait DriverManager extends LazyLogging {
         }
       case "chrome" => DesiredCapabilities.chrome tap { capabilities =>
         capabilities.setCapability(ChromeOptions.CAPABILITY, chromeOptions)
+        capabilities.setCapability(CapabilityType.ACCEPT_SSL_CERTS, WebSettings.`gwen.web.accept.untrusted.certs`);
       }
+      case "ie" => ieCapabilities
     }
     capabilities.setJavascriptEnabled(true)
 
@@ -100,10 +103,13 @@ trait DriverManager extends LazyLogging {
     WebSettings.`gwen.web.useragent` foreach { 
       profile.setPreference("general.useragent.override", _)
     }
-    profile.setAcceptUntrustedCertificates(true);
     if (WebSettings.`gwen.web.authorize.plugins`) {
       profile.setPreference("security.enable_java", true);
       profile.setPreference("plugin.state.java", 2);
+    }
+    WebSettings.`gwen.web.accept.untrusted.certs` tap { acceptUntrustedCerts =>
+      profile.setAcceptUntrustedCertificates(true);
+      profile.setAssumeUntrustedCertificateIssuer(false);
     }
   }
   
@@ -115,13 +121,20 @@ trait DriverManager extends LazyLogging {
       options.addArguments(s"--always-authorize-plugins") 
     }
     options.addArguments("--test-type")
+    if (WebSettings.`gwen.web.accept.untrusted.certs`) {
+      options.addArguments("--ignore-certificate-errors")
+    }
+  }
+  
+  private def ieCapabilities: DesiredCapabilities = new DesiredCapabilities() tap {capabilities => 
+    capabilities.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);  
   }
   
   private[web] def chrome(): WebDriver = new ChromeDriver(chromeOptions)
   
   private[web] def firefox(): WebDriver = new FirefoxDriver(firefoxProfile)
   
-  private[web] def ie(): WebDriver = new InternetExplorerDriver()
+  private[web] def ie(): WebDriver = new InternetExplorerDriver(ieCapabilities)
   
   private[web] def safari(): WebDriver = new SafariDriver()
   
