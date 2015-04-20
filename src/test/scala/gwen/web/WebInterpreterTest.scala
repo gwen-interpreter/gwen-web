@@ -25,28 +25,31 @@ import gwen.Settings
 
 class WebInterpreterTest extends FlatSpec {
 
-  "Sample test features" should "evaluate" in {
-    
+  "Sample test features" should "evaluate in sequence" in {
+    evaluate(false, "target/report-sequential")
+  }
+  
+  "Sample test features" should "evaluate in parallel" in {
+    evaluate(true, "target/report-parallel")
+  }
+  
+  private def evaluate(parallel: Boolean, reportDir: String) {
     Settings.synchronized {
-    
       val features = List("features/floodio", "features/blogs/pageObjectsBegone", "features/blogs/automationByMeta")
-    
       val options = GwenOptions(
         true,
-        true,
-        Some(new File("target/report")), 
+        parallel,
+        Some(new File(reportDir)), 
         Nil, 
         Nil,
         Nil,
         features.map(new File(_)))
-      
       val intepreter = new WebInterpreter
       intepreter.execute(options, None) match {
         case Passed(_) => // woo hoo
         case Failed(_, error) => error.printStackTrace(); fail(error.getMessage())
         case _ => fail("evaluation expected but got noop")
       }
-    
     }
   }
   
