@@ -23,27 +23,16 @@ import gwen.dsl.Passed
 import gwen.eval.GwenOptions
 import gwen.Settings
 
-class WebInterpreterTest extends FlatSpec {
+abstract class WebInterpreterTest extends FlatSpec {
 
-  "Sample test features" should "evaluate in sequence" in {
-    evaluate(false, "target/report-sequential")
-  }
-  
-  "Sample test features" should "evaluate in parallel" in {
-    evaluate(true, "target/report-parallel")
-  }
-  
-  private def evaluate(parallel: Boolean, reportDir: String) {
+  private[web] def evaluate(features: List[String], parallel: Boolean, reportDir: String) {
     Settings.synchronized {
-      val features = List("features/floodio", "features/blogs/pageObjectsBegone", "features/blogs/automationByMeta")
-      val options = GwenOptions(
-        true,
-        parallel,
-        Some(new File(reportDir)), 
-        Nil, 
-        Nil,
-        Nil,
-        features.map(new File(_)))
+      val args = (if (parallel) { 
+        Array("--parallel", "-b", "-r", reportDir)
+      } else {
+        Array("-b", "-r", reportDir )
+      }) ++ features.toArray.asInstanceOf[Array[String]]
+      val options = GwenOptions.parse(WebInterpreter.getClass.getName, args).get
       val intepreter = new WebInterpreter
       intepreter.execute(options, None) match {
         case Passed(_) => // woo hoo
