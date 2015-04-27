@@ -234,10 +234,10 @@ class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with
     step.expression match {
       // resolve concatenation: "prefix" + binding + "suffix"
       case r"""(.+?)$prefix"\s*\+\s*(.+?)$binding\s*\+\s*"(.+?)$suffix""" => 
-        resolve(Step(step.pos, step.keyword, s"$prefix${getBoundValue(binding)}$suffix", step.status, step.attachments))
+        resolve(Step(step, s"$prefix${getBoundValue(binding)}$suffix"))
       // resolve concatenation: "prefix" + binding
       case r"""(.+?)$prefix"\s*\+\s*(.+?)$binding\s*""" => 
-        resolve(Step(step.pos, step.keyword, s"""$prefix${getBoundValue(binding)}"""", step.status, step.attachments))
+        resolve(Step(step, s"""$prefix${getBoundValue(binding)}""""))
       case _ => step
     }
   }

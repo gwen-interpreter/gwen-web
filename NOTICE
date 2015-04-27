@@ -17,7 +17,7 @@
       http://www.scala-lang.org
          
    gwen
-      Version 1.0.0-9f4d0234f3eddc8442fad93d4e6f60d51facc6cc
+      Version 1.0.0-35f9a351b065a61209a9d51123614fbaf640139f
       Copyright (c) 2014-2015 Branko Juric, Brady Wood 
       Apache License, Version 2.0
       https://github.com/gwen-interpreter/gwen/LICENSE
