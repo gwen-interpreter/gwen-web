@@ -49,6 +49,8 @@ User Guides
     necessary.
   - [Automation By Meta](http://warpedjavaguy.wordpress.com/2015/01/12/automation-by-meta/) - 
     How to write a feature file and make it executable.
+  - [gwen-web and Remote Webdriver](https://quietachievingtester.wordpress.com/2015/04/23/remote-webdriver-feature-now-available-in-gwen-web/) - 
+    How to enable remote webdriver in gwen-web
 - [FAQ](doc/FAQ.md)
 
 Installation
