@@ -163,6 +163,9 @@ trait WebEngine extends EvalEngine[WebEnvContext] with WebElementLocator with Sy
       case r"""(.+?)$attribute (?:is|will be) "(.*?)"$$$value""" => 
         env.featureScope.set(attribute, value)
         
+      case r"""(.+?)$target (?:is|will be) (.+?)$$$source""" => 
+        env.featureScope.set(target, env.getBoundValue(source))
+        
       case r"""I wait for (.+?)$element text for (.+?)$seconds second(?:s?)""" => env.withScreenShot {
         env.waitUntil(s"Waiting for $element text after $seconds second(s)", seconds.toInt) {
           env.waitForText(element)

@@ -40,6 +40,7 @@ import gwen.eval.EnvContext
 import gwen.eval.ScopedDataStack
 import gwen.eval.support.RegexSupport
 import gwen.eval.support.XPathSupport
+import gwen.eval.support.InterpolationSupport
 
 /**
   * Defines the web environment context. This includes the configured selenium web
@@ -47,7 +48,7 @@ import gwen.eval.support.XPathSupport
   *
   *  @author Branko Juric
   */
-class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with WebElementLocator with DriverManager with RegexSupport with XPathSupport {
+class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with WebElementLocator with DriverManager with RegexSupport with XPathSupport with InterpolationSupport {
 
    /** Resets the current context and closes the web browser. */
   override def reset() {
@@ -225,22 +226,12 @@ class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with
   }
   
   /**
-    * Resolves any string concatenations in the given step.
+    * Interpolates string expressions in the given step.
     * 
     * @param step the step to resolve
     * @return the resolved step
     */
-  override def resolve(step: Step): Step = {
-    step.expression match {
-      // resolve concatenation: "prefix" + binding + "suffix"
-      case r"""(.+?)$prefix"\s*\+\s*(.+?)$binding\s*\+\s*"(.+?)$suffix""" => 
-        resolve(Step(step, s"$prefix${getBoundValue(binding)}$suffix"))
-      // resolve concatenation: "prefix" + binding
-      case r"""(.+?)$prefix"\s*\+\s*(.+?)$binding\s*""" => 
-        resolve(Step(step, s"""$prefix${getBoundValue(binding)}""""))
-      case _ => step
-    }
-  }
+  override def parse(step: Step): Step = Step(step, interpolate(step.expression)(getBoundValue))
   
   /**
     * Gets a bound value from memory. A search for the value is made in 
