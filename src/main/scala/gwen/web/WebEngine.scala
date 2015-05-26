@@ -165,6 +165,28 @@ trait WebEngine extends EvalEngine[WebEnvContext] with WebElementLocator with Sy
         }
       }
       
+      case r"""I wait ([0-9]+?)$duration second(?:s?) when (.+?)$element is (clicked|submitted|checked|unchecked|selected|typed|entered|cleared)$$$event""" =>
+        env.scopes.set(s"$element/${WebElementActions.EventToAction(event)}/wait", duration)
+        
+      case r"""I wait until (.+?)$condition when (.+?)$element is (clicked|submitted|checked|unchecked|selected|typed|entered|cleared)$$$event""" =>
+        env.scopes.set(s"$element/${WebElementActions.EventToAction(event)}/condition", condition)
+        
+      case r"""I wait until "(.+?)$javascript"""" => env.withScreenShot {
+        env.waitUntil(s"Waiting until $javascript") {
+          env.executeScript(s"return $javascript").asInstanceOf[Boolean]
+        }
+      }
+        
+      case r"""I wait until (.+?)$$$condition""" => env.withScreenShot {
+        env.waitUntil(s"Waiting until $condition") {
+          env.executeScript(s"return ${env.scopes.get(s"$condition/javascript")}").asInstanceOf[Boolean]
+        }
+      }
+        
+      case r"""I wait ([0-9]+?)$duration second(?:s?)""" => env.withScreenShot {
+        Thread.sleep(duration.toLong * 1000)
+      }
+      
       case r"""my (.+?)$name (?:property|setting) (?:is|will be) "(.*?)"$$$value""" =>
         Settings.add(name, value)
         
@@ -243,28 +265,6 @@ trait WebEngine extends EvalEngine[WebEnvContext] with WebElementLocator with Sy
           }
           true
         }
-      }
-        
-      case r"""I wait ([0-9]+?)$duration second(?:s?) when (.+?)$element is (clicked|submitted|checked|unchecked|selected|typed|entered|cleared)$$$event""" =>
-        env.scopes.set(s"$element/${WebElementActions.EventToAction(event)}/wait", duration)
-        
-      case r"""I wait until (.+?)$condition when (.+?)$element is (clicked|submitted|checked|unchecked|selected|typed|entered|cleared)$$$event""" =>
-        env.scopes.set(s"$element/${WebElementActions.EventToAction(event)}/condition", condition)
-        
-      case r"""I wait until "(.+?)$javascript"""" => env.withScreenShot {
-        env.waitUntil(s"Waiting until $javascript") {
-          env.executeScript(s"return $javascript").asInstanceOf[Boolean]
-        }
-      }
-        
-      case r"""I wait until (.+?)$$$condition""" => env.withScreenShot {
-        env.waitUntil(s"Waiting until $condition") {
-          env.executeScript(s"return ${env.scopes.get(s"$condition/javascript")}").asInstanceOf[Boolean]
-        }
-      }
-        
-      case r"""I wait ([0-9]+?)$duration second(?:s?)""" => env.withScreenShot {
-        Thread.sleep(duration.toLong * 1000)
       }
         
       case r"""I (?:highlight|locate) (.+?)$$$element""" =>
