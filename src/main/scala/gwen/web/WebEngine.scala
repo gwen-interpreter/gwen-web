@@ -141,6 +141,30 @@ trait WebEngine extends EvalEngine[WebEnvContext] with WebElementLocator with Sy
         env.featureScope.set(element, env.getBoundValue(element))
       }
         
+      case r"""I wait for (.+?)$element text for (.+?)$seconds second(?:s?)""" => env.withScreenShot {
+        env.waitUntil(s"Waiting for $element text after $seconds second(s)", seconds.toInt) {
+          env.waitForText(element)
+        } 
+      }
+        
+      case r"""I wait for (.+?)$element text""" => env.withScreenShot {
+        env.waitUntil(s"Waiting for $element text") {
+          env.waitForText(element)
+        }
+      }
+        
+      case r"""I wait for (.+?)$element for (.+?)$seconds second(?:s?)""" => env.withScreenShot {
+        env.waitUntil(s"Waiting for $element after $seconds second(s)", seconds.toInt) {
+          locateOpt(env, element).isDefined
+        }
+      }
+        
+      case r"""I wait for (.+?)$$$element""" => env.withScreenShot {
+        env.waitUntil(s"Waiting for $element") {
+          locateOpt(env, element).isDefined
+        }
+      }
+      
       case r"""my (.+?)$name (?:property|setting) (?:is|will be) "(.*?)"$$$value""" =>
         Settings.add(name, value)
         
@@ -165,30 +189,6 @@ trait WebEngine extends EvalEngine[WebEnvContext] with WebElementLocator with Sy
         
       case r"""(.+?)$target (?:is|will be) (.+?)$$$source""" => 
         env.featureScope.set(target, env.getBoundValue(source))
-        
-      case r"""I wait for (.+?)$element text for (.+?)$seconds second(?:s?)""" => env.withScreenShot {
-        env.waitUntil(s"Waiting for $element text after $seconds second(s)", seconds.toInt) {
-          env.waitForText(element)
-        } 
-      }
-        
-      case r"""I wait for (.+?)$element text""" => env.withScreenShot {
-        env.waitUntil(s"Waiting for $element text") {
-          env.waitForText(element)
-        }
-      }
-        
-      case r"""I wait for (.+?)$element for (.+?)$seconds second(?:s?)""" => env.withScreenShot {
-        env.waitUntil(s"Waiting for $element after $seconds second(s)", seconds.toInt) {
-          locateOpt(env, element).isDefined
-        }
-      }
-        
-      case r"""I wait for (.+?)$$$element""" => env.withScreenShot {
-        env.waitUntil(s"Waiting for $element") {
-          locateOpt(env, element).isDefined
-        }
-      }
        
       case r"""I clear (.+?)$$$element""" => env.withScreenShot {
         env.clearText(element)
