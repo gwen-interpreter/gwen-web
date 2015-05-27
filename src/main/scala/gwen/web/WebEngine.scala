@@ -61,15 +61,13 @@ trait WebEngine extends EvalEngine[WebEnvContext] with WebElementLocator with Sy
       case r"""I am on the (.+?)$$$page""" =>
         env.scopes.addScope(page)
         
-      case r"""I navigate to the (.+?)$$$page""" => env.withScreenShot {
+      case r"""I navigate to the (.+?)$$$page""" => 
         env.scopes.addScope(page)
         env.webDriver.get(env.getAttribute("url"))
-      }
         
-      case r"""I navigate to "(.+?)"$$$url""" => env.withScreenShot {
+      case r"""I navigate to "(.+?)"$$$url""" => 
         env.scopes.addScope(url)
         env.webDriver.get(url)
-      }
       
       case r"""the url will be defined by (?:property|setting) "(.+?)"$$$name""" => 
         env.scopes.set("url", Settings.get(name))
@@ -81,15 +79,13 @@ trait WebEngine extends EvalEngine[WebEnvContext] with WebElementLocator with Sy
         env.scopes.set(s"$element/locator", locator);
         env.scopes.set(s"$element/locator/$locator", expression)
 
-      case r"""the page title should( not)?$negation (be|contain|match regex|match xpath)$operator "(.*?)"$$$expression""" => env.withScreenShot {
+      case r"""the page title should( not)?$negation (be|contain|match regex|match xpath)$operator "(.*?)"$$$expression""" => 
         compare("title", expression, env.getTitle, operator, Option(negation).isDefined, env)
-      }
         
-      case r"""the page title should( not)?$negation (be|contain|match regex|match xpath)$operator (.+?)$$$attribute""" => env.withScreenShot {
+      case r"""the page title should( not)?$negation (be|contain|match regex|match xpath)$operator (.+?)$$$attribute""" =>
         compare("title", env.getAttribute(attribute), env.getTitle, operator, Option(negation).isDefined, env) 
-      }
       
-      case r"""(.+?)$element should( not)?$negation be (displayed|hidden|checked|unchecked|enabled|disabled)$$$state""" => env.withScreenShot {
+      case r"""(.+?)$element should( not)?$negation be (displayed|hidden|checked|unchecked|enabled|disabled)$$$state""" => 
         env.withWebElement(element) { webElement =>
           val result = state match {
             case "displayed" => webElement.isDisplayed()
@@ -103,67 +99,54 @@ trait WebEngine extends EvalEngine[WebEnvContext] with WebElementLocator with Sy
           else assert(!result,  s"$element should not be $state")
           env.bindAndWait(element, state, "true")
         }
-      }
         
-      case r"""(.+?)$element should( not)?$negation (be|contain|match regex|match xpath)$operator "(.*?)"$$$expression""" => env.withScreenShot {
+      case r"""(.+?)$element should( not)?$negation (be|contain|match regex|match xpath)$operator "(.*?)"$$$expression""" => 
         compare(element, expression, env.getBoundValue(element), operator, Option(negation).isDefined, env)
-      }
         
-      case r"""(.+?)$element should( not)?$negation (be|contain|match regex|match xpath)$operator (.+?)$$$attribute""" => env.withScreenShot {
+      case r"""(.+?)$element should( not)?$negation (be|contain|match regex|match xpath)$operator (.+?)$$$attribute""" => 
         compare(element, env.getAttribute(attribute), env.getBoundValue(element), operator, Option(negation).isDefined, env) 
-      }
       
-      case r"""I capture the (text|node|nodeset)$targetType in (.+?)$source by xpath "(.+?)"$expression as (.+?)$$$name""" => env.withScreenShot {
+      case r"""I capture the (text|node|nodeset)$targetType in (.+?)$source by xpath "(.+?)"$expression as (.+?)$$$name""" => 
         env.evaluateXPath(expression, env.getBoundValue(source), env.XMLNodeType.withName(targetType)) tap { value =>
           env.featureScope.set(name, value)
         }
-      }
       
-      case r"""I capture the text in (.+?)$source by regex "(.+?)"$expression as (.+?)$$$name""" => env.withScreenShot {
+      case r"""I capture the text in (.+?)$source by regex "(.+?)"$expression as (.+?)$$$name""" => 
         env.extractByRegex(expression, env.getBoundValue(source)) tap { value =>
           env.featureScope.set(name, value)
         }
-      }
       
-      case r"""I capture the current URL""" => env.withScreenShot {
+      case r"""I capture the current URL""" => 
         env.featureScope.set("the current URL", env.webDriver.getCurrentUrl())
-      }
       
-      case r"""I capture the current URL as (.+?)$name""" => env.withScreenShot {
+      case r"""I capture the current URL as (.+?)$name""" => 
         env.featureScope.set(name, env.webDriver.getCurrentUrl())
-      }
       
-      case r"""I capture (.+?)$element as (.+?)$attribute""" => env.withScreenShot {
+      case r"""I capture (.+?)$element as (.+?)$attribute""" => 
         env.featureScope.set(attribute, env.getBoundValue(element))
-      }
         
-      case r"""I capture (.+?)$element""" => env.withScreenShot {
+      case r"""I capture (.+?)$element""" => 
         env.featureScope.set(element, env.getBoundValue(element))
-      }
         
-      case r"""I wait for (.+?)$element text for (.+?)$seconds second(?:s?)""" => env.withScreenShot {
+      case r"""I wait for (.+?)$element text for (.+?)$seconds second(?:s?)""" => 
         env.waitUntil(s"Waiting for $element text after $seconds second(s)", seconds.toInt) {
           env.waitForText(element)
         } 
-      }
         
-      case r"""I wait for (.+?)$element text""" => env.withScreenShot {
+      case r"""I wait for (.+?)$element text""" => 
         env.waitUntil(s"Waiting for $element text") {
           env.waitForText(element)
         }
-      }
         
-      case r"""I wait for (.+?)$element for (.+?)$seconds second(?:s?)""" => env.withScreenShot {
+      case r"""I wait for (.+?)$element for (.+?)$seconds second(?:s?)""" => 
         env.waitUntil(s"Waiting for $element after $seconds second(s)", seconds.toInt) {
           locateOpt(env, element).isDefined
         }
-      }
         
-      case r"""I wait for (.+?)$$$element""" => env.withScreenShot {
+      case r"""I wait for (.+?)$$$element""" => 
         env.waitUntil(s"Waiting for $element") {
           locateOpt(env, element).isDefined
         }
-      }
       
       case r"""I wait ([0-9]+?)$duration second(?:s?) when (.+?)$element is (clicked|submitted|checked|unchecked|selected|typed|entered|cleared)$$$event""" =>
         env.scopes.set(s"$element/${WebElementActions.EventToAction(event)}/wait", duration)
@@ -171,21 +154,18 @@ trait WebEngine extends EvalEngine[WebEnvContext] with WebElementLocator with Sy
       case r"""I wait until (.+?)$condition when (.+?)$element is (clicked|submitted|checked|unchecked|selected|typed|entered|cleared)$$$event""" =>
         env.scopes.set(s"$element/${WebElementActions.EventToAction(event)}/condition", condition)
         
-      case r"""I wait until "(.+?)$javascript"""" => env.withScreenShot {
+      case r"""I wait until "(.+?)$javascript"""" => 
         env.waitUntil(s"Waiting until $javascript") {
           env.executeScript(s"return $javascript").asInstanceOf[Boolean]
         }
-      }
         
-      case r"""I wait until (.+?)$$$condition""" => env.withScreenShot {
+      case r"""I wait until (.+?)$$$condition""" => 
         env.waitUntil(s"Waiting until $condition") {
           env.executeScript(s"return ${env.scopes.get(s"$condition/javascript")}").asInstanceOf[Boolean]
         }
-      }
         
-      case r"""I wait ([0-9]+?)$duration second(?:s?)""" => env.withScreenShot {
+      case r"""I wait ([0-9]+?)$duration second(?:s?)""" => 
         Thread.sleep(duration.toLong * 1000)
-      }
       
       case r"""my (.+?)$name (?:property|setting) (?:is|will be) "(.*?)"$$$value""" =>
         Settings.add(name, value)
@@ -201,10 +181,9 @@ trait WebEngine extends EvalEngine[WebEnvContext] with WebElementLocator with Sy
         env.scopes.set(s"$attribute/xpath/targetType", targetType)
         env.scopes.set(s"$attribute/xpath/expression", expression)
       
-      case r"""(.+?)$attribute (?:is|will be) defined in (.+?)$source by regex "(.+?)"$$$expression""" => env.withScreenShot {
+      case r"""(.+?)$attribute (?:is|will be) defined in (.+?)$source by regex "(.+?)"$$$expression""" => 
         env.scopes.set(s"$attribute/regex/source", source)
         env.scopes.set(s"$attribute/regex/expression", expression)
-      }
       
       case r"""(.+?)$attribute (?:is|will be) "(.*?)"$$$value""" => 
         env.featureScope.set(attribute, value)
@@ -212,47 +191,40 @@ trait WebEngine extends EvalEngine[WebEnvContext] with WebElementLocator with Sy
       case r"""(.+?)$target (?:is|will be) (.+?)$$$source""" => 
         env.featureScope.set(target, env.getBoundValue(source))
        
-      case r"""I clear (.+?)$$$element""" => env.withScreenShot {
+      case r"""I clear (.+?)$$$element""" => 
         env.clearText(element)
-      }
       
-      case r"""I press enter in (.+?)$$$element""" => env.withScreenShot {
+      case r"""I press enter in (.+?)$$$element""" => 
         locate(env, element).sendKeys(Keys.RETURN)
         env.bindAndWait(element, "enter", "true")
-      }
 
-      case r"""I (enter|type)$action "(.*?)"$value in (.+?)$$$element""" => env.withScreenShot {
+      case r"""I (enter|type)$action "(.*?)"$value in (.+?)$$$element""" => 
         env.sendKeys(element, value, true, action == "enter")
-      }
         
-      case r"""I (enter|type)$action (.+?)$attribute in (.+?)$$$element""" => env.withScreenShot {
+      case r"""I (enter|type)$action (.+?)$attribute in (.+?)$$$element""" => 
         env.sendKeys(element, env.getAttribute(attribute), true, action == "enter")
-      }
         
-      case r"""I select the (\d+?)$position(st|nd|rd|th)$suffix option in (.+?)$$$element""" => env.withScreenShot {
+      case r"""I select the (\d+?)$position(st|nd|rd|th)$suffix option in (.+?)$$$element""" => 
         env.waitUntil(s"Selecting '${position}${suffix}' option in $element") {
           env.selectByIndex(element, position.toInt - 1)
           true
         }
-      }
         
-      case r"""I select "(.*?)"$value in (.+?)$$$element""" => env.withScreenShot {
+      case r"""I select "(.*?)"$value in (.+?)$$$element""" => 
         env.waitUntil(s"Selecting '$value' in $element") {
           env.selectByVisibleText(element, value)
           true
         }
-      }
         
-      case r"""I select (.+?)$attribute in (.+?)$$$element""" => env.withScreenShot {
+      case r"""I select (.+?)$attribute in (.+?)$$$element""" => 
         env.getAttribute(attribute) tap { value => 
           env.waitUntil(s"Selecting '$value' in $element") {
             env.selectByVisibleText(element, value)
             true
           }
         }
-      }
         
-      case r"""I (click|submit|check|uncheck)$action (.+?)$$$element""" => env.withScreenShot {
+      case r"""I (click|submit|check|uncheck)$action (.+?)$$$element""" => 
         env.waitUntil {
           env.withWebElement(action, element) { webElement =>
             action match {
@@ -265,7 +237,6 @@ trait WebEngine extends EvalEngine[WebEnvContext] with WebElementLocator with Sy
           }
           true
         }
-      }
         
       case r"""I (?:highlight|locate) (.+?)$$$element""" =>
         env.highlight(locate(env, element))

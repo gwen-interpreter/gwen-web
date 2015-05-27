@@ -150,10 +150,12 @@ class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with
     * @param element the element to highlight
     */
   def highlight(element: WebElement) {
-    val msecs = WebSettings`gwen.web.throttle.msecs`
-    val style = WebSettings.`gwen.web.highlight.style` 
-    executeScript(s"element = arguments[0]; type = element.getAttribute('type'); if (('radio' == type || 'checkbox' == type) && element.parentElement.getElementsByTagName('input').length == 1) { element = element.parentElement; } original_style = element.getAttribute('style'); element.setAttribute('style', original_style + '; ${style}'); setTimeout(function() { element.setAttribute('style', original_style); }, ${msecs});", element)
-    Thread.sleep(msecs);
+    withScreenShot {
+      val msecs = WebSettings`gwen.web.throttle.msecs`
+      val style = WebSettings.`gwen.web.highlight.style` 
+      executeScript(s"element = arguments[0]; type = element.getAttribute('type'); if (('radio' == type || 'checkbox' == type) && element.parentElement.getElementsByTagName('input').length == 1) { element = element.parentElement; } original_style = element.getAttribute('style'); element.setAttribute('style', original_style + '; ${style}'); setTimeout(function() { element.setAttribute('style', original_style); }, ${msecs});", element)
+      Thread.sleep(msecs);
+    }
   }
   
   /**
@@ -217,7 +219,7 @@ class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with
     * Invokes the given function `f` and then captures the current browser
     * screenshot if the `gwen.web.catpure.screenshots` setting is set.
     */
-  def withScreenShot(f: => Unit): Unit = { 
+  private def withScreenShot(f: => Unit): Unit = { 
     f
     if (WebSettings.`gwen.web.capture.screenshots`) {
       Thread.sleep(WebSettings.`gwen.web.throttle.msecs`)
