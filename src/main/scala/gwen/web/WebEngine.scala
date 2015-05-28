@@ -63,11 +63,11 @@ trait WebEngine extends EvalEngine[WebEnvContext] with WebElementLocator with Sy
         
       case r"""I navigate to the (.+?)$$$page""" => 
         env.scopes.addScope(page)
-        env.webDriver.get(env.getAttribute("url"))
+        env.withWebDriver{ _.get(env.getAttribute("url")) }
         
       case r"""I navigate to "(.+?)"$$$url""" => 
         env.scopes.addScope(url)
-        env.webDriver.get(url)
+        env.withWebDriver { _.get(url) }
       
       case r"""the url will be defined by (?:property|setting) "(.+?)"$$$name""" => 
         env.scopes.set("url", Settings.get(name))
@@ -117,10 +117,10 @@ trait WebEngine extends EvalEngine[WebEnvContext] with WebElementLocator with Sy
         }
       
       case r"""I capture the current URL""" => 
-        env.featureScope.set("the current URL", env.webDriver.getCurrentUrl())
+        env.featureScope.set("the current URL", env.withWebDriver({ _.getCurrentUrl() })(false))
       
       case r"""I capture the current URL as (.+?)$name""" => 
-        env.featureScope.set(name, env.webDriver.getCurrentUrl())
+        env.featureScope.set(name, env.withWebDriver({_.getCurrentUrl() })(false))
       
       case r"""I capture (.+?)$element as (.+?)$attribute""" => 
         env.featureScope.set(attribute, env.getBoundValue(element))

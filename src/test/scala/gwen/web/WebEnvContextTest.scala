@@ -66,14 +66,14 @@ class WebEnvContextTest extends FlatSpec with Matchers with MockitoSugar {
   "Resetting new web env context after referencing webdriver" should "quit the browser" in {
     val mockDriverManager = mock[DriverManager]
     val env = newEnv(mockDriverManager)
-    env.webDriver
+    env.withWebDriver { webDriver => webDriver }
     env.reset()
     verify(mockDriverManager).quit()
   }
   
   def newEnv(browser: DriverManager) = {
    new WebEnvContext(new ScopedDataStack()) {
-     override def webDriver: WebDriver = mock[WebDriver]
+     override def withWebDriver[T](f: WebDriver => T)(implicit takeScreenShot: Boolean = false): T = f(mock[WebDriver])
      override def close() { browser.quit() }
    }
   }

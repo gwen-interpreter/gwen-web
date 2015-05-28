@@ -32,6 +32,8 @@ import org.scalatest.Matchers
 import org.scalatest.mock.MockitoSugar
 import gwen.Settings
 import gwen.UserOverrides
+import gwen.eval.EnvContext
+import gwen.eval.ScopedDataStack
 
 class DriverManagerTest extends FlatSpec with Matchers with MockitoSugar {
   
@@ -43,28 +45,28 @@ class DriverManagerTest extends FlatSpec with Matchers with MockitoSugar {
   
   "Firefox setting" should "load firefox driver" in {
     val manager = newManager("firefox")
-    manager.webDriver should be (mockFirefoxDriver)
+    manager.withWebDriver { _ should be (mockFirefoxDriver) }
   }
   
   "Chrome setting" should "load chrome driver" in {
     val manager = newManager("chrome")
-    manager.webDriver should be (mockChromeDriver)
+    manager.withWebDriver { _ should be (mockChromeDriver) }
   }
   
   "IE setting" should "load IE driver" in {
     val manager = newManager("ie")
-    manager.webDriver should be (mockIeDriver)
+    manager.withWebDriver { _ should be (mockIeDriver) }
   }
   
   "Safari setting" should "load safari driver" in {
     val manager = newManager("safari")
-    manager.webDriver should be (mockSafariDriver)
+    manager.withWebDriver { _ should be (mockSafariDriver) }
   }
   
   "Hub URL setting" should "load remote web driver" in {
     withSetting("gwen.web.remote.url", "http://localhost:44466/wd/hub") {
       val manager = newManager("chrome")
-      val driver = manager.webDriver.asInstanceOf[RemoteWebDriver]
+      val driver = manager.withWebDriver { _.asInstanceOf[RemoteWebDriver] }
       driver should be (mockRemoteDriver)
       val capabilities = driver.getCapabilities
       capabilities.getCapability(ChromeOptions.CAPABILITY).getClass should be (classOf[ChromeOptions])
@@ -74,32 +76,32 @@ class DriverManagerTest extends FlatSpec with Matchers with MockitoSugar {
   
   "Web driver" should "quit on manager quit" in {
     val manager = newManager()
-    val mockWebDriver = manager.webDriver
+    val mockWebDriver = manager.withWebDriver { webDriver => webDriver }
     manager.quit()
     verify(mockWebDriver).quit()
   }
   
   "Quitting manager" should "create new webdriver on subsequent access" in {
     val manager = newManager()
-    val webDriver1 = manager.webDriver
+    val webDriver1 = manager.withWebDriver { webDriver => webDriver }
     manager.quit()
     verify(webDriver1).quit()
-    val webDriver2 = manager.webDriver
+    val webDriver2 = manager.withWebDriver { webDriver => webDriver }
     webDriver1 should not be (webDriver2)
   }
   
   "Accessing web driver without closing manager" should "return the same web driver instance" in {
     
     val manager = newManager()
-    val webDriver1 = manager.webDriver
-    val webDriver2 = manager.webDriver
+    val webDriver1 = manager.withWebDriver { webDriver => webDriver }
+    val webDriver2 = manager.withWebDriver { webDriver => webDriver }
     webDriver1 should be (webDriver2)
   }
   
   "Quitting the manager multiple times" should "quit the web driver only once" in {
 
     val manager = newManager()
-    val mockWebDriver = manager.webDriver
+    val mockWebDriver = manager.withWebDriver { webDriver => webDriver }
 
     // calling quit multiple times on manager should call quit on web driver just once
     manager.quit()
@@ -114,7 +116,7 @@ class DriverManagerTest extends FlatSpec with Matchers with MockitoSugar {
     verify(mockWebDriver, never()).quit()
   }
   
-  private def newManager(driverName: String): DriverManager = new DriverManager() {
+  private def newManager(driverName: String): DriverManager = new EnvContext(new ScopedDataStack) with DriverManager {
     override private[web] def chrome(): WebDriver = mockChromeDriver
     override private[web] def firefox(): WebDriver = mockFirefoxDriver
     override private[web] def ie(): WebDriver = mockIeDriver
@@ -129,11 +131,11 @@ class DriverManagerTest extends FlatSpec with Matchers with MockitoSugar {
     }
   }
   
-  private def newManager(mockDriver: WebDriver): DriverManager = new DriverManager() {
+  private def newManager(mockDriver: WebDriver): DriverManager = new EnvContext(new ScopedDataStack) with DriverManager {
     override private[web] def loadWebDriver: WebDriver = mockDriver
   }
   
-  private def newManager(): DriverManager = new DriverManager() {
+  private def newManager(): DriverManager = new EnvContext(new ScopedDataStack) with DriverManager {
     override private[web] def loadWebDriver: WebDriver = mock[WebDriver]
   }
   

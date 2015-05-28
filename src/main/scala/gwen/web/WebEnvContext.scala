@@ -68,12 +68,14 @@ class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with
     * @param params optional parameters to the script
     */
   def executeScript(javascript: String, params: Any*): Any = 
-    webDriver.asInstanceOf[JavascriptExecutor].executeScript(javascript, params.map(_.asInstanceOf[AnyRef]) : _*) tap { result =>
-      logger.debug(s"Evaluated javascript: $javascript, result='$result'")
-      if (result.isInstanceOf[Boolean] && result.asInstanceOf[Boolean]) {
-        Thread.sleep(WebSettings.`gwen.web.throttle.msecs`)
+    withWebDriver({ webDriver => 
+      webDriver.asInstanceOf[JavascriptExecutor].executeScript(javascript, params.map(_.asInstanceOf[AnyRef]) : _*) tap { result =>
+        logger.debug(s"Evaluated javascript: $javascript, result='$result'")
+        if (result.isInstanceOf[Boolean] && result.asInstanceOf[Boolean]) {
+          Thread.sleep(WebSettings.`gwen.web.throttle.msecs`)
+        }
       }
-    }
+    })(false)
   
   /**
     * Waits for a given condition to be true. Errors on time out 
@@ -128,16 +130,18 @@ class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with
     * @param condition the boolean condition to wait for (until true)
     */
   private def waitUntil(reason: Option[String], timeoutSecs: Long)(condition: => Boolean) {
-    try {
-      reason foreach { logger.info(_) }
-      new WebDriverWait(webDriver, timeoutSecs).until(
-        new ExpectedCondition[Boolean] {
-          override def apply(driver: WebDriver): Boolean = condition
-        }
-      )
-    } catch {
-      case e: TimeoutException => throw new TimeoutOnWaitException(reason.getOrElse("waiting"));
-    }
+    withWebDriver({ webDriver =>
+      try {
+        reason foreach { logger.info(_) }
+        new WebDriverWait(webDriver, timeoutSecs).until(
+          new ExpectedCondition[Boolean] {
+            override def apply(driver: WebDriver): Boolean = condition
+          }
+        )
+      } catch {
+        case e: TimeoutException => throw new TimeoutOnWaitException(reason.getOrElse("waiting"));
+      }
+    })(false)
   }
   
   /**
@@ -150,12 +154,10 @@ class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with
     * @param element the element to highlight
     */
   def highlight(element: WebElement) {
-    withScreenShot {
-      val msecs = WebSettings`gwen.web.throttle.msecs`
-      val style = WebSettings.`gwen.web.highlight.style` 
-      executeScript(s"element = arguments[0]; type = element.getAttribute('type'); if (('radio' == type || 'checkbox' == type) && element.parentElement.getElementsByTagName('input').length == 1) { element = element.parentElement; } original_style = element.getAttribute('style'); element.setAttribute('style', original_style + '; ${style}'); setTimeout(function() { element.setAttribute('style', original_style); }, ${msecs});", element)
-      Thread.sleep(msecs);
-    }
+    val msecs = WebSettings`gwen.web.throttle.msecs`
+    val style = WebSettings.`gwen.web.highlight.style` 
+    executeScript(s"element = arguments[0]; type = element.getAttribute('type'); if (('radio' == type || 'checkbox' == type) && element.parentElement.getElementsByTagName('input').length == 1) { element = element.parentElement; } original_style = element.getAttribute('style'); element.setAttribute('style', original_style + '; ${style}'); setTimeout(function() { element.setAttribute('style', original_style); }, ${msecs});", element)
+    Thread.sleep(msecs);
   }
   
   /**
@@ -167,9 +169,6 @@ class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with
   override def createErrorAttachments(failure: Failed): List[(String, File)] =
     captureScreenshot :: super.createErrorAttachments(failure)
     
-  /** Captures and returns the current screenshot as an attachment (name-file pair). */
-  private def captureScreenshot: (String, File) = ("Screenshot", webDriver.asInstanceOf[TakesScreenshot].getScreenshotAs(OutputType.FILE))
-   
   /**
     * Performs a function on a web element and transparently re-locates elements and 
     * re-attempts the function if the web driver throws an exception.
@@ -210,23 +209,16 @@ class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with
            case "uncheck" => "Unchecking"
          }} $element")
        }
-       f(webElement)
+       f(webElement) tap { result =>
+         if (WebSettings.`gwen.web.capture.screenshots`) {
+           Thread.sleep(WebSettings.`gwen.web.throttle.msecs`)
+           addAttachment(captureScreenshot)
+         }
+       }
      } catch {
        case _: WebDriverException => f(locate(this, element))
      }
 
-  /**
-    * Invokes the given function `f` and then captures the current browser
-    * screenshot if the `gwen.web.catpure.screenshots` setting is set.
-    */
-  private def withScreenShot(f: => Unit): Unit = { 
-    f
-    if (WebSettings.`gwen.web.capture.screenshots`) {
-      Thread.sleep(WebSettings.`gwen.web.throttle.msecs`)
-      addAttachment(captureScreenshot)
-    }
-  }
-  
   /**
     * Interpolates string expressions in the given step.
     * 
@@ -352,9 +344,11 @@ class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with
   }
   
   /** Gets the title of the current page in the browser.*/
-  def getTitle: String = webDriver.getTitle() tap { title =>
-    bindAndWait("page", "title", title)
-  }
+  def getTitle: String = withWebDriver({ webDriver => 
+    webDriver.getTitle() tap { title =>
+      bindAndWait("page", "title", title)
+    }
+  })(false)
   
   /**
     * Sends a value to a web element (one character at a time).

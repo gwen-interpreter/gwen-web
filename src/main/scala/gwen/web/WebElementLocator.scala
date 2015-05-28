@@ -108,7 +108,7 @@ trait WebElementLocator extends LazyLogging {
     * @param env the web environment context
     * @param by the by locator
     */
-  private def getElement(env: WebEnvContext, element: String, by: By): Option[WebElement] = Option(env.webDriver.findElement(by)) map {
+  private def getElement(env: WebEnvContext, element: String, by: By): Option[WebElement] = Option(env.withWebDriver({ _.findElement(by) })(false)) map {
     moveTo(env, element, _)
   }
     

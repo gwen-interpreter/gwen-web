@@ -16,29 +16,38 @@
 
 package gwen.web
 
+import java.io.File
+import java.net.URL
 import java.util.concurrent.TimeUnit
+
+import org.openqa.selenium.OutputType
+import org.openqa.selenium.TakesScreenshot
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.chrome.ChromeOptions
 import org.openqa.selenium.firefox.FirefoxDriver
 import org.openqa.selenium.firefox.FirefoxProfile
 import org.openqa.selenium.ie.InternetExplorerDriver
-import org.openqa.selenium.safari.SafariDriver
-import com.typesafe.scalalogging.slf4j.LazyLogging
-import gwen.Predefs.Kestrel
-import org.openqa.selenium.remote.RemoteWebDriver
+import org.openqa.selenium.remote.CapabilityType
 import org.openqa.selenium.remote.DesiredCapabilities
 import org.openqa.selenium.remote.HttpCommandExecutor
-import java.net.URL
-import org.openqa.selenium.remote.CapabilityType
+import org.openqa.selenium.remote.RemoteWebDriver
+import org.openqa.selenium.safari.SafariDriver
+
+import com.typesafe.scalalogging.slf4j.LazyLogging
+
+import gwen.Predefs.Kestrel
+import gwen.eval.EnvContext
 
 /** Provides access to the web driver used to drive the browser. */
-trait DriverManager extends LazyLogging {
+trait DriverManager extends LazyLogging { 
+  env: EnvContext =>
 
   /** Web driver (lazily loaded). */
   private[web] var _webDriver: Option[WebDriver] = None
   
-  def webDriver: WebDriver = _webDriver match {
+  /** Provides private access to the web driver */
+  private def webDriver: WebDriver = _webDriver match {
     case None => 
       _webDriver = Some(loadWebDriver)
       _webDriver.get
@@ -51,6 +60,29 @@ trait DriverManager extends LazyLogging {
     _webDriver foreach { _.quit() } 
     _webDriver = None
   }
+   
+  /**
+    * Invokes a function that performs an operation on the web driver and
+    * conditionally captures the current screenshot if the specified 
+    * takeScreenShot is true and the gwen.web.capture.screenshots setting 
+    * is true.
+    * 
+    * @param f the function to perform
+    * @param takeScreenShot true to take screenshot after performing the function
+    *                       (and if gwen.web.capture.screenshots setting is true)
+    */
+  def withWebDriver[T](f: WebDriver => T)(implicit takeScreenShot: Boolean = true): T = {
+    f(webDriver) tap { driver =>
+      if (takeScreenShot && WebSettings.`gwen.web.capture.screenshots`) {
+        Thread.sleep(WebSettings.`gwen.web.throttle.msecs`)
+        env.addAttachment(captureScreenshot)
+      }
+    }
+  }
+  
+  /** Captures and returns the current screenshot as an attachment (name-file pair). */
+  private[web] def captureScreenshot: (String, File) =  
+    ("Screenshot", webDriver.asInstanceOf[TakesScreenshot].getScreenshotAs(OutputType.FILE))
   
   /** Loads the selenium webdriver. */
   private[web] def loadWebDriver: WebDriver = withGlobalSettings {
@@ -76,18 +108,6 @@ trait DriverManager extends LazyLogging {
     }
     capabilities.setJavascriptEnabled(true)
 
-    //TODO
-    //profile override if the useragent is set.
-    //set the untrusted certificates
-    //etc..
-    //mock the drivers, write tests
-    //capabilities.setCapability("record-video", true)
-    //capabilities.setCapability("build", sys.env("TRAVIS_BUILD_NUMBER"))
-    //capabilities.setCapability("tunnel-identifier", sys.env("TRAVIS_JOB_NUMBER"))
-    //val username = sys.env("SAUCE_USERNAME")
-    //val accessKey = sys.env("SAUCE_ACCESS_KEY")
-    // val hubURL = new URL(s"http://$username:$accessKey@localhost:4445/wd/hub")
-    //val hubURL = new URL(s"http://localhost:44466/wd/hub")
     remote(addr, capabilities)
   }
   
