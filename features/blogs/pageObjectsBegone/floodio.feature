@@ -31,7 +31,7 @@
       Then I am on the step 3 page
      Given I capture the largest order value
        And I type the largest order value in the largest order value field
-       And I click the largest order value
+       And I click the largest order value radio button
       When I click the next button
       Then I am on the step 4 page
       When I click the next button
