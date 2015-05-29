@@ -188,9 +188,6 @@ trait WebEngine extends EvalEngine[WebEnvContext] with WebElementLocator with Sy
       case r"""(.+?)$attribute (?:is|will be) "(.*?)"$$$value""" => 
         env.featureScope.set(attribute, value)
         
-      case r"""(.+?)$target (?:is|will be) (.+?)$$$source""" => 
-        env.featureScope.set(target, env.getBoundValue(source))
-       
       case r"""I clear (.+?)$$$element""" => 
         env.clearText(element)
       
