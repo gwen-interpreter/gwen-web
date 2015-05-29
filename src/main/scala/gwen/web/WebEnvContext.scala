@@ -41,6 +41,7 @@ import gwen.eval.ScopedDataStack
 import gwen.eval.support.RegexSupport
 import gwen.eval.support.XPathSupport
 import gwen.eval.support.InterpolationSupport
+import gwen.dsl.SpecType
 
 /**
   * Defines the web environment context. This includes the configured selenium web
@@ -225,7 +226,11 @@ class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with
     * @param step the step to resolve
     * @return the resolved step
     */
-  override def parse(step: Step): Step = Step(step, interpolate(step.expression)(getBoundValue))
+  override def parse(step: Step): Step = 
+    if (SpecType.feature.equals(specType)) 
+      Step(step, interpolate(step.expression)(getBoundValue)) 
+    else 
+      step
   
   /**
     * Gets a bound value from memory. A search for the value is made in 
@@ -297,17 +302,18 @@ class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with
             case None | Some("") => scopes.getOpt(s"$name/regex") match {
               case None | Some("") => scopes.get(name)
               case _ =>
-                val source = getBoundValue(scopes.get(s"$name/regex/source"))
-                val expression = getBoundValue(scopes.get(s"$name/regex/expression"))
+                val source = interpolate(getBoundValue(scopes.get(s"$name/regex/source")))(getBoundValue)
+                val expression = interpolate(getBoundValue(scopes.get(s"$name/regex/expression")))(getBoundValue)
                 extractByRegex(expression, source)
             }
             case _ =>
-              val source = getBoundValue(scopes.get(s"$name/xpath/source"))
-              val targetType = getBoundValue(scopes.get(s"$name/xpath/targetType"))
-              val expression = getBoundValue(scopes.get(s"$name/xpath/expression"))
+              val source = interpolate(getBoundValue(scopes.get(s"$name/xpath/source")))(getBoundValue)
+              val targetType = interpolate(getBoundValue(scopes.get(s"$name/xpath/targetType")))(getBoundValue)
+              val expression = interpolate(getBoundValue(scopes.get(s"$name/xpath/expression")))(getBoundValue)
               evaluateXPath(expression, source, XMLNodeType.withName(targetType))
           }
-          case Some(javascript) => executeScript(s"return $javascript").toString
+          case Some(javascript) => 
+            executeScript(s"return ${interpolate(javascript)(getBoundValue)}").toString
         }
         case Some(value) => value
       }

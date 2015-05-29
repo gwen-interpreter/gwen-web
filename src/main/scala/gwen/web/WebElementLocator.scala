@@ -69,16 +69,17 @@ trait WebElementLocator extends LazyLogging {
     val locatorBinding = s"$element/locator";
     env.scopes.getOpt(locatorBinding) match {
       case Some(locator) =>
-        val expressionBinding = s"$element/locator/$locator"
+        val expressionBinding = env.interpolate(s"$element/locator/$locator")(env.getBoundValue)
         env.scopes.getOpt(expressionBinding) match {
             case Some(expression) =>
+              val expr = env.interpolate(expression)(env.getBoundValue)
               logger.info(s"Locating $element")
               try {
-                findElementByLocator(env, element, locator, expression)
+                findElementByLocator(env, element, locator, expr)
               } catch {
                 case e: WebDriverException =>
                   // attempt to locate one more time on web driver exception
-                  findElementByLocator(env, element, locator, expression)
+                  findElementByLocator(env, element, locator, expr)
               }
             case None => throw new LocatorBindingException(element, s"locator expression binding not bound: ${expressionBinding}")
           }

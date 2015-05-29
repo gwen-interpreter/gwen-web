@@ -33,10 +33,9 @@ Scenario: Configure step 2 page
 
 Scenario: Configure step 3 page
      When I am on the step 3 page
-     Then the largest order value field can be located by id "challenger_largest_order"
-     And the largest order value query is "$('.radio:contains(' + Math.max.apply(Math, $.map($('.radio'), function(x) { return parseInt($(x).text()); })) + ')')"
-     And the largest order value can be located by javascript "${the largest order value query}.get(0);"
-     And the largest order value radio button can be located by javascript "${the largest order value query}.find('input').get(0);"
+     Then the largest order value is defined by javascript "Math.max.apply(Math, $.map($('.radio'), function(x) { return parseInt($(x).text()); }))"
+      And the largest order value field can be located by id "challenger_largest_order"
+      And the largest order value radio button can be located by javascript "$('.radio:contains(${the largest order value}) input').get(0);"
 
 Scenario: Configure step 4 page
    # noop - this page only has a next button (we have already defined a common locator for it above)

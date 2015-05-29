@@ -19,7 +19,7 @@ package gwen.web
 class WebInterpreterMultipleSequentialTest extends WebInterpreterTest {
 
   "Multiple test features" should "evaluate in sequence" in {
-    evaluate(List("features/blogs/pageObjectsBegone", "features/blogs/automationByMeta"), false, "target/report-multi-sequential")
+    evaluate(List("features/floodio", "features/blogs/pageObjectsBegone", "features/blogs/automationByMeta"), false, "target/report-multi-sequential")
   }
   
 }
