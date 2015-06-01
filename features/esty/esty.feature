@@ -15,9 +15,9 @@
 #
 
  Feature: Information is available for the user to find out about esty
-     As a user who knows nothing about esty
   
   Scenario: verify a user is able to find out information about esty
       Given I am an anonomous user wanting to shop for an item
        When I want to find out more about Esty
        Then I am presented with About information
+
