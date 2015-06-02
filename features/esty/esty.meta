@@ -28,7 +28,8 @@
 
   @StepDef
   Scenario: the about information is selected
-     Given the About link can be located by javascript "$('#footer-about-link-desktop').get(0)"
+     Given I wait until "function() { $('#footer-about-link-desktop').get(0).scrollIntoView(true); return true; }()"
+       And the About link can be located by javascript "$('#footer-about-link-desktop').get(0)"
        And I wait 1 second
        And I click the About link
        And I wait 1 second
@@ -36,7 +37,7 @@
   @StepDef 
   Scenario: I want to find out more about Esty
       Given the about information is selected
-        And I wait until "$('h2:last').text().trim() == 'About Etsy'"
+        And I wait until "$('.about-banner').text().trim() == 'About Etsy'"
        Then I am on the About page
 
   @StepDef
