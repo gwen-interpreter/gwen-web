@@ -13,8 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-    # Given I wait until "function() { $('#footer-about-link-desktop').get(0).scrollIntoView(true); sleep 100; return true; }()"
-     #Given the About link can be located by javascript "$('#footer-about-link-desktop').get(0)"
 
    Feature: Etsy
   
