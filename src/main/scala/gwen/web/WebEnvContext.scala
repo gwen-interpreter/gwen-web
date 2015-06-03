@@ -424,6 +424,26 @@ class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with
     text != null && text.length > 0
   }
   
+  /**
+   * Scrolls an element into view.
+   * 
+   * @param element the name of the element to scroll to
+   * @param scrollTo scroll element into view, options are: top or bottom
+   */
+  def scrollIntoView(element: String, scrollTo: ScrollTo.Value) {
+    withWebElement(element) { scrollIntoView(_, scrollTo) }
+  }
+  
+  /**
+   * Scrolls the given web element into view.
+   * 
+   * @param webElement the web element to scroll to
+   * @param scrollTo scroll element into view, options are: top or bottom
+   */
+  def scrollIntoView(webElement: WebElement, scrollTo: ScrollTo.Value) {
+    executeScript(s"var elem = arguments[0]; if (typeof elem !== 'undefined' && elem != null) { elem.scrollIntoView(${scrollTo == ScrollTo.top}); }", webElement)
+  }
+  
 }
 
 /** Thrown when a fluent wait times out. */

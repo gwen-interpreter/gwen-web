@@ -40,10 +40,11 @@ trait WebElementLocator extends LazyLogging {
     *  @param element the name of the element to locate
     *  @return the found element (errors if not found)
     */
-  def locate(env: WebEnvContext, element: String): WebElement = locateElement(env, element) match {
-    case Some(webElement) => webElement
-    case None => throw new NoSuchElementException(s"Web element not found: ${element}")
-  }
+  def locate(env: WebEnvContext, element: String): WebElement = 
+    locateElement(env, element) match {
+      case Some(webElement) => webElement
+      case None => throw new NoSuchElementException(s"Web element not found: ${element}")
+    }
   
   /**
    * Locates a bound web element.
@@ -89,7 +90,7 @@ trait WebElementLocator extends LazyLogging {
   
   /** Finds an element by the given locator expression. */
   private def findElementByLocator(env: WebEnvContext, element: String, locator: String, expression: String): Option[WebElement] = {
-    locator match {
+    (locator match {
       case "id" => getElement(env, element, By.id(expression))
       case "name" => getElement(env, element, By.name(expression))
       case "tag name" => getElement(env, element, By.tagName(expression))
@@ -100,6 +101,13 @@ trait WebElementLocator extends LazyLogging {
       case "partial link text" => getElement(env, element, By.partialLinkText(expression))
       case "javascript" => getElementByJavaScript(env, element, s"$expression")
       case _ => throw new LocatorBindingException(element, s"unsupported locator: ${locator}")
+    }) tap { optWebElement =>
+      optWebElement foreach { webElement =>
+        if (!webElement.isDisplayed()) {
+        	env.scrollIntoView(webElement, ScrollTo.top)
+        }
+        env.highlight(webElement)
+      }
     }
   }
   
@@ -109,9 +117,8 @@ trait WebElementLocator extends LazyLogging {
     * @param env the web environment context
     * @param by the by locator
     */
-  private def getElement(env: WebEnvContext, element: String, by: By): Option[WebElement] = Option(env.withWebDriver({ _.findElement(by) })(false)) map {
-    moveTo(env, element, _)
-  }
+  private def getElement(env: WebEnvContext, element: String, by: By): Option[WebElement] = 
+    Option(env.withWebDriver({ _.findElement(by) })(false))
     
   /**
     * Gets a web element by the given javascript expression. If the web element is not 
@@ -124,7 +131,7 @@ trait WebElementLocator extends LazyLogging {
   private def getElementByJavaScript(env: WebEnvContext, element: String, javascript: String): Option[WebElement] = {
     var elem: Option[WebElement] = None
     env.waitUntil {
-      elem = (env.executeScript(s"return $javascript") match {
+      elem = env.executeScript(s"return $javascript") match {
         case elems: ArrayList[_] => 
           if (!elems.isEmpty()) Option(elems.get(0).asInstanceOf[WebElement])
           else None
@@ -132,25 +139,10 @@ trait WebElementLocator extends LazyLogging {
           case Some(elem) => Option(elem.asInstanceOf[WebElement])
           case None => None
         }
-      }) map { webElement =>
-        moveTo(env, element, webElement)
       }
       elem.isDefined
     }
     elem
-  }
-  
-  /**
-    * Physically scrolls to the given web element so it is visible in the browser.
-    * 
-    * @param env the web environment context
-    * @param webElement the webElement to scroll to (if not None)
-    */
-  private def moveTo(env: WebEnvContext, element: String, webElement: WebElement): WebElement = {
-    if (!webElement.isDisplayed()) {
-      env.executeScript("var elem = arguments[0]; if (typeof elem !== 'undefined' && elem != null) { elem.scrollIntoView(true); }")
-    }
-    webElement tap { env.highlight(_) } 
   }
   
 }

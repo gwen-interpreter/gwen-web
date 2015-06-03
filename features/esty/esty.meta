@@ -26,11 +26,9 @@
 
   @StepDef
   Scenario: the about information is selected
-     Given I wait until "function() { $('#footer-about-link-desktop').get(0).scrollIntoView(true); return true; }()"
-       And the About link can be located by javascript "$('#footer-about-link-desktop').get(0)"
-       And I wait 1 second
+     Given the About link can be located by javascript "$('#footer-about-link-desktop').get(0)"
+       And I scroll the About link into view
        And I click the About link
-       And I wait 1 second
   
   @StepDef 
   Scenario: I want to find out more about Esty
