@@ -27,7 +27,7 @@
   @StepDef
   Scenario: the about information is selected
      Given the About link can be located by javascript "$('#footer-about-link-desktop').get(0)"
-       And I scroll the About link into view
+       And I scroll to the top of the About link
        And I click the About link
   
   @StepDef 
