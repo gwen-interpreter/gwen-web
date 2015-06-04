@@ -69,10 +69,7 @@ trait WebEngine extends EvalEngine[WebEnvContext] with WebElementLocator with Sy
         env.scopes.addScope(url)
         env.withWebDriver { _.get(url) }
         
-      case r"""I scroll (.+?)$element into view""" =>
-        env.scrollIntoView(element, ScrollTo.top)
-        
-      case r"""I scroll (.+?)$element into (top|bottom)$position of view""" =>
+      case r"""I scroll to (top|bottom)$position of (.+?)$$$element""" =>
         env.scrollIntoView(element, ScrollTo.withName(position))
       
       case r"""the url will be defined by (?:property|setting) "(.+?)"$$$name""" => 
