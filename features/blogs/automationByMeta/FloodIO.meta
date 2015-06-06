@@ -29,9 +29,9 @@
   
   @StepDef 
   Scenario: I should be on the start page
-      Given I wait until "$('h2').text().trim() == 'Welcome'"
+      Given I wait until "$('h2').text().trim() == 'Welcome to our Script Challenge'"
        Then I am on the start page
-        And the heading should be "Welcome"
+        And the heading should be "Welcome to our Script Challenge"
         And the Start button can be located by name "commit"
 
   @StepDef
@@ -47,8 +47,8 @@
        Then I am on the step 3 page
         And the heading should be "Step 3"
         And the largest order value is defined by javascript "Math.max.apply(Math, $.map($('.radio'), function(x) { return parseInt($(x).text()); }))"
-        And the largest order value field can be located by id "challenger_largest_order"
-        And the largest order value radio button can be located by javascript "$('.radio:contains(${the largest order value}) input').get(0);"
+        And the largest order input field can be located by id "challenger_largest_order"
+        And the largest order radio button can be located by javascript "$('.radio:contains(${the largest order value}) input').get(0);"
       
   @StepDef  
   Scenario: I should be on the step 4 page
@@ -72,12 +72,11 @@
      
   @StepDef
   Scenario: I select and enter the largest order value
-      Given I type the largest order value in the largest order value field
-        And I click the largest order value radio button
+      Given I type the largest order value in the largest order input field
+        And I click the largest order radio button
   
   @StepDef
   Scenario: I enter the one time token
       Given I wait for the one time token text
-        And I capture the one time token
         And I type the one time token in the one time token field
         

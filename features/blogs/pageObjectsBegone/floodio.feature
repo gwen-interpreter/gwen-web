@@ -29,14 +29,13 @@
       When I select "21" in the how old are you dropdown
        And I click the next button
       Then I am on the step 3 page
-      When I type the largest order value in the largest order value field
-       And I click the largest order value radio button
+      When I type the largest order value in the largest order input field
+       And I click the largest order radio button
        And I click the next button
       Then I am on the step 4 page
       When I click the next button
       Then I am on the step 5 page
       When I wait for the one time token text
-       And I capture the one time token
        And I type the one time token in the one time token field
        And I click the next button
       Then I am on the done page

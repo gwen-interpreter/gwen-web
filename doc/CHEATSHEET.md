@@ -87,6 +87,8 @@ The following steps are supported. Each one must be prefixed by one of the keywo
 | the url will be defined by `property|setting` "`<name>`" | Binds the URL defined in the named property to the current page scope | `<name>` = name of property containing the URL |
 | I navigate to the `<page>` | Opens the browser to the URL bound to the given page | `<page>` = the name of the page to navigate to |
 | I navigate to "`<url>`" | Opens the browser to the given URL | `<url>` = the URL to navigate to |
+| I scroll `<element>` into view | Scrolls the named element to the top of the browser view. | `<element>` = name of web element to scroll to |
+| I scroll `<element>` into `top|bottom` of view | Scrolls the named element to the top or bottom of the browser view. | `<element>` = name of web element to scroll to |
 | `<element>` can be located by `id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript` "`<expression>`" | Creates a web element locator binding | `<element>` = name of web element, `<expression>` = the lookup expression |
 | the page title `should|should not` `be|contain|match regex|match xpath` "`<expression>`" | Checks that the page title matches or does not match a given expression | `<expression>` = the expression to match against |
 | the page title `should|should not` `be|contain|match regex|match xpath` `<attribute>` | Checks that the page title matches or does not match a bound attribute value | `<attribute>` = the attribute to match against | 
