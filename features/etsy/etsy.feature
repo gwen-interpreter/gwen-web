@@ -15,9 +15,12 @@
 #
 
  Feature: Information is available for the user to find out about esty
+    As an anonymous user who is not registered with esty
+    I want to be able to find out information
+    So that I can view handmade items, vintage goods and craft supplies
   
   Scenario: verify a user is able to find out information about esty
-      Given I am an anonomous user wanting to shop for an item
-       When I want to find out more about Esty
-       Then I am presented with About information
+      Given I am a first time user on Esty
+       When I go to find out more about Esty
+       Then I should be presented with About information
 

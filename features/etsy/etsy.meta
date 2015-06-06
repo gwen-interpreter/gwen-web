@@ -19,7 +19,7 @@
    Feature: Etsy
   
   @StepDef
-  Scenario: I am an anonomous user wanting to shop for an item
+  Scenario: I am a first time user on Esty
       Given I navigate to "https://www.etsy.com/au/"
         And the heading can be located by id "etsy-logo"
         And the cart icon title can be located by class name "cart "
@@ -35,11 +35,11 @@
        And I wait 1 second
   
   @StepDef 
-  Scenario: I want to find out more about Esty
+  Scenario: I go to find out more about Esty
       Given the about information is selected
         And I wait until "$('.about-banner').text().trim() == 'About Etsy'"
        Then I am on the About page
 
   @StepDef
-  Scenario: I am presented with About information
+  Scenario: I should be presented with About information
       Given I am on the About page
