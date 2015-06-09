@@ -47,7 +47,7 @@ file provided through the `-p|--properties` command line option.
 | `gwen.web.maximize`               | false          | `true` to maximize, `false` otherwise | Controls whether or not the web driver should maximize the browser window. |
 | `gwen.web.throttle.msecs`         | 200            | Number of milliseconds | Sets the number of milliseconds to wait for the web driver and web browser to synchronize with each other between interactions. Also directly controls element highlighting duration. |
 | `gwen.web.highlight.style`        | background: yellow; border: 2px solid gold; | HTML style string | Sets the look and feel of element highlighting. |
-| `gwen.web.capture.screenshots`    | false          | `true` to capture screenshots, `false` otherwise | Controls whether or not the web driver should capture screenshots for all steps that change page states. |
+| `gwen.web.capture.screenshots`    | false          | `true` to capture screenshots and slideshow playback, `false` otherwise | Controls whether or not to capture screenshots and generate slideshow |
 | `gwen.web.remote.url`             |                | http://host:port/wd/hub | If set, allows gwen-web to connect to the remote webdriver at the specified URL. |
 | `gwen.web.accept.untrusted.certs` | true           | `true` to accept untrused SSL certs, `false` otherwise | Controls whether or not the web driver should accept untrusted (self signed) SSL certificates |
 

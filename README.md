@@ -28,6 +28,7 @@ Key Features
 - REPL console allows verifying before running
 - Cross browser support
 - Remote web driver support
+- Screenshot capture and slideshow playback
 - No development
  
 Core Requirements
