@@ -23,7 +23,7 @@ class WebInterpreterSerialSingleTest extends WebInterpreterTest {
   }
   
   "Single etsy test feature" should "should evaluate" in {
-    evaluate(List("features/esty"), false, "target/report-single-etsy")
+    evaluate(List("features/etsy"), false, "target/report-single-etsy")
   }
   
 }
