@@ -264,14 +264,25 @@ class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with
     *  - Web element text attribute
     *  - Web element value attribute
     * If a value is found, its value is bound to the current page 
-    * scope as `name/text`.
+    * scope as `name/text`. Three attempts are made to retrieve the 
+    * value after waiting `gwen.web.throttle.msecs` between failed attempts.
+    * 
+    * 
     * @param name the name of the web element
     */
-  def getElementText(name: String): String = 
+  def getElementText(name: String, attempt: Int = 1): String = 
     (withWebElement(name) { webElement =>
       (Option(webElement.getText) match {
         case None | Some("") => Option(webElement.getAttribute("text")) match {
-          case None | Some("") => webElement.getAttribute("value")
+          case None | Some("") => Option(webElement.getAttribute("value")) match {
+            case value @ (None | Some("")) =>
+              if (attempt < 3) {
+                Thread.sleep(WebSettings.`gwen.web.throttle.msecs`)
+                getElementText(name, attempt + 1)
+              } 
+              value.getOrElse(null)
+            case Some(value) => value  
+          }
           case Some(value) => value
         }
         case Some(value) => value

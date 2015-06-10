@@ -1,6 +1,6 @@
 target/
 project/project/target/
-.cache
+.cache*
 .classpath
 .project
 .history

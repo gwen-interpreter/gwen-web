@@ -18,9 +18,9 @@ organizationHomepage := Some(url("http://gweninterpreter.org"))
 
 startYear := Some(2014)
 
-scalaVersion := "2.11.5"
+scalaVersion := "2.11.6"
 
-crossScalaVersions := Seq("2.11.5", "2.10.4")
+crossScalaVersions := Seq("2.11.6", "2.10.4")
 
 scalacOptions += "-feature"
 
@@ -42,13 +42,13 @@ resolvers += "Typesafe Repo" at "http://repo.typesafe.com/typesafe/releases/"
 
 resolvers += "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"
 
-libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.1" % "test"
+libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.4" % "test"
 
-libraryDependencies += "org.mockito" % "mockito-all" % "1.10.14" % "test"
+libraryDependencies += "org.mockito" % "mockito-all" % "1.10.19" % "test"
 
 libraryDependencies += "com.google.code.findbugs" % "jsr305" % "2.0.1" % "compile" 
 
-libraryDependencies += "org.seleniumhq.selenium" % "selenium-java" % "2.45.0" excludeAll(
+libraryDependencies += "org.seleniumhq.selenium" % "selenium-java" % "2.46.0" excludeAll(
   ExclusionRule(organization = "org.seleniumhq.selenium", name = "selenium-htmlunit-driver"),
   ExclusionRule(organization = "net.java.dev.jna", name = "jna"),
   ExclusionRule(organization = "net.java.dev.jna", name = "jna-platform")

@@ -9,7 +9,7 @@
    - Source Dependencies -
 
    scala 
-      Version 2.11.5, 2.10.4
+      Version 2.11.6, 2.10.4
       Copyright (c) 2002-2015 EPFL
       Copyright (c) 2011-2015 Typesafe, Inc.
       Scala license 
@@ -17,14 +17,14 @@
       http://www.scala-lang.org
          
    gwen
-      Version 1.0.0-1c8d352225e25e88da54e3837ae74058b8d5f4a2
+      Version 1.0.0-49f319a3a7a483245e6b2d603876cff51c6c379a
       Copyright (c) 2014-2015 Branko Juric, Brady Wood 
       Apache License, Version 2.0
       https://github.com/gwen-interpreter/gwen/LICENSE
       https://github.com/gwen-interpreter/gwen
       
    selenium-java
-      Version 2.45.0
+      Version 2.46.0
       Copyright 2007-2009 Google Inc.
       Copyright 2007-2009 WebDriver committers
       Apache License, Version 2.0
@@ -34,14 +34,14 @@
    - Test Dependencies -
    
    scalatest
-      Version 2.2.1
+      Version 2.2.4
       Copyright 2001-2013 Artima, Inc.
       Apache License, Version 2.0 
       https://github.com/scalatest/scalatest/blob/master/LICENSE
       http://www.scalatest.org
       
    mockito
-      Version 1.10.14
+      Version 1.10.19
       Copyright (c) 2007 Mockito contributors
       MIT License
       https://github.com/mockito/mockito/blob/master/LICENSE

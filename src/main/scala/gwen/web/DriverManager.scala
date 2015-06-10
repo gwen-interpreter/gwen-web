@@ -19,7 +19,6 @@ package gwen.web
 import java.io.File
 import java.net.URL
 import java.util.concurrent.TimeUnit
-
 import org.openqa.selenium.OutputType
 import org.openqa.selenium.TakesScreenshot
 import org.openqa.selenium.WebDriver
@@ -33,11 +32,9 @@ import org.openqa.selenium.remote.DesiredCapabilities
 import org.openqa.selenium.remote.HttpCommandExecutor
 import org.openqa.selenium.remote.RemoteWebDriver
 import org.openqa.selenium.safari.SafariDriver
-
-import com.typesafe.scalalogging.slf4j.LazyLogging
-
 import gwen.Predefs.Kestrel
 import gwen.eval.EnvContext
+import com.typesafe.scalalogging.LazyLogging
 
 /** Provides access to the web driver used to drive the browser. */
 trait DriverManager extends LazyLogging { 

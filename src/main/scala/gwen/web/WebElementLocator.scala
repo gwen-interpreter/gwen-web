@@ -22,7 +22,7 @@ import org.openqa.selenium.By
 import org.openqa.selenium.WebDriverException
 import org.openqa.selenium.WebElement
 
-import com.typesafe.scalalogging.slf4j.LazyLogging
+import com.typesafe.scalalogging.LazyLogging
 
 import gwen.Predefs.Kestrel
 
