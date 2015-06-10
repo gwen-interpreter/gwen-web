@@ -34,7 +34,7 @@ import org.openqa.selenium.remote.RemoteWebDriver
 import org.openqa.selenium.safari.SafariDriver
 import gwen.Predefs.Kestrel
 import gwen.eval.EnvContext
-import com.typesafe.scalalogging.LazyLogging
+import com.typesafe.scalalogging.slf4j.LazyLogging
 
 /** Provides access to the web driver used to drive the browser. */
 trait DriverManager extends LazyLogging { 
