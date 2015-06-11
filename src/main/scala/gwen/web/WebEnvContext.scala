@@ -67,10 +67,16 @@ class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with
     * 
     * @param javascript the script expression to execute
     * @param params optional parameters to the script
+    * @param isHighlighting true is this is an element highlighting script (captures
+    *        screenshot if this is true and the `gwen.web.capture.screenshots.highlighting` 
+    *        setting is true)
     */
-  def executeScript(javascript: String, params: Any*): Any = 
+  def executeScript(javascript: String, params: Any*)(implicit isHighlighting: Boolean = false): Any = 
     withWebDriver({ webDriver => 
       webDriver.asInstanceOf[JavascriptExecutor].executeScript(javascript, params.map(_.asInstanceOf[AnyRef]) : _*) tap { result =>
+        if (isHighlighting && WebSettings.`gwen.web.capture.screenshots.highlighting`) {
+          addAttachment(captureScreenshot)
+        }
         logger.debug(s"Evaluated javascript: $javascript, result='$result'")
         if (result.isInstanceOf[Boolean] && result.asInstanceOf[Boolean]) {
           Thread.sleep(WebSettings.`gwen.web.throttle.msecs`)
@@ -157,7 +163,7 @@ class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with
   def highlight(element: WebElement) {
     val msecs = WebSettings`gwen.web.throttle.msecs`
     val style = WebSettings.`gwen.web.highlight.style` 
-    executeScript(s"element = arguments[0]; type = element.getAttribute('type'); if (('radio' == type || 'checkbox' == type) && element.parentElement.getElementsByTagName('input').length == 1) { element = element.parentElement; } original_style = element.getAttribute('style'); element.setAttribute('style', original_style + '; ${style}'); setTimeout(function() { element.setAttribute('style', original_style); }, ${msecs});", element)
+    executeScript(s"element = arguments[0]; type = element.getAttribute('type'); if (('radio' == type || 'checkbox' == type) && element.parentElement.getElementsByTagName('input').length == 1) { element = element.parentElement; } original_style = element.getAttribute('style'); element.setAttribute('style', original_style + '; ${style}'); setTimeout(function() { element.setAttribute('style', original_style); }, ${msecs});", element)(true)
     Thread.sleep(msecs);
   }
   

@@ -83,6 +83,14 @@ object WebSettings {
   def `gwen.web.capture.screenshots`: Boolean = Settings.getOpt("gwen.web.capture.screenshots").getOrElse("false").toBoolean
   
   /**
+    * Provides access to the `gwen.web.capture.screenshots.highlighting` setting used to control whether 
+    * or not the web driver should capture screenshots for all steps that highlight elements on a page 
+    * (default value is `false`).
+    * Note that setting this to `true` degrades performance significantly.
+    */
+  def `gwen.web.capture.screenshots.highlighting`: Boolean = Settings.getOpt("gwen.web.capture.screenshots.highlighting").getOrElse("false").toBoolean
+  
+  /**
     * Provides access to the `gwen.web.accept.untrusted.certs` setting used to control whether 
     * or not the web driver should accept untrusted (self signed) SSL certificates (default value
     * is `true`).
