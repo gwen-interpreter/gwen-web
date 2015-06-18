@@ -402,7 +402,22 @@ class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with
     */
   def selectByVisibleText(element: String, value: String) {
     withWebElement(element) { webElement =>
+      logger.info(s"Selecting '$value' in $element by text")
       new Select(webElement).selectByVisibleText(value)
+      bindAndWait(element, "select", value)
+    }
+  }
+  
+  /**
+    * Selects a value in a dropdown (select control) by value.
+    * 
+    * @param element the name of the dropdown element (select control)
+    * @param value the value to select
+    */
+  def selectByValue(element: String, value: String) {
+    withWebElement(element) { webElement =>
+      logger.info(s"Selecting '$value' in $element by value")
+      new Select(webElement).selectByValue(value)
       bindAndWait(element, "select", value)
     }
   }
@@ -415,9 +430,22 @@ class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with
     */
   def selectByIndex(element: String, index: Int) {
     withWebElement(element) { webElement =>
+      logger.info(s"Selecting option in $element by index: $index")
       val select = new Select(webElement)
       select.selectByIndex(index)
       bindAndWait(element, "select", select.getFirstSelectedOption().getText())
+    }
+  }
+  
+  def performAction(action: String, element: String) {
+    withWebElement(action, element) { webElement =>
+      action match {
+        case "click" => webElement.click
+        case "submit" => webElement.submit
+        case "check" if (!webElement.isSelected()) => webElement.sendKeys(Keys.SPACE)
+        case "uncheck" if (webElement.isSelected()) => webElement.sendKeys(Keys.SPACE)
+      }
+      bindAndWait(element, action, "true")
     }
   }
   

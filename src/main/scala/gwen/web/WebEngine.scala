@@ -205,38 +205,22 @@ trait WebEngine extends EvalEngine[WebEnvContext] with WebElementLocator with Sy
         env.sendKeys(element, env.getAttribute(attribute), true, action == "enter")
         
       case r"""I select the (\d+?)$position(st|nd|rd|th)$suffix option in (.+?)$$$element""" => 
-        env.waitUntil(s"Selecting '${position}${suffix}' option in $element") {
-          env.selectByIndex(element, position.toInt - 1)
-          true
-        }
+        env.selectByIndex(element, position.toInt - 1)
+        
+      case r"""I select "(.*?)"$value in (.+?)$element by value""" => 
+        env.selectByValue(element, value)
         
       case r"""I select "(.*?)"$value in (.+?)$$$element""" => 
-        env.waitUntil(s"Selecting '$value' in $element") {
-          env.selectByVisibleText(element, value)
-          true
-        }
+        env.selectByVisibleText(element, value)
+        
+      case r"""I select (.+?)$attribute in (.+?)$element by value""" => 
+        env.selectByValue(element, env.getAttribute(attribute))
         
       case r"""I select (.+?)$attribute in (.+?)$$$element""" => 
-        env.getAttribute(attribute) tap { value => 
-          env.waitUntil(s"Selecting '$value' in $element") {
-            env.selectByVisibleText(element, value)
-            true
-          }
-        }
+        env.selectByVisibleText(element, env.getAttribute(attribute))
         
       case r"""I (click|submit|check|uncheck)$action (.+?)$$$element""" => 
-        env.waitUntil {
-          env.withWebElement(action, element) { webElement =>
-            action match {
-              case "click" => webElement.click
-              case "submit" => webElement.submit
-              case "check" if (!webElement.isSelected()) => webElement.sendKeys(Keys.SPACE)
-              case "uncheck" if (webElement.isSelected()) => webElement.sendKeys(Keys.SPACE)
-            }
-            env.bindAndWait(element, action, "true")
-          }
-          true
-        }
+        env.performAction(action, element)
         
       case r"""I (?:highlight|locate) (.+?)$$$element""" =>
         env.highlight(locate(env, element))
