@@ -48,7 +48,7 @@ libraryDependencies += "org.mockito" % "mockito-all" % "1.10.19" % "test"
 
 libraryDependencies += "com.google.code.findbugs" % "jsr305" % "2.0.1" % "compile" 
 
-libraryDependencies += "org.seleniumhq.selenium" % "selenium-java" % "2.46.0" excludeAll(
+libraryDependencies += "org.seleniumhq.selenium" % "selenium-java" % "2.45.0" excludeAll(
   ExclusionRule(organization = "org.seleniumhq.selenium", name = "selenium-htmlunit-driver"),
   ExclusionRule(organization = "net.java.dev.jna", name = "jna"),
   ExclusionRule(organization = "net.java.dev.jna", name = "jna-platform")
