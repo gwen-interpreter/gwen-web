@@ -1,5 +1,5 @@
-Gwen Web Manual
-===============
+Gwen-Web User Guide
+===================
 
 Invoking Gwen
 -------------
@@ -23,12 +23,12 @@ REPL Commands
 
 The following commands are available within the gwen REPL console.
 
-| Command                          | Description |
-| -------------------------------- | ----------- |
-| `env`, `env -v`, `env --visible` | dump the currently visible environment scope to the console |
-| `env -a`, `env --all`            | dump the entire environment scope to the console |
-| `env -f`, `env --feature`        | dump the global feature scope to the console |
-| `exit`,`quit`,`bye`              | will close the current browser (if open) and exit the console. |
+| Command                              | Description |
+| -------------------------------------| ----------- |
+| `env [-v|--visible] ["<attribute>"]` | dump the currently visible environment (or specified attribute) to the console |
+| `env -a|--all ["<attribute>"]`       | dump the entire environment (or specified attribute) in all scopes to the console |
+| `env -f|--feature ["<attribute>"]`   | dump all attributes (or specified attribute) in feature scope to the console |
+| `exit`,`quit`,`bye`                  | will close the current browser (if open) and exit the console. |
 
 Configuration Settings
 ----------------------

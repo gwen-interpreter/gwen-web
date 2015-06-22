@@ -152,10 +152,10 @@ trait WebEngine extends EvalEngine[WebEnvContext] with WebElementLocator with Sy
         }
       
       case r"""I wait ([0-9]+?)$duration second(?:s?) when (.+?)$element is (clicked|submitted|checked|unchecked|selected|typed|entered|cleared)$$$event""" =>
-        env.scopes.set(s"$element/${WebElementActions.EventToAction(event)}/wait", duration)
+        env.scopes.set(s"$element/${WebEvents.EventToAction(event)}/wait", duration)
         
       case r"""I wait until (.+?)$condition when (.+?)$element is (clicked|submitted|checked|unchecked|selected|typed|entered|cleared)$$$event""" =>
-        env.scopes.set(s"$element/${WebElementActions.EventToAction(event)}/condition", condition)
+        env.scopes.set(s"$element/${WebEvents.EventToAction(event)}/condition", condition)
         
       case r"""I wait until "(.+?)$javascript"""" => 
         env.waitUntil(s"Waiting until $javascript") {
@@ -254,15 +254,3 @@ trait WebEngine extends EvalEngine[WebEnvContext] with WebElementLocator with Sy
   
 }
 
-object WebElementActions {
-  val EventToAction = Map(
-    "clicked"   -> "click",
-    "submitted" -> "submit", 
-    "checked"   -> "check", 
-    "unchecked" -> "uncheck", 
-    "selected"  -> "select", 
-    "typed"     -> "type", 
-    "entered"   -> "enter",
-    "cleared"   -> "clear"
-  )
-}

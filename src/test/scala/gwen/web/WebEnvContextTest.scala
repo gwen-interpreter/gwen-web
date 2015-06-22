@@ -50,7 +50,7 @@ class WebEnvContextTest extends FlatSpec with Matchers with MockitoSugar {
   "json on new env context" should "be empty" in {
     val mockDriverManager = mock[DriverManager]
     val env = newEnv(mockDriverManager)
-    env.json.toString should be ("""{"scopes":[{"scope":"feature","atts":[]}]}""")
+    env.scopes.json.toString should be ("""{"scopes":[{"scope":"feature","atts":[]}]}""")
   }
   
   "Bound scope attribute" should "show up in JSON string" in {
@@ -59,7 +59,7 @@ class WebEnvContextTest extends FlatSpec with Matchers with MockitoSugar {
     env.scopes.addScope("login")
     env.scopes.set("username", "Gwen")
     env.scopes.get("username") should be ("Gwen")
-    env.json.toString should be ("""{"scopes":[{"scope":"feature","atts":[]},{"scope":"login","atts":[{"username":"Gwen"}]}]}""")
+    env.scopes.json.toString should be ("""{"scopes":[{"scope":"feature","atts":[]},{"scope":"login","atts":[{"username":"Gwen"}]}]}""")
                                       
   }
   
