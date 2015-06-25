@@ -16,10 +16,10 @@
 
 package gwen.web
 
-class WebInterpreterMultipleParallelTest extends WebInterpreterTest {
+class WebInterpreterParallelTest extends WebInterpreterTest {
 
-  "Multiple features" should "evaluate in parallel" in {
-    evaluate(List("features/floodio", "features/blogs/pageObjectsBegone", "features/blogs/automationByMeta"), true, "target/report-multi-parallel")
+  "Parallel mode" should "evaluate all features in parallel" in {
+    evaluate(List("features/floodio", "features/blogs/pageObjectsBegone", "features/blogs/automationByMeta", "features/etsy"), true, "target/reports/parallel")
   }
   
 }

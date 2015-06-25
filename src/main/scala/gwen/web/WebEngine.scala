@@ -63,11 +63,11 @@ trait WebEngine extends EvalEngine[WebEnvContext] with WebElementLocator with Sy
         
       case r"""I navigate to the (.+?)$$$page""" => 
         env.scopes.addScope(page)
-        env.withWebDriver{ _.get(env.getAttribute("url")) }
+        env.withWebDriver(_.get(env.getAttribute("url")))(WebSettings.`gwen.web.capture.screenshots`)
         
       case r"""I navigate to "(.+?)"$$$url""" => 
         env.scopes.addScope(url)
-        env.withWebDriver { _.get(url) }
+        env.withWebDriver(_.get(url))(WebSettings.`gwen.web.capture.screenshots`)
         
       case r"""I scroll to the (top|bottom)$position of (.+?)$$$element""" =>
         env.scrollIntoView(element, ScrollTo.withName(position))
@@ -120,10 +120,10 @@ trait WebEngine extends EvalEngine[WebEnvContext] with WebElementLocator with Sy
         }
       
       case r"""I capture the current URL""" => 
-        env.featureScope.set("the current URL", env.withWebDriver({ _.getCurrentUrl() })(false))
+        env.featureScope.set("the current URL", env.withWebDriver(_.getCurrentUrl()))
       
       case r"""I capture the current URL as (.+?)$name""" => 
-        env.featureScope.set(name, env.withWebDriver({_.getCurrentUrl() })(false))
+        env.featureScope.set(name, env.withWebDriver(_.getCurrentUrl()))
       
       case r"""I capture (.+?)$element as (.+?)$attribute""" => 
         env.featureScope.set(attribute, env.getBoundValue(element))

@@ -32,14 +32,15 @@ import org.openqa.selenium.remote.DesiredCapabilities
 import org.openqa.selenium.remote.HttpCommandExecutor
 import org.openqa.selenium.remote.RemoteWebDriver
 import org.openqa.selenium.safari.SafariDriver
-import gwen.Predefs.Kestrel
-import gwen.eval.EnvContext
 import com.typesafe.scalalogging.slf4j.LazyLogging
+import gwen.Predefs.Kestrel
+import org.apache.commons.io.FileUtils
+import gwen.eval.EnvContext
 
 /** Provides access to the web driver used to drive the browser. */
 trait DriverManager extends LazyLogging { 
   env: EnvContext =>
-
+    
   /** Web driver (lazily loaded). */
   private[web] var _webDriver: Option[WebDriver] = None
   
@@ -61,16 +62,14 @@ trait DriverManager extends LazyLogging {
   /**
     * Invokes a function that performs an operation on the web driver and
     * conditionally captures the current screenshot if the specified 
-    * takeScreenShot is true and the gwen.web.capture.screenshots setting 
-    * is true.
+    * takeScreenShot is true.
     * 
     * @param f the function to perform
     * @param takeScreenShot true to take screenshot after performing the function
-    *                       (and if gwen.web.capture.screenshots setting is true)
     */
-  def withWebDriver[T](f: WebDriver => T)(implicit takeScreenShot: Boolean = true): T = {
+  def withWebDriver[T](f: WebDriver => T)(implicit takeScreenShot: Boolean = false): T = {
     f(webDriver) tap { driver =>
-      if (takeScreenShot && WebSettings.`gwen.web.capture.screenshots`) {
+      if (takeScreenShot) {
         Thread.sleep(WebSettings.`gwen.web.throttle.msecs`)
         env.addAttachment(captureScreenshot)
       }
@@ -78,8 +77,12 @@ trait DriverManager extends LazyLogging {
   }
   
   /** Captures and returns the current screenshot as an attachment (name-file pair). */
-  private[web] def captureScreenshot: (String, File) =  
-    ("Screenshot", webDriver.asInstanceOf[TakesScreenshot].getScreenshotAs(OutputType.FILE))
+  private[web] def captureScreenshot(): (String, File) = {
+    val screenshot = webDriver.asInstanceOf[TakesScreenshot].getScreenshotAs(OutputType.FILE)
+    val targetFile = env.createAttachmentFile("screenshot", screenshot.getName.substring(screenshot.getName.lastIndexOf('.') + 1))
+    FileUtils.copyFile(screenshot, targetFile)
+    ("Screenshot", targetFile)
+  }
   
   /** Loads the selenium webdriver. */
   private[web] def loadWebDriver: WebDriver = withGlobalSettings {

@@ -16,14 +16,10 @@
 
 package gwen.web
 
-class WebInterpreterSerialSingleTest extends WebInterpreterTest {
+class WebInterpreterSingleTest extends WebInterpreterTest {
 
-  "Single floodio test feature" should "should evaluate" in {
-    evaluate(List("features/floodio"), false, "target/report-single-floodio")
-  }
-  
-  "Single etsy test feature" should "should evaluate" in {
-    evaluate(List("features/etsy"), false, "target/report-single-etsy")
+  "Single feature" should "should evaluate" in {
+    evaluate(List("features/floodio/FloodIO.feature"), false, "target/reports/single")
   }
   
 }

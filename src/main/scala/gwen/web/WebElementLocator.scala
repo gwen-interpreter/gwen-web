@@ -115,7 +115,7 @@ trait WebElementLocator extends LazyLogging {
     * @param by the by locator
     */
   private def getElement(env: WebEnvContext, element: String, by: By): Option[WebElement] = 
-    Option(env.withWebDriver({ _.findElement(by) })(false))
+    Option(env.withWebDriver(_.findElement(by)))
     
   /**
     * Gets a web element by the given javascript expression. If the web element is not 
