@@ -23,18 +23,18 @@ REPL Commands
 
 The following commands are available within the gwen REPL console.
 
-| Command                              | Description |
-| -------------------------------------| ----------- |
-| `env [-v|--visible] ["<attribute>"]` | dump the currently visible environment (or specified attribute) to the console |
-| `env -a|--all ["<attribute>"]`       | dump the entire environment (or specified attribute) in all scopes to the console |
-| `env -f|--feature ["<attribute>"]`   | dump all attributes (or specified attribute) in feature scope to the console |
-| `exit`,`quit`,`bye`                  | will close the current browser (if open) and exit the console. |
+| Command                               | Description |
+| --------------------------------------| ----------- |
+| `env [-v|--visible] ["<expression>"]` | Prints all currently visible attributes to the console (or attributes containing or matching `<expression>` only) |
+| `env -a|--all ["<expression>"]`       | Prints all attributes in all scopes to the console (or attributes containing or matching `<expression>` only) |
+| `env -f|--feature ["<expression>"]`   | Prints all attributes in feature scope to the console (or attributes containing or matching `<expression>` only) |
+| `exit`,`quit`,`bye`                   | Closes the current browser (if open) and exits the console. |
 
 Configuration Settings
 ----------------------
 
 The following settings can be used to configure certain runtime aspects. These can be defined in 
-your local `gwen.properties` files (located in your user home directory) or in a separate properties 
+your local `gwen.properties` file (located in your user home directory) or in a separate properties 
 file provided through the `-p|--properties` command line option.
 
 | Property/Setting                            | Default value  | Supported Values | Description |
