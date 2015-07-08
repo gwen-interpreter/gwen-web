@@ -72,7 +72,7 @@ class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with
   def executeScript(javascript: String, params: Any*)(implicit takeScreenShot: Boolean = false): Any = 
     withWebDriver { webDriver => 
       webDriver.asInstanceOf[JavascriptExecutor].executeScript(javascript, params.map(_.asInstanceOf[AnyRef]) : _*) tap { result =>
-        if (takeScreenShot) {
+        if (takeScreenShot && WebSettings.`gwen.web.capture.screenshots`) {
           addAttachment(captureScreenshot())
         }
         logger.debug(s"Evaluated javascript: $javascript, result='$result'")
@@ -216,7 +216,6 @@ class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with
        }
        f(webElement) tap { result =>
          if (WebSettings.`gwen.web.capture.screenshots`) {
-           Thread.sleep(WebSettings.`gwen.web.throttle.msecs`)
            addAttachment(captureScreenshot())
          }
        }
