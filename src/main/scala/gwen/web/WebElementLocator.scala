@@ -101,7 +101,7 @@ trait WebElementLocator extends LazyLogging {
     }) tap { optWebElement =>
       optWebElement foreach { webElement =>
         if (!webElement.isDisplayed()) {
-        	env.scrollIntoView(webElement, ScrollTo.top)
+          env.scrollIntoView(webElement, ScrollTo.top)
         }
         env.highlight(webElement)
       }

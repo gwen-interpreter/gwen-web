@@ -211,7 +211,7 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar wit
       case Some(elem) => 
         elem should be (mockWebElement)
       case None => 
-      	fail("Excpected Some(webElement) but got None")
+        fail("Expected Some(webElement) but got None")
     }
     
     verify(mockWebDriver, times(2)).findElement(by)

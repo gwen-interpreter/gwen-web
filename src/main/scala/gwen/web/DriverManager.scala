@@ -89,7 +89,7 @@ trait DriverManager extends LazyLogging {
     val driverName = WebSettings.`gwen.web.browser`.toLowerCase
     logger.info(s"Loading $driverName web driver")
     WebSettings.`gwen.web.remote.url` match {
-    	case Some(addr) => remoteDriver(driverName, addr)
+      case Some(addr) => remoteDriver(driverName, addr)
       case None => localDriver(driverName)
     }
   }
