@@ -20,23 +20,23 @@
   @StepDef
   Scenario: I am a first time user on Etsy
       Given I navigate to "https://www.etsy.com/au/"
-        And the heading can be located by id "etsy-logo"
+        And I wait until "document.getElementById('etsy-logo').innerText.trim() == 'Etsy'"
+       Then I am on the home page
         And the cart icon title can be located by class name "cart "
-        And the heading should be "Etsy"
-        And the cart icon title should be "Cart"
+        And the about link can be located by javascript "document.getElementById('footer-about-link-desktop')"
 
-  @StepDef
-  Scenario: the about information is selected
-     Given the About link can be located by javascript "$('#footer-about-link-desktop').get(0)"
-       And I scroll to the top of the About link
-       And I click the About link
-  
   @StepDef 
   Scenario: I go to find out more about Etsy
-      Given the about information is selected
-        And I wait until "$('.about-banner').text().trim() == 'About Etsy'"
-       Then I am on the About page
+      Given I am on the home page
+       When I scroll to the top of the about link
+        And I click the about link
+        And I wait until "document.getElementsByClassName('about-banner')[0].innerText.trim() == 'About Etsy'"
+       Then I am on the about page
+        And the about info can be located by id "about_intro"
+        
 
   @StepDef
   Scenario: I should be presented with About information
-      Given I am on the About page
+      Given I am on the about page
+       When I scroll to the top of the about info
+       Then the about info should be displayed
