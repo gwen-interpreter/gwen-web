@@ -17,6 +17,7 @@
 # https://warpedjavaguy.wordpress.com/2015/01/12/automation-by-meta/
 #
 
+   @floodio
    Feature: Complete the floodio challenge
        As a gwen user
        I want to automate the floodio challenge

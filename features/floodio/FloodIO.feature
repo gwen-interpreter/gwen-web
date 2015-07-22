@@ -14,6 +14,7 @@
 # limitations under the License.
 #
 
+ @floodio
  Feature: Complete the floodio challenge
      As a gwen user
      I want to automate the floodio challenge

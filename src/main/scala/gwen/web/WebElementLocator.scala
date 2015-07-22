@@ -34,24 +34,24 @@ trait WebElementLocator extends LazyLogging {
     * Locates a bound web element.
     * 
     *  @param env the web environment context
-    *  @param element the name of the element to locate
+    *  @param elementBinding the web element locator binding
     *  @return the found element (errors if not found)
     */
-  def locate(env: WebEnvContext, element: String): WebElement = 
-    locateElement(env, element) match {
+  def locate(env: WebEnvContext, elementBinding: LocatorBinding): WebElement = 
+    locateElement(env, elementBinding) match {
       case Some(webElement) => webElement
-      case None => throw new NoSuchElementException(s"Web element not found: ${element}")
+      case None => throw new NoSuchElementException(s"Web element not found: ${elementBinding.element}")
     }
   
   /**
    * Locates a bound web element.
    * 
    * @param env the web environment context
-   * @param element the name of the element to locate
+   * @param elementBinding the web element locator binding
    * @return Some(element) if found, None otherwise
    */
-  def locateOpt(env: WebEnvContext, element: String): Option[WebElement] = try {
-    locateElement(env, element)
+  def locateOpt(env: WebEnvContext, elementBinding: LocatorBinding): Option[WebElement] = try {
+    locateElement(env, elementBinding)
   } catch {
     case e: TimeoutOnWaitException => None
   }
@@ -60,44 +60,35 @@ trait WebElementLocator extends LazyLogging {
    * Locates a bound web element.
    * 
    * @param env the web environment context
-   * @param element the name of the element to locate
+   * @param elementBinding the web element locator binding
    * @return Some(element) if found, None otherwise
    */
-  private def locateElement(env: WebEnvContext, element: String): Option[WebElement] = {
-    val locatorBinding = s"$element/locator";
-    env.scopes.getOpt(locatorBinding) match {
-      case Some(locator) =>
-        val expressionBinding = env.interpolate(s"$element/locator/$locator")(env.getBoundValue)
-        env.scopes.getOpt(expressionBinding) match {
-            case Some(expression) =>
-              val expr = env.interpolate(expression)(env.getBoundValue)
-              logger.info(s"Locating $element")
-              try {
-                findElementByLocator(env, element, locator, expr)
-              } catch {
-                case e: WebDriverException =>
-                  // attempt to locate one more time on web driver exception
-                  findElementByLocator(env, element, locator, expr)
-              }
-            case None => throw new LocatorBindingException(element, s"locator expression binding not bound: ${expressionBinding}")
-          }
-      case None => throw new LocatorBindingException(element, s"locator type binding not found: ${locatorBinding}")
-    }
+  private def locateElement(env: WebEnvContext, elementBinding: LocatorBinding): Option[WebElement] = {
+     logger.info(s"Locating ${elementBinding.element}")
+     try {
+       findElementByLocator(env, elementBinding)
+     } catch {
+        case e: WebDriverException =>
+        // attempt to locate one more time on web driver exception
+        findElementByLocator(env, elementBinding)
+     }
   }
   
   /** Finds an element by the given locator expression. */
-  private def findElementByLocator(env: WebEnvContext, element: String, locator: String, expression: String): Option[WebElement] = {
+  private def findElementByLocator(env: WebEnvContext, elementBinding: LocatorBinding): Option[WebElement] = {
+    val lookup = elementBinding.lookup
+    val locator = elementBinding.locator 
     (locator match {
-      case "id" => getElement(env, element, By.id(expression))
-      case "name" => getElement(env, element, By.name(expression))
-      case "tag name" => getElement(env, element, By.tagName(expression))
-      case "css selector" => getElement(env, element, By.cssSelector(expression))
-      case "xpath" => getElement(env, element, By.xpath(expression))
-      case "class name" => getElement(env, element, By.className(expression))
-      case "link text" => getElement(env, element, By.linkText(expression))
-      case "partial link text" => getElement(env, element, By.partialLinkText(expression))
-      case "javascript" => getElementByJavaScript(env, element, s"$expression")
-      case _ => throw new LocatorBindingException(element, s"unsupported locator: ${locator}")
+      case "id" => getElement(env, By.id(lookup))
+      case "name" => getElement(env, By.name(lookup))
+      case "tag name" => getElement(env, By.tagName(lookup))
+      case "css selector" => getElement(env, By.cssSelector(lookup))
+      case "xpath" => getElement(env, By.xpath(lookup))
+      case "class name" => getElement(env, By.className(lookup))
+      case "link text" => getElement(env, By.linkText(lookup))
+      case "partial link text" => getElement(env, By.partialLinkText(lookup))
+      case "javascript" => getElementByJavaScript(env, s"$lookup")
+      case _ => throw new LocatorBindingException(elementBinding.element, s"unsupported locator: ${locator}")
     }) tap { optWebElement =>
       optWebElement foreach { webElement =>
         if (!webElement.isDisplayed()) {
@@ -114,7 +105,7 @@ trait WebElementLocator extends LazyLogging {
     * @param env the web environment context
     * @param by the by locator
     */
-  private def getElement(env: WebEnvContext, element: String, by: By): Option[WebElement] = 
+  private def getElement(env: WebEnvContext, by: By): Option[WebElement] = 
     Option(env.withWebDriver(_.findElement(by)))
     
   /**
@@ -122,10 +113,9 @@ trait WebElementLocator extends LazyLogging {
     * visible in the browser, then the element is brought into view by scrolling to it.
     * 
     * @param env the web environment context
-    * @param element the element 
     * @param javascipt the javascript expression for returning the element
     */
-  private def getElementByJavaScript(env: WebEnvContext, element: String, javascript: String): Option[WebElement] = {
+  private def getElementByJavaScript(env: WebEnvContext, javascript: String): Option[WebElement] = {
     var elem: Option[WebElement] = None
     env.waitUntil {
       elem = env.executeScript(s"return $javascript") match {
@@ -144,6 +134,14 @@ trait WebElementLocator extends LazyLogging {
   
 }
 
+/** 
+  *  Captures a web element locator binding. 
+  *  
+  *  @param element the web element name
+  *  @param locator the locator type
+  *  @param lookup the lookup string
+  */
+case class LocatorBinding(val element: String, val locator: String, val lookup: String)
+
 /** Thrown when a web element cannot be located. */
 class LocatorBindingException(element: String, causeMsg: String) extends Exception(s"Could not locate ${element}: ${causeMsg}")
-

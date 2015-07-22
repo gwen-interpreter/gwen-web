@@ -25,13 +25,12 @@ import gwen.Settings
 
 abstract class WebInterpreterTest extends FlatSpec {
 
-  private[web] def evaluate(features: List[String], parallel: Boolean, reportDir: String) {
+  private[web] def evaluate(features: List[String], parallel: Boolean, dryRun: Boolean, reportDir: String) {
     Settings.synchronized {
-      val args = (if (parallel) { 
-        Array("--parallel", "-b", "-r", reportDir)
-      } else {
-        Array("-b", "-r", reportDir )
-      }) ++ features.toArray.asInstanceOf[Array[String]]
+      var args = Array("-b", "-r", reportDir)
+      if (parallel) args = args ++ Array("--parallel")
+      if (dryRun) args = args ++ Array("-n")
+      args = args ++ features.toArray.asInstanceOf[Array[String]]
       val options = GwenOptions(WebInterpreter.getClass, args)
       val intepreter = new WebInterpreter
       intepreter.execute(options, None) match {

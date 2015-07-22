@@ -17,6 +17,7 @@
 # https://warpedjavaguy.wordpress.com/2014/08/27/page-objects-begone/
 #
 
+ @floodio
  Feature: Flood IO Meta
 
 Scenario: Configure common locators

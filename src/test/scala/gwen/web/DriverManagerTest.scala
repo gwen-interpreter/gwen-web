@@ -34,6 +34,7 @@ import gwen.Settings
 import gwen.UserOverrides
 import gwen.eval.EnvContext
 import gwen.eval.ScopedDataStack
+import gwen.eval.GwenOptions
 
 class DriverManagerTest extends FlatSpec with Matchers with MockitoSugar {
   
@@ -116,7 +117,7 @@ class DriverManagerTest extends FlatSpec with Matchers with MockitoSugar {
     verify(mockWebDriver, never()).quit()
   }
   
-  private def newManager(driverName: String): DriverManager = new EnvContext(new ScopedDataStack) with DriverManager {
+  private def newManager(driverName: String): DriverManager = new EnvContext(GwenOptions(), new ScopedDataStack) with DriverManager {
     override private[web] def chrome(): WebDriver = mockChromeDriver
     override private[web] def firefox(): WebDriver = mockFirefoxDriver
     override private[web] def ie(): WebDriver = mockIeDriver
@@ -131,11 +132,11 @@ class DriverManagerTest extends FlatSpec with Matchers with MockitoSugar {
     }
   }
   
-  private def newManager(mockDriver: WebDriver): DriverManager = new EnvContext(new ScopedDataStack) with DriverManager {
+  private def newManager(mockDriver: WebDriver): DriverManager = new EnvContext(GwenOptions(), new ScopedDataStack) with DriverManager {
     override private[web] def loadWebDriver: WebDriver = mockDriver
   }
   
-  private def newManager(): DriverManager = new EnvContext(new ScopedDataStack) with DriverManager {
+  private def newManager(): DriverManager = new EnvContext(GwenOptions(), new ScopedDataStack) with DriverManager {
     override private[web] def loadWebDriver: WebDriver = mock[WebDriver]
   }
   

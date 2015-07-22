@@ -42,6 +42,7 @@ import gwen.eval.support.RegexSupport
 import gwen.eval.support.XPathSupport
 import gwen.eval.support.InterpolationSupport
 import gwen.dsl.SpecType
+import gwen.eval.GwenOptions
 
 /**
   * Defines the web environment context. This includes the configured selenium web
@@ -49,7 +50,7 @@ import gwen.dsl.SpecType
   *
   *  @author Branko Juric
   */
-class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with WebElementLocator with DriverManager with RegexSupport with XPathSupport with InterpolationSupport {
+class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) extends EnvContext(options, scopes) with WebElementLocator with DriverManager with RegexSupport with XPathSupport with InterpolationSupport {
 
    /** Resets the current context and closes the web browser. */
   override def reset() {
@@ -171,48 +172,50 @@ class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with
     * 
     * @param failed the failed status
     */
-  override def createErrorAttachments(failure: Failed): List[(String, File)] =
-    captureScreenshot() :: super.createErrorAttachments(failure)
+  override def createErrorAttachments(failure: Failed): List[(String, File)] = {
+    val errAttachments = super.createErrorAttachments(failure)
+    execute(captureScreenshot() :: errAttachments).getOrElse(errAttachments)
+  }
     
   /**
     * Performs a function on a web element and transparently re-locates elements and 
     * re-attempts the function if the web driver throws an exception.
     * 
     * @param action the action string
-    * @param element the element reference to perform the action on
+    * @param elementBinding the web element locator binding
     * @param f the function to perform on the element
     */
-  def withWebElement[T](action: String, element: String)(f: WebElement => T): T =
-     withWebElement(Some(action), element)(f)
+  def withWebElement[T](action: String, elementBinding: LocatorBinding)(f: WebElement => T): T =
+     withWebElement(Some(action), elementBinding)(f)
   
   /**
     * Performs a function on a web element and transparently re-locates elements and 
     * re-attempts the function if the web driver throws an exception.
     * 
-    * @param element the element reference to perform the action on
+    * @param elementBinding the web element locator binding
     * @param f the function to perform on the element
     */
-  def withWebElement[T](element: String)(f: WebElement => T): T =
-     withWebElement(None, element)(f)
+  def withWebElement[T](elementBinding: LocatorBinding)(f: WebElement => T): T =
+     withWebElement(None, elementBinding)(f)
      
   /**
     * Performs a function on a web element and transparently re-locates elements and 
     * re-attempts the function if the web driver throws an exception.
     * 
     * @param action optional action string
-    * @param element the element reference to perform the action on
+    * @param elementBinding the web element locator binding
     * @param f the function to perform on the element
     */
-  private def withWebElement[T](action: Option[String], element: String)(f: WebElement => T): T =
+  private def withWebElement[T](action: Option[String], elementBinding: LocatorBinding)(f: WebElement => T): T =
      try {
-       val webElement = locate(this, element)
+       val webElement = locate(this, elementBinding)
        action.foreach { actionString =>
          logger.info(s"${actionString match {
            case "click" => "Clicking"
            case "submit" => "Submitting"
            case "check" => "Checking"
            case "uncheck" => "Unchecking"
-         }} $element")
+         }} ${elementBinding.element}")
        }
        f(webElement) tap { result =>
          if (WebSettings.`gwen.web.capture.screenshots`) {
@@ -220,7 +223,7 @@ class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with
          }
        }
      } catch {
-       case _: WebDriverException => f(locate(this, element))
+       case _: WebDriverException => f(locate(this, elementBinding))
      }
 
   /**
@@ -245,19 +248,29 @@ class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with
     *  
     * @param name the name of the bound value to find
     */
-  def getBoundValue(name: String): String = 
-    (Try(getElementText(name)) match {
-      case Success(text) => text
-      case Failure(e1) => Try(getAttribute(name)) match {
-        case Success(text) => text
-        case Failure(e2) => Settings.getOpt(name) match { 
-          case Some(text) => text
-          case _ => sys.error(s"Bound value not found: ${name}")
+  def getBoundValue(name: String): String = { 
+    (Try(getLocatorBinding(name)) match {
+      case Success(binding) =>
+        Try(execute(getElementText(binding)).get) match {
+          case Success(text) => text
+          case Failure(_) => getAttributeOrSetting(name)
         }
-      }
+      case Failure(_) => getAttributeOrSetting(name)
     }) tap { value =>
       logger.debug(s"getBoundValue(${name})='${value}'")
     }
+  }
+  
+  private def getAttributeOrSetting(name: String): String = {
+    Try(getAttribute(name)) match {
+      case Success(text) => text
+      case Failure(_) => Settings.getOpt(name) match { 
+        case Some(text) => text
+        case _ => 
+          sys.error(s"Unbound attribute: ${name}")
+      }
+    }
+  }
   
   /**
     * Gets the text value of a web element on the current page. 
@@ -269,10 +282,10 @@ class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with
     * If a value is found, its value is bound to the current page 
     * scope as `name/text`.
     * 
-    * @param name the name of the web element
+    * @param elementBinding the web element locator binding
     */
-  def getElementText(name: String): String = 
-    (withWebElement(name) { webElement =>
+  def getElementText(elementBinding: LocatorBinding): String = 
+    (withWebElement(elementBinding) { webElement =>
       (Option(webElement.getText) match {
         case None | Some("") => Option(webElement.getAttribute("text")) match {
           case None | Some("") => webElement.getAttribute("value")
@@ -280,10 +293,10 @@ class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with
         }
         case Some(value) => value
       }) tap { text => 
-        bindAndWait(name, "text", text)
+        bindAndWait(elementBinding.element, "text", text)
       }
     }) tap { value =>
-      logger.debug(s"getElementText(${name})='${value}'")
+      logger.debug(s"getElementText(${elementBinding.element})='${value}'")
     }
   
   /**
@@ -304,20 +317,20 @@ class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with
         case None | Some("") => scopes.getOpt(s"$name/javascript") match {
           case None | Some("") => scopes.getOpt(s"$name/xpath") match {
             case None | Some("") => scopes.getOpt(s"$name/regex") match {
-              case None | Some("") => scopes.get(name)
+              case None | Some("") => execute(scopes.get(name)).getOrElse(Try(scopes.get(name)).getOrElse(Try(getLocatorBinding(name).lookup).getOrElse(sys.error(s"Unbound reference: $name"))))
               case _ =>
                 val source = interpolate(getBoundValue(scopes.get(s"$name/regex/source")))(getBoundValue)
                 val expression = interpolate(getBoundValue(scopes.get(s"$name/regex/expression")))(getBoundValue)
-                extractByRegex(expression, source)
+                execute(extractByRegex(expression, source)).getOrElse(s"$$[regex:$expression]")
             }
             case _ =>
               val source = interpolate(getBoundValue(scopes.get(s"$name/xpath/source")))(getBoundValue)
               val targetType = interpolate(getBoundValue(scopes.get(s"$name/xpath/targetType")))(getBoundValue)
               val expression = interpolate(getBoundValue(scopes.get(s"$name/xpath/expression")))(getBoundValue)
-              evaluateXPath(expression, source, XMLNodeType.withName(targetType))
+              execute(evaluateXPath(expression, source, XMLNodeType.withName(targetType))).getOrElse(s"$$[xpath:$expression]")
           }
-          case Some(javascript) => 
-            executeScript(s"return ${interpolate(javascript)(getBoundValue)}").toString
+          case Some(javascript) =>
+              execute(executeScript(s"return ${interpolate(javascript)(getBoundValue)}").toString).getOrElse(s"$$[javascript:$javascript]")
         }
         case Some(value) => value
       }
@@ -325,6 +338,25 @@ class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with
     }) tap { value =>
       logger.debug(s"getAttribute(${name})='${value}'")
     }
+  
+  /**
+   * Gets a web element binding.
+   * 
+   * @param element the name of the web element
+   */
+  def getLocatorBinding(element: String): LocatorBinding = {
+    val locatorBinding = s"$element/locator";
+    scopes.getOpt(locatorBinding) match {
+      case Some(locator) =>
+        val lookupBinding = interpolate(s"$element/locator/$locator")(getBoundValue)
+        scopes.getOpt(lookupBinding) match {
+          case Some(expression) =>
+            LocatorBinding(element, locator, interpolate(expression)(getBoundValue))
+          case None => throw new LocatorBindingException(element, s"locator lookup binding not found: ${lookupBinding}")
+        }
+      case None => throw new LocatorBindingException(element, s"locator binding not found: ${locatorBinding}")
+    }
+  }
   
   /**
     * Binds the given name and value to a given action (name/action=value) 
@@ -363,13 +395,14 @@ class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with
   /**
     * Sends a value to a web element (one character at a time).
     * 
-    * @param element the name of the element to send the value to
+    * @param elementBinding the web element locator binding
     * @param value the value to send
     * @param clearFirst true to clear field first (if element is a text field)
     * @param sendEnterKey true to send the Enter key after sending the value
     */
-  def sendKeys(element: String, value: String, clearFirst: Boolean, sendEnterKey: Boolean) {
-    withWebElement(element) { webElement =>
+  def sendKeys(elementBinding: LocatorBinding, value: String, clearFirst: Boolean, sendEnterKey: Boolean) {
+    val element = elementBinding.element
+    withWebElement(elementBinding) { webElement =>
       if (clearFirst) {
         clearText(webElement, element)
       }
@@ -382,8 +415,8 @@ class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with
     }
   }
   
-  def clearText(element: String) {
-    withWebElement(element) { clearText(_, element) }
+  def clearText(elementBinding: LocatorBinding) {
+    withWebElement(elementBinding) { clearText(_, elementBinding.element) }
   }
   
   private def clearText(webElement: WebElement, name: String) {
@@ -394,76 +427,76 @@ class WebEnvContext(val scopes: ScopedDataStack) extends EnvContext(scopes) with
   /**
     * Selects a value in a dropdown (select control) by visible text.
     * 
-    * @param element the name of the dropdown element (select control)
+    * @param elementBinding the web element locator binding
     * @param value the value to select
     */
-  def selectByVisibleText(element: String, value: String) {
-    withWebElement(element) { webElement =>
-      logger.info(s"Selecting '$value' in $element by text")
+  def selectByVisibleText(elementBinding: LocatorBinding, value: String) {
+    withWebElement(elementBinding) { webElement =>
+      logger.info(s"Selecting '$value' in ${elementBinding.element} by text")
       new Select(webElement).selectByVisibleText(value)
-      bindAndWait(element, "select", value)
+      bindAndWait(elementBinding.element, "select", value)
     }
   }
   
   /**
     * Selects a value in a dropdown (select control) by value.
     * 
-    * @param element the name of the dropdown element (select control)
+    * @param elementBinding the web element locator binding
     * @param value the value to select
     */
-  def selectByValue(element: String, value: String) {
-    withWebElement(element) { webElement =>
-      logger.info(s"Selecting '$value' in $element by value")
+  def selectByValue(elementBinding: LocatorBinding, value: String) {
+    withWebElement(elementBinding) { webElement =>
+      logger.info(s"Selecting '$value' in ${elementBinding.element} by value")
       new Select(webElement).selectByValue(value)
-      bindAndWait(element, "select", value)
+      bindAndWait(elementBinding.element, "select", value)
     }
   }
   
   /**
     * Selects a value in a dropdown (select control) by index.
     * 
-    * @param element the name of the dropdown element (select control)
+    * @param elementBinding the web element locator binding
     * @param index the index to select (first index is 1)
     */
-  def selectByIndex(element: String, index: Int) {
-    withWebElement(element) { webElement =>
-      logger.info(s"Selecting option in $element by index: $index")
+  def selectByIndex(elementBinding: LocatorBinding, index: Int) {
+    withWebElement(elementBinding) { webElement =>
+      logger.info(s"Selecting option in ${elementBinding.element} by index: $index")
       val select = new Select(webElement)
       select.selectByIndex(index)
-      bindAndWait(element, "select", select.getFirstSelectedOption().getText())
+      bindAndWait(elementBinding.element, "select", select.getFirstSelectedOption().getText())
     }
   }
   
-  def performAction(action: String, element: String) {
-    withWebElement(action, element) { webElement =>
+  def performAction(action: String, elementBinding: LocatorBinding) {
+    withWebElement(action, elementBinding) { webElement =>
       action match {
         case "click" => webElement.click
         case "submit" => webElement.submit
         case "check" if (!webElement.isSelected()) => webElement.sendKeys(Keys.SPACE)
         case "uncheck" if (webElement.isSelected()) => webElement.sendKeys(Keys.SPACE)
       }
-      bindAndWait(element, action, "true")
+      bindAndWait(elementBinding.element, action, "true")
     }
   }
   
   /**
     * Waits for text to appear in the given web element.
     * 
-    * @param element the element to wait for text on 
+    * @param elementBinding the web element locator binding 
     */
-  def waitForText(element: String): Boolean = {
-    val text = getElementText(element)
+  def waitForText(elementBinding: LocatorBinding): Boolean = {
+    val text = getElementText(elementBinding)
     text != null && text.length > 0
   }
   
   /**
    * Scrolls an element into view.
    * 
-   * @param element the name of the element to scroll to
+   * @param elementBinding the web element locator binding
    * @param scrollTo scroll element into view, options are: top or bottom
    */
-  def scrollIntoView(element: String, scrollTo: ScrollTo.Value) {
-    withWebElement(element) { scrollIntoView(_, scrollTo) }
+  def scrollIntoView(elementBinding: LocatorBinding, scrollTo: ScrollTo.Value) {
+    withWebElement(elementBinding) { scrollIntoView(_, scrollTo) }
   }
   
   /**

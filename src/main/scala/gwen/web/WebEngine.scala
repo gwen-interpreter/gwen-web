@@ -17,7 +17,6 @@
 package gwen.web
 
 import org.openqa.selenium.Keys
-
 import gwen.Predefs.Kestrel
 import gwen.Predefs.RegexContext
 import gwen.Settings
@@ -28,6 +27,7 @@ import gwen.eval.ScopedDataStack
 import gwen.eval.support.RegexSupport
 import gwen.eval.support.SystemProcessSupport
 import gwen.eval.support.XPathSupport
+import gwen.eval.UnsupportedStepException
 
 
 /**
@@ -44,7 +44,7 @@ trait WebEngine extends EvalEngine[WebEnvContext] with WebElementLocator with Sy
     * @param options command line options
     * @param scopes initial data scopes
     */
-  override def init(options: GwenOptions, scopes: ScopedDataStack) = new WebEnvContext(scopes)
+  override def init(options: GwenOptions, scopes: ScopedDataStack) = new WebEnvContext(options, scopes)
   
   /**
     * Evaluates a given step.  This method matches the incoming step against a 
@@ -63,14 +63,23 @@ trait WebEngine extends EvalEngine[WebEnvContext] with WebElementLocator with Sy
         
       case r"""I navigate to the (.+?)$$$page""" => 
         env.scopes.addScope(page)
-        env.withWebDriver(_.get(env.getAttribute("url")))(WebSettings.`gwen.web.capture.screenshots`)
+        val url = env.getAttribute("url")
+        env.execute {
+          env.withWebDriver(_.get(url))(WebSettings.`gwen.web.capture.screenshots`)
+        }
         
       case r"""I navigate to "(.+?)"$$$url""" => 
         env.scopes.addScope(url)
-        env.withWebDriver(_.get(url))(WebSettings.`gwen.web.capture.screenshots`)
+        env.execute {
+          env.withWebDriver(_.get(url))(WebSettings.`gwen.web.capture.screenshots`)
+        }
         
-      case r"""I scroll to the (top|bottom)$position of (.+?)$$$element""" =>
-        env.scrollIntoView(element, ScrollTo.withName(position))
+      case r"""I scroll to the (top|bottom)$position of (.+?)$$$element""" => {
+        val elementBinding = env.getLocatorBinding(element)
+        env.execute {
+          env.scrollIntoView(elementBinding, ScrollTo.withName(position))
+        }
+      }
       
       case r"""the url will be defined by (?:property|setting) "(.+?)"$$$name""" => 
         env.scopes.set("url", Settings.get(name))
@@ -82,74 +91,110 @@ trait WebEngine extends EvalEngine[WebEnvContext] with WebElementLocator with Sy
         env.scopes.set(s"$element/locator", locator);
         env.scopes.set(s"$element/locator/$locator", expression)
 
-      case r"""the page title should( not)?$negation (be|contain|match regex|match xpath)$operator "(.*?)"$$$expression""" => 
+      case r"""the page title should( not)?$negation (be|contain|match regex|match xpath)$operator "(.*?)"$$$expression""" =>  env.execute {
         compare("title", expression, env.getTitle, operator, Option(negation).isDefined, env)
+      }
         
-      case r"""the page title should( not)?$negation (be|contain|match regex|match xpath)$operator (.+?)$$$attribute""" =>
-        compare("title", env.getAttribute(attribute), env.getTitle, operator, Option(negation).isDefined, env) 
+      case r"""the page title should( not)?$negation (be|contain|match regex|match xpath)$operator (.+?)$$$attribute""" => {
+        val expected = env.getAttribute(attribute)
+        env.execute {
+          compare("title", expected, env.getTitle, operator, Option(negation).isDefined, env)
+        }
+      }
       
-      case r"""(.+?)$element should( not)?$negation be (displayed|hidden|checked|unchecked|enabled|disabled)$$$state""" => 
-        env.withWebElement(element) { webElement =>
-          val result = state match {
-            case "displayed" => webElement.isDisplayed()
-            case "hidden"    => !webElement.isDisplayed()
-            case "checked"   => webElement.isSelected()
-            case "unchecked" => !webElement.isSelected()
-            case "enabled"   => webElement.isEnabled()
-            case "disabled"  => !webElement.isEnabled()
+      case r"""(.+?)$element should( not)?$negation be (displayed|hidden|checked|unchecked|enabled|disabled)$$$state""" => {
+        val elementBinding = env.getLocatorBinding(element)
+        env.execute {
+          env.withWebElement(elementBinding) { webElement =>
+            val result = state match {
+              case "displayed" => webElement.isDisplayed()
+              case "hidden"    => !webElement.isDisplayed()
+              case "checked"   => webElement.isSelected()
+              case "unchecked" => !webElement.isSelected()
+              case "enabled"   => webElement.isEnabled()
+              case "disabled"  => !webElement.isEnabled()
+            }
+            if (!Option(negation).isDefined) assert(result,  s"$element should be $state")
+            else assert(!result,  s"$element should not be $state")
+            env.bindAndWait(element, state, "true")
           }
-          if (!Option(negation).isDefined) assert(result,  s"$element should be $state")
-          else assert(!result,  s"$element should not be $state")
-          env.bindAndWait(element, state, "true")
         }
+      }
         
-      case r"""(.+?)$element should( not)?$negation (be|contain|match regex|match xpath)$operator "(.*?)"$$$expression""" => 
-        compare(element, expression, env.getBoundValue(element), operator, Option(negation).isDefined, env)
+      case r"""(.+?)$element should( not)?$negation (be|contain|match regex|match xpath)$operator "(.*?)"$$$expression""" => { 
+        if (element == "I") throw new UnsupportedStepException(step)
+        val actual = env.getBoundValue(element)
+        env.execute {
+          compare(element, expression, actual, operator, Option(negation).isDefined, env)
+        }
+      }
         
-      case r"""(.+?)$element should( not)?$negation (be|contain|match regex|match xpath)$operator (.+?)$$$attribute""" => 
-        compare(element, env.getAttribute(attribute), env.getBoundValue(element), operator, Option(negation).isDefined, env) 
-      
-      case r"""I capture the (text|node|nodeset)$targetType in (.+?)$source by xpath "(.+?)"$expression as (.+?)$$$name""" => 
-        env.evaluateXPath(expression, env.getBoundValue(source), env.XMLNodeType.withName(targetType)) tap { value =>
-          env.featureScope.set(name, value)
+      case r"""(.+?)$element should( not)?$negation (be|contain|match regex|match xpath)$operator (.+?)$$$attribute""" => {
+        if (element == "I") throw new UnsupportedStepException(step)
+        val expected = env.getAttribute(attribute)
+        val actual = env.getBoundValue(element)
+        env.execute {
+          compare(element, expected, actual, operator, Option(negation).isDefined, env)
         }
+      }
       
-      case r"""I capture the text in (.+?)$source by regex "(.+?)"$expression as (.+?)$$$name""" => 
-        env.extractByRegex(expression, env.getBoundValue(source)) tap { value =>
-          env.featureScope.set(name, value)
-        }
+      case r"""I capture the (text|node|nodeset)$targetType in (.+?)$source by xpath "(.+?)"$expression as (.+?)$$$name""" => {
+        val src = env.getBoundValue(source)
+        env.featureScope.set(name, env.execute(env.evaluateXPath(expression, src, env.XMLNodeType.withName(targetType))).getOrElse(s"$$[xpath:$expression]"))
+      }
+      
+      case r"""I capture the text in (.+?)$source by regex "(.+?)"$expression as (.+?)$$$name""" => {
+        val src = env.getBoundValue(source)
+        env.featureScope.set(name, env.execute(env.extractByRegex(expression, src)).getOrElse(s"$$[regex:$expression"))
+      }
       
       case r"""I capture the current URL""" => 
-        env.featureScope.set("the current URL", env.withWebDriver(_.getCurrentUrl()))
+        env.featureScope.set("the current URL", env.execute(env.withWebDriver(_.getCurrentUrl())).getOrElse("$[currentUrl]"))
       
       case r"""I capture the current URL as (.+?)$name""" => 
-        env.featureScope.set(name, env.withWebDriver(_.getCurrentUrl()))
+        env.featureScope.set(name, env.execute(env.withWebDriver(_.getCurrentUrl())).getOrElse("$[currentUrl]"))
       
-      case r"""I capture (.+?)$element as (.+?)$attribute""" => 
+      case r"""I capture (.+?)$element as (.+?)$attribute""" =>
         env.featureScope.set(attribute, env.getBoundValue(element))
         
-      case r"""I capture (.+?)$element""" => 
+      case r"""I capture (.+?)$element""" =>
         env.featureScope.set(element, env.getBoundValue(element))
         
-      case r"""I wait for (.+?)$element text for (.+?)$seconds second(?:s?)""" => 
-        env.waitUntil(s"Waiting for $element text after $seconds second(s)", seconds.toInt) {
-          env.waitForText(element)
-        } 
-        
-      case r"""I wait for (.+?)$element text""" => 
-        env.waitUntil(s"Waiting for $element text") {
-          env.waitForText(element)
+      case r"""I wait for (.+?)$element text for (.+?)$seconds second(?:s?)""" =>  {
+        val elementBinding = env.getLocatorBinding(element)
+        env.execute {
+          env.waitUntil(s"Waiting for $element text after $seconds second(s)", seconds.toInt) {
+            env.waitForText(elementBinding)
+          }
         }
+      }
         
-      case r"""I wait for (.+?)$element for (.+?)$seconds second(?:s?)""" => 
-        env.waitUntil(s"Waiting for $element after $seconds second(s)", seconds.toInt) {
-          locateOpt(env, element).isDefined
+      case r"""I wait for (.+?)$element text""" => {
+        val elementBinding = env.getLocatorBinding(element)
+        env.execute {
+          env.waitUntil(s"Waiting for $element text") {
+            env.waitForText(elementBinding)
+          }
         }
+      }
         
-      case r"""I wait for (.+?)$$$element""" => 
-        env.waitUntil(s"Waiting for $element") {
-          locateOpt(env, element).isDefined
+      case r"""I wait for (.+?)$element for (.+?)$seconds second(?:s?)""" =>  {
+        val elementBinding = env.getLocatorBinding(element)
+        env.execute {
+          env.waitUntil(s"Waiting for $element after $seconds second(s)", seconds.toInt) {
+            locateOpt(env, elementBinding).isDefined
+          }
         }
+      }
+        
+      case r"""I wait for (.+?)$$$element""" => {
+        val elementBinding = env.getLocatorBinding(element)
+        env.execute {
+          env.waitUntil(s"Waiting for $element") {
+            locateOpt(env, elementBinding).isDefined
+          }
+        }
+      }
       
       case r"""I wait ([0-9]+?)$duration second(?:s?) when (.+?)$element is (clicked|submitted|checked|unchecked|selected|typed|entered|cleared)$$$event""" =>
         env.scopes.set(s"$element/${WebEvents.EventToAction(event)}/wait", duration)
@@ -157,18 +202,24 @@ trait WebEngine extends EvalEngine[WebEnvContext] with WebElementLocator with Sy
       case r"""I wait until (.+?)$condition when (.+?)$element is (clicked|submitted|checked|unchecked|selected|typed|entered|cleared)$$$event""" =>
         env.scopes.set(s"$element/${WebEvents.EventToAction(event)}/condition", condition)
         
-      case r"""I wait until "(.+?)$javascript"""" => 
+      case r"""I wait until "(.+?)$javascript"""" => env.execute {
         env.waitUntil(s"Waiting until $javascript") {
           env.executeScript(s"return $javascript").asInstanceOf[Boolean]
         }
+      }
         
-      case r"""I wait until (.+?)$$$condition""" => 
-        env.waitUntil(s"Waiting until $condition") {
-          env.executeScript(s"return ${env.scopes.get(s"$condition/javascript")}").asInstanceOf[Boolean]
+      case r"""I wait until (.+?)$$$condition""" =>  {
+        val javascript = env.scopes.get(s"$condition/javascript")
+        env.execute {
+          env.waitUntil(s"Waiting until $condition") {
+            env.executeScript(s"return ${javascript}").asInstanceOf[Boolean]
+          }
         }
+      }
         
-      case r"""I wait ([0-9]+?)$duration second(?:s?)""" => 
+      case r"""I wait ([0-9]+?)$duration second(?:s?)""" => env.execute {
         Thread.sleep(duration.toLong * 1000)
+      }
       
       case r"""my (.+?)$name (?:property|setting) (?:is|will be) "(.*?)"$$$value""" =>
         Settings.add(name, value)
@@ -191,39 +242,86 @@ trait WebEngine extends EvalEngine[WebEnvContext] with WebElementLocator with Sy
       case r"""(.+?)$attribute (?:is|will be) "(.*?)"$$$value""" => 
         env.featureScope.set(attribute, value)
         
-      case r"""I clear (.+?)$$$element""" => 
-        env.clearText(element)
+      case r"""I clear (.+?)$$$element""" => {
+        val elementBinding = env.getLocatorBinding(element)
+        env.execute {
+          env.clearText(elementBinding)
+        }
+      }
       
-      case r"""I press enter in (.+?)$$$element""" => 
-        locate(env, element).sendKeys(Keys.RETURN)
-        env.bindAndWait(element, "enter", "true")
+      case r"""I press enter in (.+?)$$$element""" => {
+        val elementBinding = env.getLocatorBinding(element) 
+        env.execute {
+          locate(env, elementBinding).sendKeys(Keys.RETURN)
+          env.bindAndWait(element, "enter", "true")
+        }
+      }
 
-      case r"""I (enter|type)$action "(.*?)"$value in (.+?)$$$element""" => 
-        env.sendKeys(element, value, true, action == "enter")
+      case r"""I (enter|type)$action "(.*?)"$value in (.+?)$$$element""" => {
+        val elementBinding = env.getLocatorBinding(element)
+        env.execute {
+          env.sendKeys(elementBinding, value, true, action == "enter")
+        }
+      }
         
-      case r"""I (enter|type)$action (.+?)$attribute in (.+?)$$$element""" => 
-        env.sendKeys(element, env.getAttribute(attribute), true, action == "enter")
+      case r"""I (enter|type)$action (.+?)$attribute in (.+?)$$$element""" => {
+        val elementBinding = env.getLocatorBinding(element)
+        val value = env.getAttribute(attribute)
+        env.execute {
+          env.sendKeys(elementBinding, value, true, action == "enter")
+        }
+      }
         
-      case r"""I select the (\d+?)$position(st|nd|rd|th)$suffix option in (.+?)$$$element""" => 
-        env.selectByIndex(element, position.toInt - 1)
+      case r"""I select the (\d+?)$position(st|nd|rd|th)$suffix option in (.+?)$$$element""" => {
+        val elementBinding = env.getLocatorBinding(element)
+        env.execute {
+          env.selectByIndex(elementBinding, position.toInt - 1)
+        }
+      }
         
-      case r"""I select "(.*?)"$value in (.+?)$element by value""" => 
-        env.selectByValue(element, value)
+      case r"""I select "(.*?)"$value in (.+?)$element by value""" => {
+        val elementBinding = env.getLocatorBinding(element)
+        env.execute { 
+          env.selectByValue(elementBinding, value)
+        }
+      }
         
-      case r"""I select "(.*?)"$value in (.+?)$$$element""" => 
-        env.selectByVisibleText(element, value)
+      case r"""I select "(.*?)"$value in (.+?)$$$element""" => {
+        val elementBinding = env.getLocatorBinding(element)
+        env.execute { 
+          env.selectByVisibleText(elementBinding, value)
+        }
+      }
         
-      case r"""I select (.+?)$attribute in (.+?)$element by value""" => 
-        env.selectByValue(element, env.getAttribute(attribute))
+      case r"""I select (.+?)$attribute in (.+?)$element by value""" => {
+        val value = env.getAttribute(attribute)
+        val elementBinding = env.getLocatorBinding(element)
+        env.execute { 
+          env.selectByValue(elementBinding, value)
+        }
+      }
         
-      case r"""I select (.+?)$attribute in (.+?)$$$element""" => 
-        env.selectByVisibleText(element, env.getAttribute(attribute))
+      case r"""I select (.+?)$attribute in (.+?)$$$element""" => {
+        val value = env.getAttribute(attribute)
+        val elementBinding = env.getLocatorBinding(element)
+        env.execute { 
+          env.selectByVisibleText(elementBinding, value)
+        }
+      }
         
-      case r"""I (click|submit|check|uncheck)$action (.+?)$$$element""" => 
-        env.performAction(action, element)
+      case r"""I (click|submit|check|uncheck)$action (.+?)$$$element""" => {
+        val elementBinding = env.getLocatorBinding(element)
+        env.execute { 
+          env.performAction(action, elementBinding)
+        }
+      }
         
-      case r"""I (?:highlight|locate) (.+?)$$$element""" =>
-        env.highlight(locate(env, element))
+      case r"""I (?:highlight|locate) (.+?)$$$element""" => {
+        val elementBinding = env.getLocatorBinding(element)
+        env.execute {
+          env.highlight(locate(env, elementBinding))
+        }
+      }
         
       case _ => super.evaluate(step, env)
       

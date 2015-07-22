@@ -4,7 +4,7 @@ Gwen-Web User Guide
 Invoking Gwen
 -------------
 
-Usage: `gwen-web-install-dir/bin/gwen.sh|gwen.bat` `[options]` `[<feature paths>]`
+Usage: `gwen-web-install-dir/bin/gwen.sh|gwen.bat` `[options]` `[<features>]`
 
 | Option                         | Description |
 | ------------------------------ |-------------|
@@ -15,8 +15,9 @@ Usage: `gwen-web-install-dir/bin/gwen.sh|gwen.bat` `[options]` `[<feature paths>
 | `-r`, `--report` `<dir>`       | generated reporting location |
 | `-m`, `--meta` `<files>`       | Comma separated list of meta file paths |
 | `-t`, `--tags` `<tags>`        | Comma separated list of @include or ~@exclude tags |
-| `-|`, `--parallel`             | Executes specified `<feature paths>` in parallel |
-| `<feature paths>`              | Space separated list of feature files and/or directories (feature suites) to evaluate |
+| `-n`, `--dry-run`              | Do not evaluate steps on engine (validate for correctness only)|
+| `-|`, `--parallel`             | Executes specified `<features>` in parallel |
+| `<feature>`                    | Space separated list of feature files and/or directories (feature suites) to evaluate |
 
 REPL Commands
 -------------

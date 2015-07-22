@@ -30,8 +30,8 @@ import org.openqa.selenium.firefox.FirefoxDriver
 import org.scalatest.FlatSpec
 import org.scalatest.Matchers
 import org.scalatest.mock.MockitoSugar
-
 import gwen.eval.ScopedDataStack
+import gwen.eval.GwenOptions
 
 class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar with WebElementLocator {
 
@@ -40,33 +40,16 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar wit
   val mockWebDriverOptions = mock[WebDriver.Options]
   val mockWebDriverTimeouts = mock[WebDriver.Timeouts]
   
-  "Attempt to locate unbound element "should "throw locator binding not found error" in {
-    shouldFailWithLocatorBindingError("username", newEnv, "Could not locate username: locator type binding not found: username/locator")
-  }
-  
-  "Attempt to locate element with unbound locator" should "throw locator not found error" in {
-    val env = newEnv
-    env.scopes.addScope("login").set("username/locator", "id")
-    shouldFailWithLocatorBindingError("username", env, "Could not locate username: locator expression binding not bound: username/locator/id")
-  }
-  
-  "Attempt to locate element with unsupported locator" should "throw unsuported locator error" in {
-    val env = newEnv
-    env.scopes.addScope("login").set("username/locator", "unknown").set("username/locator/unknown", "funkyness")
-    shouldFailWithLocatorBindingError("username", env, "Could not locate username: unsupported locator: unknown")
-  }
-  
   "Attempt to locate non existent element" should "throw no such element error" in {
     
     val env = newEnv
-    env.scopes.addScope("login").set("middleName/locator", "id").set("middleName/locator/id", "mname")
     
     when(mockWebDriver.manage()).thenReturn(mockWebDriverOptions)
     when(mockWebDriverOptions.timeouts()).thenReturn(mockWebDriverTimeouts)
     when(mockWebDriver.findElement(By.id("mname"))).thenReturn(null)
     
     val e = intercept[NoSuchElementException] {
-      locate(env, "middleName")
+      locate(env, LocatorBinding("middleName", "id", "mname"))
     }
     e.getMessage should be ("Web element not found: middleName")
   }
@@ -74,13 +57,12 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar wit
   "Attempt to locate non existent element by Opt" should "return None" in {
     
     val env = newEnv
-    env.scopes.addScope("login").set("middleName/locator", "id").set("middleName/locator/id", "mname")
     
     when(mockWebDriver.manage()).thenReturn(mockWebDriverOptions)
     when(mockWebDriverOptions.timeouts()).thenReturn(mockWebDriverTimeouts)
     when(mockWebDriver.findElement(By.id("mname"))).thenReturn(null)
     
-    locateOpt(env, "middleName") match {
+    locateOpt(env, LocatorBinding("middleName", "id", "mname")) match {
       case None => { } //expected
       case Some(webElement) => fail("Expected None but got Some(webElement)")
     }
@@ -121,93 +103,76 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar wit
   "Attempt to locate existing element by javascript" should "return the element" in {
     
     val locator = "javascript"
-    val locatorValue = "document.getElementById('username')"
+    val lookup = "document.getElementById('username')"
     val env = newEnv
-    env.scopes.addScope("login").set("username/locator", locator).set(s"username/locator/${locator}", locatorValue)
     
     when(mockWebDriver.manage()).thenReturn(mockWebDriverOptions)
     when(mockWebDriverOptions.timeouts()).thenReturn(mockWebDriverTimeouts)
-    doReturn(mockWebElement).when(mockWebDriver).executeScript(s"return $locatorValue")
+    doReturn(mockWebElement).when(mockWebDriver).executeScript(s"return $lookup")
     when(mockWebElement.isDisplayed()).thenReturn(true);
     
-    locate(env, "username") should be (mockWebElement)
+    locate(env, LocatorBinding("username", locator, lookup)) should be (mockWebElement)
     
-    locateOpt(env, "username") match {
+    locateOpt(env, LocatorBinding("username", locator, lookup)) match {
       case Some(elem) => 
         elem should be (mockWebElement)
       case None =>
         fail("Excpected Some(webElement) but got None")
     }
     
-    verify(mockWebDriver, times(2)).executeScript(s"return $locatorValue")
+    verify(mockWebDriver, times(2)).executeScript(s"return $lookup")
 
-  }
-  
-  private def shouldFailWithLocatorBindingError(element: String, env: WebEnvContext, expectedMsg: String) {
-    
-    var e = intercept[LocatorBindingException] {
-      locate(env, element)
-    }
-    e.getMessage should be (expectedMsg)
-    
-    e = intercept[LocatorBindingException] {
-      locateOpt(env, element)
-    }
-    e.getMessage should be (expectedMsg)
   }
   
   "Timeout on locating element by javascript" should "throw error" in {
     
     val locator = "javascript"
-    val locatorValue = "document.getElementById('username')"
+    val lookup = "document.getElementById('username')"
     val env = newEnv
-    env.scopes.addScope("login").set("username/locator", locator).set(s"username/locator/${locator}", locatorValue)
     
     val timeoutError = new TimeoutException();
     when(mockWebDriver.manage()).thenReturn(mockWebDriverOptions)
     when(mockWebDriverOptions.timeouts()).thenReturn(mockWebDriverTimeouts)
-    doThrow(timeoutError).when(mockWebDriver).executeScript(s"return $locatorValue")
+    doThrow(timeoutError).when(mockWebDriver).executeScript(s"return $lookup")
     
     val e = intercept[TimeoutOnWaitException] {
-      locate(env, "username")
+      locate(env, new LocatorBinding("username", locator, lookup))
     }
     e.getMessage should be ("Timed out waiting.")
     
-    verify(mockWebDriver, atLeastOnce()).executeScript(s"return $locatorValue")
+    verify(mockWebDriver, atLeastOnce()).executeScript(s"return $lookup")
 
   }
   
   "Timeout on locating optional element by javascript" should "return None" in {
     
     val locator = "javascript"
-    val locatorValue = "document.getElementById('username')"
+    val lookup = "document.getElementById('username')"
     val env = newEnv
-    env.scopes.addScope("login").set("username/locator", locator).set(s"username/locator/${locator}", locatorValue)
     
     val timeoutError = new TimeoutException();
     when(mockWebDriver.manage()).thenReturn(mockWebDriverOptions)
     when(mockWebDriverOptions.timeouts()).thenReturn(mockWebDriverTimeouts)
-    doThrow(timeoutError).when(mockWebDriver).executeScript(s"return $locatorValue")
+    doThrow(timeoutError).when(mockWebDriver).executeScript(s"return $lookup")
     
-    locateOpt(env, "username") should be (None)
+    locateOpt(env, LocatorBinding("username", locator, lookup)) should be (None)
     
-    verify(mockWebDriver, atLeastOnce()).executeScript(s"return $locatorValue")
+    verify(mockWebDriver, atLeastOnce()).executeScript(s"return $lookup")
 
   }
   
-  private def shouldFindWebElement(locator: String, locatorValue: String, by: By) {
+  private def shouldFindWebElement(locator: String, lookup: String, by: By) {
     
     val env = newEnv
-    env.scopes.addScope("login").set("username/locator", locator).set(s"username/locator/${locator}", locatorValue)
     
     when(mockWebDriver.manage()).thenReturn(mockWebDriverOptions)
     when(mockWebDriverOptions.timeouts()).thenReturn(mockWebDriverTimeouts)
     when(mockWebDriver.findElement(by)).thenReturn(mockWebElement)
     when(mockWebElement.isDisplayed()).thenReturn(true)
 
-    locate(env, "username") should be (mockWebElement)
+    locate(env, LocatorBinding("username", locator, lookup)) should be (mockWebElement)
     
-    locateOpt(env, "username") match {
+    locateOpt(env, LocatorBinding("username", locator, lookup)) match {
       case Some(elem) => 
         elem should be (mockWebElement)
       case None => 
@@ -218,8 +183,21 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar wit
     
   }
   
-  private def newEnv = new WebEnvContext(new ScopedDataStack()) {
+  "Attempt to locate element with unsupported locator" should "throw unsuported locator error" in {
+    val env = newEnv
+    env.scopes.addScope("login").set("username/id", "unknown").set("username/id/unknown", "funkyness")
+    var e = intercept[LocatorBindingException] {
+      locate(env, LocatorBinding("username", "unknown", "funkiness"))
+    }
+    e.getMessage should be ("Could not locate username: unsupported locator: unknown")
+  }
+  
+  private def newEnv = new WebEnvContext(GwenOptions(), new ScopedDataStack()) {
     override def withWebDriver[T](f: WebDriver => T)(implicit takeScreenShot: Boolean = false): T = f(mockWebDriver)
+  }
+  
+  private def shouldFailWithLocatorBindingError(element: String, env: WebEnvContext, expectedMsg: String) {
+    
   }
   
 }

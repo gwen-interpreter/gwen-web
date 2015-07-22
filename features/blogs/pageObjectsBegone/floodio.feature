@@ -17,6 +17,7 @@
 # https://warpedjavaguy.wordpress.com/2014/08/27/page-objects-begone/
 #
 
+ @floodio
  Feature: The floodio challenge
      As a gwen user
      I want to automate the floodio challenge

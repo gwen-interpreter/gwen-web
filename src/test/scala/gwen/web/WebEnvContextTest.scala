@@ -22,8 +22,8 @@ import org.openqa.selenium.WebDriver
 import org.scalatest.FlatSpec
 import org.scalatest.Matchers
 import org.scalatest.mock.MockitoSugar
-
 import gwen.eval.ScopedDataStack
+import gwen.eval.GwenOptions
 
 class WebEnvContextTest extends FlatSpec with Matchers with MockitoSugar {
   
@@ -71,11 +71,31 @@ class WebEnvContextTest extends FlatSpec with Matchers with MockitoSugar {
     verify(mockDriverManager).quit()
   }
   
+  "Attempt to locate unbound element "should "throw locator binding not found error" in {
+    val mockDriverManager = mock[DriverManager]
+    val env = newEnv(mockDriverManager)
+    shouldFailWithLocatorBindingError("username", env, "Could not locate username: locator binding not found: username/locator")
+  }
+  
+  "Attempt to locate element with unbound locator" should "throw locator not found error" in {
+    val mockDriverManager = mock[DriverManager]
+    val env = newEnv(mockDriverManager)
+    env.scopes.addScope("login").set("username/locator", "id")
+    shouldFailWithLocatorBindingError("username", env, "Could not locate username: locator lookup binding not found: username/locator/id")
+  }
+  
   def newEnv(browser: DriverManager) = {
-   new WebEnvContext(new ScopedDataStack()) {
+   new WebEnvContext(GwenOptions(), new ScopedDataStack()) {
      override def withWebDriver[T](f: WebDriver => T)(implicit takeScreenShot: Boolean = false): T = f(mock[WebDriver])
      override def close() { browser.quit() }
    }
+  }
+  
+  private def shouldFailWithLocatorBindingError(element: String, env: WebEnvContext, expectedMsg: String) {
+    var e = intercept[LocatorBindingException] {
+      env.getLocatorBinding(element)
+    }
+    e.getMessage should be (expectedMsg)
   }
   
 }

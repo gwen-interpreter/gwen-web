@@ -16,10 +16,10 @@
 
 package gwen.web
 
-class WebInterpreterSingleTest extends WebInterpreterTest {
+class WebInterpreterSequentialDryTest extends WebInterpreterTest {
 
-  "Single feature" should "should evaluate" in {
-    evaluate(List("features/floodio/FloodIO.feature"), false, false, "target/reports/single")
+  "Sequential mode dry run" should "should validate all features in sequence" in {
+    evaluate(List("features"), false, true, "target/reports/sequential-dry-run")
   }
   
 }

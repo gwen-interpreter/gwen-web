@@ -14,6 +14,7 @@
 # limitations under the License.
 #
 
+ @etsy
  Feature: Information is available for the user to find out about Etsy
     As an anonymous user who is not registered with Etsy
     I want to be able to find out information
