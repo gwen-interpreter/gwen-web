@@ -22,6 +22,7 @@ import gwen.dsl.Failed
 import gwen.dsl.Passed
 import gwen.eval.GwenOptions
 import gwen.Settings
+import gwen.eval.GwenLauncher
 
 abstract class WebInterpreterTest extends FlatSpec {
 
@@ -32,8 +33,8 @@ abstract class WebInterpreterTest extends FlatSpec {
       if (dryRun) args = args ++ Array("-n")
       args = args ++ features.toArray.asInstanceOf[Array[String]]
       val options = GwenOptions(WebInterpreter.getClass, args)
-      val intepreter = new WebInterpreter
-      intepreter.execute(options, None) match {
+      val launcher = new GwenLauncher(new WebInterpreter)
+      launcher.run(options, None) match {
         case Passed(_) => // woo hoo
         case Failed(_, error) => error.printStackTrace(); fail(error.getMessage())
         case _ => fail("evaluation expected but got noop")

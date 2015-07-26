@@ -18,7 +18,7 @@ package gwen.web
 
 class WebInterpreterSingleDryRunTest extends WebInterpreterTest {
 
-  "Single feature dry run" should "should validate feature" in {
+  "Single feature dry run" should "validate feature" in {
     evaluate(List("features/floodio/FloodIO.feature"), false, true, "target/reports/single-dry-run")
   }
   
