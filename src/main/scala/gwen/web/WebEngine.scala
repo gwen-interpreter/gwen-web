@@ -27,7 +27,7 @@ import gwen.eval.ScopedDataStack
 import gwen.eval.support.RegexSupport
 import gwen.eval.support.SystemProcessSupport
 import gwen.eval.support.XPathSupport
-import gwen.eval.UnsupportedStepException
+import gwen.errors._
 
 
 /**
@@ -122,7 +122,7 @@ trait WebEngine extends EvalEngine[WebEnvContext] with WebElementLocator with Sy
       }
         
       case r"""(.+?)$element should( not)?$negation (be|contain|match regex|match xpath)$operator "(.*?)"$$$expression""" => { 
-        if (element == "I") throw new UnsupportedStepException(step)
+        if (element == "I") undefinedStepError(step)
         val actual = env.getBoundValue(element)
         env.execute {
           compare(element, expression, actual, operator, Option(negation).isDefined, env)
@@ -130,7 +130,7 @@ trait WebEngine extends EvalEngine[WebEnvContext] with WebElementLocator with Sy
       }
         
       case r"""(.+?)$element should( not)?$negation (be|contain|match regex|match xpath)$operator (.+?)$$$attribute""" => {
-        if (element == "I") throw new UnsupportedStepException(step)
+        if (element == "I") undefinedStepError(step)
         val expected = env.getAttribute(attribute)
         val actual = env.getBoundValue(element)
         env.execute {

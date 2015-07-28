@@ -43,6 +43,7 @@ import gwen.eval.support.XPathSupport
 import gwen.eval.support.InterpolationSupport
 import gwen.dsl.SpecType
 import gwen.eval.GwenOptions
+import gwen.errors._
 
 /**
   * Defines the web environment context. This includes the configured selenium web
@@ -267,7 +268,7 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
       case Failure(_) => Settings.getOpt(name) match { 
         case Some(text) => text
         case _ => 
-          sys.error(s"Unbound attribute: ${name}")
+          unboundAttributeError(name)
       }
     }
   }
@@ -317,7 +318,7 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
         case None | Some("") => scopes.getOpt(s"$name/javascript") match {
           case None | Some("") => scopes.getOpt(s"$name/xpath") match {
             case None | Some("") => scopes.getOpt(s"$name/regex") match {
-              case None | Some("") => execute(scopes.get(name)).getOrElse(Try(scopes.get(name)).getOrElse(Try(getLocatorBinding(name).lookup).getOrElse(sys.error(s"Unbound reference: $name"))))
+              case None | Some("") => execute(scopes.get(name)).getOrElse(Try(scopes.get(name)).getOrElse(Try(getLocatorBinding(name).lookup).getOrElse(unboundAttributeError(name))))
               case _ =>
                 val source = interpolate(getBoundValue(scopes.get(s"$name/regex/source")))(getBoundValue)
                 val expression = interpolate(getBoundValue(scopes.get(s"$name/regex/expression")))(getBoundValue)

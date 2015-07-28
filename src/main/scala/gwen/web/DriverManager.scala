@@ -36,6 +36,7 @@ import com.typesafe.scalalogging.slf4j.LazyLogging
 import gwen.Predefs.Kestrel
 import org.apache.commons.io.FileUtils
 import gwen.eval.EnvContext
+import gwen.web.errors._
 
 /** Provides access to the web driver used to drive the browser. */
 trait DriverManager extends LazyLogging { 
@@ -116,7 +117,7 @@ trait DriverManager extends LazyLogging {
     case "ie" => ie()
     case "chrome" => chrome()
     case "safari" => safari()
-    case _ => sys.error(s"Unsupported webdriver: $driverName")
+    case _ => unsupportedWebDriverError(driverName)
   }
   
   private def firefoxProfile() : FirefoxProfile = new FirefoxProfile() tap { profile =>
