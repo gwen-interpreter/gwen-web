@@ -42,22 +42,22 @@ import gwen.web.errors._
 trait DriverManager extends LazyLogging { 
   env: EnvContext =>
     
-  /** Web driver (lazily loaded). */
-  private[web] var _webDriver: Option[WebDriver] = None
+  /** Current web driver instance. */
+  private[web] var driver: Option[WebDriver] = None
   
   /** Provides private access to the web driver */
-  private def webDriver: WebDriver = _webDriver match {
+  private def webDriver: WebDriver = driver match {
     case None => 
-      _webDriver = Some(loadWebDriver)
-      _webDriver.get
+      driver = Some(loadWebDriver)
+      driver.get
     case _ => 
-      _webDriver.get
+      driver.get
   }
   
   /** Quits the browser and closes the web driver (if it has loaded). */
    def quit() {
-    _webDriver foreach { _.quit() } 
-    _webDriver = None
+    driver foreach { _.quit() } 
+    driver = None
   }
    
   /**

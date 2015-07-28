@@ -233,7 +233,7 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     * @param step the step to resolve
     * @return the resolved step
     */
-  override def parse(step: Step): Step = 
+  override def interpolate(step: Step): Step = 
     if (SpecType.feature.equals(specType)) 
       Step(step, interpolate(step.expression)(getBoundValue)) 
     else 
@@ -331,7 +331,7 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
               execute(evaluateXPath(expression, source, XMLNodeType.withName(targetType))).getOrElse(s"$$[xpath:$expression]")
           }
           case Some(javascript) =>
-              execute(executeScript(s"return ${interpolate(javascript)(getBoundValue)}").toString).getOrElse(s"$$[javascript:$javascript]")
+              execute(Option(executeScript(s"return ${interpolate(javascript)(getBoundValue)}")).map(_.toString).getOrElse("")).getOrElse(s"$$[javascript:$javascript]")
         }
         case Some(value) => value
       }

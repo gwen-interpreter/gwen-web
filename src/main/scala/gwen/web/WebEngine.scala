@@ -29,7 +29,6 @@ import gwen.eval.support.SystemProcessSupport
 import gwen.eval.support.XPathSupport
 import gwen.errors._
 
-
 /**
   * A web engine that uses the Selenium web driver
   * API to automate various web operations.

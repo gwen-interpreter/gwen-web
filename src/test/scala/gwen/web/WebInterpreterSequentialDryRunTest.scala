@@ -18,7 +18,7 @@ package gwen.web
 
 class WebInterpreterSequentialDryTest extends WebInterpreterTest {
 
-  "Sequential mode dry run" should "should validate all features in sequence" in {
+  "Sequential mode dry run" should "validate all features in sequence" in {
     evaluate(List("features"), false, true, "target/reports/sequential-dry-run")
   }
   
