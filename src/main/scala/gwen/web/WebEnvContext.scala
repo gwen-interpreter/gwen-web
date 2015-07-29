@@ -262,6 +262,13 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     }
   }
   
+  /**
+    * Gets the attribute or settings value bound to the given name.
+    * 
+    *  @param name the name of the attribute or value
+    *  @throws `gwen.errors.UnboundAttributeException` if no value is bound 
+    *          to the given name 
+    */
   private def getAttributeOrSetting(name: String): String = {
     Try(getAttribute(name)) match {
       case Success(text) => text
@@ -311,6 +318,8 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     *  - name/regex
     *  
     * @param name the name of the bound attribute to find
+    * @throws `gwen.errors.UnboundAttributeException` if no value is bound 
+    *          to the given name
     */
   def getAttribute(name: String): String = 
     (scopes.getOpt(name) match {

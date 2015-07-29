@@ -96,4 +96,11 @@ object WebSettings {
     * is `true`).
     */
   def `gwen.web.accept.untrusted.certs`: Boolean = Settings.getOpt("gwen.web.accept.untrusted.certs").getOrElse("true").toBoolean
+  
+  /**
+    * Provides access to the `gwen.web.suppress.images` setting used to control whether 
+    * or not image rendering will be suppressed in the browser (default value
+    * is `false`). Currently this capability is only supported in firefox driver.
+    */
+  def `gwen.web.suppress.images`: Boolean = Settings.getOpt("gwen.web.suppress.images").getOrElse("false").toBoolean
 }

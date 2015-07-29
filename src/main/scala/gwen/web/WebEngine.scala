@@ -52,6 +52,7 @@ trait WebEngine extends EvalEngine[WebEnvContext] with WebElementLocator with Sy
     *
     * @param step the step to evaluate
     * @param env the web environment context
+    * @throws gwen.errors.UndefinedStepException if the given step is undefined or unsupported
     */
   override def evaluate(step: Step, env: WebEnvContext): Unit = {
     

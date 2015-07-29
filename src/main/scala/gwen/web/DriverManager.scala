@@ -112,6 +112,13 @@ trait DriverManager extends LazyLogging {
     remote(addr, capabilities)
   }
   
+  /**
+    * Gets the local web driver for the given name.
+    * 
+    *  @param driverName the name of the driver to get
+    *  @throws gwen.web.errors.UnsupportedWebDriverException if the given
+    *          web driver name is unsupported 
+    */
   private def localDriver(driverName: String): WebDriver = driverName match {
     case "firefox" => firefox()
     case "ie" => ie()
@@ -131,6 +138,9 @@ trait DriverManager extends LazyLogging {
     WebSettings.`gwen.web.accept.untrusted.certs` tap { acceptUntrustedCerts =>
       profile.setAcceptUntrustedCertificates(true);
       profile.setAssumeUntrustedCertificateIssuer(false);
+    }
+    if (WebSettings.`gwen.web.suppress.images`) {
+      profile.setPreference("permissions.default.image", 2)
     }
   }
   

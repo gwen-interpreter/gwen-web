@@ -52,6 +52,7 @@ file provided through the `-p|--properties` command line option.
 | `gwen.web.capture.screenshots.highlighting` | false          | `true` to capture screenshot highlighting, `false` otherwise | Controls whether or not to capture screenshots of element highlighting |
 | `gwen.web.remote.url`                       |                | http://host:port/wd/hub | If set, allows gwen-web to connect to the remote webdriver at the specified URL. |
 | `gwen.web.accept.untrusted.certs`           | true           | `true` to accept untrused SSL certs, `false` otherwise | Controls whether or not the web driver should accept untrusted (self signed) SSL certificates |
+| `gwen.web.suppress.images` (firefox only)   | false          | `true` to not render images in browser, `false` otherwise | Controls whether or not images are rendered in the browser |
 
 In addition to the above settings, all selenium web driver system properties are also supported. For example, 
 all the [FireFox driver properties](https://code.google.com/p/selenium/wiki/FirefoxDriver#Important_System_Properties) 

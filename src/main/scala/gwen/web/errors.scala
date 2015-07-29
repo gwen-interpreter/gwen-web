@@ -21,12 +21,12 @@ package gwen {
 
   package web {
 
-    object errors {
+    package object errors {
 
-      def unsupportedWebDriverError(name: String) = throw new UnsupportedWebDriverException(name)
+      def unsupportedWebDriverError(driverName: String) = throw new UnsupportedWebDriverException(driverName)
 
       /** Thrown when an unsupported web driver is detected. */
-      class UnsupportedWebDriverException(name: String) extends Exception(s"Unsupported webdriver: ${name}")
+      class UnsupportedWebDriverException(driverName: String) extends Exception(s"Unsupported web driver: ${driverName}")
 
     }
   }
