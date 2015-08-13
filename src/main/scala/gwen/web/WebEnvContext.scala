@@ -44,6 +44,7 @@ import gwen.eval.support.InterpolationSupport
 import gwen.dsl.SpecType
 import gwen.eval.GwenOptions
 import gwen.errors._
+import scala.io.Source
 
 /**
   * Defines the web environment context. This includes the configured selenium web
@@ -518,6 +519,13 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
   def scrollIntoView(webElement: WebElement, scrollTo: ScrollTo.Value) {
     executeScript(s"var elem = arguments[0]; if (typeof elem !== 'undefined' && elem != null) { elem.scrollIntoView(${scrollTo == ScrollTo.top}); }", webElement)
   }
+  
+  /**
+   * Adds web engine dsl steps to super implementation. The entries 
+   * returned by this method are used for tab completion in the REPL.
+   */
+  override def dsl: List[String] = 
+    Source.fromInputStream(getClass.getResourceAsStream("/gwen-web.dsl")).getLines().toList ++ super.dsl
   
 }
 
