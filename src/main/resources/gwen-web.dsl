@@ -60,7 +60,7 @@ the page title should not match xpath <reference>
 <reference> should not match regex <reference>
 <reference> should not match xpath <reference>
 I capture the text in <reference> by xpath "<expression>" as <reference>
-I capture the node|nodeset in <reference> by xpath "<expression>" as <reference>
+I capture the node in <reference> by xpath "<expression>" as <reference>
 I capture the nodeset in <reference> by xpath "<expression>" as <reference>
 I capture the text in <reference> by regex "<expression>" as <reference>
 I capture the current URL
@@ -79,10 +79,10 @@ my <name> setting will be "<value>"
 <reference> will be defined by setting "<name>"
 <reference> is defined by the text in <reference> by xpath "<expression>"
 <reference> is defined by the node in <reference> by xpath "<expression>"
-<reference> is defined by nodeset in <reference> by xpath "<expression>"
+<reference> is defined by the nodeset in <reference> by xpath "<expression>"
 <reference> will be defined by the text in <reference> by xpath "<expression>"
 <reference> will be defined by the node in <reference> by xpath "<expression>"
-<reference> will be defined by nodeset in <reference> by xpath "<expression>"
+<reference> will be defined by the nodeset in <reference> by xpath "<expression>"
 <reference> is defined in <reference> by regex "<expression>"
 <reference> will be defined in <reference> by regex "<expression>"
 <reference> is "<value>"
