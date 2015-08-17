@@ -26,7 +26,9 @@ class WebDslTest extends FlatSpec {
       env.dsl map { dsl =>
         dsl.replace("<position>", "1").replace("<duration>", "2")
       } foreach { dsl => 
-        interpreter.evaluate(Step(StepKeyword.Given, dsl), env) 
+        StepKeyword.values foreach { keyword =>
+          interpreter.evaluate(Step(keyword, dsl), env)
+        } 
       }
     }
   }
