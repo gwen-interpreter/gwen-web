@@ -224,9 +224,10 @@ trait WebEngine extends EvalEngine[WebEnvContext] with WebElementLocator with Sy
       case r"""my (.+?)$name (?:property|setting) (?:is|will be) "(.*?)"$$$value""" =>
         Settings.add(name, value)
         
-      case r"""(.+?)$attribute (?:is|will be) defined by (javascript|property|setting)$attrType "(.+?)"$$$expression""" =>
+      case r"""(.+?)$attribute (?:is|will be) defined by (javascript|system process|property|setting)$attrType "(.+?)"$$$expression""" =>
         attrType match {
           case "javascript" => env.scopes.set(s"$attribute/javascript", expression)
+          case "system process" => env.scopes.set(s"$attribute/sysproc", expression)
           case _ => env.featureScope.set(attribute, Settings.get(expression))
         }
 

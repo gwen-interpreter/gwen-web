@@ -45,6 +45,7 @@ import gwen.dsl.SpecType
 import gwen.eval.GwenOptions
 import gwen.errors._
 import scala.io.Source
+import scala.sys.process._
 
 /**
   * Defines the web environment context. This includes the configured selenium web
@@ -328,11 +329,15 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
         case None | Some("") => scopes.getOpt(s"$name/javascript") match {
           case None | Some("") => scopes.getOpt(s"$name/xpath") match {
             case None | Some("") => scopes.getOpt(s"$name/regex") match {
-              case None | Some("") => execute(scopes.get(name)).getOrElse(Try(scopes.get(name)).getOrElse(Try(getLocatorBinding(name).lookup).getOrElse(unboundAttributeError(name))))
+              case None | Some("") => scopes.getOpt(s"$name/sysproc") match {
+                case None | Some("") => execute(scopes.get(name)).getOrElse(Try(scopes.get(name)).getOrElse(Try(getLocatorBinding(name).lookup).getOrElse(unboundAttributeError(name))))
+                case Some(sysproc) =>
+                  execute(sysproc.!!).map(_.trim).getOrElse(s"$$[sysproc:$sysproc]")
+              }
               case _ =>
                 val source = interpolate(getBoundValue(scopes.get(s"$name/regex/source")))(getBoundValue)
                 val expression = interpolate(getBoundValue(scopes.get(s"$name/regex/expression")))(getBoundValue)
-                execute(extractByRegex(expression, source)).getOrElse(s"$$[regex:$expression]")
+                execute(extractByRegex(expression, source)).getOrElse(s"$$[regex:$expression]")  
             }
             case _ =>
               val source = interpolate(getBoundValue(scopes.get(s"$name/xpath/source")))(getBoundValue)
