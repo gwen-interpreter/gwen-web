@@ -53,7 +53,7 @@ import scala.sys.process._
   *
   *  @author Branko Juric
   */
-class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) extends EnvContext(options, scopes) with WebElementLocator with DriverManager with RegexSupport with XPathSupport with InterpolationSupport {
+class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) extends EnvContext(options, scopes) with WebElementLocator with DriverManager with RegexSupport with XPathSupport {
 
    /** Resets the current context and closes the web browser. */
   override def reset() {
@@ -230,18 +230,6 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
      }
 
   /**
-    * Interpolates string expressions in the given step.
-    * 
-    * @param step the step to resolve
-    * @return the resolved step
-    */
-  override def interpolate(step: Step): Step = 
-    if (SpecType.feature.equals(specType)) 
-      Step(step, interpolate(step.expression)(getBoundValue)) 
-    else 
-      step
-  
-  /**
     * Gets a bound value from memory. A search for the value is made in 
     * the following order and the first value found is returned:
     *  - Web element text on the current page
@@ -251,34 +239,16 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     *  
     * @param name the name of the bound value to find
     */
-  def getBoundValue(name: String): String = { 
+  override def getBoundReferenceValue(name: String): String = { 
     (Try(getLocatorBinding(name)) match {
       case Success(binding) =>
         Try(execute(getElementText(binding)).get) match {
           case Success(text) => text
-          case Failure(_) => getAttributeOrSetting(name)
+          case Failure(_) => getAttribute(name)
         }
-      case Failure(_) => getAttributeOrSetting(name)
+      case Failure(_) => getAttribute(name)
     }) tap { value =>
-      logger.debug(s"getBoundValue(${name})='${value}'")
-    }
-  }
-  
-  /**
-    * Gets the attribute or settings value bound to the given name.
-    * 
-    *  @param name the name of the attribute or value
-    *  @throws `gwen.errors.UnboundAttributeException` if no value is bound 
-    *          to the given name 
-    */
-  private def getAttributeOrSetting(name: String): String = {
-    Try(getAttribute(name)) match {
-      case Success(text) => text
-      case Failure(_) => Settings.getOpt(name) match { 
-        case Some(text) => text
-        case _ => 
-          unboundAttributeError(name)
-      }
+      logger.debug(s"getBoundReferenceValue(${name})='${value}'")
     }
   }
   
@@ -330,23 +300,23 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
           case None | Some("") => scopes.getOpt(s"$name/xpath") match {
             case None | Some("") => scopes.getOpt(s"$name/regex") match {
               case None | Some("") => scopes.getOpt(s"$name/sysproc") match {
-                case None | Some("") => execute(scopes.get(name)).getOrElse(Try(scopes.get(name)).getOrElse(Try(getLocatorBinding(name).lookup).getOrElse(unboundAttributeError(name))))
+                case None | Some("") => execute(super.getBoundReferenceValue(name)).getOrElse(Try(super.getBoundReferenceValue(name)).getOrElse(Try(getLocatorBinding(name).lookup).getOrElse(unboundAttributeError(name))))
                 case Some(sysproc) =>
                   execute(sysproc.!!).map(_.trim).getOrElse(s"$$[sysproc:$sysproc]")
               }
               case _ =>
-                val source = interpolate(getBoundValue(scopes.get(s"$name/regex/source")))(getBoundValue)
-                val expression = interpolate(getBoundValue(scopes.get(s"$name/regex/expression")))(getBoundValue)
+                val source = interpolate(getBoundReferenceValue(scopes.get(s"$name/regex/source")))(getBoundReferenceValue)
+                val expression = interpolate(getBoundReferenceValue(scopes.get(s"$name/regex/expression")))(getBoundReferenceValue)
                 execute(extractByRegex(expression, source)).getOrElse(s"$$[regex:$expression]")  
             }
             case _ =>
-              val source = interpolate(getBoundValue(scopes.get(s"$name/xpath/source")))(getBoundValue)
-              val targetType = interpolate(getBoundValue(scopes.get(s"$name/xpath/targetType")))(getBoundValue)
-              val expression = interpolate(getBoundValue(scopes.get(s"$name/xpath/expression")))(getBoundValue)
+              val source = interpolate(getBoundReferenceValue(scopes.get(s"$name/xpath/source")))(getBoundReferenceValue)
+              val targetType = interpolate(getBoundReferenceValue(scopes.get(s"$name/xpath/targetType")))(getBoundReferenceValue)
+              val expression = interpolate(getBoundReferenceValue(scopes.get(s"$name/xpath/expression")))(getBoundReferenceValue)
               execute(evaluateXPath(expression, source, XMLNodeType.withName(targetType))).getOrElse(s"$$[xpath:$expression]")
           }
           case Some(javascript) =>
-              execute(Option(executeScript(s"return ${interpolate(javascript)(getBoundValue)}")).map(_.toString).getOrElse("")).getOrElse(s"$$[javascript:$javascript]")
+              execute(Option(executeScript(s"return ${interpolate(javascript)(getBoundReferenceValue)}")).map(_.toString).getOrElse("")).getOrElse(s"$$[javascript:$javascript]")
         }
         case Some(value) => value
       }
@@ -364,10 +334,10 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     val locatorBinding = s"$element/locator";
     scopes.getOpt(locatorBinding) match {
       case Some(locator) =>
-        val lookupBinding = interpolate(s"$element/locator/$locator")(getBoundValue)
+        val lookupBinding = interpolate(s"$element/locator/$locator")(getBoundReferenceValue)
         scopes.getOpt(lookupBinding) match {
           case Some(expression) =>
-            LocatorBinding(element, locator, interpolate(expression)(getBoundValue))
+            LocatorBinding(element, locator, interpolate(expression)(getBoundReferenceValue))
           case None => throw new LocatorBindingException(element, s"locator lookup binding not found: ${lookupBinding}")
         }
       case None => throw new LocatorBindingException(element, s"locator binding not found: ${locatorBinding}")
