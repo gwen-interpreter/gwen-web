@@ -123,7 +123,7 @@ trait WebEngine extends EvalEngine[WebEnvContext] with WebElementLocator with Sy
         
       case r"""(.+?)$element should( not)?$negation (be|contain|match regex|match xpath)$operator "(.*?)"$$$expression""" => { 
         if (element == "I") undefinedStepError(step)
-        val actual = env.getBoundValue(element)
+        val actual = env.getBoundReferenceValue(element)
         env.execute {
           compare(element, expression, actual, operator, Option(negation).isDefined, env)
         }
@@ -132,19 +132,19 @@ trait WebEngine extends EvalEngine[WebEnvContext] with WebElementLocator with Sy
       case r"""(.+?)$element should( not)?$negation (be|contain|match regex|match xpath)$operator (.+?)$$$attribute""" => {
         if (element == "I") undefinedStepError(step)
         val expected = env.getAttribute(attribute)
-        val actual = env.getBoundValue(element)
+        val actual = env.getBoundReferenceValue(element)
         env.execute {
           compare(element, expected, actual, operator, Option(negation).isDefined, env)
         }
       }
       
       case r"""I capture the (text|node|nodeset)$targetType in (.+?)$source by xpath "(.+?)"$expression as (.+?)$$$name""" => {
-        val src = env.getBoundValue(source)
+        val src = env.getBoundReferenceValue(source)
         env.featureScope.set(name, env.execute(env.evaluateXPath(expression, src, env.XMLNodeType.withName(targetType))).getOrElse(s"$$[xpath:$expression]"))
       }
       
       case r"""I capture the text in (.+?)$source by regex "(.+?)"$expression as (.+?)$$$name""" => {
-        val src = env.getBoundValue(source)
+        val src = env.getBoundReferenceValue(source)
         env.featureScope.set(name, env.execute(env.extractByRegex(expression, src)).getOrElse(s"$$[regex:$expression"))
       }
       
@@ -155,10 +155,10 @@ trait WebEngine extends EvalEngine[WebEnvContext] with WebElementLocator with Sy
         env.featureScope.set(name, env.execute(env.withWebDriver(_.getCurrentUrl())).getOrElse("$[currentUrl]"))
       
       case r"""I capture (.+?)$element as (.+?)$attribute""" =>
-        env.featureScope.set(attribute, env.getBoundValue(element))
+        env.featureScope.set(attribute, env.getBoundReferenceValue(element))
         
       case r"""I capture (.+?)$element""" =>
-        env.featureScope.set(element, env.getBoundValue(element))
+        env.featureScope.set(element, env.getBoundReferenceValue(element))
         
       case r"""I wait for (.+?)$element text for (.+?)$seconds second(?:s?)""" =>  {
         val elementBinding = env.getLocatorBinding(element)
