@@ -48,9 +48,14 @@
   
    @StepDef
    Scenario: I can read more information on capability assurance 
-     Given the through our capability assurance can be located by css selector "body > div.l-canvas.type_wide.col_cont.headertype_extended.headerpos_fixed > div.l-main > div:nth-child(2) > div > div:nth-child(2) > div > div.wpb_text_column > div > p:nth-child(2)"
+     Given the through our capability assurance can be located by xpath "/html/body/div[1]/div[2]/div[2]/div/div[2]/div/div[2]/div/p[1]"
       And I wait for the through our capability assurance
-      And I am the capability assurance page 
+      And I am on the capability assurance page 
+
+  @StepDef
+  Scenario: I am on the <page-name> page
+     Given I am on the "$<page-name>" page
+      Then I capture the current URL
 
   @StepDef
   Scenario: I click the <link text> link
