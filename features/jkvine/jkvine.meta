@@ -53,9 +53,16 @@
       And I am on the capability assurance page 
 
   @StepDef
+  Scenario: what about capability assurance
+    Given I am a first time user who wants to know more about jkvine
+      And I am a business user who requires some assistance with executive mentoring
+      And I find information on services
+     Then I can read more information on capability assurance
+
+  @StepDef
   Scenario: I am on the <page-name> page
-     Given I am on the "$<page-name>" page
-      Then I capture the current URL
+     Given I am on the $<page-name> page
+      Then I capture the current URL as url
 
   @StepDef
   Scenario: I click the <link text> link
