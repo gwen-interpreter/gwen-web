@@ -2,8 +2,6 @@ import com.typesafe.sbt.packager.Keys._
 
 packageArchetype.java_application
 
-scriptClasspath := Seq("*")
-
 val packageZip = taskKey[File]("package-zip")
 
 packageZip := (baseDirectory in Compile).value / "target" / "universal" / (name.value + "-" + version.value + ".zip")

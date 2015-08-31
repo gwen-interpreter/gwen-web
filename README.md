@@ -31,7 +31,7 @@ Key Features
 Core Requirements
 -----------------
 
-- Java 6 or 7
+- Java 7+
 - A web browser (Chrome, Firefox, Safari, or IE)
 - A native web driver (required for Chrome and IE only)
 
@@ -58,7 +58,7 @@ Installation
 
 Perform the following to download and install the latest binary build:
 
-1. Download and install [Java (JRE) 6 or 7](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
+1. Download and install [Java (JRE) 7+](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
 2. Download one of the following zips:
    - [latest version 1.0.0 snapshot](https://oss.sonatype.org/content/repositories/snapshots/org/gweninterpreter/gwen-web_2.11/1.0.0-SNAPSHOT/gwen-web_2.11-1.0.0-SNAPSHOT.zip)
    - version 1.0.0 release (coming soon) 
