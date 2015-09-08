@@ -64,7 +64,7 @@ Perform the following to download and install the latest binary build:
    - version 1.0.0 release (coming soon) 
 3. Extract the zip to a desired location on your local drive:
    - A folder named _gwen-web-[version]_ will be created
-4. [Install native web driver](doc/CHEATSHEET.md#native-web-drivers) for Chrome, IE, or Safari browser
+4. [Install native web driver](doc/CHEATSHEET.md#native-web-drivers) for Chrome, IE, or Safari
    - Skip this step if you are using firefox (you're good to go)
 5. [Configure settings](doc/CHEATSHEET.md#configuration-settings) (optional)
 6. [Start using gwen-web](doc/START.md) 
