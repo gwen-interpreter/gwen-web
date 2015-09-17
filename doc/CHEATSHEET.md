@@ -22,14 +22,40 @@ Usage: `gwen-web-install-dir/bin/gwen.sh|gwen.bat` `[options]` `[<features>]`
 REPL Commands
 -------------
 
-The following commands are available within the gwen REPL console.
+The following commands are available within the gwen REPL console (these can 
+also be displayed in the REPL by typing `help`).
 
-| Command                               | Description |
-| --------------------------------------| ----------- |
-| `env [-v|--visible] ["<expression>"]` | Prints all currently visible attributes to the console (or attributes containing or matching `<expression>` only) |
-| `env -a|--all ["<expression>"]`       | Prints all attributes in all scopes to the console (or attributes containing or matching `<expression>` only) |
-| `env -f|--feature ["<expression>"]`   | Prints all attributes in feature scope to the console (or attributes containing or matching `<expression>` only) |
-| `exit`,`quit`,`bye`                   | Closes the current browser (if open) and exits the console. |
+```
+Gwen REPL commands:
+
+help
+  Displays this help text
+  
+env [switch] ["filter"]
+  Lists attributes in the current environment
+    Only lists visible attributes if no options are specified
+    switch :
+      -a : to list all attributes in all scopes
+      -f : to list all attributes in the feature (global) scope
+    "filter" : literal string or regex filter expression
+
+history
+  Lists all previously entered commands
+
+!<history#>
+  Executes a previously entered command (history bang operator)
+    history# : the history command number
+
+Given|When|Then|And|But <step>
+  Evaluates a step
+    step : the step expression
+
+exit|quit|bye
+  Closes the REPL session and exits
+
+<tab>
+  Press tab key at any time for tab completion
+```
 
 Configuration Settings
 ----------------------
