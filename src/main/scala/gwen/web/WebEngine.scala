@@ -28,6 +28,7 @@ import gwen.eval.support.RegexSupport
 import gwen.eval.support.SystemProcessSupport
 import gwen.eval.support.XPathSupport
 import gwen.errors._
+import gwen.dsl.Failed
 
 /**
   * A web engine that uses the Selenium web driver
@@ -323,6 +324,21 @@ trait WebEngine extends EvalEngine[WebEnvContext] with WebElementLocator with Sy
           env.highlight(locate(env, elementBinding))
         }
       }
+      
+      case "I refresh the current page" => env.execute { 
+        env.withWebDriver { _.navigate().refresh() }
+      }
+      
+      case r"""(.+?)$doStep until (.+?)$$$condition""" => 
+        val javascript = env.scopes.get(s"$condition/javascript")
+        env.execute {
+          env.waitUntil(s"Repeating until $condition") {
+            evaluateStep(Step(step.keyword, doStep), env).evalStatus match {
+              case Failed(_, e) => throw e
+              case _ => env.executeScript(s"return ${javascript}").asInstanceOf[Boolean]
+            }
+          }
+        }
         
       case _ => super.evaluate(step, env)
       

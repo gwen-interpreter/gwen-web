@@ -144,3 +144,5 @@ I highlight <element>
 I locate <element>
 I execute system process "<command>"
 I execute a unix system process "<command>"
+I refresh the current page
+<step> until <condition>
