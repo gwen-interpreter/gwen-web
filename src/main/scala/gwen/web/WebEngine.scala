@@ -332,7 +332,7 @@ trait WebEngine extends EvalEngine[WebEnvContext] with WebElementLocator with Sy
       case r"""(.+?)$doStep until (.+?)$$$condition""" => 
         val javascript = env.scopes.get(s"$condition/javascript")
         env.execute {
-          env.waitUntil(s"Repeating until $condition") {
+          env.waitUntil(s"Repeating until $condition", 3 * WebSettings.`gwen.web.wait.seconds`) {
             evaluateStep(Step(step.keyword, doStep), env).evalStatus match {
               case Failed(_, e) => throw e
               case _ => env.executeScript(s"return ${javascript}").asInstanceOf[Boolean]
