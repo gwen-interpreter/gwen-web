@@ -213,7 +213,7 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
      try {
        val webElement = locate(this, elementBinding)
        action.foreach { actionString =>
-         logger.info(s"${actionString match {
+         logger.debug(s"${actionString match {
            case "click" => "Clicking"
            case "submit" => "Submitting"
            case "check" => "Checking"
@@ -418,7 +418,7 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     */
   def selectByVisibleText(elementBinding: LocatorBinding, value: String) {
     withWebElement(elementBinding) { webElement =>
-      logger.info(s"Selecting '$value' in ${elementBinding.element} by text")
+      logger.debug(s"Selecting '$value' in ${elementBinding.element} by text")
       new Select(webElement).selectByVisibleText(value)
       bindAndWait(elementBinding.element, "select", value)
     }
@@ -432,7 +432,7 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     */
   def selectByValue(elementBinding: LocatorBinding, value: String) {
     withWebElement(elementBinding) { webElement =>
-      logger.info(s"Selecting '$value' in ${elementBinding.element} by value")
+      logger.debug(s"Selecting '$value' in ${elementBinding.element} by value")
       new Select(webElement).selectByValue(value)
       bindAndWait(elementBinding.element, "select", value)
     }
@@ -446,7 +446,7 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     */
   def selectByIndex(elementBinding: LocatorBinding, index: Int) {
     withWebElement(elementBinding) { webElement =>
-      logger.info(s"Selecting option in ${elementBinding.element} by index: $index")
+      logger.debug(s"Selecting option in ${elementBinding.element} by index: $index")
       val select = new Select(webElement)
       select.selectByIndex(index)
       bindAndWait(elementBinding.element, "select", select.getFirstSelectedOption().getText())

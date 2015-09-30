@@ -64,7 +64,7 @@ trait WebElementLocator extends LazyLogging {
    * @return Some(element) if found, None otherwise
    */
   private def locateElement(env: WebEnvContext, elementBinding: LocatorBinding): Option[WebElement] = {
-     logger.info(s"Locating ${elementBinding.element}")
+     logger.debug(s"Locating ${elementBinding.element}")
      try {
        findElementByLocator(env, elementBinding)
      } catch {

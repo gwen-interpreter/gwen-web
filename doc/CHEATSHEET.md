@@ -4,20 +4,32 @@ Gwen-Web User Guide
 Invoking Gwen
 -------------
 
-Usage: `gwen-web-install-dir/bin/gwen.sh|gwen.bat` `[options]` `[<features>]`
+```
+Usage: install-dir/bin/gwen.sh|gwen.bat [options] [<features>]
 
-| Option                         | Description |
-| ------------------------------ |-------------|
-| `--version  `                  | Prints the implementation version |
-| `--help`                       | Prints the usage text |
-| `-b`, `--batch`                | batch mode, will exit gwen session after executing features. Absence of this switch launches REPL mode. |
-| `-p`, `--properties` `<files>` | Comma separated list of properties file paths |
-| `-r`, `--report` `<dir>`       | generated reporting location |
-| `-m`, `--meta` `<files>`       | Comma separated list of meta file paths |
-| `-t`, `--tags` `<tags>`        | Comma separated list of @include or ~@exclude tags |
-| `-n`, `--dry-run`              | Do not evaluate steps on engine (validate for correctness only)|
-| `-|`, `--parallel`             | Executes specified `<features>` in parallel |
-| `<feature>`                    | Space separated list of feature files and/or directories (feature suites) to evaluate |
+  [options]
+  --version
+        Prints the implementation version
+  --help
+        Prints this usage text
+  -b | --batch
+        Batch/server mode
+  -| | --parallel
+        Parallel batch execution mode)
+  -p <properties files> | --properties <properties files>
+        Comma separated list of properties file paths
+  -r <report directory> | --report <report directory>
+        Evaluation report output directory
+  -t <tags> | --tags <tags>
+        Comma separated list of @include or ~@exclude tags
+  -n | --dry-run
+        Do not evaluate steps on engine (validate for correctness only)
+  -m <meta files> | --meta <meta files>
+        Comma separated list of meta file paths
+
+  [<features>]
+       Space separated list of feature files and/or directory paths
+```
 
 REPL Commands
 -------------
@@ -79,10 +91,35 @@ file provided through the `-p|--properties` command line option.
 | `gwen.web.remote.url`                       |                | http://host:port/wd/hub | If set, allows gwen-web to connect to the remote webdriver at the specified URL. |
 | `gwen.web.accept.untrusted.certs`           | true           | `true` to accept untrused SSL certs, `false` otherwise | Controls whether or not the web driver should accept untrusted (self signed) SSL certificates |
 | `gwen.web.suppress.images` (firefox only)   | false          | `true` to not render images in browser, `false` otherwise | Controls whether or not images are rendered in the browser |
+| `log4j.configuration`                       |                | URL to log4j configuration file (example: `file:/path-to-log4j-config-file`. If not specified, then the log4j.properties bundled in the binary is used by default) | 
+
+### Web driver settings
 
 In addition to the above settings, all selenium web driver system properties are also supported. For example, 
 all the [FireFox driver properties](https://code.google.com/p/selenium/wiki/FirefoxDriver#Important_System_Properties) 
 are supported. 
+
+### Logging settings
+
+All log4j system properties are also supported. The following logging 
+configuration is used by default if no `log4j.configuration` setting 
+is specified. For more information about log4j, 
+see [the log4j FAQ](http://logging.apache.org/log4j/1.2/faq.html).
+
+```
+# Set root logger level to INFO and append to STDOUT
+log4j.rootLogger=INFO, STDOUT
+
+# STDOUT is set to be a ConsoleAppender.
+log4j.appender.STDOUT=org.apache.log4j.ConsoleAppender
+
+# STDOUT uses PatternLayout.
+log4j.appender.STDOUT.layout=org.apache.log4j.PatternLayout
+log4j.appender.STDOUT.layout.ConversionPattern=%p - %m%n
+
+# Gwen logging level
+log4j.logger.gwen=INFO
+```
 
 ### Native Web Drivers
 
