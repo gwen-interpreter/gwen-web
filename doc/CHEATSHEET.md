@@ -96,8 +96,25 @@ file provided through the `-p|--properties` command line option.
 ### Web driver settings
 
 In addition to the above settings, all selenium web driver system properties are also supported. For example, 
-all the [FireFox driver properties](https://code.google.com/p/selenium/wiki/FirefoxDriver#Important_System_Properties) 
-are supported. 
+all the [FireFox driver properties](https://code.google.com/p/selenium/wiki/FirefoxDriver#Important_System_Properties) are supported. 
+
+### Native Web Drivers
+
+If you use Chrome or IE, then you will need to download the 
+[chrome web driver](http://chromedriver.storage.googleapis.com/index.html) 
+or [IE web driver server](http://selenium-release.storage.googleapis.com/index.html) 
+respectively and install it on your system path. If you do not have permission to 
+install the driver on your system path, then you can set the path to your 
+downloaded driver location in your _gwen.properties_ file as shown below:
+  
+```
+    (chrome)  webdriver.chrome.driver = /path/to/chromedriver
+    (ie)      webdriver.ie.driver = c:/path/to/IEDriverServer.exe
+```
+
+If you want to use Safari, then you will need to install the latest  
+[safari driver extension](http://selenium-release.storage.googleapis.com/index.html) 
+in your browser.
 
 ### Logging settings
 
@@ -120,24 +137,6 @@ log4j.appender.STDOUT.layout.ConversionPattern=%p - %m%n
 # Gwen logging level
 log4j.logger.gwen=INFO
 ```
-
-### Native Web Drivers
-
-If you use Chrome or IE, then you will need to download the 
-[chrome web driver](http://chromedriver.storage.googleapis.com/index.html) 
-or [IE web driver server](http://selenium-release.storage.googleapis.com/index.html) 
-respectively and install it on your system path. If you do not have permission to 
-install the driver on your system path, then you can set the path to your 
-downloaded driver location in your _gwen.properties_ file as shown below:
-  
-```
-    (chrome)  webdriver.chrome.driver = /path/to/chromedriver
-    (ie)      webdriver.ie.driver = c:/path/to/IEDriverServer.exe
-```
-
-If you want to use Safari, then you will need to install the latest  
-[safari driver extension](http://selenium-release.storage.googleapis.com/index.html) 
-in your browser.
 
 Supported DSL
 -------------
