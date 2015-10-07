@@ -59,6 +59,38 @@ the page title should not match xpath <reference>
 <reference> should not contain <reference>
 <reference> should not match regex <reference>
 <reference> should not match xpath <reference>
+<dropdown> text should be "<value>"
+<dropdown> text should contain "<value>"
+<dropdown> text should match regex "<expression>"
+<dropdown> text should match xpath "<expression>"
+<dropdown> text should not be "<value>"
+<dropdown> text should not contain "<value>"
+<dropdown> text should not match regex "<expression>"
+<dropdown> text should not match xpath "<expression>"
+<dropdown> text should be <reference>
+<dropdown> text should contain <reference>
+<dropdown> text should match regex <reference>
+<dropdown> text should match xpath <reference>
+<dropdown> text should not be <reference>
+<dropdown> text should not contain <reference>
+<dropdown> text should not match regex <reference>
+<dropdown> text should not match xpath <reference>
+<dropdown> value should be "<value>"
+<dropdown> value should contain "<value>"
+<dropdown> value should match regex "<expression>"
+<dropdown> value should match xpath "<expression>"
+<dropdown> value should not be "<value>"
+<dropdown> value should not contain "<value>"
+<dropdown> value should not match regex "<expression>"
+<dropdown> value should not match xpath "<expression>"
+<dropdown> value should be <reference>
+<dropdown> value should contain <reference>
+<dropdown> value should match regex <reference>
+<dropdown> value should match xpath <reference>
+<dropdown> value should not be <reference>
+<dropdown> value should not contain <reference>
+<dropdown> value should not match regex <reference>
+<dropdown> value should not match xpath <reference>
 I capture the text in <reference> by xpath "<expression>" as <reference>
 I capture the node in <reference> by xpath "<expression>" as <reference>
 I capture the nodeset in <reference> by xpath "<expression>" as <reference>
@@ -67,6 +99,10 @@ I capture the current URL
 I capture the current URL as <reference>
 I capture <reference> as <reference>
 I capture <reference>
+I capture <dropdown> text as <reference>
+I capture <dropdown> value as <reference>
+I capture <dropdown> text
+I capture <dropdown> value
 my <name> property is "<value>"
 my <name> property will be "<value>"
 my <name> setting is "<value>"
@@ -145,4 +181,6 @@ I locate <element>
 I execute system process "<command>"
 I execute a unix system process "<command>"
 I refresh the current page
+I base64 decode <reference> as <attribute>
+I base64 decode <reference>
 <step> until <condition>

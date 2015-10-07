@@ -46,6 +46,7 @@ import gwen.eval.GwenOptions
 import gwen.errors._
 import scala.io.Source
 import scala.sys.process._
+import scala.collection.JavaConverters._
 
 /**
   * Defines the web environment context. This includes the configured selenium web
@@ -170,14 +171,14 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
   }
   
   /**
-    * Creates a list of error attachments which includes the current 
+    * Add a list of error attachments which includes the current 
     * screenshot and all current error attachments.
     * 
     * @param failed the failed status
     */
-  override def createErrorAttachments(failure: Failed): List[(String, File)] = {
-    val errAttachments = super.createErrorAttachments(failure)
-    execute(captureScreenshot() :: errAttachments).getOrElse(errAttachments)
+  override def addErrorAttachments(failure: Failed): Unit = {
+    super.addErrorAttachments(failure)
+    execute(captureScreenshot())
   }
     
   /**
@@ -222,7 +223,7 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
        }
        f(webElement) tap { result =>
          if (WebSettings.`gwen.web.capture.screenshots`) {
-           addAttachment(captureScreenshot())
+           captureScreenshot()
          }
        }
      } catch {
@@ -278,6 +279,63 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     }) tap { value =>
       logger.debug(s"getElementText(${elementBinding.element})='${value}'")
     }
+  
+  /**
+    * Gets the selected text of a dropdown web element on the current page. 
+    * If a value is found, its value is bound to the current page 
+    * scope as `name/selectedText`.
+    * 
+    * @param name the web element name
+    */
+  private def getSelectedElementText(name: String): String = {
+    val elementBinding = getLocatorBinding(name)
+    (withWebElement(elementBinding) { webElement =>
+      val select = new Select(webElement) 
+      (Option(select.getAllSelectedOptions().asScala.map(_.getText()).mkString(",")) match {
+        case None | Some("") => 
+          select.getAllSelectedOptions().asScala.map(_.getAttribute("text")).mkString(",")
+        case Some(value) => value
+      }) tap { text => 
+        bindAndWait(elementBinding.element, "selectedText", text)
+      }
+    }) tap { value =>
+      logger.debug(s"getSelectedElementText(${elementBinding.element})='${value}'")
+    }
+  }
+  
+   /**
+    * Gets the selected value of a dropdown web element on the current page. 
+    * If a value is found, its value is bound to the current page 
+    * scope as `name/selectedValue`.
+    * 
+    * @param name the web element name
+    */
+  private def getSelectedElementValue(name: String): String = {
+    val elementBinding = getLocatorBinding(name)
+    (withWebElement(elementBinding) { webElement =>
+      new Select(webElement).getAllSelectedOptions().asScala.map(_.getAttribute("value")).mkString(",") tap { value => 
+        bindAndWait(elementBinding.element, "selectedValue", value)
+      }
+    }) tap { value =>
+      logger.debug(s"getSelectedElementValue(${elementBinding.element})='${value}'")
+    }
+  }
+  
+  /**
+   * Gets an element's selected value(s).
+   * 
+   * @param name the name of the element
+   * @param selection `text` to get selected option text, `value` to get
+   *        selected option value
+   * @return the selected value or a comma seprated string containing all 
+   * the selected values if multiple values are selected.
+   */
+  def getElementSelection(name: String, selection: String) = execute {
+    selection.trim match {
+      case "text" => getSelectedElementText(name)
+      case _ => getSelectedElementValue(name)
+    }
+  }.getOrElse(s"$$[$name $selection]")
   
   /**
     * Gets a bound attribute value from memory. A search for the value is made 

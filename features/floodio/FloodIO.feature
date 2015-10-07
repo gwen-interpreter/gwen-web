@@ -36,7 +36,9 @@
   Scenario: Complete step 2
       Given I am on the step 2 page
        When I select "21" in the how old are you dropdown
-        And I click the next button
+       Then the how old are you dropdown text should be "21"
+        And the how old are you dropdown value should be "21"
+       When I click the next button
        Then I should be on the step 3 page
        
   Scenario: Complete step 3

@@ -18,6 +18,8 @@ class WebDslTest extends FlatSpec {
     env.scopes.set("<element>/locator", "id");
     env.scopes.set("<element>/locator/id", "id")
     env.scopes.set("<reference>", "reference")
+    env.scopes.set("<dropdown>/locator", "id")
+    env.scopes.set("<dropdown>/locator/id", "id")
     env.scopes.set("<url>", "url")
     env.scopes.set("<condition>/javascript", "condition")
         

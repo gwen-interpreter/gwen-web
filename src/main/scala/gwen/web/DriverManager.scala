@@ -71,7 +71,7 @@ trait DriverManager extends LazyLogging {
   def withWebDriver[T](f: WebDriver => T)(implicit takeScreenShot: Boolean = false): T = {
     f(webDriver) tap { driver =>
       if (takeScreenShot) {
-        env.addAttachment(captureScreenshot)
+        captureScreenshot()
       }
     }
   }
@@ -80,9 +80,9 @@ trait DriverManager extends LazyLogging {
   private[web] def captureScreenshot(): (String, File) = {
     Thread.sleep(WebSettings.`gwen.web.throttle.msecs` / 2)
     val screenshot = webDriver.asInstanceOf[TakesScreenshot].getScreenshotAs(OutputType.FILE)
-    val targetFile = env.createAttachmentFile("screenshot", screenshot.getName.substring(screenshot.getName.lastIndexOf('.') + 1))
-    FileUtils.copyFile(screenshot, targetFile)
-    ("Screenshot", targetFile)
+    env.addAttachment("Screenshot", screenshot.getName.substring(screenshot.getName.lastIndexOf('.') + 1), null) tap { 
+      case (name, file) => FileUtils.copyFile(screenshot, file)
+    }
   }
   
   /** Loads the selenium webdriver. */

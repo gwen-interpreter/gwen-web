@@ -49,14 +49,14 @@ env [switch] ["filter"]
     switch :
       -a : to list all attributes in all scopes
       -f : to list all attributes in the feature (global) scope
-    "filter" : literal string or regex filter expression
+    filter : literal string or regex filter expression
 
 history
   Lists all previously entered commands
 
-!<history#>
+!<#>
   Executes a previously entered command (history bang operator)
-    history# : the history command number
+    # : the history command number
 
 Given|When|Then|And|But <step>
   Evaluates a step
@@ -159,12 +159,16 @@ The following steps are supported. Each one must be prefixed by one of the keywo
 | `<element>` `should|should not` be `displayed|hidden|checked|unchecked|enabled|disabled` | Checks that an element should or should not be in a given state | `<element>` = the web element to check |
 | `<element|attribute>` `should|should not` `be|contain|match regex|match xpath` "`<expression>`" | Checks that the text value of an element matches or does not match a given expression | `<element|attribute>` = the web element or bound attribute to check, `<expression>` = the expression to match against |
 | `<element|attribute>` `should|should not` `be|contain|match regex|match xpath` `<attribute>` | Checks that the text value of an element matches or does not match a bound attribute | `<element|attribute>` = the web element or bound attribute to check, `<attribute>` = the name of the bound attribute containing the value to match against |
+| `<dropdown>` `<text|value>` `should|should not` `be|contain|match regex|match xpath` "`<expression>`" | Checks that a dropdown selection matches or does not match a given expression | `<dropdown>` = the dropdown element to check, `<text|value>`=`text` to match selected option text or `value` to match selection option value, `<expression>` = the expression to match against |
+| `<dropdown>` `<text|value>` `should|should not` `be|contain|match regex|match xpath` `<attribute>` | Checks that a dropdown selection matches or does not match a bound attribute | `<dropdown>` = the dropdown element to check,, `<text|value>`=`text` to match selected option text or `value` to match selection option value, `<attribute>` = the name of the bound attribute containing the value to match against |
 | I capture the `text|node|nodeset` in `<element|attribute|property>` by xpath "`<expression>`" as `<attribute>` | Extracts and binds a value by xpath from an element, attribute, or property setting into an attribute |`<element|attribute|property>` = the element, attribute, or property setting to extract the value from, `<expression>` = the extractor expression, `<attribute>` = the attribute to store the captured value into |
 | I capture the text in `<element|attribute|property>` by regex "`<expression>`" as `<attribute>` | Extracts and binds a value by regex from an element, attribute, or property setting into an attribute |`<element|attribute|property>` = the element, attribute, or property setting to extract the value from, `<expression>` = the extractor expression, `<attribute>` = the attribute to store the captured value into |
 | I capture the current URL | Binds the current browser URL to an attribute named URL in the current page scope |  |
 | I capture the current URL as `<attribute>` | Binds the current browser URL to a named attribute in the current page scope | `<attribute>` = the attribute to bind the URL to |
 | I capture `<element|attribute|property>` as `<attribute>` | Captures the text value of an element, attribute, or property and binds it to a named attribute | `<element|attribute|property>` = the web element, attribute, or property to capture the text of, `<attribute>` = the name of the attribute to bind the value to |
 | I capture `<element|attribute|property>` | Captures the text value of an element and binds it to an attribute of the same name | `<element|attribute|property>` = the web element, attribute, or property to capture the value of and store in the attribute of the same name |
+| I capture `<dropdown>` `<text|value>` as `<attribute>` | Captures the dropdown selection and binds it to a named attribute | `<dropdown>` = the dropdown web element, attribute, or property to capture the selection of, `<text|value>`=`text` to capture the selected option text or `value` to capture the selected option value, `<attribute>` = the name of the attribute to bind the value to |
+| I capture `<dropdown>` `<text|value>` | Captures the dropdown selection and binds it to an attribute of the same name | `<dropdown>` = the dropdown web element to capture the selection of and store in the attribute of the same name, `<text|value>`=`text` to capture the selected option text or `value` to capture the selected option value |
 | my `<name>` `property|setting` `is|will be` "`<value>`" | Binds a given value to a system property | `<name>` = the name of the system property to set, `<value>` = the value to set |
 | `<attribute>` `is|will be` defined by `javascript|system process|property|setting` "`<expression>`" | Evaluates an expression and binds its value to a named attribute.  The evaluation occurs when the attribute is referenced. | `<attribute>` = the name of the attribute to bind the value to, `<expression>` = the expression that will yield the value to bind |
 | `<attribute>` `is|will be` defined by the `text|node|nodeset` in `<source>` by xpath "`<expression>`" | Evaluates an xpath expression on a source attribute and binds the returned value to a another named attribute.  The evaluation occurs when the attribute is referenced. | `<attribute>` = the name of the attribute to bind the value to, `<source>` = the source attribute to evaluate the xpath expression on, `<expression>` = the xpath expression that will yield the value from the source to bind |
@@ -193,4 +197,6 @@ The following steps are supported. Each one must be prefixed by one of the keywo
 | I execute system process "`<process>`" | Executes a local system process | `<process>` = the system process to execute |
 | I execute a unix system process "`<process>`" | Executes a local unix system process | `<process>` = the unix system process to execute |
 | I refresh the current page | Refreshes the current page | |
+| I base64 decode `<element|attribute>` as `<attribute>` | Base64 encodes the given element or attribute value and stores the result in named attribute | `<element|attribute>` = the web element or bound attribute to decode, `<attribute>` = the attribute to bind the result to |
+| I base64 decode `<element|attribute>` | Base64 encodes the given element or attribute value and stores the result in the attribute of the same name | `<element|attribute>` = the web element or bound attribute to decode |
 | `<step>` until `<condition>` | Repeatedly performs the given step until a condition is satisfied | `<step>` = the step to repeat, `<condition>` = the name of the bound attribute containing a javascript predicate expression |

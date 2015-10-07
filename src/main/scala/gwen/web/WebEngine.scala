@@ -29,6 +29,7 @@ import gwen.eval.support.SystemProcessSupport
 import gwen.eval.support.XPathSupport
 import gwen.errors._
 import gwen.dsl.Failed
+import gwen.eval.support.DecodingSupport
 
 /**
   * A web engine that uses the Selenium web driver
@@ -36,7 +37,7 @@ import gwen.dsl.Failed
   * 
   * @author Branko Juric, Brady Wood
   */
-trait WebEngine extends EvalEngine[WebEnvContext] with WebElementLocator with SystemProcessSupport[WebEnvContext] {
+trait WebEngine extends EvalEngine[WebEnvContext] with WebElementLocator with SystemProcessSupport[WebEnvContext] with DecodingSupport {
   
   /**
     * Initialises and returns a new web environment context.
@@ -122,18 +123,24 @@ trait WebEngine extends EvalEngine[WebEnvContext] with WebElementLocator with Sy
         }
       }
         
-      case r"""(.+?)$element should( not)?$negation (be|contain|match regex|match xpath)$operator "(.*?)"$$$expression""" => { 
+      case r"""(.+?)$element( text| value)?$selection should( not)?$negation (be|contain|match regex|match xpath)$operator "(.*?)"$$$expression""" => { 
         if (element == "I") undefinedStepError(step)
-        val actual = env.getBoundReferenceValue(element)
+        val actual = Option(selection) match {
+          case None => env.getBoundReferenceValue(element)
+          case Some(sel) => env.getElementSelection(element, sel)
+        }
         env.execute {
           compare(element, expression, actual, operator, Option(negation).isDefined, env)
         }
       }
         
-      case r"""(.+?)$element should( not)?$negation (be|contain|match regex|match xpath)$operator (.+?)$$$attribute""" => {
+      case r"""(.+?)$element( value| text)?$selection should( not)?$negation (be|contain|match regex|match xpath)$operator (.+?)$$$attribute""" => {
         if (element == "I") undefinedStepError(step)
         val expected = env.getAttribute(attribute)
-        val actual = env.getBoundReferenceValue(element)
+        val actual = Option(selection) match {
+          case None => env.getBoundReferenceValue(element)
+          case Some(sel) => env.getElementSelection(element, sel)
+        }
         env.execute {
           compare(element, expected, actual, operator, Option(negation).isDefined, env)
         }
@@ -141,25 +148,57 @@ trait WebEngine extends EvalEngine[WebEnvContext] with WebElementLocator with Sy
       
       case r"""I capture the (text|node|nodeset)$targetType in (.+?)$source by xpath "(.+?)"$expression as (.+?)$$$name""" => {
         val src = env.getBoundReferenceValue(source)
-        env.featureScope.set(name, env.execute(env.evaluateXPath(expression, src, env.XMLNodeType.withName(targetType))).getOrElse(s"$$[xpath:$expression]"))
+        env.featureScope.set(name, env.execute(env.evaluateXPath(expression, src, env.XMLNodeType.withName(targetType)) tap { content => 
+          env.addAttachment(name, "txt", content) 
+        }).getOrElse(s"$$[xpath:$expression]"))
       }
       
       case r"""I capture the text in (.+?)$source by regex "(.+?)"$expression as (.+?)$$$name""" => {
         val src = env.getBoundReferenceValue(source)
-        env.featureScope.set(name, env.execute(env.extractByRegex(expression, src)).getOrElse(s"$$[regex:$expression"))
+        env.featureScope.set(name, env.execute(env.extractByRegex(expression, src) tap { content => 
+          env.addAttachment(name, "txt", content) 
+        }).getOrElse(s"$$[regex:$expression"))
       }
       
       case r"""I capture the current URL""" => 
-        env.featureScope.set("the current URL", env.execute(env.withWebDriver(_.getCurrentUrl())).getOrElse("$[currentUrl]"))
+        env.featureScope.set("the current URL", env.execute(env.withWebDriver(_.getCurrentUrl()) tap { content => 
+          env.addAttachment("the current URL", "txt", content) 
+        }).getOrElse("$[currentUrl]"))
       
       case r"""I capture the current URL as (.+?)$name""" => 
-        env.featureScope.set(name, env.execute(env.withWebDriver(_.getCurrentUrl())).getOrElse("$[currentUrl]"))
-      
-      case r"""I capture (.+?)$element as (.+?)$attribute""" =>
-        env.featureScope.set(attribute, env.getBoundReferenceValue(element))
+        env.featureScope.set(name, env.execute(env.withWebDriver(_.getCurrentUrl()) tap { content => 
+          env.addAttachment(name, "txt", content) 
+        }).getOrElse("$[currentUrl]"))
         
-      case r"""I capture (.+?)$element""" =>
-        env.featureScope.set(element, env.getBoundReferenceValue(element))
+      case r"""I capture (.+?)$element( value| text)?$selection as (.+?)$attribute""" =>
+        val value = Option(selection) match {
+          case None => env.getBoundReferenceValue(element)
+          case Some(sel) => env.getElementSelection(element, sel)
+        }
+        env.featureScope.set(attribute, value tap { content => 
+          env.addAttachment(attribute, "txt", content) 
+        })
+        
+      case r"""I capture (.+?)$element( value| text)?$$$selection""" =>
+        val value = Option(selection) match {
+          case None => env.getBoundReferenceValue(element)
+          case Some(sel) => env.getElementSelection(element, sel)
+        }
+        env.featureScope.set(element, value tap { content => 
+          env.addAttachment(element, "txt", content) 
+        })
+        
+      case r"""I base64 decode (.+?)$attribute as (.+?)$$$name""" => 
+        val source = env.getBoundReferenceValue(attribute)
+        env.featureScope.set(name, env.execute(decodeBase64(source) tap { content => 
+          env.addAttachment(name, "txt", content) 
+        }).getOrElse(s"$$[base64 decoded $attribute]"))
+        
+      case r"""I base64 decode (.+?)$attribute""" => 
+        val source = env.getBoundReferenceValue(attribute)
+        env.featureScope.set(attribute, env.execute(decodeBase64(source) tap { content => 
+          env.addAttachment(attribute, "txt", content) 
+        }).getOrElse(s"$$[base64 decoded $attribute]"))
         
       case r"""I wait for (.+?)$element text for (.+?)$seconds second(?:s?)""" =>  {
         val elementBinding = env.getLocatorBinding(element)

@@ -38,6 +38,7 @@ Core Requirements
 User Guides
 -----------
 
+- [Introduction](#doc/gwen-web-intro.pptx)
 - [Installation](#installation) 
 - [Getting Started](doc/START.md)
 - [Cheat Sheet](doc/CHEATSHEET.md)
