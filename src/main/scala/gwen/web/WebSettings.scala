@@ -17,6 +17,7 @@
 package gwen.web
 
 import gwen.Settings
+import java.io.File
 
 /**
   * Provides access to gwen web settings defined through system properties loaded 
@@ -103,4 +104,12 @@ object WebSettings {
     * is `false`). Currently this capability is only supported in firefox driver.
     */
   def `gwen.web.suppress.images`: Boolean = Settings.getOpt("gwen.web.suppress.images").getOrElse("false").toBoolean
+
+  /**
+   * Provides access to the `gwen.web.chrome.extensions` settings use to set 
+   * the list of Chrome web browser extensions to load (default is empty list).
+   * The settings accepts a comma separated list of paths to extensions (.crx files
+   * or location paths). Each extension provided is loaded into the Chrome web driver.
+   */
+  def `gwen.web.chrome.extensions`: List[File] = Settings.getOpt("gwen.web.chrome.extensions").map(_.split(",").toList).getOrElse(Nil).map(new File(_))
 }

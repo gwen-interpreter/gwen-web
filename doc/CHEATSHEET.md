@@ -90,7 +90,8 @@ file provided through the `-p|--properties` command line option.
 | `gwen.web.capture.screenshots.highlighting` | false          | `true` to capture screenshot highlighting, `false` otherwise | Controls whether or not to capture screenshots of element highlighting |
 | `gwen.web.remote.url`                       |                | http://host:port/wd/hub | If set, allows gwen-web to connect to the remote webdriver at the specified URL. |
 | `gwen.web.accept.untrusted.certs`           | true           | `true` to accept untrused SSL certs, `false` otherwise | Controls whether or not the web driver should accept untrusted (self signed) SSL certificates |
-| `gwen.web.suppress.images` (firefox only)   | false          | `true` to not render images in browser, `false` otherwise | Controls whether or not images are rendered in the browser |
+| `gwen.web.suppress.images`  (firefox only)  | false          | `true` to not render images in browser, `false` otherwise | Controls whether or not images are rendered in the browser |
+| `gwen.web.chrome.extensions` (chrome only)  |                | Comma separated list of paths to chrome extensions (crx files or directories) to load |
 | `log4j.configuration`                       |                | URL to log4j configuration file (example: `file:/path-to-log4j-config-file`. If not specified, then the log4j.properties bundled in the binary is used by default) | 
 
 ### Web driver settings

@@ -155,6 +155,12 @@ trait DriverManager extends LazyLogging {
     if (WebSettings.`gwen.web.accept.untrusted.certs`) {
       options.addArguments("--ignore-certificate-errors")
     }
+    WebSettings.`gwen.web.chrome.extensions` tap { extensions =>
+      if (extensions.nonEmpty) {
+        logger.info(s"Loading chrome extension${if (extensions.size > 1) "s" else ""}: ${extensions.mkString(",")}")
+        options.addExtensions(extensions:_*)
+      }
+    }
   }
   
   private def ieCapabilities: DesiredCapabilities = new DesiredCapabilities() tap {capabilities => 
