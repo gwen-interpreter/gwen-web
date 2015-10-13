@@ -374,7 +374,17 @@ trait WebEngine extends EvalEngine[WebEnvContext] with WebElementLocator with Sy
           env.waitUntil(s"Repeating until $condition", 3 * WebSettings.`gwen.web.wait.seconds`) {
             evaluateStep(Step(step.keyword, doStep), env).evalStatus match {
               case Failed(_, e) => throw e
-              case _ => env.executeScript(s"return ${javascript}").asInstanceOf[Boolean]
+              case _ => 
+                env.executeScript(s"return ${javascript}").asInstanceOf[Boolean] tap { result =>
+                  if (!result) {
+                	val delayMsecs = WebSettings.`gwen.web.wait.seconds` * 100
+                	val delaySecs = delayMsecs / 1000
+                    logger.info(s"Condition not satisfied: $condition ..will try again in ${delaySecs} second${if (delaySecs != 1) "s" else ""}")
+                    Thread.sleep(delayMsecs)
+                  } else {
+                    logger.info(s"Condition satisfied: $condition")
+                  }
+                }
             }
           }
         }
