@@ -19,7 +19,7 @@ package gwen.web
 class WebInterpreterSequentialTest extends WebInterpreterTest {
 
   "Sequential mode" should "evaluate all features in sequence" in {
-    evaluate(List("features"), false, false, "target/reports/sequential")
+    evaluate(List("features/floodio", "features/blogs", "features/etsy"), false, false, "target/reports/sequential", None)
   }
   
 }
