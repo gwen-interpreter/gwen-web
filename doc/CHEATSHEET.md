@@ -24,8 +24,8 @@ Usage: install-dir/bin/gwen.sh|gwen.bat [options] [<features>]
         Comma separated list of @include or ~@exclude tags
   -n | --dry-run
         Do not evaluate steps on engine (validate for correctness only)
-  -c <csv file> | --csv-file <csv file>
-        CSV file (with column headers) for data driven processing
+  -d <data file> | --data-file <data file>
+        CSV file (with column headers) for data driven execution
   -m <meta files> | --meta <meta files>
         Comma separated list of meta file paths
 

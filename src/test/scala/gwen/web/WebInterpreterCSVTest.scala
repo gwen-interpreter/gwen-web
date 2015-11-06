@@ -18,8 +18,16 @@ package gwen.web
 
 class WebInterpreterCSVTest extends WebInterpreterTest {
 
-  "CSV data-driven feature" should "evaluate" in {
-    evaluate(List("features/csvdriven/FloodIO.feature"), false, false, "target/reports/single-csvdriven", Some("features/csvdriven/FloodIO.csv"))
+  "Dry run CSV data-driven feature" should "pass" in {
+    evaluate(List("features/csvdriven/FloodIO.feature"), false, true, "target/reports/dryrun-csvdriven", Some("features/csvdriven/FloodIO.csv"))
+  }
+  
+  "Sequential CSV data-driven feature" should "evaluate" in {
+    evaluate(List("features/csvdriven/FloodIO.feature"), false, false, "target/reports/sequential-csvdriven", Some("features/csvdriven/FloodIO.csv"))
+  }
+  
+  "Parallel CSV data-driven feature" should "evaluate" in {
+    evaluate(List("features/csvdriven/FloodIO.feature"), true, false, "target/reports/parallel-csvdriven", Some("features/csvdriven/FloodIO.csv"))
   }
   
 }
