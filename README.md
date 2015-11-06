@@ -22,7 +22,7 @@ Key Features
 - Tests are plain text specifications
 - Tests can be run in batch mode or interactively
 - Tests can be run sequentially or in parallel
-- Tests can be data driven (csv files)
+- Tests can be data driven (using csv data feeds)
 - REPL console allows verifying before running
 - Cross browser support
 - Remote web driver support
