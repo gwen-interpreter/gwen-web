@@ -31,7 +31,7 @@ abstract class WebInterpreterTest extends FlatSpec {
       var args = Array("-b", "-r", reportDir)
       if (parallel) args = args ++ Array("--parallel")
       if (dryRun) args = args ++ Array("-n")
-      if (dataFile.nonEmpty) args = args ++ Array("-d", dataFile.get)
+      if (dataFile.nonEmpty) args = args ++ Array("-i", dataFile.get)
       args = args ++ features.toArray.asInstanceOf[Array[String]]
       val options = GwenOptions(WebInterpreter.getClass, args)
       val launcher = new GwenLauncher(new WebInterpreter)
