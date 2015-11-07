@@ -371,8 +371,8 @@ trait WebEngine extends EvalEngine[WebEnvContext]
               case _ => 
                 env.executeScript(s"return ${javascript}").asInstanceOf[Boolean] tap { result =>
                   if (!result) {
-                	val delayMsecs = WebSettings.`gwen.web.wait.seconds` * 100
-                	val delaySecs = delayMsecs / 1000
+                    val delayMsecs = WebSettings.`gwen.web.wait.seconds` * 100
+                    val delaySecs = delayMsecs / 1000
                     logger.info(s"Condition not satisfied: $condition ..will try again in ${delaySecs} second${if (delaySecs != 1) "s" else ""}")
                     Thread.sleep(delayMsecs)
                   } else {
