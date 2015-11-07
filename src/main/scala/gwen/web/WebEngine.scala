@@ -24,12 +24,13 @@ import gwen.dsl.Step
 import gwen.eval.EvalEngine
 import gwen.eval.GwenOptions
 import gwen.eval.ScopedDataStack
+import gwen.eval.support.DefaultEngineSupport
 import gwen.eval.support.RegexSupport
-import gwen.eval.support.SystemProcessSupport
 import gwen.eval.support.XPathSupport
 import gwen.errors._
 import gwen.dsl.Failed
 import gwen.eval.support.DecodingSupport
+import gwen.eval.support.DefaultEngineSupport
 
 /**
   * A web engine that uses the Selenium web driver
@@ -37,7 +38,10 @@ import gwen.eval.support.DecodingSupport
   * 
   * @author Branko Juric, Brady Wood
   */
-trait WebEngine extends EvalEngine[WebEnvContext] with WebElementLocator with SystemProcessSupport[WebEnvContext] with DecodingSupport {
+trait WebEngine extends EvalEngine[WebEnvContext] 
+  with WebElementLocator 
+  with DefaultEngineSupport[WebEnvContext] 
+  with DecodingSupport {
   
   /**
     * Initialises and returns a new web environment context.
@@ -257,13 +261,6 @@ trait WebEngine extends EvalEngine[WebEnvContext] with WebElementLocator with Sy
         }
       }
         
-      case r"""I wait ([0-9]+?)$duration second(?:s?)""" => env.execute {
-        Thread.sleep(duration.toLong * 1000)
-      }
-      
-      case r"""my (.+?)$name (?:property|setting) (?:is|will be) "(.*?)"$$$value""" =>
-        Settings.add(name, value)
-        
       case r"""(.+?)$attribute (?:is|will be) defined by (javascript|system process|property|setting)$attrType "(.+?)"$$$expression""" =>
         attrType match {
           case "javascript" => env.scopes.set(s"$attribute/javascript", expression)
@@ -280,9 +277,6 @@ trait WebEngine extends EvalEngine[WebEnvContext] with WebElementLocator with Sy
         env.scopes.set(s"$attribute/regex/source", source)
         env.scopes.set(s"$attribute/regex/expression", expression)
       
-      case r"""(.+?)$attribute (?:is|will be) "(.*?)"$$$value""" => 
-        env.featureScope.set(attribute, value)
-        
       case r"""I clear (.+?)$$$element""" => {
         val elementBinding = env.getLocatorBinding(element)
         env.execute {

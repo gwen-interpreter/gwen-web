@@ -26,11 +26,12 @@ import gwen.eval.GwenLauncher
 
 abstract class WebInterpreterTest extends FlatSpec {
 
-  private[web] def evaluate(features: List[String], parallel: Boolean, dryRun: Boolean, reportDir: String) {
+  private[web] def evaluate(features: List[String], parallel: Boolean, dryRun: Boolean, reportDir: String, dataFile: Option[String]) {
     Settings.synchronized {
       var args = Array("-b", "-r", reportDir)
       if (parallel) args = args ++ Array("--parallel")
       if (dryRun) args = args ++ Array("-n")
+      if (dataFile.nonEmpty) args = args ++ Array("-i", dataFile.get)
       args = args ++ features.toArray.asInstanceOf[Array[String]]
       val options = GwenOptions(WebInterpreter.getClass, args)
       val launcher = new GwenLauncher(new WebInterpreter)
