@@ -159,6 +159,7 @@ class DriverManagerTest extends FlatSpec with Matchers with MockitoSugar {
         sys.props += ((name, value))
         f
       } finally {
+        sys.props -= name
         Settings.loadAll(UserOverrides.UserProperties.toList)
       }
     }
