@@ -28,6 +28,8 @@ scalacOptions += "-language:postfixOps"
 
 scalacOptions += "-deprecation"
 
+scalacOptions += "-target:jvm-1.7"
+
 licenses += "Apache License, Version 2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0.html")
 
 homepage := Some(url("http://gwen-interpreter.github.io/gwen-web/"))

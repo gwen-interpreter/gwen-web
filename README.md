@@ -38,7 +38,9 @@ Core Requirements
 User Guides
 -----------
 
-- [Introduction](doc/gwen-web-intro.pptx?raw=true) (powerpoint slides)
+- Introduction
+  - [Keynote](doc/gwen-web-intro.key?raw=true)
+  - [Powerpoint](doc/gwen-web-intro.pptx?raw=true)
 - [Installation](#installation) 
 - [Getting Started](doc/START.md)
 - [Cheat Sheet](doc/CHEATSHEET.md)
