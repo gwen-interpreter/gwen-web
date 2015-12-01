@@ -65,6 +65,7 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
   /** Closes the current web driver. */
   override def close() {
     quit()
+    super.close()
   }
   
   /**
