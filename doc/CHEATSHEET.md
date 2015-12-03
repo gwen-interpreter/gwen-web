@@ -84,6 +84,7 @@ file provided through the `-p|--properties` command line option.
 | Property/Setting                            | Default value  | Supported Values | Description |
 | ------------------------------------------- | -------------- | ---------------- | ----------- |
 | `gwen.feature.failfast`                     | true           | `true` to enable, `false` otherwise | Enables or disables fail fast mode at the feature level. If enabled, will fail a feature as soon as the first scenario in that feature fails before resuming with the next feature (if provided). |
+| `gwen.feature.failfast.exit`                | false          | `true` to enable, `false` otherwise | If enabled, will exit execution as soon as any feature step fails. |
 | `gwen.web.browser`                          | firefox        | `firefox`, `chrome`, `safari`, or `ie` | Configures the target browser to use. |
 | `gwen.web.useragent`                        |                | Any string literal | Set the user agent header in the browser to the literal specified. |
 | `gwen.web.authorize.plugins`                | false          | `true` to allow, `false` otherwise | Controls whether or not to allow browser plugins to run (for example: Java applets). |
