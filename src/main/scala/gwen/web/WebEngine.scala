@@ -353,7 +353,7 @@ trait WebEngine extends EvalEngine[WebEnvContext]
       case r"""I (?:highlight|locate) (.+?)$$$element""" => {
         val elementBinding = env.getLocatorBinding(element)
         env.execute {
-          env.highlight(locate(env, elementBinding))
+          locate(env, elementBinding)
         }
       }
       
