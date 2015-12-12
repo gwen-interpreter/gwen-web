@@ -184,3 +184,4 @@ I refresh the current page
 I base64 decode <reference> as <attribute>
 I base64 decode <reference>
 <step> until <condition>
+<step> while <condition>
