@@ -31,6 +31,7 @@ import gwen.errors._
 import gwen.dsl.Failed
 import gwen.eval.support.DecodingSupport
 import gwen.eval.support.DefaultEngineSupport
+import gwen.dsl.Failed
 
 /**
   * A web engine that uses the Selenium web driver
@@ -141,6 +142,11 @@ trait WebEngine extends EvalEngine[WebEnvContext]
                 }
             }
           }
+        } getOrElse { 
+          this.evaluateStep(Step(step.keyword, doStep), env).evalStatus match {
+            case Failed(_, e) => throw e
+            case _ => step
+          }
         }
         
       case r"""(.+?)$doStep while (.+?)$$$condition""" => 
@@ -164,6 +170,11 @@ trait WebEngine extends EvalEngine[WebEnvContext]
             }
             !result
           }
+        } getOrElse { 
+          this.evaluateStep(Step(step.keyword, doStep), env).evalStatus match {
+            case Failed(_, e) => throw e
+            case _ => step
+          } 
         }
       
       case r"""I am on the (.+?)$$$page""" =>
