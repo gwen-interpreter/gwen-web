@@ -1,5 +1,3 @@
-sonatypeSettings
-
 publishMavenStyle := true
 
 pomIncludeRepository := { _ => false }

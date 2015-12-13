@@ -6,3 +6,4 @@ project/project/target/
 .history
 .settings/
 *.log
+/bin/
