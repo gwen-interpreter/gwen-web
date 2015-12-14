@@ -1,5 +1,4 @@
-import com.typesafe.sbt.packager.Keys._
-
+import com.typesafe.sbt.SbtNativePackager.autoImport._
 
 val packageZip = taskKey[File]("package-zip")
 
