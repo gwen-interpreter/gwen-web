@@ -5,9 +5,9 @@ import com.typesafe.sbt.SbtGit._
 
 import com.typesafe.sbt.packager.archetypes._
 
-import SonatypeKeys._
-
+// Use file URI for gwen dep until sbt issue 1284 is fixed: https://github.com/sbt/sbt/issues/1284
 lazy val gwen = ProjectRef(file("../gwen"), "gwen")
+// lazy val gwen = ProjectRef(uri("git://github.com/gwen-interpreter/gwen.git"), "gwen")
 
 val gwenWeb = project in file(".") dependsOn(gwen) 
 
@@ -21,9 +21,9 @@ organizationHomepage := Some(url("http://gweninterpreter.org"))
 
 startYear := Some(2014)
 
-scalaVersion := "2.11.6"
+scalaVersion := "2.11.7"
 
-crossScalaVersions := Seq("2.11.6", "2.10.4")
+crossPaths := false
 
 scalacOptions += "-feature"
 
@@ -53,7 +53,7 @@ libraryDependencies += "org.mockito" % "mockito-all" % "1.10.19" % "test"
 
 libraryDependencies += "com.google.code.findbugs" % "jsr305" % "2.0.1" % "compile" 
 
-libraryDependencies += "org.seleniumhq.selenium" % "selenium-java" % "2.45.0" excludeAll(
+libraryDependencies += "org.seleniumhq.selenium" % "selenium-java" % "2.48.2" excludeAll(
   ExclusionRule(organization = "org.seleniumhq.selenium", name = "selenium-htmlunit-driver"),
   ExclusionRule(organization = "net.java.dev.jna", name = "jna"),
   ExclusionRule(organization = "net.java.dev.jna", name = "jna-platform")

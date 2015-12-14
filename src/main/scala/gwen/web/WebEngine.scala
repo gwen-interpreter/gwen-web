@@ -31,6 +31,7 @@ import gwen.errors._
 import gwen.dsl.Failed
 import gwen.eval.support.DecodingSupport
 import gwen.eval.support.DefaultEngineSupport
+import gwen.dsl.Failed
 
 /**
   * A web engine that uses the Selenium web driver
@@ -63,6 +64,119 @@ trait WebEngine extends EvalEngine[WebEnvContext]
     
    step.expression match {
     
+      case r"""I wait for (.+?)$element text for (.+?)$seconds second(?:s?)""" =>  {
+        val elementBinding = env.getLocatorBinding(element)
+        env.execute {
+          env.waitUntil(s"Waiting for $element text after $seconds second(s)", seconds.toInt) {
+            env.waitForText(elementBinding)
+          }
+        }
+      }
+        
+      case r"""I wait for (.+?)$element text""" => {
+        val elementBinding = env.getLocatorBinding(element)
+        env.execute {
+          env.waitUntil(s"Waiting for $element text") {
+            env.waitForText(elementBinding)
+          }
+        }
+      }
+        
+      case r"""I wait for (.+?)$element for (.+?)$seconds second(?:s?)""" =>  {
+        val elementBinding = env.getLocatorBinding(element)
+        env.execute {
+          env.waitUntil(s"Waiting for $element after $seconds second(s)", seconds.toInt) {
+            locateOpt(env, elementBinding).isDefined
+          }
+        }
+      }
+        
+      case r"""I wait for (.+?)$$$element""" => {
+        val elementBinding = env.getLocatorBinding(element)
+        env.execute {
+          env.waitUntil(s"Waiting for $element") {
+            locateOpt(env, elementBinding).isDefined
+          }
+        }
+      }
+      
+      case r"""I wait ([0-9]+?)$duration second(?:s?) when (.+?)$element is (clicked|submitted|checked|unchecked|selected|typed|entered|cleared)$$$event""" =>
+        env.scopes.set(s"$element/${WebEvents.EventToAction(event)}/wait", duration)
+        
+      case r"""I wait until (.+?)$condition when (.+?)$element is (clicked|submitted|checked|unchecked|selected|typed|entered|cleared)$$$event""" =>
+        env.scopes.set(s"$element/${WebEvents.EventToAction(event)}/condition", condition)
+        
+      case r"""I wait until "(.+?)$javascript"""" => env.execute {
+        env.waitUntil(s"Waiting until $javascript") {
+          env.executeScript(s"return $javascript").asInstanceOf[Boolean]
+        }
+      }
+        
+      case r"""I wait until (.+?)$$$condition""" =>  {
+        val javascript = env.scopes.get(s"$condition/javascript")
+        env.execute {
+          env.waitUntil(s"Waiting until $condition") {
+            env.executeScript(s"return ${javascript}").asInstanceOf[Boolean]
+          }
+        }
+      }
+      
+      case r"""(.+?)$doStep until (.+?)$$$condition""" => 
+        val javascript = env.scopes.get(s"$condition/javascript")
+        env.execute {
+          var attempt = 0
+          env.waitUntil(s"Repeating until $condition", 3 * WebSettings.`gwen.web.wait.seconds`) {
+            attempt = attempt + 1
+            evaluateStep(Step(step.keyword, doStep), env).evalStatus match {
+              case Failed(_, e) => throw e
+              case _ => 
+                env.executeScript(s"return ${javascript}").asInstanceOf[Boolean] tap { result =>
+                  if (!result) {
+                    val delayMsecs = WebSettings.`gwen.web.wait.seconds` * 100
+                    val delaySecs = delayMsecs / 1000
+                    logger.info(s"Repeat-until[$attempt] not completed ..will try again in ${delaySecs} second${if (delaySecs != 1) "s" else ""}")
+                    Thread.sleep(delayMsecs)
+                  } else {
+                    logger.info(s"Repeat-until[$attempt] completed")
+                  }
+                }
+            }
+          }
+        } getOrElse { 
+          this.evaluateStep(Step(step.keyword, doStep), env).evalStatus match {
+            case Failed(_, e) => throw e
+            case _ => step
+          }
+        }
+        
+      case r"""(.+?)$doStep while (.+?)$$$condition""" => 
+        val javascript = env.scopes.get(s"$condition/javascript")
+        env.execute {
+          var attempt = 0
+          env.waitUntil(s"Repeating while $condition", 3 * WebSettings.`gwen.web.wait.seconds`) {
+            attempt = attempt + 1
+            val result = env.executeScript(s"return ${javascript}").asInstanceOf[Boolean]
+            if (result) {
+              evaluateStep(Step(step.keyword, doStep), env).evalStatus match {
+                case Failed(_, e) => throw e
+                case _ => 
+                  val delayMsecs = WebSettings.`gwen.web.wait.seconds` * 100
+                  val delaySecs = delayMsecs / 1000
+                  logger.info(s"Repeat-while[$attempt] not completed ..will try again in ${delaySecs} second${if (delaySecs != 1) "s" else ""}")
+                  Thread.sleep(delayMsecs)
+              }
+            } else {
+              logger.info(s"Repeat-while[$attempt] completed")
+            }
+            !result
+          }
+        } getOrElse { 
+          this.evaluateStep(Step(step.keyword, doStep), env).evalStatus match {
+            case Failed(_, e) => throw e
+            case _ => step
+          } 
+        }
+      
       case r"""I am on the (.+?)$$$page""" =>
         env.scopes.addScope(page)
         
@@ -203,63 +317,6 @@ trait WebEngine extends EvalEngine[WebEnvContext]
           env.addAttachment(attribute, "txt", content) 
         }).getOrElse(s"$$[base64 decoded $attribute]"))
         
-      case r"""I wait for (.+?)$element text for (.+?)$seconds second(?:s?)""" =>  {
-        val elementBinding = env.getLocatorBinding(element)
-        env.execute {
-          env.waitUntil(s"Waiting for $element text after $seconds second(s)", seconds.toInt) {
-            env.waitForText(elementBinding)
-          }
-        }
-      }
-        
-      case r"""I wait for (.+?)$element text""" => {
-        val elementBinding = env.getLocatorBinding(element)
-        env.execute {
-          env.waitUntil(s"Waiting for $element text") {
-            env.waitForText(elementBinding)
-          }
-        }
-      }
-        
-      case r"""I wait for (.+?)$element for (.+?)$seconds second(?:s?)""" =>  {
-        val elementBinding = env.getLocatorBinding(element)
-        env.execute {
-          env.waitUntil(s"Waiting for $element after $seconds second(s)", seconds.toInt) {
-            locateOpt(env, elementBinding).isDefined
-          }
-        }
-      }
-        
-      case r"""I wait for (.+?)$$$element""" => {
-        val elementBinding = env.getLocatorBinding(element)
-        env.execute {
-          env.waitUntil(s"Waiting for $element") {
-            locateOpt(env, elementBinding).isDefined
-          }
-        }
-      }
-      
-      case r"""I wait ([0-9]+?)$duration second(?:s?) when (.+?)$element is (clicked|submitted|checked|unchecked|selected|typed|entered|cleared)$$$event""" =>
-        env.scopes.set(s"$element/${WebEvents.EventToAction(event)}/wait", duration)
-        
-      case r"""I wait until (.+?)$condition when (.+?)$element is (clicked|submitted|checked|unchecked|selected|typed|entered|cleared)$$$event""" =>
-        env.scopes.set(s"$element/${WebEvents.EventToAction(event)}/condition", condition)
-        
-      case r"""I wait until "(.+?)$javascript"""" => env.execute {
-        env.waitUntil(s"Waiting until $javascript") {
-          env.executeScript(s"return $javascript").asInstanceOf[Boolean]
-        }
-      }
-        
-      case r"""I wait until (.+?)$$$condition""" =>  {
-        val javascript = env.scopes.get(s"$condition/javascript")
-        env.execute {
-          env.waitUntil(s"Waiting until $condition") {
-            env.executeScript(s"return ${javascript}").asInstanceOf[Boolean]
-          }
-        }
-      }
-        
       case r"""(.+?)$attribute (?:is|will be) defined by (javascript|system process|property|setting)$attrType "(.+?)"$$$expression""" =>
         attrType match {
           case "javascript" => env.scopes.set(s"$attribute/javascript", expression)
@@ -361,27 +418,6 @@ trait WebEngine extends EvalEngine[WebEnvContext]
         env.withWebDriver { _.navigate().refresh() }
       }
       
-      case r"""(.+?)$doStep until (.+?)$$$condition""" => 
-        val javascript = env.scopes.get(s"$condition/javascript")
-        env.execute {
-          env.waitUntil(s"Repeating until $condition", 3 * WebSettings.`gwen.web.wait.seconds`) {
-            evaluateStep(Step(step.keyword, doStep), env).evalStatus match {
-              case Failed(_, e) => throw e
-              case _ => 
-                env.executeScript(s"return ${javascript}").asInstanceOf[Boolean] tap { result =>
-                  if (!result) {
-                    val delayMsecs = WebSettings.`gwen.web.wait.seconds` * 100
-                    val delaySecs = delayMsecs / 1000
-                    logger.info(s"Condition not satisfied: $condition ..will try again in ${delaySecs} second${if (delaySecs != 1) "s" else ""}")
-                    Thread.sleep(delayMsecs)
-                  } else {
-                    logger.info(s"Condition satisfied: $condition")
-                  }
-                }
-            }
-          }
-        }
-        
       case _ => super.evaluate(step, env)
       
     }
