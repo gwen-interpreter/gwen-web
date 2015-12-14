@@ -9,7 +9,7 @@
    - Source Dependencies -
 
    scala 
-      Version 2.11.7, 2.10.6
+      Version 2.11.7
       Copyright (c) 2002-2015 EPFL
       Copyright (c) 2011-2015 Typesafe, Inc.
       Scala license 

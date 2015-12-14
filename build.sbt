@@ -2,7 +2,7 @@ import com.typesafe.sbt.SbtGit._
 
 import com.typesafe.sbt.packager.archetypes._
 
-lazy val gwen = ProjectRef(file("../gwen"), "gwen")
+lazy val gwen = ProjectRef(uri("git://github.com/gwen-interpreter/gwen.git"), "gwen")
 
 val gwenWeb = project in file(".") dependsOn(gwen) 
 
@@ -18,7 +18,7 @@ startYear := Some(2014)
 
 scalaVersion := "2.11.7"
 
-crossScalaVersions := Seq("2.11.7", "2.10.6")
+crossPaths := false
 
 scalacOptions += "-feature"
 
