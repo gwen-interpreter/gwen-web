@@ -1,3 +1,6 @@
+enablePlugins(JavaAppPackaging)
+enablePlugins(SbtNativePackager)
+
 import com.typesafe.sbt.SbtGit._
 
 import com.typesafe.sbt.packager.archetypes._
@@ -64,3 +67,4 @@ mappings in (Compile, packageBin) ++= Seq(
   file("LICENSE") -> "LICENSE",
   file("NOTICE") -> "NOTICE"
 )
+

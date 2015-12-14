@@ -3,7 +3,7 @@ dependencyOverrides += "org.bouncycastle" % "bcpg-jdk15on" % "1.49"
 
 addSbtPlugin("com.typesafe.sbteclipse" % "sbteclipse-plugin" % "2.5.0")
 
-addSbtPlugin("com.typesafe.sbt" % "sbt-native-packager" % "0.8.0")
+addSbtPlugin("com.typesafe.sbt" % "sbt-native-packager" % "1.0.0")
 
 resolvers += Resolver.url("bintray-sbt-plugins", url("https://dl.bintray.com/sbt/sbt-plugin-releases/"))(Resolver.ivyStylePatterns)
 

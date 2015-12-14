@@ -1,6 +1,5 @@
 import com.typesafe.sbt.packager.Keys._
 
-packageArchetype.java_application
 
 val packageZip = taskKey[File]("package-zip")
 
