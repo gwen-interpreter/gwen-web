@@ -5,6 +5,6 @@ scala:
 jdk:
   - oraclejdk8
   - oraclejdk7
-before_install:
+before_script:
   - cd ..
   - git clone https://github.com/gwen-interpreter/gwen-web.git gwen
