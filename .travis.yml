@@ -7,4 +7,5 @@ jdk:
   - oraclejdk7
 before_script:
   - cd ..
-  - git clone https://github.com/gwen-interpreter/gwen-web.git gwen
+  - git clone https://github.com/gwen-interpreter/gwen.git
+  - cd gwen-web
