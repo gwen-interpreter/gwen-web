@@ -1,0 +1,10 @@
+language: scala
+scala:
+   - 2.10.6
+   - 2.11.7
+jdk:
+  - oraclejdk8
+  - oraclejdk7
+before_install:
+  - cd ..
+  - git clone https://github.com/gwen-interpreter/gwen-web.git gwen
