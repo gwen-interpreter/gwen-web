@@ -9,3 +9,6 @@ before_script:
   - cd ..
   - git clone https://github.com/gwen-interpreter/gwen.git
   - cd gwen-web
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
+  - sleep 3 # give xvfb some time to start
