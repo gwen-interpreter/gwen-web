@@ -1,10 +1,3 @@
-enablePlugins(JavaAppPackaging)
-enablePlugins(SbtNativePackager)
-
-import com.typesafe.sbt.SbtGit._
-
-import com.typesafe.sbt.packager.archetypes._
-
 // Use file URI for gwen dep until sbt issue 1284 is fixed: https://github.com/sbt/sbt/issues/1284
 lazy val gwen = ProjectRef(file("../gwen"), "gwen")
 // lazy val gwen = ProjectRef(uri("git://github.com/gwen-interpreter/gwen.git"), "gwen")
@@ -13,7 +6,7 @@ val gwenWeb = project in file(".") dependsOn(gwen)
 
 name := "gwen-web"
 
-description := "An acceptance driven web automation engine."
+description := "Web automation engine for Gwen"
 
 organization := "org.gweninterpreter"
 
@@ -67,4 +60,3 @@ mappings in (Compile, packageBin) ++= Seq(
   file("LICENSE") -> "LICENSE",
   file("NOTICE") -> "NOTICE"
 )
-
