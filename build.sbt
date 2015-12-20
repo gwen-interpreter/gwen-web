@@ -1,9 +1,3 @@
-enablePlugins(JDKPackagerPlugin)
-
-import com.typesafe.sbt.SbtGit._
-
-import com.typesafe.sbt.packager.archetypes._
-
 // Use file URI for gwen dep until sbt issue 1284 is fixed: https://github.com/sbt/sbt/issues/1284
 lazy val gwen = ProjectRef(file("../gwen"), "gwen")
 // lazy val gwen = ProjectRef(uri("git://github.com/gwen-interpreter/gwen.git"), "gwen")
@@ -12,9 +6,7 @@ val gwenWeb = project in file(".") dependsOn(gwen)
 
 name := "gwen-web"
 
-version := "1.0.0"
-
-description := "An acceptance driven web automation engine."
+description := "Web automation engine for Gwen"
 
 organization := "org.gweninterpreter"
 
@@ -68,36 +60,3 @@ mappings in (Compile, packageBin) ++= Seq(
   file("LICENSE") -> "LICENSE",
   file("NOTICE") -> "NOTICE"
 )
-
-lazy val iconGlob = sys.props("os.name").toLowerCase match {
-  case os if os.contains("mac") ⇒ "*.icns"
-  case os if os.contains("win") ⇒ "*.ico"
-  case _ ⇒ "*.png"
-}
-
-maintainer := "Branko Juric and Brady Wood"
-packageSummary := "Gwen installer"
-packageDescription := "Package which installs gwen, ready to run Given When thEN."
-
-jdkAppIcon :=  (sourceDirectory.value ** iconGlob).getPaths.headOption.map(file)
-
-jdkPackagerType := "installer"
-
-jdkPackagerJVMArgs := Seq("-Xmx1g")
-
-jdkPackagerProperties := Map("app.name" -> name.value, "app.version" -> version.value)
-
-jdkPackagerAppArgs := Seq(maintainer.value, packageSummary.value, packageDescription.value)
-
-jdkPackagerAssociations := Seq(
-  FileAssociation("gwen", "application/gwen", "Gwen file type", jdkAppIcon.value)
-)
-
-// this is to help ubuntu 15.10
-//antPackagerTasks in JDKPackager := (antPackagerTasks in JDKPackager).value orElse {
-//  for {
-//    f <- Some(file("/usr/lib/jvm/java-8-oracle/lib/ant-javafx.jar")) if f.exists()
-//  } yield f
-//}
-
-//fork := true

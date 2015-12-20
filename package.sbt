@@ -1,4 +1,8 @@
-import com.typesafe.sbt.SbtNativePackager.autoImport._
+enablePlugins(JavaAppPackaging)
+
+enablePlugins(JDKPackagerPlugin)
+
+mainClass in Compile := Some("gwen.web.WebInterpreter")
 
 val packageZip = taskKey[File]("package-zip")
 
@@ -36,3 +40,37 @@ mappings in Universal <++= (com.typesafe.sbt.packager.Keys.makeBatScript in Univ
     s <- script.toSeq
   } yield s -> ("bin/gwen.bat") 
 }
+
+lazy val iconGlob = sys.props("os.name").toLowerCase match {
+  case os if os.contains("mac") ⇒ "*.icns"
+  case os if os.contains("win") ⇒ "*.ico"
+  case _ ⇒ "*.png"
+}
+
+maintainer := "Branko Juric and Brady Wood"
+
+packageSummary := "Gwen installer"
+
+packageDescription := "Package which installs gwen, ready to run Given When thEN."
+
+jdkAppIcon :=  (sourceDirectory.value ** iconGlob).getPaths.headOption.map(file)
+
+jdkPackagerType := "installer"
+
+jdkPackagerJVMArgs := Seq("-Xmx1g")
+
+jdkPackagerProperties := Map("app.name" -> name.value, "app.version" -> version.value)
+
+jdkPackagerAssociations := Seq(
+  FileAssociation("feature", "application/gwen", "Gwen feature file", jdkAppIcon.value)
+)
+
+// this is to help ubuntu 15.10
+//antPackagerTasks in JDKPackager := (antPackagerTasks in JDKPackager).value orElse {
+//  for {
+//    f <- Some(file("/usr/lib/jvm/java-8-oracle/lib/ant-javafx.jar")) if f.exists()
+//  } yield f
+//}
+
+//fork := true
+
