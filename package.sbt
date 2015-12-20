@@ -47,11 +47,11 @@ lazy val iconGlob = sys.props("os.name").toLowerCase match {
   case _ ⇒ "*.png"
 }
 
-maintainer := "Branko Juric and Brady Wood"
+maintainer := "Gwen Interpreter, Org"
 
-packageSummary := "Gwen installer"
+packageSummary := "gwen-web installer"
 
-packageDescription := "Package which installs gwen, ready to run Given When thEN."
+packageDescription := "Package which installs gwen-web, ready to run Given When thEN on the web"
 
 jdkAppIcon :=  (sourceDirectory.value ** iconGlob).getPaths.headOption.map(file)
 
