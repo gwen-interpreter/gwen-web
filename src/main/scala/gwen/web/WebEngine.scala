@@ -100,10 +100,10 @@ trait WebEngine extends EvalEngine[WebEnvContext]
         }
       }
       
-      case r"""I wait ([0-9]+?)$duration second(?:s?) when (.+?)$element is (clicked|submitted|checked|unchecked|selected|typed|entered|cleared)$$$event""" =>
+      case r"""I wait ([0-9]+?)$duration second(?:s?) when (.+?)$element is (clicked|submitted|checked|unchecked|selected|typed|entered|tabbed|cleared)$$$event""" =>
         env.scopes.set(s"$element/${WebEvents.EventToAction(event)}/wait", duration)
         
-      case r"""I wait until (.+?)$condition when (.+?)$element is (clicked|submitted|checked|unchecked|selected|typed|entered|cleared)$$$event""" =>
+      case r"""I wait until (.+?)$condition when (.+?)$element is (clicked|submitted|checked|unchecked|selected|typed|entered|tabbed|cleared)$$$event""" =>
         env.scopes.set(s"$element/${WebEvents.EventToAction(event)}/condition", condition)
         
       case r"""I wait until "(.+?)$javascript"""" => env.execute {
@@ -340,11 +340,17 @@ trait WebEngine extends EvalEngine[WebEnvContext]
         }
       }
       
-      case r"""I press enter in (.+?)$$$element""" => {
+      case r"""I press (enter|tab)$key in (.+?)$$$element""" => {
         val elementBinding = env.getLocatorBinding(element) 
         env.execute {
-          locate(env, elementBinding).sendKeys(Keys.RETURN)
-          env.bindAndWait(element, "enter", "true")
+          val elem = locate(env, elementBinding)
+          key match {
+            case "enter" =>
+              elem.sendKeys(Keys.RETURN)
+            case _ =>
+              elem.sendKeys(Keys.TAB)
+          }
+          env.bindAndWait(element, key, "true")
         }
       }
 

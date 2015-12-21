@@ -155,6 +155,7 @@ I wait 1 second when <element> is unchecked
 I wait 1 second when <element> is selected
 I wait 1 second when <element> is typed
 I wait 1 second when <element> is entered
+I wait 1 second when <element> is tabbed
 I wait 1 second when <element> is cleared
 I wait <duration> seconds when <element> is clicked
 I wait <duration> seconds when <element> is submitted
@@ -163,6 +164,7 @@ I wait <duration> seconds when <element> is unchecked
 I wait <duration> seconds when <element> is selected
 I wait <duration> seconds when <element> is typed
 I wait <duration> seconds when <element> is entered
+I wait <duration> seconds when <element> is tabbed
 I wait <duration> seconds when <element> is cleared
 I wait until <condition> when <element> is clicked
 I wait until <condition> when <element> is submitted
@@ -171,6 +173,7 @@ I wait until <condition> when <element> is unchecked
 I wait until <condition> when <element> is selected
 I wait until <condition> when <element> is typed
 I wait until <condition> when <element> is entered
+I wait until <condition> when <element> is tabbed
 I wait until <condition> when <element> is cleared
 I wait until "<javascript>"
 I wait until <condition>

@@ -24,6 +24,7 @@ object WebEvents {
     "selected"  -> "select", 
     "typed"     -> "type", 
     "entered"   -> "enter",
+    "tabbed"    -> "tab",
     "cleared"   -> "clear"
   )
 }
