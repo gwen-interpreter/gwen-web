@@ -1,5 +1,4 @@
-import com.typesafe.sbt.packager.Keys._
-
+enablePlugins(JavaAppPackaging)
 
 val packageZip = taskKey[File]("package-zip")
 
@@ -17,9 +16,11 @@ publishLocal <<= (publishLocal) dependsOn (packageBin in Universal)
 
 PgpKeys.publishSigned <<= (PgpKeys.publishSigned) dependsOn (packageBin in Universal)
 
-mappings in Universal += file("LICENSE") -> "LICENSE" 
+mappings in Universal += file("LICENSE") -> "LICENSE"
 
-mappings in Universal += file("NOTICE") -> "NOTICE" 
+mappings in Universal += file("NOTICE") -> "NOTICE"
+
+mappings in Universal += file("LICENSE-Third-Party.txt") -> "LICENSE-Third-Party.txt"
 
 mappings in Universal <++= (packageBin in Compile, target ) map { (_, target) =>
   val dir = file("./features")

@@ -109,8 +109,10 @@ This software is open sourced under the
 
 See also: [LICENSE](LICENSE).
 
-This project has dependencies on other open source projects, all of which are 
-listed in the [NOTICE](NOTICE) file.
+This project has dependencies on [gwen](https://github.com/gwen-interpreter/gwen) 
+and other open source projects. All distributed third party depdendencies and 
+their licenses are listed in the [LICENSE-Third-Party.txt](LICENSE-Third-Party.txt) 
+file.
 
 Open sourced 28 June 2014 03:27 pm AEST
 

@@ -1,10 +1,3 @@
-enablePlugins(JavaAppPackaging)
-enablePlugins(SbtNativePackager)
-
-import com.typesafe.sbt.SbtGit._
-
-import com.typesafe.sbt.packager.archetypes._
-
 // Use file URI for gwen dep until sbt issue 1284 is fixed: https://github.com/sbt/sbt/issues/1284
 lazy val gwen = ProjectRef(file("../gwen"), "gwen")
 // lazy val gwen = ProjectRef(uri("git://github.com/gwen-interpreter/gwen.git"), "gwen")
@@ -65,6 +58,7 @@ libraryDependencies += "net.java.dev.jna" % "jna-platform" % "4.1.0"
 
 mappings in (Compile, packageBin) ++= Seq(
   file("LICENSE") -> "LICENSE",
-  file("NOTICE") -> "NOTICE"
+  file("NOTICE") -> "NOTICE",
+  file("LICENSE-Third-Party.txt") -> "LICENSE-Third-Party.txt"
 )
 
