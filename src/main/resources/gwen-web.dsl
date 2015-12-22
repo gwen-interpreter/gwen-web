@@ -132,6 +132,7 @@ I wait for <element> for <duration> seconds
 I wait for <element>
 I clear <element>
 I press enter in <element>
+I press tab in <element>
 I enter "<text>" in <element>
 I type "<text>" in <element>
 I enter <reference> in <element>
