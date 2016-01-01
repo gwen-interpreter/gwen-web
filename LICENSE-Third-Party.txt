@@ -292,8 +292,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 # [BSD 3-Clause](http://www.scala-lang.org/license.html)
 
 ```
-Copyright (c) 2002-2015 EPFL
-Copyright (c) 2011-2015 Typesafe, Inc.
+Copyright (c) 2002-2016 EPFL
+Copyright (c) 2011-2016 Typesafe, Inc.
 
 All rights reserved.
 
@@ -365,7 +365,7 @@ POSSIBILITY OF SUCH DAMAGE.
 # [The BSD License](https://github.com/jline/jline2/blob/master/LICENSE.txt)
 
 ```
-Copyright (c) 2002-2015, the original author or authors.
+Copyright (c) 2002-2016, the original author or authors.
 All rights reserved.
 
 http://www.opensource.org/licenses/bsd-license.php
