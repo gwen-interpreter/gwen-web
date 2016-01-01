@@ -47,14 +47,8 @@ libraryDependencies += "org.mockito" % "mockito-all" % "1.10.19" % "test"
 libraryDependencies += "com.google.code.findbugs" % "jsr305" % "2.0.1" % "compile" 
 
 libraryDependencies += "org.seleniumhq.selenium" % "selenium-java" % "2.48.1" excludeAll(
-  ExclusionRule(organization = "org.seleniumhq.selenium", name = "selenium-htmlunit-driver"),
-  ExclusionRule(organization = "net.java.dev.jna", name = "jna"),
-  ExclusionRule(organization = "net.java.dev.jna", name = "jna-platform")
+  ExclusionRule(organization = "org.seleniumhq.selenium", name = "selenium-htmlunit-driver")
 )
-
-libraryDependencies += "net.java.dev.jna" % "jna" % "4.1.0"
-
-libraryDependencies += "net.java.dev.jna" % "jna-platform" % "4.1.0"
 
 mappings in (Compile, packageBin) ++= Seq(
   file("LICENSE") -> "LICENSE",
