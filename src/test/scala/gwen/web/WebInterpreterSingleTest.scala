@@ -18,8 +18,12 @@ package gwen.web
 
 class WebInterpreterSingleTest extends WebInterpreterTest {
 
-  "Single feature" should "evaluate" in {
-    evaluate(List("features/floodio/FloodIO.feature"), false, false, "target/reports/single", None)
+  "Single floodio feature" should "evaluate" in {
+    evaluate(List("features/floodio/FloodIO.feature"), false, false, "target/reports/single/floodio", None)
+  }
+  
+  "Single se feature" should "evaluate" in {
+    evaluate(List("features/se/Selenium2Example.feature"), false, false, "target/reports/single/se", None)
   }
   
 }

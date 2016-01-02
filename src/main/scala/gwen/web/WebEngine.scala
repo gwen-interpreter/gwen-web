@@ -32,6 +32,9 @@ import gwen.dsl.Failed
 import gwen.eval.support.DecodingSupport
 import gwen.eval.support.DefaultEngineSupport
 import gwen.dsl.Failed
+import org.openqa.selenium.net.UrlChecker.TimeoutException
+import scala.util.Try
+import scala.util.Failure
 
 /**
   * A web engine that uses the Selenium web driver
@@ -210,14 +213,14 @@ trait WebEngine extends EvalEngine[WebEnvContext]
         env.scopes.set(s"$element/locator", locator);
         env.scopes.set(s"$element/locator/$locator", expression)
 
-      case r"""the page title should( not)?$negation (be|contain|match regex|match xpath)$operator "(.*?)"$$$expression""" =>  env.execute {
-        compare("title", expression, env.getTitle, operator, Option(negation).isDefined, env)
+      case r"""the page title should( not)?$negation (be|contain|start with|end with|match regex|match xpath)$operator "(.*?)"$$$expression""" =>  env.execute {
+        compare("title", expression, () => env.getTitle, operator, Option(negation).isDefined, env)
       }
         
-      case r"""the page title should( not)?$negation (be|contain|match regex|match xpath)$operator (.+?)$$$attribute""" => {
+      case r"""the page title should( not)?$negation (be|contain|start with|end with|match regex|match xpath)$operator (.+?)$$$attribute""" => {
         val expected = env.getAttribute(attribute)
         env.execute {
-          compare("title", expected, env.getTitle, operator, Option(negation).isDefined, env)
+          compare("title", expected, () => env.getTitle, operator, Option(negation).isDefined, env)
         }
       }
       
@@ -240,9 +243,9 @@ trait WebEngine extends EvalEngine[WebEnvContext]
         }
       }
         
-      case r"""(.+?)$element( text| value)?$selection should( not)?$negation (be|contain|match regex|match xpath)$operator "(.*?)"$$$expression""" => { 
+      case r"""(.+?)$element( text| value)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath)$operator "(.*?)"$$$expression""" => { 
         if (element == "I") undefinedStepError(step)
-        val actual = Option(selection) match {
+        val actual = () => Option(selection) match {
           case None => env.getBoundReferenceValue(element)
           case Some(sel) => env.getElementSelection(element, sel)
         }
@@ -251,10 +254,10 @@ trait WebEngine extends EvalEngine[WebEnvContext]
         }
       }
         
-      case r"""(.+?)$element( value| text)?$selection should( not)?$negation (be|contain|match regex|match xpath)$operator (.+?)$$$attribute""" => {
+      case r"""(.+?)$element( value| text)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath)$operator (.+?)$$$attribute""" => {
         if (element == "I") undefinedStepError(step)
         val expected = env.getAttribute(attribute)
-        val actual = Option(selection) match {
+        val actual = () => Option(selection) match {
           case None => env.getBoundReferenceValue(element)
           case Some(sel) => env.getElementSelection(element, sel)
         }
@@ -440,16 +443,26 @@ trait WebEngine extends EvalEngine[WebEnvContext]
     * @param env the web environment context
     * @return true if the actual value matches the expected value
     */
-  private def compare(element: String, expected: String, actual: String, operator: String, negate: Boolean, env: WebEnvContext) = 
-    (operator match {
-      case "be"      => expected.equals(actual)
-      case "contain" => actual.contains(expected)
-      case "match regex" => actual.matches(expected)
-      case "match xpath" => !env.evaluateXPath(expected, actual, env.XMLNodeType.text).isEmpty()
-    }) tap { result =>
-      if (!negate) assert(result, s"$element '$actual' should $operator '$expected'")
-      else assert(!result, s"$element should not $operator '$expected'")
-    } 
+  private def compare(element: String, expected: String, actual: () => String, operator: String, negate: Boolean, env: WebEnvContext) = {
+    var actualValue = ""
+    val result = Try {
+      env.waitUntil {
+        actualValue = actual()
+        if (actualValue != null) {
+          operator match {
+            case "be"      => expected.equals(actualValue)
+            case "contain" => actualValue.contains(expected)
+            case "start with" => actualValue.startsWith(expected)
+            case "end with" => actualValue.endsWith(expected)
+            case "match regex" => actualValue.matches(expected)
+            case "match xpath" => !env.evaluateXPath(expected, actualValue, env.XMLNodeType.text).isEmpty()
+          }
+        } else false
+      }
+    }.isSuccess
+    if (!negate) assert(result, s"Expected $element '$actualValue' to $operator '$expected', but it ${if(operator == "be") "was" else "did"} not")
+    else assert(!result, s"Expected $element '$actualValue' to not $operator '$expected', but it ${if(operator == "be") "was" else "did"}'")
+  }
   
 }
 
