@@ -1,7 +1,8 @@
 [![Gwen-web](https://github.com/gwen-interpreter/gwen/blob/master/doc/img/gwen-attractor.png)](https://github.com/gwen-interpreter/gwen/blob/master/doc/LOGO.md)
-
-gwen-web [![Build Status](https://travis-ci.org/gwen-interpreter/gwen-web.svg?branch=master)](https://travis-ci.org/gwen-interpreter/gwen-web)
+gwen-web
 ========
+
+[![Build Status](https://travis-ci.org/gwen-interpreter/gwen-web.svg?branch=master)](https://travis-ci.org/gwen-interpreter/gwen-web)
 
 Gwen-web is a web automation engine that runs inside the 
 [gwen](https://github.com/gwen-interpreter/gwen) interpreter. 
