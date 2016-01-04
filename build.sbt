@@ -6,7 +6,7 @@ val gwenWeb = project in file(".") dependsOn(gwen)
 
 name := "gwen-web"
 
-description := "An acceptance driven web automation engine."
+description := "A web automation engine for Gwen"
 
 organization := "org.gweninterpreter"
 
@@ -28,7 +28,7 @@ scalacOptions += "-target:jvm-1.7"
 
 licenses += "Apache License, Version 2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0.html")
 
-homepage := Some(url("http://gwen-interpreter.github.io/gwen-web/"))
+homepage := Some(url("https://github.com/gwen-interpreter/gwen-web"))
 
 EclipseKeys.createSrc := EclipseCreateSrc.Default + EclipseCreateSrc.Resource
 
