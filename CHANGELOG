@@ -1,0 +1,86 @@
+v1.0.0
+======
+First gwen-web release.
+- Uses:
+  - gwen.interpreger gwen v1.0.0
+  - org.seleniumhq.selenium selenium-java v2.48.1
+- Requires:
+  - Java 7+
+  - A Web Browser. The following are supported:
+    - Firefox
+    - Chrome
+      - Requires native web driver
+    - Safari
+      - Requires safari extension
+    - IE
+      - Requires native web driver
+- Introduces:
+  - Web engine DSL:
+    - I am on the <page>
+    - the url will be "<url>"
+    - the url will be defined by property|setting "<name>"
+    - I navigate to the <page>
+    - I navigate to "<url>"
+    - I scroll to the top|bottom of <element>
+    - <element> can be located by id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript "<expression>"
+    - the page title should|should not be|contain|start with|end with|match regex|match xpath "<expression>"
+    - the page title should|should not be|contain|start with|end with|match regex|match xpath <attribute>
+    - <element> should|should not be displayed|hidden|checked|unchecked|enabled|disabled
+    - <element|attribute> should|should not be|contain|start with|end with|match regex|match xpath "<expression>"
+    - <element|attribute> should|should not be|contain|start with|end with|match regex|match xpath <attribute>
+    - <dropdown> <text|value> should|should not be|contain|start with|end with|match regex|match xpath "<expression>"
+    - <dropdown> <text|value> should|should not be|contain|start with|end with|match regex|match xpath <attribute>
+    - I capture the text|node|nodeset in <element|attribute|property> by xpath "<expression>" as <attribute>
+    - I capture the text in <element|attribute|property> by regex "<expression>" as <attribute>
+    - I capture the current URL
+    - I capture the current URL as <attribute>
+    - I capture <element|attribute|property> as <attribute>
+    - I capture <element|attribute|property>
+    - I capture <dropdown> <text|value> as <attribute>
+    - I capture <dropdown> <text|value>
+    - my <name> property|setting is|will be "<value>"
+    - <attribute> is|will be defined by javascript|system process|property|setting "<expression>"
+    - <attribute> is|will be defined by the text|node|nodeset in <source> by xpath "<expression>"
+    - <attribute> is|will be defined in <source> by regex "<expression>"
+    - <attribute> is|will be "<value>"
+    - I wait for <element> text for <duration> second|seconds
+    - I wait for <element> text
+    - I wait for <element> for <duration> second|seconds
+    - I wait for <element>
+    - I clear <element>
+    - I press enter|tab in <element>
+    - I enter|type "<value>" in <element>
+    - I enter|type <attribute> in <element>
+    - I select the <position>st|nd|rd|th option in <element>
+    - I select "<value>" in <element>
+    - I select "<value>" in <element> by value
+    - I select <attribute> in <element>
+    - I select <attribute> in <element> by value
+    - I click|submit|check|uncheck <element>
+    - I wait <duration> second|seconds when <element> is clicked|submitted|checked|unchecked|selected|typed|entered|tabbed|cleared
+    - I wait until <condition> when <element> is clicked|submitted|checked|unchecked|selected|typed|entered|tabbed|cleared
+    - I wait until "<javascript>"
+    - I wait until <condition>
+    - I wait <duration> second|seconds
+    - I highlight|locate <element>
+    - I execute system process "<process>"
+    - I execute a unix system process "<process>"
+    - I refresh the current page
+    - I base64 decode <element|attribute> as <attribute>
+    - I base64 decode <element|attribute>
+    - <step> until <condition>
+    - <step> while <condition>
+  - Configuration settings:
+    - gwen.web.browser
+    - gwen.web.useragent
+    - gwen.web.authorize.plugins
+    - gwen.web.wait.seconds
+    - gwen.web.maximize
+    - gwen.web.throttle.msecs
+    - gwen.web.highlight.style
+    - gwen.web.capture.screenshots
+    - gwen.web.capture.screenshots.highlighting
+    - gwen.web.remote.url
+    - gwen.web.accept.untrusted.certs
+    - gwen.web.suppress.images (firefox only)
+    - gwen.web.chrome.extensions (chrome only)

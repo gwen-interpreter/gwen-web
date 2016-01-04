@@ -22,6 +22,8 @@ mappings in Universal += file("NOTICE") -> "NOTICE"
 
 mappings in Universal += file("LICENSE-Third-Party.txt") -> "LICENSE-Third-Party.txt"
 
+mappings in Universal += file("CHANGELOG") -> "CHANGELOG"
+
 mappings in Universal <++= (packageBin in Compile, target ) map { (_, target) =>
   val dir = file("./features")
   (dir.***) pair relativeTo(dir.getParentFile)
