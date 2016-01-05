@@ -56,6 +56,8 @@ import scala.collection.JavaConverters._
   */
 class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) extends EnvContext(options, scopes) with WebElementLocator with DriverManager with RegexSupport with XPathSupport {
 
+   Try(logger.info(s"SELENIUM_HOME = ${sys.env("SELENIUM_HOME")}"))
+  
    /** Resets the current context and closes the web browser. */
   override def reset() {
     super.reset()

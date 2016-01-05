@@ -74,6 +74,17 @@ exit|quit|bye
   Press tab key at any time for tab completion
 ```
 
+Changing the Selenium version
+-----------------------------
+By default, gwen-web uses the selenium implementation bundled in the 
+distribution (see selenium JARs in the lib dir). If you would like to use a 
+different version of selenium instead, then you can download the 
+`selenium-java` ZIP distribution you desire from the 
+[selenium downloads](http://www.seleniumhq.org/download/) page and unpack it 
+to a location on your drive and then set the `SELENIUM_HOME` environment 
+variable to point to that location. Gwen will then use that selenium version 
+when it is next invoked.
+
 Configuration Settings
 ----------------------
 
