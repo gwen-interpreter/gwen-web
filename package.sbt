@@ -40,3 +40,12 @@ mappings in Universal <++= (com.typesafe.sbt.packager.Keys.makeBatScript in Univ
     s <- script.toSeq
   } yield s -> ("bin/gwen.bat") 
 }
+
+val BashClasspathPattern = "declare -r app_classpath=\"(.*)\"\n".r
+
+bashScriptDefines := bashScriptDefines.value.map {
+  case BashClasspathPattern(classpath) => "declare -r app_classpath=\"$SELENIUM_HOME/*:$SELENIUM_HOME/libs/*:" + classpath + "\"\n"
+  case _@entry => entry
+}
+
+batScriptExtraDefines += """set "APP_CLASSPATH=%SELENIUM_HOME%\*;%SELENIUM_HOME%\libs\*;%APP_CLASSPATH%""""

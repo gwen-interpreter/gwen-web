@@ -16,3 +16,6 @@ No, gwen-web uses page scopes to emulate page objects and does away with
 development and compilation altogether through a [prescribed DSL](CHEATSHEET.md#supported-dsl). 
 - See also: [Page Objects Begone](https://warpedjavaguy.wordpress.com/2014/08/27/page-objects-begone/)
 
+Can I change the selenium implementation used by gwen-web?
+----------------------------------------------------------
+Yes, see [Changing the Selenium version](CHEATSHEET#changing-the-selenium-version).

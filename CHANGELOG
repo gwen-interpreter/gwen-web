@@ -84,3 +84,4 @@ First gwen-web release.
     - gwen.web.accept.untrusted.certs
     - gwen.web.suppress.images (firefox only)
     - gwen.web.chrome.extensions (chrome only)
+  - Interchangeable selenium implementation through SELENIUM_HOME environment variable

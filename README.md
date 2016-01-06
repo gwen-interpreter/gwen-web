@@ -29,6 +29,8 @@ Key Features
 - Cross browser support
 - Remote web driver support
 - Screenshot capture and slideshow playback
+- Interchangeable Selenium implementation
+  - See [Changing the selenium version](CHEATSHEET#changing-the-selenium-version)  
  
 Core Requirements
 -----------------
