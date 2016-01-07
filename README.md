@@ -9,8 +9,7 @@ Gwen-web is a web automation engine that runs inside the
 It allows teams to automate front end web tests by writing 
 specifications instead of code. It also provides 
 users with the ability to interactively debug tests before 
-committing them to an automation cycle. 
-- See also: [CHANGELOG](CHANGELOG).
+committing them to an automation cycle.
  
 Once the tests have been written, gwen-web is able to run them 
 sequentially or in parallel.  It can also target different types
@@ -30,8 +29,9 @@ Key Features
 - Remote web driver support
 - Screenshot capture and slideshow playback
 - Interchangeable Selenium implementation
-  - See [Changing the selenium version](CHEATSHEET#changing-the-selenium-version)  
- 
+  - See [Changing the selenium version](doc/CHEATSHEET.md#changing-the-selenium-version)
+- See also: [CHANGELOG](CHANGELOG)
+
 Core Requirements
 -----------------
 
