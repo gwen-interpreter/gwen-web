@@ -31,7 +31,7 @@ Note that the floodio challenge requires that the user agent header be set to
 the Firefox and Chrome browsers only. 
  
 Next, open a command prompt / shell in your gwen installation directory and 
-issue the following command if you are using Firefox or Chrome:
+issue the following command if you are using Firefox or Chrome (replace all forward slashes with back slashes if you are on a windows platform):
 
 ```
 bin/gwen -b features/floodio
