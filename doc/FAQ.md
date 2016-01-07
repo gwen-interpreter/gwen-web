@@ -18,4 +18,4 @@ development and compilation altogether through a [prescribed DSL](CHEATSHEET.md#
 
 Can I change the selenium implementation used by gwen-web?
 ----------------------------------------------------------
-Yes, see [Changing the Selenium version](CHEATSHEET#changing-the-selenium-version).
+Yes, see [Changing the Selenium version](CHEATSHEET.md#changing-the-selenium-version).
