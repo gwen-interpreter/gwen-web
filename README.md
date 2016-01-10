@@ -11,7 +11,7 @@ It allows teams to automate front end web tests by writing
 instead of code. A [prescribed DSL](doc/CHEATSHEET.md#supported-dsl) deletages
 to [Selenium WebDriver](http://www.seleniumhq.org/projects/webdriver) 
 under the covers for you, but you can also declarateively compose your own 
-custom DSL by with [@StepDef](https://github.com/gwen-interpreter/gwen#composable-steps) 
+custom DSL with [@StepDef](https://github.com/gwen-interpreter/gwen#composable-steps) 
 Scenarios that can accept parameters and call other steps.
 
 A [REPL console](https://github.com/gwen-interpreter/gwen#repl-console) 
