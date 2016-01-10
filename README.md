@@ -36,7 +36,8 @@ Key Features
 Why gwen-web?
 -------------
 
-Because you can now automate web pages by writing specifications like this:
+Because you can now automate web pages by writing 
+[Gherkin](https://github.com/cucumber/cucumber/wiki/Gherkin) features like this:
 ```
    Feature: Google search
    
