@@ -22,8 +22,8 @@ class WebInterpreterSingleTest extends WebInterpreterTest {
     evaluate(List("features/floodio/FloodIO.feature"), false, false, "target/reports/single/floodio", None)
   }
   
-  "Single se feature" should "evaluate" in {
-    evaluate(List("features/se/Selenium2Example.feature"), false, false, "target/reports/single/se", None)
+  "Single google feature" should "evaluate" in {
+    evaluate(List("features/google/GoogleSearch.feature"), false, false, "target/reports/single/google", None)
   }
   
 }

@@ -243,7 +243,7 @@ trait WebEngine extends EvalEngine[WebEnvContext]
         }
       }
         
-      case r"""(.+?)$element( text| value)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath)$operator "(.*?)"$$$expression""" => { 
+      case r"""(.+?)$element( text| value)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath)$operator "(.*?)"$$$expression""" => {
         if (element == "I") undefinedStepError(step)
         val actual = () => Option(selection) match {
           case None => env.getBoundReferenceValue(element)
@@ -281,9 +281,7 @@ trait WebEngine extends EvalEngine[WebEnvContext]
       }
       
       case r"""I capture the current URL""" => 
-        env.featureScope.set("the current URL", env.execute(env.withWebDriver(_.getCurrentUrl()) tap { content => 
-          env.addAttachment("the current URL", "txt", content) 
-        }).getOrElse("$[currentUrl]"))
+        env.captureCurrentUrl()
       
       case r"""I capture the current URL as (.+?)$name""" => 
         env.featureScope.set(name, env.execute(env.withWebDriver(_.getCurrentUrl()) tap { content => 

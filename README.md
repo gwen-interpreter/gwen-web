@@ -20,6 +20,7 @@ screenshots, slideshows, and captured runtime data can also be generated.
 
 Key Features
 ------------
+
 - Tests are plain text specifications
 - Tests can be run in batch mode or interactively
 - Tests can be run sequentially or in parallel
@@ -31,6 +32,69 @@ Key Features
 - Interchangeable Selenium implementation
   - See [Changing the selenium version](doc/CHEATSHEET.md#changing-the-selenium-version)
 - See also: [CHANGELOG](CHANGELOG)
+
+Why gwen-web?
+-------------
+
+Because you can now automate web pages by writing specifications like this:
+```
+   Feature: Google search
+   
+  @StepDef
+  Scenario: I search for "<query>"
+      Given I navigate to "http://www.google.com"
+        And the search field can be located by name "q"
+       When I enter "$<query>" in the search field
+       Then the page title should start with "$<query>"
+        And the first result can be located by class name "r"
+        And the first result should contain "$<query>"
+        
+  Scenario: Perform a google search for gwen-web
+      Given I search for "gwen-web"
+       When I click the first result
+       Then the current URL should be "https://github.com/gwen-interpreter/gwen-web"
+```
+..instead of developing code like this:
+```
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+public class GoogleSearch  {
+    private static WebElement searchFor(String query, WebDriver driver) {
+        driver.get("http://www.google.com");
+        WebElement searchField = driver.findElement(By.name("q"));
+        searchField.sendKeys(query);
+        searchField.submit();
+        new WebDriverWait(driver, 10).until(new ExpectedCondition<Boolean>() {
+            public Boolean apply(WebDriver d) {
+                return d.getTitle().startsWith(query);
+            }
+        });
+        WebElement firstResult = driver.findElement(By.className("r"));
+        if(!firstResult.getText().contains(query)) {
+            throw new AssertionError("Unexpected result");
+        }
+        return firstResult;
+    }
+    public static void main(String[] args) {
+        WebDriver driver = new FirefoxDriver();
+        try {
+            WebElement firstResult = searchFor("gwen-web", driver);
+            firstResult.click();
+            String url = driver.getCurrentUrl(); 
+            if (!url.equals("https://github.com/gwen-interpreter/gwen-web")) {
+                throw new AssertionError("Unexepcted URL");
+            }
+        } finally {
+            driver.quit();
+        }
+    }
+}
+```
 
 Core Requirements
 -----------------

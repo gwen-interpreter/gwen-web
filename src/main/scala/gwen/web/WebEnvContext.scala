@@ -243,7 +243,8 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     *  
     * @param name the name of the bound value to find
     */
-  override def getBoundReferenceValue(name: String): String = { 
+  override def getBoundReferenceValue(name: String): String = {
+    if (name == "the current URL") captureCurrentUrl()
     (Try(getLocatorBinding(name)) match {
       case Success(binding) =>
         Try(execute(getElementText(binding)).get) match {
@@ -255,6 +256,11 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
       logger.debug(s"getBoundReferenceValue(${name})='${value}'")
     }
   }
+  
+  def captureCurrentUrl() = 
+    featureScope.set("the current URL", execute(withWebDriver(_.getCurrentUrl()) tap { content => 
+      addAttachment("the current URL", "txt", content) 
+    }).getOrElse("$[currentUrl]"))
   
   /**
     * Gets the text value of a web element on the current page. 

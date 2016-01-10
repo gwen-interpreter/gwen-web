@@ -14,14 +14,18 @@
 # limitations under the License.
 #
 
-   Feature: Selenium 2 Example
- 
-    This feature does the same thing as the selenium code example found here: 
-    http://www.seleniumhq.org/docs/03_webdriver.jsp#introducing-the-selenium-webdriver-api-by-example
-      
-  Scenario: Google search
+   Feature: Google search
+   
+  @StepDef
+  Scenario: I search for "<query>"
       Given I navigate to "http://www.google.com"
         And the search field can be located by name "q"
-       When I enter "Cheese!" in the search field
-       Then the page title should start with "Cheese!"
-
+       When I enter "$<query>" in the search field
+       Then the page title should start with "$<query>"
+        And the first result can be located by class name "r"
+        And the first result should contain "$<query>"
+        
+  Scenario: Perform a google search for gwen-web
+      Given I search for "gwen-web"
+       When I click the first result
+       Then the current URL should be "https://github.com/gwen-interpreter/gwen-web"
