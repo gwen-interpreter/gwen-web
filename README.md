@@ -5,12 +5,12 @@ gwen-web
 [![Build Status](https://travis-ci.org/gwen-interpreter/gwen-web.svg?branch=master)](https://travis-ci.org/gwen-interpreter/gwen-web)
 
 Gwen-web is a web automation engine that runs inside the 
-[gwen](https://github.com/gwen-interpreter/gwen) interpreter. 
+[Gwen](https://github.com/gwen-interpreter/gwen) interpreter. 
 It allows teams to automate front end web tests by writing 
 [Gherkin](https://github.com/cucumber/cucumber/wiki/Gherkin) specifications 
 instead of code. A [prescribed DSL](doc/CHEATSHEET.md#supported-dsl) deletages
 to [Selenium WebDriver](http://www.seleniumhq.org/projects/webdriver) 
-under the covers for you, but you can also declarateively compose your own 
+under the covers for you, but you can also declaratively compose your own 
 custom DSL with [@StepDef](https://github.com/gwen-interpreter/gwen#composable-steps) 
 Scenarios that can accept parameters and call other steps.
 
@@ -23,25 +23,11 @@ IE and Safari. Reports showing the status of each test execution,
 including timings, screenshots, slideshows, and captured runtime data 
 can also be generated.
 
-Key Features
-------------
-
-- Tests are plain text specifications
-- Tests can be run in batch mode or interactively
-- Tests can be run sequentially or in parallel
-- Tests can be data driven (using csv data feeds)
-- REPL console allows verifying before running
-- Cross browser support
-- Remote web driver support
-- Screenshot capture and slideshow playback
-- [Interchangeable Selenium](doc/CHEATSHEET.md#changing-the-selenium-version) implementation
-- See also: [CHANGELOG](CHANGELOG)
-
 Why gwen-web?
 -------------
 
-Because you can now instantly automate web pages by writing 
-[Gherkin](https://github.com/cucumber/cucumber/wiki/Gherkin) features like this:
+With gwen-web you can instantly automate web pages by writing executable 
+features like this:
 ```
    Feature: Google search
    
@@ -100,6 +86,20 @@ public class GoogleSearch  {
     }
 }
 ```
+
+Key Features
+------------
+
+- Tests are plain text specifications
+- Tests can be run in batch mode or interactively
+- Tests can be run sequentially or in parallel
+- Tests can be data driven (using csv data feeds)
+- REPL console allows verifying before running
+- Cross browser support
+- Remote web driver support
+- Screenshot capture and slideshow playback
+- [Interchangeable Selenium](doc/CHEATSHEET.md#changing-the-selenium-version) implementation
+- See also: [CHANGELOG](CHANGELOG)
 
 Core Requirements
 -----------------
