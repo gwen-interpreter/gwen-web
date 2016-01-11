@@ -20,6 +20,8 @@ IE and Safari. Reports showing the status of each test execution,
 including timings, screenshots, slideshows, and captured runtime data 
 can also be generated.
 
+#### Current Status
+
 [![Build Status](https://travis-ci.org/gwen-interpreter/gwen-web.svg?branch=master)](https://travis-ci.org/gwen-interpreter/gwen-web)
 
 Why gwen-web?
@@ -32,6 +34,12 @@ features like this:
    
   @StepDef
   Scenario: I search for "<query>"
+            
+            This is a custom step definition that accepts a query string as 
+            input and performs a google search on it and checks for a returned 
+            match. It is not immediately executed but rather loaded into 
+            memory and executed only when referenced in another step by name.
+             
       Given I navigate to "http://www.google.com"
         And the search field can be located by name "q"
        When I enter "$<query>" in the search field
@@ -40,6 +48,11 @@ features like this:
         And the first result should contain "$<query>"
         
   Scenario: Perform a google search
+            
+            This scenario calls the above step definition to perform a google 
+            search for "gwen-web". It then clicks the first link in the 
+            returned results and checks the URL of the page that is loaded.
+            
       Given I search for "gwen-web"
        When I click the first result
        Then the current URL should be "https://github.com/gwen-interpreter/gwen-web"
@@ -54,6 +67,11 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class GoogleSearch  {
+    /** 
+     * Performs a google search and returns the first element in the results.
+     * @param query the query string to search
+     * @param driver the web driver
+     */
     private static WebElement searchFor(String query, WebDriver driver) {
         driver.get("http://www.google.com");
         WebElement searchField = driver.findElement(By.name("q"));
@@ -70,6 +88,12 @@ public class GoogleSearch  {
         }
         return firstResult;
     }
+    /** 
+     * Main method that creates a new web driver instance and calls the 
+     * above method to perform a google search for "gwen-web" before clicking 
+     * the first link in the results and checking the URL of the loaded page.
+     * @param args command line arguments (not used)
+     */
     public static void main(String[] args) {
         WebDriver driver = new FirefoxDriver();
         try {

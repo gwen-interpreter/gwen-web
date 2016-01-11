@@ -18,6 +18,12 @@
    
   @StepDef
   Scenario: I search for "<query>"
+            
+            This is a custom step definition that accepts a query string as 
+            input and performs a google search on it and checks for a returned 
+            match. It is not immediately executed but rather loaded into 
+            memory and executed only when referenced in another step by name.
+             
       Given I navigate to "http://www.google.com"
         And the search field can be located by name "q"
        When I enter "$<query>" in the search field
@@ -25,7 +31,12 @@
         And the first result can be located by class name "r"
         And the first result should contain "$<query>"
         
-  Scenario: Perform a google search for gwen-web
+  Scenario: Perform a google search
+            
+            This scenario calls the above step definition to perform a google 
+            search for "gwen-web". It then clicks the first link in the 
+            returned results and checks the URL of the page that is loaded.
+            
       Given I search for "gwen-web"
        When I click the first result
        Then the current URL should be "https://github.com/gwen-interpreter/gwen-web"
