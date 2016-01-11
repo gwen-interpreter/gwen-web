@@ -18,7 +18,7 @@ can help eliminate redundancies and give you the flexibility to be as
 imperative or as declarative as you like in your approach to writing features.
 
 A [REPL console](https://github.com/gwen-interpreter/gwen#repl-console) 
-provides users with the ability to interactively debug tests 
+provides users with the ability to interactively write and debug tests 
 before committing them to an automation cycle. Once the tests have been 
 written, gwen-web is able to run them sequentially or in parallel.  It 
 can also target different types of browsers including Firefox, Chrome, 
