@@ -2,8 +2,6 @@
 gwen-web
 ========
 
-[![Build Status](https://travis-ci.org/gwen-interpreter/gwen-web.svg?branch=master)](https://travis-ci.org/gwen-interpreter/gwen-web)
-
 Gwen-web is a web automation engine that runs inside the 
 [Gwen](https://github.com/gwen-interpreter/gwen) interpreter. 
 It allows teams to automate front end web tests by writing 
@@ -11,8 +9,8 @@ It allows teams to automate front end web tests by writing
 instead of code. A [prescribed DSL](doc/CHEATSHEET.md#supported-dsl) deletages
 to [Selenium WebDriver](http://www.seleniumhq.org/projects/webdriver) 
 under the covers for you, but you can also declaratively compose your own 
-custom DSL with [@StepDef](https://github.com/gwen-interpreter/gwen#composable-steps) 
-Scenarios that can accept parameters and call other steps.
+custom DSL with [@StepDef](https://github.com/gwen-interpreter/gwen#composable-steps)s 
+(annotated Scenarios) that can accept parameters and call other steps.
 
 A [REPL console](https://github.com/gwen-interpreter/gwen#repl-console) 
 provides users with the ability to interactively debug tests 
@@ -22,6 +20,8 @@ can also target different types of browsers including Firefox, Chrome,
 IE and Safari. Reports showing the status of each test execution, 
 including timings, screenshots, slideshows, and captured runtime data 
 can also be generated.
+
+[![Build Status](https://travis-ci.org/gwen-interpreter/gwen-web.svg?branch=master)](https://travis-ci.org/gwen-interpreter/gwen-web)
 
 Why gwen-web?
 -------------
