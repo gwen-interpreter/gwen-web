@@ -27,7 +27,7 @@ can also be generated.
 Why gwen-web?
 -------------
 
-With gwen-web you can instantly automate web pages by writing plain text  
+With gwen-web you can instantly automate web pages by writing plain text 
 features like this:
 ```gherkin
    Feature: Google search
