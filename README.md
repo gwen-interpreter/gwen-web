@@ -29,7 +29,7 @@ Why gwen-web?
 
 With gwen-web you can instantly automate web pages by writing executable 
 features like this:
-```
+```gherkin
    Feature: Google search
    
   @StepDef
@@ -58,7 +58,7 @@ features like this:
        Then the current URL should be "https://github.com/gwen-interpreter/gwen-web"
 ```
 ..instead of developing code like this:
-```
+```java
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
