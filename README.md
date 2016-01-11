@@ -40,7 +40,7 @@ features like this:
         And the first result can be located by class name "r"
         And the first result should contain "$<query>"
         
-  Scenario: Perform a google search for gwen-web
+  Scenario: Perform a google search
       Given I search for "gwen-web"
        When I click the first result
        Then the current URL should be "https://github.com/gwen-interpreter/gwen-web"
