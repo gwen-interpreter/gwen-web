@@ -5,20 +5,26 @@ gwen-web
 Gwen-web is a web automation engine that runs inside the 
 [Gwen](https://github.com/gwen-interpreter/gwen) interpreter. 
 It allows teams to automate front end web tests by writing 
-[Gherkin](https://github.com/cucumber/cucumber/wiki/Gherkin) specifications 
-instead of code. A [prescribed DSL](doc/CHEATSHEET.md#supported-dsl) deletages
-to [Selenium WebDriver](http://www.seleniumhq.org/projects/webdriver) 
+[Gherkin](https://github.com/cucumber/cucumber/wiki/Gherkin) feature 
+specifications instead of code. 
+A [prescribed DSL](doc/CHEATSHEET.md#supported-dsl) deletages to 
+[Selenium WebDriver](http://www.seleniumhq.org/projects/webdriver) 
 under the covers for you, but you can also declaratively compose your own 
-custom DSL with annotated [@StepDef](https://github.com/gwen-interpreter/gwen#composable-steps) Scenarios that can accept parameters and call other steps.
+custom DSL with annotated 
+[@StepDef](https://github.com/gwen-interpreter/gwen#composable-steps) 
+Scenarios that can accept parameters and call other steps. 
+[Meta features](https://github.com/gwen-interpreter/gwen#meta-features) 
+can help eliminate redundancies and give you the flexibility to be as 
+imperative or as declarative as you like in your approach to writing features.
 
 A [REPL console](https://github.com/gwen-interpreter/gwen#repl-console) 
 provides users with the ability to interactively debug tests 
 before committing them to an automation cycle. Once the tests have been 
 written, gwen-web is able to run them sequentially or in parallel.  It 
 can also target different types of browsers including Firefox, Chrome, 
-IE and Safari. Reports showing the status of each test execution, 
+IE and Safari. Rich HTML reports showing the status of each test execution, 
 including timings, screenshots, slideshows, and captured runtime data 
-can also be generated.
+can also be generated. XML JUnit style reports can be generated too. 
 
 #### Current Status
 
@@ -143,9 +149,9 @@ User Guides
 - Blogs and Articles
   - [Page Objects Begone](http://warpedjavaguy.wordpress.com/2014/08/27/page-objects-begone/) - 
     See how gwen-web does away with page objects and why coding them is no longer 
-    necessary.
+    necessary (using a bottom-up approach)
   - [Automation By Meta](http://warpedjavaguy.wordpress.com/2015/01/12/automation-by-meta/) - 
-    How to write a feature file and make it executable.
+    How to write a feature file and make it executable (using a top-down approach)
   - [gwen-web and Remote Webdriver](https://quietachievingtester.wordpress.com/2015/04/23/remote-webdriver-feature-now-available-in-gwen-web/) - 
     How to enable remote webdriver in gwen-web
 - [FAQ](doc/FAQ.md)
@@ -163,8 +169,9 @@ Perform the following to download and install the latest binary build:
    - version 1.0.0 release (coming soon) 
 3. Extract the zip to a desired location on your local drive:
    - A folder named _gwen-web-[version]_ will be created
-4. [Install native web driver](doc/CHEATSHEET.md#native-web-drivers) for Chrome, IE, or Safari
-   - Skip this step if you are using firefox (you're good to go)
+4. [Install native web driver](doc/CHEATSHEET.md#native-web-drivers) for Chrome or IE, 
+   or a browser extension for Safari
+   - Skip this step if you are using firefox (no native driver required)
 5. [Configure settings](doc/CHEATSHEET.md#configuration-settings) (optional)
 6. [Start using gwen-web](doc/START.md) 
 
