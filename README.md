@@ -30,6 +30,8 @@ can also be generated. XML JUnit style reports can be generated too.
 
 [![Build Status](https://travis-ci.org/gwen-interpreter/gwen-web.svg?branch=master)](https://travis-ci.org/gwen-interpreter/gwen-web)
 
+- See also [Gwen Wiki](https://github.com/gwen-interpreter/gwen-web/wiki)
+
 
 Core Requirements
 -----------------
@@ -38,43 +40,12 @@ Core Requirements
 - A web browser (Chrome, Firefox, Safari, or IE)
 - A native web driver (required for Chrome and IE only)
 
-User Guides
+Quick Links to Wiki Information
 -----------
-
-- Introduction
-  - [Keynote](doc/gwen-web-intro.key?raw=true)
-  - [Powerpoint](doc/gwen-web-intro.pptx?raw=true)
-- [Installation](#installation) 
-- [Getting Started](doc/START.md)
-- [Cheat Sheet](doc/CHEATSHEET.md)
-- Blogs and Articles
-  - [Page Objects Begone](http://warpedjavaguy.wordpress.com/2014/08/27/page-objects-begone/) - 
-    See how gwen-web does away with page objects and why coding them is no longer 
-    necessary (using a bottom-up approach)
-  - [Automation By Meta](http://warpedjavaguy.wordpress.com/2015/01/12/automation-by-meta/) - 
-    How to write a feature file and make it executable (using a top-down approach)
-  - [gwen-web and Remote Webdriver](https://quietachievingtester.wordpress.com/2015/04/23/remote-webdriver-feature-now-available-in-gwen-web/) - 
-    How to enable remote webdriver in gwen-web
-- [FAQ](doc/FAQ.md)
-
-Installation
-------------
-
-### Installing a Binary Release
-
-Perform the following to download and install the latest binary build:
-
-1. Download and install [Java (JRE) 7+](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
-2. Download one of the following zips:
-   - [latest version 1.0.0 snapshot](https://oss.sonatype.org/content/repositories/snapshots/org/gweninterpreter/gwen-web/1.0.0-SNAPSHOT/gwen-web-1.0.0-SNAPSHOT.zip)
-   - version 1.0.0 release (coming soon) 
-3. Extract the zip to a desired location on your local drive:
-   - A folder named _gwen-web-[version]_ will be created
-4. [Install native web driver](doc/CHEATSHEET.md#native-web-drivers) for Chrome or IE, 
-   or a browser extension for Safari
-   - Skip this step if you are using firefox (no native driver required)
-5. [Configure settings](doc/CHEATSHEET.md#configuration-settings) (optional)
-6. [Start using gwen-web](doc/START.md) 
+- [Installation](/gwen-interpreter/gwen-web/wiki/Installation) 
+- [Getting Started](/gwen-interpreter/gwen-web/wiki/Getting-Started)
+- [Supported DSL](/gwen-interpreter/gwen-web/wiki/Supported-DSL)
+- [REPL Console](/gwen-interpreter/gwen-web/wiki/REPL-Console)
 
 Mail Group
 ----------
@@ -88,7 +59,7 @@ notifications or get involved.
 Development Guide
 -----------------
 
-See the [Dev Guide](doc/DEVGUIDE.md) if you would like to work with the code 
+See the [Dev Guide](/gwen-interpreter/gwen-web/wiki/Development-Guide) if you would like to work with the code 
 or build the project from source.
 
 Contributions
