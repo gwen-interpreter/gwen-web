@@ -195,7 +195,7 @@ Contributions
 
 New capabilities, improvements, and fixes are all valid candidates for 
 contribution. Submissions can be made using pull requests. Each submission 
-is reviewed and verified by the project's committer's before being integrated 
+is reviewed and verified by the project committers before being integrated 
 and released to the community. We ask that all code submissions include unit 
 tests or sample test features providing relevant coverage.
 
