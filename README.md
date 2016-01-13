@@ -7,30 +7,13 @@ Gwen-web is a web automation engine that runs inside the
 It allows teams to automate front end web tests by writing 
 [Gherkin](https://github.com/cucumber/cucumber/wiki/Gherkin) feature 
 specifications instead of code. 
-A [prescribed DSL](doc/CHEATSHEET.md#supported-dsl) delegates to 
-[Selenium WebDriver](http://www.seleniumhq.org/projects/webdriver) 
-under the covers for you, but you can also declaratively compose your own 
-custom DSL with annotated 
-[@StepDef](https://github.com/gwen-interpreter/gwen#composable-steps) 
-Scenarios that can accept parameters and call other steps. 
-[Meta features](https://github.com/gwen-interpreter/gwen#meta-features) 
-can help eliminate redundancies and give you the flexibility to be as 
-imperative or as declarative as you like in your approach to writing features.
 
-A [REPL console](https://github.com/gwen-interpreter/gwen#repl-console) 
-provides users with the ability to interactively write and debug tests 
-before committing them to an automation cycle. Once the tests have been 
-written, gwen-web is able to run them sequentially or in parallel.  It 
-can also target different types of browsers including Firefox, Chrome, 
-IE and Safari. Rich HTML reports showing the status of each test execution, 
-including timings, screenshots, slideshows, and captured runtime data 
-can also be generated. XML JUnit style reports can be generated too. 
+- See also [Gwen Wiki](https://github.com/gwen-interpreter/gwen-web/wiki)
+
 
 #### Current Status
 
 [![Build Status](https://travis-ci.org/gwen-interpreter/gwen-web.svg?branch=master)](https://travis-ci.org/gwen-interpreter/gwen-web)
-
-- See also [Gwen Wiki](https://github.com/gwen-interpreter/gwen-web/wiki)
 
 
 Core Requirements
