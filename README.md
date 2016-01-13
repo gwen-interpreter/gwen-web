@@ -199,7 +199,7 @@ is reviewed and verified by the project committers before being integrated
 and released to the community. We ask that all code submissions include unit 
 tests or sample test features providing relevant coverage.
 
-By sending a pull request, we assume that you agree to release your work under 
+By submitting contributions, we assume that you agree to release your work under 
 the license that covers this software.
 
 License
