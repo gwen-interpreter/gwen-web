@@ -1,4 +1,4 @@
-[![Gwen-web](https://github.com/gwen-interpreter/gwen/wiki/img/gwen-attractor.png)](https://github.com/gwen-interpreter/gwen/blob/master/doc/LOGO.md)
+[![Gwen-web](https://github.com/gwen-interpreter/gwen/wiki/img/gwen-attractor.png)](https://github.com/gwen-interpreter/gwen/wiki/The-Gwen-Logo)
 Gwen-web
 ========
 
@@ -8,7 +8,7 @@ It allows teams to automate front end web tests by writing
 [Gherkin](https://github.com/cucumber/cucumber/wiki/Gherkin) feature 
 specifications instead of code. 
 
-- See also [Gwen Wiki](https://github.com/gwen-interpreter/gwen-web/wiki)
+- See also [Gwen-Web Wiki](https://github.com/gwen-interpreter/gwen-web/wiki)
 
 
 #### Current Status
@@ -25,10 +25,10 @@ Core Requirements
 
 Quick Links to Wiki Information
 -----------
-- [Installation](/gwen-interpreter/gwen-web/wiki/Installation) 
-- [Getting Started](/gwen-interpreter/gwen-web/wiki/Getting-Started)
-- [Supported DSL](/gwen-interpreter/gwen-web/wiki/Supported-DSL)
-- [REPL Console](/gwen-interpreter/gwen-web/wiki/REPL-Console)
+- [Installation](https://github.com/gwen-interpreter/gwen-web/wiki/Installation) 
+- [Getting Started](https://github.com/gwen-interpreter/gwen-web/wiki/Getting-Started)
+- [Supported DSL](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL)
+- [REPL Console](https://github.com/gwen-interpreter/gwen-web/wiki/REPL-Console)
 
 Mail Group
 ----------
@@ -42,7 +42,7 @@ notifications or get involved.
 Development Guide
 -----------------
 
-See the [Dev Guide](/gwen-interpreter/gwen-web/wiki/Development-Guide) if you would like to work with the code 
+See the [Dev Guide](https://github.com/gwen-interpreter/gwen-web/wiki/Development-Guide) if you would like to work with the code 
 or build the project from source.
 
 Contributions
