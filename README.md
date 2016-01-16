@@ -33,7 +33,7 @@ Quick Links to Wiki Information
 Mail Group
 ----------
 
-All announcements and discussions are posted and broadcast to all members of 
+All announcements and discussions are posted and broadcast to all members in 
 the following mail group. You are welcome to visit and subscribe to receive 
 notifications or get involved.
 
@@ -54,8 +54,8 @@ is reviewed and verified by the project committers before being integrated
 and released to the community. We ask that all code submissions include unit 
 tests or sample test features providing relevant coverage.
 
-By submitting contributions, we assume that you agree to release your work under 
-the license that covers this software.
+By submitting contributions, you agree to release your work under the 
+license that covers this software.
 
 License
 -------
