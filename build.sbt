@@ -6,7 +6,7 @@ val gwenWeb = project in file(".") dependsOn(gwen)
 
 name := "gwen-web"
 
-description := "A web automation engine for Gwen"
+description := "A web automation engine for the Gwen platform"
 
 organization := "org.gweninterpreter"
 
