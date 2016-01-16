@@ -53,7 +53,7 @@ libraryDependencies += "org.seleniumhq.selenium" % "selenium-java" % "2.48.1" ex
 mappings in (Compile, packageBin) ++= Seq(
   file("LICENSE") -> "LICENSE",
   file("NOTICE") -> "NOTICE",
-  file("LICENSE-Third-Party.txt") -> "LICENSE-Third-Party.txt",
+  file("LICENSE-THIRDPARTY") -> "LICENSE-THIRDPARTY",
   file("CHANGELOG") -> "CHANGELOG"
 )
 

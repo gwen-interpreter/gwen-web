@@ -20,7 +20,7 @@ mappings in Universal += file("LICENSE") -> "LICENSE"
 
 mappings in Universal += file("NOTICE") -> "NOTICE"
 
-mappings in Universal += file("LICENSE-Third-Party.txt") -> "LICENSE-Third-Party.txt"
+mappings in Universal += file("LICENSE-THIRDPARTY") -> "LICENSE-THIRDPARTY"
 
 mappings in Universal += file("CHANGELOG") -> "CHANGELOG"
 
