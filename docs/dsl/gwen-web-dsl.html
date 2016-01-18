@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>Gwen-Web DSL</title>
+	<link href="resources/bootstrap-3.3.6/css/bootstrap.min.css" rel="stylesheet" />
+	<script src="resources/jquery-2.1.4.min.js"></script>
+	<script src="resources/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+	<style>
+	  body {
+		padding: 40px;
+	  }
+	  .panel-heading {
+    	padding: 5px 15px;
+	  }
+	  .panel-title {
+		font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
+		font-size: 13px;
+	  }
+	  a:visited {
+	    text-decoration: none;
+	  }
+	</style>
+  </head>
+  <body>
+	<a href="https://github.com/gwen-interpreter/gwen/wiki/The-Gwen-Logo"><img src="https://github.com/gwen-interpreter/gwen/wiki/img/gwen-attractor.png"></a>
+   	<h2>Supported DSL</h2>
+   	<hr>
+   	All feature files must conform to the <a href="https://github.com/cucumber/cucumber/wiki/Feature-Introduction">Gherkin standard for feature files</a>.
+   	The following steps are supported <em>(click on a step for details)</em>:<br><br>
+   	<code>Given</code>, <code>When</code>, <code>Then</code>, <code>And</code>, or <code>But</code>..<br><br>
+  	<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+
+<!--- ---->
+                <div class="panel panel-default">
+<div class="panel-heading" role="tab" id="dsl-0">
+                    <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-0" aria-expanded="true" aria-controls="collapseOne">
+                           I am on the &quot;&lt;page&gt;&quot;
+                            </a>
+                    </h4>
+            </div>
+            <div id="collapse-0" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-0">
+                    <div class="panel-body">
+                            Puts the given page in scope
+                                    <ul>
+<li>&quot;&lt;page&gt;&quot; = the name of the page to put in scope</li>
+</ul>
+
+                    </div>
+            </div>
+    </div>
+
+                <div class="panel panel-default">
+<div class="panel-heading" role="tab" id="dsl-1">
+                    <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-1" aria-expanded="true" aria-controls="collapseOne">
+                           the url will be &quot;&lt;url&gt;&quot;
+                            </a>
+                    </h4>
+            </div>
+            <div id="collapse-1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-1">
+                    <div class="panel-body">
+                            Binds the given URL to the current page scope
+                                    <ul>
+<li>&quot;&lt;url&gt;&quot; = the URL</li>
+</ul>
+
+                    </div>
+            </div>
+    </div>
+
+                <div class="panel panel-default">
+<div class="panel-heading" role="tab" id="dsl-2">
+                    <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-2" aria-expanded="true" aria-controls="collapseOne">
+                           the url will be defined by &quot;property|setting&quot; &quot;&lt;name&gt;&quot;
+                            </a>
+                    </h4>
+            </div>
+            <div id="collapse-2" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-2">
+                    <div class="panel-body">
+                            Binds the URL defined in the named property to the current page scope
+                                    <ul>
+<li>&quot;&lt;name&gt;&quot; = name of property containing the URL</li>
+</ul>
+
+                    </div>
+            </div>
+    </div>
+
+                <div class="panel panel-default">
+<div class="panel-heading" role="tab" id="dsl-3">
+                    <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-3" aria-expanded="true" aria-controls="collapseOne">
+                           I navigate to the &quot;&lt;page&gt;&quot;
+                            </a>
+                    </h4>
+            </div>
+            <div id="collapse-3" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-3">
+                    <div class="panel-body">
+                            Opens the browser to the URL bound to the given page
+                                    <ul>
+<li>&quot;&lt;page&gt;&quot; = the name of the page to navigate to</li>
+</ul>
+
+                    </div>
+            </div>
+    </div>
+
+                <div class="panel panel-default">
+<div class="panel-heading" role="tab" id="dsl-4">
+                    <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-4" aria-expanded="true" aria-controls="collapseOne">
+                           I navigate to &quot;&lt;url&gt;&quot;
+                            </a>
+                    </h4>
+            </div>
+            <div id="collapse-4" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-4">
+                    <div class="panel-body">
+                            Opens the browser to the given URL
+                                    <ul>
+<li>&quot;&lt;url&gt;&quot; = the URL to navigate to</li>
+</ul>
+
+                    </div>
+            </div>
+    </div>
+
+                <div class="panel panel-default">
+<div class="panel-heading" role="tab" id="dsl-5">
+                    <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-5" aria-expanded="true" aria-controls="collapseOne">
+                           I scroll to the &quot;top|bottom&quot; of &quot;&lt;element&gt;&quot;
+                            </a>
+                    </h4>
+            </div>
+            <div id="collapse-5" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-5">
+                    <div class="panel-body">
+                            Scrolls to the top or bottom of the named element.
+                                    <ul>
+<li>&quot;&lt;element&gt;&quot; = name of web element to scroll to</li>
+</ul>
+
+                    </div>
+            </div>
+    </div>
+
+                <div class="panel panel-default">
+<div class="panel-heading" role="tab" id="dsl-6">
+                    <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-6" aria-expanded="true" aria-controls="collapseOne">
+                           &quot;&lt;element&gt;&quot; can be located by &quot;id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript&quot; &quot;&lt;expression&gt;&quot;
+                            </a>
+                    </h4>
+            </div>
+            <div id="collapse-6" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-6">
+                    <div class="panel-body">
+                            Creates a web element locator binding
+                                    <ul>
+<li>&quot;&lt;element&gt;&quot; = name of web element</li>
+<li> &quot;&lt;expression&gt;&quot; = the lookup expression</li>
+</ul>
+
+                    </div>
+            </div>
+    </div>
+
+                <div class="panel panel-default">
+<div class="panel-heading" role="tab" id="dsl-7">
+                    <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-7" aria-expanded="true" aria-controls="collapseOne">
+                           the page title &quot;should|should not&quot; &quot;be|contain|start with|end with|match regex|match xpath&quot; &quot;&lt;expression&gt;&quot;
+                            </a>
+                    </h4>
+            </div>
+            <div id="collapse-7" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-7">
+                    <div class="panel-body">
+                            Checks that the page title matches or does not match a given expression
+                                    <ul>
+<li>&quot;&lt;expression&gt;&quot; = the expression to match against</li>
+</ul>
+
+                    </div>
+            </div>
+    </div>
+
+                <div class="panel panel-default">
+<div class="panel-heading" role="tab" id="dsl-8">
+                    <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-8" aria-expanded="true" aria-controls="collapseOne">
+                           the page title &quot;should|should not&quot; &quot;be|contain|start with|end with|match regex|match xpath&quot; &quot;&lt;attribute&gt;&quot;
+                            </a>
+                    </h4>
+            </div>
+            <div id="collapse-8" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-8">
+                    <div class="panel-body">
+                            Checks that the page title matches or does not match a bound attribute value
+                                    <ul>
+<li>&quot;&lt;attribute&gt;&quot; = the attribute to match against</li>
+</ul>
+
+                    </div>
+            </div>
+    </div>
+
+                <div class="panel panel-default">
+<div class="panel-heading" role="tab" id="dsl-9">
+                    <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-9" aria-expanded="true" aria-controls="collapseOne">
+                           &quot;&lt;element&gt;&quot; &quot;should|should not&quot; be &quot;displayed|hidden|checked|unchecked|enabled|disabled&quot;
+                            </a>
+                    </h4>
+            </div>
+            <div id="collapse-9" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-9">
+                    <div class="panel-body">
+                            Checks that an element should or should not be in a given state
+                                    <ul>
+<li>&quot;&lt;element&gt;&quot; = the web element to check</li>
+</ul>
+
+                    </div>
+            </div>
+    </div>
+
+                <div class="panel panel-default">
+<div class="panel-heading" role="tab" id="dsl-10">
+                    <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-10" aria-expanded="true" aria-controls="collapseOne">
+                           &quot;&lt;element|attribute&gt;&quot; &quot;should|should not&quot; &quot;be|contain|start with|end with|match regex|match xpath&quot; &quot;&lt;expression&gt;&quot;
+                            </a>
+                    </h4>
+            </div>
+            <div id="collapse-10" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-10">
+                    <div class="panel-body">
+                            Checks that the text value of an element matches or does not match a given expression
+                                    <ul>
+<li>&quot;&lt;element|attribute&gt;&quot; = the web element or bound attribute to check</li>
+<li> &quot;&lt;expression&gt;&quot; = the expression to match against</li>
+</ul>
+
+                    </div>
+            </div>
+    </div>
+
+                <div class="panel panel-default">
+<div class="panel-heading" role="tab" id="dsl-11">
+                    <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-11" aria-expanded="true" aria-controls="collapseOne">
+                           &quot;&lt;element|attribute&gt;&quot; &quot;should|should not&quot; &quot;be|contain|start with|end with|match regex|match xpath&quot; &quot;&lt;attribute&gt;&quot;
+                            </a>
+                    </h4>
+            </div>
+            <div id="collapse-11" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-11">
+                    <div class="panel-body">
+                            Checks that the text value of an element matches or does not match a bound attribute
+                                    <ul>
+<li>&quot;&lt;element|attribute&gt;&quot; = the web element or bound attribute to check</li>
+<li> &quot;&lt;attribute&gt;&quot; = the name of the bound attribute containing the value to match against</li>
+</ul>
+
+                    </div>
+            </div>
+    </div>
+
+                <div class="panel panel-default">
+<div class="panel-heading" role="tab" id="dsl-12">
+                    <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-12" aria-expanded="true" aria-controls="collapseOne">
+                           &quot;&lt;dropdown&gt;&quot; &quot;&lt;text|value&gt;&quot; &quot;should|should not&quot; &quot;be|contain|start with|end with|match regex|match xpath&quot; &quot;&lt;expression&gt;&quot;
+                            </a>
+                    </h4>
+            </div>
+            <div id="collapse-12" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-12">
+                    <div class="panel-body">
+                            Checks that a dropdown selection matches or does not match a given expression
+                                    <ul>
+<li>&quot;&lt;dropdown&gt;&quot; = the dropdown element to check</li>
+<li> &quot;&lt;text|value&gt;&quot;=&quot;text&quot; to match selected option text or &quot;value&quot; to match selection option value</li>
+<li> &quot;&lt;expression&gt;&quot; = the expression to match against</li>
+</ul>
+
+                    </div>
+            </div>
+    </div>
+
+                <div class="panel panel-default">
+<div class="panel-heading" role="tab" id="dsl-13">
+                    <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-13" aria-expanded="true" aria-controls="collapseOne">
+                           &quot;&lt;dropdown&gt;&quot; &quot;&lt;text|value&gt;&quot; &quot;should|should not&quot; &quot;be|contain|start with|end with|match regex|match xpath&quot; &quot;&lt;attribute&gt;&quot;
+                            </a>
+                    </h4>
+            </div>
+            <div id="collapse-13" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-13">
+                    <div class="panel-body">
+                            Checks that a dropdown selection matches or does not match a bound attribute
+                                    <ul>
+<li>&quot;&lt;dropdown&gt;&quot; = the dropdown element to check</li>
+<li> &quot;&lt;text|value&gt;&quot;=&quot;text&quot; to match selected option text or &quot;value&quot; to match selection option value</li>
+<li> &quot;&lt;attribute&gt;&quot; = the name of the bound attribute containing the value to match against</li>
+</ul>
+
+                    </div>
+            </div>
+    </div>
+
+                <div class="panel panel-default">
+<div class="panel-heading" role="tab" id="dsl-14">
+                    <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-14" aria-expanded="true" aria-controls="collapseOne">
+                           I capture the &quot;text|node|nodeset&quot; in &quot;&lt;element|attribute|property&gt;&quot; by xpath &quot;&lt;expression&gt;&quot; as &quot;&lt;attribute&gt;&quot;
+                            </a>
+                    </h4>
+            </div>
+            <div id="collapse-14" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-14">
+                    <div class="panel-body">
+                            Extracts and binds a value by xpath from an element, attribute, or property setting into an attribute
+                                    <ul>
+<li>&quot;&lt;element|attribute|property&gt;&quot; = the element</li>
+<li> attribute</li>
+<li> or property setting to extract the value from</li>
+<li> &quot;&lt;expression&gt;&quot; = the extractor expression</li>
+<li> &quot;&lt;attribute&gt;&quot; = the attribute to store the captured value into</li>
+</ul>
+
+                    </div>
+            </div>
+    </div>
+
+                <div class="panel panel-default">
+<div class="panel-heading" role="tab" id="dsl-15">
+                    <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-15" aria-expanded="true" aria-controls="collapseOne">
+                           I capture the text in &quot;&lt;element|attribute|property&gt;&quot; by regex &quot;&lt;expression&gt;&quot; as &quot;&lt;attribute&gt;&quot;
+                            </a>
+                    </h4>
+            </div>
+            <div id="collapse-15" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-15">
+                    <div class="panel-body">
+                            Extracts and binds a value by regex from an element, attribute, or property setting into an attribute
+                                    <ul>
+<li>&quot;&lt;element|attribute|property&gt;&quot; = the element</li>
+<li> attribute</li>
+<li> or property setting to extract the value from</li>
+<li> &quot;&lt;expression&gt;&quot; = the extractor expression</li>
+<li> &quot;&lt;attribute&gt;&quot; = the attribute to store the captured value into</li>
+</ul>
+
+                    </div>
+            </div>
+    </div>
+
+                <div class="panel panel-default">
+<div class="panel-heading" role="tab" id="dsl-16">
+                    <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-16" aria-expanded="true" aria-controls="collapseOne">
+                           I capture the current URL
+                            </a>
+                    </h4>
+            </div>
+            <div id="collapse-16" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-16">
+                    <div class="panel-body">
+                            Binds the current browser URL to an attribute named URL in the current page scope |
+                                    <ul>
+<li>-</li>
+</ul>
+
+                    </div>
+            </div>
+    </div>
+
+                <div class="panel panel-default">
+<div class="panel-heading" role="tab" id="dsl-17">
+                    <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-17" aria-expanded="true" aria-controls="collapseOne">
+                           I capture the current URL as &quot;&lt;attribute&gt;&quot;
+                            </a>
+                    </h4>
+            </div>
+            <div id="collapse-17" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-17">
+                    <div class="panel-body">
+                            Binds the current browser URL to a named attribute in the current page scope
+                                    <ul>
+<li>&quot;&lt;attribute&gt;&quot; = the attribute to bind the URL to</li>
+</ul>
+
+                    </div>
+            </div>
+    </div>
+
+                <div class="panel panel-default">
+<div class="panel-heading" role="tab" id="dsl-18">
+                    <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-18" aria-expanded="true" aria-controls="collapseOne">
+                           I capture &quot;&lt;element|attribute|property&gt;&quot; as &quot;&lt;attribute&gt;&quot;
+                            </a>
+                    </h4>
+            </div>
+            <div id="collapse-18" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-18">
+                    <div class="panel-body">
+                            Captures the text value of an element, attribute, or property and binds it to a named attribute
+                                    <ul>
+<li>&quot;&lt;element|attribute|property&gt;&quot; = the web element</li>
+<li> attribute</li>
+<li> or property to capture the text of</li>
+<li> &quot;&lt;attribute&gt;&quot; = the name of the attribute to bind the value to</li>
+</ul>
+
+                    </div>
+            </div>
+    </div>
+
+                <div class="panel panel-default">
+<div class="panel-heading" role="tab" id="dsl-19">
+                    <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-19" aria-expanded="true" aria-controls="collapseOne">
+                           I capture &quot;&lt;element|attribute|property&gt;&quot;
+                            </a>
+                    </h4>
+            </div>
+            <div id="collapse-19" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-19">
+                    <div class="panel-body">
+                            Captures the text value of an element and binds it to an attribute of the same name
+                                    <ul>
+<li>&quot;&lt;element|attribute|property&gt;&quot; = the web element</li>
+<li> attribute</li>
+<li> or property to capture the value of and store in the attribute of the same name</li>
+</ul>
+
+                    </div>
+            </div>
+    </div>
+
+                <div class="panel panel-default">
+<div class="panel-heading" role="tab" id="dsl-20">
+                    <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-20" aria-expanded="true" aria-controls="collapseOne">
+                           I capture &quot;&lt;dropdown&gt;&quot; &quot;&lt;text|value&gt;&quot; as &quot;&lt;attribute&gt;&quot;
+                            </a>
+                    </h4>
+            </div>
+            <div id="collapse-20" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-20">
+                    <div class="panel-body">
+                            Captures the dropdown selection and binds it to a named attribute
+                                    <ul>
+<li>&quot;&lt;dropdown&gt;&quot; = the dropdown web element</li>
+<li> attribute</li>
+<li> or property to capture the selection of</li>
+<li> &quot;&lt;text|value&gt;&quot;=&quot;text&quot; to capture the selected option text or &quot;value&quot; to capture the selected option value</li>
+<li> &quot;&lt;attribute&gt;&quot; = the name of the attribute to bind the value to</li>
+</ul>
+
+                    </div>
+            </div>
+    </div>
+
+                <div class="panel panel-default">
+<div class="panel-heading" role="tab" id="dsl-21">
+                    <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-21" aria-expanded="true" aria-controls="collapseOne">
+                           I capture &quot;&lt;dropdown&gt;&quot; &quot;&lt;text|value&gt;&quot;
+                            </a>
+                    </h4>
+            </div>
+            <div id="collapse-21" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-21">
+                    <div class="panel-body">
+                            Captures the dropdown selection and binds it to an attribute of the same name
+                                    <ul>
+<li>&quot;&lt;dropdown&gt;&quot; = the dropdown web element to capture the selection of and store in the attribute of the same name</li>
+<li> &quot;&lt;text|value&gt;&quot;=&quot;text&quot; to capture the selected option text or &quot;value&quot; to capture the selected option value</li>
+</ul>
+
+                    </div>
+            </div>
+    </div>
+
+                <div class="panel panel-default">
+<div class="panel-heading" role="tab" id="dsl-22">
+                    <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-22" aria-expanded="true" aria-controls="collapseOne">
+                           my &quot;&lt;name&gt;&quot; &quot;property|setting&quot; &quot;is|will be&quot; &quot;&lt;value&gt;&quot;
+                            </a>
+                    </h4>
+            </div>
+            <div id="collapse-22" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-22">
+                    <div class="panel-body">
+                            Binds a given value to a system property
+                                    <ul>
+<li>&quot;&lt;name&gt;&quot; = the name of the system property to set</li>
+<li> &quot;&lt;value&gt;&quot; = the value to set</li>
+</ul>
+
+                    </div>
+            </div>
+    </div>
+
+                <div class="panel panel-default">
+<div class="panel-heading" role="tab" id="dsl-23">
+                    <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-23" aria-expanded="true" aria-controls="collapseOne">
+                           &quot;&lt;attribute&gt;&quot; &quot;is|will be&quot; defined by &quot;javascript|system process|property|setting&quot; &quot;&lt;expression&gt;&quot;
+                            </a>
+                    </h4>
+            </div>
+            <div id="collapse-23" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-23">
+                    <div class="panel-body">
+                            Evaluates an expression and binds its value to a named attribute.  The evaluation occurs when the attribute is referenced.
+                                    <ul>
+<li>&quot;&lt;attribute&gt;&quot; = the name of the attribute to bind the value to</li>
+<li> &quot;&lt;expression&gt;&quot; = the expression that will yield the value to bind</li>
+</ul>
+
+                    </div>
+            </div>
+    </div>
+
+                <div class="panel panel-default">
+<div class="panel-heading" role="tab" id="dsl-24">
+                    <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-24" aria-expanded="true" aria-controls="collapseOne">
+                           &quot;&lt;attribute&gt;&quot; &quot;is|will be&quot; defined by the &quot;text|node|nodeset&quot; in &quot;&lt;source&gt;&quot; by xpath &quot;&lt;expression&gt;&quot;
+                            </a>
+                    </h4>
+            </div>
+            <div id="collapse-24" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-24">
+                    <div class="panel-body">
+                            Evaluates an xpath expression on a source attribute and binds the returned value to a another named attribute.  The evaluation occurs when the attribute is referenced.
+                                    <ul>
+<li>&quot;&lt;attribute&gt;&quot; = the name of the attribute to bind the value to</li>
+<li> &quot;&lt;source&gt;&quot; = the source attribute to evaluate the xpath expression on</li>
+<li> &quot;&lt;expression&gt;&quot; = the xpath expression that will yield the value from the source to bind</li>
+</ul>
+
+                    </div>
+            </div>
+    </div>
+
+                <div class="panel panel-default">
+<div class="panel-heading" role="tab" id="dsl-25">
+                    <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-25" aria-expanded="true" aria-controls="collapseOne">
+                           &quot;&lt;attribute&gt;&quot; &quot;is|will be&quot; defined in &quot;&lt;source&gt;&quot; by regex &quot;&lt;expression&gt;&quot;
+                            </a>
+                    </h4>
+            </div>
+            <div id="collapse-25" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-25">
+                    <div class="panel-body">
+                            Evaluates a regex expression on a source attribute and binds the returned value to a another named attribute.  The evaluation occurs when the attribute is referenced.
+                                    <ul>
+<li>&quot;&lt;attribute&gt;&quot; = the name of the attribute to bind the value to</li>
+<li> &quot;&lt;source&gt;&quot; = the source attribute to evaluate the regex expression on</li>
+<li> &quot;&lt;expression&gt;&quot; = the regex expression that will yield the value from the source to bind</li>
+</ul>
+
+                    </div>
+            </div>
+    </div>
+
+                <div class="panel panel-default">
+<div class="panel-heading" role="tab" id="dsl-26">
+                    <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-26" aria-expanded="true" aria-controls="collapseOne">
+                           &quot;&lt;attribute&gt;&quot; &quot;is|will be&quot; &quot;&lt;value&gt;&quot;
+                            </a>
+                    </h4>
+            </div>
+            <div id="collapse-26" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-26">
+                    <div class="panel-body">
+                            Binds a given value to a named attribute
+                                    <ul>
+<li>&quot;&lt;attribute&gt;&quot; = the name of the attribute to bind the value to</li>
+<li> &quot;&lt;value&gt;&quot; = the value to bind</li>
+</ul>
+
+                    </div>
+            </div>
+    </div>
+
+                <div class="panel panel-default">
+<div class="panel-heading" role="tab" id="dsl-27">
+                    <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-27" aria-expanded="true" aria-controls="collapseOne">
+                           I wait for &quot;&lt;element&gt;&quot; text for &quot;&lt;duration&gt;&quot; &quot;second|seconds&quot;
+                            </a>
+                    </h4>
+            </div>
+            <div id="collapse-27" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-27">
+                    <div class="panel-body">
+                            Waits a given number of seconds for an element's text to be loaded
+                                    <ul>
+<li>&quot;&lt;element&gt;&quot; = the element to wait for text on</li>
+<li> &quot;&lt;duration&gt;&quot; = the number of seconds to wait before timing out</li>
+</ul>
+
+                    </div>
+            </div>
+    </div>
+
+                <div class="panel panel-default">
+<div class="panel-heading" role="tab" id="dsl-28">
+                    <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-28" aria-expanded="true" aria-controls="collapseOne">
+                           I wait for &quot;&lt;element&gt;&quot; text
+                            </a>
+                    </h4>
+            </div>
+            <div id="collapse-28" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-28">
+                    <div class="panel-body">
+                            Waits for an elements text to be loaded
+                                    <ul>
+<li>&quot;&lt;element&gt;&quot; = the element to wait for text on (timeout occurs after configured &quot;gwen.web.wait.seconds&quot;</li>
+<li> or 10 seconds by default)</li>
+</ul>
+
+                    </div>
+            </div>
+    </div>
+
+                <div class="panel panel-default">
+<div class="panel-heading" role="tab" id="dsl-29">
+                    <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-29" aria-expanded="true" aria-controls="collapseOne">
+                           I wait for &quot;&lt;element&gt;&quot; for &quot;&lt;duration&gt;&quot; &quot;second|seconds&quot;
+                            </a>
+                    </h4>
+            </div>
+            <div id="collapse-29" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-29">
+                    <div class="panel-body">
+                            Waits a given number of seconds for a web element to be available on the page
+                                    <ul>
+<li>&quot;&lt;element&gt;&quot; = the web element to wait for</li>
+<li> &quot;&lt;duration&gt;&quot; = the number of seconds to wait before timing out</li>
+</ul>
+
+                    </div>
+            </div>
+    </div>
+
+                <div class="panel panel-default">
+<div class="panel-heading" role="tab" id="dsl-30">
+                    <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-30" aria-expanded="true" aria-controls="collapseOne">
+                           I wait for &quot;&lt;element&gt;&quot;
+                            </a>
+                    </h4>
+            </div>
+            <div id="collapse-30" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-30">
+                    <div class="panel-body">
+                            Waits for a web element to be available on the page
+                                    <ul>
+<li>&quot;&lt;element&gt;&quot; = the web element to wait for (timeout occurs after configured &quot;gwen.web.wait.seconds&quot;</li>
+<li> or 10 seconds by default)</li>
+</ul>
+
+                    </div>
+            </div>
+    </div>
+
+                <div class="panel panel-default">
+<div class="panel-heading" role="tab" id="dsl-31">
+                    <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-31" aria-expanded="true" aria-controls="collapseOne">
+                           I clear &quot;&lt;element&gt;&quot;
+                            </a>
+                    </h4>
+            </div>
+            <div id="collapse-31" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-31">
+                    <div class="panel-body">
+                            Clears a text element
+                                    <ul>
+<li>&quot;&lt;element&gt;&quot; = the web element to clear the text of</li>
+</ul>
+
+                    </div>
+            </div>
+    </div>
+
+                <div class="panel panel-default">
+<div class="panel-heading" role="tab" id="dsl-32">
+                    <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-32" aria-expanded="true" aria-controls="collapseOne">
+                           I press &quot;enter|tab&quot; in &quot;&lt;element&gt;&quot;
+                            </a>
+                    </h4>
+            </div>
+            <div id="collapse-32" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-32">
+                    <div class="panel-body">
+                            Sends the enter or tab key to a web element (emulates user pressing a non alphanumeric key in the element)
+                                    <ul>
+<li>&quot;&lt;element&gt;&quot; = the element to send the key to</li>
+</ul>
+
+                    </div>
+            </div>
+    </div>
+
+                <div class="panel panel-default">
+<div class="panel-heading" role="tab" id="dsl-33">
+                    <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-33" aria-expanded="true" aria-controls="collapseOne">
+                           I &quot;enter|type&quot; &quot;&lt;value&gt;&quot; in &quot;&lt;element&gt;&quot;
+                            </a>
+                    </h4>
+            </div>
+            <div id="collapse-33" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-33">
+                    <div class="panel-body">
+                            Types or enters a value into a field (&quot;type&quot; just types the value, &quot;enter&quot; types the value and then sends the enter key to element)
+                                    <ul>
+<li>&quot;&lt;value&gt;&quot; = the value to type or enter</li>
+<li> &quot;&lt;element&gt;&quot; = the web element to type or enter the value into</li>
+</ul>
+
+                    </div>
+            </div>
+    </div>
+
+                <div class="panel panel-default">
+<div class="panel-heading" role="tab" id="dsl-34">
+                    <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-34" aria-expanded="true" aria-controls="collapseOne">
+                           I &quot;enter|type&quot; &quot;&lt;attribute&gt;&quot; in &quot;&lt;element&gt;&quot;
+                            </a>
+                    </h4>
+            </div>
+            <div id="collapse-34" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-34">
+                    <div class="panel-body">
+                            Types or enters a bound attribute value into a field (&quot;type&quot; just types the value, &quot;enter&quot; types the value and then sends the enter key to element)
+                                    <ul>
+<li>&quot;&lt;attribute&gt;&quot; = the name of the attribute containing the value to type or enter</li>
+<li> &quot;&lt;element&gt;&quot; = the web element to type or enter the value into</li>
+</ul>
+
+                    </div>
+            </div>
+    </div>
+
+                <div class="panel panel-default">
+<div class="panel-heading" role="tab" id="dsl-35">
+                    <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-35" aria-expanded="true" aria-controls="collapseOne">
+                           I select the &quot;&lt;position&gt;st|nd|rd|th&quot; option in &quot;&lt;element&gt;&quot;
+                            </a>
+                    </h4>
+            </div>
+            <div id="collapse-35" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-35">
+                    <div class="panel-body">
+                            Selects the option in a dropdown at a given position
+                                    <ul>
+<li>&quot;&lt;position&gt;&quot; = the position of the option to select (1=first</li>
+<li> 2=2nd</li>
+<li> etc..)</li>
+<li> &quot;&lt;element&gt;&quot; = the dropdown element to select</li>
+</ul>
+
+                    </div>
+            </div>
+    </div>
+
+                <div class="panel panel-default">
+<div class="panel-heading" role="tab" id="dsl-36">
+                    <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-36" aria-expanded="true" aria-controls="collapseOne">
+                           I select &quot;&lt;value&gt;&quot; in &quot;&lt;element&gt;&quot;
+                            </a>
+                    </h4>
+            </div>
+            <div id="collapse-36" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-36">
+                    <div class="panel-body">
+                            Selects the option (by visible text) in a dropdown containing the given value
+                                    <ul>
+<li>&quot;&lt;value&gt;&quot; = the value to select</li>
+<li> &quot;&lt;element&gt;&quot; = the dropdown element to select</li>
+</ul>
+
+                    </div>
+            </div>
+    </div>
+
+                <div class="panel panel-default">
+<div class="panel-heading" role="tab" id="dsl-37">
+                    <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-37" aria-expanded="true" aria-controls="collapseOne">
+                           I select &quot;&lt;value&gt;&quot; in &quot;&lt;element&gt;&quot; by value
+                            </a>
+                    </h4>
+            </div>
+            <div id="collapse-37" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-37">
+                    <div class="panel-body">
+                            Selects the option (by value) in a dropdown containing the given value
+                                    <ul>
+<li>&quot;&lt;value&gt;&quot; = the value to select</li>
+<li> &quot;&lt;element&gt;&quot; = the dropdown element to select</li>
+</ul>
+
+                    </div>
+            </div>
+    </div>
+
+                <div class="panel panel-default">
+<div class="panel-heading" role="tab" id="dsl-38">
+                    <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-38" aria-expanded="true" aria-controls="collapseOne">
+                           I select &quot;&lt;attribute&gt;&quot; in &quot;&lt;element&gt;&quot;
+                            </a>
+                    </h4>
+            </div>
+            <div id="collapse-38" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-38">
+                    <div class="panel-body">
+                            Selects the option (by visible text) in a dropdown containing a bound attribute value
+                                    <ul>
+<li>&quot;&lt;attribute&gt;&quot; = the name of the attribute containing the value to select</li>
+<li> &quot;&lt;element&gt;&quot; = the dropdown element to select</li>
+</ul>
+
+                    </div>
+            </div>
+    </div>
+
+                <div class="panel panel-default">
+<div class="panel-heading" role="tab" id="dsl-39">
+                    <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-39" aria-expanded="true" aria-controls="collapseOne">
+                           I select &quot;&lt;attribute&gt;&quot; in &quot;&lt;element&gt;&quot; by value
+                            </a>
+                    </h4>
+            </div>
+            <div id="collapse-39" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-39">
+                    <div class="panel-body">
+                            Selects the option (by value) in a dropdown containing a bound attribute value
+                                    <ul>
+<li>&quot;&lt;attribute&gt;&quot; = the name of the attribute containing the value to select</li>
+<li> &quot;&lt;element&gt;&quot; = the dropdown element to select</li>
+</ul>
+
+                    </div>
+            </div>
+    </div>
+
+                <div class="panel panel-default">
+<div class="panel-heading" role="tab" id="dsl-40">
+                    <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-40" aria-expanded="true" aria-controls="collapseOne">
+                           I &quot;click|submit|check|uncheck&quot; &quot;&lt;element&gt;&quot;
+                            </a>
+                    </h4>
+            </div>
+            <div id="collapse-40" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-40">
+                    <div class="panel-body">
+                            Performs the specified action on an element
+                                    <ul>
+<li>&quot;&lt;element&gt;&quot; = the element to perform the action on</li>
+</ul>
+
+                    </div>
+            </div>
+    </div>
+
+                <div class="panel panel-default">
+<div class="panel-heading" role="tab" id="dsl-41">
+                    <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-41" aria-expanded="true" aria-controls="collapseOne">
+                           I wait &quot;&lt;duration&gt;&quot; &quot;second|seconds&quot; when &quot;&lt;element&gt;&quot; is &quot;clicked|submitted|checked|unchecked|selected|typed|entered|tabbed|cleared&quot;
+                            </a>
+                    </h4>
+            </div>
+            <div id="collapse-41" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-41">
+                    <div class="panel-body">
+                            Waits a given number of seconds after an action is performed on an element
+                                    <ul>
+<li>&quot;&lt;duration&gt;&quot; = the number of seconds to wait</li>
+<li> &quot;&lt;element&gt;&quot; = the element the action was performed on</li>
+</ul>
+
+                    </div>
+            </div>
+    </div>
+
+                <div class="panel panel-default">
+<div class="panel-heading" role="tab" id="dsl-42">
+                    <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-42" aria-expanded="true" aria-controls="collapseOne">
+                           I wait until &quot;&lt;condition&gt;&quot; when &quot;&lt;element&gt;&quot; is &quot;clicked|submitted|checked|unchecked|selected|typed|entered|tabbed|cleared&quot;
+                            </a>
+                    </h4>
+            </div>
+            <div id="collapse-42" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-42">
+                    <div class="panel-body">
+                            Waits for a condition to be true after an action is performed on an element
+                                    <ul>
+<li>&quot;&lt;condition&gt;&quot; = the name of the bound attribute containing a javascript predicate expression</li>
+<li> &quot;&lt;element&gt;&quot; = the element the action was performed on</li>
+</ul>
+
+                    </div>
+            </div>
+    </div>
+
+                <div class="panel panel-default">
+<div class="panel-heading" role="tab" id="dsl-43">
+                    <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-43" aria-expanded="true" aria-controls="collapseOne">
+                           I wait until &quot;&lt;javascript&gt;&quot;
+                            </a>
+                    </h4>
+            </div>
+            <div id="collapse-43" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-43">
+                    <div class="panel-body">
+                            Waits until the given javascript expression returns true on the current page
+                                    <ul>
+<li>&quot;&lt;javascript&gt;&quot; = a javascript predicate expression</li>
+</ul>
+
+                    </div>
+            </div>
+    </div>
+
+                <div class="panel panel-default">
+<div class="panel-heading" role="tab" id="dsl-44">
+                    <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-44" aria-expanded="true" aria-controls="collapseOne">
+                           I wait until &quot;&lt;condition&gt;&quot;
+                            </a>
+                    </h4>
+            </div>
+            <div id="collapse-44" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-44">
+                    <div class="panel-body">
+                            Waits until a condition is true on the current page
+                                    <ul>
+<li>&quot;&lt;condition&gt;&quot; = the name of the bound attribute containing the javascript predicate expression</li>
+</ul>
+
+                    </div>
+            </div>
+    </div>
+
+                <div class="panel panel-default">
+<div class="panel-heading" role="tab" id="dsl-45">
+                    <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-45" aria-expanded="true" aria-controls="collapseOne">
+                           I wait &quot;&lt;duration&gt;&quot; &quot;second|seconds&quot;
+                            </a>
+                    </h4>
+            </div>
+            <div id="collapse-45" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-45">
+                    <div class="panel-body">
+                            Waits for a given number of seconds to lapse
+                                    <ul>
+<li>&quot;&lt;duration&gt;&quot; = the number of seconds to wait</li>
+</ul>
+
+                    </div>
+            </div>
+    </div>
+
+                <div class="panel panel-default">
+<div class="panel-heading" role="tab" id="dsl-46">
+                    <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-46" aria-expanded="true" aria-controls="collapseOne">
+                           I &quot;highlight|locate&quot; &quot;&lt;element&gt;&quot;
+                            </a>
+                    </h4>
+            </div>
+            <div id="collapse-46" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-46">
+                    <div class="panel-body">
+                            Locates and highlights the given element on the current page
+                                    <ul>
+<li>&quot;&lt;element&gt;&quot; = the element to highlight</li>
+</ul>
+
+                    </div>
+            </div>
+    </div>
+
+                <div class="panel panel-default">
+<div class="panel-heading" role="tab" id="dsl-47">
+                    <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-47" aria-expanded="true" aria-controls="collapseOne">
+                           I execute system process &quot;&lt;process&gt;&quot;
+                            </a>
+                    </h4>
+            </div>
+            <div id="collapse-47" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-47">
+                    <div class="panel-body">
+                            Executes a local system process
+                                    <ul>
+<li>&quot;&lt;process&gt;&quot; = the system process to execute</li>
+</ul>
+
+                    </div>
+            </div>
+    </div>
+
+                <div class="panel panel-default">
+<div class="panel-heading" role="tab" id="dsl-48">
+                    <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-48" aria-expanded="true" aria-controls="collapseOne">
+                           I execute a unix system process &quot;&lt;process&gt;&quot;
+                            </a>
+                    </h4>
+            </div>
+            <div id="collapse-48" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-48">
+                    <div class="panel-body">
+                            Executes a local unix system process
+                                    <ul>
+<li>&quot;&lt;process&gt;&quot; = the unix system process to execute</li>
+</ul>
+
+                    </div>
+            </div>
+    </div>
+
+                <div class="panel panel-default">
+<div class="panel-heading" role="tab" id="dsl-49">
+                    <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-49" aria-expanded="true" aria-controls="collapseOne">
+                           I refresh the current page
+                            </a>
+                    </h4>
+            </div>
+            <div id="collapse-49" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-49">
+                    <div class="panel-body">
+                            Refreshes the current page |
+                                    <ul>
+<li>-</li>
+</ul>
+
+                    </div>
+            </div>
+    </div>
+
+                <div class="panel panel-default">
+<div class="panel-heading" role="tab" id="dsl-50">
+                    <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-50" aria-expanded="true" aria-controls="collapseOne">
+                           I base64 decode &quot;&lt;element|attribute&gt;&quot; as &quot;&lt;attribute&gt;&quot;
+                            </a>
+                    </h4>
+            </div>
+            <div id="collapse-50" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-50">
+                    <div class="panel-body">
+                            Base64 encodes the given element or attribute value and stores the result in named attribute
+                                    <ul>
+<li>&quot;&lt;element|attribute&gt;&quot; = the web element or bound attribute to decode</li>
+<li> &quot;&lt;attribute&gt;&quot; = the attribute to bind the result to</li>
+</ul>
+
+                    </div>
+            </div>
+    </div>
+
+                <div class="panel panel-default">
+<div class="panel-heading" role="tab" id="dsl-51">
+                    <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-51" aria-expanded="true" aria-controls="collapseOne">
+                           I base64 decode &quot;&lt;element|attribute&gt;&quot;
+                            </a>
+                    </h4>
+            </div>
+            <div id="collapse-51" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-51">
+                    <div class="panel-body">
+                            Base64 encodes the given element or attribute value and stores the result in the attribute of the same name
+                                    <ul>
+<li>&quot;&lt;element|attribute&gt;&quot; = the web element or bound attribute to decode</li>
+</ul>
+
+                    </div>
+            </div>
+    </div>
+
+                <div class="panel panel-default">
+<div class="panel-heading" role="tab" id="dsl-52">
+                    <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-52" aria-expanded="true" aria-controls="collapseOne">
+                           &quot;&lt;step&gt;&quot; until &quot;&lt;condition&gt;&quot;
+                            </a>
+                    </h4>
+            </div>
+            <div id="collapse-52" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-52">
+                    <div class="panel-body">
+                            Repeatedly performs the given step until a condition is satisfied
+                                    <ul>
+<li>&quot;&lt;step&gt;&quot; = the step to repeat</li>
+<li> &quot;&lt;condition&gt;&quot; = the name of the bound attribute containing a javascript predicate expression</li>
+</ul>
+
+                    </div>
+            </div>
+    </div>
+
+                <div class="panel panel-default">
+<div class="panel-heading" role="tab" id="dsl-53">
+                    <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-53" aria-expanded="true" aria-controls="collapseOne">
+                           &quot;&lt;step&gt;&quot; while &quot;&lt;condition&gt;&quot;
+                            </a>
+                    </h4>
+            </div>
+            <div id="collapse-53" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-53">
+                    <div class="panel-body">
+                            Repeatedly performs the given step while a condition is satisfied
+                                    <ul>
+<li>&quot;&lt;step&gt;&quot; = the step to repeat</li>
+<li> &quot;&lt;condition&gt;&quot; = the name of the bound attribute containing a javascript predicate expression</li>
+</ul>
+
+                    </div>
+            </div>
+    </div>
+
+
+<!---- ---->	
+  	
+	</div>
+	
+	<hr>
+	
+	<div class="well well-sm">
+    Gwen-web is open sourced at <a href="https://github.com/gwen-interpreter/gwen-web">https://github.com/gwen-interpreter/gwen-web</a> | <a href="https://github.com/gwen-interpreter/gwen-web/blob/master/README.md#license">License</a>
+    </div>
+  </body>
+</html>
