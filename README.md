@@ -15,6 +15,7 @@ specifications instead of code.
 
 [![Build Status](https://travis-ci.org/gwen-interpreter/gwen-web.svg?branch=master)](https://travis-ci.org/gwen-interpreter/gwen-web)
 
+- [Change log](CHANGELOG)
 
 Core Requirements
 -----------------
