@@ -27,7 +27,7 @@ Quick Links to Wiki Information
 -----------
 - [Installation](https://github.com/gwen-interpreter/gwen-web/wiki/Installation) 
 - [Getting Started](https://github.com/gwen-interpreter/gwen-web/wiki/Getting-Started)
-- [Supported DSL](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL)
+- [Gwen-Web DSL](http://htmlpreview.github.io/?https://github.com/gwen-interpreter/gwen-web/blob/master/docs/dsl/gwen-web-dsl.html)
 - [REPL Console](https://github.com/gwen-interpreter/gwen-web/wiki/REPL-Console)
 
 Mail Group
