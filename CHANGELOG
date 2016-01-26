@@ -1,10 +1,11 @@
-v1.0.1
-======
-Jan 26, 2016
+1.0.1
+=====
+Jan 26, 2016, 11:43 PM GMT+11 (AEDT)
 - Resolved gwen-interpreter/gwen#15 - Use compact report attachment names
+- Depends on: [Gwen 1.0.1](https://github.com/gwen-interpreter/gwen/releases/tag/v1.0.1)
     
-v1.0.0
-======
+1.0.0
+=====
 Jan 19, 2016, 11:51 PM GMT+11 (AEDT) 
 First gwen-web release.
 - Uses:
@@ -91,3 +92,4 @@ First gwen-web release.
     - gwen.web.suppress.images (firefox only)
     - gwen.web.chrome.extensions (chrome only)
   - Interchangeable selenium implementation through SELENIUM_HOME environment variable
+  - Depends on: [Gwen 1.0.0](https://github.com/gwen-interpreter/gwen/releases/tag/v1.0.0)
