@@ -55,6 +55,7 @@
   Scenario: Complete step 5
       Given I am on the step 5 page
        When I enter the one time token
+        And I capture the one time token
         And I click the next button
        Then I should be on the challenge completed page
        
