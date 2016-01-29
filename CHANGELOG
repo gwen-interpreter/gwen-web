@@ -1,6 +1,6 @@
 1.0.2
 =====
-Jan 29, 2016
+Jan 29, 2016, 5:13 PM GMT+11 (AEDT)
 - Fixed problem with 1.0.1 release which had a snapshot dependency to Gwen
   in the maven POM file.
 
