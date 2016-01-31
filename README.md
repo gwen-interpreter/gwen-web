@@ -59,10 +59,6 @@ tests or sample test features providing relevant coverage.
 By submitting contributions, you agree to release your work under the 
 license that covers this software.
 
-### Contributors
-
-See [all contributors](https://libraries.io/github/gwen-interpreter/gwen-web/contributors)
-
 License
 -------
 
@@ -79,6 +75,3 @@ their licenses are listed in the [LICENSE-THIRDPARTY](LICENSE-THIRDPARTY)
 file.
 
 Open sourced 28 June 2014 03:27 pm AEST
-
-
-***
