@@ -214,6 +214,14 @@ trait WebEngine extends EvalEngine[WebEnvContext]
       case r"""(.+?)$element can be located by (id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)$locator "(.+?)"$$$expression""" =>
         env.scopes.set(s"$element/locator", locator);
         env.scopes.set(s"$element/locator/$locator", expression)
+        env.scopes.getOpt(s"$element/locator/$locator/container") foreach { _ =>
+          env.scopes.set(s"$element/locator/$locator/container", null)
+        }
+        
+      case r"""(.+?)$element can be located by (id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)$locator "(.+?)"$expression in (.+?)$$$container""" =>
+        env.scopes.set(s"$element/locator", locator);
+        env.scopes.set(s"$element/locator/$locator", expression)
+        env.scopes.set(s"$element/locator/$locator/container", container)
 
       case r"""the page title should( not)?$negation (be|contain|start with|end with|match regex|match xpath)$operator "(.*?)"$$$expression""" =>  env.execute {
         compare("title", expression, () => env.getTitle, operator, Option(negation).isDefined, env)
@@ -425,21 +433,6 @@ trait WebEngine extends EvalEngine[WebEnvContext]
       
       case "I refresh the current page" => env.execute { 
         env.withWebDriver { _.navigate().refresh() }
-      }
-      
-      case r"""I switch to (.+?)$$$frame""" => env.execute {
-        val frameBinding = env.getLocatorBinding(frame)
-        env.withWebDriver { driver =>
-          env.scrollIntoView(frameBinding, ScrollTo.top)
-          driver.switchTo().frame(locate(env, frameBinding))
-        }
-      }
-      
-      case "I switch out of the current frame" => env.execute {
-        env.withWebDriver { driver =>
-          driver.switchTo().defaultContent()
-          env.executeScript("window.scrollTo(0, 0)")
-        }
       }
       
       case _ => super.evaluate(step, env)

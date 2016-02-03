@@ -15,6 +15,15 @@ I scroll to the bottom of <element>
 <element> can be located by link text "<value>"
 <element> can be located by partial link text "<value>"
 <element> can be located by javascript "<expression>"
+<element> can be located by id "<value>" in <container>
+<element> can be located by name "<value>" in <container>
+<element> can be located by tag name "<value>" in <container>
+<element> can be located by css selector "<value>" in <container>
+<element> can be located by xpath "<value>" in <container>
+<element> can be located by class name "<value>" in <container>
+<element> can be located by link text "<value>" in <container>
+<element> can be located by partial link text "<value>" in <container>
+<element> can be located by javascript "<expression>" in <container>
 the page title should be "<value>"
 the page title should contain "<value>"
 the page title should start with "<value>"
@@ -221,5 +230,3 @@ I base64 decode <reference> as <attribute>
 I base64 decode <reference>
 <step> until <condition>
 <step> while <condition>
-I switch to <frame>
-I switch out of the current frame

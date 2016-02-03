@@ -78,15 +78,16 @@ trait WebElementLocator extends LazyLogging {
   private def findElementByLocator(env: WebEnvContext, elementBinding: LocatorBinding): Option[WebElement] = {
     val lookup = elementBinding.lookup
     val locator = elementBinding.locator 
+    val container = elementBinding.container
     (locator match {
-      case "id" => getElement(env, By.id(lookup))
-      case "name" => getElement(env, By.name(lookup))
-      case "tag name" => getElement(env, By.tagName(lookup))
-      case "css selector" => getElement(env, By.cssSelector(lookup))
-      case "xpath" => getElement(env, By.xpath(lookup))
-      case "class name" => getElement(env, By.className(lookup))
-      case "link text" => getElement(env, By.linkText(lookup))
-      case "partial link text" => getElement(env, By.partialLinkText(lookup))
+      case "id" => getElement(env, By.id(lookup), container)
+      case "name" => getElement(env, By.name(lookup), container)
+      case "tag name" => getElement(env, By.tagName(lookup), container)
+      case "css selector" => getElement(env, By.cssSelector(lookup), container)
+      case "xpath" => getElement(env, By.xpath(lookup), container)
+      case "class name" => getElement(env, By.className(lookup), container)
+      case "link text" => getElement(env, By.linkText(lookup), container)
+      case "partial link text" => getElement(env, By.partialLinkText(lookup), container)
       case "javascript" => getElementByJavaScript(env, s"$lookup")
       case _ => throw new LocatorBindingException(elementBinding.element, s"unsupported locator: ${locator}")
     }) tap { optWebElement =>
@@ -105,8 +106,20 @@ trait WebElementLocator extends LazyLogging {
     * @param env the web environment context
     * @param by the by locator
     */
-  private def getElement(env: WebEnvContext, by: By): Option[WebElement] = 
-    Option(env.withWebDriver(_.findElement(by)))
+  private def getElement(env: WebEnvContext, by: By, container: Option[String]): Option[WebElement] =
+    container match {
+      case None =>
+        Option(env.withWebDriver(_.findElement(by)))
+      case Some(inContainer) =>
+        findElementByLocator(env, env.getLocatorBinding(inContainer)).map { containerElem =>
+          containerElem.getTagName match {
+            case "iframe" | "frame" =>
+              env.withWebDriver { _.switchTo().frame(containerElem).findElement(by) }
+            case _ =>
+              containerElem.findElement(by)
+          }
+        }
+    }
     
   /**
     * Gets a web element by the given javascript expression. If the web element is not 
@@ -141,7 +154,7 @@ trait WebElementLocator extends LazyLogging {
   *  @param locator the locator type
   *  @param lookup the lookup string
   */
-case class LocatorBinding(val element: String, val locator: String, val lookup: String)
+case class LocatorBinding(val element: String, val locator: String, val lookup: String, val container: Option[String])
 
 /** Thrown when a web element cannot be located. */
 class LocatorBindingException(element: String, causeMsg: String) extends Exception(s"Could not locate ${element}: ${causeMsg}")

@@ -231,6 +231,10 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
        }
      } catch {
        case _: WebDriverException => f(locate(this, elementBinding))
+     } finally {
+       elementBinding.container foreach { _ =>
+         withWebDriver { _.switchTo().defaultContent(); }
+       }
      }
 
   /**
@@ -402,7 +406,9 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
         val lookupBinding = interpolate(s"$element/locator/$locator")(getBoundReferenceValue)
         scopes.getOpt(lookupBinding) match {
           case Some(expression) =>
-            LocatorBinding(element, locator, interpolate(expression)(getBoundReferenceValue))
+            val expr = interpolate(expression)(getBoundReferenceValue)
+            val container = scopes.getOpt(interpolate(s"$element/locator/$locator/container")(getBoundReferenceValue))
+            LocatorBinding(element, locator, expr, container)
           case None => throw new LocatorBindingException(element, s"locator lookup binding not found: ${lookupBinding}")
         }
       case None => throw new LocatorBindingException(element, s"locator binding not found: ${locatorBinding}")
