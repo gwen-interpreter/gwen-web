@@ -33,8 +33,10 @@ import gwen.eval.support.DecodingSupport
 import gwen.eval.support.DefaultEngineSupport
 import gwen.dsl.Failed
 import org.openqa.selenium.net.UrlChecker.TimeoutException
+import org.openqa.selenium.By
 import scala.util.Try
 import scala.util.Failure
+import org.openqa.selenium.interactions.Actions
 
 /**
   * A web engine that uses the Selenium web driver
@@ -423,6 +425,21 @@ trait WebEngine extends EvalEngine[WebEnvContext]
       
       case "I refresh the current page" => env.execute { 
         env.withWebDriver { _.navigate().refresh() }
+      }
+      
+      case r"""I switch to (.+?)$$$frame""" => env.execute {
+        val frameBinding = env.getLocatorBinding(frame)
+        env.withWebDriver { driver =>
+          env.scrollIntoView(frameBinding, ScrollTo.top)
+          driver.switchTo().frame(locate(env, frameBinding))
+        }
+      }
+      
+      case "I switch out of the current frame" => env.execute {
+        env.withWebDriver { driver =>
+          driver.switchTo().defaultContent()
+          env.executeScript("window.scrollTo(0, 0)")
+        }
       }
       
       case _ => super.evaluate(step, env)
