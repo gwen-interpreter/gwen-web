@@ -14,8 +14,8 @@ Feb 4, 2016
         fails on the first attempt. 
   - All elemement lookups and operations now occur inside the
     WebEnvContext.withElement function. This is where all 1st and 2nd lookup 
-    attempts now occur. This also ensures that locator errors are reported on 
-    the correct binding when a chained lookup fails. The web engine no longer 
+    attempts now occur and where switching to the previous window is performed 
+    when operations on elements are completed. The web engine no longer 
     calls the locator methods directly (it now calls withElement instead).
 
 1.0.2

@@ -88,7 +88,7 @@ trait WebElementLocator extends LazyLogging {
             env.withWebDriver { driver =>
               val handle = driver.getWindowHandle
               Try(driver.switchTo().frame(containerElem).findElement(by)) match {
-                case Success(e) => e
+                case Success(elem) => elem
                 case Failure(e) =>
                   driver.switchTo().window(handle)
                   throw e
