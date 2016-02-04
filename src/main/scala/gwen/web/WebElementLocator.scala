@@ -22,6 +22,9 @@ import org.openqa.selenium.WebDriverException
 import org.openqa.selenium.WebElement
 import gwen.Predefs.Kestrel
 import com.typesafe.scalalogging.slf4j.LazyLogging
+import scala.util.Try
+import scala.util.Success
+import scala.util.Failure
 
 /**
   * Locates web elements using the selenium web driver.
@@ -37,41 +40,12 @@ trait WebElementLocator extends LazyLogging {
     *  @param elementBinding the web element locator binding
     *  @return the found element (errors if not found)
     */
-  def locate(env: WebEnvContext, elementBinding: LocatorBinding): WebElement = 
-    locateElement(env, elementBinding) match {
+  private[web] def locate(env: WebEnvContext, elementBinding: LocatorBinding): WebElement = {
+    logger.debug(s"Locating ${elementBinding.element}")
+    findElementByLocator(env, elementBinding) match {
       case Some(webElement) => webElement
       case None => throw new NoSuchElementException(s"Web element not found: ${elementBinding.element}")
     }
-  
-  /**
-   * Locates a bound web element.
-   * 
-   * @param env the web environment context
-   * @param elementBinding the web element locator binding
-   * @return Some(element) if found, None otherwise
-   */
-  def locateOpt(env: WebEnvContext, elementBinding: LocatorBinding): Option[WebElement] = try {
-    locateElement(env, elementBinding)
-  } catch {
-    case e: TimeoutOnWaitException => None
-  }
-  
-  /**
-   * Locates a bound web element.
-   * 
-   * @param env the web environment context
-   * @param elementBinding the web element locator binding
-   * @return Some(element) if found, None otherwise
-   */
-  private def locateElement(env: WebEnvContext, elementBinding: LocatorBinding): Option[WebElement] = {
-     logger.debug(s"Locating ${elementBinding.element}")
-     try {
-       findElementByLocator(env, elementBinding)
-     } catch {
-        case e: WebDriverException =>
-        // attempt to locate one more time on web driver exception
-        findElementByLocator(env, elementBinding)
-     }
   }
   
   /** Finds an element by the given locator expression. */
@@ -106,20 +80,26 @@ trait WebElementLocator extends LazyLogging {
     * @param env the web environment context
     * @param by the by locator
     */
-  private def getElement(env: WebEnvContext, by: By, container: Option[String]): Option[WebElement] =
-    container match {
-      case None =>
-        Option(env.withWebDriver(_.findElement(by)))
-      case Some(inContainer) =>
-        findElementByLocator(env, env.getLocatorBinding(inContainer)).map { containerElem =>
-          containerElem.getTagName match {
-            case "iframe" | "frame" =>
-              env.withWebDriver { _.switchTo().frame(containerElem).findElement(by) }
-            case _ =>
-              containerElem.findElement(by)
-          }
+  private def getElement(env: WebEnvContext, by: By, container: Option[String]): Option[WebElement] = Option {
+    container.fold(env.withWebDriver(_.findElement(by))) { inContainer =>
+      env.withWebElement(env.getLocatorBinding(inContainer)) { containerElem =>
+        containerElem.getTagName match {
+          case "iframe" | "frame" =>
+            env.withWebDriver { driver =>
+              val handle = driver.getWindowHandle
+              Try(driver.switchTo().frame(containerElem).findElement(by)) match {
+                case Success(e) => e
+                case Failure(e) =>
+                  driver.switchTo().window(handle)
+                  throw e
+              } 
+            }
+          case _ =>
+            containerElem.findElement(by)
         }
+      }
     }
+  }
     
   /**
     * Gets a web element by the given javascript expression. If the web element is not 

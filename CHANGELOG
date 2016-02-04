@@ -1,3 +1,23 @@
+1.1.0
+=====
+Feb 4, 2016
+- Added support for chaining locators through new DSL:
+  - <element> can be located by <locator> "<expression>" in <container>
+  - Where <container> can be 
+    - An element
+      - In this case <element> is located within the <container> element
+    - A frame
+      - In this case <element> is located within the page in the <container> 
+        frame  
+      - The WebEnvContext.withElement function will restore the previous window 
+        in the web driver if the location of the element within the frame 
+        fails on the first attempt. 
+  - All elemement lookups and operations now occur inside the
+    WebEnvContext.withElement function. This is where all 1st and 2nd lookup 
+    attempts now occur. This also ensures that locator errors are reported on 
+    the correct binding when a chained lookup fails. The web engine no longer 
+    calls the locator methods directly (it now calls withElement instead).
+
 1.0.2
 =====
 Jan 29, 2016, 5:13 PM GMT+11 (AEDT)

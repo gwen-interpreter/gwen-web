@@ -213,29 +213,27 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     * @param elementBinding the web element locator binding
     * @param f the function to perform on the element
     */
-  private def withWebElement[T](action: Option[String], elementBinding: LocatorBinding)(f: WebElement => T): T =
-     try {
-       val webElement = locate(this, elementBinding)
-       action.foreach { actionString =>
-         logger.debug(s"${actionString match {
-           case "click" => "Clicking"
-           case "submit" => "Submitting"
-           case "check" => "Checking"
-           case "uncheck" => "Unchecking"
+  private def withWebElement[T](action: Option[String], elementBinding: LocatorBinding)(f: WebElement => T): T = {
+    try {
+      val webElement = locate(this, elementBinding)
+      action.foreach { actionString =>
+        logger.debug(s"${actionString match {
+          case "click" => "Clicking"
+          case "submit" => "Submitting"
+          case "check" => "Checking"
+          case "uncheck" => "Unchecking"
          }} ${elementBinding.element}")
-       }
-       f(webElement) tap { result =>
-         if (WebSettings.`gwen.web.capture.screenshots`) {
-           captureScreenshot()
-         }
-       }
-     } catch {
-       case _: WebDriverException => f(locate(this, elementBinding))
-     } finally {
-       elementBinding.container foreach { _ =>
-         withWebDriver { _.switchTo().defaultContent(); }
-       }
+      }
+      f(webElement) tap { result =>
+        if (WebSettings.`gwen.web.capture.screenshots`) {
+          captureScreenshot()
+        }
+      }
+    } catch {
+      case _: WebDriverException =>
+        f(locate(this, elementBinding))
      }
+  }
 
   /**
     * Gets a bound value from memory. A search for the value is made in 

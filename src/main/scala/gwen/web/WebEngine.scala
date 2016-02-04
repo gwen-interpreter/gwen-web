@@ -45,7 +45,6 @@ import org.openqa.selenium.interactions.Actions
   * @author Branko Juric, Brady Wood
   */
 trait WebEngine extends EvalEngine[WebEnvContext] 
-  with WebElementLocator 
   with DefaultEngineSupport[WebEnvContext] 
   with DecodingSupport {
   
@@ -91,7 +90,7 @@ trait WebEngine extends EvalEngine[WebEnvContext]
         val elementBinding = env.getLocatorBinding(element)
         env.execute {
           env.waitUntil(s"Waiting for $element after $seconds second(s)", seconds.toInt) {
-            locateOpt(env, elementBinding).isDefined
+            env.withWebElement(elementBinding) { _=> true }
           }
         }
       }
@@ -100,7 +99,7 @@ trait WebEngine extends EvalEngine[WebEnvContext]
         val elementBinding = env.getLocatorBinding(element)
         env.execute {
           env.waitUntil(s"Waiting for $element") {
-            locateOpt(env, elementBinding).isDefined
+            env.withWebElement(elementBinding) { _=> true }
           }
         }
       }
@@ -354,14 +353,15 @@ trait WebEngine extends EvalEngine[WebEnvContext]
       case r"""I press (enter|tab)$key in (.+?)$$$element""" => {
         val elementBinding = env.getLocatorBinding(element) 
         env.execute {
-          val elem = locate(env, elementBinding)
-          key match {
-            case "enter" =>
-              elem.sendKeys(Keys.RETURN)
-            case _ =>
-              elem.sendKeys(Keys.TAB)
+          env.withWebElement(elementBinding) { elem =>
+            key match {
+              case "enter" =>
+                elem.sendKeys(Keys.RETURN)
+              case _ =>
+                elem.sendKeys(Keys.TAB)
+            }
+            env.bindAndWait(element, key, "true")
           }
-          env.bindAndWait(element, key, "true")
         }
       }
 
@@ -427,7 +427,7 @@ trait WebEngine extends EvalEngine[WebEnvContext]
       case r"""I (?:highlight|locate) (.+?)$$$element""" => {
         val elementBinding = env.getLocatorBinding(element)
         env.execute {
-          locate(env, elementBinding)
+          env.withWebElement(elementBinding) { _ => }
         }
       }
       

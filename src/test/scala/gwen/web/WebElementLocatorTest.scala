@@ -59,20 +59,6 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar wit
     e.getMessage should be ("Web element not found: middleName")
   }
   
-  "Attempt to locate non existent element by Opt" should "return None" in {
-    
-    val env = newEnv
-    
-    when(mockWebDriver.manage()).thenReturn(mockWebDriverOptions)
-    when(mockWebDriverOptions.timeouts()).thenReturn(mockWebDriverTimeouts)
-    when(mockWebDriver.findElement(By.id("mname"))).thenReturn(null)
-    
-    locateOpt(env, LocatorBinding("middleName", "id", "mname", None)) match {
-      case None => { } //expected
-      case Some(webElement) => fail("Expected None but got Some(webElement)")
-    }
-  }
-  
   "Attempt to locate existing element by id" should "return the element" in {
     shouldFindWebElement("id", "uname", By.id("uname"))
   }
@@ -118,14 +104,7 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar wit
     
     locate(env, LocatorBinding("username", locator, lookup, None)) should be (mockWebElement)
     
-    locateOpt(env, LocatorBinding("username", locator, lookup, None)) match {
-      case Some(elem) => 
-        elem should be (mockWebElement)
-      case None =>
-        fail("Excpected Some(webElement) but got None")
-    }
-    
-    verify(mockWebDriver, times(2)).executeScript(s"return $lookup")
+    verify(mockWebDriver, times(1)).executeScript(s"return $lookup")
 
   }
   
@@ -159,8 +138,6 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar wit
     when(mockWebDriver.manage()).thenReturn(mockWebDriverOptions)
     when(mockWebDriverOptions.timeouts()).thenReturn(mockWebDriverTimeouts)
     doThrow(timeoutError).when(mockWebDriver).executeScript(s"return $lookup")
-    
-    locateOpt(env, LocatorBinding("username", locator, lookup, None)) should be (None)
     
     verify(mockWebDriver, atLeastOnce()).executeScript(s"return $lookup")
 
@@ -200,14 +177,7 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar wit
     locate(env, LocatorBinding("username", locator, lookup, Some("iframe"))) should be (mockWebElement)
     locate(env, LocatorBinding("username", locator, lookup, Some("frame"))) should be (mockWebElement)
     
-    locateOpt(env, LocatorBinding("username", locator, lookup, None)) match {
-      case Some(elem) => 
-        elem should be (mockWebElement)
-      case None => 
-        fail("Expected Some(webElement) but got None")
-    }
-    
-    verify(mockWebDriver, times(4)).findElement(by)
+    verify(mockWebDriver, times(3)).findElement(by)
     
   }
   
