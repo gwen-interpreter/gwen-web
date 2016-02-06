@@ -413,6 +413,9 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
           case Some(expression) =>
             val expr = interpolate(expression)(getBoundReferenceValue)
             val container = scopes.getOpt(interpolate(s"$element/locator/$locator/container")(getBoundReferenceValue))
+            if (isDryRun) {
+              container.foreach(c => getLocatorBinding(c))
+            }
             LocatorBinding(element, locator, expr, container)
           case None => throw new LocatorBindingException(element, s"locator lookup binding not found: ${lookupBinding}")
         }

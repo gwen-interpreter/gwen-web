@@ -52,16 +52,15 @@ trait WebElementLocator extends LazyLogging {
   private def findElementByLocator(env: WebEnvContext, elementBinding: LocatorBinding): Option[WebElement] = {
     val lookup = elementBinding.lookup
     val locator = elementBinding.locator 
-    val container = elementBinding.container
     (locator match {
-      case "id" => getElement(env, By.id(lookup), container)
-      case "name" => getElement(env, By.name(lookup), container)
-      case "tag name" => getElement(env, By.tagName(lookup), container)
-      case "css selector" => getElement(env, By.cssSelector(lookup), container)
-      case "xpath" => getElement(env, By.xpath(lookup), container)
-      case "class name" => getElement(env, By.className(lookup), container)
-      case "link text" => getElement(env, By.linkText(lookup), container)
-      case "partial link text" => getElement(env, By.partialLinkText(lookup), container)
+      case "id" => getElement(env, By.id(lookup), elementBinding)
+      case "name" => getElement(env, By.name(lookup), elementBinding)
+      case "tag name" => getElement(env, By.tagName(lookup), elementBinding)
+      case "css selector" => getElement(env, By.cssSelector(lookup), elementBinding)
+      case "xpath" => getElement(env, By.xpath(lookup), elementBinding)
+      case "class name" => getElement(env, By.className(lookup), elementBinding)
+      case "link text" => getElement(env, By.linkText(lookup), elementBinding)
+      case "partial link text" => getElement(env, By.partialLinkText(lookup), elementBinding)
       case "javascript" => getElementByJavaScript(env, s"$lookup")
       case _ => throw new LocatorBindingException(elementBinding.element, s"unsupported locator: ${locator}")
     }) tap { optWebElement =>
@@ -80,23 +79,39 @@ trait WebElementLocator extends LazyLogging {
     * @param env the web environment context
     * @param by the by locator
     */
-  private def getElement(env: WebEnvContext, by: By, container: Option[String]): Option[WebElement] = Option {
-    container.fold(env.withWebDriver(_.findElement(by))) { inContainer =>
-      env.withWebElement(env.getLocatorBinding(inContainer)) { containerElem =>
-        containerElem.getTagName match {
-          case "iframe" | "frame" =>
-            env.withWebDriver { driver =>
-              val handle = driver.getWindowHandle
-              Try(driver.switchTo().frame(containerElem).findElement(by)) match {
-                case Success(elem) => elem
-                case Failure(e) =>
-                  driver.switchTo().window(handle)
-                  throw e
-              } 
-            }
-          case _ =>
-            containerElem.findElement(by)
+  private def getElement(env: WebEnvContext, by: By, elementBinding: LocatorBinding): Option[WebElement] = Option {
+    env.withWebDriver { driver =>
+      val handle = driver.getWindowHandle
+      try {
+        elementBinding.container.fold(driver.findElement(by)) { containerName =>
+          getContainerElement(env, env.getLocatorBinding(containerName)) match {
+            case Some(containerElem) => containerElem.findElement(by)
+            case _ => driver.findElement(by)
+          }
         }
+      } catch {
+        case e: Throwable => 
+          driver.switchTo().window(handle)
+          throw e
+      }
+    }
+  }
+  
+  /**
+    * Gets container web element using the given by locator.
+    * 
+    * @param env the web environment context
+    * @param containerBinding the container binding
+    */
+  private def getContainerElement(env: WebEnvContext, containerBinding: LocatorBinding): Option[WebElement] = {
+    val container = findElementByLocator(env, containerBinding)
+    container flatMap { containerElem =>
+      containerElem.getTagName match {
+        case "iframe" | "frame" => 
+          env.withWebDriver(_.switchTo().frame(containerElem))
+          None
+        case _ =>
+          container
       }
     }
   }
@@ -133,6 +148,7 @@ trait WebElementLocator extends LazyLogging {
   *  @param element the web element name
   *  @param locator the locator type
   *  @param lookup the lookup string
+  *  @param container optional parent container name
   */
 case class LocatorBinding(val element: String, val locator: String, val lookup: String, val container: Option[String])
 
