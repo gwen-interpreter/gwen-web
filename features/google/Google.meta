@@ -29,4 +29,3 @@
        When I enter "$<query>" in the search field
        Then the page title should start with "$<query>"
         And the first result can be located by class name "r"
-        And the first result should contain "$<query>"

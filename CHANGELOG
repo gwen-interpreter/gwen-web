@@ -1,6 +1,6 @@
 1.1.0
 =====
-Feb 4, 2016
+Feb 9, 2016
 - Added support for chaining locators through new DSL:
   - <element> can be located by <locator> "<expression>" in <container>
   - Where <container> can be 
@@ -17,6 +17,7 @@ Feb 4, 2016
     attempts now occur and where switching to the previous window is performed 
     when operations on elements are completed. The web engine no longer 
     calls the locator methods directly (it now calls withElement instead).
+- Simplified assertion error messages
 
 1.0.2
 =====

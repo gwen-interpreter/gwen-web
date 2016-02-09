@@ -468,8 +468,8 @@ trait WebEngine extends EvalEngine[WebEnvContext]
         } else false
       }
     }.isSuccess
-    if (!negate) assert(result, s"Expected $element '$actualValue' to $operator '$expected', but it ${if(operator == "be") "was" else "did"} not")
-    else assert(!result, s"Expected $element '$actualValue' to not $operator '$expected', but it ${if(operator == "be") "was" else "did"}'")
+    if (!negate) assert(result, s"Expected ${if(operator == "be") s"'$expected' but got '$actualValue'" else s"'$actualValue' to $operator '$expected'"}")
+    else assert(!result, s"Did not expect '$actualValue'${if(operator == "be") "" else s" to $operator '$expected'"}")
   }
   
 }
