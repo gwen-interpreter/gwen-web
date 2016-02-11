@@ -33,8 +33,10 @@ import gwen.eval.support.DecodingSupport
 import gwen.eval.support.DefaultEngineSupport
 import gwen.dsl.Failed
 import org.openqa.selenium.net.UrlChecker.TimeoutException
+import org.openqa.selenium.By
 import scala.util.Try
 import scala.util.Failure
+import org.openqa.selenium.interactions.Actions
 
 /**
   * A web engine that uses the Selenium web driver
@@ -43,7 +45,6 @@ import scala.util.Failure
   * @author Branko Juric, Brady Wood
   */
 trait WebEngine extends EvalEngine[WebEnvContext] 
-  with WebElementLocator 
   with DefaultEngineSupport[WebEnvContext] 
   with DecodingSupport {
   
@@ -89,7 +90,7 @@ trait WebEngine extends EvalEngine[WebEnvContext]
         val elementBinding = env.getLocatorBinding(element)
         env.execute {
           env.waitUntil(s"Waiting for $element after $seconds second(s)", seconds.toInt) {
-            locateOpt(env, elementBinding).isDefined
+            env.withWebElement(elementBinding) { _=> true }
           }
         }
       }
@@ -98,7 +99,7 @@ trait WebEngine extends EvalEngine[WebEnvContext]
         val elementBinding = env.getLocatorBinding(element)
         env.execute {
           env.waitUntil(s"Waiting for $element") {
-            locateOpt(env, elementBinding).isDefined
+            env.withWebElement(elementBinding) { _=> true }
           }
         }
       }
@@ -212,6 +213,14 @@ trait WebEngine extends EvalEngine[WebEnvContext]
       case r"""(.+?)$element can be located by (id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)$locator "(.+?)"$$$expression""" =>
         env.scopes.set(s"$element/locator", locator);
         env.scopes.set(s"$element/locator/$locator", expression)
+        env.scopes.getOpt(s"$element/locator/$locator/container") foreach { _ =>
+          env.scopes.set(s"$element/locator/$locator/container", null)
+        }
+        
+      case r"""(.+?)$element can be located by (id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)$locator "(.+?)"$expression in (.+?)$$$container""" =>
+        env.scopes.set(s"$element/locator", locator);
+        env.scopes.set(s"$element/locator/$locator", expression)
+        env.scopes.set(s"$element/locator/$locator/container", container)
 
       case r"""the page title should( not)?$negation (be|contain|start with|end with|match regex|match xpath)$operator "(.*?)"$$$expression""" =>  env.execute {
         compare("title", expression, () => env.getTitle, operator, Option(negation).isDefined, env)
@@ -344,14 +353,15 @@ trait WebEngine extends EvalEngine[WebEnvContext]
       case r"""I press (enter|tab)$key in (.+?)$$$element""" => {
         val elementBinding = env.getLocatorBinding(element) 
         env.execute {
-          val elem = locate(env, elementBinding)
-          key match {
-            case "enter" =>
-              elem.sendKeys(Keys.RETURN)
-            case _ =>
-              elem.sendKeys(Keys.TAB)
+          env.withWebElement(elementBinding) { elem =>
+            key match {
+              case "enter" =>
+                elem.sendKeys(Keys.RETURN)
+              case _ =>
+                elem.sendKeys(Keys.TAB)
+            }
+            env.bindAndWait(element, key, "true")
           }
-          env.bindAndWait(element, key, "true")
         }
       }
 
@@ -417,7 +427,7 @@ trait WebEngine extends EvalEngine[WebEnvContext]
       case r"""I (?:highlight|locate) (.+?)$$$element""" => {
         val elementBinding = env.getLocatorBinding(element)
         env.execute {
-          locate(env, elementBinding)
+          env.withWebElement(elementBinding) { _ => }
         }
       }
       

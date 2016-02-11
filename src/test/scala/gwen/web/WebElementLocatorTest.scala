@@ -32,11 +32,16 @@ import org.scalatest.Matchers
 import org.scalatest.mock.MockitoSugar
 import gwen.eval.ScopedDataStack
 import gwen.eval.GwenOptions
+import org.openqa.selenium.WebDriver.TargetLocator
 
 class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar with WebElementLocator {
 
   val mockWebDriver = mock[FirefoxDriver]
   val mockWebElement = mock[WebElement]
+  val mockContainerElement = mock[WebElement]
+  val mockIFrameElement = mock[WebElement]
+  val mockFrameElement = mock[WebElement]
+  val mockTargetLocator = mock[TargetLocator]
   val mockWebDriverOptions = mock[WebDriver.Options]
   val mockWebDriverTimeouts = mock[WebDriver.Timeouts]
   
@@ -49,23 +54,9 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar wit
     when(mockWebDriver.findElement(By.id("mname"))).thenReturn(null)
     
     val e = intercept[NoSuchElementException] {
-      locate(env, LocatorBinding("middleName", "id", "mname"))
+      locate(env, LocatorBinding("middleName", "id", "mname", None))
     }
     e.getMessage should be ("Web element not found: middleName")
-  }
-  
-  "Attempt to locate non existent element by Opt" should "return None" in {
-    
-    val env = newEnv
-    
-    when(mockWebDriver.manage()).thenReturn(mockWebDriverOptions)
-    when(mockWebDriverOptions.timeouts()).thenReturn(mockWebDriverTimeouts)
-    when(mockWebDriver.findElement(By.id("mname"))).thenReturn(null)
-    
-    locateOpt(env, LocatorBinding("middleName", "id", "mname")) match {
-      case None => { } //expected
-      case Some(webElement) => fail("Expected None but got Some(webElement)")
-    }
   }
   
   "Attempt to locate existing element by id" should "return the element" in {
@@ -111,16 +102,9 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar wit
     doReturn(mockWebElement).when(mockWebDriver).executeScript(s"return $lookup")
     when(mockWebElement.isDisplayed()).thenReturn(true);
     
-    locate(env, LocatorBinding("username", locator, lookup)) should be (mockWebElement)
+    locate(env, LocatorBinding("username", locator, lookup, None)) should be (mockWebElement)
     
-    locateOpt(env, LocatorBinding("username", locator, lookup)) match {
-      case Some(elem) => 
-        elem should be (mockWebElement)
-      case None =>
-        fail("Excpected Some(webElement) but got None")
-    }
-    
-    verify(mockWebDriver, times(2)).executeScript(s"return $lookup")
+    verify(mockWebDriver, times(1)).executeScript(s"return $lookup")
 
   }
   
@@ -136,7 +120,7 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar wit
     doThrow(timeoutError).when(mockWebDriver).executeScript(s"return $lookup")
     
     val e = intercept[TimeoutOnWaitException] {
-      locate(env, new LocatorBinding("username", locator, lookup))
+      locate(env, new LocatorBinding("username", locator, lookup, None))
     }
     e.getMessage should be ("Timed out waiting.")
     
@@ -155,8 +139,6 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar wit
     when(mockWebDriverOptions.timeouts()).thenReturn(mockWebDriverTimeouts)
     doThrow(timeoutError).when(mockWebDriver).executeScript(s"return $lookup")
     
-    locateOpt(env, LocatorBinding("username", locator, lookup)) should be (None)
-    
     verify(mockWebDriver, atLeastOnce()).executeScript(s"return $lookup")
 
   }
@@ -169,17 +151,33 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar wit
     when(mockWebDriverOptions.timeouts()).thenReturn(mockWebDriverTimeouts)
     when(mockWebDriver.findElement(by)).thenReturn(mockWebElement)
     when(mockWebElement.isDisplayed()).thenReturn(true)
+    
+    when(mockWebDriver.findElement(By.id("container"))).thenReturn(mockContainerElement)
+    when(mockContainerElement.getTagName).thenReturn("div")
+    when(mockContainerElement.findElement(by)).thenReturn(mockWebElement)
+    env.scopes.set("container/locator", "id")
+    env.scopes.set("container/locator/id", "container")
+    
+    when(mockWebDriver.findElement(By.id("iframe"))).thenReturn(mockIFrameElement)
+    when(mockIFrameElement.getTagName).thenReturn("iframe")
+    when(mockWebDriver.switchTo()).thenReturn(mockTargetLocator);
+    when(mockTargetLocator.frame(mockIFrameElement)).thenReturn(mockWebDriver)
+    env.scopes.set("iframe/locator", "id")
+    env.scopes.set("iframe/locator/id", "iframe")
+    
+    when(mockWebDriver.findElement(By.id("frame"))).thenReturn(mockFrameElement)
+    when(mockFrameElement.getTagName).thenReturn("frame")
+    when(mockWebDriver.switchTo()).thenReturn(mockTargetLocator);
+    when(mockTargetLocator.frame(mockFrameElement)).thenReturn(mockWebDriver)
+    env.scopes.set("frame/locator", "id")
+    env.scopes.set("frame/locator/id", "frame")
 
-    locate(env, LocatorBinding("username", locator, lookup)) should be (mockWebElement)
+    locate(env, LocatorBinding("username", locator, lookup, None)) should be (mockWebElement)
+    locate(env, LocatorBinding("username", locator, lookup, Some("container"))) should be (mockWebElement)
+    locate(env, LocatorBinding("username", locator, lookup, Some("iframe"))) should be (mockWebElement)
+    locate(env, LocatorBinding("username", locator, lookup, Some("frame"))) should be (mockWebElement)
     
-    locateOpt(env, LocatorBinding("username", locator, lookup)) match {
-      case Some(elem) => 
-        elem should be (mockWebElement)
-      case None => 
-        fail("Expected Some(webElement) but got None")
-    }
-    
-    verify(mockWebDriver, times(2)).findElement(by)
+    verify(mockWebDriver, times(3)).findElement(by)
     
   }
   
@@ -187,7 +185,7 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar wit
     val env = newEnv
     env.scopes.addScope("login").set("username/id", "unknown").set("username/id/unknown", "funkyness")
     var e = intercept[LocatorBindingException] {
-      locate(env, LocatorBinding("username", "unknown", "funkiness"))
+      locate(env, LocatorBinding("username", "unknown", "funkiness", None))
     }
     e.getMessage should be ("Could not locate username: unsupported locator: unknown")
   }

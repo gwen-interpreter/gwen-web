@@ -213,26 +213,35 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     * @param elementBinding the web element locator binding
     * @param f the function to perform on the element
     */
-  private def withWebElement[T](action: Option[String], elementBinding: LocatorBinding)(f: WebElement => T): T =
-     try {
-       val webElement = locate(this, elementBinding)
-       action.foreach { actionString =>
-         logger.debug(s"${actionString match {
-           case "click" => "Clicking"
-           case "submit" => "Submitting"
-           case "check" => "Checking"
-           case "uncheck" => "Unchecking"
+  private def withWebElement[T](action: Option[String], elementBinding: LocatorBinding)(f: WebElement => T): T = {
+    val wHandle = elementBinding.container.map(_ => withWebDriver(_.getWindowHandle))
+    try {
+      val webElement = locate(this, elementBinding)
+      action.foreach { actionString =>
+        logger.debug(s"${actionString match {
+          case "click" => "Clicking"
+          case "submit" => "Submitting"
+          case "check" => "Checking"
+          case "uncheck" => "Unchecking"
          }} ${elementBinding.element}")
-       }
-       f(webElement) tap { result =>
-         if (WebSettings.`gwen.web.capture.screenshots`) {
-           captureScreenshot()
-         }
-       }
-     } catch {
-       case _: WebDriverException => f(locate(this, elementBinding))
-     }
-
+      }
+      f(webElement) tap { result =>
+        if (WebSettings.`gwen.web.capture.screenshots`) {
+          captureScreenshot()
+        }
+      }
+    } catch {
+      case _: WebDriverException =>
+        f(locate(this, elementBinding))
+    } finally {
+      wHandle foreach { handle =>
+        withWebDriver { driver =>
+          driver.switchTo().window(handle)
+        }
+      }
+    }
+  }
+  
   /**
     * Gets a bound value from memory. A search for the value is made in 
     * the following order and the first value found is returned:
@@ -402,7 +411,12 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
         val lookupBinding = interpolate(s"$element/locator/$locator")(getBoundReferenceValue)
         scopes.getOpt(lookupBinding) match {
           case Some(expression) =>
-            LocatorBinding(element, locator, interpolate(expression)(getBoundReferenceValue))
+            val expr = interpolate(expression)(getBoundReferenceValue)
+            val container = scopes.getOpt(interpolate(s"$element/locator/$locator/container")(getBoundReferenceValue))
+            if (isDryRun) {
+              container.foreach(c => getLocatorBinding(c))
+            }
+            LocatorBinding(element, locator, expr, container)
           case None => throw new LocatorBindingException(element, s"locator lookup binding not found: ${lookupBinding}")
         }
       case None => throw new LocatorBindingException(element, s"locator binding not found: ${locatorBinding}")
