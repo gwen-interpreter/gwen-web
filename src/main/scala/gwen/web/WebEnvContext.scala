@@ -537,8 +537,8 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
       action match {
         case "click" => webElement.click
         case "submit" => webElement.submit
-        case "check" if (!webElement.isSelected()) => webElement.sendKeys(Keys.SPACE)
-        case "uncheck" if (webElement.isSelected()) => webElement.sendKeys(Keys.SPACE)
+        case "check" => if (!webElement.isSelected()) webElement.sendKeys(Keys.SPACE)
+        case "uncheck" => if (webElement.isSelected()) webElement.sendKeys(Keys.SPACE)
       }
       bindAndWait(elementBinding.element, action, "true")
     }

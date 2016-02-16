@@ -1,3 +1,11 @@
+1.1.1
+=====
+Feb 16, 2016, 12:43 PM GMT+11 (AEDT)
+- Fixed #17 - Do nothing when checking/unchecking checkboxes or radio 
+  buttons that are already checked or unchecked respectively 
+  - Solution was to move the guards from the check and uncheck 
+    pattern match clauses to their bodies instead
+
 1.1.0
 =====
 Feb 11, 2016, 11:47 PM GMT+11 (AEDT)
