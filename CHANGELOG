@@ -1,3 +1,12 @@
+1.2.0
+=====
+Feb 16, 2016, 3:00 PM GMT+11 (AEDT)
+- Added support for performing actions on elements that are only 
+  available on a container element (that is; when the container element 
+  is moved to or hovered over with the mouse). This is supported through 
+  the following DSL:
+  - I <click|check|uncheck> <element> in <container>
+   
 1.1.1
 =====
 Feb 16, 2016, 12:43 PM GMT+11 (AEDT)

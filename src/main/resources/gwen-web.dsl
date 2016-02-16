@@ -187,9 +187,12 @@ I select "<text>" in <element> by value
 I select <reference> in <element>
 I select <reference> in <element> by value
 I click <element>
-I submit <element>
 I check <element>
 I uncheck <element>
+I submit <element>
+I click <element> in <container>
+I check <element> in <container>
+I uncheck <element> in <container>
 I wait 1 second when <element> is clicked
 I wait 1 second when <element> is submitted
 I wait 1 second when <element> is checked
