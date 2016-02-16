@@ -538,18 +538,18 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
       action match {
         case "click" => webElement.click
         case "submit" => webElement.submit
-        case "check" if (!webElement.isSelected()) => webElement.sendKeys(Keys.SPACE)
-        case "uncheck" if (webElement.isSelected()) => webElement.sendKeys(Keys.SPACE)
+        case "check" => if (!webElement.isSelected()) webElement.sendKeys(Keys.SPACE)
+        case "uncheck" => if (webElement.isSelected()) webElement.sendKeys(Keys.SPACE)
       }
       bindAndWait(elementBinding.element, action, "true")
     }
   }
   
-  def performActionIn(action: String, elementBinding: LocatorBinding, containerBinding: LocatorBinding) {
-    withWebElement(action, containerBinding) { containerElement =>
+  def performActionIn(action: String, elementBinding: LocatorBinding, contextBinding: LocatorBinding) {
+    withWebElement(action, contextBinding) { contextElement =>
       withWebElement(action, elementBinding) { webElement =>
         withWebDriver { driver =>
-          var actions = new Actions(driver).moveToElement(containerElement).moveToElement(webElement)
+          var actions = new Actions(driver).moveToElement(contextElement).moveToElement(webElement)
           action match {
             case "click" => actions = actions.click
             case "check" => if (!webElement.isSelected()) actions = actions.sendKeys(Keys.SPACE)

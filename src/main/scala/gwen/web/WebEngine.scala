@@ -417,11 +417,11 @@ trait WebEngine extends EvalEngine[WebEnvContext]
         }
       }
         
-      case r"""I (click|check|uncheck)$action (.+?)$element in (.+?)$$$container""" => {
-        val containerBinding = env.getLocatorBinding(container)
+      case r"""I (click|check|uncheck)$action (.+?)$element of (.+?)$$$context""" => {
+        val contextBinding = env.getLocatorBinding(context)
         val elementBinding = env.getLocatorBinding(element)
         env.execute { 
-          env.performActionIn(action, elementBinding, containerBinding)
+          env.performActionIn(action, elementBinding, contextBinding)
         }
       }
       
@@ -441,6 +441,16 @@ trait WebEngine extends EvalEngine[WebEnvContext]
       
       case "I refresh the current page" => env.execute { 
         env.withWebDriver { _.navigate().refresh() }
+      }
+      
+      case "I start a new browser session" => env.execute {
+        env.quit()
+        env.withWebDriver { driver => // noop 
+        }
+      }
+      
+      case "I close the current browser session" => env.execute {
+        env.quit()
       }
       
       case _ => super.evaluate(step, env)

@@ -190,9 +190,9 @@ I click <element>
 I check <element>
 I uncheck <element>
 I submit <element>
-I click <element> in <container>
-I check <element> in <container>
-I uncheck <element> in <container>
+I click <element> of <context>
+I check <element> of <context>
+I uncheck <element> of <context>
 I wait 1 second when <element> is clicked
 I wait 1 second when <element> is submitted
 I wait 1 second when <element> is checked
@@ -233,3 +233,5 @@ I base64 decode <reference> as <attribute>
 I base64 decode <reference>
 <step> until <condition>
 <step> while <condition>
+I start a new browser session
+I close the current browser session
