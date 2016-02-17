@@ -1134,7 +1134,7 @@ a:visited {
 			<div class="panel-heading" role="tab" id="dsl-1-2_1">
 				<h4 class="panel-title">
 					<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-1-2_1" aria-expanded="true" aria-controls="collapseOne">
-					I close the current browser (if it is open)
+					I close the current browser
 					</a>
 				</h4>
 			</div>
@@ -1148,15 +1148,15 @@ a:visited {
 			<div class="panel-heading" role="tab" id="dsl-1-2_2">
 				<h4 class="panel-title">
 					<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-1-2_2" aria-expanded="true" aria-controls="collapseOne">
-					I &lt;have|start&gt; a browser for <code>&lt;name&gt;</code>
+					I start a browser for <code>&lt;session&gt;</code>
 					</a>
 				</h4>
 			</div>
 			<div id="collapse-1-2_2" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-1-2_2">
 				<div class="panel-body">
-					Closes the current browser session (if one is open) and creates a new browser session with the given name.
+					Closes the current browser session (if one is open) and starts a new browser session with the given name.
 					<ul>
-						<li><code>&lt;name&gt;</code> = the unique name to assign to the new browser session</li>
+						<li><code>&lt;session&gt;</code> = the unique name to assign to the new browser session</li>
 					</ul>
 				</div>
 			</div>
@@ -1165,7 +1165,7 @@ a:visited {
 			<div class="panel-heading" role="tab" id="dsl-1-2_3">
 				<h4 class="panel-title">
 					<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-1-2_3" aria-expanded="true" aria-controls="collapseOne">
-					I close the browser for <code>&lt;name&gt;</code>
+					I close the browser for <code>&lt;session&gt;</code>
 					</a>
 				</h4>
 			</div>
@@ -1173,7 +1173,7 @@ a:visited {
 				<div class="panel-body">
 					Closes a named browser session (if one is open).
 					<ul>
-						<li><code>&lt;name&gt;</code> = the name of the browser session to close</li>
+						<li><code>&lt;session&gt;</code> = the name of the browser session to close</li>
 					</ul>
 				</div>
 			</div>
@@ -1182,15 +1182,15 @@ a:visited {
 			<div class="panel-heading" role="tab" id="dsl-1-2_4">
 				<h4 class="panel-title">
 					<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-1-2_4" aria-expanded="true" aria-controls="collapseOne">
-					I switch to <code>&lt;name&gt;</code>
+					I switch to <code>&lt;session&gt;</code>
 					</a>
 				</h4>
 			</div>
 			<div id="collapse-1-2_4" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-1-2_4">
 				<div class="panel-body">
-					Switches to a named browser session (creates one if it does not exist). All actions performed after this execute in the named browser.
+					Switches to a named browser session (starts one if required). All actions performed after this execute in the named session.
 					<ul>
-						<li><code>&lt;name&gt;</code> = the name of the browser session to switch to</li>
+						<li><code>&lt;session&gt;</code> = the name of the browser session to switch to</li>
 					</ul>
 				</div>
 			</div>

@@ -47,31 +47,45 @@ trait DriverManager extends LazyLogging {
   private[web] val drivers: Map[String, WebDriver] = Map()
   
   /** Current web browser session. */
-  private[web] var currentBrowser = "default"
+  private var session = "default"
   
   /** Provides private access to the web driver */
-  private def webDriver: WebDriver = drivers.get(currentBrowser) getOrElse {
+  private def webDriver: WebDriver = drivers.get(session) getOrElse {
     loadWebDriver tap { driver =>
-      drivers += (currentBrowser -> driver)
+      drivers += (session -> driver)
     }
   }
   
   /** Quits all browsers and closes the web drivers (if any have loaded). */
   def quit() {
-    drivers.values.foreach { _.quit }
-    drivers.clear()
+    drivers.keys.foreach(quit)
   }
   
   /** Quits a named browser and associated web driver instance. */
   def quit(name: String) {
-    drivers.remove(name) foreach { _.quit }
+    drivers.get(name) foreach { driver =>
+      logger.info(s"Closing browser session${ if(name == "default") "" else s": $name"}")
+      driver.quit
+      drivers.remove(name)
+    }
+    session = "default"
   }
-   
+  
   /**
-    * Invokes a function that performs an operation on the web driver and
-    * conditionally captures the current screenshot if the specified 
+    * Switches the web driver session
+    *
+    * @param session the name of the session to switch to 
+    */
+  def switchTo(session: String) {
+    this.session = session
+    webDriver
+  }
+  
+   /**
+    * Invokes a function that performs an operation on the current web driver 
+    * session and conditionally captures the current screenshot if the specified 
     * takeScreenShot is true.
-    * 
+    *
     * @param f the function to perform
     * @param takeScreenShot true to take screenshot after performing the function
     */
@@ -82,7 +96,7 @@ trait DriverManager extends LazyLogging {
       }
     }
   }
-  
+   
   /** Captures and returns the current screenshot as an attachment (name-file pair). */
   private[web] def captureScreenshot(): (String, File) = {
     Thread.sleep(WebSettings.`gwen.web.throttle.msecs` / 2)
@@ -95,7 +109,7 @@ trait DriverManager extends LazyLogging {
   /** Loads the selenium webdriver. */
   private[web] def loadWebDriver: WebDriver = withGlobalSettings {
     val driverName = WebSettings.`gwen.web.browser`.toLowerCase
-    logger.info(s"Loading $driverName web driver")
+    logger.info(s"Starting $driverName browser session${ if(session == "default") "" else s": $session"}")
     WebSettings.`gwen.web.remote.url` match {
       case Some(addr) => remoteDriver(driverName, addr)
       case None => localDriver(driverName)

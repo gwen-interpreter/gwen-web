@@ -443,22 +443,21 @@ trait WebEngine extends EvalEngine[WebEnvContext]
         env.withWebDriver { _.navigate().refresh() }
       }
       
-      case r"""I (?:have|start) a browser for (.+?)$$$name""" => env.execute {
-        env.quit(name)
-        env.currentBrowser = name
-        env.withWebDriver { driver => }
+      case r"""I start a browser for (.+?)$$$session""" => env.execute {
+        env.quit(session)
+        env.switchTo(session)
       }
       
       case "I close the current browser" => env.execute {
         env.quit()
       }
       
-      case r"""I close the browser for (.+?)$name""" => env.execute {
-        env.quit(name)
+      case r"""I close the browser for (.+?)$session""" => env.execute {
+        env.quit(session)
       }
       
-      case r"""I switch to (.+?)$name""" => env.execute {
-        env.currentBrowser = name
+      case r"""I switch to (.+?)$session""" => env.execute {
+        env.switchTo(session)
       }
       
       case _ => super.evaluate(step, env)
