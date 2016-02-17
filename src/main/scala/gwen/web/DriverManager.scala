@@ -46,13 +46,13 @@ trait DriverManager extends LazyLogging {
   /** Map of web driver instances (keyed by name). */
   private[web] val drivers: Map[String, WebDriver] = Map()
   
-  /** Current web driver instance. */
-  private[web] var currentDriver = "default"
+  /** Current web browser session. */
+  private[web] var currentBrowser = "default"
   
   /** Provides private access to the web driver */
-  private def webDriver: WebDriver = drivers.get(currentDriver) getOrElse {
+  private def webDriver: WebDriver = drivers.get(currentBrowser) getOrElse {
     loadWebDriver tap { driver =>
-      drivers += (currentDriver -> driver)
+      drivers += (currentBrowser -> driver)
     }
   }
   

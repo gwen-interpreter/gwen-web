@@ -233,8 +233,8 @@ I base64 decode <reference> as <attribute>
 I base64 decode <reference>
 <step> until <condition>
 <step> while <condition>
-I start a new browser session
-I close the current browser session
-I start a new browser session named "<name>"
-I close the browser session named "<name>"
-I switch to the browser session named "<name>"
+I close the current browser
+I have a browser for <name>
+I start a browser for <name>
+I close the browser for <name>
+I switch to <name>
