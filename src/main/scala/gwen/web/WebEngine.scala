@@ -445,12 +445,25 @@ trait WebEngine extends EvalEngine[WebEnvContext]
       
       case "I start a new browser session" => env.execute {
         env.quit()
-        env.withWebDriver { driver => // noop 
-        }
+        env.withWebDriver { driver => }
+      }
+      
+      case r"""I start a new browser session named (.+?)$$$name""" => env.execute {
+        env.quit(name)
+        env.currentDriver = name
+        env.withWebDriver { driver => }
       }
       
       case "I close the current browser session" => env.execute {
         env.quit()
+      }
+      
+      case r"""I close the browser session named (.+?)$$$name""" => env.execute {
+        env.quit(name)
+      }
+      
+      case r"""I switch to the browser session named (.+?)$$$name""" => env.execute {
+        env.currentDriver = name
       }
       
       case _ => super.evaluate(step, env)

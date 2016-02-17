@@ -235,3 +235,6 @@ I base64 decode <reference>
 <step> while <condition>
 I start a new browser session
 I close the current browser session
+I start a new browser session named "<name>"
+I close the browser session named "<name>"
+I switch to the browser session named "<name>"

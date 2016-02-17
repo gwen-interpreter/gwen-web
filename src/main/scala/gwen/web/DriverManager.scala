@@ -37,27 +37,34 @@ import gwen.Predefs.Kestrel
 import org.apache.commons.io.FileUtils
 import gwen.eval.EnvContext
 import gwen.web.errors._
+import scala.collection.mutable.Map
 
 /** Provides access to the web driver used to drive the browser. */
 trait DriverManager extends LazyLogging { 
   env: EnvContext =>
     
+  /** Map of web driver instances (keyed by name). */
+  private[web] val drivers: Map[String, WebDriver] = Map()
+  
   /** Current web driver instance. */
-  private[web] var driver: Option[WebDriver] = None
+  private[web] var currentDriver = "default"
   
   /** Provides private access to the web driver */
-  private def webDriver: WebDriver = driver match {
-    case None => 
-      driver = Some(loadWebDriver)
-      driver.get
-    case _ => 
-      driver.get
+  private def webDriver: WebDriver = drivers.get(currentDriver) getOrElse {
+    loadWebDriver tap { driver =>
+      drivers += (currentDriver -> driver)
+    }
   }
   
-  /** Quits the browser and closes the web driver (if it has loaded). */
-   def quit() {
-    driver foreach { _.quit() } 
-    driver = None
+  /** Quits all browsers and closes the web drivers (if any have loaded). */
+  def quit() {
+    drivers.values.foreach { _.quit }
+    drivers.clear()
+  }
+  
+  /** Quits a named browser and associated web driver instance. */
+  def quit(name: String) {
+    drivers.remove(name) foreach { _.quit }
   }
    
   /**
