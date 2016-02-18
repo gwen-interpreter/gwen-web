@@ -234,6 +234,7 @@ I base64 decode <reference>
 <step> until <condition>
 <step> while <condition>
 I close the current browser
+I start a new browser
 I start a browser for <session>
 I close the browser for <session>
 I switch to <session>

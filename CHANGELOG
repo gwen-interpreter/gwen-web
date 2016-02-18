@@ -2,6 +2,7 @@
 =====
 Feb 17, 2016, 12:07 AM GMT+11 (AEDT)
 - Added the following DSLs for managing browser sessions:
+  - I start a new browser
   - I close the current browser
   - I start a browser for <session>
   - I close the browser for <session>

@@ -443,6 +443,11 @@ trait WebEngine extends EvalEngine[WebEnvContext]
         env.withWebDriver { _.navigate().refresh() }
       }
       
+      case r"I start a new browser" => env.execute {
+        env.quit("default")
+        env.switchTo("default")
+      }
+      
       case r"""I start a browser for (.+?)$$$session""" => env.execute {
         env.quit(session)
         env.switchTo(session)
