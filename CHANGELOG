@@ -1,3 +1,14 @@
+1.2.0
+=====
+Feb 17, 2016, 12:07 AM GMT+11 (AEDT)
+- Added new DSLs for starting and closing browser sessions:
+  - I start a new browser session
+  - I close the current browser session
+- Added support for performing actions on context sensitive elements 
+  that are available only when another element is moved into first. 
+  This is supported through the following DSL: 
+  - I <click|check|uncheck> <element> of <context>
+   
 1.1.1
 =====
 Feb 16, 2016, 12:43 PM GMT+11 (AEDT)
