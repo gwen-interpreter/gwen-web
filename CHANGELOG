@@ -1,9 +1,12 @@
 1.2.0
 =====
 Feb 17, 2016, 12:07 AM GMT+11 (AEDT)
-- Added new DSLs for starting and closing browser sessions:
-  - I start a new browser session
-  - I close the current browser session
+- Added the following DSLs for managing browser sessions:
+  - I start a new browser
+  - I close the current browser
+  - I start a browser for <session>
+  - I close the browser for <session>
+  - I switch to <session>
 - Added support for performing actions on context sensitive elements 
   that are available only when another element is moved into first. 
   This is supported through the following DSL: 
