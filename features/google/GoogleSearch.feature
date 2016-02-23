@@ -20,9 +20,10 @@
             
             This scenario calls the a step definition defined in the Goolge.meta
             file to perform a google search for "gwen-web". It then clicks the 
-            first link in the returned results and checks the URL of the page 
-            that is loaded.
+            first link in the returned results and checks the title and URL of 
+            the page that is loaded.
             
       Given I do a google search for "gwen-web"
        When I click the first result
-       Then the current URL should be "https://github.com/gwen-interpreter/gwen-web"
+       Then the page title should contain "gwen-interpreter/gwen-web"
+        And the current URL should be "https://github.com/gwen-interpreter/gwen-web"
