@@ -1,15 +1,13 @@
 1.2.0
 =====
-Feb 17, 2016, 12:07 AM GMT+11 (AEDT)
-- Added the following DSLs for managing browser sessions:
+Feb 23, 2016, 09:57 PM GMT+11 (AEDT)
+- Added the following DSLs for managing browser sessions (pull request #19):
   - I start a new browser
   - I close the current browser
   - I start a browser for <session>
   - I close the browser for <session>
   - I switch to <session>
-- Added support for performing actions on context sensitive elements 
-  that are available only when another element is moved into first. 
-  This is supported through the following DSL: 
+- Added DSL for performing actions on context sensitive elements (pull request #18):
   - I <click|check|uncheck> <element> of <context>
    
 1.1.1
