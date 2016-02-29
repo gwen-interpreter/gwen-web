@@ -1,3 +1,21 @@
+1.3.0
+=====
+Feb 29, 2016, 9:18 PM GMT + 11
+- Updated Gwen from v1.0.3 to v[1.1.0](https://github.com/gwen-interpreter/gwen/releases/tag/v1.1.0)
+  - Added support for configuring a ramp up interval (in seconds) for 
+    staggered parallel execution ~ for user request issue gwen-interpreter/gwen#18. 
+    The interval can be set through the `gwen.rampup.interval.seconds` setting
+    This setting is only applicable for parallel execution mode. If it is 
+    not set or is set to zero, then no staggering will occur (as per default 
+    behavior). 
+  - Added new `gwen.report.suppress.meta` setting for controlling whether or 
+    not meta reports should be generated with HTML reports (default value is 
+    false). If you have a lot of meta, suppressing the meta reports can 
+    save a lot of disk space. Enabling this setting does not suppress the 
+    hyperlinked stepdefs in feature reports (they will always be rendered).
+- Added the following alternative DSL for closing the current browser session
+  - I close the current browser
+
 1.2.1
 =====
 Feb 29, 2016, 6:37 PM GMT+11
@@ -18,7 +36,7 @@ Feb 23, 2016, 09:57 PM GMT+11 (AEDT)
   - I switch to <session>
 - Added DSL for performing actions on context sensitive elements (pull request #18):
   - I <click|check|uncheck> <element> of <context>
-   
+
 1.1.1
 =====
 Feb 16, 2016, 12:43 PM GMT+11 (AEDT)

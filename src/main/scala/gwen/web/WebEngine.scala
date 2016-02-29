@@ -466,7 +466,7 @@ trait WebEngine extends EvalEngine[WebEnvContext]
         env.switchTo(session)
       }
       
-      case "I close the current browser" => env.execute {
+      case r"I close the(?: current)? browser" => env.execute {
         env.quit()
       }
       
