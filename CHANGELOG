@@ -4,6 +4,8 @@ Feb 29, 2016, 6:37 PM GMT+11
 - Fixed issue #20 - Cannot perform actions on elements bound to names containing 'of' literal 
   - Solution was to perform the `I <click|check|uncheck> <element>` logic if 
     `I  <click|check|uncheck> <element> of <context>` results in a LocatorBindingException
+- Immediately return from a 'should not' assertion step if it evaluates to true (instead of 
+  waiting until timeout)
 
 1.2.0
 =====

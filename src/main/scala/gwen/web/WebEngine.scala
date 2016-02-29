@@ -500,7 +500,7 @@ trait WebEngine extends EvalEngine[WebEnvContext]
       env.waitUntil {
         actualValue = actual()
         if (actualValue != null) {
-          operator match {
+          val res = operator match {
             case "be"      => expected.equals(actualValue)
             case "contain" => actualValue.contains(expected)
             case "start with" => actualValue.startsWith(expected)
@@ -508,11 +508,12 @@ trait WebEngine extends EvalEngine[WebEnvContext]
             case "match regex" => actualValue.matches(expected)
             case "match xpath" => !env.evaluateXPath(expected, actualValue, env.XMLNodeType.text).isEmpty()
           }
+          if (!negate) res else !res
         } else false
       }
     }.isSuccess
     if (!negate) assert(result, s"Expected ${if(operator == "be") s"'$expected' but got '$actualValue'" else s"'$actualValue' to $operator '$expected'"}")
-    else assert(!result, s"Did not expect '$actualValue'${if(operator == "be") "" else s" to $operator '$expected'"}")
+    else assert(result, s"Did not expect '$actualValue'${if(operator == "be") "" else s" to $operator '$expected'"}")
   }
   
 }
