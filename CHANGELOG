@@ -1,3 +1,10 @@
+1.2.1
+=====
+Feb 29, 2016, 6:37 PM GMT+11
+- Fixed issue #20 - Cannot perform actions on elements bound to names containing 'of' literal 
+  - Solution was to perform the `I <click|check|uncheck> <element>` logic if 
+    `I  <click|check|uncheck> <element> of <context>` results in a LocatorBindingException
+
 1.2.0
 =====
 Feb 23, 2016, 09:57 PM GMT+11 (AEDT)

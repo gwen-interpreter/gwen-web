@@ -418,10 +418,23 @@ trait WebEngine extends EvalEngine[WebEnvContext]
       }
         
       case r"""I (click|check|uncheck)$action (.+?)$element of (.+?)$$$context""" => {
-        val contextBinding = env.getLocatorBinding(context)
-        val elementBinding = env.getLocatorBinding(element)
-        env.execute { 
-          env.performActionIn(action, elementBinding, contextBinding)
+        try {
+          val contextBinding = env.getLocatorBinding(context)
+          val elementBinding = env.getLocatorBinding(element)
+          env.execute { 
+            env.performActionIn(action, elementBinding, contextBinding)
+          }
+        } catch {
+          case e1: LocatorBindingException =>
+            try {
+              val elementBinding = env.getLocatorBinding(s"$element of $context")
+              env.execute { 
+                env.performAction(action, elementBinding)
+              }
+            } catch {
+              case e2: LocatorBindingException =>
+                throw new LocatorBindingException(s"'$element', '$context', or '$element of $context'", s"${e1.getMessage}, ${e2.getMessage}")
+            }
         }
       }
       

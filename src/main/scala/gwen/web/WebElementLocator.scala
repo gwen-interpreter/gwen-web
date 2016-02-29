@@ -153,4 +153,4 @@ trait WebElementLocator extends LazyLogging {
 case class LocatorBinding(val element: String, val locator: String, val lookup: String, val container: Option[String])
 
 /** Thrown when a web element cannot be located. */
-class LocatorBindingException(element: String, causeMsg: String) extends Exception(s"Could not locate ${element}: ${causeMsg}")
+class LocatorBindingException(element: String, causeMsg: String) extends RuntimeException(s"Could not locate ${element}: ${causeMsg}")
