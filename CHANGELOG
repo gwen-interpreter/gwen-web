@@ -1,6 +1,12 @@
+1.3.1
+=====
+Mar 3, 2016, 11:05 PM GMT+11 (AEDT)
+- Added convenience launch scripts in root directory of distributed package
+  (so users can invoke gwen directly from the install directory)
+
 1.3.0
 =====
-Feb 29, 2016, 9:18 PM GMT + 11
+Feb 29, 2016, 9:18 PM GMT+11 (AEDT)
 - Updated Gwen from v1.0.3 to v[1.1.0](https://github.com/gwen-interpreter/gwen/releases/tag/v1.1.0)
   - Added support for configuring a ramp up interval (in seconds) for 
     staggered parallel execution ~ for user request issue gwen-interpreter/gwen#18. 
@@ -18,7 +24,7 @@ Feb 29, 2016, 9:18 PM GMT + 11
 
 1.2.1
 =====
-Feb 29, 2016, 6:37 PM GMT+11
+Feb 29, 2016, 6:37 PM GMT+11 (AEDT)
 - Fixed issue #20 - Cannot perform actions on elements bound to names containing 'of' literal 
   - Solution was to perform the `I <click|check|uncheck> <element>` logic if 
     `I  <click|check|uncheck> <element> of <context>` results in a LocatorBindingException
