@@ -8,14 +8,16 @@ It allows teams to automate front end web tests by writing
 [Gherkin](https://github.com/cucumber/cucumber/wiki/Gherkin) feature 
 specifications instead of code. 
 
-- See also [Gwen-Web Wiki](https://github.com/gwen-interpreter/gwen-web/wiki)
-
+- See also:
+  - [Wiki](https://github.com/gwen-interpreter/gwen-web/wiki)
+  - [FAQ](https://github.com/gwen-interpreter/gwen-web/wiki/FAQ)
+  - [Blog](https://gweninterpreter.wordpress.com)
 
 #### Current Status
 
 [![Build Status](https://travis-ci.org/gwen-interpreter/gwen-web.svg?branch=master)](https://travis-ci.org/gwen-interpreter/gwen-web)
 
-- Current release: [1.3.0](https://github.com/gwen-interpreter/gwen-web/releases/tag/v1.3.0)
+- Current release: [1.3.1](https://github.com/gwen-interpreter/gwen-web/releases/tag/v1.3.1)
 - [Change log](CHANGELOG)
 
 Core Requirements
