@@ -17,7 +17,7 @@ specifications instead of code.
 
 [![Build Status](https://travis-ci.org/gwen-interpreter/gwen-web.svg?branch=master)](https://travis-ci.org/gwen-interpreter/gwen-web)
 
-- Current release: [1.3.1](https://github.com/gwen-interpreter/gwen-web/releases/tag/v1.3.1)
+- Current release: [1.4.0](https://github.com/gwen-interpreter/gwen-web/releases/tag/v1.4.0)
 - [Change log](CHANGELOG)
 
 Core Requirements
