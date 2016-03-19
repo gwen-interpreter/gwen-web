@@ -2,7 +2,7 @@
 =====
 Mar 19, 1026, 12:56 PM GMT+11 (AEDT)
 - Add support for accepting and dismissing browser popup boxes. New DSL includes:
-  - I <accept|dismiss> the popup box
+  - I <accept|dismiss> the <alert|confirmation> popup
 
 1.3.1
 =====

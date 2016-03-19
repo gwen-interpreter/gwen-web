@@ -239,5 +239,6 @@ I start a new browser
 I start a browser for <session>
 I close the browser for <session>
 I switch to <session>
-I accept the popup box
-I dismiss the popup box
+I accept the alert popup
+I accept the confirmation popup
+I dismiss the confirmation popup

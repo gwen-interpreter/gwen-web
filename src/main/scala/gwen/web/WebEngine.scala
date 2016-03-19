@@ -478,7 +478,7 @@ trait WebEngine extends EvalEngine[WebEnvContext]
         env.switchTo(session)
       }
       
-      case r"I (accept|dismiss)$action the popup box" => env.execute {
+      case r"I (accept|dismiss)$action the (?:alert|confirmation) popup" => env.execute {
         env.withWebDriver { driver =>
           if (action == "accept") {
             driver.switchTo().alert().accept()
