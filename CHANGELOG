@@ -1,8 +1,12 @@
 1.4.0
 =====
-Mar 19, 1026, 12:56 PM GMT+11 (AEDT)
+Mar 23, 2016, 12:02 PM GMT+11 (AEDT)
 - Add support for accepting and dismissing browser popup boxes. New DSL includes:
   - I <accept|dismiss> the <alert|confirmation> popup
+- Add ability to switch between parent and child windows. New DSL includes:
+  - I switch to the child window
+  - I close the child window
+  - I switch to the parent window
 
 1.3.1
 =====

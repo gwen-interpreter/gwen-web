@@ -457,13 +457,13 @@ trait WebEngine extends EvalEngine[WebEnvContext]
       }
       
       case r"I start a new browser" => env.execute {
-        env.quit("default")
-        env.switchTo("default")
+        env.quit("primary")
+        env.switchToSession("primary")
       }
       
       case r"""I start a browser for (.+?)$$$session""" => env.execute {
         env.quit(session)
-        env.switchTo(session)
+        env.switchToSession(session)
       }
       
       case r"I close the(?: current)? browser" => env.execute {
@@ -474,8 +474,20 @@ trait WebEngine extends EvalEngine[WebEnvContext]
         env.quit(session)
       }
       
+      case r"""I switch to the child window""" => env.execute {
+        env.withWebDriver(env.switchToChild)
+      }
+      
+      case r"""I close the child window""" => env.execute {
+        env.closeChild()
+      }
+      
+      case r"""I switch to the parent window""" => env.execute {
+        env.switchToParent(false)
+      }
+      
       case r"""I switch to (.+?)$session""" => env.execute {
-        env.switchTo(session)
+        env.switchToSession(session)
       }
       
       case r"I (accept|dismiss)$action the (?:alert|confirmation) popup" => env.execute {

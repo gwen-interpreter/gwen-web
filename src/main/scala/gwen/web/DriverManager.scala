@@ -34,10 +34,15 @@ import org.openqa.selenium.remote.RemoteWebDriver
 import org.openqa.selenium.safari.SafariDriver
 import com.typesafe.scalalogging.slf4j.LazyLogging
 import gwen.Predefs.Kestrel
+import gwen.Predefs.RegexContext
 import org.apache.commons.io.FileUtils
 import gwen.eval.EnvContext
+import gwen.errors._
 import gwen.web.errors._
 import scala.collection.mutable.Map
+import gwen.GwenSettings
+import scala.collection.mutable.Stack
+import gwen.errors.AmbiguousCaseException
 
 /** Provides access to the web driver used to drive the browser. */
 trait DriverManager extends LazyLogging { 
@@ -46,13 +51,16 @@ trait DriverManager extends LazyLogging {
   /** Map of web driver instances (keyed by name). */
   private[web] val drivers: Map[String, WebDriver] = Map()
   
-  /** Current web browser session. */
-  private var session = "default"
-  
+  /** The current web browser session. */
+  private[web] var session = "primary"
+    
+  private val windows = Stack[String]()
+    
   /** Provides private access to the web driver */
   private def webDriver: WebDriver = drivers.get(session) getOrElse {
     loadWebDriver tap { driver =>
       drivers += (session -> driver)
+      windows push driver.getWindowHandle()
     }
   }
   
@@ -64,19 +72,72 @@ trait DriverManager extends LazyLogging {
   /** Quits a named browser and associated web driver instance. */
   def quit(name: String) {
     drivers.get(name) foreach { driver =>
-      logger.info(s"Closing browser session${ if(name == "default") "" else s": $name"}")
+      logger.info(s"Closing browser session${ if(name == "primary") "" else s": $name"}")
       driver.quit
       drivers.remove(name)
     }
-    session = "default"
+    session = "primary"
   }
   
+  /** 
+    * Switches to the child window if one was just opened.
+    * 
+    * @param driver the current web driver 
+    */
+  private[web] def switchToChild(driver: WebDriver) {
+    import collection.JavaConversions._
+    val children = driver.getWindowHandles.filter(window => windows.forall(_ != window))
+    if (children.size == 1) {
+      switchToWindow(children.head, true)
+    } else if (children.size > 1) {
+      ambiguousCaseError(s"Cannot determine which child window to switch to: ${children.size} were detected but only one is supported")
+    } else {
+      noSuchWindowError("Cannot switch to child window: no child window was found")
+    }
+  }
+  
+  /** Switches the driver to another window. 
+    * 
+    * @param handle the handle of the window to switch to
+    * @param isChild true if switching to a child window; false for parent window
+    */
+  private def switchToWindow(handle: String, isChild: Boolean) {
+    logger.info(s"Switching to ${if (isChild) "child" else "parent"} window ($handle)")
+    drivers.get(session).fold(noSuchWindowError("Cannot switch to window: no windows currently open")) { _.switchTo.window(handle) }
+    windows push handle
+  }
+  
+  private[web] def closeChild() {
+    if (windows.size > 1) {
+      val child = windows.pop
+      webDriver.switchTo.window(child)
+      logger.info(s"Closing child window ($child)")
+      webDriver.close() 
+      switchToParent(true)
+    } else {
+      noSuchWindowError("Cannot close child window: currently at root window which has no child")
+    }
+  }
+  
+  /** Switches to the parent window. */
+  private[web] def switchToParent(childClosed: Boolean) {
+    if (windows.nonEmpty) {
+      val child = windows.pop
+      val target = if (windows.nonEmpty) windows.top else child
+      switchToWindow(target, false)
+      if (!childClosed) { windows push child }
+    } else {
+      logger.warn("Bypassing switch to parent window: no child window currently open")
+    }
+  }
+    
   /**
     * Switches the web driver session
     *
     * @param session the name of the session to switch to 
     */
-  def switchTo(session: String) {
+  def switchToSession(session: String) {
+    logger.info(s"Switching to browser session: $session")
     this.session = session
     webDriver
   }
@@ -109,7 +170,7 @@ trait DriverManager extends LazyLogging {
   /** Loads the selenium webdriver. */
   private[web] def loadWebDriver: WebDriver = withGlobalSettings {
     val driverName = WebSettings.`gwen.web.browser`.toLowerCase
-    logger.info(s"Starting $driverName browser session${ if(session == "default") "" else s": $session"}")
+    logger.info(s"Starting $driverName browser session${ if(session == "primary") "" else s": $session"}")
     WebSettings.`gwen.web.remote.url` match {
       case Some(addr) => remoteDriver(driverName, addr)
       case None => localDriver(driverName)
