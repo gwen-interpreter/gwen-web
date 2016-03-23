@@ -242,3 +242,6 @@ I switch to <session>
 I accept the alert popup
 I accept the confirmation popup
 I dismiss the confirmation popup
+I switch to the child window
+I close the child window
+I switch to the parent window
