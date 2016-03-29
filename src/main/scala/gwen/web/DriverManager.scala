@@ -54,7 +54,11 @@ trait DriverManager extends LazyLogging {
   /** The current web browser session. */
   private[web] var session = "primary"
     
+  /** Current stack of windows. */
   private val windows = Stack[String]()
+  
+  /** Last captured screenshot file size. */
+  private var lastScreenshotSize: Option[Long] = None
     
   /** Provides private access to the web driver */
   private def webDriver: WebDriver = drivers.get(session) getOrElse {
@@ -162,10 +166,11 @@ trait DriverManager extends LazyLogging {
   private[web] def captureScreenshot(unconditional: Boolean) {
     Thread.sleep(WebSettings.`gwen.web.throttle.msecs` / 2)
     val screenshot = webDriver.asInstanceOf[TakesScreenshot].getScreenshotAs(OutputType.FILE)
-    val keep = unconditional || WebSettings.`gwen.web.capture.screenshots.duplicates` || env.attachments.filter(_._1 == "Screenshot").lastOption.fold(true) { case (_, imgFile) => imgFile.length != screenshot.length}
+    val keep = unconditional || WebSettings.`gwen.web.capture.screenshots.duplicates` || lastScreenshotSize.fold(true) { _ != screenshot.length}
     if (keep) {
+      if (!WebSettings.`gwen.web.capture.screenshots.duplicates`) lastScreenshotSize = Some(screenshot.length())
       env.addAttachment("Screenshot", screenshot.getName.substring(screenshot.getName.lastIndexOf('.') + 1), null) tap { 
-        case (name, file) => FileUtils.copyFile(screenshot, file)
+        case (_, file) => FileUtils.copyFile(screenshot, file)
       }
     }
   }
