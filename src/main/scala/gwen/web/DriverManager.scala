@@ -158,16 +158,16 @@ trait DriverManager extends LazyLogging {
     }
   }
    
-  /** Captures and returns the current screenshot as an attachment (name-file pair). */
-  private[web] def captureScreenshot(unconditional: Boolean): Option[(String, File)] = {
+  /** Captures and the current screenshot and adds it to the attachments list. */
+  private[web] def captureScreenshot(unconditional: Boolean) {
     Thread.sleep(WebSettings.`gwen.web.throttle.msecs` / 2)
     val screenshot = webDriver.asInstanceOf[TakesScreenshot].getScreenshotAs(OutputType.FILE)
-    val screenChanged = unconditional || WebSettings.`gwen.web.capture.screenshots.duplicates` || env.attachments.filter(_._1 == "Screenshot").lastOption.fold(true) { case (_, imgFile) => imgFile.length != screenshot.length}
-    if (screenChanged) {
-      Some(env.addAttachment("Screenshot", screenshot.getName.substring(screenshot.getName.lastIndexOf('.') + 1), null) tap { 
+    val keep = unconditional || WebSettings.`gwen.web.capture.screenshots.duplicates` || env.attachments.filter(_._1 == "Screenshot").lastOption.fold(true) { case (_, imgFile) => imgFile.length != screenshot.length}
+    if (keep) {
+      env.addAttachment("Screenshot", screenshot.getName.substring(screenshot.getName.lastIndexOf('.') + 1), null) tap { 
         case (name, file) => FileUtils.copyFile(screenshot, file)
-      })
-    } else None
+      }
+    }
   }
   
   /** Loads the selenium webdriver. */

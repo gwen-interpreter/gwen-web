@@ -82,7 +82,7 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     withWebDriver { webDriver => 
       webDriver.asInstanceOf[JavascriptExecutor].executeScript(javascript, params.map(_.asInstanceOf[AnyRef]) : _*) tap { result =>
         if (takeScreenShot && WebSettings.`gwen.web.capture.screenshots`) {
-          captureScreenshot(false) foreach (addAttachment)
+          captureScreenshot(false)
         }
         logger.debug(s"Evaluated javascript: $javascript, result='$result'")
         if (result.isInstanceOf[Boolean] && result.asInstanceOf[Boolean]) {
