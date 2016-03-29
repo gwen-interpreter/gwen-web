@@ -112,4 +112,12 @@ object WebSettings {
    * or location paths). Each extension provided is loaded into the Chrome web driver.
    */
   def `gwen.web.chrome.extensions`: List[File] = Settings.getOpt("gwen.web.chrome.extensions").map(_.split(",").toList).getOrElse(Nil).map(new File(_))
+  
+  /**
+    * Provides access to the `gwen.web.capture.screenshots.duplicates` setting used to control whether 
+    * or not the web driver should capture or discard contiguously duplicate screenshots 
+    * (default value is `false` ~ to discard). If set to `false`, then a screenshot will be discarded 
+    * if its size in bytes matches that of the last captured screenshot.
+    */
+  def `gwen.web.capture.screenshots.duplicates`: Boolean = Settings.getOpt("gwen.web.capture.screenshots.duplicates").getOrElse("false").toBoolean
 }
