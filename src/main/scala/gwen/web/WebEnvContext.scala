@@ -82,7 +82,7 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     withWebDriver { webDriver => 
       webDriver.asInstanceOf[JavascriptExecutor].executeScript(javascript, params.map(_.asInstanceOf[AnyRef]) : _*) tap { result =>
         if (takeScreenShot && WebSettings.`gwen.web.capture.screenshots`) {
-          addAttachment(captureScreenshot())
+          captureScreenshot(false)
         }
         logger.debug(s"Evaluated javascript: $javascript, result='$result'")
         if (result.isInstanceOf[Boolean] && result.asInstanceOf[Boolean]) {
@@ -182,7 +182,7 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     */
   override def addErrorAttachments(failure: Failed): Unit = {
     super.addErrorAttachments(failure)
-    execute(captureScreenshot())
+    execute(captureScreenshot(true))
   }
     
   /**
@@ -228,7 +228,7 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
       }
       f(webElement) tap { result =>
         if (WebSettings.`gwen.web.capture.screenshots`) {
-          captureScreenshot()
+          captureScreenshot(false)
         }
       }
     } catch {
