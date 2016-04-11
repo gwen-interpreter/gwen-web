@@ -1,13 +1,13 @@
 1.4.0
 =====
 Apr 11 2016, 4:49 PM GMT+10 (AEST)
-- Add support for accepting and dismissing browser popup boxes. New DSL includes:
+- Add support for accepting and dismissing browser popup boxes (PR #21). New DSL includes:
   - I <accept|dismiss> the <alert|confirmation> popup
-- Add ability to switch between parent and child windows. New DSL includes:
+- Add ability to switch between parent and child windows (PR #22). New DSL includes:
   - I switch to the child window
   - I close the child window
   - I switch to the parent window
-- Avoid contiguous duplicate screenshots 
+- Avoid contiguous duplicate screenshots (PR #23)
   - Solution was to discard the current screenshot if its size in bytes matches that 
     of the last captured screenshot.
   - This feature is now on by default. It can be turned off by setting: 
