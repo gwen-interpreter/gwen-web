@@ -90,7 +90,10 @@ trait DriverManager extends LazyLogging {
     */
   private[web] def switchToChild(driver: WebDriver) {
     import collection.JavaConversions._
-    val children = driver.getWindowHandles.filter(window => windows.forall(_ != window))
+    val children = driver.getWindowHandles.filter(window => windows.forall(_ != window)).toList match {
+      case Nil if windows.size > 1 => windows.init
+      case cs => cs
+    }
     if (children.size == 1) {
       switchToWindow(children.head, true)
     } else if (children.size > 1) {
@@ -108,7 +111,7 @@ trait DriverManager extends LazyLogging {
   private def switchToWindow(handle: String, isChild: Boolean) {
     logger.info(s"Switching to ${if (isChild) "child" else "parent"} window ($handle)")
     drivers.get(session).fold(noSuchWindowError("Cannot switch to window: no windows currently open")) { _.switchTo.window(handle) }
-    windows push handle
+    pushWindow(handle)
   }
   
   private[web] def closeChild() {
@@ -129,9 +132,15 @@ trait DriverManager extends LazyLogging {
       val child = windows.pop
       val target = if (windows.nonEmpty) windows.top else child
       switchToWindow(target, false)
-      if (!childClosed) { windows push child }
+      if (!childClosed) { pushWindow(child) }
     } else {
       logger.warn("Bypassing switch to parent window: no child window currently open")
+    }
+  }
+  
+  private def pushWindow(window: String) {
+    if (windows.isEmpty || windows.top != window) {
+      windows push window
     }
   }
     
