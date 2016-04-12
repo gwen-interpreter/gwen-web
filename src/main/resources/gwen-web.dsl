@@ -30,24 +30,28 @@ the page title should start with "<value>"
 the page title should end with "<value>"
 the page title should match regex "<expression>"
 the page title should match xpath "<expression>"
+the page title should match json path "<expression>"
 the page title should not be "<value>"
 the page title should not contain "<value>"
 the page title should not start with "<value>"
 the page title should not end with "<value>"
 the page title should not match regex "<expression>"
 the page title should not match xpath "<expression>"
+the page title should not match json path "<expression>"
 the page title should be <reference>
 the page title should contain <reference>
 the page title should start with <reference>
 the page title should end with <reference>
 the page title should match regex <reference>
 the page title should match xpath <reference>
+the page title should match json path <reference>
 the page title should not be <reference>
 the page title should not contain <reference>
 the page title should not start with <reference>
 the page title should not end with <reference>
 the page title should not match regex <reference>
 the page title should not match xpath <reference>
+the page title should not match json path <reference>
 <element> should be displayed
 <element> should be hidden
 <element> should be checked
@@ -66,76 +70,89 @@ the page title should not match xpath <reference>
 <reference> should end with "<value>"
 <reference> should match regex "<expression>"
 <reference> should match xpath "<expression>"
+<reference> should match json path "<expression>"
 <reference> should not be "<value>"
 <reference> should not contain "<value>"
 <reference> should not start with "<value>"
 <reference> should not end with "<value>"
 <reference> should not match regex "<expression>"
 <reference> should not match xpath "<expression>"
+<reference> should not match json path "<expression>"
 <reference> should be <reference>
 <reference> should contain <reference>
 <reference> should start with <reference>
 <reference> should end with <reference>
 <reference> should match regex <reference>
 <reference> should match xpath <reference>
+<reference> should match json path <reference>
 <reference> should not be <reference>
 <reference> should not contain <reference>
 <reference> should not start with <reference>
 <reference> should not end with <reference>
 <reference> should not match regex <reference>
 <reference> should not match xpath <reference>
+<reference> should not match json path <reference>
 <dropdown> text should be "<value>"
 <dropdown> text should contain "<value>"
 <dropdown> text should start with "<value>"
 <dropdown> text should end with "<value>"
 <dropdown> text should match regex "<expression>"
 <dropdown> text should match xpath "<expression>"
+<dropdown> content should match json path "<expression>"
 <dropdown> text should not be "<value>"
 <dropdown> text should not contain "<value>"
 <dropdown> text should not start with "<value>"
 <dropdown> text should not end with "<value>"
 <dropdown> text should not match regex "<expression>"
 <dropdown> text should not match xpath "<expression>"
+<dropdown> content should not match json path "<expression>"
 <dropdown> text should be <reference>
 <dropdown> text should contain <reference>
 <dropdown> text should start with <reference>
 <dropdown> text should end with <reference>
 <dropdown> text should match regex <reference>
 <dropdown> text should match xpath <reference>
+<dropdown> content should match json path <reference>
 <dropdown> text should not be <reference>
 <dropdown> text should not contain <reference>
 <dropdown> text should not start with <reference>
 <dropdown> text should not end with <reference>
 <dropdown> text should not match regex <reference>
 <dropdown> text should not match xpath <reference>
+<dropdown> content should not match json path <reference>
 <dropdown> value should be "<value>"
 <dropdown> value should contain "<value>"
 <dropdown> value should start with "<value>"
 <dropdown> value should end with "<value>"
 <dropdown> value should match regex "<expression>"
 <dropdown> value should match xpath "<expression>"
+<dropdown> value should match json path "<expression>"
 <dropdown> value should not be "<value>"
 <dropdown> value should not contain "<value>"
 <dropdown> value should not start with "<value>"
 <dropdown> value should not end with "<value>"
 <dropdown> value should not match regex "<expression>"
 <dropdown> value should not match xpath "<expression>"
+<dropdown> value should not match json path "<expression>"
 <dropdown> value should be <reference>
 <dropdown> value should contain <reference>
 <dropdown> value should start with <reference>
 <dropdown> value should end with <reference>
 <dropdown> value should match regex <reference>
 <dropdown> value should match xpath <reference>
+<dropdown> value should match json path <reference>
 <dropdown> value should not be <reference>
 <dropdown> value should not contain <reference>
 <dropdown> value should not start with <reference>
 <dropdown> value should not end with <reference>
 <dropdown> value should not match regex <reference>
 <dropdown> value should not match xpath <reference>
+<dropdown> value should not match json path <reference>
 I capture the text in <reference> by xpath "<expression>" as <reference>
 I capture the node in <reference> by xpath "<expression>" as <reference>
 I capture the nodeset in <reference> by xpath "<expression>" as <reference>
 I capture the text in <reference> by regex "<expression>" as <reference>
+I capture the content in <reference> by json path "<expression>" as <reference>
 I capture the current URL
 I capture the current URL as <reference>
 I capture <reference> as <reference>
@@ -163,6 +180,8 @@ my <name> setting will be "<value>"
 <reference> will be defined by the nodeset in <reference> by xpath "<expression>"
 <reference> is defined in <reference> by regex "<expression>"
 <reference> will be defined in <reference> by regex "<expression>"
+<reference> is defined in <reference> by json path "<expression>"
+<reference> will be defined in <reference> by json path "<expression>"
 <reference> is "<value>"
 <reference> will be "<value>"
 I wait for <element> text for 1 second

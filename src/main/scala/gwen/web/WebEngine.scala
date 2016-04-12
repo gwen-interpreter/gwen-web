@@ -222,11 +222,11 @@ trait WebEngine extends EvalEngine[WebEnvContext]
         env.scopes.set(s"$element/locator/$locator", expression)
         env.scopes.set(s"$element/locator/$locator/container", container)
 
-      case r"""the page title should( not)?$negation (be|contain|start with|end with|match regex|match xpath)$operator "(.*?)"$$$expression""" =>  env.execute {
+      case r"""the page title should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator "(.*?)"$$$expression""" =>  env.execute {
         compare("title", expression, () => env.getTitle, operator, Option(negation).isDefined, env)
       }
         
-      case r"""the page title should( not)?$negation (be|contain|start with|end with|match regex|match xpath)$operator (.+?)$$$attribute""" => {
+      case r"""the page title should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$$$attribute""" => {
         val expected = env.getAttribute(attribute)
         env.execute {
           compare("title", expected, () => env.getTitle, operator, Option(negation).isDefined, env)
@@ -252,7 +252,7 @@ trait WebEngine extends EvalEngine[WebEnvContext]
         }
       }
         
-      case r"""(.+?)$element( text| value)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath)$operator "(.*?)"$$$expression""" => {
+      case r"""(.+?)$element( text| value)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator "(.*?)"$$$expression""" => {
         if (element == "I") undefinedStepError(step)
         val actual = () => Option(selection) match {
           case None => env.getBoundReferenceValue(element)
@@ -263,7 +263,7 @@ trait WebEngine extends EvalEngine[WebEnvContext]
         }
       }
         
-      case r"""(.+?)$element( value| text)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath)$operator (.+?)$$$attribute""" => {
+      case r"""(.+?)$element( value| text)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$$$attribute""" => {
         if (element == "I") undefinedStepError(step)
         val expected = env.getAttribute(attribute)
         val actual = () => Option(selection) match {
@@ -287,6 +287,13 @@ trait WebEngine extends EvalEngine[WebEnvContext]
         env.featureScope.set(name, env.execute(env.extractByRegex(expression, src) tap { content => 
           env.addAttachment(name, "txt", content) 
         }).getOrElse(s"$$[regex:$expression"))
+      }
+      
+      case r"""I capture the content in (.+?)$source by json path "(.+?)"$expression as (.+?)$$$name""" => {
+        val src = env.getBoundReferenceValue(source)
+        env.featureScope.set(name, env.execute(env.evaluateJsonPath(expression, src) tap { content => 
+          env.addAttachment(name, "txt", content) 
+        }).getOrElse(s"$$[json path:$expression"))
       }
       
       case r"""I capture the current URL""" => 
@@ -342,6 +349,10 @@ trait WebEngine extends EvalEngine[WebEnvContext]
       case r"""(.+?)$attribute (?:is|will be) defined in (.+?)$source by regex "(.+?)"$$$expression""" => 
         env.scopes.set(s"$attribute/regex/source", source)
         env.scopes.set(s"$attribute/regex/expression", expression)
+        
+      case r"""(.+?)$attribute (?:is|will be) defined in (.+?)$source by json path "(.+?)"$$$expression""" => 
+        env.scopes.set(s"$attribute/json path/source", source)
+        env.scopes.set(s"$attribute/json path/expression", expression)
       
       case r"""I clear (.+?)$$$element""" => {
         val elementBinding = env.getLocatorBinding(element)
@@ -509,7 +520,7 @@ trait WebEngine extends EvalEngine[WebEnvContext]
     * Compares the value of an element with an expected value.
     * 
     * @param element the name of the element to compare from
-    * @param expected the expected value, regex, or xpath
+    * @param expected the expected value, regex, xpath, or json path
     * @param actual the actual value of the element
     * @param operator the comparison operator
     * @param negate true to negate the result
@@ -529,6 +540,7 @@ trait WebEngine extends EvalEngine[WebEnvContext]
             case "end with" => actualValue.endsWith(expected)
             case "match regex" => actualValue.matches(expected)
             case "match xpath" => !env.evaluateXPath(expected, actualValue, env.XMLNodeType.text).isEmpty()
+            case "match json path" => !env.evaluateJsonPath(expected, actualValue).isEmpty()
           }
           if (!negate) res else !res
         } else false

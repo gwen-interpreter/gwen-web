@@ -1,6 +1,6 @@
 1.4.0
 =====
-Apr 11 2016, 4:49 PM GMT+10 (AEST)
+Apr 12 2016, 10:55 PM GMT+10 (AEST)
 - Add support for accepting and dismissing browser popup boxes (PR #21). New DSL includes:
   - I <accept|dismiss> the <alert|confirmation> popup
 - Add ability to switch between parent and child windows (PR #22). New DSL includes:
@@ -12,7 +12,16 @@ Apr 11 2016, 4:49 PM GMT+10 (AEST)
     of the last captured screenshot.
   - This feature is now on by default. It can be turned off by setting: 
       gwen.web.capture.screenshots.duplicates=true
-- Updated Gwen from v1.1.1 to v[1.1.2](https://github.com/gwen-interpreter/gwen/releases/tag/v1.1.2)
+- Added support for JSON path matching using library: https://github.com/jayway/JsonPath
+  - New DSL includes:
+    - the page title <should|should not> match json path "<expression>"
+    - the page title <should|should not> match json path <attribute>
+    - <element|attribute> <should|should not> match json path "<expression>"
+    - <dropdown> <text|value> <should|should not> match json path "<expression>"
+    - <dropdown> <text|value> <should|should not> match json path <attribute>
+    - I capture the content in <element|attribute|property> by json path "<expression>" as <attribute>
+    - <attribute> <is|will be> defined in <source> by json path "<expression>"
+- Updated Gwen from v1.1.1 to v[1.2.0](https://github.com/gwen-interpreter/gwen/releases/tag/v1.1.2)
   - To pick up sequence counter number fix for all attachment filenames
 - Update bundled selenium webdriver from v2.51.0 to v2.53.0
 

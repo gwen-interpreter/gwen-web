@@ -48,6 +48,7 @@ import scala.io.Source
 import scala.sys.process._
 import scala.collection.JavaConverters._
 import org.openqa.selenium.interactions.Actions
+import gwen.eval.support.JsonPathSupport
 
 /**
   * Defines the web environment context. This includes the configured selenium web
@@ -55,7 +56,8 @@ import org.openqa.selenium.interactions.Actions
   *
   *  @author Branko Juric
   */
-class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) extends EnvContext(options, scopes) with WebElementLocator with DriverManager with RegexSupport with XPathSupport {
+class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) extends EnvContext(options, scopes) 
+  with WebElementLocator with DriverManager with RegexSupport with XPathSupport with JsonPathSupport {
 
    Try(logger.info(s"SELENIUM_HOME = ${sys.env("SELENIUM_HOME")}"))
   
@@ -374,10 +376,16 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
         case None | Some("") => scopes.getOpt(s"$name/javascript") match {
           case None | Some("") => scopes.getOpt(s"$name/xpath") match {
             case None | Some("") => scopes.getOpt(s"$name/regex") match {
-              case None | Some("") => scopes.getOpt(s"$name/sysproc") match {
-                case None | Some("") => execute(super.getBoundReferenceValue(name)).getOrElse(Try(super.getBoundReferenceValue(name)).getOrElse(Try(getLocatorBinding(name).lookup).getOrElse(unboundAttributeError(name))))
-                case Some(sysproc) =>
-                  execute(sysproc.!!).map(_.trim).getOrElse(s"$$[sysproc:$sysproc]")
+              case None | Some("") => scopes.getOpt(s"$name/json path") match {
+                case None | Some("") => scopes.getOpt(s"$name/sysproc") match {
+                  case None | Some("") => execute(super.getBoundReferenceValue(name)).getOrElse(Try(super.getBoundReferenceValue(name)).getOrElse(Try(getLocatorBinding(name).lookup).getOrElse(unboundAttributeError(name))))
+                  case Some(sysproc) =>
+                    execute(sysproc.!!).map(_.trim).getOrElse(s"$$[sysproc:$sysproc]")
+                }
+                case _ =>
+                  val source = interpolate(getBoundReferenceValue(scopes.get(s"$name/json path/source")))(getBoundReferenceValue)
+                  val expression = interpolate(getBoundReferenceValue(scopes.get(s"$name/json path/expression")))(getBoundReferenceValue)
+                  execute(evaluateJsonPath(expression, source)).getOrElse(s"$$[json path:$expression]")
               }
               case _ =>
                 val source = interpolate(getBoundReferenceValue(scopes.get(s"$name/regex/source")))(getBoundReferenceValue)
