@@ -1,3 +1,15 @@
+1.4.1
+=====
+May 24, 2016, 7.24 PM GMT+10 (AEST)
+- Updated Gwen from v1.2.0 to v[1.2.1](https://github.com/gwen-interpreter/gwen/releases/tag/v1.1.1)
+  To pick up the following:
+  - Fixed tag filtering to accept tagged features and scenarios that have at 
+    least one specified include tag and exclude all specified exclude tags. 
+    The specified include and exclude tags are now partitioned and evaluated 
+    separately (as per above) instead of being logically ANDed together from 
+    left to right. Fixed #24
+  - Only dump environment on failure when in batch mode
+
 1.4.0
 =====
 Apr 12 2016, 10:55 PM GMT+10 (AEST)
