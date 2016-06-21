@@ -1,7 +1,23 @@
+1.5.0
+=====
+- Updated Gwen from v1.2.1 to v[1.3.0](https://github.com/gwen-interpreter/gwen/releases/tag/v1.3.0)
+  - User request gwen-interpreter/gwen#21
+    - Implemented ability to load multiple meta files in directories
+      instead of just one
+  - Fix issue gwen-interpreter/gwen#23 
+    - Raise ambigious error if a step resolves to more than one StepDef at runtime
+  - Fix issue gwen-interpreter/gwen#24
+    - Change stepdef parameter interpolation for dry run mode so that 
+      `$<name>` becomes `$[param:name]` (otherwise it forever recurses)
+  - Implement enhancement gwen-interpreter/#25
+  	- Add support for passing directories to the `-m/--meta` option instead of 
+      just files. All meta files within a specified directory will be recursively 
+      loaded.
+  
 1.4.1
 =====
 May 24, 2016, 7.24 PM GMT+10 (AEST)
-- Updated Gwen from v1.2.0 to v[1.2.1](https://github.com/gwen-interpreter/gwen/releases/tag/v1.1.1)
+- Updated Gwen from v1.2.0 to v[1.2.1](https://github.com/gwen-interpreter/gwen/releases/tag/v1.2.1)
   To pick up the following:
   - Fixed tag filtering to accept tagged features and scenarios that have at 
     least one specified include tag and exclude all specified exclude tags. 

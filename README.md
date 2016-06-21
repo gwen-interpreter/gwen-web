@@ -13,11 +13,11 @@ specifications instead of code.
   - [FAQ](https://github.com/gwen-interpreter/gwen-web/wiki/FAQ)
   - [Blog](https://gweninterpreter.wordpress.com)
 
-#### Current Status
+### Current Status
 
 [![Build Status](https://travis-ci.org/gwen-interpreter/gwen-web.svg?branch=master)](https://travis-ci.org/gwen-interpreter/gwen-web)
 
-- Current release: [1.4.1](https://github.com/gwen-interpreter/gwen-web/releases/tag/v1.4.1)
+- [Latest release](https://github.com/gwen-interpreter/gwen-web/releases/latest)
 - [Change log](CHANGELOG)
 
 Core Requirements
