@@ -1,8 +1,15 @@
 
-1.5.1
+1.6.0
 =====
 Jul 15, 2016, 10:50 PM GMT+10 (AEST)
 - Update web driver from 2.53.0 to 2.53.1 to support Firefox 47.0.1+
+- Add DSL for capturing the current screenshot on demand
+  - `I capture the current screenshot`
+- Updated Gwen from v1.3.0 to v[1.3.1](https://github.com/gwen-interpreter/gwen/releases/tag/v1.3.1)
+  - Wrap list of meta that is displayed in HTML detail reports with a 
+    collapsable container that is hidden by default and can be expanded when 
+    user clicks the 'no of meta files' hyperlink.
+  - Link version number in report to release notes
 
 1.5.0
 =====

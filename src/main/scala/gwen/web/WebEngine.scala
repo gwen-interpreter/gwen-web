@@ -304,6 +304,11 @@ trait WebEngine extends EvalEngine[WebEnvContext]
           env.addAttachment(name, "txt", content) 
         }).getOrElse("$[currentUrl]"))
         
+      case r"""I capture the current screenshot""" => 
+        env.execute {
+          env.captureScreenshot(true)
+        }
+        
       case r"""I capture (.+?)$element( value| text)?$selection as (.+?)$attribute""" =>
         val value = Option(selection) match {
           case None => env.getBoundReferenceValue(element)

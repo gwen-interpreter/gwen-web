@@ -264,3 +264,4 @@ I dismiss the confirmation popup
 I switch to the child window
 I close the child window
 I switch to the parent window
+I capture the current screenshot
