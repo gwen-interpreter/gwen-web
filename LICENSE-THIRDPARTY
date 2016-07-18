@@ -46,7 +46,7 @@ com.jayway.jsonpath         json-path                | 2.2.0       | [Apache Lic
 net.minidev                 accessors-smart          | 1.1         | [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt) 
 net.minidev                 json-smart               | 2.2.1       | [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt) 
 org.scala-stm               scala-stm_2.11           | 0.7         | [BSD](https://github.com/nbronson/scala-stm/blob/master/LICENSE.txt) 
-org.scala-lang              scala-library            | 2.11.7      | [BSD 3-Clause](http://www.scala-lang.org/license.html)
+org.scala-lang              scala-library            | 2.11.8      | [BSD 3-Clause](http://www.scala-lang.org/license.html)
 org.scala-lang              scala-reflect            | 2.11.1      | [BSD 3-Clause](http://www.scala-lang.org/license.html)
 org.webbitserver            webbit                   | 0.4.14      | [BSD License](https://github.com/webbit/webbit/blob/master/LICENSE)
 org.ow2.asm                 asm                      | 5.0.3       | [BSD License](http://asm.objectweb.org/license.html)

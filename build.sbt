@@ -14,7 +14,7 @@ organizationHomepage := Some(url("http://gweninterpreter.org"))
 
 startYear := Some(2014)
 
-scalaVersion := "2.11.7"
+scalaVersion := "2.11.8"
 
 crossPaths := false
 

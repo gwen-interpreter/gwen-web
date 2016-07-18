@@ -1,8 +1,9 @@
 1.6.1
 =====
-Jul 18, 2016, 9:30 PM GMT+10 (AEST)
+Jul 18, 2016, 9:12 PM GMT+10 (AEST)
 - Updated Gwen from v1.3.1 to v[1.3.2](https://github.com/gwen-interpreter/gwen/releases/tag/v1.3.2)
   - Fix version hyperlink in report 
+- Update scala version from 2.11.7 to 2.11.8
 
 1.6.0
 =====
