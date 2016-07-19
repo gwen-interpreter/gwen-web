@@ -1019,7 +1019,9 @@ a:visited {
 			</div>
 			<div id="collapse-52" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-52">
 				<div class="panel-body">
-					Repeatedly performs the given step until a condition is satisfied
+					Repeatedly performs the given step until a condition is satisfied.
+					The delay between iterations is one tenth of the configured <code>gwen.web.wait.seconds</code> setting (or 1 second if not set)
+					The total timeout period is 3 times the configured <code>gwen.web.wait.seconds</code> setting (or 30 seconds if not set)
 					<ul>
 						<li><code>&lt;step&gt;</code> = the step to repeat</li>
 						<li><code>&lt;condition&gt;</code> = the name of the bound attribute containing a javascript predicate expression</li>
@@ -1038,7 +1040,9 @@ a:visited {
 			</div>
 			<div id="collapse-53" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-53">
 				<div class="panel-body">
-					Repeatedly performs the given step while a condition is satisfied
+					Repeatedly performs the given step while a condition is satisfied. 
+					The delay between iterations is one tenth of the configured <code>gwen.web.wait.seconds</code> setting (or 1 second if not set)
+					The total timeout period is 3 times the configured <code>gwen.web.wait.seconds</code> setting (or 30 seconds if not set)
 					<ul>
 						<li><code>&lt;step&gt;</code> = the step to repeat</li>
 						<li><code>&lt;condition&gt;</code> = the name of the bound attribute containing a javascript predicate expression</li>
@@ -1392,7 +1396,7 @@ a:visited {
 		<div class="panel panel-default">
 			<div class="panel-heading" role="tab" id="dsl-1-6_1">
 				<h4 class="panel-title">
-					<a role="button" data-toggle="collapse" data-parent="#accordion3" href="#collapse-1-6_1" aria-expanded="true" aria-controls="collapseOne">
+					<a role="button" data-toggle="collapse" data-parent="#accordion6" href="#collapse-1-6_1" aria-expanded="true" aria-controls="collapseOne">
 					I capture the current screenshot
 					</a>
 				</h4>

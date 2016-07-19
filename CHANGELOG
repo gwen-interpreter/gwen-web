@@ -1,3 +1,9 @@
+1.6.2
+=====
+Jul 19, 2016, 8:26 PM GMT+10 (AEST)
+- Bug fix for user issue #26
+  - Support dynamically changing conditions in repeat-until and repeat-while steps
+
 1.6.1
 =====
 Jul 18, 2016, 9:12 PM GMT+10 (AEST)

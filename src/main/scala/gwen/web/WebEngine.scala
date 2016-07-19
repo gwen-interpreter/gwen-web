@@ -126,61 +126,11 @@ trait WebEngine extends EvalEngine[WebEnvContext]
       }
       
       case r"""(.+?)$doStep until (.+?)$$$condition""" => 
-        val javascript = env.scopes.get(s"$condition/javascript")
-        env.execute {
-          var attempt = 0
-          env.waitUntil(s"Repeating until $condition", 3 * WebSettings.`gwen.web.wait.seconds`) {
-            attempt = attempt + 1
-            evaluateStep(Step(step.keyword, doStep), env).evalStatus match {
-              case Failed(_, e) => throw e
-              case _ => 
-                env.executeScript(s"return ${javascript}").asInstanceOf[Boolean] tap { result =>
-                  if (!result) {
-                    val delayMsecs = WebSettings.`gwen.web.wait.seconds` * 100
-                    val delaySecs = delayMsecs / 1000
-                    logger.info(s"Repeat-until[$attempt] not completed ..will try again in ${delaySecs} second${if (delaySecs != 1) "s" else ""}")
-                    Thread.sleep(delayMsecs)
-                  } else {
-                    logger.info(s"Repeat-until[$attempt] completed")
-                  }
-                }
-            }
-          }
-        } getOrElse { 
-          this.evaluateStep(Step(step.keyword, doStep), env).evalStatus match {
-            case Failed(_, e) => throw e
-            case _ => step
-          }
-        }
+        repeatUntil(step, doStep, condition, WebSettings.`gwen.web.wait.seconds` * 100, 3 * WebSettings.`gwen.web.wait.seconds`, env)
         
       case r"""(.+?)$doStep while (.+?)$$$condition""" => 
-        val javascript = env.scopes.get(s"$condition/javascript")
-        env.execute {
-          var attempt = 0
-          env.waitUntil(s"Repeating while $condition", 3 * WebSettings.`gwen.web.wait.seconds`) {
-            attempt = attempt + 1
-            val result = env.executeScript(s"return ${javascript}").asInstanceOf[Boolean]
-            if (result) {
-              evaluateStep(Step(step.keyword, doStep), env).evalStatus match {
-                case Failed(_, e) => throw e
-                case _ => 
-                  val delayMsecs = WebSettings.`gwen.web.wait.seconds` * 100
-                  val delaySecs = delayMsecs / 1000
-                  logger.info(s"Repeat-while[$attempt] not completed ..will try again in ${delaySecs} second${if (delaySecs != 1) "s" else ""}")
-                  Thread.sleep(delayMsecs)
-              }
-            } else {
-              logger.info(s"Repeat-while[$attempt] completed")
-            }
-            !result
-          }
-        } getOrElse { 
-          this.evaluateStep(Step(step.keyword, doStep), env).evalStatus match {
-            case Failed(_, e) => throw e
-            case _ => step
-          } 
-        }
-      
+        repeatWhile(step, doStep, condition, WebSettings.`gwen.web.wait.seconds` * 100, 3 * WebSettings.`gwen.web.wait.seconds`, env)
+        
       case r"""I am on the (.+?)$$$page""" =>
         env.scopes.addScope(page)
         
@@ -553,6 +503,64 @@ trait WebEngine extends EvalEngine[WebEnvContext]
     }.isSuccess
     if (!negate) assert(result, s"Expected ${if(operator == "be") s"'$expected' but got '$actualValue'" else s"'$actualValue' to $operator '$expected'"}")
     else assert(result, s"Did not expect '$actualValue'${if(operator == "be") "" else s" to $operator '$expected'"}")
+  }
+  
+  private def repeatUntil(step: Step, doStep: String, condition: String, delayMsecs: Long, timeoutSecs: Long, env: WebEnvContext) {
+    var javascript = env.scopes.get(s"$condition/javascript")
+    env.execute {
+      val delaySecs = delayMsecs / 1000
+      var attempt = 0
+      env.waitUntil(s"Repeating until $condition", timeoutSecs) {
+        attempt = attempt + 1
+        evaluateStep(Step(step.keyword, doStep), env).evalStatus match {
+          case Failed(_, e) => throw e
+          case _ =>
+            env.executeScript(s"return ${javascript}").asInstanceOf[Boolean] tap { result =>
+              if (!result) {
+                logger.info(s"Repeat-until[$attempt] not completed ..will try again in ${delaySecs} second${if (delaySecs != 1) "s" else ""}")
+                Thread.sleep(delayMsecs)
+                javascript = env.scopes.get(s"$condition/javascript")
+              } else {
+                logger.info(s"Repeat-until[$attempt] completed")
+              }
+            }
+        }
+      }
+    } getOrElse { 
+      this.evaluateStep(Step(step.keyword, doStep), env).evalStatus match {
+        case Failed(_, e) => throw e
+        case _ => step
+      }
+    }
+  }
+  
+  private def repeatWhile(step: Step, doStep: String, condition: String, delayMsecs: Long, timeoutSecs: Long, env: WebEnvContext) {
+    var javascript = env.scopes.get(s"$condition/javascript")
+    env.execute {
+      val delaySecs = delayMsecs / 1000
+      var attempt = 0
+      env.waitUntil(s"Repeating while $condition", timeoutSecs) {
+        attempt = attempt + 1
+        val result = env.executeScript(s"return ${javascript}").asInstanceOf[Boolean]
+        if (result) {
+          evaluateStep(Step(step.keyword, doStep), env).evalStatus match {
+            case Failed(_, e) => throw e
+            case _ => 
+              logger.info(s"Repeat-while[$attempt] not completed ..will try again in ${delaySecs} second${if (delaySecs != 1) "s" else ""}")
+              Thread.sleep(delayMsecs)
+              javascript = env.scopes.get(s"$condition/javascript")
+          }
+        } else {
+          logger.info(s"Repeat-while[$attempt] completed")
+        }
+        !result
+      }
+    } getOrElse { 
+      this.evaluateStep(Step(step.keyword, doStep), env).evalStatus match {
+        case Failed(_, e) => throw e
+        case _ => step
+      } 
+    }
   }
   
 }
