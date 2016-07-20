@@ -250,7 +250,45 @@ I execute a unix system process "<command>"
 I refresh the current page
 I base64 decode <reference> as <attribute>
 I base64 decode <reference>
+<step> until <condition> using <delayPeriod> second delay and <timeoutPeriod> minute timeout
+<step> until <condition> using <delayPeriod> second delay and <timeoutPeriod> second timeout
+<step> until <condition> using <delayPeriod> second delay and <timeoutPeriod> millisecond timeout
+<step> until <condition> using <delayPeriod> millisecond delay and <timeoutPeriod> minute timeout
+<step> until <condition> using <delayPeriod> millisecond delay and <timeoutPeriod> second timeout
+<step> until <condition> using <delayPeriod> millisecond delay and <timeoutPeriod> millisecond timeout
+<step> until <condition> using <delayPeriod> second delay
+<step> until <condition> using <delayPeriod> millisecond delay
+<step> until <condition> using <timeoutPeriod> minute timeout
+<step> until <condition> using <timeoutPeriod> second timeout
+<step> until <condition> using <timeoutPeriod> millisecond timeout
+<step> until <condition> using no delay and <timeoutPeriod> minute timeout
+<step> until <condition> using no delay and <timeoutPeriod> second timeout
+<step> until <condition> using no delay and <timeoutPeriod> millisecond timeout
+<step> until <condition> using <delayPeriod> second delay and no timeout
+<step> until <condition> using <delayPeriod> millisecond delay and no timeout
+<step> until <condition> using no delay
+<step> until <condition> using no timeout
+<step> until <condition> using no delay and no timeout
 <step> until <condition>
+<step> while <condition> using <delayPeriod> second delay and <timeoutPeriod> minute timeout
+<step> while <condition> using <delayPeriod> second delay and <timeoutPeriod> second timeout
+<step> while <condition> using <delayPeriod> second delay and <timeoutPeriod> millisecond timeout
+<step> while <condition> using <delayPeriod> millisecond delay and <timeoutPeriod> minute timeout
+<step> while <condition> using <delayPeriod> millisecond delay and <timeoutPeriod> second timeout
+<step> while <condition> using <delayPeriod> millisecond delay and <timeoutPeriod> millisecond timeout
+<step> while <condition> using <delayPeriod> second delay
+<step> while <condition> using <delayPeriod> millisecond delay
+<step> while <condition> using <timeoutPeriod> minute timeout
+<step> while <condition> using <timeoutPeriod> second timeout
+<step> while <condition> using <timeoutPeriod> millisecond timeout
+<step> while <condition> using no delay and <timeoutPeriod> minute timeout
+<step> while <condition> using no delay and <timeoutPeriod> second timeout
+<step> while <condition> using no delay and <timeoutPeriod> millisecond timeout
+<step> while <condition> using <delayPeriod> second delay and no timeout
+<step> while <condition> using <delayPeriod> millisecond delay and no timeout
+<step> while <condition> using no delay
+<step> while <condition> using no timeout
+<step> while <condition> using no delay and no timeout
 <step> while <condition>
 I close the current browser
 I close the browser

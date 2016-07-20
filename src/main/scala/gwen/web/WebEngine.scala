@@ -37,6 +37,8 @@ import org.openqa.selenium.By
 import scala.util.Try
 import scala.util.Failure
 import org.openqa.selenium.interactions.Actions
+import scala.concurrent.duration.Duration
+import gwen.Predefs.Formatting._
 
 /**
   * A web engine that uses the Selenium web driver
@@ -125,12 +127,35 @@ trait WebEngine extends EvalEngine[WebEnvContext]
         }
       }
       
-      case r"""(.+?)$doStep until (.+?)$$$condition""" => 
-        repeatUntil(step, doStep, condition, WebSettings.`gwen.web.wait.seconds` * 100, 3 * WebSettings.`gwen.web.wait.seconds`, env)
+      case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using no delay and (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit timeout""" =>
+        repeat(operation, step, doStep, condition, Duration.Zero, Duration(timeoutPeriod.toLong, timeoutUnit), env)
         
-      case r"""(.+?)$doStep while (.+?)$$$condition""" => 
-        repeatWhile(step, doStep, condition, WebSettings.`gwen.web.wait.seconds` * 100, 3 * WebSettings.`gwen.web.wait.seconds`, env)
+        case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using (.+?)$delayPeriod (second|millisecond)$delayUnit delay and no timeout""" =>
+        val delayDuration = Duration(delayPeriod.toLong, delayUnit)
+        repeat(operation, step, doStep, condition, delayDuration, Duration.Inf, env)
         
+      case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using no delay and no timeout""" =>
+        repeat(operation, step, doStep, condition, Duration.Zero, Duration.Inf, env)
+        
+      case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using no delay""" =>
+        repeat(operation, step, doStep, condition, Duration.Zero, defaultRepeatTimeout(DefaultRepeatDelay), env)
+        
+      case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using no timeout""" =>
+        repeat(operation, step, doStep, condition, DefaultRepeatDelay, Duration.Inf, env)
+      
+      case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using (.+?)$delayPeriod (second|millisecond)$delayUnit delay and (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit timeout""" =>
+        repeat(operation, step, doStep, condition, Duration(delayPeriod.toLong, delayUnit), Duration(timeoutPeriod.toLong, timeoutUnit), env)
+        
+      case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using (.+?)$delayPeriod (second|millisecond)$delayUnit delay""" =>
+        val delayDuration = Duration(delayPeriod.toLong, delayUnit)
+        repeat(operation, step, doStep, condition, delayDuration, defaultRepeatTimeout(delayDuration), env)
+
+      case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit timeout""" =>
+        repeat(operation, step, doStep, condition, DefaultRepeatDelay, Duration(timeoutPeriod.toLong, timeoutUnit), env)
+        
+      case r"""(.+?)$doStep (until|while)$operation (.+?)$$$condition""" =>
+        repeat(operation, step, doStep, condition, DefaultRepeatDelay, defaultRepeatTimeout(DefaultRepeatDelay), env)
+
       case r"""I am on the (.+?)$$$page""" =>
         env.scopes.addScope(page)
         
@@ -505,25 +530,53 @@ trait WebEngine extends EvalEngine[WebEnvContext]
     else assert(result, s"Did not expect '$actualValue'${if(operator == "be") "" else s" to $operator '$expected'"}")
   }
   
-  private def repeatUntil(step: Step, doStep: String, condition: String, delayMsecs: Long, timeoutSecs: Long, env: WebEnvContext) {
+  /**
+    * Performs a repeat until or while operation 
+    */
+  private def repeat(operation: String, step: Step, doStep: String, condition: String, delay: Duration, timeout: Duration, env: WebEnvContext) {
+    assert(delay.gteq(Duration.Zero), "delay cannot be less than zero")
+    assert(timeout.gt(Duration.Zero), "timeout must be greater than zero")
+    assert(timeout.gteq(delay), "timeout cannot be less than or equal to delay")
     var javascript = env.scopes.get(s"$condition/javascript")
     env.execute {
-      val delaySecs = delayMsecs / 1000
-      var attempt = 0
-      env.waitUntil(s"Repeating until $condition", timeoutSecs) {
+      var attempt = 0L
+      env.waitUntil(s"Repeating $operation $condition", timeout.toSeconds) {
         attempt = attempt + 1
-        evaluateStep(Step(step.keyword, doStep), env).evalStatus match {
-          case Failed(_, e) => throw e
-          case _ =>
-            env.executeScript(s"return ${javascript}").asInstanceOf[Boolean] tap { result =>
-              if (!result) {
-                logger.info(s"Repeat-until[$attempt] not completed ..will try again in ${delaySecs} second${if (delaySecs != 1) "s" else ""}")
-                Thread.sleep(delayMsecs)
-                javascript = env.scopes.get(s"$condition/javascript")
-              } else {
-                logger.info(s"Repeat-until[$attempt] completed")
-              }
+        operation match {
+          case "until" =>
+            evaluateStep(Step(step.keyword, doStep), env).evalStatus match {
+              case Failed(_, e) => throw e
+              case _ =>
+                env.executeScript(s"return ${javascript}").asInstanceOf[Boolean] tap { result =>
+                  if (!result) {
+                    logger.info(s"Repeat-until[$attempt] not completed")
+                    if (delay.gt(Duration.Zero)) {
+                      logger.info(s"..will try again in ${DurationFormatter.format(delay)}")
+                      Thread.sleep(delay.toMillis)
+                    }
+                    javascript = env.scopes.get(s"$condition/javascript")
+                  } else {
+                    logger.info(s"Repeat-until[$attempt] completed")
+                  }
+                }
             }
+          case "while" =>
+            val result = env.executeScript(s"return ${javascript}").asInstanceOf[Boolean]
+            if (result) {
+              evaluateStep(Step(step.keyword, doStep), env).evalStatus match {
+                case Failed(_, e) => throw e
+                case _ => 
+                  logger.info(s"Repeat-while[$attempt] not completed")
+                  if (delay.gt(Duration.Zero)) {
+                    logger.info(s"..will try again in ${DurationFormatter.format(delay)}")
+                    Thread.sleep(delay.toMillis)
+                  }
+                  javascript = env.scopes.get(s"$condition/javascript")
+              }
+            } else {
+              logger.info(s"Repeat-while[$attempt] completed")
+            }
+            !result
         }
       }
     } getOrElse { 
@@ -534,34 +587,12 @@ trait WebEngine extends EvalEngine[WebEnvContext]
     }
   }
   
-  private def repeatWhile(step: Step, doStep: String, condition: String, delayMsecs: Long, timeoutSecs: Long, env: WebEnvContext) {
-    var javascript = env.scopes.get(s"$condition/javascript")
-    env.execute {
-      val delaySecs = delayMsecs / 1000
-      var attempt = 0
-      env.waitUntil(s"Repeating while $condition", timeoutSecs) {
-        attempt = attempt + 1
-        val result = env.executeScript(s"return ${javascript}").asInstanceOf[Boolean]
-        if (result) {
-          evaluateStep(Step(step.keyword, doStep), env).evalStatus match {
-            case Failed(_, e) => throw e
-            case _ => 
-              logger.info(s"Repeat-while[$attempt] not completed ..will try again in ${delaySecs} second${if (delaySecs != 1) "s" else ""}")
-              Thread.sleep(delayMsecs)
-              javascript = env.scopes.get(s"$condition/javascript")
-          }
-        } else {
-          logger.info(s"Repeat-while[$attempt] completed")
-        }
-        !result
-      }
-    } getOrElse { 
-      this.evaluateStep(Step(step.keyword, doStep), env).evalStatus match {
-        case Failed(_, e) => throw e
-        case _ => step
-      } 
-    }
+  lazy val DefaultRepeatDelay: Duration = {
+    val waitSecs = WebSettings.`gwen.web.wait.seconds` 
+    if (waitSecs > 9 && waitSecs % 10 == 0) Duration(waitSecs / 10, "second") else Duration(waitSecs * 100, "millisecond")
   }
+  
+  private def defaultRepeatTimeout(delay: Duration): Duration = delay * 30
   
 }
 
