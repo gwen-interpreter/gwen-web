@@ -264,11 +264,7 @@ I base64 decode <reference>
 <step> until <condition> using no delay and <timeoutPeriod> minute timeout
 <step> until <condition> using no delay and <timeoutPeriod> second timeout
 <step> until <condition> using no delay and <timeoutPeriod> millisecond timeout
-<step> until <condition> using <delayPeriod> second delay and no timeout
-<step> until <condition> using <delayPeriod> millisecond delay and no timeout
 <step> until <condition> using no delay
-<step> until <condition> using no timeout
-<step> until <condition> using no delay and no timeout
 <step> until <condition>
 <step> while <condition> using <delayPeriod> second delay and <timeoutPeriod> minute timeout
 <step> while <condition> using <delayPeriod> second delay and <timeoutPeriod> second timeout
@@ -284,11 +280,7 @@ I base64 decode <reference>
 <step> while <condition> using no delay and <timeoutPeriod> minute timeout
 <step> while <condition> using no delay and <timeoutPeriod> second timeout
 <step> while <condition> using no delay and <timeoutPeriod> millisecond timeout
-<step> while <condition> using <delayPeriod> second delay and no timeout
-<step> while <condition> using <delayPeriod> millisecond delay and no timeout
 <step> while <condition> using no delay
-<step> while <condition> using no timeout
-<step> while <condition> using no delay and no timeout
 <step> while <condition>
 I close the current browser
 I close the browser

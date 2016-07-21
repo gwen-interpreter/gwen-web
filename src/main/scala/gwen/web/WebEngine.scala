@@ -130,19 +130,9 @@ trait WebEngine extends EvalEngine[WebEnvContext]
       case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using no delay and (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit timeout""" =>
         repeat(operation, step, doStep, condition, Duration.Zero, Duration(timeoutPeriod.toLong, timeoutUnit), env)
         
-        case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using (.+?)$delayPeriod (second|millisecond)$delayUnit delay and no timeout""" =>
-        val delayDuration = Duration(delayPeriod.toLong, delayUnit)
-        repeat(operation, step, doStep, condition, delayDuration, Duration.Inf, env)
-        
-      case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using no delay and no timeout""" =>
-        repeat(operation, step, doStep, condition, Duration.Zero, Duration.Inf, env)
-        
       case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using no delay""" =>
         repeat(operation, step, doStep, condition, Duration.Zero, defaultRepeatTimeout(DefaultRepeatDelay), env)
         
-      case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using no timeout""" =>
-        repeat(operation, step, doStep, condition, DefaultRepeatDelay, Duration.Inf, env)
-      
       case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using (.+?)$delayPeriod (second|millisecond)$delayUnit delay and (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit timeout""" =>
         repeat(operation, step, doStep, condition, Duration(delayPeriod.toLong, delayUnit), Duration(timeoutPeriod.toLong, timeoutUnit), env)
         
@@ -537,41 +527,36 @@ trait WebEngine extends EvalEngine[WebEnvContext]
     assert(delay.gteq(Duration.Zero), "delay cannot be less than zero")
     assert(timeout.gt(Duration.Zero), "timeout must be greater than zero")
     assert(timeout.gteq(delay), "timeout cannot be less than or equal to delay")
-    var javascript = env.scopes.get(s"$condition/javascript")
     env.execute {
       var attempt = 0L
       env.waitUntil(s"Repeating $operation $condition", timeout.toSeconds) {
         attempt = attempt + 1
         operation match {
           case "until" =>
+            logger.info(s"Repeat-until[$attempt]")
             evaluateStep(Step(step.keyword, doStep), env).evalStatus match {
               case Failed(_, e) => throw e
               case _ =>
+                val javascript = env.scopes.get(s"$condition/javascript")
                 env.executeScript(s"return ${javascript}").asInstanceOf[Boolean] tap { result =>
                   if (!result) {
-                    logger.info(s"Repeat-until[$attempt] not completed")
-                    if (delay.gt(Duration.Zero)) {
-                      logger.info(s"..will try again in ${DurationFormatter.format(delay)}")
-                      Thread.sleep(delay.toMillis)
-                    }
-                    javascript = env.scopes.get(s"$condition/javascript")
+                    logger.info(s"Repeat-until[$attempt] not completed, ..${if (delay.gt(Duration.Zero)) s"will try again in ${DurationFormatter.format(delay)}" else "trying again"}")
+                    Thread.sleep(delay.toMillis)
                   } else {
                     logger.info(s"Repeat-until[$attempt] completed")
                   }
                 }
             }
           case "while" =>
+            val javascript = env.scopes.get(s"$condition/javascript")
             val result = env.executeScript(s"return ${javascript}").asInstanceOf[Boolean]
             if (result) {
+              logger.info(s"Repeat-while[$attempt]")
               evaluateStep(Step(step.keyword, doStep), env).evalStatus match {
                 case Failed(_, e) => throw e
                 case _ => 
-                  logger.info(s"Repeat-while[$attempt] not completed")
-                  if (delay.gt(Duration.Zero)) {
-                    logger.info(s"..will try again in ${DurationFormatter.format(delay)}")
-                    Thread.sleep(delay.toMillis)
-                  }
-                  javascript = env.scopes.get(s"$condition/javascript")
+                  logger.info(s"Repeat-while[$attempt] not completed, ..${if (delay.gt(Duration.Zero)) s"will try again in ${DurationFormatter.format(delay)}" else "trying again"}")
+                  Thread.sleep(delay.toMillis)
               }
             } else {
               logger.info(s"Repeat-while[$attempt] completed")
@@ -580,6 +565,7 @@ trait WebEngine extends EvalEngine[WebEnvContext]
         }
       }
     } getOrElse { 
+      env.scopes.get(s"$condition/javascript")
       this.evaluateStep(Step(step.keyword, doStep), env).evalStatus match {
         case Failed(_, e) => throw e
         case _ => step

@@ -11,10 +11,7 @@ Jul 21, 2016, 12:36 AM GMT+10 (AEST)
     - `<step> <until|while> <condition> using <delayPeriod> <second|millisecond> delay`
     - `<step> <until|while> <condition> using <timeoutPeriod> <minute|second|millisecond> timeout`
     - `<step> <until|while> <condition> using no delay and <timeoutPeriod> <minute|second|millisecond> timeout`
-    - `<step> <until|while> <condition> using <delayPeriod> <second|millisecond> delay and no timeout`
-    - `<step> <until|while> <condition> using no delay and no timeout`
     - `<step> <until|while> <condition> using no delay`
-    - `<step> <until|while> <condition> using no timeout`
    
 1.6.1
 =====

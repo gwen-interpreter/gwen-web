@@ -1471,70 +1471,14 @@ a:visited {
 			<div class="panel-heading" role="tab" id="dsl-75">
 				<h4 class="panel-title">
 					<a role="button" data-toggle="collapse" data-parent="#accordion7" href="#collapse-75" aria-expanded="true" aria-controls="collapseOne">
-					<code>&lt;step&gt;</code> &lt;until|while&gt; <code>&lt;condition&gt;</code> using <code>&lt;delayPeriod&gt;</code> &lt;second|millisecond&gt; delay and no timeout
+					<code>&lt;step&gt;</code> &lt;until|while&gt; <code>&lt;condition&gt;</code> using no delay
 					</a>
 				</h4>
 			</div>
 			<div id="collapse-75" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-75">
 				<div class="panel-body">
-					Repeatedly performs the given step until or while a condition is satisfied, using explicit delay period and no timeout period.
-					<ul>
-						<li><code>&lt;step&gt;</code> = the step to repeat</li>
-						<li><code>&lt;condition&gt;</code> = the name of the bound attribute containing a javascript predicate expression</li>
-						<li><code>&lt;delayPeriod&gt;</code> = the time to wait between repeats</li>
-					</ul>
-				</div>
-			</div>
-		</div>
-		<div class="panel panel-default">
-			<div class="panel-heading" role="tab" id="dsl-76">
-				<h4 class="panel-title">
-					<a role="button" data-toggle="collapse" data-parent="#accordion7" href="#collapse-76" aria-expanded="true" aria-controls="collapseOne">
-					<code>&lt;step&gt;</code> &lt;until|while&gt; <code>&lt;condition&gt;</code> using no delay and no timeout
-					</a>
-				</h4>
-			</div>
-			<div id="collapse-76" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-76">
-				<div class="panel-body">
-					Repeatedly performs the given step until or while a condition is satisfied, using no delay or timeout period.
-					<ul>
-						<li><code>&lt;step&gt;</code> = the step to repeat</li>
-						<li><code>&lt;condition&gt;</code> = the name of the bound attribute containing a javascript predicate expression</li>
-					</ul>
-				</div>
-			</div>
-		</div>
-		<div class="panel panel-default">
-			<div class="panel-heading" role="tab" id="dsl-77">
-				<h4 class="panel-title">
-					<a role="button" data-toggle="collapse" data-parent="#accordion7" href="#collapse-77" aria-expanded="true" aria-controls="collapseOne">
-					<code>&lt;step&gt;</code> &lt;until|while&gt; <code>&lt;condition&gt;</code> using no delay
-					</a>
-				</h4>
-			</div>
-			<div id="collapse-77" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-77">
-				<div class="panel-body">
 					Repeatedly performs the given step until or while a condition is satisfied, using no delay period and default timeout period.
 					The default timeout period is 30 times the delay.
-					<ul>
-						<li><code>&lt;step&gt;</code> = the step to repeat</li>
-						<li><code>&lt;condition&gt;</code> = the name of the bound attribute containing a javascript predicate expression</li>
-					</ul>
-				</div>
-			</div>
-		</div>
-		<div class="panel panel-default">
-			<div class="panel-heading" role="tab" id="dsl-78">
-				<h4 class="panel-title">
-					<a role="button" data-toggle="collapse" data-parent="#accordion7" href="#collapse-78" aria-expanded="true" aria-controls="collapseOne">
-					<code>&lt;step&gt;</code> &lt;until|while&gt; <code>&lt;condition&gt;</code> using no timeout
-					</a>
-				</h4>
-			</div>
-			<div id="collapse-78" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-78">
-				<div class="panel-body">
-					Repeatedly performs the given step until or while a condition is satisfied, using default delay period and no timeout period.
-					The default delay between iterations is one tenth of the configured <code>gwen.web.wait.seconds</code> setting (or 1 second if not set)
 					<ul>
 						<li><code>&lt;step&gt;</code> = the step to repeat</li>
 						<li><code>&lt;condition&gt;</code> = the name of the bound attribute containing a javascript predicate expression</li>
