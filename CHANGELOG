@@ -1,7 +1,58 @@
+1.7.0
+=====
+Jul 21, 2016, 12:36 AM GMT+10 (AEST)
+- Updated Gwen from v1.3.2 to v[1.3.3](https://github.com/gwen-interpreter/gwen/releases/tag/v1.3.3)
+- Fix for user issue #26
+  - Support dynamically changing conditions in repeat-until and repeat-while steps
+- User request #27
+  - Added support for setting explicit delay and timeout periods in repeat-until and 
+    repeat-while steps. New DSL includes:
+    - `<step> <until|while> <condition> using <delayPeriod> <second|millisecond> delay and <timeoutPeriod> <minute|second|millisecond> timeout`
+    - `<step> <until|while> <condition> using <delayPeriod> <second|millisecond> delay`
+    - `<step> <until|while> <condition> using <timeoutPeriod> <minute|second|millisecond> timeout`
+    - `<step> <until|while> <condition> using no delay and <timeoutPeriod> <minute|second|millisecond> timeout`
+    - `<step> <until|while> <condition> using no delay`
+   
+1.6.1
+=====
+Jul 18, 2016, 9:12 PM GMT+10 (AEST)
+- Updated Gwen from v1.3.1 to v[1.3.2](https://github.com/gwen-interpreter/gwen/releases/tag/v1.3.2)
+  - Fix version hyperlink in report 
+- Update scala version from 2.11.7 to 2.11.8
+
+1.6.0
+=====
+Jul 15, 2016, 10:50 PM GMT+10 (AEST)
+- Update web driver from 2.53.0 to 2.53.1 to support Firefox 47.0.1+
+- Add DSL for capturing the current screenshot on demand
+  - `I capture the current screenshot`
+- Updated Gwen from v1.3.0 to v[1.3.1](https://github.com/gwen-interpreter/gwen/releases/tag/v1.3.1)
+  - Wrap list of meta that is displayed in HTML detail reports with a 
+    collapsable container that is hidden by default and can be expanded when 
+    user clicks the 'no of meta files' hyperlink.
+  - Link version number in report to release notes
+
+1.5.0
+=====
+Jun 21, 2016, 7:45 PM GMT+10 (AEST)
+- Updated Gwen from v1.2.1 to v[1.3.0](https://github.com/gwen-interpreter/gwen/releases/tag/v1.3.0)
+  - User request gwen-interpreter/gwen#21
+    - Implemented ability to load multiple meta files in directories
+      instead of just one
+  - Fix issue gwen-interpreter/gwen#23 
+    - Raise ambigious error if a step resolves to more than one StepDef at runtime
+  - Fix issue gwen-interpreter/gwen#24
+    - Change stepdef parameter interpolation for dry run mode so that 
+      `$<name>` becomes `$[param:name]` (otherwise it forever recurses)
+  - Implement enhancement gwen-interpreter/#25
+  	- Add support for passing directories to the `-m/--meta` option instead of 
+      just files. All meta files within a specified directory will be recursively 
+      loaded.
+  
 1.4.1
 =====
 May 24, 2016, 7.24 PM GMT+10 (AEST)
-- Updated Gwen from v1.2.0 to v[1.2.1](https://github.com/gwen-interpreter/gwen/releases/tag/v1.1.1)
+- Updated Gwen from v1.2.0 to v[1.2.1](https://github.com/gwen-interpreter/gwen/releases/tag/v1.2.1)
   To pick up the following:
   - Fixed tag filtering to accept tagged features and scenarios that have at 
     least one specified include tag and exclude all specified exclude tags. 

@@ -14,7 +14,7 @@ organizationHomepage := Some(url("http://gweninterpreter.org"))
 
 startYear := Some(2014)
 
-scalaVersion := "2.11.7"
+scalaVersion := "2.11.8"
 
 crossPaths := false
 
@@ -46,7 +46,7 @@ libraryDependencies += "org.mockito" % "mockito-all" % "1.10.19" % "test"
 
 libraryDependencies += "com.google.code.findbugs" % "jsr305" % "2.0.1" % "compile" 
 
-libraryDependencies += "org.seleniumhq.selenium" % "selenium-java" % "2.53.0" excludeAll(
+libraryDependencies += "org.seleniumhq.selenium" % "selenium-java" % "2.53.1" excludeAll(
   ExclusionRule(organization = "org.seleniumhq.selenium", name = "selenium-htmlunit-driver")
 )
 
