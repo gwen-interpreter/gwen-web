@@ -240,6 +240,7 @@ I wait until <condition> when <element> is entered
 I wait until <condition> when <element> is tabbed
 I wait until <condition> when <element> is cleared
 I wait until "<javascript>"
+I perform javascript action "<javascript>" on <element>
 I wait until <condition>
 I wait 1 second
 I wait <duration> seconds
