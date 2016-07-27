@@ -1,3 +1,9 @@
+1.8.0
+=====
+Jul 28, 2016 12:00 AM GMT+10 (AEST)
+- Add DSL for executing javascript on a webelement to assist with cross browser clicks
+  - `I perform javascript action "<javascript>" on <element>` where javascript webelement is referenced by elem
+
 1.7.0
 =====
 Jul 21, 2016, 12:36 AM GMT+10 (AEST)
