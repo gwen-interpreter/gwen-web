@@ -40,3 +40,13 @@
       Given I am on the about page
        When I scroll to the top of the about info
        Then the about info should be displayed
+       
+       
+  @StepDef
+  Scenario: alternative click
+     Given I navigate to "https://www.etsy.com/au/"
+       And I wait until "!!document.getElementById('etsy-logo')"
+       And I perform javascript action "elem.click()" on the about link
+       And I wait until "!!document.getElementsByClassName('about-banner')"
+      Then I am on the about page
+       And the about info can be located by id "about_intro"     
