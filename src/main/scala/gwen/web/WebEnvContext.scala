@@ -542,31 +542,42 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
   }
   
   def performAction(action: String, elementBinding: LocatorBinding) {
+    performElementAction(action, elementBinding, None)
+  }
+  
+  def performActionByScript(action: String, javascript: String, elementBinding: LocatorBinding) {
     withWebElement(action, elementBinding) { webElement =>
-      action match {
-        case "click" => webElement.click
-        case "submit" => webElement.submit
-        case "check" => if (!webElement.isSelected()) webElement.sendKeys(Keys.SPACE)
-        case "uncheck" => if (webElement.isSelected()) webElement.sendKeys(Keys.SPACE)
-      }
+      executeScript(s"(function(element) { $javascript })(arguments[0])", webElement) 
       bindAndWait(elementBinding.element, action, "true")
     }
   }
   
   def performActionIn(action: String, elementBinding: LocatorBinding, contextBinding: LocatorBinding) {
-    withWebElement(action, contextBinding) { contextElement =>
-      withWebElement(action, elementBinding) { webElement =>
-        withWebDriver { driver =>
-          var actions = new Actions(driver).moveToElement(contextElement).moveToElement(webElement)
-          action match {
-            case "click" => actions = actions.click
-            case "check" => if (!webElement.isSelected()) actions = actions.sendKeys(Keys.SPACE)
-            case "uncheck" => if (webElement.isSelected()) actions = actions.sendKeys(Keys.SPACE)
+    performElementAction(action, elementBinding, Some(contextBinding))
+  }
+  
+  private def performElementAction(action: String, elementBinding: LocatorBinding, contextBinding: Option[LocatorBinding]) {
+    withWebElement(action, elementBinding) { webElement =>
+      action match {
+        case "submit" => webElement.submit
+        case _ =>
+          withWebDriver { driver =>
+            var actions = new Actions(driver)
+            contextBinding foreach { ctxBinding =>
+              withWebElement(action, ctxBinding) { contextElement =>
+                actions = actions.moveToElement(contextElement)
+              }
+            }
+            actions = actions.moveToElement(webElement)
+            action match {
+              case "click" => actions = actions.click
+              case "check" => if (!webElement.isSelected()) actions = actions.sendKeys(Keys.SPACE)
+              case "uncheck" => if (webElement.isSelected()) actions = actions.sendKeys(Keys.SPACE)
+            }
+            actions.build.perform()
           }
-          actions.build.perform()
-        }
-        bindAndWait(elementBinding.element, action, "true")
       }
+      bindAndWait(elementBinding.element, action, "true")
     }
   }
   

@@ -2,7 +2,9 @@
 =====
 Jul 28, 2016 12:00 AM GMT+10 (AEST)
 - Add DSL for executing javascript on a webelement to assist with cross browser clicks
-  - `I perform javascript action "<javascript>" on <element>` where javascript webelement is referenced by elem
+  - `I <action> <element> by javascript "<javascript>"` 
+    - where action is an arbitrary action name such as click, submit, etc..
+    - and the web element is referenced in the javascript by an implicit parameter named `element`
 
 1.7.0
 =====

@@ -419,10 +419,10 @@ trait WebEngine extends EvalEngine[WebEnvContext]
         }
       }
       
-      case r"""I perform javascript action "(.+?)"jsaction on (.+?)$$$element""" => {
+      case r"""I (.+?)$action (.+?)$element by javascript "(.+?)"$$$javascript""" => {
         val elementBinding = env.getLocatorBinding(element)
-        env.execute {
-          env.withWebElement(elementBinding) { webElem => env.executeScript("var elem = arguments[0]; $jsaction", webElem) }
+        env.execute { 
+          env.performActionByScript(action, javascript, elementBinding)
         }
       }
       

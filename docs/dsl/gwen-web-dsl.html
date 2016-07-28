@@ -1494,15 +1494,22 @@ a:visited {
 			<div class="panel-heading" role="tab" id="dsl-1-8_1">
 				<h4 class="panel-title">
 					<a role="button" data-toggle="collapse" data-parent="#accordion8" href="#collapse-1-8_1" aria-expanded="true" aria-controls="collapseOne">
-					I perform javascript action &quot;<code>&lt;javascript&gt;</code>&quot; on &lt;element&gt;
+					I <code>&lt;action&gt;</code> <code>&lt;element&gt</code> by javascript &quot;<code>&lt;javascript&gt;</code>&quot;
 					</a>
 				</h4>
 			</div>
 			<div id="collapse-1-8_1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-1-8_1">
 				<div class="panel-body">
-					Executes javascript expression on an element
+					Executes javascript expression on an element to perform an action.
 					<ul>
-						<li><code>&lt;javascript&gt;</code> = a javascript predicate expression</li>
+						<li><code>&lt;name&gt;</code> = the name of the action to perform (eg: click, submit, etc..)
+					    <li><code>&lt;element&gt;</code> = the web element to perform the action on (a web element binding)</li>
+						<li><code>&lt;javascript&gt;</code> = a javascript function that performs the desired action on the element. 
+							<ul>
+						    	<li>The reference to the element is provided to the javascript through an implicit parameter named <code>element</code></li> 
+						    	<li>For example, &quot;element.click()&quot; will click the element</li>
+						    </ul>
+						</li>
 					</ul>
 				</div>
 			</div>
