@@ -114,7 +114,7 @@ trait WebEngine extends EvalEngine[WebEnvContext]
         
       case r"""I wait until "(.+?)$javascript"""" => env.execute {
         env.waitUntil(s"Waiting until $javascript") {
-          env.executeScript(s"return $javascript").asInstanceOf[Boolean]
+          env.executeScriptPredicate(javascript)
         }
       }
         
@@ -122,7 +122,7 @@ trait WebEngine extends EvalEngine[WebEnvContext]
         val javascript = env.scopes.get(s"$condition/javascript")
         env.execute {
           env.waitUntil(s"Waiting until $condition") {
-            env.executeScript(s"return ${javascript}").asInstanceOf[Boolean]
+            env.executeScriptPredicate(javascript)
           }
         }
       }
@@ -545,7 +545,7 @@ trait WebEngine extends EvalEngine[WebEnvContext]
               case Failed(_, e) => throw e
               case _ =>
                 val javascript = env.scopes.get(s"$condition/javascript")
-                env.executeScript(s"return ${javascript}").asInstanceOf[Boolean] tap { result =>
+                env.executeScriptPredicate(javascript) tap { result =>
                   if (!result) {
                     logger.info(s"Repeat-until[$attempt] not completed, ..${if (delay.gt(Duration.Zero)) s"will try again in ${DurationFormatter.format(delay)}" else "trying again"}")
                     Thread.sleep(delay.toMillis)
@@ -556,7 +556,7 @@ trait WebEngine extends EvalEngine[WebEnvContext]
             }
           case "while" =>
             val javascript = env.scopes.get(s"$condition/javascript")
-            val result = env.executeScript(s"return ${javascript}").asInstanceOf[Boolean]
+            val result = env.executeScriptPredicate(javascript)
             if (result) {
               logger.info(s"Repeat-while[$attempt]")
               evaluateStep(Step(step.keyword, doStep), env).evalStatus match {

@@ -44,4 +44,5 @@
        
   @StepDef
   Scenario: I click <element>
-      Given I click $<element> by javascript "element.click()" 
+            This stepdef overrides the "I click <element>" DSL in engine to use javascript instaed          
+      Given I click $<element> by javascript "element.click();" 
