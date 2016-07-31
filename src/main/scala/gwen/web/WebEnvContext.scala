@@ -99,7 +99,7 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     * @param javascript the script predicate expression to execute
     */
   def executeScriptPredicate(javascript: String): Boolean = 
-    executeScript(s"return document.readyState == 'complete' && $javascript").asInstanceOf[Boolean]
+    executeScript(s"return $javascript").asInstanceOf[Boolean]
   
   /**
     * Waits for a given condition to be true. Errors on time out 
@@ -563,17 +563,24 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
   }
   
   def performAction(action: String, elementBinding: LocatorBinding) {
-    action match {
-      case "click" => performActionByScript(action, "element.click();", elementBinding)
-      case _ =>
-        withWebElement(action, elementBinding) { webElement =>
-          executeScript(s"(function(element) { element.focus(); })(arguments[0])", webElement)
-          action match {
-            case "submit" => webElement.submit
-            case "check" => if (!webElement.isSelected()) webElement.sendKeys(Keys.SPACE)
-            case "uncheck" => if (webElement.isSelected()) webElement.sendKeys(Keys.SPACE)
+    val actionBinding = scopes.getOpt(s"${elementBinding.element}/action/$action/javascript")
+    actionBinding match {
+      case Some(javascript) =>
+        performActionByScript(action, javascript, elementBinding)
+      case None =>
+        action match {
+          case "click" => 
+            performActionByScript(action, "element.click();", elementBinding)
           }
-        }
+          case _ =>
+            withWebElement(action, elementBinding) { webElement =>
+              executeScript(s"(function(element) { element.focus(); })(arguments[0])", webElement)
+              action match {
+                case "submit" => webElement.submit
+                case "check" => if (!webElement.isSelected()) webElement.sendKeys(Keys.SPACE)
+                case "uncheck" => if (webElement.isSelected()) webElement.sendKeys(Keys.SPACE)
+              }
+            }
     }
     bindAndWait(elementBinding.element, action, "true")
   }

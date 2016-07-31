@@ -174,7 +174,12 @@ trait WebEngine extends EvalEngine[WebEnvContext]
         
       case r"""the url will be "(.+?)"$$$url""" => 
         env.scopes.set("url", url)   
-  
+
+      case r"""(.+?)$element can be located by (id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)$locator "(.+?)"$expression in (.+?)$$$container""" =>
+        env.scopes.set(s"$element/locator", locator);
+        env.scopes.set(s"$element/locator/$locator", expression)
+        env.scopes.set(s"$element/locator/$locator/container", container)
+        
       case r"""(.+?)$element can be located by (id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)$locator "(.+?)"$$$expression""" =>
         env.scopes.set(s"$element/locator", locator);
         env.scopes.set(s"$element/locator/$locator", expression)
@@ -182,10 +187,9 @@ trait WebEngine extends EvalEngine[WebEnvContext]
           env.scopes.set(s"$element/locator/$locator/container", null)
         }
         
-      case r"""(.+?)$element can be located by (id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)$locator "(.+?)"$expression in (.+?)$$$container""" =>
-        env.scopes.set(s"$element/locator", locator);
-        env.scopes.set(s"$element/locator/$locator", expression)
-        env.scopes.set(s"$element/locator/$locator/container", container)
+      case r"""(.+?)$element can be (clicked|submitted|checked|unchecked)$event by javascript "(.+?)"$$$expression""" =>
+        val elementBinding = env.getLocatorBinding(element)
+        env.scopes.set(s"$element/action/${WebEvents.EventToAction(event)}/javascript", expression)
 
       case r"""the page title should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator "(.*?)"$$$expression""" =>  env.execute {
         compare("title", expression, () => env.getTitle, operator, Option(negation).isDefined, env)
@@ -416,13 +420,6 @@ trait WebEngine extends EvalEngine[WebEnvContext]
               case e2: LocatorBindingException =>
                 throw new LocatorBindingException(s"'$element', '$context', or '$element of $context'", s"${e1.getMessage}, ${e2.getMessage}")
             }
-        }
-      }
-      
-      case r"""I (.+?)$action (.+?)$element by javascript "(.+?)"$$$javascript""" => {
-        val elementBinding = env.getLocatorBinding(element)
-        env.execute { 
-          env.performActionByScript(action, javascript, elementBinding)
         }
       }
       

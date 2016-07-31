@@ -240,7 +240,6 @@ I wait until <condition> when <element> is entered
 I wait until <condition> when <element> is tabbed
 I wait until <condition> when <element> is cleared
 I wait until "<javascript>"
-I <action> <element> by javascript "<javascript>"
 I wait until <condition>
 I wait 1 second
 I wait <duration> seconds
@@ -296,3 +295,7 @@ I switch to the child window
 I close the child window
 I switch to the parent window
 I capture the current screenshot
+<element> can be clicked by javascript "<javascript>"
+<element> can be submitted by javascript "<javascript>"
+<element> can be checked by javascript "<javascript>"
+<element> can be unchecked by javascript "<javascript>"

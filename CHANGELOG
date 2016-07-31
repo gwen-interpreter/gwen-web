@@ -1,15 +1,15 @@
 1.8.0
 =====
 Jul 28, 2016 12:00 AM GMT+10 (AEST)
-- Add DSL for executing javascript on a webelement to assist with cross browser actions
-  - `I <action> <element> by javascript "<javascript>"` 
-    - where <action> is an arbitrary action name such as click, submit, etc..
-    - and the web element can be referenced in the javascript by an implicit parameter named `element`
-    - the element is implicitly given the focus before the given script is executed
+- Add DSL for registering javascript actions on web elements (to assist with cross browser actions 
+  where standard web driver instructions do not produce expected results).
+  - `<element> can be <clicked|submitted|checked|unchecked> by javascript "<javascript>"` 
+    - The web element can be referenced in the javascript by an implicit parameter named `element`
+    - The element is implicitly given the focus before the given script is executed
 - Cross browser fixes
-  - Use javascript to set focus and then click for all click actions on all elements
+  - Use javascript to set focus and then click for all click actions on all elements (instead of 
+    standard web driver click)
   - Retry "wait until" operations when browser is not ready to execute javascript predicates
-  - Add document ready state checks to all javascript predicates
 
 1.7.0
 =====
