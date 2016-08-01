@@ -571,7 +571,6 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
         action match {
           case "click" => 
             performActionByScript(action, "element.click();", elementBinding)
-          }
           case _ =>
             withWebElement(action, elementBinding) { webElement =>
               executeScript(s"(function(element) { element.focus(); })(arguments[0])", webElement)
@@ -581,6 +580,7 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
                 case "uncheck" => if (webElement.isSelected()) webElement.sendKeys(Keys.SPACE)
               }
             }
+        }
     }
     bindAndWait(elementBinding.element, action, "true")
   }
