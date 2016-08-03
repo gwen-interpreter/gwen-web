@@ -566,14 +566,13 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     val actionBinding = scopes.getOpt(s"${elementBinding.element}/action/$action/javascript")
     actionBinding match {
       case Some(javascript) =>
-        performActionByScript(action, javascript, elementBinding)
+        performScriptAction(action, javascript, elementBinding)
       case None =>
         action match {
           case "click" => 
-            performActionByScript(action, "element.click();", elementBinding)
+            performScriptAction(action, "element.focus(); element.click();", elementBinding)
           case _ =>
             withWebElement(action, elementBinding) { webElement =>
-              executeScript(s"(function(element) { element.focus(); })(arguments[0])", webElement)
               action match {
                 case "submit" => webElement.submit
                 case "check" => if (!webElement.isSelected()) webElement.sendKeys(Keys.SPACE)
@@ -585,9 +584,9 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     bindAndWait(elementBinding.element, action, "true")
   }
   
-  def performActionByScript(action: String, javascript: String, elementBinding: LocatorBinding) {
+  private def performScriptAction(action: String, javascript: String, elementBinding: LocatorBinding) {
     withWebElement(action, elementBinding) { webElement =>
-      executeScript(s"(function(element) { element.focus(); $javascript })(arguments[0])", webElement) 
+      executeScript(s"(function(element) { $javascript })(arguments[0])", webElement) 
       bindAndWait(elementBinding.element, action, "true")
     }
   }

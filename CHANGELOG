@@ -10,6 +10,9 @@ Jul 28, 2016 12:00 AM GMT+10 (AEST)
   - Use javascript to set focus and then click for all click actions on all elements (instead of 
     standard web driver click)
   - Retry "wait until" operations when browser is not ready to execute javascript predicates
+- Dry run fix
+  - check that the condition and element attributes are bound in calls to DSL:
+    `I wait until <condition> when <element> is ..`
 
 1.7.0
 =====

@@ -107,10 +107,13 @@ trait WebEngine extends EvalEngine[WebEnvContext]
       }
       
       case r"""I wait ([0-9]+?)$duration second(?:s?) when (.+?)$element is (clicked|submitted|checked|unchecked|selected|typed|entered|tabbed|cleared)$$$event""" =>
+        env.getLocatorBinding(element)
         env.scopes.set(s"$element/${WebEvents.EventToAction(event)}/wait", duration)
         
       case r"""I wait until (.+?)$condition when (.+?)$element is (clicked|submitted|checked|unchecked|selected|typed|entered|tabbed|cleared)$$$event""" =>
-        env.scopes.set(s"$element/${WebEvents.EventToAction(event)}/condition", condition)
+        env.scopes.get(s"$condition/javascript")
+        env.getLocatorBinding(element)
+        env.scopes.set(s"$element/$WebEvents.EventToAction(event)}/condition", condition)
         
       case r"""I wait until "(.+?)$javascript"""" => env.execute {
         env.waitUntil(s"Waiting until $javascript") {
@@ -176,6 +179,7 @@ trait WebEngine extends EvalEngine[WebEnvContext]
         env.scopes.set("url", url)   
 
       case r"""(.+?)$element can be located by (id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)$locator "(.+?)"$expression in (.+?)$$$container""" =>
+        env.getLocatorBinding(container)
         env.scopes.set(s"$element/locator", locator);
         env.scopes.set(s"$element/locator/$locator", expression)
         env.scopes.set(s"$element/locator/$locator/container", container)
