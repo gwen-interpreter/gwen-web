@@ -113,7 +113,7 @@ trait WebEngine extends EvalEngine[WebEnvContext]
       case r"""I wait until (.+?)$condition when (.+?)$element is (clicked|submitted|checked|unchecked|selected|typed|entered|tabbed|cleared)$$$event""" =>
         env.scopes.get(s"$condition/javascript")
         env.getLocatorBinding(element)
-        env.scopes.set(s"$element/$WebEvents.EventToAction(event)}/condition", condition)
+        env.scopes.set(s"$element/${WebEvents.EventToAction(event)}/condition", condition)
         
       case r"""I wait until "(.+?)$javascript"""" => env.execute {
         env.waitUntil(s"Waiting until $javascript") {
