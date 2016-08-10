@@ -122,9 +122,9 @@ object WebSettings {
   def `gwen.web.capture.screenshots.duplicates`: Boolean = Settings.getOpt("gwen.web.capture.screenshots.duplicates").getOrElse("false").toBoolean
   
   /**
-    * Provides access to the `gwen.web.no.sandbox` setting used to control whether 
-    * or not the web driver should not use sandboxing (currently only supported for chrome.
-    * Default value is `false`.
-    */
-  def `gwen.web.no.sandbox`: Boolean = Settings.getOpt("gwen.web.no.sandbox").getOrElse("false").toBoolean
+   * Provides access to the `gwen.web.chrome.args` settings use to set 
+   * the list of Chrome web driver arguments to load (default is empty list).
+   * The settings accepts a comma separated list of agruments.
+   */
+  def `gwen.web.chrome.args`: List[String] = Settings.getOpt("gwen.web.chrome.args").map(_.split(",").toList).getOrElse(Nil)
 }

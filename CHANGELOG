@@ -13,8 +13,8 @@ Jul 28, 2016 12:00 AM GMT+10 (AEST)
 - Dry run fix
   - check that the condition and element attributes are bound in calls to DSL:
     `I wait until <condition> when <element> is ..`
-- Add setting to turn off web driver sandboxing (currently only supported for chrome):
-  - gwen.web.no.sandobx = true|false (default is false - enabled)
+- Add setting for passing comma separated list of arguments to chrome web driver
+  - gwen.web.chrome.args
   
 1.7.0
 =====
