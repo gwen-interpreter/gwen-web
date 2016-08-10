@@ -254,6 +254,9 @@ trait DriverManager extends LazyLogging {
     if (WebSettings.`gwen.web.accept.untrusted.certs`) {
       options.addArguments("--ignore-certificate-errors")
     }
+    if (WebSettings.`gwen.web.no.sandbox`) {
+      options.addArguments("--no-sandbox")
+    }
     WebSettings.`gwen.web.chrome.extensions` tap { extensions =>
       if (extensions.nonEmpty) {
         logger.info(s"Loading chrome extension${if (extensions.size > 1) "s" else ""}: ${extensions.mkString(",")}")

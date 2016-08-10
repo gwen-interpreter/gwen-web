@@ -120,4 +120,11 @@ object WebSettings {
     * if its size in bytes matches that of the last captured screenshot.
     */
   def `gwen.web.capture.screenshots.duplicates`: Boolean = Settings.getOpt("gwen.web.capture.screenshots.duplicates").getOrElse("false").toBoolean
+  
+  /**
+    * Provides access to the `gwen.web.no.sandbox` setting used to control whether 
+    * or not the web driver should not use sandboxing (currently only supported for chrome.
+    * Default value is `false`.
+    */
+  def `gwen.web.no.sandbox`: Boolean = Settings.getOpt("gwen.web.no.sandbox").getOrElse("false").toBoolean
 }
