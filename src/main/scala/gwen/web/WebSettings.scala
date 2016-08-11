@@ -120,4 +120,11 @@ object WebSettings {
     * if its size in bytes matches that of the last captured screenshot.
     */
   def `gwen.web.capture.screenshots.duplicates`: Boolean = Settings.getOpt("gwen.web.capture.screenshots.duplicates").getOrElse("false").toBoolean
+  
+  /**
+   * Provides access to the `gwen.web.chrome.args` settings use to set 
+   * the list of Chrome web driver arguments to load (default is empty list).
+   * The settings accepts a comma separated list of agruments.
+   */
+  def `gwen.web.chrome.args`: List[String] = Settings.getOpt("gwen.web.chrome.args").map(_.split(",").toList).getOrElse(Nil)
 }

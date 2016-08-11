@@ -119,10 +119,9 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar wit
     when(mockWebDriverOptions.timeouts()).thenReturn(mockWebDriverTimeouts)
     doThrow(timeoutError).when(mockWebDriver).executeScript(s"return $lookup")
     
-    val e = intercept[TimeoutOnWaitException] {
+    val e = intercept[TimeoutException] {
       locate(env, new LocatorBinding("username", locator, lookup, None))
     }
-    e.getMessage should be ("Timed out waiting.")
     
     verify(mockWebDriver, atLeastOnce()).executeScript(s"return $lookup")
 
@@ -192,10 +191,6 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar wit
   
   private def newEnv = new WebEnvContext(GwenOptions(), new ScopedDataStack()) {
     override def withWebDriver[T](f: WebDriver => T)(implicit takeScreenShot: Boolean = false): T = f(mockWebDriver)
-  }
-  
-  private def shouldFailWithLocatorBindingError(element: String, env: WebEnvContext, expectedMsg: String) {
-    
-  }
+  }  
   
 }

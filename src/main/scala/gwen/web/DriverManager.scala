@@ -248,11 +248,14 @@ trait DriverManager extends LazyLogging {
       agent => options.addArguments(s"--user-agent=$agent") 
     }
     if (WebSettings.`gwen.web.authorize.plugins`) {
-      options.addArguments(s"--always-authorize-plugins") 
+      options.addArguments("--always-authorize-plugins") 
     }
     options.addArguments("--test-type")
     if (WebSettings.`gwen.web.accept.untrusted.certs`) {
       options.addArguments("--ignore-certificate-errors")
+    }
+    WebSettings.`gwen.web.chrome.args` foreach { arg =>
+      options.addArguments(arg)
     }
     WebSettings.`gwen.web.chrome.extensions` tap { extensions =>
       if (extensions.nonEmpty) {

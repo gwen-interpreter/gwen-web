@@ -24,6 +24,7 @@
        Then I am on the home page
         And the cart icon title can be located by class name "cart "
         And the about link can be located by javascript "document.getElementById('footer-about-link-desktop')"
+        And the about link can be clicked by javascript "element.click()"
 
   @StepDef 
   Scenario: I go to find out more about Etsy
@@ -40,3 +41,4 @@
       Given I am on the about page
        When I scroll to the top of the about info
        Then the about info should be displayed
+       

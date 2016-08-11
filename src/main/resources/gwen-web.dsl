@@ -295,3 +295,7 @@ I switch to the child window
 I close the child window
 I switch to the parent window
 I capture the current screenshot
+<element> can be clicked by javascript "<javascript>"
+<element> can be submitted by javascript "<javascript>"
+<element> can be checked by javascript "<javascript>"
+<element> can be unchecked by javascript "<javascript>"

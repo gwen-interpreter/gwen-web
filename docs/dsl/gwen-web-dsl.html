@@ -1488,6 +1488,33 @@ a:visited {
 		</div>
 	</div>
 	
+	<em style="color:gray">Since v1.8.0</em>
+	<div class="panel-group" id="accordion8" role="tablist" aria-multiselectable="true">
+		<div class="panel panel-default">
+			<div class="panel-heading" role="tab" id="dsl-1-8_1">
+				<h4 class="panel-title">
+					<a role="button" data-toggle="collapse" data-parent="#accordion8" href="#collapse-1-8_1" aria-expanded="true" aria-controls="collapseOne">
+					<code>&lt;element&gt;</code> can be &lt;clicked|submitted|checked|unchecked&gt; by javascript &quot;<code>&lt;javascript&gt;</code>&quot;
+					</a>
+				</h4>
+			</div>
+			<div id="collapse-1-8_1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-1-8_1">
+				<div class="panel-body">
+					Registers a javascript action on an element. When the action is performed, then the javascript will execute.
+					<ul>
+					    <li><code>&lt;element&gt;</code> = the web element to perform the action on (a web element binding)</li>
+						<li><code>&lt;javascript&gt;</code> = a javascript function that performs the desired action on the element. 
+							<ul>
+						    	<li>The reference to the element is provided to the javascript through an implicit parameter named <code>element</code></li> 
+						    	<li>For example, &quot;element.click()&quot; will click the element</li>
+						    </ul>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	
 	<a href="https://github.com/gwen-interpreter/gwen-web/wiki">&lt; Gwen-Web Wiki</a>
 
 	<hr>

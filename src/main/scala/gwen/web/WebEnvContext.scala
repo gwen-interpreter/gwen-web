@@ -94,6 +94,14 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     }
   
   /**
+    * Injects and executes a javascript predicate on the current page.
+    * 
+    * @param javascript the script predicate expression to execute
+    */
+  def executeScriptPredicate(javascript: String): Boolean = 
+    executeScript(s"return $javascript").asInstanceOf[Boolean]
+  
+  /**
     * Waits for a given condition to be true. Errors on time out 
     * after "gwen.web.wait.seconds" (default is 10 seconds)
     * 
@@ -146,16 +154,29 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     * @param condition the boolean condition to wait for (until true)
     */
   private def waitUntil(reason: Option[String], timeoutSecs: Long)(condition: => Boolean) {
-    withWebDriver { webDriver =>
-      try {
-        reason foreach { logger.info(_) }
-        new WebDriverWait(webDriver, timeoutSecs).until(
+    def doWaitUntil(webDriver: WebDriver, timeout: Long) {
+      new WebDriverWait(webDriver, timeout).until(
           new ExpectedCondition[Boolean] {
             override def apply(driver: WebDriver): Boolean = condition
           }
         )
-      } catch {
-        case e: TimeoutException => throw new TimeoutOnWaitException(reason.getOrElse("waiting"));
+    }
+    // some drivers intermittently throw javascript errors, so have to track timeout and retry
+    val start = System.nanoTime()
+    withWebDriver { webDriver =>
+      reason foreach { logger.info(_) }
+      var timeout = timeoutSecs
+      while (timeout > -1) {
+        try {
+          doWaitUntil(webDriver, timeout)
+          timeout = -1
+        } catch {
+          case e: TimeoutException =>
+            throw e
+          case e: WebDriverException =>
+            timeout = timeoutSecs - ((System.nanoTime() - start) / 1000000000L)
+            if (timeout <= 0) throw e
+        }
       }
     }
   }
@@ -454,7 +475,7 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
       val javascript = scopes.get(s"$condition/javascript")
       logger.debug(s"Waiting for script to return true: ${javascript}")
       waitUntil(s"Waiting until $condition (post-$action condition)") {
-        executeScript(s"return $javascript").asInstanceOf[Boolean]
+        executeScriptPredicate(javascript)
       }
     }
   }
@@ -542,13 +563,30 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
   }
   
   def performAction(action: String, elementBinding: LocatorBinding) {
+    val actionBinding = scopes.getOpt(s"${elementBinding.element}/action/$action/javascript")
+    actionBinding match {
+      case Some(javascript) =>
+        performScriptAction(action, javascript, elementBinding)
+      case None =>
+        action match {
+          case "click" => 
+            performScriptAction(action, "element.focus(); element.click();", elementBinding)
+          case _ =>
+            withWebElement(action, elementBinding) { webElement =>
+              action match {
+                case "submit" => webElement.submit
+                case "check" => if (!webElement.isSelected()) webElement.sendKeys(Keys.SPACE)
+                case "uncheck" => if (webElement.isSelected()) webElement.sendKeys(Keys.SPACE)
+              }
+            }
+        }
+    }
+    bindAndWait(elementBinding.element, action, "true")
+  }
+  
+  private def performScriptAction(action: String, javascript: String, elementBinding: LocatorBinding) {
     withWebElement(action, elementBinding) { webElement =>
-      action match {
-        case "click" => webElement.click
-        case "submit" => webElement.submit
-        case "check" => if (!webElement.isSelected()) webElement.sendKeys(Keys.SPACE)
-        case "uncheck" => if (webElement.isSelected()) webElement.sendKeys(Keys.SPACE)
-      }
+      executeScript(s"(function(element) { $javascript })(arguments[0])", webElement) 
       bindAndWait(elementBinding.element, action, "true")
     }
   }
@@ -608,6 +646,3 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     Source.fromInputStream(getClass.getResourceAsStream("/gwen-web.dsl")).getLines().toList ++ super.dsl
   
 }
-
-/** Thrown when a fluent wait times out. */
-class TimeoutOnWaitException(reason: String) extends Exception(s"Timed out ${reason.head.toLower}${reason.tail}.")

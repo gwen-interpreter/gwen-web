@@ -107,14 +107,17 @@ trait WebEngine extends EvalEngine[WebEnvContext]
       }
       
       case r"""I wait ([0-9]+?)$duration second(?:s?) when (.+?)$element is (clicked|submitted|checked|unchecked|selected|typed|entered|tabbed|cleared)$$$event""" =>
+        env.getLocatorBinding(element)
         env.scopes.set(s"$element/${WebEvents.EventToAction(event)}/wait", duration)
         
       case r"""I wait until (.+?)$condition when (.+?)$element is (clicked|submitted|checked|unchecked|selected|typed|entered|tabbed|cleared)$$$event""" =>
+        env.scopes.get(s"$condition/javascript")
+        env.getLocatorBinding(element)
         env.scopes.set(s"$element/${WebEvents.EventToAction(event)}/condition", condition)
         
       case r"""I wait until "(.+?)$javascript"""" => env.execute {
         env.waitUntil(s"Waiting until $javascript") {
-          env.executeScript(s"return $javascript").asInstanceOf[Boolean]
+          env.executeScriptPredicate(javascript)
         }
       }
         
@@ -122,7 +125,7 @@ trait WebEngine extends EvalEngine[WebEnvContext]
         val javascript = env.scopes.get(s"$condition/javascript")
         env.execute {
           env.waitUntil(s"Waiting until $condition") {
-            env.executeScript(s"return ${javascript}").asInstanceOf[Boolean]
+            env.executeScriptPredicate(javascript)
           }
         }
       }
@@ -174,7 +177,13 @@ trait WebEngine extends EvalEngine[WebEnvContext]
         
       case r"""the url will be "(.+?)"$$$url""" => 
         env.scopes.set("url", url)   
-  
+
+      case r"""(.+?)$element can be located by (id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)$locator "(.+?)"$expression in (.+?)$$$container""" =>
+        env.getLocatorBinding(container)
+        env.scopes.set(s"$element/locator", locator);
+        env.scopes.set(s"$element/locator/$locator", expression)
+        env.scopes.set(s"$element/locator/$locator/container", container)
+        
       case r"""(.+?)$element can be located by (id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)$locator "(.+?)"$$$expression""" =>
         env.scopes.set(s"$element/locator", locator);
         env.scopes.set(s"$element/locator/$locator", expression)
@@ -182,10 +191,9 @@ trait WebEngine extends EvalEngine[WebEnvContext]
           env.scopes.set(s"$element/locator/$locator/container", null)
         }
         
-      case r"""(.+?)$element can be located by (id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)$locator "(.+?)"$expression in (.+?)$$$container""" =>
-        env.scopes.set(s"$element/locator", locator);
-        env.scopes.set(s"$element/locator/$locator", expression)
-        env.scopes.set(s"$element/locator/$locator/container", container)
+      case r"""(.+?)$element can be (clicked|submitted|checked|unchecked)$event by javascript "(.+?)"$$$expression""" =>
+        val elementBinding = env.getLocatorBinding(element)
+        env.scopes.set(s"$element/action/${WebEvents.EventToAction(event)}/javascript", expression)
 
       case r"""the page title should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator "(.*?)"$$$expression""" =>  env.execute {
         compare("title", expression, () => env.getTitle, operator, Option(negation).isDefined, env)
@@ -538,7 +546,7 @@ trait WebEngine extends EvalEngine[WebEnvContext]
               case Failed(_, e) => throw e
               case _ =>
                 val javascript = env.scopes.get(s"$condition/javascript")
-                env.executeScript(s"return ${javascript}").asInstanceOf[Boolean] tap { result =>
+                env.executeScriptPredicate(javascript) tap { result =>
                   if (!result) {
                     logger.info(s"Repeat-until[$attempt] not completed, ..${if (delay.gt(Duration.Zero)) s"will try again in ${DurationFormatter.format(delay)}" else "trying again"}")
                     Thread.sleep(delay.toMillis)
@@ -549,7 +557,7 @@ trait WebEngine extends EvalEngine[WebEnvContext]
             }
           case "while" =>
             val javascript = env.scopes.get(s"$condition/javascript")
-            val result = env.executeScript(s"return ${javascript}").asInstanceOf[Boolean]
+            val result = env.executeScriptPredicate(javascript)
             if (result) {
               logger.info(s"Repeat-while[$attempt]")
               evaluateStep(Step(step.keyword, doStep), env).evalStatus match {
