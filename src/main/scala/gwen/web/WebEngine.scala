@@ -524,8 +524,7 @@ trait WebEngine extends EvalEngine[WebEnvContext]
         } else false
       }
     }.isSuccess
-    if (!negate) assert(result, s"Expected ${if(operator == "be") s"'$expected' but got '$actualValue'" else s"'$actualValue' to $operator '$expected'"}")
-    else assert(result, s"Did not expect '$actualValue'${if(operator == "be") "" else s" to $operator '$expected'"}")
+    assert(result, s"Expected value to ${if(negate) "not " else ""}$operator '$expected' but got '$actualValue'")
   }
   
   /**
