@@ -15,7 +15,7 @@
 #
 
    @etsy
-   Feature: Etsy
+   Feature: JKVine meta
  
    @StepDef
    Scenario: I am a first time user who wants to know more about jkvine
