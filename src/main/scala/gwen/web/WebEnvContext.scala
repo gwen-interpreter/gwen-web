@@ -97,9 +97,10 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     * Injects and executes a javascript predicate on the current page.
     * 
     * @param javascript the script predicate expression to execute
+    * @param params optional parameters to the script
     */
-  def executeScriptPredicate(javascript: String): Boolean = 
-    executeScript(s"return $javascript").asInstanceOf[Boolean]
+  def executeScriptPredicate(javascript: String, params: Any*): Boolean = 
+    executeScript(s"return $javascript", params.map(_.asInstanceOf[AnyRef]) : _*).asInstanceOf[Boolean]
   
   /**
     * Waits for a given condition to be true. Errors on time out 
@@ -569,8 +570,13 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
         performScriptAction(action, javascript, elementBinding)
       case None =>
         action match {
-          case "click" => 
-            performScriptAction(action, "element.focus(); element.click();", elementBinding)
+          case "click" =>
+            withWebElement(action, elementBinding) { webElement =>
+              val clicked = executeScriptPredicate("(function(element){try{element.focus(); element.click(); return true;}catch(err){return false;}})(arguments[0]);", webElement)
+              if (!clicked) {
+                webElement.click()
+              }  
+            }
           case _ =>
             withWebElement(action, elementBinding) { webElement =>
               action match {

@@ -28,4 +28,4 @@
         And the search field can be located by name "q"
        When I enter "$<query>" in the search field
        Then the page title should start with "$<query>"
-        And the first result can be located by class name "r"
+        And the first result can be located by javascript "document.getElementsByClassName('r')[0].getElementsByTagName('a')[0]"
