@@ -8,6 +8,9 @@ Aug 25, 2016, 12:56 AM GMT+10 (AEST)
   - Make failed status in detail report a hyperlink to first failed scenario
   - Add support for importing meta through feature level @Import("pathTo/file.meta") annotation
     - the path to the meta file is relative to the working directory where gwen is invoked 
+  - Internally store tags in list instead of set
+  - Display elapsed time on report summary lines
+  
 
 1.8.1
 =====
