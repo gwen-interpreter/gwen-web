@@ -382,17 +382,38 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
   
   /**
     * Gets a bound attribute value from memory. A search for the value is made 
-    * in the current and global feature scopes in the following order and the 
+    * in the current and then global scopes in the following order and the 
     * first value found is returned:
     *  - name
     *  - name/text
     *  - name/javascript
     *  - name/xpath
     *  - name/regex
+    *  - name/json path
+    *  - name/sysproc
     *  
     * @param name the name of the bound attribute to find
     */
   def getAttribute(name: String): String = 
+    Try(getAttributeIn(scopes.filterData(_.scope == scopes.current.scope).filterAtts{case (n, _) => n.startsWith(name)}, name)) getOrElse { 
+      getAttributeIn(ScopedDataStack(Some(featureScope)), name) 
+    }
+  
+  /**
+    * Gets a bound attribute value from the given scopes. A search for the value is made 
+    * in the given scopes in the following order and the first value found is returned:
+    *  - name
+    *  - name/text
+    *  - name/javascript
+    *  - name/xpath
+    *  - name/regex
+    *  - name/json path
+    *  - name/sysproc
+    *  
+    * @param name the name of the bound attribute to find
+    * @param scopes the scopes to search in
+    */
+  def getAttributeIn(scopes: ScopedDataStack, name: String): String = 
     (scopes.getOpt(name) match {
       case None | Some("") => scopes.getOpt(s"$name/text") match {
         case None | Some("") => scopes.getOpt(s"$name/javascript") match {
@@ -421,14 +442,14 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
               execute(evaluateXPath(expression, source, XMLNodeType.withName(targetType))).getOrElse(s"$$[xpath:$expression]")
           }
           case Some(javascript) =>
-              execute(Option(executeScript(s"return ${interpolate(javascript)(getBoundReferenceValue)}")).map(_.toString).getOrElse("")).getOrElse(s"$$[javascript:$javascript]")
+            execute(Option(executeScript(s"return ${interpolate(javascript)(getBoundReferenceValue)}")).map(_.toString).getOrElse("")).getOrElse(s"$$[javascript:$javascript]")
         }
         case Some(value) => value
-      }
+      } 
       case Some(value) => value
     }) tap { value =>
-      logger.debug(s"getAttribute(${name})='${value}'")
-    }
+    logger.debug(s"getAttribute(${name})='${value}'")
+  }
   
   /**
    * Gets a web element binding.
