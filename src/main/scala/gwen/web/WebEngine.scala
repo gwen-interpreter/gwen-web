@@ -495,9 +495,9 @@ trait WebEngine extends EvalEngine[WebEnvContext]
   }
   
   /**
-    * Compares the value of an element with an expected value.
+    * Compares the actual value of an attribute with an expected value or condition.
     * 
-    * @param element the name of the element to compare from
+    * @param name the name of the attribute being compared
     * @param expected the expected value, regex, xpath, or json path
     * @param actual the actual value of the element
     * @param operator the comparison operator
@@ -505,7 +505,7 @@ trait WebEngine extends EvalEngine[WebEnvContext]
     * @param env the web environment context
     * @return true if the actual value matches the expected value
     */
-  private def compare(element: String, expected: String, actual: () => String, operator: String, negate: Boolean, env: WebEnvContext) = {
+  private def compare(name: String, expected: String, actual: () => String, operator: String, negate: Boolean, env: WebEnvContext) = {
     var actualValue = ""
     val result = Try {
       env.waitUntil {
@@ -524,7 +524,7 @@ trait WebEngine extends EvalEngine[WebEnvContext]
         } else false
       }
     }.isSuccess
-    assert(result, s"Expected [$element] to ${if(negate) "not " else ""}$operator '$expected' but got '$actualValue'")
+    assert(result, s"Expected $name to ${if(negate) "not " else ""}$operator '$expected' but got '$actualValue'")
   }
   
   /**

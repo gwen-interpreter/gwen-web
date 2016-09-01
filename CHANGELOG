@@ -2,15 +2,16 @@
 =====
 Aug 25, 2016, 12:56 AM GMT+10 (AEST)
 - Updated failed assertion messages
-- Ensure locally scoped bindings with the same name (regardless of type) shadow global ones
+- Ensure that same named locally scoped bindings shadow global ones (regardless of type)
 - Updated Gwen from v1.3.4 to v[1.4.0](https://github.com/gwen-interpreter/gwen/releases/tag/v1.4.0)
   - Include total elapsed time at the top of all reports
   - Include start and finish times at the top of all reports
   - Make failed status in detail report a hyperlink to first failed scenario
-  - Add support for importing meta through feature level @Import("pathTo/file.meta") annotation
-    - the path to the meta file is relative to the working directory where gwen is invoked 
+  - Enhancement gwen-interpreter/gwen#26: meta imports 
+    - to allow fine grained and explicit control over how meta is loaded 
   - Internally store tags in list instead of set
   - Display elapsed time on report summary lines  
+  - Do not auto discover CSV files below feature directory
 
 1.8.1
 =====

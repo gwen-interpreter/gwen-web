@@ -411,34 +411,34 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     *  - name/sysproc
     *  
     * @param name the name of the bound attribute to find
-    * @param scopes the scopes to search in
+    * @param attScopes the attribute scopes to search in
     */
-  def getAttributeIn(scopes: ScopedDataStack, name: String): String = 
-    (scopes.getOpt(name) match {
-      case None | Some("") => scopes.getOpt(s"$name/text") match {
-        case None | Some("") => scopes.getOpt(s"$name/javascript") match {
-          case None | Some("") => scopes.getOpt(s"$name/xpath") match {
-            case None | Some("") => scopes.getOpt(s"$name/regex") match {
-              case None | Some("") => scopes.getOpt(s"$name/json path") match {
-                case None | Some("") => scopes.getOpt(s"$name/sysproc") match {
+  private def getAttributeIn(attScopes: ScopedDataStack, name: String): String = 
+    (attScopes.getOpt(name) match {
+      case None | Some("") => attScopes.getOpt(s"$name/text") match {
+        case None | Some("") => attScopes.getOpt(s"$name/javascript") match {
+          case None | Some("") => attScopes.getOpt(s"$name/xpath") match {
+            case None | Some("") => attScopes.getOpt(s"$name/regex") match {
+              case None | Some("") => attScopes.getOpt(s"$name/json path") match {
+                case None | Some("") => attScopes.getOpt(s"$name/sysproc") match {
                   case None | Some("") => execute(super.getBoundReferenceValue(name)).getOrElse(Try(super.getBoundReferenceValue(name)).getOrElse(Try(getLocatorBinding(name).lookup).getOrElse(unboundAttributeError(name))))
                   case Some(sysproc) =>
                     execute(sysproc.!!).map(_.trim).getOrElse(s"$$[sysproc:$sysproc]")
                 }
                 case _ =>
-                  val source = interpolate(getBoundReferenceValue(scopes.get(s"$name/json path/source")))(getBoundReferenceValue)
-                  val expression = interpolate(getBoundReferenceValue(scopes.get(s"$name/json path/expression")))(getBoundReferenceValue)
+                  val source = interpolate(getBoundReferenceValue(attScopes.get(s"$name/json path/source")))(getBoundReferenceValue)
+                  val expression = interpolate(getBoundReferenceValue(attScopes.get(s"$name/json path/expression")))(getBoundReferenceValue)
                   execute(evaluateJsonPath(expression, source)).getOrElse(s"$$[json path:$expression]")
               }
               case _ =>
-                val source = interpolate(getBoundReferenceValue(scopes.get(s"$name/regex/source")))(getBoundReferenceValue)
-                val expression = interpolate(getBoundReferenceValue(scopes.get(s"$name/regex/expression")))(getBoundReferenceValue)
+                val source = interpolate(getBoundReferenceValue(attScopes.get(s"$name/regex/source")))(getBoundReferenceValue)
+                val expression = interpolate(getBoundReferenceValue(attScopes.get(s"$name/regex/expression")))(getBoundReferenceValue)
                 execute(extractByRegex(expression, source)).getOrElse(s"$$[regex:$expression]")  
             }
             case _ =>
-              val source = interpolate(getBoundReferenceValue(scopes.get(s"$name/xpath/source")))(getBoundReferenceValue)
-              val targetType = interpolate(getBoundReferenceValue(scopes.get(s"$name/xpath/targetType")))(getBoundReferenceValue)
-              val expression = interpolate(getBoundReferenceValue(scopes.get(s"$name/xpath/expression")))(getBoundReferenceValue)
+              val source = interpolate(getBoundReferenceValue(attScopes.get(s"$name/xpath/source")))(getBoundReferenceValue)
+              val targetType = interpolate(getBoundReferenceValue(attScopes.get(s"$name/xpath/targetType")))(getBoundReferenceValue)
+              val expression = interpolate(getBoundReferenceValue(attScopes.get(s"$name/xpath/expression")))(getBoundReferenceValue)
               execute(evaluateXPath(expression, source, XMLNodeType.withName(targetType))).getOrElse(s"$$[xpath:$expression]")
           }
           case Some(javascript) =>
