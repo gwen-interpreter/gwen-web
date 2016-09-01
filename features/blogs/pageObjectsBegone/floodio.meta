@@ -43,5 +43,5 @@ Scenario: Configure step 4 page
     
 Scenario: Configure step 5 page
      When I am on the step 5 page
-     Then the one time token can be located by css selector ".token"
+     Then the one time token can be located by javascript "$('.token').get(0)"
       And the one time token field can be located by id "challenger_one_time_token"

@@ -62,7 +62,7 @@
       Given I wait until "$('h2').text().trim() == 'Step 5'"
        Then I am on the step 5 page
         And the heading should be "Step 5"
-        And the one time token can be located by css selector ".token"
+        And the one time token can be located by javascript "$('.token').get(0)"
         And the one time token field can be located by id "challenger_one_time_token"
         
   @StepDef
