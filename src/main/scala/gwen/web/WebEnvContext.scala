@@ -175,6 +175,7 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
           case e: TimeoutException =>
             throw e
           case e: WebDriverException =>
+            Thread.sleep(WebSettings`gwen.web.throttle.msecs`)
             timeout = timeoutSecs - ((System.nanoTime() - start) / 1000000000L)
             if (timeout <= 0) throw e
         }
