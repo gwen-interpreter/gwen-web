@@ -312,7 +312,10 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     (withWebElement(elementBinding) { webElement =>
       (Option(webElement.getText) match {
         case None | Some("") => Option(webElement.getAttribute("text")) match {
-          case None | Some("") => webElement.getAttribute("value")
+          case None | Some("") => Option(webElement.getAttribute("value")) match {
+            case None | Some("") => executeScript("(function(element){return element.innerText || element.textContent || ''})(arguments[0]);", webElement).toString
+            case Some(value) => value
+          }
           case Some(value) => value
         }
         case Some(value) => value
