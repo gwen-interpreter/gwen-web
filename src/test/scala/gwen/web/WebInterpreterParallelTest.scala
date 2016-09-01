@@ -19,7 +19,7 @@ package gwen.web
 class WebInterpreterParallelTest extends WebInterpreterTest {
 
   "Parallel mode" should "evaluate all features in parallel" in {
-    evaluate(List("features/floodio", "features/blogs/pageObjectsBegone", "features/blogs/automationByMeta", "features/etsy"), true, false, "target/reports/parallel", None)
+    evaluate(List("features/floodio", "features/bindings", "features/google", "features/etsy"), true, false, "target/reports/parallel", None)
   }
   
 }
