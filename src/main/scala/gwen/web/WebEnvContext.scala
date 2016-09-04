@@ -385,40 +385,40 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
   }.getOrElse(s"$$[$name $selection]")
   
   /**
-    * Gets a bound attribute value from memory. A search for the value is made 
-    * in the current and then global scopes in the following order and the 
-    * first value found is returned:
-    *  - name
-    *  - name/text
-    *  - name/javascript
-    *  - name/xpath
-    *  - name/regex
-    *  - name/json path
-    *  - name/sysproc
-    *  
-    * @param name the name of the bound attribute to find
-    */
-  def getAttribute(name: String): String = 
-    Try(getAttributeIn(scopes.filterData(_.scope == scopes.current.scope).filterAtts{case (n, _) => n.startsWith(name)}, name)) getOrElse { 
-      getAttributeIn(ScopedDataStack(Some(featureScope)), name) 
-    }
-  
-  /**
-    * Gets a bound attribute value from the given scopes. A search for the value is made 
-    * in the given scopes in the following order and the first value found is returned:
-    *  - name
-    *  - name/text
-    *  - name/javascript
-    *  - name/xpath
-    *  - name/regex
-    *  - name/json path
-    *  - name/sysproc
+    * Gets a bound attribute value from the visible scope.
     *  
     * @param name the name of the bound attribute to find
     * @param attScopes the attribute scopes to search in
     */
-  private def getAttributeIn(attScopes: ScopedDataStack, name: String): String = 
-    (attScopes.getOpt(name) match {
+  def getAttribute(name: String): String = {
+    val attScopes = scopes.visible.filterAtts{case (n, _) => n.startsWith(name)}
+    (attScopes.findEntry { case (n, v) => n.matches(s"""$name(/(text|javascript|xpath|regex|json path|sysproc))?""") && v != "" } map {
+      case (n, v) => 
+        if (n == s"$name/text") v
+        else if (n == s"$name/javascript") 
+          execute(Option(executeScript(s"return ${interpolate(v)(getBoundReferenceValue)}")).map(_.toString).getOrElse("")).getOrElse(s"$$[javascript:$v]")
+        else if (n == s"$name/xpath") {
+          val source = interpolate(getBoundReferenceValue(attScopes.get(s"$name/xpath/source")))(getBoundReferenceValue)
+          val targetType = interpolate(getBoundReferenceValue(attScopes.get(s"$name/xpath/targetType")))(getBoundReferenceValue)
+          val expression = interpolate(getBoundReferenceValue(attScopes.get(s"$name/xpath/expression")))(getBoundReferenceValue)
+          execute(evaluateXPath(expression, source, XMLNodeType.withName(targetType))).getOrElse(s"$$[xpath:$expression]")
+        }
+        else if (n == s"$name/regex") {
+          val source = interpolate(getBoundReferenceValue(attScopes.get(s"$name/regex/source")))(getBoundReferenceValue)
+          val expression = interpolate(getBoundReferenceValue(attScopes.get(s"$name/regex/expression")))(getBoundReferenceValue)
+          execute(extractByRegex(expression, source)).getOrElse(s"$$[regex:$expression]")
+        }
+        else if (n == s"$name/json path") {
+          val source = interpolate(getBoundReferenceValue(attScopes.get(s"$name/json path/source")))(getBoundReferenceValue)
+          val expression = interpolate(getBoundReferenceValue(attScopes.get(s"$name/json path/expression")))(getBoundReferenceValue)
+          execute(evaluateJsonPath(expression, source)).getOrElse(s"$$[json path:$expression]")
+        }
+        else if (n == s"$name/sysproc") execute(v.!!).map(_.trim).getOrElse(s"$$[sysproc:$v]")
+        else v
+    }).getOrElse(unboundAttributeError(name))
+  }
+  
+    /*(attScopes.getOpt(name) match {
       case None | Some("") => attScopes.getOpt(s"$name/text") match {
         case None | Some("") => attScopes.getOpt(s"$name/javascript") match {
           case None | Some("") => attScopes.getOpt(s"$name/xpath") match {
@@ -453,7 +453,7 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
       case Some(value) => value
     }) tap { value =>
     logger.debug(s"getAttribute(${name})='${value}'")
-  }
+  }*/
   
   /**
    * Gets a web element binding.

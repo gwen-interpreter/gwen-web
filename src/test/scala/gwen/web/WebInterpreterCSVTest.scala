@@ -18,8 +18,11 @@ package gwen.web
 
 class WebInterpreterCSVTest extends WebInterpreterTest {
 
-  "Dry run CSV data-driven feature" should "pass" in {
+  "Dry run implicit CSV data-driven feature" should "pass" in {
     evaluate(List("features/csvdriven/FloodIO.feature"), false, true, "target/reports/dryrun-csvdriven-1", None)  // will auto discover csv in same folder
+  }
+  
+  "Dry run explicit CSV data-driven feature" should "pass" in {
     evaluate(List("features/csvdriven/FloodIO.feature"), false, true, "target/reports/dryrun-csvdriven-2", Some("features/csvdriven/FloodIO.csv"))
   }
   

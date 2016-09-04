@@ -76,6 +76,8 @@ trait WebEngine extends EvalEngine[WebEnvContext]
           env.waitUntil(s"Waiting for $element text after $seconds second(s)", seconds.toInt) {
             env.waitForText(elementBinding)
           }
+        } getOrElse {
+          env.scopes.set(s"$element/text", "text")
         }
       }
         
@@ -85,6 +87,8 @@ trait WebEngine extends EvalEngine[WebEnvContext]
           env.waitUntil(s"Waiting for $element text") {
             env.waitForText(elementBinding)
           }
+        } getOrElse {
+          env.scopes.set(s"$element/text", "text")
         }
       }
         

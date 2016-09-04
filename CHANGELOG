@@ -12,6 +12,8 @@ Aug 25, 2016, 12:56 AM GMT+10 (AEST)
   - Internally store tags in list instead of set
   - Display elapsed time on report summary lines  
   - Do not auto discover CSV files below feature directory
+  - Do not treat embedded '+' literals in strings as concatenation operator
+  - Use flash scope to track changes made to global attributes in local scopes
 
 1.8.1
 =====
