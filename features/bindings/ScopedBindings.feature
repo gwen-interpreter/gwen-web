@@ -11,6 +11,10 @@ Scenario: Init globals
       And c should be "1"
       And d should be "1"
       And e should be "1" 
+      
+Scenario: System properties should resolve
+    Given my java version is "${java.version}"
+     Then my java version should not be ""
 	
 Scenario: Global binding defined in local scope should override that in feature scope
     Given I am on the A page
@@ -37,6 +41,6 @@ Scenario: Capture of dynamic attribute into static attribute should be visible i
       And ee is "${e}"
      Then ee should be "3"
      When e is "2"
-     Then e should be "2"
+     Then e should be "3"
      When e is defined by javascript "2+2"
      Then e should be "4"

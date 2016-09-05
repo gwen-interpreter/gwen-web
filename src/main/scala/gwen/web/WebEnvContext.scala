@@ -415,45 +415,18 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
         }
         else if (n == s"$name/sysproc") execute(v.!!).map(_.trim).getOrElse(s"$$[sysproc:$v]")
         else v
-    }).getOrElse(unboundAttributeError(name))
-  }
-  
-    /*(attScopes.getOpt(name) match {
-      case None | Some("") => attScopes.getOpt(s"$name/text") match {
-        case None | Some("") => attScopes.getOpt(s"$name/javascript") match {
-          case None | Some("") => attScopes.getOpt(s"$name/xpath") match {
-            case None | Some("") => attScopes.getOpt(s"$name/regex") match {
-              case None | Some("") => attScopes.getOpt(s"$name/json path") match {
-                case None | Some("") => attScopes.getOpt(s"$name/sysproc") match {
-                  case None | Some("") => execute(super.getBoundReferenceValue(name)).getOrElse(Try(super.getBoundReferenceValue(name)).getOrElse(Try(getLocatorBinding(name).lookup).getOrElse(unboundAttributeError(name))))
-                  case Some(sysproc) =>
-                    execute(sysproc.!!).map(_.trim).getOrElse(s"$$[sysproc:$sysproc]")
-                }
-                case _ =>
-                  val source = interpolate(getBoundReferenceValue(attScopes.get(s"$name/json path/source")))(getBoundReferenceValue)
-                  val expression = interpolate(getBoundReferenceValue(attScopes.get(s"$name/json path/expression")))(getBoundReferenceValue)
-                  execute(evaluateJsonPath(expression, source)).getOrElse(s"$$[json path:$expression]")
-              }
-              case _ =>
-                val source = interpolate(getBoundReferenceValue(attScopes.get(s"$name/regex/source")))(getBoundReferenceValue)
-                val expression = interpolate(getBoundReferenceValue(attScopes.get(s"$name/regex/expression")))(getBoundReferenceValue)
-                execute(extractByRegex(expression, source)).getOrElse(s"$$[regex:$expression]")  
-            }
-            case _ =>
-              val source = interpolate(getBoundReferenceValue(attScopes.get(s"$name/xpath/source")))(getBoundReferenceValue)
-              val targetType = interpolate(getBoundReferenceValue(attScopes.get(s"$name/xpath/targetType")))(getBoundReferenceValue)
-              val expression = interpolate(getBoundReferenceValue(attScopes.get(s"$name/xpath/expression")))(getBoundReferenceValue)
-              execute(evaluateXPath(expression, source, XMLNodeType.withName(targetType))).getOrElse(s"$$[xpath:$expression]")
+    }).getOrElse {
+      execute(super.getBoundReferenceValue(name)).getOrElse { 
+        Try(super.getBoundReferenceValue(name)).getOrElse {
+          Try(getLocatorBinding(name).lookup).getOrElse {
+            unboundAttributeError(name)
           }
-          case Some(javascript) =>
-            execute(Option(executeScript(s"return ${interpolate(javascript)(getBoundReferenceValue)}")).map(_.toString).getOrElse("")).getOrElse(s"$$[javascript:$javascript]")
         }
-        case Some(value) => value
-      } 
-      case Some(value) => value
-    }) tap { value =>
-    logger.debug(s"getAttribute(${name})='${value}'")
-  }*/
+      }
+    } tap { value =>
+      logger.debug(s"getAttribute(${name})='${value}'")
+    }
+  }
   
   /**
    * Gets a web element binding.
