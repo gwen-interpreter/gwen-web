@@ -33,7 +33,7 @@ class WebEnvContextTest extends FlatSpec with Matchers with MockitoSugar {
   "New web env context" should "have 'feature' scope" in {
     val mockDriverManager = mock[DriverManager]
     val env = newEnv(mockDriverManager)
-    env.scopes.current.scope should be ("feature")
+    env.scopes.current.isFeatureScope should be (true)
   }
   
   "Bound scope attribute" should "be recreated after reset" in {
@@ -43,7 +43,7 @@ class WebEnvContextTest extends FlatSpec with Matchers with MockitoSugar {
     env.scopes.set("username", "Gwen")
     env.scopes.get("username") should be ("Gwen")
     env.reset
-    env.scopes.current.scope should be ("feature")
+    env.scopes.current.isFeatureScope should be (true)
     env.scopes.getOpt("username") should be (None)
   }
   

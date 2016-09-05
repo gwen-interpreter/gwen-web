@@ -41,6 +41,6 @@ Scenario: Capture of dynamic attribute into static attribute should be visible i
       And ee is "${e}"
      Then ee should be "3"
      When e is "2"
-     Then e should be "3"
+     Then e should be "2"
      When e is defined by javascript "2+2"
      Then e should be "4"
