@@ -59,7 +59,7 @@ class WebEnvContextTest extends FlatSpec with Matchers with MockitoSugar {
     env.scopes.addScope("login")
     env.scopes.set("username", "Gwen")
     env.scopes.get("username") should be ("Gwen")
-    env.scopes.json.toString should be ("""{"scopes":[{"scope":"feature","atts":[]},{"scope":"login","atts":[{"username":"Gwen"}]}]}""")
+    env.scopes.json.toString should be ("""{"scopes":[{"scope":"login","atts":[{"username":"Gwen"}]}]}""")
                                       
   }
   
