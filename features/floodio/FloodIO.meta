@@ -34,6 +34,7 @@
   @StepDef 
   Scenario: I should be on the start page
       Given I am on the start page
+        And the heading can be located by tag name "h1"
        Then the heading should be "Welcome to our Script Challenge"
         And the Start button can be located by name "commit"
 

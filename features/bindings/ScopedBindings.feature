@@ -1,4 +1,20 @@
-Feature: Scoped binding tests
+# 
+# Copyright 2016 Brady Wood, Branko Juric
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+#     http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+ Feature: Scoped binding tests
       
 Scenario: Init globals
 	Given a is "1"
@@ -14,7 +30,7 @@ Scenario: Init globals
       
 Scenario: System properties should resolve
     Given my java version is "${java.version}"
-     Then my java version should not be ""
+     Then my java version should not contain "java.version"
 	
 Scenario: Global binding defined in local scope should override that in feature scope
     Given I am on the A page
