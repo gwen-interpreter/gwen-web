@@ -1,23 +1,24 @@
 1.9.0
 =====
-Aug 25, 2016, 12:56 AM GMT+10 (AEST)
+Sep 12, 2016, 10:54 PM GMT+10 (AEST)
 - Updated failed assertion messages
 - Ensure that same named locally scoped bindings shadow global ones (regardless of type)
 - Updated Gwen from v1.3.4 to v[1.4.0](https://github.com/gwen-interpreter/gwen/releases/tag/v1.4.0)
   - Include total elapsed time at the top of all reports
   - Include start and finish times at the top of all reports
   - Make failed status in detail report a hyperlink to first failed scenario
-  - Enhancement gwen-interpreter/gwen#26: meta imports 
-    - to allow fine grained and explicit control over how meta is loaded 
-  - Internally store tags in list instead of set
-  - Display elapsed time on report summary lines  
+  - Performance enhancement gwen-interpreter/gwen#26: add meta imports 
+    - to allow fine grained and explicit control over how meta is loaded
+    - `-m` overrides still supported 
+  - Performance enhancement: internally store tags in list instead of set
+  - Display elapsed time on report summary lines
   - Do not auto discover CSV files below feature directory
   - Do not treat embedded '+' literals in strings as concatenation operator
-  - Use flash scope to track changes made to global attributes in local scopes
+  - Scoping fix: use flash scope to track changes made to global attributes in local scopes
   - wrap long text in reports
-  - store atts as list of nvp tuples instaed of json
+  - Performance enhancement: store atts as list of nvp tuples instead of json
   - update gherkin parser from v3.1.2 to v4.0.0
-  - improved stepdef lookup performance (use lazy iterator)
+  - Performance enhancement: improved StepDef lookup performance (use lazy iterator over view)
 
 1.8.1
 =====
