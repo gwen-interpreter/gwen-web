@@ -17,6 +17,7 @@ Aug 25, 2016, 12:56 AM GMT+10 (AEST)
   - wrap long text in reports
   - store atts as list of nvp tuples instaed of json
   - update gherkin parser from v3.1.2 to v4.0.0
+  - improved stepdef lookup performance (use lazy iterator)
 
 1.8.1
 =====
