@@ -1,3 +1,10 @@
+1.9.1
+=====
+Sep 14, 2016, 12:49 AM GMT+10 (AEST)
+- Updated Gwen from v1.4.0 to v[1.4.1](https://github.com/gwen-interpreter/gwen/releases/tag/v1.4.1)
+  - Fix analytics and timings in reports
+  - Suppress hyperlink for 'Loaded' status in reports
+
 1.9.0
 =====
 Sep 12, 2016, 10:54 PM GMT+10 (AEST)
