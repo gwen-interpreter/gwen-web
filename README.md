@@ -2,11 +2,10 @@
 Gwen-web
 ========
 
-Gwen-web is a web automation engine that runs inside the 
-[Gwen](https://github.com/gwen-interpreter/gwen) interpreter. 
-It allows teams to automate front end web tests by writing 
-[Gherkin](https://github.com/cucumber/cucumber/wiki/Gherkin) feature 
-specifications instead of code. 
+Gwen-Web is a web automation engine that runs inside the [Gwen](https://github.com/gwen-interpreter/gwen) interpreter. It allows teams to automate front end web tests by writing 
+[Gherkin](https://github.com/cucumber/cucumber/wiki/Gherkin) feature specifications instead of code.
+A [prescribed DSL](http://htmlpreview.github.io/?https://github.com/gwen-interpreter/gwen-web/blob/master/docs/dsl/gwen-web-dsl.html) delegates to [Selenium WebDriver](http://www.seleniumhq.org/projects/webdriver) under the covers for you and frees you from development concerns. You can also declaratively compose your own custom DSL with annotated 
+[@StepDef](https://github.com/gwen-interpreter/gwen/wiki/Meta-Features#compostable-steps) Scenarios that can accept parameters and call other steps. [Meta features](https://github.com/gwen-interpreter/gwen/wiki/Meta-Features) can help eliminate redundancies and give you the flexibility to be as imperative or as declarative as you like in your approach to writing features.
 
 - See also:
   - [Wiki](https://github.com/gwen-interpreter/gwen-web/wiki)
@@ -19,6 +18,21 @@ specifications instead of code.
 
 - [Latest release](https://github.com/gwen-interpreter/gwen-web/releases/latest)
 - [Change log](CHANGELOG)
+
+Key Features
+------------
+
+* Tests are plain text [Gherkin](https://github.com/cucumber/cucumber/wiki/Gherkin) specifications
+  * See [Gwen-Web DSL](http://htmlpreview.github.io/?https://github.com/gwen-interpreter/gwen-web/blob/master/docs/dsl/gwen-web-dsl.html)
+* Tests can be run in [batch mode](https://github.com/gwen-interpreter/gwen/wiki/Execution-Modes#batch-execution) or [interactively](https://github.com/gwen-interpreter/gwen/wiki/Execution-Modes#interactive-repl-execution)
+* Tests can be run [sequentially](https://github.com/gwen-interpreter/gwen/wiki/Execution-Modes#serial-execution) or in [parallel](https://github.com/gwen-interpreter/gwen/wiki/Execution-Modes#parallel-execution)
+* Tests can be [data driven](https://github.com/gwen-interpreter/gwen/wiki/Execution-Modes#csv-data-feeds) (using csv data feeds)
+* [REPL console](https://github.com/gwen-interpreter/gwen/wiki/REPL-Console) allows verifying before running
+* Cross browser support
+* Remote web driver support
+* Screenshot capture and slideshow playback
+* [Interchangeable Selenium](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#changing-the-selenium-version) implementation
+* [Locator Chaining](https://github.com/gwen-interpreter/gwen-web/wiki/Locator-Chaining)
 
 Core Requirements
 -----------------
