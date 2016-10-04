@@ -23,7 +23,7 @@
         And I wait until "!!document.getElementById('etsy-logo')"
        Then I am on the home page
         And the cart icon title can be located by class name "cart "
-        And the about link can be located by javascript "document.getElementById('footer-about-link-desktop')"
+        And the about link can be located by link text "About"
         And the about link can be clicked by javascript "element.click()"
 
   @StepDef 
