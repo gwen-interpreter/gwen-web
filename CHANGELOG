@@ -1,3 +1,10 @@
+1.10.0
+======
+Oct 4 2016, 3:51 PM GMT+11 (AEDT)
+- Enhancement (issue #29): Add setting for passing comma separated list of 
+  browser preferences to chrome 
+  - gwen.web.chrome.prefs
+
 1.9.1
 =====
 Sep 14, 2016, 12:49 AM GMT+10 (AEST)

@@ -124,7 +124,14 @@ object WebSettings {
   /**
    * Provides access to the `gwen.web.chrome.args` settings use to set 
    * the list of Chrome web driver arguments to load (default is empty list).
-   * The settings accepts a comma separated list of agruments.
+   * This setting accepts a comma separated list of agruments.
    */
   def `gwen.web.chrome.args`: List[String] = Settings.getOpt("gwen.web.chrome.args").map(_.split(",").toList).getOrElse(Nil)
+  
+  /**
+   * Provides access to the `gwen.web.chrome.prefs` settings use to set 
+   * the list of preferences to pass to Chrome (default is empty list).
+   * This setting accepts a comma separated list of agruments.
+   */
+  def `gwen.web.chrome.prefs`: List[String] = Settings.getOpt("gwen.web.chrome.prefs").map(_.split(",").toList).getOrElse(Nil)
 }

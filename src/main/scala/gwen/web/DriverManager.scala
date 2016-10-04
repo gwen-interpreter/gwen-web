@@ -255,7 +255,27 @@ trait DriverManager extends LazyLogging {
       options.addArguments("--ignore-certificate-errors")
     }
     WebSettings.`gwen.web.chrome.args` foreach { arg =>
+      logger.info(s"Setting chrome driver aregument: $arg")
       options.addArguments(arg)
+    }
+    val prefs = new java.util.HashMap[String, Object]()
+    WebSettings.`gwen.web.chrome.prefs` foreach { pref =>
+      val nvp = pref.split('=')
+      if (nvp.length == 2) {
+        val name = nvp(0).trim
+        val value = nvp(1).trim
+        logger.info(s"Setting chrome browser preference: $name=$value")
+        try {
+          prefs.put(name, Integer.valueOf(value.trim))
+        } catch {
+          case _: Throwable =>
+            if (value.matches("(true|false)")) prefs.put(name, java.lang.Boolean.valueOf(value.trim))
+            prefs.put(name, value)
+        }
+      }
+    }
+    if (!prefs.isEmpty()) {
+      options.setExperimentalOption("prefs", prefs)
     }
     WebSettings.`gwen.web.chrome.extensions` tap { extensions =>
       if (extensions.nonEmpty) {
