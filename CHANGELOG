@@ -1,3 +1,16 @@
+1.10.1
+=====
+Oct 11, 2016, 9:23 PM GMT+10 (AEDT)
+- Fixed getElementText method in web context to return None instead of null if 
+  no value is found
+- Changed the default throttle time from 200 to 100 msecs
+- Suppress highlighting if throttle is set to zero
+- Updated Gwen from v1.4.1 to v[1.4.2](https://github.com/gwen-interpreter/gwen/releases/tag/v1.4.1)
+  - Fixed play function in modal popup slideshow. Solution was to:
+    - add `height="100%"` to the slideshow image tag
+    - if the 1st frame is displayed then point the reel control to the last frame 
+      and immediately back to 1st frame before triggering play
+    
 1.10.0
 ======
 Oct 4 2016, 3:51 PM GMT+11 (AEDT)

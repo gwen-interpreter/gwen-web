@@ -66,9 +66,9 @@ object WebSettings {
   /**
     * Provides access to the `gwen.web.throttle.msecs` setting used to control the wait 
     * between javascript evaluations and duration of element highlighting (default value 
-    * is 200 msecs).
+    * is 100 msecs).
     */
-  def `gwen.web.throttle.msecs`: Long = Settings.getOpt("gwen.web.throttle.msecs").getOrElse("200").toLong
+  def `gwen.web.throttle.msecs`: Long = Settings.getOpt("gwen.web.throttle.msecs").getOrElse("100").toLong
   
   /**
     * Provides access to the `gwen.web.highlight.style` setting used to control how

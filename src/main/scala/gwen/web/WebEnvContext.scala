@@ -193,10 +193,12 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     * @param element the element to highlight
     */
   def highlight(element: WebElement) {
-    val msecs = WebSettings`gwen.web.throttle.msecs`
-    val style = WebSettings.`gwen.web.highlight.style` 
-    executeScript(s"element = arguments[0]; type = element.getAttribute('type'); if (('radio' == type || 'checkbox' == type) && element.parentElement.getElementsByTagName('input').length == 1) { element = element.parentElement; } original_style = element.getAttribute('style'); element.setAttribute('style', original_style + '; ${style}'); setTimeout(function() { element.setAttribute('style', original_style); }, ${msecs});", element)(WebSettings.`gwen.web.capture.screenshots.highlighting`)
-    Thread.sleep(msecs);
+    val msecs = WebSettings`gwen.web.throttle.msecs`;
+    if (msecs > 0) {
+      val style = WebSettings.`gwen.web.highlight.style` 
+      executeScript(s"element = arguments[0]; type = element.getAttribute('type'); if (('radio' == type || 'checkbox' == type) && element.parentElement.getElementsByTagName('input').length == 1) { element = element.parentElement; } original_style = element.getAttribute('style'); element.setAttribute('style', original_style + '; ${style}'); setTimeout(function() { element.setAttribute('style', original_style); }, ${msecs});", element)(WebSettings.`gwen.web.capture.screenshots.highlighting`)
+      Thread.sleep(msecs);
+    }
   }
   
   /**
@@ -283,7 +285,7 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     (Try(getLocatorBinding(name)) match {
       case Success(binding) =>
         Try(execute(getElementText(binding)).get) match {
-          case Success(text) => text
+          case Success(text) => text.getOrElse(getAttribute(name))
           case Failure(_) => getAttribute(name)
         }
       case Failure(_) => getAttribute(name)
@@ -309,19 +311,22 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     * 
     * @param elementBinding the web element locator binding
     */
-  def getElementText(elementBinding: LocatorBinding): String = 
+  private def getElementText(elementBinding: LocatorBinding): Option[String] = 
     (withWebElement(elementBinding) { webElement =>
       (Option(webElement.getText) match {
-        case None | Some("") => Option(webElement.getAttribute("text")) match {
-          case None | Some("") => Option(webElement.getAttribute("value")) match {
-            case None | Some("") => executeScript("(function(element){return element.innerText || element.textContent || ''})(arguments[0]);", webElement).toString
-            case Some(value) => value
+        case None | Some("") => 
+          Option(webElement.getAttribute("text")) match {
+          case None | Some("") => 
+            Option(webElement.getAttribute("value")) match {
+            case None | Some("") => 
+              Option(executeScript("(function(element){return element.innerText || element.textContent || ''})(arguments[0]);", webElement).asInstanceOf[String])
+            case value => value
           }
-          case Some(value) => value
+          case value => value
         }
-        case Some(value) => value
+        case value => value
       }) tap { text => 
-        bindAndWait(elementBinding.element, "text", text)
+        bindAndWait(elementBinding.element, "text", text.getOrElse(null))
       }
     }) tap { value =>
       logger.debug(s"getElementText(${elementBinding.element})='${value}'")
@@ -617,10 +622,8 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     * 
     * @param elementBinding the web element locator binding 
     */
-  def waitForText(elementBinding: LocatorBinding): Boolean = {
-    val text = getElementText(elementBinding)
-    text != null && text.length > 0
-  }
+  def waitForText(elementBinding: LocatorBinding): Boolean = 
+    getElementText(elementBinding).map(_.length()).getOrElse(0) > 0
   
   /**
    * Scrolls an element into view.
