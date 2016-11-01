@@ -39,6 +39,8 @@ import scala.util.Failure
 import org.openqa.selenium.interactions.Actions
 import scala.concurrent.duration.Duration
 import gwen.Predefs.Formatting._
+import scala.util.Success
+import java.io.FileNotFoundException
 
 /**
   * A web engine that uses the Selenium web driver
@@ -231,24 +233,18 @@ trait WebEngine extends EvalEngine[WebEnvContext]
         
       case r"""(.+?)$element( text| value)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator "(.*?)"$$$expression""" => {
         if (element == "I") undefinedStepError(step)
-        val actual = () => Option(selection) match {
-          case None => env.getBoundReferenceValue(element)
-          case Some(sel) => env.getElementSelection(element, sel)
-        }
+        val actual = boundAttributeOrSelection(element, selection, env)
         env.execute {
-          compare(element, expression, actual, operator, Option(negation).isDefined, env)
+          compare(element + Option(selection).getOrElse(""), expression, actual, operator, Option(negation).isDefined, env)
         }
       }
         
       case r"""(.+?)$element( value| text)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$$$attribute""" => {
         if (element == "I") undefinedStepError(step)
         val expected = env.getAttribute(attribute)
-        val actual = () => Option(selection) match {
-          case None => env.getBoundReferenceValue(element)
-          case Some(sel) => env.getElementSelection(element, sel)
-        }
+        val actual = boundAttributeOrSelection(element, selection, env)
         env.execute {
-          compare(element, expected, actual, operator, Option(negation).isDefined, env)
+          compare(element + Option(selection).getOrElse(""), expected, actual, operator, Option(negation).isDefined, env)
         }
       }
       
@@ -316,10 +312,11 @@ trait WebEngine extends EvalEngine[WebEnvContext]
           env.addAttachment(attribute, "txt", content) 
         }).getOrElse(s"$$[base64 decoded $attribute]"))
         
-      case r"""(.+?)$attribute (?:is|will be) defined by (javascript|system process|property|setting)$attrType "(.+?)"$$$expression""" =>
+      case r"""(.+?)$attribute (?:is|will be) defined by (javascript|system process|property|setting|file)$attrType "(.+?)"$$$expression""" =>
         attrType match {
           case "javascript" => env.scopes.set(s"$attribute/javascript", expression)
           case "system process" => env.scopes.set(s"$attribute/sysproc", expression)
+          case "file" => env.scopes.set(s"$attribute/file", expression)
           case _ => env.featureScope.set(attribute, Settings.get(expression))
         }
 
@@ -498,6 +495,17 @@ trait WebEngine extends EvalEngine[WebEnvContext]
     }
   }
   
+  private def boundAttributeOrSelection(element: String, selection: String, env: WebEnvContext): () => String = () => Option(selection) match {
+    case None => env.getBoundReferenceValue(element)
+    case Some(sel) => 
+      try { 
+        env.getBoundReferenceValue(element + sel)
+      } catch {
+        case _: UnboundAttributeException => env.getElementSelection(element, sel)
+        case e: Throwable => throw e
+      }
+  }
+  
   /**
     * Compares the actual value of an attribute with an expected value or condition.
     * 
@@ -527,7 +535,13 @@ trait WebEngine extends EvalEngine[WebEnvContext]
           if (!negate) res else !res
         } else false
       }
-    }.isSuccess
+    } match {
+      case Success(_) => true
+      case Failure(failure) => failure.getCause match {
+        case _: FileNotFoundException => throw failure
+        case _ => false
+      }
+    }
     assert(result, s"Expected $name to ${if(negate) "not " else ""}$operator '$expected' but got '$actualValue'")
   }
   

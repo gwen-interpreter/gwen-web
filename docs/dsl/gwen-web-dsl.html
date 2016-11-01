@@ -479,13 +479,14 @@ a:visited {
 			<div class="panel-heading" role="tab" id="dsl-23">
 				<h4 class="panel-title">
 					<a role="button" data-toggle="collapse" data-parent="#accordion0" href="#collapse-23" aria-expanded="true" aria-controls="collapseOne">
-					<code>&lt;attribute&gt;</code> &lt;is|will be&gt; defined by &lt;javascript|system process|property|setting&gt; &quot;<code>&lt;expression&gt;</code>&quot;
+					<code>&lt;attribute&gt;</code> &lt;is|will be&gt; defined by &lt;javascript|system process|property|setting|file&gt; &quot;<code>&lt;expression&gt;</code>&quot;
 					</a>
 				</h4>
 			</div>
 			<div id="collapse-23" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-23">
 				<div class="panel-body">
-					Evaluates an expression and binds its value to a named attribute. The evaluation occurs when the attribute is referenced.
+					Binds an expression to a named attribute. The evaluation occurs when the attribute is referenced.
+					(Note: Support for "file" type binding is only available in v1.11.0 and above)
 					<ul>
 						<li><code>&lt;attribute&gt;</code> = the name of the attribute to bind the value to</li>
 						<li><code>&lt;expression&gt;</code> = the expression that will yield the value to bind</li>
@@ -1509,6 +1510,28 @@ a:visited {
 						    	<li>For example, &quot;element.click()&quot; will click the element</li>
 						    </ul>
 						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<em style="color:gray">Since v1.11.0</em>
+	<div class="panel-group" id="accordion11" role="tablist" aria-multiselectable="true">	
+		<div class="panel panel-default">
+			<div class="panel-heading" role="tab" id="dsl-1-11_1">
+				<h4 class="panel-title">
+					<a role="button" data-toggle="collapse" data-parent="#accordion0" href="#collapse-1-11" aria-expanded="true" aria-controls="collapseOne">
+					<code>&lt;attribute&gt;</code> &lt;is|will be&gt; defined by file &quot;<code>&lt;filepath&gt;</code>&quot;
+					</a>
+				</h4>
+			</div>
+			<div id="collapse-1-11" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-1-11_1">
+				<div class="panel-body">
+					Binds a file path to a named attribute. The contents of the file are bound to the attribute when it is referenced at evaluation time.
+					<ul>
+						<li><code>&lt;attribute&gt;</code> = the name of the attribute to bind the value to</li>
+						<li><code>&lt;filepath&gt;</code> = the path to the file</li>
 					</ul>
 				</div>
 			</div>

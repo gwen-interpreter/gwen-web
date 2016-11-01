@@ -49,6 +49,7 @@ import scala.sys.process._
 import scala.collection.JavaConverters._
 import org.openqa.selenium.interactions.Actions
 import gwen.eval.support.JsonPathSupport
+import java.io.FileNotFoundException
 
 /**
   * Defines the web environment context. This includes the configured selenium web
@@ -397,7 +398,7 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     */
   def getAttribute(name: String): String = {
     val attScopes = scopes.visible.filterAtts{case (n, _) => n.startsWith(name)}
-    (attScopes.findEntry { case (n, v) => n.matches(s"""$name(/(text|javascript|xpath|regex|json path|sysproc))?""") && v != "" } map {
+    (attScopes.findEntry { case (n, v) => n.matches(s"""$name(/(text|javascript|xpath|regex|json path|sysproc|file))?""") && v != "" } map {
       case (n, v) => 
         if (n == s"$name/text") v
         else if (n == s"$name/javascript") 
@@ -419,6 +420,12 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
           execute(evaluateJsonPath(expression, source)).getOrElse(s"$$[json path:$expression]")
         }
         else if (n == s"$name/sysproc") execute(v.!!).map(_.trim).getOrElse(s"$$[sysproc:$v]")
+        else if (n == s"$name/file") execute {
+          val filepath = (interpolate(v))(getBoundReferenceValue)
+          if (new File(filepath).exists()) {
+            Source.fromFile(filepath).mkString
+          } else throw new FileNotFoundException(s"File bound to '$name' not found: $filepath")
+        } getOrElse(s"$$[file:$v]")
         else v
     }).getOrElse {
       execute(super.getBoundReferenceValue(name)).getOrElse { 

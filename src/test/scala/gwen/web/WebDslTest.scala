@@ -26,6 +26,7 @@ class WebDslTest extends FlatSpec {
     env.scopes.set("<container>/locator/id", "id")
     env.scopes.set("<context>/locator", "id")
     env.scopes.set("<context>/locator/id", "id")
+    env.scopes.set("<filepath>/file", "file.txt")
         
     val interpreter = new WebInterpreter
     withSetting("<name>", "name") {
