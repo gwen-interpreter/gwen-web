@@ -1,11 +1,15 @@
-1.11.1
-=====
-Nov 2, 2016, 12:43 AM GMT+10 (AEDT)
+1.11.10
+=======
+Nov 25, 2016, 6:30 PM GMT+10 (AEDT)
 - Added DSL to support binding attributes to file contents (in support of issue #32):
   - `<attribute> <is|will be> defined by file "<filepath>"`
+- Move attribute fetch and compare logic from web engine to environemt context
+- Removed stale feature samples
+- Updated Gwen from v1.4.2 to v[1.4.3](https://github.com/gwen-interpreter/gwen/releases/tag/v1.4.3)
+  - Mix XPath, Regex, and JSON support into core environment context
 
 1.10.1
-=====
+======
 Oct 11, 2016, 9:23 PM GMT+10 (AEDT)
 - Fixed getElementText method in web context to return None instead of null if 
   no value is found

@@ -58,7 +58,7 @@ import java.io.FileNotFoundException
   *  @author Branko Juric
   */
 class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) extends EnvContext(options, scopes) 
-  with WebElementLocator with DriverManager with RegexSupport with XPathSupport with JsonPathSupport {
+  with WebElementLocator with DriverManager {
 
    Try(logger.info(s"SELENIUM_HOME = ${sys.env("SELENIUM_HOME")}"))
   
@@ -440,6 +440,17 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     }
   }
   
+  def boundAttributeOrSelection(element: String, selection: String): () => String = () => Option(selection) match {
+    case None => getBoundReferenceValue(element)
+    case Some(sel) => 
+      try { 
+        getBoundReferenceValue(element + sel)
+      } catch {
+        case _: UnboundAttributeException => getElementSelection(element, sel)
+        case e: Throwable => throw e
+      }
+  }
+  
   /**
    * Gets a web element binding.
    * 
@@ -650,6 +661,36 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
    */
   def scrollIntoView(webElement: WebElement, scrollTo: ScrollTo.Value) {
     executeScript(s"var elem = arguments[0]; if (typeof elem !== 'undefined' && elem != null) { elem.scrollIntoView(${scrollTo == ScrollTo.top}); }", webElement)
+  }
+  
+  /**
+    * Gets the actual value of an attribute and compares it with an expected value or condition.
+    * 
+    * @param name the name of the attribute being compared
+    * @param expected the expected value, regex, xpath, or json path
+    * @param actual the actual value of the element
+    * @param operator the comparison operator
+    * @param negate true to negate the result
+    * @param env the web environment context
+    * @return true if the actual value matches the expected value
+    */
+  def compare(name: String, expected: String, actual: () => String, operator: String, negate: Boolean) = {
+    var actualValue = ""
+    val result = Try {
+      waitUntil {
+        actualValue = actual()
+        if (actualValue != null) {
+          super.compare(expected, actualValue, operator, negate)
+        } else false
+      }
+    } match {
+      case Success(_) => true
+      case Failure(failure) => failure.getCause match {
+        case _: FileNotFoundException => throw failure
+        case _ => false
+      }
+    }
+    assert(result, s"Expected $name to ${if(negate) "not " else ""}$operator '$expected' but got '$actualValue'")
   }
   
   /**

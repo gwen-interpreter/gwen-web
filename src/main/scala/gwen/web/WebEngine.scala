@@ -16,31 +16,22 @@
 
 package gwen.web
 
+import scala.concurrent.duration.Duration
+
 import org.openqa.selenium.Keys
+
+import gwen.Predefs.Formatting.DurationFormatter
 import gwen.Predefs.Kestrel
 import gwen.Predefs.RegexContext
 import gwen.Settings
+import gwen.dsl.Failed
 import gwen.dsl.Step
+import gwen.errors.undefinedStepError
 import gwen.eval.EvalEngine
 import gwen.eval.GwenOptions
 import gwen.eval.ScopedDataStack
-import gwen.eval.support.DefaultEngineSupport
-import gwen.eval.support.RegexSupport
-import gwen.eval.support.XPathSupport
-import gwen.errors._
-import gwen.dsl.Failed
 import gwen.eval.support.DecodingSupport
 import gwen.eval.support.DefaultEngineSupport
-import gwen.dsl.Failed
-import org.openqa.selenium.net.UrlChecker.TimeoutException
-import org.openqa.selenium.By
-import scala.util.Try
-import scala.util.Failure
-import org.openqa.selenium.interactions.Actions
-import scala.concurrent.duration.Duration
-import gwen.Predefs.Formatting._
-import scala.util.Success
-import java.io.FileNotFoundException
 
 /**
   * A web engine that uses the Selenium web driver
@@ -202,13 +193,13 @@ trait WebEngine extends EvalEngine[WebEnvContext]
         env.scopes.set(s"$element/action/${WebEvents.EventToAction(event)}/javascript", expression)
 
       case r"""the page title should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator "(.*?)"$$$expression""" =>  env.execute {
-        compare("title", expression, () => env.getTitle, operator, Option(negation).isDefined, env)
+        env.compare("title", expression, () => env.getTitle, operator, Option(negation).isDefined)
       }
         
       case r"""the page title should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$$$attribute""" => {
         val expected = env.getAttribute(attribute)
         env.execute {
-          compare("title", expected, () => env.getTitle, operator, Option(negation).isDefined, env)
+          env.compare("title", expected, () => env.getTitle, operator, Option(negation).isDefined)
         }
       }
       
@@ -233,18 +224,18 @@ trait WebEngine extends EvalEngine[WebEnvContext]
         
       case r"""(.+?)$element( text| value)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator "(.*?)"$$$expression""" => {
         if (element == "I") undefinedStepError(step)
-        val actual = boundAttributeOrSelection(element, selection, env)
+        val actual = env.boundAttributeOrSelection(element, selection)
         env.execute {
-          compare(element + Option(selection).getOrElse(""), expression, actual, operator, Option(negation).isDefined, env)
+          env.compare(element + Option(selection).getOrElse(""), expression, actual, operator, Option(negation).isDefined)
         }
       }
         
       case r"""(.+?)$element( value| text)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$$$attribute""" => {
         if (element == "I") undefinedStepError(step)
         val expected = env.getAttribute(attribute)
-        val actual = boundAttributeOrSelection(element, selection, env)
+        val actual = env.boundAttributeOrSelection(element, selection)
         env.execute {
-          compare(element + Option(selection).getOrElse(""), expected, actual, operator, Option(negation).isDefined, env)
+          env.compare(element + Option(selection).getOrElse(""), expected, actual, operator, Option(negation).isDefined)
         }
       }
       
@@ -493,56 +484,6 @@ trait WebEngine extends EvalEngine[WebEnvContext]
       case _ => super.evaluate(step, env)
       
     }
-  }
-  
-  private def boundAttributeOrSelection(element: String, selection: String, env: WebEnvContext): () => String = () => Option(selection) match {
-    case None => env.getBoundReferenceValue(element)
-    case Some(sel) => 
-      try { 
-        env.getBoundReferenceValue(element + sel)
-      } catch {
-        case _: UnboundAttributeException => env.getElementSelection(element, sel)
-        case e: Throwable => throw e
-      }
-  }
-  
-  /**
-    * Compares the actual value of an attribute with an expected value or condition.
-    * 
-    * @param name the name of the attribute being compared
-    * @param expected the expected value, regex, xpath, or json path
-    * @param actual the actual value of the element
-    * @param operator the comparison operator
-    * @param negate true to negate the result
-    * @param env the web environment context
-    * @return true if the actual value matches the expected value
-    */
-  private def compare(name: String, expected: String, actual: () => String, operator: String, negate: Boolean, env: WebEnvContext) = {
-    var actualValue = ""
-    val result = Try {
-      env.waitUntil {
-        actualValue = actual()
-        if (actualValue != null) {
-          val res = operator match {
-            case "be"      => expected.equals(actualValue)
-            case "contain" => actualValue.contains(expected)
-            case "start with" => actualValue.startsWith(expected)
-            case "end with" => actualValue.endsWith(expected)
-            case "match regex" => actualValue.matches(expected)
-            case "match xpath" => !env.evaluateXPath(expected, actualValue, env.XMLNodeType.text).isEmpty()
-            case "match json path" => !env.evaluateJsonPath(expected, actualValue).isEmpty()
-          }
-          if (!negate) res else !res
-        } else false
-      }
-    } match {
-      case Success(_) => true
-      case Failure(failure) => failure.getCause match {
-        case _: FileNotFoundException => throw failure
-        case _ => false
-      }
-    }
-    assert(result, s"Expected $name to ${if(negate) "not " else ""}$operator '$expected' but got '$actualValue'")
   }
   
   /**
