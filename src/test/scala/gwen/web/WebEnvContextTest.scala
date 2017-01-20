@@ -21,7 +21,7 @@ import org.mockito.Mockito.verify
 import org.openqa.selenium.WebDriver
 import org.scalatest.FlatSpec
 import org.scalatest.Matchers
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import gwen.eval.ScopedDataStack
 import gwen.eval.GwenOptions
 

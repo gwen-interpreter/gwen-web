@@ -1,3 +1,11 @@
+2.0.0
+=====
+
+Jan 20, 2017
+- Update to Java 8 (Java 7 no longer supported)
+- Update from Scala 2.11.8 to 2.12.1
+- Update Gwen from v1.4.3 to v[2.0.0](https://github.com/gwen-interpreter/gwen/releases/tag/v2.0.0)
+  
 1.11.10
 =======
 Nov 25, 2016, 6:30 PM GMT+10 (AEDT)

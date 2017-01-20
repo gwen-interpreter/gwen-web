@@ -29,7 +29,7 @@ import org.openqa.selenium.remote.DesiredCapabilities
 import org.openqa.selenium.remote.RemoteWebDriver
 import org.scalatest.FlatSpec
 import org.scalatest.Matchers
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import gwen.Settings
 import gwen.UserOverrides
 import gwen.eval.EnvContext

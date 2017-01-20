@@ -1,9 +1,8 @@
 language: scala
 scala:
-   - 2.11.8
+   - 2.12.1
 jdk:
   - oraclejdk8
-  - oraclejdk7
 before_script:
   # pull down gwen source dependency
   - cd ..
@@ -17,3 +16,10 @@ cache:
   directories:
     - $HOME/.ivy2/cache
     - $HOME/.sbt/boot/
+addons:
+  firefox: "49.0.2"
+before_install:
+  - wget https://github.com/mozilla/geckodriver/releases/download/v0.11.1/geckodriver-v0.11.1-linux64.tar.gz
+  - mkdir geckodriver
+  - tar -xzf geckodriver-v0.11.1-linux64.tar.gz -C geckodriver
+  - export PATH=$PATH:$PWD/geckodriver
