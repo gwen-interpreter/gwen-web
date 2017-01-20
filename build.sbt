@@ -38,15 +38,23 @@ resolvers += "Typesafe Repo" at "http://repo.typesafe.com/typesafe/releases/"
 
 resolvers += "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"
 
+libraryDependencies += "org.seleniumhq.selenium" % "selenium-chrome-driver" % "3.0.1"
+
+libraryDependencies += "org.seleniumhq.selenium" % "selenium-firefox-driver" % "3.0.1"
+
+libraryDependencies += "org.seleniumhq.selenium" % "selenium-ie-driver" % "3.0.1"
+
+libraryDependencies += "org.seleniumhq.selenium" % "selenium-safari-driver" % "3.0.1"
+
+libraryDependencies += "org.seleniumhq.selenium" % "selenium-support" % "3.0.1" excludeAll(
+  ExclusionRule(organization = "junit")
+)
+
+libraryDependencies += "commons-io" % "commons-io" % "2.5"
+
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.1" % "test"
 
 libraryDependencies += "org.mockito" % "mockito-all" % "1.10.19" % "test"
-
-libraryDependencies += "com.google.code.findbugs" % "jsr305" % "2.0.1" % "compile" 
-
-libraryDependencies += "org.seleniumhq.selenium" % "selenium-java" % "2.53.1" excludeAll(
-  ExclusionRule(organization = "org.seleniumhq.selenium", name = "selenium-htmlunit-driver")
-)
 
 mappings in (Compile, packageBin) ++= Seq(
   file("LICENSE") -> "LICENSE",
