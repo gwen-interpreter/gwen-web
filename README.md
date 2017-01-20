@@ -34,15 +34,19 @@ Key Features
 * [Interchangeable Selenium](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#changing-the-selenium-version) implementation
 * [Locator Chaining](https://github.com/gwen-interpreter/gwen-web/wiki/Locator-Chaining)
 
-Core Requirements
------------------
+Runtime Requirements
+--------------------
 
-- Java JRE 7+
-- A web browser (Chrome, Firefox, Safari, or IE)
-- A native web driver (required for Chrome and IE only)
+- Java SE 8 Runtime Environment
+- A web browser
+- Native web driver
+  - [Safari](https://webkit.org/blog/6900/webdriver-support-in-safari-10/)
+  - [Chrome](https://sites.google.com/a/chromium.org/chromedriver/)
+  - [Edge](https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/)
+  - [Firefox](https://github.com/mozilla/geckodriver/releases)
 
 Quick Links to Wiki Information
------------
+-------------------------------
 - [Installation](https://github.com/gwen-interpreter/gwen-web/wiki/Installation) 
 - [Getting Started](https://github.com/gwen-interpreter/gwen-web/wiki/Getting-Started)
 - [Gwen-Web DSL](http://htmlpreview.github.io/?https://github.com/gwen-interpreter/gwen-web/blob/master/docs/dsl/gwen-web-dsl.html)

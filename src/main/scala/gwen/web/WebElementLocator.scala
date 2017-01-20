@@ -21,7 +21,7 @@ import org.openqa.selenium.By
 import org.openqa.selenium.WebDriverException
 import org.openqa.selenium.WebElement
 import gwen.Predefs.Kestrel
-import com.typesafe.scalalogging.slf4j.LazyLogging
+import com.typesafe.scalalogging.LazyLogging
 import scala.util.Try
 import scala.util.Success
 import scala.util.Failure

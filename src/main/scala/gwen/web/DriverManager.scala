@@ -32,7 +32,7 @@ import org.openqa.selenium.remote.DesiredCapabilities
 import org.openqa.selenium.remote.HttpCommandExecutor
 import org.openqa.selenium.remote.RemoteWebDriver
 import org.openqa.selenium.safari.SafariDriver
-import com.typesafe.scalalogging.slf4j.LazyLogging
+import com.typesafe.scalalogging.LazyLogging
 import gwen.Predefs.Kestrel
 import gwen.Predefs.RegexContext
 import org.apache.commons.io.FileUtils
@@ -43,6 +43,7 @@ import scala.collection.mutable.Map
 import gwen.GwenSettings
 import scala.collection.mutable.Stack
 import gwen.errors.AmbiguousCaseException
+import collection.JavaConverters._
 
 /** Provides access to the web driver used to drive the browser. */
 trait DriverManager extends LazyLogging { 
@@ -89,8 +90,7 @@ trait DriverManager extends LazyLogging {
     * @param driver the current web driver 
     */
   private[web] def switchToChild(driver: WebDriver) {
-    import collection.JavaConversions._
-    val children = driver.getWindowHandles.filter(window => windows.forall(_ != window)).toList match {
+    val children = driver.getWindowHandles.asScala.filter(window => windows.forall(_ != window)).toList match {
       case Nil if windows.size > 1 => windows.init
       case cs => cs
     }
