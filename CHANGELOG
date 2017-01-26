@@ -1,3 +1,11 @@
+2.1.0
+=====
+Jan 27, 2017
+  - Added SQL support for binding attributes to fields in databases
+  - Introduced GWEN_CLASSPATH environment variable for adding external JARs to Gwen classpath
+  - new DSL: <attribute> <is|will be> defined by sql "<selectStmt>" in the <dbName> database
+  - Update Gwen from v2.0.0 to v[2.1.0](https://github.com/gwen-interpreter/gwen/releases/tag/v2.1.0)
+
 2.0.1
 =====
 Jan 27, 2017

@@ -300,3 +300,5 @@ I capture the current screenshot
 <element> can be submitted by javascript "<javascript>"
 <element> can be checked by javascript "<javascript>"
 <element> can be unchecked by javascript "<javascript>"
+<reference> is defined by sql "<selectStmt>" in the <dbName> database
+<reference> will be defined by sql "<selectStmt>" in the <dbName> database

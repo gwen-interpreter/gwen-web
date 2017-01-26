@@ -44,8 +44,8 @@ mappings in Universal <++= (com.typesafe.sbt.packager.Keys.makeBatScript in Univ
 val BashClasspathPattern = "declare -r app_classpath=\"(.*)\"\n".r
 
 bashScriptDefines := bashScriptDefines.value.map {
-  case BashClasspathPattern(classpath) => "declare -r app_classpath=\"$SELENIUM_HOME/*:$SELENIUM_HOME/libs/*:" + classpath + "\"\n"
+  case BashClasspathPattern(classpath) => "declare -r app_classpath=\"$GWEN_CLASSPATH:$SELENIUM_HOME/*:$SELENIUM_HOME/libs/*:" + classpath + "\"\n"
   case _@entry => entry
 }
 
-batScriptExtraDefines += """set "APP_CLASSPATH=%SELENIUM_HOME%\*;%SELENIUM_HOME%\libs\*;%APP_CLASSPATH%""""
+batScriptExtraDefines += """set "APP_CLASSPATH=%GWEN_CLASSPATH%;%SELENIUM_HOME%\*;%SELENIUM_HOME%\libs\*;%APP_CLASSPATH%""""

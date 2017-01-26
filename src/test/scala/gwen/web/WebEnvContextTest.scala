@@ -145,6 +145,14 @@ class WebEnvContextTest extends FlatSpec with Matchers with MockitoSugar {
     env.getAttribute("xml") should be ("$[file:path-to/file.xml]")
   }
   
+  "Attribute with sql binding" should "resolve" in {
+    val mockDriverManager = mock[DriverManager]
+    val env = newEnv(mockDriverManager, true)
+    env.scopes.set("username/sql/selectStmt", "select username from users")
+    env.scopes.set("username/sql/dbName", "subscribers")
+    env.getAttribute("username") should be ("$[sql:select username from users]")
+  }
+  
   def newEnv(browser: DriverManager, dry:Boolean = false) = {
     
    new WebEnvContext(GwenOptions(dryRun=dry), new ScopedDataStack()) {

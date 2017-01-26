@@ -324,6 +324,10 @@ trait WebEngine extends EvalEngine[WebEnvContext]
         env.scopes.set(s"$attribute/json path/source", source)
         env.scopes.set(s"$attribute/json path/expression", expression)
       
+      case r"""(.+?)$attribute (?:is|will be) defined by sql "(.+?)"$selectStmt in the (.+?)$dbName database""" =>
+        env.scopes.set(s"$attribute/sql/selectStmt", selectStmt)
+        env.scopes.set(s"$attribute/sql/dbName", dbName)
+
       case r"""I clear (.+?)$$$element""" => {
         val elementBinding = env.getLocatorBinding(element)
         env.execute {

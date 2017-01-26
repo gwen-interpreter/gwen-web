@@ -479,14 +479,13 @@ a:visited {
 			<div class="panel-heading" role="tab" id="dsl-23">
 				<h4 class="panel-title">
 					<a role="button" data-toggle="collapse" data-parent="#accordion0" href="#collapse-23" aria-expanded="true" aria-controls="collapseOne">
-					<code>&lt;attribute&gt;</code> &lt;is|will be&gt; defined by &lt;javascript|system process|property|setting|file&gt; &quot;<code>&lt;expression&gt;</code>&quot;
+					<code>&lt;attribute&gt;</code> &lt;is|will be&gt; defined by &lt;javascript|system process|property|setting&gt; &quot;<code>&lt;expression&gt;</code>&quot;
 					</a>
 				</h4>
 			</div>
 			<div id="collapse-23" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-23">
 				<div class="panel-body">
-					Binds an expression to a named attribute. The evaluation occurs when the attribute is referenced.
-					(Note: Support for "file" type binding is only available in v1.11.0 and above)
+					Binds an expression to a named attribute. The evaluation will occur when the attribute is referenced at runtime.
 					<ul>
 						<li><code>&lt;attribute&gt;</code> = the name of the attribute to bind the value to</li>
 						<li><code>&lt;expression&gt;</code> = the expression that will yield the value to bind</li>
@@ -1532,6 +1531,57 @@ a:visited {
 					<ul>
 						<li><code>&lt;attribute&gt;</code> = the name of the attribute to bind the value to</li>
 						<li><code>&lt;filepath&gt;</code> = the path to the file</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<em style="color:gray">Since v2.1.0</em>
+	<div class="panel-group" id="accordion11" role="tablist" aria-multiselectable="true">	
+		<div class="panel panel-default">
+			<div class="panel-heading" role="tab" id="dsl-2-1_1">
+				<h4 class="panel-title">
+					<a role="button" data-toggle="collapse" data-parent="#accordion0" href="#collapse-2-1" aria-expanded="true" aria-controls="collapseOne">
+					<code>&lt;attribute&gt;</code> &lt;is|will be&gt; defined by sql &quot;<code>&lt;selectStmt&gt;</code>&quot; in the <code>&lt;dbName&gt;</code> database
+					</a>
+				</h4>
+			</div>
+			<div id="collapse-2-1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-2-1_1">
+				<div class="panel-body">
+					Binds the result of an SQL select query to a named attribute. The query must return one result and one field only.
+					The query will be executed and the result will be bound to the attribute when it is referenced at evaluation time.
+					<ul>
+						<li><code>&lt;attribute&gt;</code> = the name of the attribute to bind the SQL result to</li>
+						<li><code>&lt;selectStmt&gt;</code> = the SQL select query statement (must return one result with one field)</li>
+						<li><code>&lt;dbName&gt;</code> = the name of database to execute the query on. This name is used to configure the database as follows:
+						  <ul>
+						    <li>The <code>GWEN_CLASSPATH</code> <a href="https://github.com/gwen-interpreter/gwen/wiki/Runtime-Settings#environment-variables">environment variable</a> must be set to include a path to the JDBC driver JAR 
+						    <li>A gwen.db.<code>&lt;dbName&gt;</code>.driver <a href="https://github.com/gwen-interpreter/gwen/wiki/Runtime-Settings">setting</a> must be set to the name of the JDBC driver implementation class
+						    <li>A gwen.db.<code>&lt;dbName&gt;</code>.url <a href="https://github.com/gwen-interpreter/gwen/wiki/Runtime-Settings">setting</a> must be set to the JDBC URL of the database
+						  </ul>
+						</li>
+					</ul>
+					Example using mysql:
+					<ul>
+					  <li>Set GWEN_CLASSPATH variable in the environment to include the JDBC driver JAR
+					      <ul>
+						    <li>Unix: export GWEN_CLASSPATH=/path-to-driver/mysql-connector-java-5.1.40-bin.jar</li>
+						    <li>Windows: set GWEN_CLASSPATH=c:/path-to-driver/mysql-connector-java-5.1.40-bin.jar</li>
+						  </ul>
+					  </li>
+					  <li>Configure the database in your <a href="https://github.com/gwen-interpreter/gwen/wiki/Runtime-Settings">Gwen settings</a>. In this example, <code>&lt;dbName&gt;</code>=feedback
+					      <ul>
+					        <li>gwen.db.<b>feedback</b>.driver = com.mysql.jdbc.Driver</li>
+					        <li>gwen.db.<b>feedback</b>.url = jdbc:mysql://localhost/feedback?user=myUser&amp;password=myPassword&amp;serverTimezone=UTC&amp;useSSL=false</li>
+					      </ul>
+					  </li>
+					  <li>Bind a database field and use it in your feature
+					    <ul>
+					      <li>Given <b>the email</b> is defined by sql "<b>select email from comments</b>" in the <b>feedback</b> database</li>
+					      <li>Then <b>the email</b> should be "the.email@gmail.com"
+					    </ul>
+					  </li>
 					</ul>
 				</div>
 			</div>

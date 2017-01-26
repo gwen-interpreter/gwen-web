@@ -60,6 +60,7 @@ import java.io.FileNotFoundException
 class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) extends EnvContext(options, scopes) 
   with WebElementLocator with DriverManager {
 
+   Try(logger.info(s"GWEN_CLASSPATH = ${sys.env("GWEN_CLASSPATH")}"))
    Try(logger.info(s"SELENIUM_HOME = ${sys.env("SELENIUM_HOME")}"))
   
    /** Resets the current context and closes the web browser. */
@@ -398,7 +399,7 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     */
   def getAttribute(name: String): String = {
     val attScopes = scopes.visible.filterAtts{case (n, _) => n.startsWith(name)}
-    (attScopes.findEntry { case (n, v) => n.matches(s"""$name(/(text|javascript|xpath.+|regex.+|json path.+|sysproc|file))?""") && v != "" } map {
+    (attScopes.findEntry { case (n, v) => n.matches(s"""$name(/(text|javascript|xpath.+|regex.+|json path.+|sysproc|file|sql.+))?""") && v != "" } map {
       case (n, v) => 
         if (n == s"$name/text") v
         else if (n == s"$name/javascript") 
@@ -427,6 +428,11 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
               Source.fromFile(filepath).mkString
             } else throw new FileNotFoundException(s"File bound to '$name' not found: $filepath")
           } getOrElse(s"$$[file:$v]")
+        } 
+        else if (n.startsWith(s"$name/sql")) {
+          val selectStmt = interpolate(attScopes.get(s"$name/sql/selectStmt"))(getBoundReferenceValue)
+          val dbName = interpolate(attScopes.get(s"$name/sql/dbName"))(getBoundReferenceValue)
+          execute(evaluateSql(selectStmt, dbName)).getOrElse(s"$$[sql:$selectStmt]")
         } 
         else v
     }).getOrElse {
@@ -689,6 +695,7 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
       case Success(_) => true
       case Failure(failure) => failure.getCause match {
         case _: FileNotFoundException => throw failure
+        case _: SQLException => throw failure
         case _ => false
       }
     }
