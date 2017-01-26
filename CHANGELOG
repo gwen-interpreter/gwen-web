@@ -1,6 +1,10 @@
+2.0.1
+=====
+Jan 27, 2017
+  - Fixed bug where regex, xpath, and json path bindings were not being resolved
+  
 2.0.0
 =====
-
 Jan 20, 2017
 - Update to Java 8 (Java 7 no longer supported)
 - Update from Scala 2.11.8 to 2.12.1

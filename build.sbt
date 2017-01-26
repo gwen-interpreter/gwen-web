@@ -47,7 +47,7 @@ libraryDependencies += "org.seleniumhq.selenium" % "selenium-ie-driver" % "3.0.1
 libraryDependencies += "org.seleniumhq.selenium" % "selenium-safari-driver" % "3.0.1"
 
 libraryDependencies += "org.seleniumhq.selenium" % "selenium-support" % "3.0.1" excludeAll(
-  ExclusionRule(organization = "junit")
+  ExclusionRule(organization = "junit", name="junit")
 )
 
 libraryDependencies += "commons-io" % "commons-io" % "2.5"
