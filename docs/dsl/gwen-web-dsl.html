@@ -1549,11 +1549,14 @@ a:visited {
 			</div>
 			<div id="collapse-2-1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-2-1_1">
 				<div class="panel-body">
-					Binds the result of an SQL select query to a named attribute. The query must return one result and one field only.
+					Binds the result of an SQL select query to a named attribute. The query must return a result in one field only.
+					If more than one record is returned, then the result in the first one will be returned and the others discarded.
+					For best results, you should narrow the query using a where clause to ensure that only one record is returned.
+					If no records are returned, then an error stating that no records were found will be reported. 
 					The query will be executed and the result will be bound to the attribute when it is referenced at evaluation time.
 					<ul>
 						<li><code>&lt;attribute&gt;</code> = the name of the attribute to bind the SQL result to</li>
-						<li><code>&lt;selectStmt&gt;</code> = the SQL select query statement (must return one result with one field)</li>
+						<li><code>&lt;selectStmt&gt;</code> = the SQL select query statement</li>
 						<li><code>&lt;dbName&gt;</code> = the name of database to execute the query on. This name is used to configure the database as follows:
 						  <ul>
 						    <li>The <code>GWEN_CLASSPATH</code> <a href="https://github.com/gwen-interpreter/gwen/wiki/Runtime-Settings#environment-variables">environment variable</a> must be set to include a path to the JDBC driver JAR 
@@ -1567,7 +1570,7 @@ a:visited {
 					  <li>Set GWEN_CLASSPATH variable in the environment to include the JDBC driver JAR
 					      <ul>
 						    <li>Unix: export GWEN_CLASSPATH=/path-to-driver/mysql-connector-java-5.1.40-bin.jar</li>
-						    <li>Windows: set GWEN_CLASSPATH=c:/path-to-driver/mysql-connector-java-5.1.40-bin.jar</li>
+						    <li>Windows: set GWEN_CLASSPATH c:/path-to-driver/mysql-connector-java-5.1.40-bin.jar</li>
 						  </ul>
 					  </li>
 					  <li>Configure the database in your <a href="https://github.com/gwen-interpreter/gwen/wiki/Runtime-Settings">Gwen settings</a>. In this example, <code>&lt;dbName&gt;</code>=feedback
