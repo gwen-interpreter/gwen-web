@@ -17,13 +17,12 @@
 package gwen.web
 
 import java.io.File
+
 import scala.util.Failure
 import scala.util.Success
 import scala.util.Try
 import org.openqa.selenium.JavascriptExecutor
 import org.openqa.selenium.Keys
-import org.openqa.selenium.OutputType
-import org.openqa.selenium.TakesScreenshot
 import org.openqa.selenium.TimeoutException
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.WebDriverException
@@ -32,23 +31,14 @@ import org.openqa.selenium.support.ui.ExpectedCondition
 import org.openqa.selenium.support.ui.Select
 import org.openqa.selenium.support.ui.WebDriverWait
 import gwen.Predefs.Kestrel
-import gwen.Predefs.RegexContext
-import gwen.Settings
 import gwen.dsl.Failed
-import gwen.dsl.Step
-import gwen.eval.EnvContext
-import gwen.eval.ScopedDataStack
-import gwen.eval.support.RegexSupport
-import gwen.eval.support.XPathSupport
-import gwen.eval.support.InterpolationSupport
-import gwen.dsl.SpecType
-import gwen.eval.GwenOptions
+import gwen.eval.{EnvContext, GwenOptions, ScopedData, ScopedDataStack}
 import gwen.errors._
+
 import scala.io.Source
 import scala.sys.process._
 import scala.collection.JavaConverters._
 import org.openqa.selenium.interactions.Actions
-import gwen.eval.support.JsonPathSupport
 import java.io.FileNotFoundException
 
 /**
@@ -167,7 +157,7 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     // some drivers intermittently throw javascript errors, so have to track timeout and retry
     val start = System.nanoTime()
     withWebDriver { webDriver =>
-      reason foreach { logger.info(_) }
+      reason foreach { r => logger.info(r) }
       var timeout = timeoutSecs
       while (timeout > -1) {
         try {
@@ -194,12 +184,12 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     *
     * @param element the element to highlight
     */
-  def highlight(element: WebElement) {
+  def highlight(element: WebElement): Unit = {
     val msecs = WebSettings`gwen.web.throttle.msecs`;
     if (msecs > 0) {
       val style = WebSettings.`gwen.web.highlight.style` 
-      executeScript(s"element = arguments[0]; type = element.getAttribute('type'); if (('radio' == type || 'checkbox' == type) && element.parentElement.getElementsByTagName('input').length == 1) { element = element.parentElement; } original_style = element.getAttribute('style'); element.setAttribute('style', original_style + '; ${style}'); setTimeout(function() { element.setAttribute('style', original_style); }, ${msecs});", element)(WebSettings.`gwen.web.capture.screenshots.highlighting`)
-      Thread.sleep(msecs);
+      executeScript(s"element = arguments[0]; type = element.getAttribute('type'); if (('radio' == type || 'checkbox' == type) && element.parentElement.getElementsByTagName('input').length == 1) { element = element.parentElement; } original_style = element.getAttribute('style'); element.setAttribute('style', original_style + '; $style'); setTimeout(function() { element.setAttribute('style', original_style); }, $msecs);", element)(WebSettings.`gwen.web.capture.screenshots.highlighting`)
+      Thread.sleep(msecs)
     }
   }
   
@@ -207,7 +197,7 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     * Add a list of error attachments which includes the current 
     * screenshot and all current error attachments.
     * 
-    * @param failed the failed status
+    * @param failure the failed status
     */
   override def addErrorAttachments(failure: Failed): Unit = {
     super.addErrorAttachments(failure)
@@ -255,7 +245,7 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
           case "uncheck" => "Unchecking"
          }} ${elementBinding.element}")
       }
-      f(webElement) tap { result =>
+      f(webElement) tap { _ =>
         if (WebSettings.`gwen.web.capture.screenshots`) {
           captureScreenshot(false)
         }
@@ -292,11 +282,11 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
         }
       case Failure(_) => getAttribute(name)
     }) tap { value =>
-      logger.debug(s"getBoundReferenceValue(${name})='${value}'")
+      logger.debug(s"getBoundReferenceValue($name)='$value'")
     }
   }
   
-  def captureCurrentUrl() = 
+  def captureCurrentUrl(): ScopedData =
     featureScope.set("the current URL", execute(withWebDriver(_.getCurrentUrl()) tap { content => 
       addAttachment("the current URL", "txt", content) 
     }).getOrElse("$[currentUrl]"))
@@ -314,24 +304,24 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     * @param elementBinding the web element locator binding
     */
   private def getElementText(elementBinding: LocatorBinding): Option[String] = 
-    (withWebElement(elementBinding) { webElement =>
+    withWebElement(elementBinding) { webElement =>
       (Option(webElement.getText) match {
-        case None | Some("") => 
+        case None | Some("") =>
           Option(webElement.getAttribute("text")) match {
-          case None | Some("") => 
-            Option(webElement.getAttribute("value")) match {
-            case None | Some("") => 
-              Option(executeScript("(function(element){return element.innerText || element.textContent || ''})(arguments[0]);", webElement).asInstanceOf[String])
+            case None | Some("") =>
+              Option(webElement.getAttribute("value")) match {
+                case None | Some("") =>
+                  Option(executeScript("(function(element){return element.innerText || element.textContent || ''})(arguments[0]);", webElement).asInstanceOf[String])
+                case value => value
+              }
             case value => value
           }
-          case value => value
-        }
         case value => value
-      }) tap { text => 
-        bindAndWait(elementBinding.element, "text", text.getOrElse(null))
+      }) tap { text =>
+        bindAndWait(elementBinding.element, "text", text.orNull)
       }
-    }) tap { value =>
-      logger.debug(s"getElementText(${elementBinding.element})='${value}'")
+    } tap { value =>
+      logger.debug(s"getElementText(${elementBinding.element})='$value'")
     }
   
   /**
@@ -343,17 +333,17 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     */
   private def getSelectedElementText(name: String): String = {
     val elementBinding = getLocatorBinding(name)
-    (withWebElement(elementBinding) { webElement =>
-      val select = new Select(webElement) 
-      (Option(select.getAllSelectedOptions().asScala.map(_.getText()).mkString(",")) match {
-        case None | Some("") => 
-          select.getAllSelectedOptions().asScala.map(_.getAttribute("text")).mkString(",")
+    withWebElement(elementBinding) { webElement =>
+      val select = new Select(webElement)
+      (Option(select.getAllSelectedOptions.asScala.map(_.getText()).mkString(",")) match {
+        case None | Some("") =>
+          select.getAllSelectedOptions.asScala.map(_.getAttribute("text")).mkString(",")
         case Some(value) => value
-      }) tap { text => 
+      }) tap { text =>
         bindAndWait(elementBinding.element, "selectedText", text)
       }
-    }) tap { value =>
-      logger.debug(s"getSelectedElementText(${elementBinding.element})='${value}'")
+    } tap { value =>
+      logger.debug(s"getSelectedElementText(${elementBinding.element})='$value'")
     }
   }
   
@@ -366,12 +356,12 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     */
   private def getSelectedElementValue(name: String): String = {
     val elementBinding = getLocatorBinding(name)
-    (withWebElement(elementBinding) { webElement =>
-      new Select(webElement).getAllSelectedOptions().asScala.map(_.getAttribute("value")).mkString(",") tap { value => 
+    withWebElement(elementBinding) { webElement =>
+      new Select(webElement).getAllSelectedOptions.asScala.map(_.getAttribute("value")).mkString(",") tap { value =>
         bindAndWait(elementBinding.element, "selectedValue", value)
       }
-    }) tap { value =>
-      logger.debug(s"getSelectedElementValue(${elementBinding.element})='${value}'")
+    } tap { value =>
+      logger.debug(s"getSelectedElementValue(${elementBinding.element})='$value'")
     }
   }
   
@@ -384,7 +374,7 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
    * @return the selected value or a comma seprated string containing all 
    * the selected values if multiple values are selected.
    */
-  def getElementSelection(name: String, selection: String) = execute {
+  def getElementSelection(name: String, selection: String): String = execute {
     selection.trim match {
       case "text" => getSelectedElementText(name)
       case _ => getSelectedElementValue(name)
@@ -395,7 +385,6 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     * Gets a bound attribute value from the visible scope.
     *  
     * @param name the name of the bound attribute to find
-    * @param attScopes the attribute scopes to search in
     */
   def getAttribute(name: String): String = {
     val attScopes = scopes.visible.filterAtts{case (n, _) => n.startsWith(name)}
@@ -422,12 +411,12 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
         }
         else if (n == s"$name/sysproc") execute(v.!!).map(_.trim).getOrElse(s"$$[sysproc:$v]")
         else if (n == s"$name/file") {
-          val filepath = (interpolate(v))(getBoundReferenceValue)
+          val filepath = interpolate(v)(getBoundReferenceValue)
           execute {
             if (new File(filepath).exists()) {
               Source.fromFile(filepath).mkString
             } else throw new FileNotFoundException(s"File bound to '$name' not found: $filepath")
-          } getOrElse(s"$$[file:$v]")
+          } getOrElse s"$$[file:$v]"
         } 
         else if (n.startsWith(s"$name/sql")) {
           val selectStmt = interpolate(attScopes.get(s"$name/sql/selectStmt"))(getBoundReferenceValue)
@@ -444,7 +433,7 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
         }
       }
     } tap { value =>
-      logger.debug(s"getAttribute(${name})='${value}'")
+      logger.debug(s"getAttribute($name)='$value'")
     }
   }
   
@@ -465,7 +454,7 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
    * @param element the name of the web element
    */
   def getLocatorBinding(element: String): LocatorBinding = {
-    val locatorBinding = s"$element/locator";
+    val locatorBinding = s"$element/locator"
     scopes.getOpt(locatorBinding) match {
       case Some(locator) =>
         val lookupBinding = interpolate(s"$element/locator/$locator")(getBoundReferenceValue)
@@ -477,17 +466,17 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
               container.foreach(c => getLocatorBinding(c))
             }
             LocatorBinding(element, locator, expr, container)
-          case None => throw new LocatorBindingException(element, s"locator lookup binding not found: ${lookupBinding}")
+          case None => throw new LocatorBindingException(element, s"locator lookup binding not found: $lookupBinding")
         }
-      case None => throw new LocatorBindingException(element, s"locator binding not found: ${locatorBinding}")
+      case None => throw new LocatorBindingException(element, s"locator binding not found: $locatorBinding")
     }
   }
   
   /**
-    * Binds the given name and value to a given action (name/action=value) 
+    * Binds the given element and value to a given action (element/action=value)
     * and then waits for any bound post conditions to be satisfied.
     * 
-    * @param name the name to bind the value to
+    * @param element the element to bind the value to
     * @param action the action to bind the value to
     * @param value the value to bind
     */
@@ -496,14 +485,14 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     
     // sleep if wait time is configured for this action
     scopes.getOpt(s"$element/$action/wait") foreach { secs => 
-      logger.info(s"Waiting for ${secs} second(s) (post-$action wait)")
+      logger.info(s"Waiting for $secs second(s) (post-$action wait)")
       Thread.sleep(secs.toLong * 1000)
     }
     
     // wait for javascript post condition if one is configured for this action
     scopes.getOpt(s"$element/$action/condition") foreach { condition =>
       val javascript = scopes.get(s"$condition/javascript")
-      logger.debug(s"Waiting for script to return true: ${javascript}")
+      logger.debug(s"Waiting for script to return true: $javascript")
       waitUntil(s"Waiting until $condition (post-$action condition)") {
         executeScriptPredicate(javascript)
       }
@@ -512,7 +501,7 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
   
   /** Gets the title of the current page in the browser.*/
   def getTitle: String = withWebDriver { webDriver => 
-    webDriver.getTitle() tap { title =>
+    webDriver.getTitle tap { title =>
       bindAndWait("page", "title", title)
     }
   }
@@ -588,7 +577,7 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
       logger.debug(s"Selecting option in ${elementBinding.element} by index: $index")
       val select = new Select(webElement)
       select.selectByIndex(index)
-      bindAndWait(elementBinding.element, "select", select.getFirstSelectedOption().getText())
+      bindAndWait(elementBinding.element, "select", select.getFirstSelectedOption.getText)
     }
   }
   
@@ -609,9 +598,9 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
           case _ =>
             withWebElement(action, elementBinding) { webElement =>
               action match {
-                case "submit" => webElement.submit
-                case "check" => if (!webElement.isSelected()) webElement.sendKeys(Keys.SPACE)
-                case "uncheck" => if (webElement.isSelected()) webElement.sendKeys(Keys.SPACE)
+                case "submit" => webElement.submit()
+                case "check" => if (!webElement.isSelected) webElement.sendKeys(Keys.SPACE)
+                case "uncheck" => if (webElement.isSelected) webElement.sendKeys(Keys.SPACE)
               }
             }
         }
@@ -633,8 +622,8 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
           var actions = new Actions(driver).moveToElement(contextElement).moveToElement(webElement)
           action match {
             case "click" => actions = actions.click
-            case "check" => if (!webElement.isSelected()) actions = actions.sendKeys(Keys.SPACE)
-            case "uncheck" => if (webElement.isSelected()) actions = actions.sendKeys(Keys.SPACE)
+            case "check" => if (!webElement.isSelected) actions = actions.sendKeys(Keys.SPACE)
+            case "uncheck" => if (webElement.isSelected) actions = actions.sendKeys(Keys.SPACE)
           }
           actions.build.perform()
         }
@@ -679,25 +668,17 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     * @param actual the actual value of the element
     * @param operator the comparison operator
     * @param negate true to negate the result
-    * @param env the web environment context
     * @return true if the actual value matches the expected value
     */
-  def compare(name: String, expected: String, actual: () => String, operator: String, negate: Boolean) = {
+  def compare(name: String, expected: String, actual: () => String, operator: String, negate: Boolean): Unit = {
     var actualValue = ""
-    val result = Try {
-      waitUntil {
-        actualValue = actual()
-        if (actualValue != null) {
-          super.compare(expected, actualValue, operator, negate)
-        } else false
+    var result = false
+    waitUntil {
+      actualValue = actual()
+      if (actualValue != null) {
+        result = super.compare(expected, actualValue, operator, negate)
       }
-    } match {
-      case Success(_) => true
-      case Failure(failure) => failure.getCause match {
-        case _: FileNotFoundException => throw failure
-        case _: SQLException => throw failure
-        case _ => false
-      }
+      result
     }
     assert(result, s"Expected $name to ${if(negate) "not " else ""}$operator '$expected' but got '$actualValue'")
   }

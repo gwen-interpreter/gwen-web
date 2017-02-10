@@ -5,5 +5,6 @@ project/project/target/
 .project
 .history
 .settings/
+.idea/
 *.log
 /bin/

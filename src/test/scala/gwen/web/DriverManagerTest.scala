@@ -38,11 +38,11 @@ import gwen.eval.GwenOptions
 
 class DriverManagerTest extends FlatSpec with Matchers with MockitoSugar {
   
-  val mockChromeDriver = createMockLocalDriver
-  val mockFirefoxDriver = createMockLocalDriver
-  val mockIeDriver = createMockLocalDriver
-  val mockSafariDriver = createMockLocalDriver
-  val mockRemoteDriver = createMockRemoteDriver
+  val mockChromeDriver: WebDriver = createMockLocalDriver
+  val mockFirefoxDriver: WebDriver = createMockLocalDriver
+  val mockIeDriver: WebDriver = createMockLocalDriver
+  val mockSafariDriver: WebDriver = createMockLocalDriver
+  val mockRemoteDriver: RemoteWebDriver = createMockRemoteDriver
   
   "Firefox setting" should "load firefox driver" in {
     val manager = newManager("firefox")
@@ -71,7 +71,6 @@ class DriverManagerTest extends FlatSpec with Matchers with MockitoSugar {
       driver should be (mockRemoteDriver)
       val capabilities = driver.getCapabilities
       capabilities.getCapability(ChromeOptions.CAPABILITY).getClass should be (classOf[ChromeOptions])
-      // TODO add other capabilities asserts here, etc..
     }
   }
   
@@ -88,7 +87,7 @@ class DriverManagerTest extends FlatSpec with Matchers with MockitoSugar {
     manager.quit()
     verify(webDriver1).quit()
     val webDriver2 = manager.withWebDriver { webDriver => webDriver }
-    webDriver1 should not be (webDriver2)
+    webDriver1 should not be webDriver2
   }
   
   "Accessing web driver without closing manager" should "return the same web driver instance" in {
@@ -125,7 +124,7 @@ class DriverManagerTest extends FlatSpec with Matchers with MockitoSugar {
     override private[web] def remote(hubUrl: String, capabilities: DesiredCapabilities): WebDriver = {
       val mockDriver = mockRemoteDriver
       when(mockDriver.getCapabilities).thenReturn(capabilities)
-      return mockDriver
+      mockDriver
     }
     override private[web] def loadWebDriver: WebDriver = withSetting("gwen.web.browser", driverName) {
       super.loadWebDriver

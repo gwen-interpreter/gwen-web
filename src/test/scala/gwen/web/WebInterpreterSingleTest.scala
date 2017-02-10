@@ -19,7 +19,7 @@ package gwen.web
 class WebInterpreterSingleTest extends WebInterpreterTest {
 
   "Single floodio feature" should "evaluate" in {
-    evaluate(List("features/floodio/FloodIO.feature"), false, false, "target/reports/single/floodio", None)
+    evaluate(List("features/floodio/FloodIO.feature"), parallel = false, dryRun = false, "target/reports/single/floodio", None)
   }
   
 }

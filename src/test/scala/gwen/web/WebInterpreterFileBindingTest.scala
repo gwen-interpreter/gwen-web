@@ -19,7 +19,7 @@ package gwen.web
 class WebInterpreterFileBindingTest extends WebInterpreterTest {
 
   "File bindings tests" should "pass" in {
-    evaluate(List("features/file"), false, false, "target/reports/file", None)
+    evaluate(List("features/file"), parallel = false, dryRun = false, "target/reports/file", None)
   }
   
 }

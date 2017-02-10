@@ -27,7 +27,7 @@ package gwen {
       def noSuchWindowError(msg: String) = throw new NoSuchWindowException(msg)
 
       /** Thrown when an unsupported web driver is detected. */
-      class UnsupportedWebDriverException(driverName: String) extends RuntimeException(s"Unsupported web driver: ${driverName}")
+      class UnsupportedWebDriverException(driverName: String) extends RuntimeException(s"Unsupported web driver: $driverName")
       
       /** Thrown when an attempt is made to switch to a window that does not exist. */
       class NoSuchWindowException(msg: String) extends RuntimeException(msg)

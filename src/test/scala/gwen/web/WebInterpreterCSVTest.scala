@@ -19,19 +19,19 @@ package gwen.web
 class WebInterpreterCSVTest extends WebInterpreterTest {
 
   "Dry run implicit CSV data-driven feature" should "pass" in {
-    evaluate(List("features/csvdriven/FloodIO.feature"), false, true, "target/reports/dryrun-csvdriven-1", None)  // will auto discover csv in same folder
+    evaluate(List("features/csvdriven/FloodIO.feature"), parallel = false, dryRun = true, "target/reports/dryrun-csvdriven-1", None)  // will auto discover csv in same folder
   }
   
   "Dry run explicit CSV data-driven feature" should "pass" in {
-    evaluate(List("features/csvdriven/FloodIO.feature"), false, true, "target/reports/dryrun-csvdriven-2", Some("features/csvdriven/FloodIO.csv"))
+    evaluate(List("features/csvdriven/FloodIO.feature"), parallel = false, dryRun = true, "target/reports/dryrun-csvdriven-2", Some("features/csvdriven/FloodIO.csv"))
   }
   
   "Sequential CSV data-driven feature" should "evaluate" in {
-    evaluate(List("features/csvdriven/FloodIO.feature"), false, false, "target/reports/sequential-csvdriven", Some("features/csvdriven/FloodIO.csv"))
+    evaluate(List("features/csvdriven/FloodIO.feature"), parallel = false, dryRun = false, "target/reports/sequential-csvdriven", Some("features/csvdriven/FloodIO.csv"))
   }
   
   "Parallel CSV data-driven feature" should "evaluate" in {
-    evaluate(List("features/csvdriven/FloodIO.feature"), true, false, "target/reports/parallel-csvdriven", None) // will auto discover csv in same folder
+    evaluate(List("features/csvdriven/FloodIO.feature"), parallel = true, dryRun = false, "target/reports/parallel-csvdriven", None) // will auto discover csv in same folder
   }
   
 }

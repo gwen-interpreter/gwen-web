@@ -19,7 +19,7 @@ package gwen.web
 class WebInterpreterMetaImportsDryRunTest extends WebInterpreterTest {
 
   "Dry run on single feature with meta imports" should "validate feature" in {
-    evaluate(List("features/meta-imports/GoogleSearch.feature"), false, true, "target/reports/meta-imports-dry-run", None)
+    evaluate(List("features/meta-imports/GoogleSearch.feature"), parallel = false, dryRun = true, "target/reports/meta-imports-dry-run", None)
   }
   
 }

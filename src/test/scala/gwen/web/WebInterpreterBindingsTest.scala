@@ -19,7 +19,7 @@ package gwen.web
 class WebInterpreterBindingsTest extends WebInterpreterTest {
 
   "Bindings tests" should "pass" in {
-    evaluate(List("features/bindings"), false, false, "target/reports/bindings", None)
+    evaluate(List("features/bindings"), parallel = false, dryRun = false, "target/reports/bindings", None)
   }
   
 }

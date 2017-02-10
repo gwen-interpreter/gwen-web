@@ -12,17 +12,17 @@ class WebDslTest extends FlatSpec {
 
   "gwen-web.dsl" should "pass --dry-run test" in {
     
-    val options = new GwenOptions(dryRun = true);
+    val options = new GwenOptions(dryRun = true)
     
     val env = new WebEnvContext(options, new ScopedDataStack())
-    env.scopes.set("<element>/locator", "id");
+    env.scopes.set("<element>/locator", "id")
     env.scopes.set("<element>/locator/id", "id")
     env.scopes.set("<reference>", "reference")
     env.scopes.set("<dropdown>/locator", "id")
     env.scopes.set("<dropdown>/locator/id", "id")
     env.scopes.set("<url>", "url")
     env.scopes.set("<condition>/javascript", "condition")
-    env.scopes.set("<container>/locator", "id");
+    env.scopes.set("<container>/locator", "id")
     env.scopes.set("<container>/locator/id", "id")
     env.scopes.set("<context>/locator", "id")
     env.scopes.set("<context>/locator/id", "id")

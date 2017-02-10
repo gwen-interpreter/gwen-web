@@ -32,18 +32,18 @@ import org.scalatest.Matchers
 import org.scalatest.mockito.MockitoSugar
 import gwen.eval.ScopedDataStack
 import gwen.eval.GwenOptions
-import org.openqa.selenium.WebDriver.TargetLocator
+import org.openqa.selenium.WebDriver.{Options, TargetLocator, Timeouts}
 
 class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar with WebElementLocator {
 
-  val mockWebDriver = mock[FirefoxDriver]
-  val mockWebElement = mock[WebElement]
-  val mockContainerElement = mock[WebElement]
-  val mockIFrameElement = mock[WebElement]
-  val mockFrameElement = mock[WebElement]
-  val mockTargetLocator = mock[TargetLocator]
-  val mockWebDriverOptions = mock[WebDriver.Options]
-  val mockWebDriverTimeouts = mock[WebDriver.Timeouts]
+  val mockWebDriver: FirefoxDriver = mock[FirefoxDriver]
+  val mockWebElement: WebElement = mock[WebElement]
+  val mockContainerElement: WebElement = mock[WebElement]
+  val mockIFrameElement: WebElement = mock[WebElement]
+  val mockFrameElement: WebElement = mock[WebElement]
+  val mockTargetLocator: TargetLocator = mock[TargetLocator]
+  val mockWebDriverOptions: Options = mock[WebDriver.Options]
+  val mockWebDriverTimeouts: Timeouts = mock[WebDriver.Timeouts]
   
   "Attempt to locate non existent element" should "throw no such element error" in {
     
@@ -100,7 +100,7 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar wit
     when(mockWebDriver.manage()).thenReturn(mockWebDriverOptions)
     when(mockWebDriverOptions.timeouts()).thenReturn(mockWebDriverTimeouts)
     doReturn(mockWebElement).when(mockWebDriver).executeScript(s"return $lookup")
-    when(mockWebElement.isDisplayed()).thenReturn(true);
+    when(mockWebElement.isDisplayed).thenReturn(true)
     
     locate(env, LocatorBinding("username", locator, lookup, None)) should be (mockWebElement)
     
@@ -114,13 +114,13 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar wit
     val lookup = "document.getElementById('username')"
     val env = newEnv
     
-    val timeoutError = new TimeoutException();
+    val timeoutError = new TimeoutException()
     when(mockWebDriver.manage()).thenReturn(mockWebDriverOptions)
     when(mockWebDriverOptions.timeouts()).thenReturn(mockWebDriverTimeouts)
     doThrow(timeoutError).when(mockWebDriver).executeScript(s"return $lookup")
     
-    val e = intercept[TimeoutException] {
-      locate(env, new LocatorBinding("username", locator, lookup, None))
+    intercept[TimeoutException] {
+      locate(env, LocatorBinding("username", locator, lookup, None))
     }
     
     verify(mockWebDriver, atLeastOnce()).executeScript(s"return $lookup")
@@ -128,12 +128,10 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar wit
   }
   
   "Timeout on locating optional element by javascript" should "return None" in {
-    
-    val locator = "javascript"
+
     val lookup = "document.getElementById('username')"
-    val env = newEnv
     
-    val timeoutError = new TimeoutException();
+    val timeoutError = new TimeoutException()
     when(mockWebDriver.manage()).thenReturn(mockWebDriverOptions)
     when(mockWebDriverOptions.timeouts()).thenReturn(mockWebDriverTimeouts)
     doThrow(timeoutError).when(mockWebDriver).executeScript(s"return $lookup")
@@ -149,7 +147,7 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar wit
     when(mockWebDriver.manage()).thenReturn(mockWebDriverOptions)
     when(mockWebDriverOptions.timeouts()).thenReturn(mockWebDriverTimeouts)
     when(mockWebDriver.findElement(by)).thenReturn(mockWebElement)
-    when(mockWebElement.isDisplayed()).thenReturn(true)
+    when(mockWebElement.isDisplayed).thenReturn(true)
     
     when(mockWebDriver.findElement(By.id("container"))).thenReturn(mockContainerElement)
     when(mockContainerElement.getTagName).thenReturn("div")
@@ -159,14 +157,14 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar wit
     
     when(mockWebDriver.findElement(By.id("iframe"))).thenReturn(mockIFrameElement)
     when(mockIFrameElement.getTagName).thenReturn("iframe")
-    when(mockWebDriver.switchTo()).thenReturn(mockTargetLocator);
+    when(mockWebDriver.switchTo()).thenReturn(mockTargetLocator)
     when(mockTargetLocator.frame(mockIFrameElement)).thenReturn(mockWebDriver)
     env.scopes.set("iframe/locator", "id")
     env.scopes.set("iframe/locator/id", "iframe")
     
     when(mockWebDriver.findElement(By.id("frame"))).thenReturn(mockFrameElement)
     when(mockFrameElement.getTagName).thenReturn("frame")
-    when(mockWebDriver.switchTo()).thenReturn(mockTargetLocator);
+    when(mockWebDriver.switchTo()).thenReturn(mockTargetLocator)
     when(mockTargetLocator.frame(mockFrameElement)).thenReturn(mockWebDriver)
     env.scopes.set("frame/locator", "id")
     env.scopes.set("frame/locator/id", "frame")
@@ -183,7 +181,7 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar wit
   "Attempt to locate element with unsupported locator" should "throw unsuported locator error" in {
     val env = newEnv
     env.scopes.addScope("login").set("username/id", "unknown").set("username/id/unknown", "funkyness")
-    var e = intercept[LocatorBindingException] {
+    val e = intercept[LocatorBindingException] {
       locate(env, LocatorBinding("username", "unknown", "funkiness", None))
     }
     e.getMessage should be ("Could not locate username: unsupported locator: unknown")

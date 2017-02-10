@@ -16,15 +16,12 @@
 
 package gwen.web
 
-import java.util.ArrayList
+import java.util
+
 import org.openqa.selenium.By
-import org.openqa.selenium.WebDriverException
 import org.openqa.selenium.WebElement
 import gwen.Predefs.Kestrel
 import com.typesafe.scalalogging.LazyLogging
-import scala.util.Try
-import scala.util.Success
-import scala.util.Failure
 
 /**
   * Locates web elements using the selenium web driver.
@@ -62,10 +59,10 @@ trait WebElementLocator extends LazyLogging {
       case "link text" => getElement(env, By.linkText(lookup), elementBinding)
       case "partial link text" => getElement(env, By.partialLinkText(lookup), elementBinding)
       case "javascript" => getElementByJavaScript(env, s"$lookup")
-      case _ => throw new LocatorBindingException(elementBinding.element, s"unsupported locator: ${locator}")
+      case _ => throw new LocatorBindingException(elementBinding.element, s"unsupported locator: $locator")
     }) tap { optWebElement =>
       optWebElement foreach { webElement =>
-        if (!webElement.isDisplayed()) {
+        if (!webElement.isDisplayed) {
           env.scrollIntoView(webElement, ScrollTo.top)
         }
         env.highlight(webElement)
@@ -121,23 +118,23 @@ trait WebElementLocator extends LazyLogging {
     * visible in the browser, then the element is brought into view by scrolling to it.
     * 
     * @param env the web environment context
-    * @param javascipt the javascript expression for returning the element
+    * @param javascript the javascript expression for returning the element
     */
   private def getElementByJavaScript(env: WebEnvContext, javascript: String): Option[WebElement] = {
-    var elem: Option[WebElement] = None
+    var element: Option[WebElement] = None
     env.waitUntil {
-      elem = env.executeScript(s"return $javascript") match {
-        case elems: ArrayList[_] => 
-          if (!elems.isEmpty()) Option(elems.get(0).asInstanceOf[WebElement])
+      element = env.executeScript(s"return $javascript") match {
+        case elems: util.ArrayList[_] => 
+          if (!elems.isEmpty) Option(elems.get(0).asInstanceOf[WebElement])
           else None
         case elem => Option(elem) match {
-          case Some(elem) => Option(elem.asInstanceOf[WebElement])
+          case Some(e) => Option(e.asInstanceOf[WebElement])
           case None => None
         }
       }
-      elem.isDefined
+      element.isDefined
     }
-    elem
+    element
   }
   
 }
@@ -150,7 +147,7 @@ trait WebElementLocator extends LazyLogging {
   *  @param lookup the lookup string
   *  @param container optional parent container name
   */
-case class LocatorBinding(val element: String, val locator: String, val lookup: String, val container: Option[String])
+case class LocatorBinding(element: String, locator: String, lookup: String, container: Option[String])
 
 /** Thrown when a web element cannot be located. */
-class LocatorBindingException(element: String, causeMsg: String) extends RuntimeException(s"Could not locate ${element}: ${causeMsg}")
+class LocatorBindingException(element: String, causeMsg: String) extends RuntimeException(s"Could not locate $element: $causeMsg")

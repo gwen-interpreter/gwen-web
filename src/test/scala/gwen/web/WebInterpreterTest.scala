@@ -16,7 +16,6 @@
 
 package gwen.web
 
-import java.io.File
 import org.scalatest.FlatSpec
 import gwen.dsl.Failed
 import gwen.dsl.Passed
@@ -37,7 +36,7 @@ abstract class WebInterpreterTest extends FlatSpec {
       val launcher = new GwenLauncher(new WebInterpreter)
       launcher.run(options, None) match {
         case Passed(_) => // woo hoo
-        case Failed(_, error) => error.printStackTrace(); fail(error.getMessage())
+        case Failed(_, error) => error.printStackTrace(); fail(error.getMessage)
         case _ => fail("evaluation expected but got noop")
       }
     }

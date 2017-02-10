@@ -17,22 +17,17 @@
 package gwen.web
 
 import org.mockito.Mockito.when
-import org.mockito.Mockito.never
 import org.mockito.Mockito.verify
-import org.mockito.Matchers.any
-import org.openqa.selenium.WebDriver
 import org.scalatest.FlatSpec
 import org.scalatest.Matchers
 import org.scalatest.mockito.MockitoSugar
-import gwen.eval.ScopedDataStack
-import gwen.eval.GwenOptions
 import gwen.dsl.Step
 import gwen.dsl.StepKeyword
 
 class WebEngineTest extends FlatSpec with Matchers with MockitoSugar with WebEngine {
   
-  val mockEnv = mock[WebEnvContext]
-  val mockLocatorBinding = mock[LocatorBinding]
+  val mockEnv: WebEnvContext = mock[WebEnvContext]
+  val mockLocatorBinding: LocatorBinding = mock[LocatorBinding]
   
   "Performing action on context sensitive web element" should "peform that action" in {
     val step = Step(StepKeyword.When, "I click the menu item of the menu")

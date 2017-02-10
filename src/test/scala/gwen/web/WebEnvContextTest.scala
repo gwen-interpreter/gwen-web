@@ -16,7 +16,6 @@
 
 package gwen.web
 
-import org.mockito.Mockito.never
 import org.mockito.Mockito.verify
 import org.openqa.selenium.WebDriver
 import org.scalatest.FlatSpec
@@ -24,11 +23,12 @@ import org.scalatest.Matchers
 import org.scalatest.mockito.MockitoSugar
 import gwen.eval.ScopedDataStack
 import gwen.eval.GwenOptions
+import org.openqa.selenium.WebDriver.{Options, Timeouts}
 
 class WebEnvContextTest extends FlatSpec with Matchers with MockitoSugar {
   
-  val mockWebDriverOptions = mock[WebDriver.Options]
-  val mockWebDriverTimeouts = mock[WebDriver.Timeouts]
+  val mockWebDriverOptions: Options = mock[WebDriver.Options]
+  val mockWebDriverTimeouts: Timeouts = mock[WebDriver.Timeouts]
   
   "New web env context" should "have 'feature' scope" in {
     val mockDriverManager = mock[DriverManager]
@@ -42,7 +42,7 @@ class WebEnvContextTest extends FlatSpec with Matchers with MockitoSugar {
     env.scopes.addScope("login")
     env.scopes.set("username", "Gwen")
     env.scopes.get("username") should be ("Gwen")
-    env.reset
+    env.reset()
     env.scopes.current.isFeatureScope should be (true)
     env.scopes.getOpt("username") should be (None)
   }
@@ -93,7 +93,7 @@ class WebEnvContextTest extends FlatSpec with Matchers with MockitoSugar {
   
   "Attribute with javascript binding" should "resolve" in {
     val mockDriverManager = mock[DriverManager]
-    val env = newEnv(mockDriverManager, true)
+    val env = newEnv(mockDriverManager, dry = true)
     env.scopes.set("username/javascript", "$('#username').val()")
     env.getAttribute("username") should be ("$[javascript:$('#username').val()]")
   }
@@ -133,27 +133,27 @@ class WebEnvContextTest extends FlatSpec with Matchers with MockitoSugar {
   
   "Attribute with sysproc binding" should "resolve" in {
     val mockDriverManager = mock[DriverManager]
-    val env = newEnv(mockDriverManager, true)
+    val env = newEnv(mockDriverManager, dry = true)
     env.scopes.set("hostname/sysproc", "local command")
     env.getAttribute("hostname") should be ("$[sysproc:local command]")
   }
   
   "Attribute with file binding" should "resolve" in {
     val mockDriverManager = mock[DriverManager]
-    val env = newEnv(mockDriverManager, true)
+    val env = newEnv(mockDriverManager, dry = true)
     env.scopes.set("xml/file", "path-to/file.xml")
     env.getAttribute("xml") should be ("$[file:path-to/file.xml]")
   }
   
   "Attribute with sql binding" should "resolve" in {
     val mockDriverManager = mock[DriverManager]
-    val env = newEnv(mockDriverManager, true)
+    val env = newEnv(mockDriverManager, dry = true)
     env.scopes.set("username/sql/selectStmt", "select username from users")
     env.scopes.set("username/sql/dbName", "subscribers")
     env.getAttribute("username") should be ("$[sql:select username from users]")
   }
   
-  def newEnv(browser: DriverManager, dry:Boolean = false) = {
+  def newEnv(browser: DriverManager, dry:Boolean = false): WebEnvContext = {
     
    new WebEnvContext(GwenOptions(dryRun=dry), new ScopedDataStack()) {
      override def withWebDriver[T](f: WebDriver => T)(implicit takeScreenShot: Boolean = false): T = f(mock[WebDriver])
@@ -162,7 +162,7 @@ class WebEnvContextTest extends FlatSpec with Matchers with MockitoSugar {
   }
   
   private def shouldFailWithLocatorBindingError(element: String, env: WebEnvContext, expectedMsg: String) {
-    var e = intercept[LocatorBindingException] {
+    val e = intercept[LocatorBindingException] {
       env.getLocatorBinding(element)
     }
     e.getMessage should be (expectedMsg)

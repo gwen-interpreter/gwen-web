@@ -16,9 +16,9 @@
 
 package gwen.web
 
-import java.io.File
 import java.net.URL
 import java.util.concurrent.TimeUnit
+
 import org.openqa.selenium.OutputType
 import org.openqa.selenium.TakesScreenshot
 import org.openqa.selenium.WebDriver
@@ -34,40 +34,36 @@ import org.openqa.selenium.remote.RemoteWebDriver
 import org.openqa.selenium.safari.SafariDriver
 import com.typesafe.scalalogging.LazyLogging
 import gwen.Predefs.Kestrel
-import gwen.Predefs.RegexContext
 import org.apache.commons.io.FileUtils
 import gwen.eval.EnvContext
 import gwen.errors._
 import gwen.web.errors._
-import scala.collection.mutable.Map
-import gwen.GwenSettings
-import scala.collection.mutable.Stack
-import gwen.errors.AmbiguousCaseException
 import collection.JavaConverters._
+import scala.collection.mutable
 
 /** Provides access to the web driver used to drive the browser. */
 trait DriverManager extends LazyLogging { 
   env: EnvContext =>
     
   /** Map of web driver instances (keyed by name). */
-  private[web] val drivers: Map[String, WebDriver] = Map()
+  private[web] val drivers: mutable.Map[String, WebDriver] = mutable.Map()
   
   /** The current web browser session. */
   private[web] var session = "primary"
     
   /** Current stack of windows. */
-  private val windows = Stack[String]()
+  private val windows = mutable.Stack[String]()
   
   /** Last captured screenshot file size. */
   private var lastScreenshotSize: Option[Long] = None
     
   /** Provides private access to the web driver */
-  private def webDriver: WebDriver = drivers.get(session) getOrElse {
-    loadWebDriver tap { driver =>
-      drivers += (session -> driver)
-      windows push driver.getWindowHandle()
-    }
-  }
+  private def webDriver: WebDriver = drivers.getOrElse(session, {
+      loadWebDriver tap { driver =>
+        drivers += (session -> driver)
+        windows push driver.getWindowHandle
+      }
+    })
   
   /** Quits all browsers and closes the web drivers (if any have loaded). */
   def quit() {
@@ -78,7 +74,7 @@ trait DriverManager extends LazyLogging {
   def quit(name: String) {
     drivers.get(name) foreach { driver =>
       logger.info(s"Closing browser session${ if(name == "primary") "" else s": $name"}")
-      driver.quit
+      driver.quit()
       drivers.remove(name)
     }
     session = "primary"
@@ -90,12 +86,12 @@ trait DriverManager extends LazyLogging {
     * @param driver the current web driver 
     */
   private[web] def switchToChild(driver: WebDriver) {
-    val children = driver.getWindowHandles.asScala.filter(window => windows.forall(_ != window)).toList match {
+    val children = driver.getWindowHandles.asScala.filter(window => !windows.contains(window)).toList match {
       case Nil if windows.size > 1 => windows.init
       case cs => cs
     }
     if (children.size == 1) {
-      switchToWindow(children.head, true)
+      switchToWindow(children.head, isChild = true)
     } else if (children.size > 1) {
       ambiguousCaseError(s"Cannot determine which child window to switch to: ${children.size} were detected but only one is supported")
     } else {
@@ -131,7 +127,7 @@ trait DriverManager extends LazyLogging {
     if (windows.nonEmpty) {
       val child = windows.pop
       val target = if (windows.nonEmpty) windows.top else child
-      switchToWindow(target, false)
+      switchToWindow(target, isChild = false)
       if (!childClosed) { pushWindow(child) }
     } else {
       logger.warn("Bypassing switch to parent window: no child window currently open")
@@ -164,7 +160,7 @@ trait DriverManager extends LazyLogging {
     * @param takeScreenShot true to take screenshot after performing the function
     */
   def withWebDriver[T](f: WebDriver => T)(implicit takeScreenShot: Boolean = false): T = {
-    f(webDriver) tap { driver =>
+    f(webDriver) tap { _ =>
       if (takeScreenShot) {
         captureScreenshot(false)
       }
@@ -198,10 +194,10 @@ trait DriverManager extends LazyLogging {
     val capabilities = driverName match {
       case "firefox" => 
         DesiredCapabilities.firefox tap { capabilities =>
-          capabilities.setCapability(FirefoxDriver.PROFILE, firefoxProfile)
+          capabilities.setCapability(FirefoxDriver.PROFILE, firefoxProfile())
         }
       case "chrome" => DesiredCapabilities.chrome tap { capabilities =>
-        capabilities.setCapability(ChromeOptions.CAPABILITY, chromeOptions)
+        capabilities.setCapability(ChromeOptions.CAPABILITY, chromeOptions())
         capabilities.setCapability(CapabilityType.ACCEPT_SSL_CERTS, WebSettings.`gwen.web.accept.untrusted.certs`);
       }
       case "ie" => ieCapabilities
@@ -231,12 +227,12 @@ trait DriverManager extends LazyLogging {
       profile.setPreference("general.useragent.override", _)
     }
     if (WebSettings.`gwen.web.authorize.plugins`) {
-      profile.setPreference("security.enable_java", true);
-      profile.setPreference("plugin.state.java", 2);
+      profile.setPreference("security.enable_java", true)
+      profile.setPreference("plugin.state.java", 2)
     }
-    WebSettings.`gwen.web.accept.untrusted.certs` tap { acceptUntrustedCerts =>
-      profile.setAcceptUntrustedCertificates(true);
-      profile.setAssumeUntrustedCertificateIssuer(false);
+    WebSettings.`gwen.web.accept.untrusted.certs` tap { _ =>
+      profile.setAcceptUntrustedCertificates(true)
+      profile.setAssumeUntrustedCertificateIssuer(false)
     }
     if (WebSettings.`gwen.web.suppress.images`) {
       profile.setPreference("permissions.default.image", 2)
@@ -274,7 +270,7 @@ trait DriverManager extends LazyLogging {
         }
       }
     }
-    if (!prefs.isEmpty()) {
+    if (!prefs.isEmpty) {
       options.setExperimentalOption("prefs", prefs)
     }
     WebSettings.`gwen.web.chrome.extensions` tap { extensions =>
@@ -289,9 +285,9 @@ trait DriverManager extends LazyLogging {
     capabilities.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);  
   }
   
-  private[web] def chrome(): WebDriver = new ChromeDriver(chromeOptions)
+  private[web] def chrome(): WebDriver = new ChromeDriver(chromeOptions())
   
-  private[web] def firefox(): WebDriver = new FirefoxDriver(firefoxProfile)
+  private[web] def firefox(): WebDriver = new FirefoxDriver(firefoxProfile())
   
   private[web] def ie(): WebDriver = new InternetExplorerDriver(ieCapabilities)
   
