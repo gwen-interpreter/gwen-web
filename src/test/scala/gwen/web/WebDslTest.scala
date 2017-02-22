@@ -31,7 +31,7 @@ class WebDslTest extends FlatSpec {
     val interpreter = new WebInterpreter
     withSetting("<name>", "name") {
       env.dsl map { dsl =>
-        dsl.replace("<position>", "1").replace("<duration>", "2").replace("<delayPeriod>", "20").replace("<timeoutPeriod>", "3000000")
+        dsl.replace("<position>", "1").replace("<duration>", "2").replace("<delayPeriod>", "20").replace("<timeoutPeriod>", "3000000").replace("<w>", "375").replace("<h>", "667")
       } foreach { dsl => 
         StepKeyword.values foreach { keyword =>
           interpreter.evaluate(Step(keyword, dsl.replaceAll("<step>", "I refresh the current page")), env)

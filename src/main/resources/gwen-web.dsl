@@ -302,3 +302,6 @@ I capture the current screenshot
 <element> can be unchecked by javascript "<javascript>"
 <reference> is defined by sql "<selectStmt>" in the <dbName> database
 <reference> will be defined by sql "<selectStmt>" in the <dbName> database
+I resize the window to width <w> and height <h>
+I maximize the window
+I maximise the window

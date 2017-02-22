@@ -459,6 +459,14 @@ trait WebEngine extends EvalEngine[WebEnvContext]
           }
         }
       }
+
+      case r"""I resize the window to width (\d+?)$width and height (\d+?)$$$height""" => env.execute {
+        env.resizeWindow(width.toInt, height.toInt)
+      }
+
+      case r"""I maximi(?:z|s)e the window""" => env.execute {
+        env.maximizeWindow()
+      }
         
       case _ => super.evaluate(step, env)
       

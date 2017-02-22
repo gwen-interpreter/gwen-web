@@ -21,12 +21,7 @@ import java.io.File
 import scala.util.Failure
 import scala.util.Success
 import scala.util.Try
-import org.openqa.selenium.JavascriptExecutor
-import org.openqa.selenium.Keys
-import org.openqa.selenium.TimeoutException
-import org.openqa.selenium.WebDriver
-import org.openqa.selenium.WebDriverException
-import org.openqa.selenium.WebElement
+import org.openqa.selenium._
 import org.openqa.selenium.support.ui.ExpectedCondition
 import org.openqa.selenium.support.ui.Select
 import org.openqa.selenium.support.ui.WebDriverWait
@@ -658,6 +653,29 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
    */
   def scrollIntoView(webElement: WebElement, scrollTo: ScrollTo.Value) {
     executeScript(s"var elem = arguments[0]; if (typeof elem !== 'undefined' && elem != null) { elem.scrollIntoView(${scrollTo == ScrollTo.top}); }", webElement)
+  }
+
+  /**
+    * Resizes the browser window to the given dimensions.
+    *
+    * @param width the width
+    * @param height the height
+    */
+  def resizeWindow(width: Int, height: Int) {
+    logger.info(s"Resizing browser window to width $width and height $height")
+    withWebDriver { driver =>
+      driver.manage().window().setSize(new Dimension(width, height))
+    }
+  }
+
+  /**
+    * Maximizes the browser window.
+    */
+  def maximizeWindow() {
+    logger.info("Maximising browser window")
+    withWebDriver { driver =>
+      driver.manage().window().maximize()
+    }
   }
   
   /**

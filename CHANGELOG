@@ -1,3 +1,10 @@
+2.2.0
+=====
+Feb 23, 2017
+- Add DSLs for resizing currently active browser window (issue #36)
+  - I resize the window to width <w> and height <h>
+  - I <maximize|maximise> the window
+
 2.1.0
 =====
 Feb 10, 2017
