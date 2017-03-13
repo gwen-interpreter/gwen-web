@@ -38,15 +38,15 @@ resolvers += "Typesafe Repo" at "http://repo.typesafe.com/typesafe/releases/"
 
 resolvers += "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"
 
-libraryDependencies += "org.seleniumhq.selenium" % "selenium-chrome-driver" % "3.0.1"
+libraryDependencies += "org.seleniumhq.selenium" % "selenium-chrome-driver" % "3.3.1"
 
-libraryDependencies += "org.seleniumhq.selenium" % "selenium-firefox-driver" % "3.0.1"
+libraryDependencies += "org.seleniumhq.selenium" % "selenium-firefox-driver" % "3.3.1"
 
-libraryDependencies += "org.seleniumhq.selenium" % "selenium-ie-driver" % "3.0.1"
+libraryDependencies += "org.seleniumhq.selenium" % "selenium-ie-driver" % "3.3.1"
 
-libraryDependencies += "org.seleniumhq.selenium" % "selenium-safari-driver" % "3.0.1"
+libraryDependencies += "org.seleniumhq.selenium" % "selenium-safari-driver" % "3.3.1"
 
-libraryDependencies += "org.seleniumhq.selenium" % "selenium-support" % "3.0.1" excludeAll(
+libraryDependencies += "org.seleniumhq.selenium" % "selenium-support" % "3.3.1" excludeAll(
   ExclusionRule(organization = "junit", name="junit")
 )
 

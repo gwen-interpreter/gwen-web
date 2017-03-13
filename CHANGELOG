@@ -1,3 +1,10 @@
+2.3.0
+=====
+Mar 12, 2017
+- Added support for scenario outlines (see PR gwen-interpreter/gwen#29)
+- Update Selenium from v3.0.1 to v3.3.1
+- Update Gwen from v2.1.0 to v[2.2.0](https://github.com/gwen-interpreter/gwen/releases/tag/v2.2.0)
+
 2.2.0
 =====
 Feb 23, 2017
