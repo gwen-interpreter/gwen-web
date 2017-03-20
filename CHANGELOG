@@ -1,3 +1,8 @@
+2.3.1
+=====
+Mar 21, 2017
+- Fail with assertion error when a timeout is detected on compare step (instead of throwing timeout error)
+
 2.3.0
 =====
 Mar 12, 2017

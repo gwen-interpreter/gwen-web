@@ -152,6 +152,14 @@ class WebEnvContextTest extends FlatSpec with Matchers with MockitoSugar {
     env.scopes.set("username/sql/dbName", "subscribers")
     env.getAttribute("username") should be ("$[sql:select username from users]")
   }
+
+  "Timeout on compare" should "result in assertion error" in {
+    val mockDriverManager = mock[DriverManager]
+    val env = newEnv(mockDriverManager)
+    intercept[AssertionError] {
+      env.compare("a", "2", () => "1", "be", negate = false)
+    }
+  }
   
   def newEnv(browser: DriverManager, dry:Boolean = false): WebEnvContext = {
     

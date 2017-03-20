@@ -691,12 +691,16 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
   def compare(name: String, expected: String, actual: () => String, operator: String, negate: Boolean): Unit = {
     var actualValue = ""
     var result = false
-    waitUntil {
-      actualValue = actual()
-      if (actualValue != null) {
-        result = super.compare(expected, actualValue, operator, negate)
+    try {
+      waitUntil {
+        actualValue = actual()
+        if (actualValue != null) {
+          result = super.compare(expected, actualValue, operator, negate)
+        }
+        result
       }
-      result
+    } catch {
+      case _: TimeoutException => result = false
     }
     assert(result, s"Expected $name to ${if(negate) "not " else ""}$operator '$expected' but got '$actualValue'")
   }
