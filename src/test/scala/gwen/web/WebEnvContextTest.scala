@@ -153,11 +153,31 @@ class WebEnvContextTest extends FlatSpec with Matchers with MockitoSugar {
     env.getAttribute("username") should be ("$[sql:select username from users]")
   }
 
+  "Valid compare" should "evaluate successfully" in {
+    val mockDriverManager = mock[DriverManager]
+    val env = newEnv(mockDriverManager)
+    env.compare("a", "2", () => "2", "be", negate = false)
+  }
+
+  "Valid negated compare" should "evaluate successfully" in {
+    val mockDriverManager = mock[DriverManager]
+    val env = newEnv(mockDriverManager)
+    env.compare("a", "2", () => "1", "be", negate = true)
+  }
+
   "Timeout on compare" should "result in assertion error" in {
     val mockDriverManager = mock[DriverManager]
     val env = newEnv(mockDriverManager)
     intercept[AssertionError] {
       env.compare("a", "2", () => "1", "be", negate = false)
+    }
+  }
+
+  "Timeout on negated compare" should "result in assertion error" in {
+    val mockDriverManager = mock[DriverManager]
+    val env = newEnv(mockDriverManager)
+    intercept[AssertionError] {
+      env.compare("a", "2", () => "2", "be", negate = true)
     }
   }
   
