@@ -1,3 +1,8 @@
+2.3.2
+=====
+Mar 23, 2017
+- Documented steps for working with the current URL and also included them in the DSL for tab completion
+
 2.3.1
 =====
 Mar 21, 2017

@@ -148,11 +148,32 @@ the page title should not match json path <reference>
 <dropdown> value should not match regex <reference>
 <dropdown> value should not match xpath <reference>
 <dropdown> value should not match json path <reference>
+the current URL should be "<value>"
+the current URL should contain "<value>"
+the current URL should start with "<value>"
+the current URL should end with "<value>"
+the current URL should match regex "<expression>"
+the current URL should not be "<value>"
+the current URL should not contain "<value>"
+the current URL should not start with "<value>"
+the current URL should not end with "<value>"
+the current URL should not match regex "<expression>"
+the current URL should be <reference>
+the current URL should contain <reference>
+the current URL should start with <reference>
+the current URL should end with <reference>
+the current URL should match regex <reference>
+the current URL should not be <reference>
+the current URL should not contain <reference>
+the current URL should not start with <reference>
+the current URL should not end with <reference>
+the current URL should not match regex <reference>
 I capture the text in <reference> by xpath "<expression>" as <reference>
 I capture the node in <reference> by xpath "<expression>" as <reference>
 I capture the nodeset in <reference> by xpath "<expression>" as <reference>
 I capture the text in <reference> by regex "<expression>" as <reference>
 I capture the content in <reference> by json path "<expression>" as <reference>
+I capture the text in the current URL by regex "<expression>" as <reference>
 I capture the current URL
 I capture the current URL as <reference>
 I capture <reference> as <reference>

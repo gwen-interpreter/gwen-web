@@ -271,6 +271,42 @@ a:visited {
 		</div>
 
 		<div class="panel panel-default">
+			<div class="panel-heading" role="tab" id="dsl-10-1">
+				<h4 class="panel-title">
+					<a role="button" data-toggle="collapse" data-parent="#accordion0" href="#collapse-10-1" aria-expanded="true" aria-controls="collapseOne">
+						the current URL &lt;should|should not&gt; &lt;be|contain|start with|end with|match regex|match xpath&gt; &quot;<code>&lt;expression&gt;</code>&quot;
+					</a>
+				</h4>
+			</div>
+			<div id="collapse-10-1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-10-1">
+				<div class="panel-body">
+					Checks that the current URL in the browser matches or does not match a given expression
+					<ul>
+						<li><code>&lt;expression&gt;</code> = the expression to match against</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<div class="panel panel-default">
+			<div class="panel-heading" role="tab" id="dsl-11-1">
+				<h4 class="panel-title">
+					<a role="button" data-toggle="collapse" data-parent="#accordion0" href="#collapse-11-1" aria-expanded="true" aria-controls="collapseOne">
+						the current URL &lt;should|should not&gt; &lt;be|contain|start with|end with|match regex|match xpath&gt; <code>&lt;attribute&gt;</code>
+					</a>
+				</h4>
+			</div>
+			<div id="collapse-11-1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-11-1">
+				<div class="panel-body">
+					Checks that the current URL in the browser matches or does not match a bound attribute
+					<ul>
+						<li><code>&lt;attribute&gt;</code> = the name of the bound attribute containing the value to match against</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<div class="panel panel-default">
 			<div class="panel-heading" role="tab" id="dsl-12">
 				<h4 class="panel-title">
 					<a role="button" data-toggle="collapse" data-parent="#accordion0" href="#collapse-12" aria-expanded="true" aria-controls="collapseOne">
@@ -343,6 +379,25 @@ a:visited {
 					Extracts and binds a value by regex from an element, attribute, or property setting into an attribute
 					<ul>
 						<li><code>&lt;element|attribute|property&gt;</code> = the element, attribute, or property setting to extract the value from</li>
+						<li><code>&lt;expression&gt;</code> = the extractor expression</li>
+						<li><code>&lt;attribute&gt;</code> = the attribute to store the captured value into</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<div class="panel panel-default">
+			<div class="panel-heading" role="tab" id="dsl-15-1">
+				<h4 class="panel-title">
+					<a role="button" data-toggle="collapse" data-parent="#accordion0" href="#collapse-15-1" aria-expanded="true" aria-controls="collapseOne">
+						I capture the text in the current URL by regex &quot;<code>&lt;expression&gt;</code>&quot; as <code>&lt;attribute&gt;</code>
+					</a>
+				</h4>
+			</div>
+			<div id="collapse-15-1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-15-1">
+				<div class="panel-body">
+					Extracts and binds a value by regex from the current URL in the browser into an attribute
+					<ul>
 						<li><code>&lt;expression&gt;</code> = the extractor expression</li>
 						<li><code>&lt;attribute&gt;</code> = the attribute to store the captured value into</li>
 					</ul>
