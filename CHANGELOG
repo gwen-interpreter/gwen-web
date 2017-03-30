@@ -5,6 +5,7 @@ Mar 29, 2017
   element cannot be located.
 - move element state checking to Web env context class
 - dry run fix for steps accessing element text
+- Add todoMVC feature examples
 
 2.3.2
 =====
