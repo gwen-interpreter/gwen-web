@@ -1,3 +1,11 @@
+2.3.3
+=====
+Mar 29, 2017
+- When checking if an element is displayed or hidden, report no such element instead of unbound reference if the
+  element cannot be located.
+- move element state checking to Web env context class
+- dry run fix for steps accessing element text
+
 2.3.2
 =====
 Mar 23, 2017

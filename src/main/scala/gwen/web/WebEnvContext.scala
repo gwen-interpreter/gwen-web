@@ -22,7 +22,6 @@ import scala.util.Failure
 import scala.util.Success
 import scala.util.Try
 import org.openqa.selenium._
-import org.openqa.selenium.support.ui.ExpectedCondition
 import org.openqa.selenium.support.ui.Select
 import org.openqa.selenium.support.ui.WebDriverWait
 import gwen.Predefs.Kestrel
@@ -143,11 +142,9 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     */
   private def waitUntil(reason: Option[String], timeoutSecs: Long)(condition: => Boolean) {
     def doWaitUntil(webDriver: WebDriver, timeout: Long) {
-      new WebDriverWait(webDriver, timeout).until(
-          new ExpectedCondition[Boolean] {
-            override def apply(driver: WebDriver): Boolean = condition
-          }
-        )
+      new WebDriverWait(webDriver, timeout).until {
+        (driver: WebDriver) => condition
+      }
     }
     // some drivers intermittently throw javascript errors, so have to track timeout and retry
     val start = System.nanoTime()
@@ -159,8 +156,7 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
           doWaitUntil(webDriver, timeout)
           timeout = -1
         } catch {
-          case e: TimeoutException =>
-            throw e
+          case e: TimeoutException=> throw e
           case e: WebDriverException =>
             Thread.sleep(WebSettings`gwen.web.throttle.msecs`)
             timeout = timeoutSecs - ((System.nanoTime() - start) / 1000000000L)
@@ -180,7 +176,7 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     * @param element the element to highlight
     */
   def highlight(element: WebElement): Unit = {
-    val msecs = WebSettings`gwen.web.throttle.msecs`;
+    val msecs = WebSettings`gwen.web.throttle.msecs`; // need semi-colon (compiler bug?)
     if (msecs > 0) {
       val style = WebSettings.`gwen.web.highlight.style` 
       executeScript(s"element = arguments[0]; type = element.getAttribute('type'); if (('radio' == type || 'checkbox' == type) && element.parentElement.getElementsByTagName('input').length == 1) { element = element.parentElement; } original_style = element.getAttribute('style'); element.setAttribute('style', original_style + '; $style'); setTimeout(function() { element.setAttribute('style', original_style); }, $msecs);", element)(WebSettings.`gwen.web.capture.screenshots.highlighting`)
@@ -221,8 +217,7 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
      withWebElement(None, elementBinding)(f)
      
   /**
-    * Performs a function on a web element and transparently re-locates elements and 
-    * re-attempts the function if the web driver throws an exception.
+    * Locates a web element and performs a function on it.
     * 
     * @param action optional action string
     * @param elementBinding the web element locator binding
@@ -245,9 +240,6 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
           captureScreenshot(false)
         }
       }
-    } catch {
-      case _: WebDriverException =>
-        f(locate(this, elementBinding))
     } finally {
       wHandle foreach { handle =>
         withWebDriver { driver =>
@@ -256,7 +248,38 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
       }
     }
   }
-  
+
+  /**
+    * Checks the current state of an element.
+    *
+    * @param elementBinding the locator binding of the element
+    * @param state the state to check
+    * @param negate whether or not to negate the check
+    */
+  def checkElementState(elementBinding: LocatorBinding, state: String, negate: Boolean): Unit = {
+    var result = false
+    try {
+      withWebElement(elementBinding) { webElement =>
+        result = state match {
+          case "displayed" => webElement.isDisplayed
+          case "hidden" => !webElement.isDisplayed
+          case "checked" => webElement.isSelected
+          case "unchecked" => !webElement.isSelected
+          case "enabled" => webElement.isEnabled
+          case "disabled" => !webElement.isEnabled
+        }
+      }
+    } catch {
+      case e: NoSuchElementException =>
+        if ((state == "displayed" && negate) || (state == "hidden" && !negate)) result = !negate
+        else if (state == "displayed" || state == "hidden") result = false
+        else throw e
+    }
+    if (!negate) assert(result, s"${elementBinding.element} should be $state")
+    else assert(!result, s"${elementBinding.element} should not be $state")
+    bindAndWait(elementBinding.element, state, "true")
+  }
+
   /**
     * Gets a bound value from memory. A search for the value is made in 
     * the following order and the first value found is returned:
@@ -271,9 +294,9 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     if (name == "the current URL") captureCurrentUrl()
     (Try(getLocatorBinding(name)) match {
       case Success(binding) =>
-        Try(execute(getElementText(binding)).get) match {
+        Try(execute(getElementText(binding)).getOrElse(None)) match {
           case Success(text) => text.getOrElse(getAttribute(name))
-          case Failure(_) => getAttribute(name)
+          case Failure(e) => throw e
         }
       case Failure(_) => getAttribute(name)
     }) tap { value =>
@@ -432,7 +455,7 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     }
   }
   
-  def boundAttributeOrSelection(element: String, selection: String): () => String = () => Option(selection) match {
+  def boundAttributeOrSelection(element: String, selection: Option[String]): () => String = () => selection match {
     case None => getBoundReferenceValue(element)
     case Some(sel) => 
       try { 
@@ -689,15 +712,16 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     * @return true if the actual value matches the expected value
     */
   def compare(name: String, expected: String, actual: () => String, operator: String, negate: Boolean): Unit = {
-    var actualValue = ""
     var result = false
+    var actualValue = actual()
     try {
       waitUntil {
-        actualValue = actual()
-        if (actualValue != null) {
-          result = super.compare(expected, actualValue, operator, negate)
+        result = if (actualValue != null) {
+          super.compare(expected, actualValue, operator, negate)
+        } else false
+        result tap { r =>
+          if (!r) actualValue = actual()
         }
-        result
       }
     } catch {
       case _: TimeoutException => result = false
