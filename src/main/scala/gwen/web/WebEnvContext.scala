@@ -329,7 +329,8 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
             case None | Some("") =>
               Option(webElement.getAttribute("value")) match {
                 case None | Some("") =>
-                  Option(executeScript("(function(element){return element.innerText || element.textContent || ''})(arguments[0]);", webElement).asInstanceOf[String])
+                  val value = executeScript("(function(element){return element.innerText || element.textContent || ''})(arguments[0]);", webElement).asInstanceOf[String]
+                  if (value != null) Some(value) else Some("")
                 case value => value
               }
             case value => value
@@ -409,7 +410,7 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     (attScopes.findEntry { case (n, v) => n.matches(s"""$name(/(text|javascript|xpath.+|regex.+|json path.+|sysproc|file|sql.+))?""") && v != "" } map {
       case (n, v) => 
         if (n == s"$name/text") v
-        else if (n == s"$name/javascript") 
+        else if (n == s"$name/javascript")
           execute(Option(executeScript(s"return ${interpolate(v)(getBoundReferenceValue)}")).map(_.toString).getOrElse("")).getOrElse(s"$$[javascript:$v]")
         else if (n.startsWith(s"$name/xpath")) {
           val source = interpolate(getBoundReferenceValue(attScopes.get(s"$name/xpath/source")))(getBoundReferenceValue)
