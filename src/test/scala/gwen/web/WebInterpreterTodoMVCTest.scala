@@ -18,10 +18,12 @@ package gwen.web
 
 class WebInterpreterTodoMVCTest extends WebInterpreterTest {
 
-  "Todo MVC dry run" should "pass" in {
-    evaluate(List("features/todoMVC"), parallel = false, dryRun = true, "target/reports/todoMVC-dry-run", None)
-  }
+  // uncomment to run dry run test locally - do not commit uncommented to remove repo (log exceeds limit on travis CI)
+//  "Todo MVC dry run" should "pass" in {
+//    evaluate(List("features/todoMVC"), parallel = false, dryRun = true, "target/reports/todoMVC-dry-run", None)
+//  }
 
+  // uncomment to run integrated test locally (takes approx 50 mins) - do not commit uncommented to remove repo
 //  "Todo MVC tests" should "run" in {
 //    evaluate(List("features/todoMVC"), parallel = false, dryRun = false, "target/reports/todoMVC", None)
 //  }
