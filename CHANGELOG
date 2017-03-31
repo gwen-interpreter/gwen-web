@@ -1,3 +1,11 @@
+2.3.4
+=====
+Mar 31, 2017
+- Add dry run unit test for todoMVC examples
+- Convert null text retrieved from web pages to blank strings
+- Generate slideshows in reports only if screen shot capture has been enabled
+- Update Gwen from v2.2.0 to v[2.2.1](https://github.com/gwen-interpreter/gwen/releases/tag/v2.2.1)
+
 2.3.3
 =====
 Mar 29, 2017
