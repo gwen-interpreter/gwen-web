@@ -8,3 +8,6 @@ This product includes software developed at:
 This product has dependencies on other open source software. All bundled 
 third party dependencies and their licenses are listed in the  
 LICENSE-THIRDPARTY file.
+
+The feature examples in the features/todoMVC folder mimic the Serenity feature tests here:
+ - https://github.com/RiverGlide/serenity-web-todomvc-journey/blob/master/src/test/java/net/serenitybdd/demos/todos/features/
