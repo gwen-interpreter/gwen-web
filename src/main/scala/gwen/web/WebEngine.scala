@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2015 Branko Juric, Brady Wood
+ * Copyright 2014-2017 Branko Juric, Brady Wood
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -121,6 +121,23 @@ trait WebEngine extends EvalEngine[WebEnvContext]
             env.executeScriptPredicate(javascript)
           }
         }
+
+      case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)$locator "(.+?)"$expression in (.+?)$$$container""" =>
+        env.getLocatorBinding(container)
+        val elements = s"List[${element}]"
+        env.scopes.set(s"$elements/locator", locator)
+        env.scopes.set(s"$elements/locator/$locator", expression)
+        env.scopes.set(s"$elements/locator/$locator/container", container)
+        foreach(env.getLocatorBinding(elements), element, step, doStep, env)
+
+      case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)$locator "(.+?)"$$$expression""" =>
+        val elements = s"List[${element}]"
+        env.scopes.set(s"$elements/locator", locator)
+        env.scopes.set(s"$elements/locator/$locator", expression)
+        env.scopes.getOpt(s"$elements/locator/$locator/container") foreach { _ =>
+          env.scopes.set(s"$elements/locator/$locator/container", null)
+        }
+        foreach(env.getLocatorBinding(elements), element, step, doStep, env)
 
       case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using no delay and (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit timeout""" =>
         repeat(operation, step, doStep, condition, Duration.Zero, Duration(timeoutPeriod.toLong, timeoutUnit), env)
@@ -510,6 +527,43 @@ trait WebEngine extends EvalEngine[WebEnvContext]
       this.evaluateStep(Step(step.keyword, doStep), env).evalStatus match {
         case Failed(_, e) => throw e
         case _ => step
+      }
+    }
+  }
+
+  /**
+    * Performs a repeat until or while operation
+    */
+  private def foreach(elementsBinding: LocatorBinding, elementName: String, step: Step, doStep: String, env: WebEnvContext) {
+    env.execute {
+      env.locateAll(env, elementsBinding) match {
+        case Nil =>
+          logger.info(s"For-each[$elementName]: none found")
+        case webElements =>
+          val noOfElements = webElements.size
+          logger.info(s"For-each[$elementName]: $noOfElements found")
+          webElements.zipWithIndex foreach { case (webElement, index) =>
+            logger.info(s"Processing [$elementName] ${index + 1} of $noOfElements")
+            env.featureScope.objects.bind(elementName, webElement)
+            try {
+              evaluateStep(Step(step.keyword, doStep), env).evalStatus match {
+                case Failed(_, e) => throw e
+                case _ => step
+              }
+            } finally {
+              env.featureScope.objects.clear(elementName)
+            }
+        }
+      }
+    } getOrElse {
+      env.featureScope.objects.bind(elementName, "WebElement[DryRun]")
+      try {
+        evaluateStep(Step(step.keyword, doStep), env).evalStatus match {
+          case Failed(_, e) => throw e
+          case _ => step
+        }
+      } finally {
+        env.featureScope.objects.clear(elementName)
       }
     }
   }

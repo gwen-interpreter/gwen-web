@@ -1682,6 +1682,49 @@ a:visited {
 			</div>
 		</div>
 	</div>
+
+	<em style="color:gray">Since v2.4.0</em>
+	<div class="panel-group" id="accordion240" role="tablist" aria-multiselectable="true">
+		<div class="panel panel-default">
+			<div class="panel-heading" role="tab" id="dsl-240_1">
+				<h4 class="panel-title">
+					<a role="button" data-toggle="collapse" data-parent="#accordion0" href="#collapse-240_1" aria-expanded="true" aria-controls="collapseOne">
+						<code>&lt;step&gt;</code> for each <code>&lt;element&gt;</code> located by &lt;id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript&gt; &quot;<code>&lt;expression&gt;</code>&quot;
+					</a>
+				</h4>
+			</div>
+			<div id="collapse-240_1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-240_1">
+				<div class="panel-body">
+					Repeats a given step for each element in a collection of web elements. Nothing is performed if no elements are found.
+					<ul>
+						<li><code>&lt;step&gt;</code> = the step to repeat for each element</li>
+						<li><code>&lt;element&gt;</code> = the name given to the current element in each iteration</li>
+						<li><code>&lt;expression&gt;</code> = the lookup expression returning the elements to iterate over</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="panel panel-default">
+			<div class="panel-heading" role="tab" id="dsl-240_2">
+				<h4 class="panel-title">
+					<a role="button" data-toggle="collapse" data-parent="#accordion0" href="#collapse-240_2" aria-expanded="true" aria-controls="collapseOne">
+						<code>&lt;step&gt;</code> for each <code>&lt;element&gt;</code> located by &lt;id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript&gt; &quot;<code>&lt;expression&gt;</code>&quot; in <code>&lt;container&gt;</code>
+					</a>
+				</h4>
+			</div>
+			<div id="collapse-240_2" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-240_2">
+				<div class="panel-body">
+					Repeats a given step for each element in a collection of web elements in a container. Nothing is performed if no elements are found.
+					<ul>
+						<li><code>&lt;step&gt;</code> = the step to repeat for each element</li>
+						<li><code>&lt;element&gt;</code> = the name given to the current element in each iteration</li>
+						<li><code>&lt;expression&gt;</code> = the lookup expression returning the elements to iterate over</li>
+						<li><code>&lt;container&gt;</code> = the container element (a frame, div, or other container element)</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
 	
 	<a href="https://github.com/gwen-interpreter/gwen-web/wiki">&lt; Gwen-Web Wiki</a>
 

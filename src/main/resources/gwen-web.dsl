@@ -326,3 +326,13 @@ I capture the current screenshot
 I resize the window to width <w> and height <h>
 I maximize the window
 I maximise the window
+<step> for each <element> located by id "<expression>"
+<step> for each <element> located by name "<expression>"
+<step> for each <element> located by tag name "<expression>"
+<step> for each <element> located by css selector "<expression>"
+<step> for each <element> located by xpath "<expression>"
+<step> for each <element> located by class name "<expression>"
+<step> for each <element> located by link text "<expression>"
+<step> for each <element> located by partial link text "<expression>"
+<step> for each <element> located by javascript "<expression>"
+<step> for each <element> located by javascript "<expression>" in <container>

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2015 Brady Wood, Branko Juric
+ * Copyright 2014-2017 Brady Wood, Branko Juric
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,7 +46,7 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
 
    Try(logger.info(s"GWEN_CLASSPATH = ${sys.env("GWEN_CLASSPATH")}"))
    Try(logger.info(s"SELENIUM_HOME = ${sys.env("SELENIUM_HOME")}"))
-  
+
    /** Resets the current context and closes the web browser. */
   override def reset() {
     super.reset()
@@ -226,7 +226,15 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
   private def withWebElement[T](action: Option[String], elementBinding: LocatorBinding)(f: WebElement => T): T = {
     val wHandle = elementBinding.container.map(_ => withWebDriver(_.getWindowHandle))
     try {
-      val webElement = locate(this, elementBinding)
+      val webElement =
+        if (elementBinding.locator == "cache") {
+          featureScope.objects.get(elementBinding.element) match {
+            case Some(obj) if (obj.isInstanceOf[WebElement]) => obj.asInstanceOf[WebElement] tap { highlight(_)}
+            case _ => throw new NoSuchElementException(s"${elementBinding.element} not found")
+          }
+        } else {
+          locate(this, elementBinding)
+        }
       action.foreach { actionString =>
         logger.debug(s"${actionString match {
           case "click" => "Clicking"
@@ -473,21 +481,25 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
    * @param element the name of the web element
    */
   def getLocatorBinding(element: String): LocatorBinding = {
-    val locatorBinding = s"$element/locator"
-    scopes.getOpt(locatorBinding) match {
-      case Some(locator) =>
-        val lookupBinding = interpolate(s"$element/locator/$locator")(getBoundReferenceValue)
-        scopes.getOpt(lookupBinding) match {
-          case Some(expression) =>
-            val expr = interpolate(expression)(getBoundReferenceValue)
-            val container = scopes.getOpt(interpolate(s"$element/locator/$locator/container")(getBoundReferenceValue))
-            if (isDryRun) {
-              container.foreach(c => getLocatorBinding(c))
+    featureScope.objects.get(element) match {
+      case None =>
+        val locatorBinding = s"$element/locator"
+        scopes.getOpt(locatorBinding) match {
+          case Some(locator) =>
+            val lookupBinding = interpolate(s"$element/locator/$locator")(getBoundReferenceValue)
+            scopes.getOpt(lookupBinding) match {
+              case Some(expression) =>
+                val expr = interpolate(expression)(getBoundReferenceValue)
+                val container = scopes.getOpt(interpolate(s"$element/locator/$locator/container")(getBoundReferenceValue))
+                if (isDryRun) {
+                  container.foreach(c => getLocatorBinding(c))
+                }
+                LocatorBinding(element, locator, expr, container)
+              case None => throw new LocatorBindingException(element, s"locator lookup binding not found: $lookupBinding")
             }
-            LocatorBinding(element, locator, expr, container)
-          case None => throw new LocatorBindingException(element, s"locator lookup binding not found: $lookupBinding")
+          case None => throw new LocatorBindingException(element, s"locator binding not found: $locatorBinding")
         }
-      case None => throw new LocatorBindingException(element, s"locator binding not found: $locatorBinding")
+      case _ => LocatorBinding(element, "cache", element, None)
     }
   }
   
