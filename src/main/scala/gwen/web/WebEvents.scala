@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2015 Branko Juric, Brady Wood
+ * Copyright 2014-2017 Branko Juric, Brady Wood
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,8 +19,10 @@ object WebEvents {
   val EventToAction = Map(
     "clicked"   -> "click",
     "submitted" -> "submit", 
-    "checked"   -> "check", 
-    "unchecked" -> "uncheck", 
+    "checked"   -> "check",
+    "ticked"    -> "tick",
+    "unchecked" -> "uncheck",
+    "unticked"  -> "untick",
     "selected"  -> "select", 
     "typed"     -> "type", 
     "entered"   -> "enter",

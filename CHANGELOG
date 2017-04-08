@@ -6,6 +6,8 @@ Apr 8, 2017
   - <step> for each <element> located by id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript "<expression>" in <container>
 - Update Gwen from v2.2.1 to v[2.2.1](https://github.com/gwen-interpreter/gwen/releases/tag/v2.3.0) to pick up feature
   level object cache used by the above change item
+- Send click action to checkboxes if sending space has no effect
+- Support ticked|unticked and tick|untick in all checkbox DSL steps in addition to checked|unchecked and check|uncheck
 
 2.3.4
 =====

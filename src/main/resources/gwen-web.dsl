@@ -55,13 +55,17 @@ the page title should not match json path <reference>
 <element> should be displayed
 <element> should be hidden
 <element> should be checked
+<element> should be ticked
 <element> should be unchecked
+<element> should be unticked
 <element> should be enabled
 <element> should be disabled
 <element> should not be displayed
 <element> should not be hidden
 <element> should not be checked
+<element> should not be ticked
 <element> should not be unchecked
+<element> should not be unticked
 <element> should not be enabled
 <element> should not be disabled
 <reference> should be "<value>"
@@ -229,15 +233,21 @@ I select <reference> in <element>
 I select <reference> in <element> by value
 I click <element>
 I check <element>
+I tick <element>
 I uncheck <element>
+I untick <element>
 I submit <element>
 I click <element> of <context>
 I check <element> of <context>
+I tick <element> of <context>
 I uncheck <element> of <context>
+I untick <element> of <context>
 I wait 1 second when <element> is clicked
 I wait 1 second when <element> is submitted
 I wait 1 second when <element> is checked
+I wait 1 second when <element> is ticked
 I wait 1 second when <element> is unchecked
+I wait 1 second when <element> is unticked
 I wait 1 second when <element> is selected
 I wait 1 second when <element> is typed
 I wait 1 second when <element> is entered
@@ -246,7 +256,9 @@ I wait 1 second when <element> is cleared
 I wait <duration> seconds when <element> is clicked
 I wait <duration> seconds when <element> is submitted
 I wait <duration> seconds when <element> is checked
+I wait <duration> seconds when <element> is ticked
 I wait <duration> seconds when <element> is unchecked
+I wait <duration> seconds when <element> is unticked
 I wait <duration> seconds when <element> is selected
 I wait <duration> seconds when <element> is typed
 I wait <duration> seconds when <element> is entered
@@ -255,7 +267,9 @@ I wait <duration> seconds when <element> is cleared
 I wait until <condition> when <element> is clicked
 I wait until <condition> when <element> is submitted
 I wait until <condition> when <element> is checked
+I wait until <condition> when <element> is ticked
 I wait until <condition> when <element> is unchecked
+I wait until <condition> when <element> is unticked
 I wait until <condition> when <element> is selected
 I wait until <condition> when <element> is typed
 I wait until <condition> when <element> is entered
@@ -320,7 +334,9 @@ I capture the current screenshot
 <element> can be clicked by javascript "<javascript>"
 <element> can be submitted by javascript "<javascript>"
 <element> can be checked by javascript "<javascript>"
+<element> can be ticked by javascript "<javascript>"
 <element> can be unchecked by javascript "<javascript>"
+<element> can be unticked by javascript "<javascript>"
 <reference> is defined by sql "<selectStmt>" in the <dbName> database
 <reference> will be defined by sql "<selectStmt>" in the <dbName> database
 I resize the window to width <w> and height <h>

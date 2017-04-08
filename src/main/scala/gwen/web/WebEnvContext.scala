@@ -271,8 +271,8 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
         result = state match {
           case "displayed" => webElement.isDisplayed
           case "hidden" => !webElement.isDisplayed
-          case "checked" => webElement.isSelected
-          case "unchecked" => !webElement.isSelected
+          case "checked" | "ticked" => webElement.isSelected
+          case "unchecked" | "unticked" => !webElement.isSelected
           case "enabled" => webElement.isEnabled
           case "disabled" => !webElement.isEnabled
         }
@@ -630,8 +630,12 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
             withWebElement(action, elementBinding) { webElement =>
               action match {
                 case "submit" => webElement.submit()
-                case "check" => if (!webElement.isSelected) webElement.sendKeys(Keys.SPACE)
-                case "uncheck" => if (webElement.isSelected) webElement.sendKeys(Keys.SPACE)
+                case "check" | "tick" =>
+                  if (!webElement.isSelected) webElement.sendKeys(Keys.SPACE)
+                  if (!webElement.isSelected) webElement.click()
+                case "uncheck" | "untick" =>
+                  if (webElement.isSelected) webElement.sendKeys(Keys.SPACE)
+                  if (webElement.isSelected) webElement.click()
               }
             }
         }
@@ -647,16 +651,22 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
   }
   
   def performActionIn(action: String, elementBinding: LocatorBinding, contextBinding: LocatorBinding) {
+    def perform(webElement: WebElement, contextElement: WebElement)(buildAction: Actions => Actions) {
+      withWebDriver { driver =>
+        val moveTo = new Actions(driver).moveToElement(contextElement).moveToElement(webElement)
+        buildAction(moveTo).perform()
+      }
+    }
     withWebElement(action, contextBinding) { contextElement =>
       withWebElement(action, elementBinding) { webElement =>
-        withWebDriver { driver =>
-          var actions = new Actions(driver).moveToElement(contextElement).moveToElement(webElement)
-          action match {
-            case "click" => actions = actions.click
-            case "check" => if (!webElement.isSelected) actions = actions.sendKeys(Keys.SPACE)
-            case "uncheck" => if (webElement.isSelected) actions = actions.sendKeys(Keys.SPACE)
-          }
-          actions.build.perform()
+        action match {
+          case "click" => perform(webElement, contextElement) { _.click() }
+          case "check" | "tick" =>
+            if (!webElement.isSelected) perform(webElement, contextElement) { _.sendKeys(Keys.SPACE) }
+            if (!webElement.isSelected) perform(webElement, contextElement) { _.click() }
+          case "uncheck" | "untick" =>
+            if (webElement.isSelected) perform(webElement, contextElement) { _.sendKeys(Keys.SPACE) }
+            if (webElement.isSelected) perform(webElement, contextElement) { _.click() }
         }
         bindAndWait(elementBinding.element, action, "true")
       }

@@ -24,12 +24,12 @@ Scenario: Add items in my Todo list
 
 Scenario: Complete one item
     Given I am on the Todo page
-     When I click the "Get the milk" item
+     When I tick the "Get the milk" item
      Then the item count should be "1"
 
 Scenario: Complete another item
     Given I am on the Todo page
-     When I click the "Walk the dog" item
+     When I tick the "Walk the dog" item
      Then the item count should be "0"
 
 Scenario: Clear my completed items

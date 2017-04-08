@@ -218,15 +218,16 @@ a:visited {
 			<div class="panel-heading" role="tab" id="dsl-9">
 				<h4 class="panel-title">
 					<a role="button" data-toggle="collapse" data-parent="#accordion0" href="#collapse-9" aria-expanded="true" aria-controls="collapseOne">
-					<code>&lt;element&gt;</code> &lt;should|should not&gt; be &lt;displayed|hidden|checked|unchecked|enabled|disabled&gt;
+					<code>&lt;element&gt;</code> &lt;should|should not&gt; be &lt;displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled&gt;
 					</a>
 				</h4>
 			</div>
 			<div id="collapse-9" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-9">
 				<div class="panel-body">
-					Checks that an element should or should not be in a given state
+					Checks that an element should or should not be in a given state.
+					<b>Note:</b> ticked and unticked supported by v2.4.0+
 					<ul>
-						<li><code>&lt;element&gt;</code> = the web element to check</li>
+						<li><code>&lt;element&gt;</code> = the web element to check the state of</li>
 					</ul>
 				</div>
 			</div>
@@ -855,13 +856,14 @@ a:visited {
 			<div class="panel-heading" role="tab" id="dsl-40">
 				<h4 class="panel-title">
 					<a role="button" data-toggle="collapse" data-parent="#accordion0" href="#collapse-40" aria-expanded="true" aria-controls="collapseOne">
-					I &lt;click|submit|check|uncheck&gt; <code>&lt;element&gt;</code>
+					I &lt;click|submit|check|tick|uncheck|untick&gt; <code>&lt;element&gt;</code>
 					</a>
 				</h4>
 			</div>
 			<div id="collapse-40" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-40">
 				<div class="panel-body">
-					Performs the specified action on an element
+					Performs the specified action on an element.
+					<b>Note:</b> tick and untick supported by v2.4.0+
 					<ul>
 						<li><code>&lt;element&gt;</code> = the element to perform the action on</li>
 					</ul>
@@ -873,13 +875,14 @@ a:visited {
 			<div class="panel-heading" role="tab" id="dsl-41">
 				<h4 class="panel-title">
 					<a role="button" data-toggle="collapse" data-parent="#accordion0" href="#collapse-41" aria-expanded="true" aria-controls="collapseOne">
-					I wait <code>&lt;duration&gt;</code> &lt;second|seconds&gt; when <code>&lt;element&gt;</code> is &lt;clicked|submitted|checked|unchecked|selected|typed|entered|tabbed|cleared&gt;
+					I wait <code>&lt;duration&gt;</code> &lt;second|seconds&gt; when <code>&lt;element&gt;</code> is &lt;clicked|submitted|checked|ticked|unchecked|unticked|selected|typed|entered|tabbed|cleared&gt;
 					</a>
 				</h4>
 			</div>
 			<div id="collapse-41" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-41">
 				<div class="panel-body">
-					Waits a given number of seconds after an action is performed on an element
+					Waits a given number of seconds after an action is performed on an element.
+					<b>Note:</b> ticked and unticked supported by v2.4.0+
 					<ul>
 						<li><code>&lt;duration&gt;</code> = the number of seconds to wait</li>
 						<li><code>&lt;element&gt;</code> = the element the action was performed on</li>
@@ -892,13 +895,14 @@ a:visited {
 			<div class="panel-heading" role="tab" id="dsl-42">
 				<h4 class="panel-title">
 					<a role="button" data-toggle="collapse" data-parent="#accordion0" href="#collapse-42" aria-expanded="true" aria-controls="collapseOne">
-					I wait until <code>&lt;condition&gt;</code> when <code>&lt;element&gt;</code> is &lt;clicked|submitted|checked|unchecked|selected|typed|entered|tabbed|cleared&gt;
+					I wait until <code>&lt;condition&gt;</code> when <code>&lt;element&gt;</code> is &lt;clicked|submitted|checked|ticked|unchecked|unticked|selected|typed|entered|tabbed|cleared&gt;
 					</a>
 				</h4>
 			</div>
 			<div id="collapse-42" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-42">
 				<div class="panel-body">
-					Waits for a condition to be true after an action is performed on an element
+					Waits for a condition to be true after an action is performed on an element.
+					<b>Note:</b> ticked and unticked supported by v2.4.0+
 					<ul>
 						<li><code>&lt;condition&gt;</code> = the name of the bound attribute containing a javascript predicate expression</li>
 						<li><code>&lt;element&gt;</code> = the element the action was performed on</li>
@@ -1194,13 +1198,14 @@ a:visited {
 			<div class="panel-heading" role="tab" id="dsl-1-2_5">
 				<h4 class="panel-title">
 					<a role="button" data-toggle="collapse" data-parent="#accordion2" href="#collapse-1-2_5" aria-expanded="true" aria-controls="collapseOne">
-					I &lt;click|check|uncheck&gt; <code>&lt;element&gt;</code> of <code>&lt;context&gt;</code>
+					I &lt;click|check|tick|uncheck|untick&gt; <code>&lt;element&gt;</code> of <code>&lt;context&gt;</code>
 					</a>
 				</h4>
 			</div>
 			<div id="collapse-1-2_5" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-1-2_5">
 				<div class="panel-body">
-					Performs the specified action on a context sensitive element
+					Performs the specified action on a context sensitive element.
+					<b>Note:</b> tick and untick supported by v2.4.0+
 					<ul>
 						<li><code>&lt;element&gt;</code> = the element to perform the action on</li>
 						<li><code>&lt;context&gt;</code> = the context element to move into (in order to activate &lt;element&gt;)</li>
@@ -1549,13 +1554,14 @@ a:visited {
 			<div class="panel-heading" role="tab" id="dsl-1-8_1">
 				<h4 class="panel-title">
 					<a role="button" data-toggle="collapse" data-parent="#accordion8" href="#collapse-1-8_1" aria-expanded="true" aria-controls="collapseOne">
-					<code>&lt;element&gt;</code> can be &lt;clicked|submitted|checked|unchecked&gt; by javascript &quot;<code>&lt;javascript&gt;</code>&quot;
+					<code>&lt;element&gt;</code> can be &lt;clicked|submitted|checked|ticked|unchecked|unticked&gt; by javascript &quot;<code>&lt;javascript&gt;</code>&quot;
 					</a>
 				</h4>
 			</div>
 			<div id="collapse-1-8_1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-1-8_1">
 				<div class="panel-body">
 					Registers a javascript action on an element. When the action is performed, then the javascript will execute.
+					<b>Note:</b> ticked and unticked supported by v2.4.0+
 					<ul>
 					    <li><code>&lt;element&gt;</code> = the web element to perform the action on (a web element binding)</li>
 						<li><code>&lt;javascript&gt;</code> = a javascript function that performs the desired action on the element. 

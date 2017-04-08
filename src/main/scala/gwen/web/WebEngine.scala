@@ -99,11 +99,11 @@ trait WebEngine extends EvalEngine[WebEnvContext]
           }
         }
 
-      case r"""I wait ([0-9]+?)$duration second(?:s?) when (.+?)$element is (clicked|submitted|checked|unchecked|selected|typed|entered|tabbed|cleared)$$$event""" =>
+      case r"""I wait ([0-9]+?)$duration second(?:s?) when (.+?)$element is (clicked|submitted|checked|ticked|unchecked|unticked|selected|typed|entered|tabbed|cleared)$$$event""" =>
         env.getLocatorBinding(element)
         env.scopes.set(s"$element/${WebEvents.EventToAction(event)}/wait", duration)
         
-      case r"""I wait until (.+?)$condition when (.+?)$element is (clicked|submitted|checked|unchecked|selected|typed|entered|tabbed|cleared)$$$event""" =>
+      case r"""I wait until (.+?)$condition when (.+?)$element is (clicked|submitted|checked|ticked|unchecked|unticked|selected|typed|entered|tabbed|cleared)$$$event""" =>
         env.scopes.get(s"$condition/javascript")
         env.getLocatorBinding(element)
         env.scopes.set(s"$element/${WebEvents.EventToAction(event)}/condition", condition)
@@ -199,7 +199,7 @@ trait WebEngine extends EvalEngine[WebEnvContext]
           env.scopes.set(s"$element/locator/$locator/container", null)
         }
         
-      case r"""(.+?)$element can be (clicked|submitted|checked|unchecked)$event by javascript "(.+?)"$$$expression""" =>
+      case r"""(.+?)$element can be (clicked|submitted|checked|ticked|unchecked|unticked)$event by javascript "(.+?)"$$$expression""" =>
         env.getLocatorBinding(element)
         env.scopes.set(s"$element/action/${WebEvents.EventToAction(event)}/javascript", expression)
 
@@ -213,7 +213,7 @@ trait WebEngine extends EvalEngine[WebEnvContext]
           env.compare("title", expected, () => env.getTitle, operator, Option(negation).isDefined)
         }
 
-      case r"""(.+?)$element should( not)?$negation be (displayed|hidden|checked|unchecked|enabled|disabled)$$$state""" =>
+      case r"""(.+?)$element should( not)?$negation be (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$$$state""" =>
         val elementBinding = env.getLocatorBinding(element)
         env.execute {
           env.checkElementState(elementBinding, state, Option(negation).nonEmpty)
@@ -385,7 +385,7 @@ trait WebEngine extends EvalEngine[WebEnvContext]
           env.selectByVisibleText(elementBinding, value)
         }
 
-      case r"""I (click|check|uncheck)$action (.+?)$element of (.+?)$$$context""" =>
+      case r"""I (click|check|tick|uncheck|untick)$action (.+?)$element of (.+?)$$$context""" =>
         try {
           val contextBinding = env.getLocatorBinding(context)
           val elementBinding = env.getLocatorBinding(element)
@@ -405,7 +405,7 @@ trait WebEngine extends EvalEngine[WebEnvContext]
             }
         }
 
-      case r"""I (click|submit|check|uncheck)$action (.+?)$$$element""" =>
+      case r"""I (click|submit|check|tick|uncheck|untick)$action (.+?)$$$element""" =>
         val elementBinding = env.getLocatorBinding(element)
         env.execute {
           env.performAction(action, elementBinding)
