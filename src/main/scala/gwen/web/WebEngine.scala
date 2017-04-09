@@ -124,20 +124,12 @@ trait WebEngine extends EvalEngine[WebEnvContext]
 
       case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)$locator "(.+?)"$expression in (.+?)$$$container""" =>
         env.getLocatorBinding(container)
-        val elements = s"List[${element}]"
-        env.scopes.set(s"$elements/locator", locator)
-        env.scopes.set(s"$elements/locator/$locator", expression)
-        env.scopes.set(s"$elements/locator/$locator/container", container)
-        foreach(env.getLocatorBinding(elements), element, step, doStep, env)
+        val binding = LocatorBinding(s"${element}/list", locator, expression, Some(container))
+        foreach(binding, element, step, doStep, env)
 
       case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)$locator "(.+?)"$$$expression""" =>
-        val elements = s"List[${element}]"
-        env.scopes.set(s"$elements/locator", locator)
-        env.scopes.set(s"$elements/locator/$locator", expression)
-        env.scopes.getOpt(s"$elements/locator/$locator/container") foreach { _ =>
-          env.scopes.set(s"$elements/locator/$locator/container", null)
-        }
-        foreach(env.getLocatorBinding(elements), element, step, doStep, env)
+        val binding = LocatorBinding(s"${element}/list", locator, expression, None)
+        foreach(binding, element, step, doStep, env)
 
       case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using no delay and (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit timeout""" =>
         repeat(operation, step, doStep, condition, Duration.Zero, Duration(timeoutPeriod.toLong, timeoutUnit), env)
