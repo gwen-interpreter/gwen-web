@@ -1,13 +1,13 @@
 2.4.0
 =====
-Apr 8, 2017
+Apr 9, 2017
 - Add support for repeating a step for each element in a list of web elements
   - <step> for each <element> located by id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript "<expression>"
   - <step> for each <element> located by id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript "<expression>" in <container>
-- Update Gwen from v2.2.1 to v[2.2.1](https://github.com/gwen-interpreter/gwen/releases/tag/v2.3.0) to pick up feature
-  level object cache used by the above change item
+- Add examples and unit tests to exercise new capability of sourcing examples tables from CSV files in scenario outlines
 - Send click action to checkboxes if sending space has no effect
 - Support ticked|unticked and tick|untick in all checkbox DSL steps in addition to checked|unchecked and check|uncheck
+- Update Gwen from v2.2.1 to v[2.2.1](https://github.com/gwen-interpreter/gwen/releases/tag/v2.3.0)
 
 2.3.4
 =====

@@ -22,7 +22,7 @@ Scenario: Load items into session 1
      When I add a "Walk the dog" item
       And I add a "Get the milk" item
       And I add a "Take out trash" item
-     Then the item count should be "3"
+     Then the active item count should be "3"
 
 Scenario: Copy items from session 1 to session 2
     Given I start a browser for session 2

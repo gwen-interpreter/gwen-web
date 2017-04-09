@@ -14,11 +14,15 @@
 # limitations under the License.
 #
 
-  Feature: Load Todo items
+Feature: Load Todo items from CSV files
 
-Scenario: Load items into my Todo list
+  Scenario: Launch the Todo application
     Given I launch the Todo app
-     When I add a "Walk the dog" item
-      And I add a "Get the milk" item
-      And I add a "Take out trash" item
-     Then the item count should be "3"
+     When I load items from CSV files
+     Then the "Walk the dog" item should be unticked
+      And the "Get the milk" item should be ticked
+      And the "Take out trash" item should be unticked
+      And the "Feed the cat" item should be unticked
+      And the "Wash the car" item should be ticked
+      And the "Write some code" item should be unticked
+      And the active item count should be "4"
