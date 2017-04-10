@@ -26,11 +26,11 @@ class WebInterpreterCSVTest extends WebInterpreterTest {
     evaluate(List("features/csvdriven/FloodIO.feature"), parallel = false, dryRun = true, "target/reports/dryrun-csvdriven-2", Some("features/csvdriven/FloodIO.csv"))
   }
   
-  "Sequential CSV data-driven feature" should "evaluate" in {
+  "Sequential explicit CSV data-driven feature" should "evaluate" in {
     evaluate(List("features/csvdriven/FloodIO.feature"), parallel = false, dryRun = false, "target/reports/sequential-csvdriven", Some("features/csvdriven/FloodIO.csv"))
   }
   
-  "Parallel CSV data-driven feature" should "evaluate" in {
+  "Parallel implicit CSV data-driven feature" should "evaluate" in {
     evaluate(List("features/csvdriven/FloodIO.feature"), parallel = true, dryRun = false, "target/reports/parallel-csvdriven", None) // will auto discover csv in same folder
   }
   

@@ -1,6 +1,6 @@
 2.4.0
 =====
-Apr 9, 2017
+Apr 10, 2017
 - Add support for repeating a step for each element in a list of web elements
   - <step> for each <element> located by id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript "<expression>"
   - <step> for each <element> located by id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript "<expression>" in <container>
@@ -8,6 +8,11 @@ Apr 9, 2017
 - Send click action to checkboxes if sending space has no effect
 - Support ticked|unticked and tick|untick in all checkbox DSL steps in addition to checked|unchecked and check|uncheck
 - Update Gwen from v2.2.1 to v[2.2.1](https://github.com/gwen-interpreter/gwen/releases/tag/v2.3.0)
+  - Add cache in feature scope for storing temporary objects (non string values)
+  - Add support for sourcing examples tables from CSV data files in scenario outlines
+  - Add settings for enabling or disabling auto meta and CSV data file discovery
+    - gwen.auto.discover.meta (true to enable auto meta discovery, false to disable, default is true for enabled)
+    - gwen.auto.discover.data.csv (true to enable auto CSV data discovery, false to disable, default is true for enabled)
 
 2.3.4
 =====
