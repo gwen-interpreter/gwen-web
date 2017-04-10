@@ -351,4 +351,13 @@ I maximise the window
 <step> for each <element> located by link text "<expression>"
 <step> for each <element> located by partial link text "<expression>"
 <step> for each <element> located by javascript "<expression>"
+<step> for each <element> located by id "<expression>" in <container>
+<step> for each <element> located by name "<expression>" in <container>
+<step> for each <element> located by tag name "<expression>" in <container>
+<step> for each <element> located by css selector "<expression>" in <container>
+<step> for each <element> located by xpath "<expression>" in <container>
+<step> for each <element> located by class name "<expression>" in <container>
+<step> for each <element> located by link text "<expression>" in <container>
+<step> for each <element> located by partial link text "<expression>" in <container>
 <step> for each <element> located by javascript "<expression>" in <container>
+<step> for each <element> in <elements>

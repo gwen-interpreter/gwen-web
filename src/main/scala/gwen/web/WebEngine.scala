@@ -131,6 +131,10 @@ trait WebEngine extends EvalEngine[WebEnvContext]
         val binding = LocatorBinding(s"${element}/list", locator, expression, None)
         foreach(binding, element, step, doStep, env)
 
+      case r"""(.+?)$doStep for each (.+?)$element in (.+?)$$$iteration""" =>
+        val binding = env.getLocatorBinding(iteration)
+        foreach(binding, element, step, doStep, env)
+
       case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using no delay and (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit timeout""" =>
         repeat(operation, step, doStep, condition, Duration.Zero, Duration(timeoutPeriod.toLong, timeoutUnit), env)
         
@@ -524,7 +528,7 @@ trait WebEngine extends EvalEngine[WebEnvContext]
   }
 
   /**
-    * Performs a repeat until or while operation
+    * Repeats a step for each web element in an iteration of elements.
     */
   private def foreach(elementsBinding: LocatorBinding, elementName: String, step: Step, doStep: String, env: WebEnvContext) {
     env.execute {
@@ -548,7 +552,7 @@ trait WebEngine extends EvalEngine[WebEnvContext]
         }
       }
     } getOrElse {
-      env.featureScope.objects.bind(elementName, "WebElement[DryRun]")
+      env.featureScope.objects.bind(elementName, "CurrentElement[DryRun]")
       try {
         evaluateStep(Step(step.keyword, doStep), env).evalStatus match {
           case Failed(_, e) => throw e

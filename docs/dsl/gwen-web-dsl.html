@@ -1701,11 +1701,11 @@ a:visited {
 			</div>
 			<div id="collapse-240_1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-240_1">
 				<div class="panel-body">
-					Repeats a given step for each element in a collection of web elements. Nothing is performed if no elements are found.
+					Repeats a given step for each web element in an iteration of elements. Nothing is performed if no elements are found.
 					<ul>
 						<li><code>&lt;step&gt;</code> = the step to repeat for each element</li>
-						<li><code>&lt;element&gt;</code> = the name given to the current element in each iteration</li>
-						<li><code>&lt;expression&gt;</code> = the lookup expression returning the elements to iterate over</li>
+						<li><code>&lt;element&gt;</code> = the name given to the current element in the iteration</li>
+						<li><code>&lt;expression&gt;</code> = the lookup expression for the element iteration</li>
 					</ul>
 				</div>
 			</div>
@@ -1720,12 +1720,31 @@ a:visited {
 			</div>
 			<div id="collapse-240_2" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-240_2">
 				<div class="panel-body">
-					Repeats a given step for each element in a collection of web elements in a container. Nothing is performed if no elements are found.
+					Repeats a given step for each web element in an iteration of elements in a container. Nothing is performed if no elements are found.
 					<ul>
 						<li><code>&lt;step&gt;</code> = the step to repeat for each element</li>
-						<li><code>&lt;element&gt;</code> = the name given to the current element in each iteration</li>
-						<li><code>&lt;expression&gt;</code> = the lookup expression returning the elements to iterate over</li>
+						<li><code>&lt;element&gt;</code> = the name given to the current element in the iteration</li>
+						<li><code>&lt;expression&gt;</code> = the lookup expression for the element iteration</li>
 						<li><code>&lt;container&gt;</code> = the container element (a frame, div, or other container element)</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="panel panel-default">
+			<div class="panel-heading" role="tab" id="dsl-240_3">
+				<h4 class="panel-title">
+					<a role="button" data-toggle="collapse" data-parent="#accordion0" href="#collapse-240_3" aria-expanded="true" aria-controls="collapseOne">
+						<code>&lt;step&gt;</code> for each <code>&lt;element&gt;</code> in <code>&lt;elements&gt;</code>
+					</a>
+				</h4>
+			</div>
+			<div id="collapse-240_3" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-240_3">
+				<div class="panel-body">
+					Repeats a given step for each web element in an iteration of elements. Nothing is performed if no elements are found.
+					<ul>
+						<li><code>&lt;step&gt;</code> = the step to repeat for each element</li>
+						<li><code>&lt;element&gt;</code> = the name given to the current element in the iteration</li>
+						<li><code>&lt;elements&gt;</code> = the element iteration locator binding</li>
 					</ul>
 				</div>
 			</div>
