@@ -25,4 +25,4 @@ Feature: Load Todo items from CSV files
       And the "Feed the cat" item should be unticked
       And the "Wash the car" item should be ticked
       And the "Write some code" item should be unticked
-      And the active item count should be "4"
+      And the number of active items should be "4"
