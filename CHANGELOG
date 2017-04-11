@@ -1,7 +1,7 @@
 2.4.0
 =====
-Apr 10, 2017
-- Add support for repeating a step for each web element in a list of elements
+Apr 11, 2017
+- Add support for repeating a step for each element in a list of web elements
   - <step> for each <element> located by id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript "<expression>"
   - <step> for each <element> located by id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript "<expression>" in <container>
   - <step> for each <element> in <elements>

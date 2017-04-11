@@ -52,6 +52,12 @@ Scenario: I copy item from session 1 to session 2
      Then I switch to session 1
 
 @StepDef
+@Examples("features-data/TodoItems1.csv")
+@Examples("features-data/TodoItems2.csv")
+Scenario Outline: I load items from CSV files
+    Given I add a <Status> "<Item>" item
+
+@StepDef
 Scenario: I add a pending "<todo>" item
     Given I add a "$<todo>" item
 
@@ -59,9 +65,3 @@ Scenario: I add a pending "<todo>" item
 Scenario: I add a done "<todo>" item
     Given I add a "$<todo>" item
       And I tick the "$<todo>" item
-
-@StepDef
-@Examples("features-data/TodoItems1.csv")
-@Examples("features-data/TodoItems2.csv")
-Scenario Outline: I load items from CSV files
-    Given I add a <Status> "<Item>" item

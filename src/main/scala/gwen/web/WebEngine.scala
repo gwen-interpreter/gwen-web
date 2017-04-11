@@ -17,15 +17,12 @@
 package gwen.web
 
 import scala.concurrent.duration.Duration
-
 import org.openqa.selenium.Keys
-
 import gwen.Predefs.Formatting.DurationFormatter
 import gwen.Predefs.Kestrel
 import gwen.Predefs.RegexContext
-import gwen.Settings
-import gwen.dsl.Failed
-import gwen.dsl.Step
+import gwen.{GwenSettings, Settings}
+import gwen.dsl._
 import gwen.errors.undefinedStepError
 import gwen.eval.EvalEngine
 import gwen.eval.GwenOptions
@@ -531,37 +528,40 @@ trait WebEngine extends EvalEngine[WebEnvContext]
     * Repeats a step for each web element in an iteration of elements.
     */
   private def foreach(elementsBinding: LocatorBinding, elementName: String, step: Step, doStep: String, env: WebEnvContext) {
-    env.execute {
+    val steps = env.execute {
       env.locateAll(env, elementsBinding) match {
         case Nil =>
           logger.info(s"For-each[$elementName]: none found")
+          Nil
         case webElements =>
           val noOfElements = webElements.size
           logger.info(s"For-each[$elementName]: $noOfElements found")
-          webElements.zipWithIndex foreach { case (webElement, index) =>
-            logger.info(s"Processing [$elementName] ${index + 1} of $noOfElements")
+          webElements.zipWithIndex.foldLeft(List[Step]()) { case (acc, (webElement, index)) =>
             env.featureScope.objects.bind(elementName, webElement)
-            try {
-              evaluateStep(Step(step.keyword, doStep), env).evalStatus match {
-                case Failed(_, e) => throw e
-                case _ => step
+            (try {
+              EvalStatus(acc.map(_.evalStatus)) match {
+                case Failed(_, _) if (env.execute(GwenSettings.`gwen.feature.failfast`).getOrElse(false)) =>
+                  logger.info(s"Skipping [$elementName] ${index + 1} of $noOfElements")
+                  Step(step.pos, if (index == 0) StepKeyword.Given else StepKeyword.And, doStep, Skipped)
+                case _ =>
+                  logger.info(s"Processing [$elementName] ${index + 1} of $noOfElements")
+                  evaluateStep(Step(step.pos, if (index == 0) StepKeyword.Given else StepKeyword.And, doStep), env)
               }
             } finally {
               env.featureScope.objects.clear(elementName)
-            }
-        }
+            }) :: acc
+          } reverse
       }
     } getOrElse {
       env.featureScope.objects.bind(elementName, "CurrentElement[DryRun]")
       try {
-        evaluateStep(Step(step.keyword, doStep), env).evalStatus match {
-          case Failed(_, e) => throw e
-          case _ => step
-        }
+        List(evaluateStep(Step(step.keyword, doStep), env))
       } finally {
         env.featureScope.objects.clear(elementName)
       }
     }
+    val foreachStepDef = new Scenario(List(Tag.StepDefTag, Tag.ForEachTag), elementName, Nil, None, steps, false, Nil, None)
+    env.foreachStepDefs += (step.uniqueId -> foreachStepDef)
   }
   
   lazy val DefaultRepeatDelay: Duration = {
