@@ -43,19 +43,10 @@ import scala.collection.mutable
 
 /** Provides access to the web driver used to drive the browser. */
 trait DriverManager extends LazyLogging { 
-  env: EnvContext =>
+  env: WebEnvContext =>
     
   /** Map of web driver instances (keyed by name). */
   private[web] val drivers: mutable.Map[String, WebDriver] = mutable.Map()
-  
-  /** The current web browser session. */
-  private[web] var session = "primary"
-    
-  /** Current stack of windows. */
-  private val windows = mutable.Stack[String]()
-  
-  /** Last captured screenshot file size. */
-  private var lastScreenshotSize: Option[Long] = None
     
   /** Provides private access to the web driver */
   private def webDriver: WebDriver = drivers.getOrElse(session, {

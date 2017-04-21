@@ -35,6 +35,8 @@ import scala.collection.JavaConverters._
 import org.openqa.selenium.interactions.Actions
 import java.io.FileNotFoundException
 
+import scala.collection.mutable
+
 /**
   * Defines the web environment context. This includes the configured selenium web
   * driver instance, feature and page scopes, and web element functions.
@@ -47,9 +49,21 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
    Try(logger.info(s"GWEN_CLASSPATH = ${sys.env("GWEN_CLASSPATH")}"))
    Try(logger.info(s"SELENIUM_HOME = ${sys.env("SELENIUM_HOME")}"))
 
+  /** The current web browser session. */
+  private[web] var session = "primary"
+
+  /** Current stack of windows. */
+  private[web] val windows = mutable.Stack[String]()
+
+  /** Last captured screenshot file size. */
+  private[web] var lastScreenshotSize: Option[Long] = None
+
    /** Resets the current context and closes the web browser. */
   override def reset() {
     super.reset()
+    session = "primary"
+    windows.clear()
+    lastScreenshotSize = None
     close()
   }
 
