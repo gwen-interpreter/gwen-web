@@ -1,9 +1,10 @@
-2.4.1
+2.5.0
 =====
-Apr 21, 2017
+Apr 23, 2017
 - Fixed issue #37 - When closing child window, Gwen can get confused about the parent window ID
   - Solution was to move tracking state to env context where lifecycle (initialisation, resetting, etc..) is managed
   - This ensures that all window tracking state is reset for each feature execution
+- Update selenium from version 3.3.1 to 3.4.0
 
 2.4.0
 =====
