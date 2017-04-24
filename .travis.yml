@@ -8,6 +8,9 @@ before_script:
   # pull down gwen source dependency
   - cd ..
   - git clone https://github.com/gwen-interpreter/gwen.git
+  - cd gwen
+  - git checkout 1.x
+  - cd ..
   - cd gwen-web
   # use virtual frame buffers to run browser tests
   - "export DISPLAY=:99.0"
