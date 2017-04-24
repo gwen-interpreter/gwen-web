@@ -7,3 +7,4 @@ project/project/target/
 .settings/
 *.log
 /bin/
+.idea/

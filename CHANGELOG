@@ -1,4 +1,11 @@
-1.11.10
+1.11.1
+=======
+Apr 21, 2017
+- Fixed issue #37 - When closing child window, Gwen can get confused about the parent window ID
+  - Solution was to move tracking state to env context where lifecycle (initialisation, resetting, etc..) is managed
+  - This ensures that all window tracking state is reset for each feature execution
+
+1.11.0
 =======
 Nov 25, 2016, 6:30 PM GMT+10 (AEDT)
 - Added DSL to support binding attributes to file contents (in support of issue #32):

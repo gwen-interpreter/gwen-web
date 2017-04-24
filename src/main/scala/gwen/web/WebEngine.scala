@@ -224,7 +224,7 @@ trait WebEngine extends EvalEngine[WebEnvContext]
         
       case r"""(.+?)$element( text| value)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator "(.*?)"$$$expression""" => {
         if (element == "I") undefinedStepError(step)
-        val actual = env.boundAttributeOrSelection(element, selection)
+        val actual = env.boundAttributeOrSelection(element, Option(selection))
         env.execute {
           env.compare(element + Option(selection).getOrElse(""), expression, actual, operator, Option(negation).isDefined)
         }
@@ -233,7 +233,7 @@ trait WebEngine extends EvalEngine[WebEnvContext]
       case r"""(.+?)$element( value| text)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$$$attribute""" => {
         if (element == "I") undefinedStepError(step)
         val expected = env.getAttribute(attribute)
-        val actual = env.boundAttributeOrSelection(element, selection)
+        val actual = env.boundAttributeOrSelection(element, Option(selection))
         env.execute {
           env.compare(element + Option(selection).getOrElse(""), expected, actual, operator, Option(negation).isDefined)
         }

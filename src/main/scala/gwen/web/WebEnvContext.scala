@@ -51,6 +51,8 @@ import org.openqa.selenium.interactions.Actions
 import gwen.eval.support.JsonPathSupport
 import java.io.FileNotFoundException
 
+import scala.collection.mutable
+
 /**
   * Defines the web environment context. This includes the configured selenium web
   * driver instance, feature and page scopes, and web element functions.
@@ -61,10 +63,22 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
   with WebElementLocator with DriverManager {
 
    Try(logger.info(s"SELENIUM_HOME = ${sys.env("SELENIUM_HOME")}"))
-  
+
+  /** The current web browser session. */
+  private[web] var session = "primary"
+
+  /** Current stack of windows. */
+  private[web] val windows = mutable.Stack[String]()
+
+  /** Last captured screenshot file size. */
+  private[web] var lastScreenshotSize: Option[Long] = None
+
    /** Resets the current context and closes the web browser. */
   override def reset() {
     super.reset()
+    session = "primary"
+    windows.clear()
+    lastScreenshotSize = None
     close()
   }
 
@@ -389,46 +403,47 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
       case _ => getSelectedElementValue(name)
     }
   }.getOrElse(s"$$[$name $selection]")
-  
+
   /**
     * Gets a bound attribute value from the visible scope.
-    *  
+    *
     * @param name the name of the bound attribute to find
-    * @param attScopes the attribute scopes to search in
     */
   def getAttribute(name: String): String = {
     val attScopes = scopes.visible.filterAtts{case (n, _) => n.startsWith(name)}
-    (attScopes.findEntry { case (n, v) => n.matches(s"""$name(/(text|javascript|xpath|regex|json path|sysproc|file))?""") && v != "" } map {
-      case (n, v) => 
+    (attScopes.findEntry { case (n, v) => n.matches(s"""$name(/(text|javascript|xpath.+|regex.+|json path.+|sysproc|file))?""") && v != "" } map {
+      case (n, v) =>
         if (n == s"$name/text") v
-        else if (n == s"$name/javascript") 
+        else if (n == s"$name/javascript")
           execute(Option(executeScript(s"return ${interpolate(v)(getBoundReferenceValue)}")).map(_.toString).getOrElse("")).getOrElse(s"$$[javascript:$v]")
-        else if (n == s"$name/xpath") {
+        else if (n.startsWith(s"$name/xpath")) {
           val source = interpolate(getBoundReferenceValue(attScopes.get(s"$name/xpath/source")))(getBoundReferenceValue)
-          val targetType = interpolate(getBoundReferenceValue(attScopes.get(s"$name/xpath/targetType")))(getBoundReferenceValue)
-          val expression = interpolate(getBoundReferenceValue(attScopes.get(s"$name/xpath/expression")))(getBoundReferenceValue)
+          val targetType = interpolate(attScopes.get(s"$name/xpath/targetType"))(getBoundReferenceValue)
+          val expression = interpolate(attScopes.get(s"$name/xpath/expression"))(getBoundReferenceValue)
           execute(evaluateXPath(expression, source, XMLNodeType.withName(targetType))).getOrElse(s"$$[xpath:$expression]")
         }
-        else if (n == s"$name/regex") {
+        else if (n.startsWith(s"$name/regex")) {
           val source = interpolate(getBoundReferenceValue(attScopes.get(s"$name/regex/source")))(getBoundReferenceValue)
-          val expression = interpolate(getBoundReferenceValue(attScopes.get(s"$name/regex/expression")))(getBoundReferenceValue)
+          val expression = interpolate(attScopes.get(s"$name/regex/expression"))(getBoundReferenceValue)
           execute(extractByRegex(expression, source)).getOrElse(s"$$[regex:$expression]")
         }
-        else if (n == s"$name/json path") {
+        else if (n.startsWith(s"$name/json path")) {
           val source = interpolate(getBoundReferenceValue(attScopes.get(s"$name/json path/source")))(getBoundReferenceValue)
-          val expression = interpolate(getBoundReferenceValue(attScopes.get(s"$name/json path/expression")))(getBoundReferenceValue)
+          val expression = interpolate(attScopes.get(s"$name/json path/expression"))(getBoundReferenceValue)
           execute(evaluateJsonPath(expression, source)).getOrElse(s"$$[json path:$expression]")
         }
         else if (n == s"$name/sysproc") execute(v.!!).map(_.trim).getOrElse(s"$$[sysproc:$v]")
-        else if (n == s"$name/file") execute {
-          val filepath = (interpolate(v))(getBoundReferenceValue)
-          if (new File(filepath).exists()) {
-            Source.fromFile(filepath).mkString
-          } else throw new FileNotFoundException(s"File bound to '$name' not found: $filepath")
-        } getOrElse(s"$$[file:$v]")
+        else if (n == s"$name/file") {
+          val filepath = interpolate(v)(getBoundReferenceValue)
+          execute {
+            if (new File(filepath).exists()) {
+              Source.fromFile(filepath).mkString
+            } else throw new FileNotFoundException(s"File bound to '$name' not found: $filepath")
+          } getOrElse s"$$[file:$v]"
+        }
         else v
     }).getOrElse {
-      execute(super.getBoundReferenceValue(name)).getOrElse { 
+      execute(super.getBoundReferenceValue(name)).getOrElse {
         Try(super.getBoundReferenceValue(name)).getOrElse {
           Try(getLocatorBinding(name).lookup).getOrElse {
             unboundAttributeError(name)
@@ -436,14 +451,14 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
         }
       }
     } tap { value =>
-      logger.debug(s"getAttribute(${name})='${value}'")
+      logger.debug(s"getAttribute($name)='$value'")
     }
   }
-  
-  def boundAttributeOrSelection(element: String, selection: String): () => String = () => Option(selection) match {
+
+  def boundAttributeOrSelection(element: String, selection: Option[String]): () => String = () => selection match {
     case None => getBoundReferenceValue(element)
-    case Some(sel) => 
-      try { 
+    case Some(sel) =>
+      try {
         getBoundReferenceValue(element + sel)
       } catch {
         case _: UnboundAttributeException => getElementSelection(element, sel)

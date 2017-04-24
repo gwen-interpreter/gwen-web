@@ -46,19 +46,10 @@ import gwen.errors.AmbiguousCaseException
 
 /** Provides access to the web driver used to drive the browser. */
 trait DriverManager extends LazyLogging { 
-  env: EnvContext =>
+  env: WebEnvContext =>
     
   /** Map of web driver instances (keyed by name). */
   private[web] val drivers: Map[String, WebDriver] = Map()
-  
-  /** The current web browser session. */
-  private[web] var session = "primary"
-    
-  /** Current stack of windows. */
-  private val windows = Stack[String]()
-  
-  /** Last captured screenshot file size. */
-  private var lastScreenshotSize: Option[Long] = None
     
   /** Provides private access to the web driver */
   private def webDriver: WebDriver = drivers.get(session) getOrElse {
