@@ -257,7 +257,19 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
           case "uncheck" => "Unchecking"
          }} ${elementBinding.element}")
       }
-      f(webElement) tap { _ =>
+      (try {
+        f(webElement)
+      } catch {
+        case _: StaleElementReferenceException =>
+          Thread.sleep(WebSettings.`gwen.web.throttle.msecs`)
+          try {
+            f(locate(this, elementBinding))
+          } catch {
+            case _: StaleElementReferenceException =>
+              Thread.sleep(WebSettings.`gwen.web.throttle.msecs`)
+              f(locate(this, elementBinding))
+          }
+      }) tap { _ =>
         if (WebSettings.`gwen.web.capture.screenshots`) {
           captureScreenshot(false)
         }
