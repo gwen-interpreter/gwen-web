@@ -4,6 +4,7 @@ Apr 21, 2017
 - Fixed issue #37 - When closing child window, Gwen can get confused about the parent window ID
   - Solution was to move tracking state to env context where lifecycle (initialisation, resetting, etc..) is managed
   - This ensures that all window tracking state is reset for each feature execution
+- Fixed bug where regex, xpath, and json path bindings were not being resolved
 
 1.11.0
 =======
