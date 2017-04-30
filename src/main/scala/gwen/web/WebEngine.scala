@@ -60,7 +60,6 @@ trait WebEngine extends EvalEngine[WebEnvContext]
     * @param env the web environment context
     */
   override def evaluate(step: Step, env: WebEnvContext): Unit = {
-    
    step.expression match {
     
       case r"""I wait for (.+?)$element text for (.+?)$seconds second(?:s?)""" =>
@@ -171,11 +170,13 @@ trait WebEngine extends EvalEngine[WebEnvContext]
 
       case r"""(.+?)$element can be located by (id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)$locator "(.+?)"$expression in (.+?)$$$container""" =>
         env.getLocatorBinding(container)
+        env.scopes.set(s"$element/type", "element")
         env.scopes.set(s"$element/locator", locator)
         env.scopes.set(s"$element/locator/$locator", expression)
         env.scopes.set(s"$element/locator/$locator/container", container)
         
       case r"""(.+?)$element can be located by (id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)$locator "(.+?)"$$$expression""" =>
+        env.scopes.set(s"$element/type", "element")
         env.scopes.set(s"$element/locator", locator)
         env.scopes.set(s"$element/locator/$locator", expression)
         env.scopes.getOpt(s"$element/locator/$locator/container") foreach { _ =>

@@ -34,6 +34,8 @@ javaSource in Compile := baseDirectory.value / "src/main/scala"
 
 javaSource in Test := baseDirectory.value / "src/test/scala"
 
+resolvers += Resolver.mavenLocal
+
 resolvers += "Typesafe Repo" at "http://repo.typesafe.com/typesafe/releases/"
 
 resolvers += "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"
