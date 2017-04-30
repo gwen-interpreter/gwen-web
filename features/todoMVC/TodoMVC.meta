@@ -1,0 +1,89 @@
+#
+# Copyright 2017 Brady Wood, Branko Juric
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+# This meta defines all the automation bindings for the features in this suite.
+
+# CSV data feed containing bindings for each JS implementation of the Todo app
+# ----------------------------------------------------------------------------
+# ${placeholers} in this meta resolve to column values defined in the CSV file for each record
+# Each record contains bindings specific to each implementation (since rendering discrepancies unfortunately exist)
+# All features in the suite are executed for each record
+
+ Feature: Todos meta
+  
+@StepDef
+Scenario: I browse to the application home page
+    Given I navigate to "http://todomvc.com/examples/${js-framework}"
+     Then the heading can be located by tag name "h1"
+      And the info panel can be located by ${locator-info} "info"
+      And the todo field can be located by ${locator-todo} "new-todo"
+      And the placeholder string is defined by javascript "document.${locator-placeholder-js}.getAttribute('placeholder')"
+      And the number of items left can be located by javascript "${locator-todo-count-js}"
+      And the toggle all checkbox can be located by ${locator-toggle-all} "toggle-all"
+      And the clear completed button can be located by ${locator-clear-completed} "clear-completed"
+      And the displayed items is defined by javascript "[].map.call([].filter.call(${locator-todo-list-items}, function(node) {return node.offsetParent !== null;}), function(node){return node.textContent.trim() || node.innerText.trim() || ''; }).join(',');"
+      And I wait for the todo field
+
+@StepDef
+Scenario: I toggle all items
+    Given I click the toggle all checkbox
+
+@StepDef
+Scenario: I clear all completed items
+    Given I click the clear completed button
+                  
+@StepDef
+Scenario: I clear all items
+    Given I check the toggle all checkbox
+     When I clear all completed items
+      Then the number of items left should not be displayed
+
+@StepDef
+Scenario: I add a "<todo>" item
+      When I enter "$<todo>" in the todo field
+      Then the "$<todo>" item can be located by xpath "${xpath-todo-list}//input[@type='checkbox']/following-sibling::label[contains(.,'$<todo>')]"
+       And the "$<todo>" item checkbox can be located by xpath "${xpath-todo-list}//input[@type='checkbox']/following-sibling::label[contains(.,'$<todo>')]/preceding-sibling::input"
+
+@StepDef
+Scenario: I complete the "<todo>" item
+    Given I click the "$<todo>" item checkbox
+     
+@StepDef
+Scenario: the "<todo>" item should be completed
+    Given the "$<todo>" item checkbox should be checked
+     
+@StepDef
+Scenario: the "<todo>" item should be active
+    Given the "$<todo>" item checkbox should not be checked
+    
+@StepDef
+Scenario: I delete the "<todo>" item
+    Given the delete button can be located by xpath "${xpath-todo-list}//input[@type='checkbox']/following-sibling::label[contains(.,'$<todo>')]/following-sibling::button"
+      And I click the delete button of the "$<todo>" item  
+
+@StepDef
+Scenario: the clear completed items option should be unavailable
+    Given the clear completed button should not be displayed
+    
+@StepDef
+Scenario: I apply the "<filter>" filter
+    Given the filter can be located by link text "$<filter>" 
+     When I click the filter
+     Then the "$<filter>" filter is selected is defined by javascript "document.querySelector('.selected').textContent == '$<filter>'"
+     
+@StepDef
+Scenario: the "<filter>" filter should be selected
+    Given the "$<filter>" filter is selected should be "true"

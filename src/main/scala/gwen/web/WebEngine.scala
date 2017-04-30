@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2015 Branko Juric, Brady Wood
+ * Copyright 2014-2017 Branko Juric, Brady Wood
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,15 +17,12 @@
 package gwen.web
 
 import scala.concurrent.duration.Duration
-
 import org.openqa.selenium.Keys
-
 import gwen.Predefs.Formatting.DurationFormatter
 import gwen.Predefs.Kestrel
 import gwen.Predefs.RegexContext
-import gwen.Settings
-import gwen.dsl.Failed
-import gwen.dsl.Step
+import gwen.{GwenSettings, Settings}
+import gwen.dsl._
 import gwen.errors.undefinedStepError
 import gwen.eval.EvalEngine
 import gwen.eval.GwenOptions
@@ -98,11 +95,11 @@ trait WebEngine extends EvalEngine[WebEnvContext]
           }
         }
 
-      case r"""I wait ([0-9]+?)$duration second(?:s?) when (.+?)$element is (clicked|submitted|checked|unchecked|selected|typed|entered|tabbed|cleared)$$$event""" =>
+      case r"""I wait ([0-9]+?)$duration second(?:s?) when (.+?)$element is (clicked|submitted|checked|ticked|unchecked|unticked|selected|typed|entered|tabbed|cleared)$$$event""" =>
         env.getLocatorBinding(element)
         env.scopes.set(s"$element/${WebEvents.EventToAction(event)}/wait", duration)
         
-      case r"""I wait until (.+?)$condition when (.+?)$element is (clicked|submitted|checked|unchecked|selected|typed|entered|tabbed|cleared)$$$event""" =>
+      case r"""I wait until (.+?)$condition when (.+?)$element is (clicked|submitted|checked|ticked|unchecked|unticked|selected|typed|entered|tabbed|cleared)$$$event""" =>
         env.scopes.get(s"$condition/javascript")
         env.getLocatorBinding(element)
         env.scopes.set(s"$element/${WebEvents.EventToAction(event)}/condition", condition)
@@ -120,6 +117,19 @@ trait WebEngine extends EvalEngine[WebEnvContext]
             env.executeScriptPredicate(javascript)
           }
         }
+
+      case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)$locator "(.+?)"$expression in (.+?)$$$container""" =>
+        env.getLocatorBinding(container)
+        val binding = LocatorBinding(s"${element}/list", locator, expression, Some(container))
+        foreach(binding, element, step, doStep, env)
+
+      case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)$locator "(.+?)"$$$expression""" =>
+        val binding = LocatorBinding(s"${element}/list", locator, expression, None)
+        foreach(binding, element, step, doStep, env)
+
+      case r"""(.+?)$doStep for each (.+?)$element in (.+?)$$$iteration""" =>
+        val binding = env.getLocatorBinding(iteration)
+        foreach(binding, element, step, doStep, env)
 
       case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using no delay and (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit timeout""" =>
         repeat(operation, step, doStep, condition, Duration.Zero, Duration(timeoutPeriod.toLong, timeoutUnit), env)
@@ -183,7 +193,7 @@ trait WebEngine extends EvalEngine[WebEnvContext]
           env.scopes.set(s"$element/locator/$locator/container", null)
         }
         
-      case r"""(.+?)$element can be (clicked|submitted|checked|unchecked)$event by javascript "(.+?)"$$$expression""" =>
+      case r"""(.+?)$element can be (clicked|submitted|checked|ticked|unchecked|unticked)$event by javascript "(.+?)"$$$expression""" =>
         env.getLocatorBinding(element)
         env.scopes.set(s"$element/action/${WebEvents.EventToAction(event)}/javascript", expression)
 
@@ -197,27 +207,15 @@ trait WebEngine extends EvalEngine[WebEnvContext]
           env.compare("title", expected, () => env.getTitle, operator, Option(negation).isDefined)
         }
 
-      case r"""(.+?)$element should( not)?$negation be (displayed|hidden|checked|unchecked|enabled|disabled)$$$state""" =>
+      case r"""(.+?)$element should( not)?$negation be (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$$$state""" =>
         val elementBinding = env.getLocatorBinding(element)
         env.execute {
-          env.withWebElement(elementBinding) { webElement =>
-            val result = state match {
-              case "displayed" => webElement.isDisplayed
-              case "hidden"    => !webElement.isDisplayed
-              case "checked"   => webElement.isSelected
-              case "unchecked" => !webElement.isSelected
-              case "enabled"   => webElement.isEnabled
-              case "disabled"  => !webElement.isEnabled
-            }
-            if (Option(negation).isEmpty) assert(result,  s"$element should be $state")
-            else assert(!result,  s"$element should not be $state")
-            env.bindAndWait(element, state, "true")
-          }
+          env.checkElementState(elementBinding, state, Option(negation).nonEmpty)
         }
 
       case r"""(.+?)$element( text| value)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator "(.*?)"$$$expression""" =>
         if (element == "I") undefinedStepError(step)
-        val actual = env.boundAttributeOrSelection(element, selection)
+        val actual = env.boundAttributeOrSelection(element, Option(selection))
         env.execute {
           env.compare(element + Option(selection).getOrElse(""), expression, actual, operator, Option(negation).isDefined)
         }
@@ -225,7 +223,7 @@ trait WebEngine extends EvalEngine[WebEnvContext]
       case r"""(.+?)$element( value| text)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$$$attribute""" =>
         if (element == "I") undefinedStepError(step)
         val expected = env.getAttribute(attribute)
-        val actual = env.boundAttributeOrSelection(element, selection)
+        val actual = env.boundAttributeOrSelection(element, Option(selection))
         env.execute {
           env.compare(element + Option(selection).getOrElse(""), expected, actual, operator, Option(negation).isDefined)
         }
@@ -381,7 +379,7 @@ trait WebEngine extends EvalEngine[WebEnvContext]
           env.selectByVisibleText(elementBinding, value)
         }
 
-      case r"""I (click|check|uncheck)$action (.+?)$element of (.+?)$$$context""" =>
+      case r"""I (click|check|tick|uncheck|untick)$action (.+?)$element of (.+?)$$$context""" =>
         try {
           val contextBinding = env.getLocatorBinding(context)
           val elementBinding = env.getLocatorBinding(element)
@@ -401,7 +399,7 @@ trait WebEngine extends EvalEngine[WebEnvContext]
             }
         }
 
-      case r"""I (click|submit|check|uncheck)$action (.+?)$$$element""" =>
+      case r"""I (click|submit|check|tick|uncheck|untick)$action (.+?)$$$element""" =>
         val elementBinding = env.getLocatorBinding(element)
         env.execute {
           env.performAction(action, elementBinding)
@@ -525,6 +523,46 @@ trait WebEngine extends EvalEngine[WebEnvContext]
         case _ => step
       }
     }
+  }
+
+  /**
+    * Repeats a step for each web element in an iteration of elements.
+    */
+  private def foreach(elementsBinding: LocatorBinding, elementName: String, step: Step, doStep: String, env: WebEnvContext) {
+    val steps = env.execute {
+      env.locateAll(env, elementsBinding) match {
+        case Nil =>
+          logger.info(s"For-each[$elementName]: none found")
+          Nil
+        case webElements =>
+          val noOfElements = webElements.size
+          logger.info(s"For-each[$elementName]: $noOfElements found")
+          webElements.zipWithIndex.foldLeft(List[Step]()) { case (acc, (webElement, index)) =>
+            env.featureScope.objects.bind(elementName, webElement)
+            (try {
+              EvalStatus(acc.map(_.evalStatus)) match {
+                case Failed(_, _) if (env.execute(GwenSettings.`gwen.feature.failfast`).getOrElse(false)) =>
+                  logger.info(s"Skipping [$elementName] ${index + 1} of $noOfElements")
+                  Step(step.pos, if (index == 0) StepKeyword.Given else StepKeyword.And, doStep, Skipped)
+                case _ =>
+                  logger.info(s"Processing [$elementName] ${index + 1} of $noOfElements")
+                  evaluateStep(Step(step.pos, if (index == 0) StepKeyword.Given else StepKeyword.And, doStep), env)
+              }
+            } finally {
+              env.featureScope.objects.clear(elementName)
+            }) :: acc
+          } reverse
+      }
+    } getOrElse {
+      env.featureScope.objects.bind(elementName, "CurrentElement[DryRun]")
+      try {
+        List(evaluateStep(Step(step.keyword, doStep), env))
+      } finally {
+        env.featureScope.objects.clear(elementName)
+      }
+    }
+    val foreachStepDef = new Scenario(List(Tag.StepDefTag, Tag.ForEachTag), elementName, Nil, None, steps, false, Nil, None)
+    env.foreachStepDefs += (step.uniqueId -> foreachStepDef)
   }
   
   lazy val DefaultRepeatDelay: Duration = {

@@ -18,6 +18,7 @@ package gwen.web
 
 import gwen.Settings
 import java.io.File
+import gwen.Predefs.Kestrel
 
 /**
   * Provides access to gwen web settings defined through system properties loaded 
@@ -79,9 +80,13 @@ object WebSettings {
   /**
     * Provides access to the `gwen.web.capture.screenshots` setting used to control whether 
     * or not the web driver should capture screenshots for all steps (default value is `false`).
-    * Note that setting this to `true` degrades performance significantly.
+    * Note that setting this to `true` degrades performance significantly. If the setting is true,
+    * then the `gwen.report.slideshow.create` setting is also implicitly set to true so that the
+    * report generator in core web component knows to generate the slideshow.
     */
-  def `gwen.web.capture.screenshots`: Boolean = Settings.getOpt("gwen.web.capture.screenshots").getOrElse("false").toBoolean
+  def `gwen.web.capture.screenshots`: Boolean = Settings.getOpt("gwen.web.capture.screenshots").getOrElse("false").toBoolean tap { isSet =>
+    if (isSet) sys.props += (("gwen.report.slideshow.create", "true"))
+  }
   
   /**
     * Provides access to the `gwen.web.capture.screenshots.highlighting` setting used to control whether 
@@ -122,16 +127,17 @@ object WebSettings {
   def `gwen.web.capture.screenshots.duplicates`: Boolean = Settings.getOpt("gwen.web.capture.screenshots.duplicates").getOrElse("false").toBoolean
   
   /**
-   * Provides access to the `gwen.web.chrome.args` settings use to set 
+   * Provides access to the `gwen.web.chrome.args` setting used to set
    * the list of Chrome web driver arguments to load (default is empty list).
    * This setting accepts a comma separated list of agruments.
    */
   def `gwen.web.chrome.args`: List[String] = Settings.getOpt("gwen.web.chrome.args").map(_.split(",").toList).getOrElse(Nil)
   
   /**
-   * Provides access to the `gwen.web.chrome.prefs` settings use to set 
+   * Provides access to the `gwen.web.chrome.prefs` setting used to set
    * the list of preferences to pass to Chrome (default is empty list).
    * This setting accepts a comma separated list of agruments.
    */
   def `gwen.web.chrome.prefs`: List[String] = Settings.getOpt("gwen.web.chrome.prefs").map(_.split(",").toList).getOrElse(Nil)
+  
 }

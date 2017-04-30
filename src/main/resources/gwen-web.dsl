@@ -55,13 +55,17 @@ the page title should not match json path <reference>
 <element> should be displayed
 <element> should be hidden
 <element> should be checked
+<element> should be ticked
 <element> should be unchecked
+<element> should be unticked
 <element> should be enabled
 <element> should be disabled
 <element> should not be displayed
 <element> should not be hidden
 <element> should not be checked
+<element> should not be ticked
 <element> should not be unchecked
+<element> should not be unticked
 <element> should not be enabled
 <element> should not be disabled
 <reference> should be "<value>"
@@ -148,11 +152,32 @@ the page title should not match json path <reference>
 <dropdown> value should not match regex <reference>
 <dropdown> value should not match xpath <reference>
 <dropdown> value should not match json path <reference>
+the current URL should be "<value>"
+the current URL should contain "<value>"
+the current URL should start with "<value>"
+the current URL should end with "<value>"
+the current URL should match regex "<expression>"
+the current URL should not be "<value>"
+the current URL should not contain "<value>"
+the current URL should not start with "<value>"
+the current URL should not end with "<value>"
+the current URL should not match regex "<expression>"
+the current URL should be <reference>
+the current URL should contain <reference>
+the current URL should start with <reference>
+the current URL should end with <reference>
+the current URL should match regex <reference>
+the current URL should not be <reference>
+the current URL should not contain <reference>
+the current URL should not start with <reference>
+the current URL should not end with <reference>
+the current URL should not match regex <reference>
 I capture the text in <reference> by xpath "<expression>" as <reference>
 I capture the node in <reference> by xpath "<expression>" as <reference>
 I capture the nodeset in <reference> by xpath "<expression>" as <reference>
 I capture the text in <reference> by regex "<expression>" as <reference>
 I capture the content in <reference> by json path "<expression>" as <reference>
+I capture the text in the current URL by regex "<expression>" as <reference>
 I capture the current URL
 I capture the current URL as <reference>
 I capture <reference> as <reference>
@@ -208,15 +233,21 @@ I select <reference> in <element>
 I select <reference> in <element> by value
 I click <element>
 I check <element>
+I tick <element>
 I uncheck <element>
+I untick <element>
 I submit <element>
 I click <element> of <context>
 I check <element> of <context>
+I tick <element> of <context>
 I uncheck <element> of <context>
+I untick <element> of <context>
 I wait 1 second when <element> is clicked
 I wait 1 second when <element> is submitted
 I wait 1 second when <element> is checked
+I wait 1 second when <element> is ticked
 I wait 1 second when <element> is unchecked
+I wait 1 second when <element> is unticked
 I wait 1 second when <element> is selected
 I wait 1 second when <element> is typed
 I wait 1 second when <element> is entered
@@ -225,7 +256,9 @@ I wait 1 second when <element> is cleared
 I wait <duration> seconds when <element> is clicked
 I wait <duration> seconds when <element> is submitted
 I wait <duration> seconds when <element> is checked
+I wait <duration> seconds when <element> is ticked
 I wait <duration> seconds when <element> is unchecked
+I wait <duration> seconds when <element> is unticked
 I wait <duration> seconds when <element> is selected
 I wait <duration> seconds when <element> is typed
 I wait <duration> seconds when <element> is entered
@@ -234,7 +267,9 @@ I wait <duration> seconds when <element> is cleared
 I wait until <condition> when <element> is clicked
 I wait until <condition> when <element> is submitted
 I wait until <condition> when <element> is checked
+I wait until <condition> when <element> is ticked
 I wait until <condition> when <element> is unchecked
+I wait until <condition> when <element> is unticked
 I wait until <condition> when <element> is selected
 I wait until <condition> when <element> is typed
 I wait until <condition> when <element> is entered
@@ -299,9 +334,30 @@ I capture the current screenshot
 <element> can be clicked by javascript "<javascript>"
 <element> can be submitted by javascript "<javascript>"
 <element> can be checked by javascript "<javascript>"
+<element> can be ticked by javascript "<javascript>"
 <element> can be unchecked by javascript "<javascript>"
+<element> can be unticked by javascript "<javascript>"
 <reference> is defined by sql "<selectStmt>" in the <dbName> database
 <reference> will be defined by sql "<selectStmt>" in the <dbName> database
 I resize the window to width <w> and height <h>
 I maximize the window
 I maximise the window
+<step> for each <element> located by id "<expression>"
+<step> for each <element> located by name "<expression>"
+<step> for each <element> located by tag name "<expression>"
+<step> for each <element> located by css selector "<expression>"
+<step> for each <element> located by xpath "<expression>"
+<step> for each <element> located by class name "<expression>"
+<step> for each <element> located by link text "<expression>"
+<step> for each <element> located by partial link text "<expression>"
+<step> for each <element> located by javascript "<expression>"
+<step> for each <element> located by id "<expression>" in <container>
+<step> for each <element> located by name "<expression>" in <container>
+<step> for each <element> located by tag name "<expression>" in <container>
+<step> for each <element> located by css selector "<expression>" in <container>
+<step> for each <element> located by xpath "<expression>" in <container>
+<step> for each <element> located by class name "<expression>" in <container>
+<step> for each <element> located by link text "<expression>" in <container>
+<step> for each <element> located by partial link text "<expression>" in <container>
+<step> for each <element> located by javascript "<expression>" in <container>
+<step> for each <element> in <elements>

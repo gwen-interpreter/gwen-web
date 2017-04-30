@@ -462,6 +462,52 @@ a:visited {
 		</div>
 	</div>
 
+	<em style="color:gray">Since v2.4.0</em>
+	<div class="panel-group" id="accordion-240" role="tablist" aria-multiselectable="true">
+		<div class="panel panel-default">
+			<div class="panel-heading" role="tab" id="settings-240_1">
+				<h4 class="panel-title">
+					<a role="button" data-toggle="collapse" data-parent="#accordion-240" href="#collapse-240_1" aria-expanded="true" aria-controls="collapseOne">
+						gwen.auto.discover.meta
+					</a>
+				</h4>
+			</div>
+			<div id="collapse-240_1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="settings-240_1">
+				<div class="panel-body">
+					Controls whether or not to enable or disable automatic discovery of meta files.
+					Disabling this will prevent Gwen from automatically discovering and loading meta files in the path of an
+					executing feature, forcing the user to control explicitly through the -m/--meta command line option which meta
+					files to load.
+					<ul>
+						<li><em>default:</em> <code>true</code> (enabled)
+						<li><em>supported:</em> <code>true</code> to enable, <code>false</code> to disable
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="panel panel-default">
+			<div class="panel-heading" role="tab" id="settings-240_2">
+				<h4 class="panel-title">
+					<a role="button" data-toggle="collapse" data-parent="#accordion-240" href="#collapse-240_2" aria-expanded="true" aria-controls="collapseOne">
+						gwen.auto.discover.data.csv
+					</a>
+				</h4>
+			</div>
+			<div id="collapse-240_2" class="panel-collapse collapse" role="tabpanel" aria-labelledby="settings-240_2">
+				<div class="panel-body">
+					Controls whether or not to enable or disable automatic discovery of CSV data files.
+					Disabling this will prevent Gwen from automatically discovering and loading CSV files in the path of an
+					executing feature, forcing the user to control explicitly through the -i/--import command line option which CSV
+					files to load.
+					<ul>
+						<li><em>default:</em> <code>true</code> (enabled)
+						<li><em>supported:</em> <code>true</code> to enable, <code>false</code> to disable
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<a href="https://github.com/gwen-interpreter/gwen-web/wiki/Gwen-Web-User-Guide">&lt; Gwen-Web Wiki</a>
 	
 	<hr>

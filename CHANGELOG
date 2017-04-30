@@ -1,3 +1,63 @@
+2.5.0
+=====
+Apr 23, 2017
+- Fixed issue #37 - When closing child window, Gwen can get confused about the parent window ID
+  - Solution was to move tracking state to env context where lifecycle (initialisation, resetting, etc..) is managed
+  - This ensures that all window tracking state is reset for each feature execution
+- Update selenium from version 3.3.1 to 3.4.0
+- Make at most two attempts to relocate stale elements
+
+2.4.0
+=====
+Apr 11, 2017
+- Add support for repeating a step for each element in a list of web elements
+  - <step> for each <element> located by id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript "<expression>"
+  - <step> for each <element> located by id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript "<expression>" in <container>
+  - <step> for each <element> in <elements>
+- Add examples and unit tests to exercise new capability of sourcing examples tables from CSV files in scenario outlines
+- Send click action to checkboxes if sending space has no effect
+- Support ticked|unticked and tick|untick in all checkbox DSL steps in addition to checked|unchecked and check|uncheck
+- Update Gwen from v2.2.1 to v[2.2.1](https://github.com/gwen-interpreter/gwen/releases/tag/v2.3.0)
+  - Add cache in feature scope for storing temporary objects (non string values)
+  - Add support for sourcing examples tables from CSV data files in scenario outlines
+  - Add settings for enabling or disabling auto meta and CSV data file discovery
+    - gwen.auto.discover.meta (true to enable auto meta discovery, false to disable, default is true for enabled)
+    - gwen.auto.discover.data.csv (true to enable auto CSV data discovery, false to disable, default is true for enabled)
+
+2.3.4
+=====
+Mar 31, 2017
+- Add dry run unit test for todoMVC examples
+- Convert null text retrieved from web pages to blank strings
+- Generate slideshows in reports only if screen shot capture has been enabled
+- Update Gwen from v2.2.0 to v[2.2.1](https://github.com/gwen-interpreter/gwen/releases/tag/v2.2.1)
+
+2.3.3
+=====
+Mar 29, 2017
+- When checking if an element is displayed or hidden, report no such element instead of unbound reference if the
+  element cannot be located.
+- move element state checking to Web env context class
+- dry run fix for steps accessing element text
+- Add todoMVC feature examples
+
+2.3.2
+=====
+Mar 23, 2017
+- Documented steps for working with the current URL and also included them in the DSL for tab completion
+
+2.3.1
+=====
+Mar 21, 2017
+- Fail with assertion error when a timeout is detected on compare step (instead of throwing timeout error)
+
+2.3.0
+=====
+Mar 12, 2017
+- Added support for scenario outlines (see PR gwen-interpreter/gwen#29)
+- Update Selenium from v3.0.1 to v3.3.1
+- Update Gwen from v2.1.0 to v[2.2.0](https://github.com/gwen-interpreter/gwen/releases/tag/v2.2.0)
+
 2.2.0
 =====
 Feb 23, 2017

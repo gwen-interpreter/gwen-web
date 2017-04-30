@@ -152,6 +152,47 @@ class WebEnvContextTest extends FlatSpec with Matchers with MockitoSugar {
     env.scopes.set("username/sql/dbName", "subscribers")
     env.getAttribute("username") should be ("$[sql:select username from users]")
   }
+
+  "Valid compare" should "evaluate successfully" in {
+    val mockDriverManager = mock[DriverManager]
+    val env = newEnv(mockDriverManager)
+    env.compare("a", "2", () => "2", "be", negate = false)
+  }
+
+  "Valid negated compare" should "evaluate successfully" in {
+    val mockDriverManager = mock[DriverManager]
+    val env = newEnv(mockDriverManager)
+    env.compare("a", "2", () => "1", "be", negate = true)
+  }
+
+  "Timeout on compare" should "result in assertion error" in {
+    val mockDriverManager = mock[DriverManager]
+    val env = newEnv(mockDriverManager)
+    intercept[AssertionError] {
+      env.compare("a", "2", () => "1", "be", negate = false)
+    }
+  }
+
+  "Timeout on negated compare" should "result in assertion error" in {
+    val mockDriverManager = mock[DriverManager]
+    val env = newEnv(mockDriverManager)
+    intercept[AssertionError] {
+      env.compare("a", "2", () => "2", "be", negate = true)
+    }
+  }
+
+  "Resetting web env context" should "reset tracking variables" in {
+    val mockDriverManager = mock[DriverManager]
+    val env = newEnv(mockDriverManager)
+    env.withWebDriver { webDriver => webDriver }
+    env.session = "child"
+    env.windows.push("childWindow")
+    env.lastScreenshotSize = Some(8192)
+    env.reset()
+    env.session should be ("primary")
+    env.windows.isEmpty should be (true)
+    env.lastScreenshotSize should be (None)
+  }
   
   def newEnv(browser: DriverManager, dry:Boolean = false): WebEnvContext = {
     
