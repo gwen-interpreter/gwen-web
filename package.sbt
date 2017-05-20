@@ -29,6 +29,11 @@ mappings in Universal <++= (packageBin in Compile, target ) map { (_, target) =>
   (dir.***) pair relativeTo(dir.getParentFile)
 }
 
+mappings in Universal <++= (packageBin in Compile, target ) map { (_, target) =>
+  val dir = file("./features-data")
+  (dir.***) pair relativeTo(dir.getParentFile)
+}
+
 mappings in Universal <++= (com.typesafe.sbt.packager.Keys.makeBashScript in Universal, normalizedName in Universal) map { (script, name) =>
   for {
     s <- script.toSeq

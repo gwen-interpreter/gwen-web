@@ -1,3 +1,9 @@
+2.5.1
+=====
+May 20, 2017
+- Fix issue gwen-interpreter/gwen#30
+  - use web driver click instead of javascript click
+
 2.5.0
 =====
 Apr 23, 2017

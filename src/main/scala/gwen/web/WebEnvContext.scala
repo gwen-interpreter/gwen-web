@@ -647,10 +647,8 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
         action match {
           case "click" =>
             withWebElement(action, elementBinding) { webElement =>
-              val clicked = executeScriptPredicate("(function(element){try{element.focus(); element.click(); return true;}catch(err){return false;}})(arguments[0]);", webElement)
-              if (!clicked) {
-                webElement.click()
-              }  
+              executeScript("(function(element){element.focus();})(arguments[0]);", webElement)
+              webElement.click()
             }
           case _ =>
             withWebElement(action, elementBinding) { webElement =>
