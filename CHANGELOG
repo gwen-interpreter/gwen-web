@@ -3,6 +3,7 @@
 May 20, 2017
 - Fix issue gwen-interpreter/gwen#30
   - use web driver click instead of javascript click
+- Update Gwen from v2.3.0 to v[2.3.1](https://github.com/gwen-interpreter/gwen/releases/tag/v2.3.1)
 
 2.5.0
 =====
