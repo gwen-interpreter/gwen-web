@@ -1,3 +1,9 @@
+2.5.2
+=====
+May 30, 2017
+- Update Gwen from v2.3.1 to v[2.4.0](https://github.com/gwen-interpreter/gwen/releases/tag/v2.4.0)
+  - Enable cntl-d in REPL for exit (issue gwen-interpreter/gwen#31 raised by @asgillett)
+
 2.5.1
 =====
 May 20, 2017
