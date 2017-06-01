@@ -1,3 +1,10 @@
+2.5.3
+=====
+Jun 1, 2017
+- Update Gwen from v2.34.0 to v[2.4.1](https://github.com/gwen-interpreter/gwen/releases/tag/v2.4.1)
+  - Make env REPL output more compact and readable
+  - Remove json-play dependency
+
 2.5.2
 =====
 May 30, 2017
