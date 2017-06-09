@@ -27,8 +27,9 @@ import gwen.errors.undefinedStepError
 import gwen.eval.EvalEngine
 import gwen.eval.GwenOptions
 import gwen.eval.ScopedDataStack
-import gwen.eval.support.DecodingSupport
 import gwen.eval.support.DefaultEngineSupport
+
+import scala.util.Try
 
 /**
   * A web engine that uses the Selenium web driver
@@ -37,8 +38,7 @@ import gwen.eval.support.DefaultEngineSupport
   * @author Branko Juric, Brady Wood
   */
 trait WebEngine extends EvalEngine[WebEnvContext] 
-  with DefaultEngineSupport[WebEnvContext] 
-  with DecodingSupport {
+  with DefaultEngineSupport[WebEnvContext] {
   
   /**
     * Initialises and returns a new web environment context.
@@ -47,19 +47,19 @@ trait WebEngine extends EvalEngine[WebEnvContext]
     * @param scopes initial data scopes
     */
   override def init(options: GwenOptions, scopes: ScopedDataStack) = new WebEnvContext(options, scopes)
-  
+
   /**
-    * Evaluates a given step.  This method matches the incoming step against a 
-    * set of supported steps and evaluates only those that are successfully 
+    * Evaluates a given step.  This method matches the incoming step against a
+    * set of supported steps and evaluates only those that are successfully
     * matched.
     *
     * @param step the step to evaluate
     * @param env the web environment context
     */
   override def evaluate(step: Step, env: WebEnvContext): Unit = {
-    
-   step.expression match {
-    
+
+    step.expression match {
+
       case r"""I wait for (.+?)$element text for (.+?)$seconds second(?:s?)""" =>
         val elementBinding = env.getLocatorBinding(element)
         env.execute {
@@ -99,23 +99,23 @@ trait WebEngine extends EvalEngine[WebEnvContext]
       case r"""I wait ([0-9]+?)$duration second(?:s?) when (.+?)$element is (clicked|submitted|checked|ticked|unchecked|unticked|selected|typed|entered|tabbed|cleared)$$$event""" =>
         env.getLocatorBinding(element)
         env.scopes.set(s"$element/${WebEvents.EventToAction(event)}/wait", duration)
-        
+
       case r"""I wait until (.+?)$condition when (.+?)$element is (clicked|submitted|checked|ticked|unchecked|unticked|selected|typed|entered|tabbed|cleared)$$$event""" =>
         env.scopes.get(s"$condition/javascript")
         env.getLocatorBinding(element)
         env.scopes.set(s"$element/${WebEvents.EventToAction(event)}/condition", condition)
-        
+
       case r"""I wait until "(.+?)$javascript"""" => env.execute {
         env.waitUntil(s"Waiting until $javascript") {
-          env.executeScriptPredicate(javascript)
+          env.executeJSPredicate(javascript)
         }
       }
-        
+
       case r"""I wait until (.+?)$$$condition""" =>
         val javascript = env.scopes.get(s"$condition/javascript")
         env.execute {
           env.waitUntil(s"Waiting until $condition") {
-            env.executeScriptPredicate(javascript)
+            env.executeJSPredicate(javascript)
           }
         }
 
@@ -134,64 +134,64 @@ trait WebEngine extends EvalEngine[WebEnvContext]
 
       case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using no delay and (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit timeout""" =>
         repeat(operation, step, doStep, condition, Duration.Zero, Duration(timeoutPeriod.toLong, timeoutUnit), env)
-        
+
       case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using no delay""" =>
         repeat(operation, step, doStep, condition, Duration.Zero, defaultRepeatTimeout(DefaultRepeatDelay), env)
-        
+
       case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using (.+?)$delayPeriod (second|millisecond)$delayUnit delay and (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit timeout""" =>
         repeat(operation, step, doStep, condition, Duration(delayPeriod.toLong, delayUnit), Duration(timeoutPeriod.toLong, timeoutUnit), env)
-        
+
       case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using (.+?)$delayPeriod (second|millisecond)$delayUnit delay""" =>
         val delayDuration = Duration(delayPeriod.toLong, delayUnit)
         repeat(operation, step, doStep, condition, delayDuration, defaultRepeatTimeout(delayDuration), env)
 
       case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit timeout""" =>
         repeat(operation, step, doStep, condition, DefaultRepeatDelay, Duration(timeoutPeriod.toLong, timeoutUnit), env)
-        
+
       case r"""(.+?)$doStep (until|while)$operation (.+?)$$$condition""" =>
         repeat(operation, step, doStep, condition, DefaultRepeatDelay, defaultRepeatTimeout(DefaultRepeatDelay), env)
 
       case r"""I am on the (.+?)$$$page""" =>
         env.scopes.addScope(page)
-        
-      case r"""I navigate to the (.+?)$$$page""" => 
+
+      case r"""I navigate to the (.+?)$$$page""" =>
         env.scopes.addScope(page)
         val url = env.getAttribute("url")
         env.execute {
           env.withWebDriver(_.get(url))(WebSettings.`gwen.web.capture.screenshots`)
         }
-        
-      case r"""I navigate to "(.+?)"$$$url""" => 
+
+      case r"""I navigate to "(.+?)"$$$url""" =>
         env.scopes.addScope(url)
         env.execute {
           env.withWebDriver(_.get(url))(WebSettings.`gwen.web.capture.screenshots`)
         }
-        
+
       case r"""I scroll to the (top|bottom)$position of (.+?)$$$element""" =>
         val elementBinding = env.getLocatorBinding(element)
         env.execute {
           env.scrollIntoView(elementBinding, ScrollTo.withName(position))
         }
 
-      case r"""the url will be defined by (?:property|setting) "(.+?)"$$$name""" => 
+      case r"""the url will be defined by (?:property|setting) "(.+?)"$$$name""" =>
         env.scopes.set("url", Settings.get(name))
-        
-      case r"""the url will be "(.+?)"$$$url""" => 
-        env.scopes.set("url", url)   
+
+      case r"""the url will be "(.+?)"$$$url""" =>
+        env.scopes.set("url", url)
 
       case r"""(.+?)$element can be located by (id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)$locator "(.+?)"$expression in (.+?)$$$container""" =>
         env.getLocatorBinding(container)
         env.scopes.set(s"$element/locator", locator)
         env.scopes.set(s"$element/locator/$locator", expression)
         env.scopes.set(s"$element/locator/$locator/container", container)
-        
+
       case r"""(.+?)$element can be located by (id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)$locator "(.+?)"$$$expression""" =>
         env.scopes.set(s"$element/locator", locator)
         env.scopes.set(s"$element/locator/$locator", expression)
         env.scopes.getOpt(s"$element/locator/$locator/container") foreach { _ =>
           env.scopes.set(s"$element/locator/$locator/container", null)
         }
-        
+
       case r"""(.+?)$element can be (clicked|submitted|checked|ticked|unchecked|unticked)$event by javascript "(.+?)"$$$expression""" =>
         env.getLocatorBinding(element)
         env.scopes.set(s"$element/action/${WebEvents.EventToAction(event)}/javascript", expression)
@@ -199,7 +199,7 @@ trait WebEngine extends EvalEngine[WebEnvContext]
       case r"""the page title should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator "(.*?)"$$$expression""" =>  env.execute {
         env.compare("title", expression, () => env.getTitle, operator, Option(negation).isDefined)
       }
-        
+
       case r"""the page title should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$$$attribute""" =>
         val expected = env.getAttribute(attribute)
         env.execute {
@@ -219,7 +219,7 @@ trait WebEngine extends EvalEngine[WebEnvContext]
           env.compare(element + Option(selection).getOrElse(""), expression, actual, operator, Option(negation).isDefined)
         }
 
-      case r"""(.+?)$element( value| text)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$$$attribute""" =>
+      case r"""(.+?)$element( value| text)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$$$attribute""" if(attribute != "absent") =>
         if (element == "I") undefinedStepError(step)
         val expected = env.getAttribute(attribute)
         val actual = env.boundAttributeOrSelection(element, Option(selection))
@@ -227,91 +227,30 @@ trait WebEngine extends EvalEngine[WebEnvContext]
           env.compare(element + Option(selection).getOrElse(""), expected, actual, operator, Option(negation).isDefined)
         }
 
-      case r"""I capture the (text|node|nodeset)$targetType in (.+?)$source by xpath "(.+?)"$expression as (.+?)$$$name""" =>
-        val src = env.getBoundReferenceValue(source)
-        env.featureScope.set(name, env.execute(env.evaluateXPath(expression, src, env.XMLNodeType.withName(targetType)) tap { content =>
-          env.addAttachment(name, "txt", content)
-        }).getOrElse(s"$$[xpath:$expression]"))
-
-      case r"""I capture the text in (.+?)$source by regex "(.+?)"$expression as (.+?)$$$name""" =>
-        val src = env.getBoundReferenceValue(source)
-        env.featureScope.set(name, env.execute(env.extractByRegex(expression, src) tap { content =>
-          env.addAttachment(name, "txt", content)
-        }).getOrElse(s"$$[regex:$expression"))
-
-      case r"""I capture the content in (.+?)$source by json path "(.+?)"$expression as (.+?)$$$name""" =>
-        val src = env.getBoundReferenceValue(source)
-        env.featureScope.set(name, env.execute(env.evaluateJsonPath(expression, src) tap { content => 
-          env.addAttachment(name, "txt", content) 
-        }).getOrElse(s"$$[json path:$expression"))
-      
-      case r"""I capture the current URL""" => 
+      case r"""I capture the current URL""" =>
         env.captureCurrentUrl()
-      
-      case r"""I capture the current URL as (.+?)$name""" => 
-        env.featureScope.set(name, env.execute(env.withWebDriver(_.getCurrentUrl()) tap { content => 
-          env.addAttachment(name, "txt", content) 
+
+      case r"""I capture the current URL as (.+?)$name""" =>
+        env.featureScope.set(name, env.execute(env.withWebDriver(_.getCurrentUrl()) tap { content =>
+          env.addAttachment(name, "txt", content)
         }).getOrElse("$[currentUrl]"))
-        
-      case r"""I capture the current screenshot""" => 
+
+      case r"""I capture the current screenshot""" =>
         env.execute {
           env.captureScreenshot(true)
         }
-        
-      case r"""I capture (.+?)$element( value| text)?$selection as (.+?)$attribute""" =>
-        val value = Option(selection) match {
-          case None => env.getBoundReferenceValue(element)
-          case Some(sel) => env.getElementSelection(element, sel)
-        }
-        env.featureScope.set(attribute, value tap { content => 
-          env.addAttachment(attribute, "txt", content) 
-        })
-        
-      case r"""I capture (.+?)$element( value| text)?$$$selection""" =>
-        val value = Option(selection) match {
-          case None => env.getBoundReferenceValue(element)
-          case Some(sel) => env.getElementSelection(element, sel)
-        }
-        env.featureScope.set(element, value tap { content => 
-          env.addAttachment(element, "txt", content) 
-        })
-        
-      case r"""I base64 decode (.+?)$attribute as (.+?)$$$name""" => 
-        val source = env.getBoundReferenceValue(attribute)
-        env.featureScope.set(name, env.execute(decodeBase64(source) tap { content => 
-          env.addAttachment(name, "txt", content) 
-        }).getOrElse(s"$$[base64 decoded $attribute]"))
-        
-      case r"""I base64 decode (.+?)$attribute""" => 
-        val source = env.getBoundReferenceValue(attribute)
-        env.featureScope.set(attribute, env.execute(decodeBase64(source) tap { content => 
-          env.addAttachment(attribute, "txt", content) 
-        }).getOrElse(s"$$[base64 decoded $attribute]"))
-        
-      case r"""(.+?)$attribute (?:is|will be) defined by (javascript|system process|property|setting|file)$attrType "(.+?)"$$$expression""" =>
-        attrType match {
-          case "javascript" => env.scopes.set(s"$attribute/javascript", expression)
-          case "system process" => env.scopes.set(s"$attribute/sysproc", expression)
-          case "file" => env.scopes.set(s"$attribute/file", expression)
-          case _ => env.featureScope.set(attribute, Settings.get(expression))
-        }
 
-      case r"""(.+?)$attribute (?:is|will be) defined by the (text|node|nodeset)$targetType in (.+?)$source by xpath "(.+?)"$$$expression""" =>
-        env.scopes.set(s"$attribute/xpath/source", source)
-        env.scopes.set(s"$attribute/xpath/targetType", targetType)
-        env.scopes.set(s"$attribute/xpath/expression", expression)
-      
-      case r"""(.+?)$attribute (?:is|will be) defined in (.+?)$source by regex "(.+?)"$$$expression""" => 
-        env.scopes.set(s"$attribute/regex/source", source)
-        env.scopes.set(s"$attribute/regex/expression", expression)
-        
-      case r"""(.+?)$attribute (?:is|will be) defined in (.+?)$source by json path "(.+?)"$$$expression""" => 
-        env.scopes.set(s"$attribute/json path/source", source)
-        env.scopes.set(s"$attribute/json path/expression", expression)
-      
-      case r"""(.+?)$attribute (?:is|will be) defined by sql "(.+?)"$selectStmt in the (.+?)$dbName database""" =>
-        env.scopes.set(s"$attribute/sql/selectStmt", selectStmt)
-        env.scopes.set(s"$attribute/sql/dbName", dbName)
+      case r"""I capture (.+?)$element( value| text)$selection as (.+?)$attribute""" =>
+        val value = env.getElementSelection(element, selection)
+        env.featureScope.set(attribute, value tap { content =>
+          env.addAttachment(attribute, "txt", content)
+        })
+
+      case r"""I capture (.+?)$element( value| text)$$$selection""" =>
+        val value = env.getElementSelection(element, selection)
+        env.featureScope.set(element, value tap { content =>
+          env.addAttachment(element, "txt", content)
+        })
 
       case r"""I clear (.+?)$$$element""" =>
         val elementBinding = env.getLocatorBinding(element)
@@ -338,7 +277,7 @@ trait WebEngine extends EvalEngine[WebEnvContext]
         env.execute {
           env.sendKeys(elementBinding, value, clearFirst = true, sendEnterKey = action == "enter")
         }
-        
+
       case r"""I (enter|type)$action (.+?)$attribute in (.+?)$$$element""" =>
         val elementBinding = env.getLocatorBinding(element)
         val value = env.getAttribute(attribute)
@@ -354,10 +293,10 @@ trait WebEngine extends EvalEngine[WebEnvContext]
 
       case r"""I select "(.*?)"$value in (.+?)$element by value""" =>
         val elementBinding = env.getLocatorBinding(element)
-        env.execute { 
+        env.execute {
           env.selectByValue(elementBinding, value)
         }
-        
+
       case r"""I select "(.*?)"$value in (.+?)$$$element""" =>
         val elementBinding = env.getLocatorBinding(element)
         env.execute {
@@ -410,44 +349,44 @@ trait WebEngine extends EvalEngine[WebEnvContext]
           env.withWebElement(elementBinding) { _ => }
         }
 
-      case "I refresh the current page" => env.execute { 
+      case "I refresh the current page" => env.execute {
         env.withWebDriver { _.navigate().refresh() }
       }
-      
+
       case r"I start a new browser" => env.execute {
         env.quit("primary")
         env.switchToSession("primary")
       }
-      
+
       case r"""I start a browser for (.+?)$$$session""" => env.execute {
         env.quit(session)
         env.switchToSession(session)
       }
-      
+
       case r"I close the(?: current)? browser" => env.execute {
         env.quit()
       }
-      
+
       case r"""I close the browser for (.+?)$session""" => env.execute {
         env.quit(session)
       }
-      
+
       case r"""I switch to the child window""" => env.execute {
         env.withWebDriver(env.switchToChild)
       }
-      
+
       case r"""I close the child window""" => env.execute {
         env.closeChild()
       }
-      
+
       case r"""I switch to the parent window""" => env.execute {
         env.switchToParent(false)
       }
-      
+
       case r"""I switch to (.+?)$session""" => env.execute {
         env.switchToSession(session)
       }
-      
+
       case r"I (accept|dismiss)$action the (?:alert|confirmation) popup" => env.execute {
         env.withWebDriver { driver =>
           if (action == "accept") {
@@ -465,9 +404,9 @@ trait WebEngine extends EvalEngine[WebEnvContext]
       case r"""I maximi(?:z|s)e the window""" => env.execute {
         env.maximizeWindow()
       }
-        
+
       case _ => super.evaluate(step, env)
-      
+
     }
   }
   
@@ -489,7 +428,7 @@ trait WebEngine extends EvalEngine[WebEnvContext]
               case Failed(_, e) => throw e
               case _ =>
                 val javascript = env.scopes.get(s"$condition/javascript")
-                env.executeScriptPredicate(javascript) tap { result =>
+                env.executeJSPredicate(javascript) tap { result =>
                   if (!result) {
                     logger.info(s"Repeat-until[$attempt] not completed, ..${if (delay.gt(Duration.Zero)) s"will try again in ${DurationFormatter.format(delay)}" else "trying again"}")
                     Thread.sleep(delay.toMillis)
@@ -500,7 +439,7 @@ trait WebEngine extends EvalEngine[WebEnvContext]
             }
           case "while" =>
             val javascript = env.scopes.get(s"$condition/javascript")
-            val result = env.executeScriptPredicate(javascript)
+            val result = env.executeJSPredicate(javascript)
             if (result) {
               logger.info(s"Repeat-while[$attempt]")
               evaluateStep(Step(step.keyword, doStep), env).evalStatus match {

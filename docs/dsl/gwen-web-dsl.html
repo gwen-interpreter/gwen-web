@@ -1750,6 +1750,46 @@ a:visited {
 			</div>
 		</div>
 	</div>
+
+	<em style="color:gray">Since v2.6.0</em>
+	<div class="panel-group" id="accordion260" role="tablist" aria-multiselectable="true">
+		<div class="panel panel-default">
+			<div class="panel-heading" role="tab" id="dsl-260_1">
+				<h4 class="panel-title">
+					<a role="button" data-toggle="collapse" data-parent="#accordion0" href="#collapse-260_1" aria-expanded="true" aria-controls="collapseOne">
+						<code>&lt;attribute&gt;</code> should be absent
+					</a>
+				</h4>
+			</div>
+			<div id="collapse-260_1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-260_1">
+				<div class="panel-body">
+					Checks that a given attribute is absent (not bound to current scope).
+					<ul>
+						<li><code>&lt;attribute&gt;</code> = the bound attribute to check</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="panel panel-default">
+			<div class="panel-heading" role="tab" id="dsl-260_2">
+				<h4 class="panel-title">
+					<a role="button" data-toggle="collapse" data-parent="#accordion0" href="#collapse-260_2" aria-expanded="true" aria-controls="collapseOne">
+						<code>&lt;source&gt;</code> at &lt;json path|xpath&gt; &quot;<code>&lt;path&gt;</code>&quot; &lt;should|should not&gt; &lt;be|contain|start with|end with|match regex|match xpath&gt; &quot;<code>&lt;expression&gt;</code>&quot;
+					</a>
+				</h4>
+			</div>
+			<div id="collapse-260_2" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-260_2">
+				<div class="panel-body">
+					Checks that value extracted by a JSON or XPath expression on given attribute matches or does not match a given expression
+					<ul>
+						<li><code>&lt;source&gt;</code> = the source attribute to extract the value from</li>
+						<li><code>&lt;path&gt;</code> = the Json Path or XPath extractor expression</li>
+						<li><code>&lt;expression&gt;</code> = the expression to match against</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
 	
 	<a href="https://github.com/gwen-interpreter/gwen-web/wiki">&lt; Gwen-Web Wiki</a>
 

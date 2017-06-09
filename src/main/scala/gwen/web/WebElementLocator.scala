@@ -136,7 +136,7 @@ trait WebElementLocator extends LazyLogging {
   private def getElementByJavaScript(env: WebEnvContext, javascript: String): Option[WebElement] = {
     var element: Option[WebElement] = None
     env.waitUntil {
-      element = env.executeScript(s"return $javascript") match {
+      element = env.executeJS(env.jsReturn(javascript)) match {
         case elems: util.ArrayList[_] =>
           if (!elems.isEmpty) Option(elems.get(0).asInstanceOf[WebElement])
           else None
@@ -209,7 +209,7 @@ trait WebElementLocator extends LazyLogging {
   private def getAllElementsByJavaScript(env: WebEnvContext, javascript: String): List[WebElement] = {
     var elements: List[WebElement] = Nil
     env.waitUntil {
-      elements = env.executeScript(s"return $javascript") match {
+      elements = env.executeJS(env.jsReturn(javascript)) match {
         case elems: util.ArrayList[_] =>
           elems.asScala.toList.map(_.asInstanceOf[WebElement])
         case elem => Option(elem) match {

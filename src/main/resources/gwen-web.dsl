@@ -180,7 +180,7 @@ I capture the content in <reference> by json path "<expression>" as <reference>
 I capture the text in the current URL by regex "<expression>" as <reference>
 I capture the current URL
 I capture the current URL as <reference>
-I capture <reference> as <reference>
+I capture <reference> as <attribute>
 I capture <reference>
 I capture <dropdown> text as <reference>
 I capture <dropdown> value as <reference>
@@ -361,3 +361,24 @@ I maximise the window
 <step> for each <element> located by partial link text "<expression>" in <container>
 <step> for each <element> located by javascript "<expression>" in <container>
 <step> for each <element> in <elements>
+<attribute> should be absent
+<source> at json path "<path>" should be "<expression"
+<source> at json path "<path>" should contain "<expression"
+<source> at json path "<path>" should start with "<expression"
+<source> at json path "<path>" should end with "<expression"
+<source> at json path "<path>" should match regex "<expression"
+<source> at json path "<path>" should not be "<expression"
+<source> at json path "<path>" should not contain "<expression"
+<source> at json path "<path>" should not start with "<expression"
+<source> at json path "<path>" should not end with "<expression"
+<source> at json path "<path>" should not match regex "<expression"
+<source> at xpath "<path>" should be "<expression"
+<source> at xpath "<path>" should contain "<expression"
+<source> at xpath "<path>" should start with "<expression"
+<source> at xpath "<path>" should end with "<expression"
+<source> at xpath "<path>" should match regex "<expression"
+<source> at xpath "<path>" should not be "<expression"
+<source> at xpath "<path>" should not contain "<expression"
+<source> at xpath "<path>" should not start with "<expression"
+<source> at xpath "<path>" should not end with "<expression"
+<source> at xpath "<path>" should not match regex "<expression"

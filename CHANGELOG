@@ -1,7 +1,19 @@
+2.6.0
+=====
+Jun 9, 2017
+- And new DSL steps, see also [Gwen web DSL](http://htmlpreview.github.io/?https://github.com/gwen-interpreter/gwen-web/blob/master/docs/dsl/gwen-web-dsl.html)
+  - <attribute> should be absent
+  - <source> at json path|xpath "<path>" should be|contain|start with|end with|match regex "<expression"
+  - <source> at json path|xpath "<path>" should not be|contain|start with|end with|match regex "<expression"
+- Update Gwen from v2.4.1 to v[2.5.0](https://github.com/gwen-interpreter/gwen/releases/tag/v2.5.0)
+  - Make string interpolation work with multi-line strings (use DOTALL mode in regex matcher)
+  - Introduce Java Scripting API (JSR 223) to support JavaScript evaluation in non web engines
+  - Merge common steps into default engine support class so other engines can easily inherit them
+
 2.5.3
 =====
 Jun 1, 2017
-- Update Gwen from v2.34.0 to v[2.4.1](https://github.com/gwen-interpreter/gwen/releases/tag/v2.4.1)
+- Update Gwen from v2.4.0 to v[2.4.1](https://github.com/gwen-interpreter/gwen/releases/tag/v2.4.1)
   - Make env REPL output more compact and readable
   - Remove json-play dependency
 

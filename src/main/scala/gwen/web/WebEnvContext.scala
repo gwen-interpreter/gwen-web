@@ -16,8 +16,6 @@
 
 package gwen.web
 
-import java.io.File
-
 import scala.util.Failure
 import scala.util.Success
 import scala.util.Try
@@ -30,10 +28,8 @@ import gwen.eval.{EnvContext, GwenOptions, ScopedData, ScopedDataStack}
 import gwen.errors._
 
 import scala.io.Source
-import scala.sys.process._
 import scala.collection.JavaConverters._
 import org.openqa.selenium.interactions.Actions
-import java.io.FileNotFoundException
 
 import scala.collection.mutable
 
@@ -72,35 +68,33 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     quit()
     super.close()
   }
+
+  /**
+    * Appends a return keyword in front of the given javascript expression in preparation for execute and return
+    * (since web driver requires return prefix).
+    *
+    * @param javascript the javascript function
+    */
+  override def jsReturn(javascript: String) = s"return $javascript"
   
   /**
-    * Injects and executes a javascript on the current page.
+    * Injects and executes a javascript on the current page through web driver.
     * 
     * @param javascript the script expression to execute
     * @param params optional parameters to the script
     * @param takeScreenShot true to take screenshot after performing the function
     */
-  def executeScript(javascript: String, params: Any*)(implicit takeScreenShot: Boolean = false): Any = 
-    withWebDriver { webDriver => 
-      webDriver.asInstanceOf[JavascriptExecutor].executeScript(javascript, params.map(_.asInstanceOf[AnyRef]) : _*) tap { result =>
-        if (takeScreenShot && WebSettings.`gwen.web.capture.screenshots`) {
-          captureScreenshot(false)
-        }
-        logger.debug(s"Evaluated javascript: $javascript, result='$result'")
-        if (result.isInstanceOf[Boolean] && result.asInstanceOf[Boolean]) {
-          Thread.sleep(WebSettings.`gwen.web.throttle.msecs`)
-        }
+  override def executeJS(javascript: String, params: Any*)(implicit takeScreenShot: Boolean = false): Any = withWebDriver { webDriver =>
+    webDriver.asInstanceOf[JavascriptExecutor].executeScript(s"$javascript", params.map(_.asInstanceOf[AnyRef]) : _*) tap { result =>
+      if (takeScreenShot && WebSettings.`gwen.web.capture.screenshots`) {
+        captureScreenshot(false)
+      }
+      logger.debug(s"Evaluated javascript: $javascript, result='$result'")
+      if (result.isInstanceOf[Boolean] && result.asInstanceOf[Boolean]) {
+        Thread.sleep(WebSettings.`gwen.web.throttle.msecs`)
       }
     }
-  
-  /**
-    * Injects and executes a javascript predicate on the current page.
-    * 
-    * @param javascript the script predicate expression to execute
-    * @param params optional parameters to the script
-    */
-  def executeScriptPredicate(javascript: String, params: Any*): Boolean = 
-    executeScript(s"return $javascript", params.map(_.asInstanceOf[AnyRef]) : _*).asInstanceOf[Boolean]
+  }
   
   /**
     * Waits for a given condition to be true. Errors on time out 
@@ -193,7 +187,7 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     val msecs = WebSettings`gwen.web.throttle.msecs`; // need semi-colon (compiler bug?)
     if (msecs > 0) {
       val style = WebSettings.`gwen.web.highlight.style` 
-      executeScript(s"element = arguments[0]; type = element.getAttribute('type'); if (('radio' == type || 'checkbox' == type) && element.parentElement.getElementsByTagName('input').length == 1) { element = element.parentElement; } original_style = element.getAttribute('style'); element.setAttribute('style', original_style + '; $style'); setTimeout(function() { element.setAttribute('style', original_style); }, $msecs);", element)(WebSettings.`gwen.web.capture.screenshots.highlighting`)
+      executeJS(s"element = arguments[0]; type = element.getAttribute('type'); if (('radio' == type || 'checkbox' == type) && element.parentElement.getElementsByTagName('input').length == 1) { element = element.parentElement; } original_style = element.getAttribute('style'); element.setAttribute('style', original_style + '; $style'); setTimeout(function() { element.setAttribute('style', original_style); }, $msecs);", element)(WebSettings.`gwen.web.capture.screenshots.highlighting`)
       Thread.sleep(msecs)
     }
   }
@@ -326,13 +320,13 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     */
   override def getBoundReferenceValue(name: String): String = {
     if (name == "the current URL") captureCurrentUrl()
-    (Try(getLocatorBinding(name)) match {
-      case Success(binding) =>
+    (getLocatorBinding(name, true) match {
+      case Some(binding) =>
         Try(execute(getElementText(binding)).getOrElse(None)) match {
           case Success(text) => text.getOrElse(getAttribute(name))
           case Failure(e) => throw e
         }
-      case Failure(_) => getAttribute(name)
+      case _ => getAttribute(name)
     }) tap { value =>
       logger.debug(s"getBoundReferenceValue($name)='$value'")
     }
@@ -363,7 +357,7 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
             case None | Some("") =>
               Option(webElement.getAttribute("value")) match {
                 case None | Some("") =>
-                  val value = executeScript("(function(element){return element.innerText || element.textContent || ''})(arguments[0]);", webElement).asInstanceOf[String]
+                  val value = executeJS("(function(element){return element.innerText || element.textContent || ''})(arguments[0]);", webElement).asInstanceOf[String]
                   if (value != null) Some(value) else Some("")
                 case value => value
               }
@@ -435,50 +429,13 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
   }.getOrElse(s"$$[$name $selection]")
   
   /**
-    * Gets a bound attribute value from the visible scope.
+    * Resolves a bound attribute value from the visible scope.
     *  
     * @param name the name of the bound attribute to find
     */
   def getAttribute(name: String): String = {
-    val attScopes = scopes.visible.filterAtts{case (n, _) => n.startsWith(name)}
-    (attScopes.findEntry { case (n, v) => n.matches(s"""$name(/(text|javascript|xpath.+|regex.+|json path.+|sysproc|file|sql.+))?""") && v != "" } map {
-      case (n, v) => 
-        if (n == s"$name/text") v
-        else if (n == s"$name/javascript")
-          execute(Option(executeScript(s"return ${interpolate(v)(getBoundReferenceValue)}")).map(_.toString).getOrElse("")).getOrElse(s"$$[javascript:$v]")
-        else if (n.startsWith(s"$name/xpath")) {
-          val source = interpolate(getBoundReferenceValue(attScopes.get(s"$name/xpath/source")))(getBoundReferenceValue)
-          val targetType = interpolate(attScopes.get(s"$name/xpath/targetType"))(getBoundReferenceValue)
-          val expression = interpolate(attScopes.get(s"$name/xpath/expression"))(getBoundReferenceValue)
-          execute(evaluateXPath(expression, source, XMLNodeType.withName(targetType))).getOrElse(s"$$[xpath:$expression]")
-        }
-        else if (n.startsWith(s"$name/regex")) {
-          val source = interpolate(getBoundReferenceValue(attScopes.get(s"$name/regex/source")))(getBoundReferenceValue)
-          val expression = interpolate(attScopes.get(s"$name/regex/expression"))(getBoundReferenceValue)
-          execute(extractByRegex(expression, source)).getOrElse(s"$$[regex:$expression]")
-        }
-        else if (n.startsWith(s"$name/json path")) {
-          val source = interpolate(getBoundReferenceValue(attScopes.get(s"$name/json path/source")))(getBoundReferenceValue)
-          val expression = interpolate(attScopes.get(s"$name/json path/expression"))(getBoundReferenceValue)
-          execute(evaluateJsonPath(expression, source)).getOrElse(s"$$[json path:$expression]")
-        }
-        else if (n == s"$name/sysproc") execute(v.!!).map(_.trim).getOrElse(s"$$[sysproc:$v]")
-        else if (n == s"$name/file") {
-          val filepath = interpolate(v)(getBoundReferenceValue)
-          execute {
-            if (new File(filepath).exists()) {
-              Source.fromFile(filepath).mkString
-            } else throw new FileNotFoundException(s"File bound to '$name' not found: $filepath")
-          } getOrElse s"$$[file:$v]"
-        } 
-        else if (n.startsWith(s"$name/sql")) {
-          val selectStmt = interpolate(attScopes.get(s"$name/sql/selectStmt"))(getBoundReferenceValue)
-          val dbName = interpolate(attScopes.get(s"$name/sql/dbName"))(getBoundReferenceValue)
-          execute(evaluateSql(selectStmt, dbName)).getOrElse(s"$$[sql:$selectStmt]")
-        } 
-        else v
-    }).getOrElse {
-      execute(super.getBoundReferenceValue(name)).getOrElse { 
+    resolveBoundValue(name).getOrElse {
+      execute(super.getBoundReferenceValue(name)).getOrElse {
         Try(super.getBoundReferenceValue(name)).getOrElse {
           Try(getLocatorBinding(name).lookup).getOrElse {
             unboundAttributeError(name)
@@ -500,13 +457,21 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
         case e: Throwable => throw e
       }
   }
+
+  /**
+    * Gets a web element binding.
+    *
+    * @param element the name of the web element
+    */
+  def getLocatorBinding(element: String): LocatorBinding = getLocatorBinding(element, false).get
   
   /**
    * Gets a web element binding.
    * 
    * @param element the name of the web element
+   * @param optional true to return None if not found; false to throw error
    */
-  def getLocatorBinding(element: String): LocatorBinding = {
+  def getLocatorBinding(element: String, optional: Boolean): Option[LocatorBinding] = {
     featureScope.objects.get(element) match {
       case None =>
         val locatorBinding = s"$element/locator"
@@ -518,14 +483,15 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
                 val expr = interpolate(expression)(getBoundReferenceValue)
                 val container = scopes.getOpt(interpolate(s"$element/locator/$locator/container")(getBoundReferenceValue))
                 if (isDryRun) {
-                  container.foreach(c => getLocatorBinding(c))
+                  container.foreach(c => getLocatorBinding(c, optional))
                 }
-                LocatorBinding(element, locator, expr, container)
-              case None => throw new LocatorBindingException(element, s"locator lookup binding not found: $lookupBinding")
+                Some(LocatorBinding(element, locator, expr, container))
+              case None =>
+                if (optional) None else throw new LocatorBindingException(element, s"locator lookup binding not found: $lookupBinding")
             }
-          case None => throw new LocatorBindingException(element, s"locator binding not found: $locatorBinding")
+          case None => if (optional) None else throw new LocatorBindingException(element, s"locator binding not found: $locatorBinding")
         }
-      case _ => LocatorBinding(element, "cache", element, None)
+      case _ => Some(LocatorBinding(element, "cache", element, None))
     }
   }
   
@@ -551,7 +517,7 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
       val javascript = scopes.get(s"$condition/javascript")
       logger.debug(s"Waiting for script to return true: $javascript")
       waitUntil(s"Waiting until $condition (post-$action condition)") {
-        executeScriptPredicate(javascript)
+        executeJSPredicate(javascript)
       }
     }
   }
@@ -647,7 +613,7 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
         action match {
           case "click" =>
             withWebElement(action, elementBinding) { webElement =>
-              executeScript("(function(element){element.focus();})(arguments[0]);", webElement)
+              executeJS("(function(element){element.focus();})(arguments[0]);", webElement)
               webElement.click()
             }
           case _ =>
@@ -669,7 +635,7 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
   
   private def performScriptAction(action: String, javascript: String, elementBinding: LocatorBinding) {
     withWebElement(action, elementBinding) { webElement =>
-      executeScript(s"(function(element) { $javascript })(arguments[0])", webElement) 
+      executeJS(s"(function(element) { $javascript })(arguments[0])", webElement)
       bindAndWait(elementBinding.element, action, "true")
     }
   }
@@ -722,7 +688,7 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
    * @param scrollTo scroll element into view, options are: top or bottom
    */
   def scrollIntoView(webElement: WebElement, scrollTo: ScrollTo.Value) {
-    executeScript(s"var elem = arguments[0]; if (typeof elem !== 'undefined' && elem != null) { elem.scrollIntoView(${scrollTo == ScrollTo.top}); }", webElement)
+    executeJS(s"var elem = arguments[0]; if (typeof elem !== 'undefined' && elem != null) { elem.scrollIntoView(${scrollTo == ScrollTo.top}); }", webElement)
   }
 
   /**
