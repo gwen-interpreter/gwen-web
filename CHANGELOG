@@ -1,3 +1,14 @@
+2.7.0
+=====
+Jun 25, 2017
+- Update Gwen from v2.5.0 to v[2.6.0](https://github.com/gwen-interpreter/gwen/releases/tag/v2.6.0)
+  - Add cucumber compliant JSON output reports
+    - json -f/--format option
+    - evaluated scenario outlines are expanded in the report (and not expanded if not evaluated)
+  - Expand evaluated scenario outlines in JUnit-XML reports (and do not expanded if not evaluated)
+  - Capture location of all gherkin nodes instead of just steps only
+  - Add support for binding closure functions to data scopes
+
 2.6.0
 =====
 Jun 9, 2017
