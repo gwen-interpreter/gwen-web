@@ -1,3 +1,10 @@
+2.7.1
+=====
+Jun 27, 2017
+- Update Gwen from v2.6.0 to v[2.6.1](https://github.com/gwen-interpreter/gwen/releases/tag/v2.6.1)
+  - Correct id in example rows for scenario outlines in JSON reports
+  - Use StringEscapeUtils from Apache Commons to escape HTML, XML, and JSON in reports where necessary
+
 2.7.0
 =====
 Jun 25, 2017

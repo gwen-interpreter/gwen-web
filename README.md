@@ -2,10 +2,12 @@
 Gwen-web
 ========
 
-Gwen-Web is a web automation engine that runs inside the [Gwen](https://github.com/gwen-interpreter/gwen) interpreter. It allows teams to automate front end web tests by writing 
+Gwen-Web is a web automation engine that runs inside the [Gwen](https://github.com/gwen-interpreter/gwen) interpreter.
+It allows teams to automate front end web tests and other online activities with
 [Gherkin](https://github.com/cucumber/cucumber/wiki/Gherkin) feature specifications instead of code.
-A [prescribed DSL](http://htmlpreview.github.io/?https://github.com/gwen-interpreter/gwen-web/blob/master/docs/dsl/gwen-web-dsl.html) delegates to [Selenium WebDriver](http://www.seleniumhq.org/projects/webdriver) under the covers for you and frees you from development concerns. You can also declaratively compose your own custom DSL with annotated 
-[@StepDef](https://github.com/gwen-interpreter/gwen/wiki/Meta-Features#compostable-steps) Scenarios that can accept parameters and call other steps. [Meta features](https://github.com/gwen-interpreter/gwen/wiki/Meta-Features) can help eliminate redundancies and give you the flexibility to be as imperative or as declarative as you like in your approach to writing features.
+A [prescribed DSL](http://htmlpreview.github.io/?https://github.com/gwen-interpreter/gwen-web/blob/master/docs/dsl/gwen-web-dsl.html)
+delegates to [Selenium WebDriver](http://www.seleniumhq.org/projects/webdriver) under the covers for you so you don't
+have to do any Selenium programming at all.
 
 - See also:
   - [Wiki](https://github.com/gwen-interpreter/gwen-web/wiki)
@@ -59,13 +61,7 @@ All announcements and discussions are posted and broadcast to all members in
 the following mail group. You are welcome to visit and subscribe to receive 
 notifications or get involved.
 
-- [gwen-interpreter](https://groups.google.com/d/forum/gwen-interpreter) 
-
-Development Guide
------------------
-
-See the [Dev Guide](https://github.com/gwen-interpreter/gwen-web/wiki/Development-Guide) if you would like to work with the code 
-or build the project from source.
+- [gwen-interpreter](https://groups.google.com/d/forum/gwen-interpreter)
 
 Contributions
 -------------
@@ -78,6 +74,13 @@ tests or sample test features providing relevant coverage.
 
 By submitting contributions, you agree to release your work under the 
 license that covers this software.
+
+How to contribute:
+1. Fork this repository
+2. Create a branch on your forked repository
+3. Commit your changes to your branch
+4. Push your branch to your forked repository
+5. Create a pull request from your branch to here
 
 License
 -------
