@@ -3,16 +3,17 @@ Gwen-web
 ========
 
 Gwen-Web is a web automation engine that runs inside the [Gwen](https://github.com/gwen-interpreter/gwen) interpreter.
-It allows teams to automate front end web tests and other online activities with
+It allows teams to automate front end web tests and other web activities with
 [Gherkin](https://github.com/cucumber/cucumber/wiki/Gherkin) feature specifications instead of code.
 A [prescribed DSL](http://htmlpreview.github.io/?https://github.com/gwen-interpreter/gwen-web/blob/master/docs/dsl/gwen-web-dsl.html)
 delegates to [Selenium WebDriver](http://www.seleniumhq.org/projects/webdriver) under the covers for you so you don't
-have to do any Selenium programming at all.
+have to develop that code.
 
-- See also:
-  - [Wiki](https://github.com/gwen-interpreter/gwen-web/wiki)
-  - [FAQ](https://github.com/gwen-interpreter/gwen-web/wiki/FAQ)
+- See also, our:
   - [Blog](https://gweninterpreter.wordpress.com)
+  - [Wiki](https://github.com/gwen-interpreter/gwen-web/wiki)
+  - [Gwen-Web FAQ](https://github.com/gwen-interpreter/gwen-web/wiki/FAQ)
+  - and [Gwen FAQ](https://github.com/gwen-interpreter/gwen/wiki/FAQ)
 
 ### Current Status
 
@@ -20,6 +21,17 @@ have to do any Selenium programming at all.
 
 - [Latest release](https://github.com/gwen-interpreter/gwen-web/releases/latest)
 - [Change log](CHANGELOG)
+
+Runtime Requirements
+--------------------
+
+- Java SE 8 Runtime Environment
+- A web browser
+- Native web driver
+  - [Safari](https://webkit.org/blog/6900/webdriver-support-in-safari-10/)
+  - [Chrome](https://sites.google.com/a/chromium.org/chromedriver/)
+  - [Edge](https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/)
+  - [Firefox](https://github.com/mozilla/geckodriver/releases)
 
 Key Features
 ------------
@@ -36,23 +48,11 @@ Key Features
 * [Interchangeable Selenium](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#changing-the-selenium-version) implementation
 * [Locator Chaining](https://github.com/gwen-interpreter/gwen-web/wiki/Locator-Chaining)
 
-Runtime Requirements
---------------------
-
-- Java SE 8 Runtime Environment
-- A web browser
-- Native web driver
-  - [Safari](https://webkit.org/blog/6900/webdriver-support-in-safari-10/)
-  - [Chrome](https://sites.google.com/a/chromium.org/chromedriver/)
-  - [Edge](https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/)
-  - [Firefox](https://github.com/mozilla/geckodriver/releases)
-
 Quick Links to Wiki Information
 -------------------------------
 - [Installation](https://github.com/gwen-interpreter/gwen-web/wiki/Installation) 
 - [Getting Started](https://github.com/gwen-interpreter/gwen-web/wiki/Getting-Started)
 - [Gwen-Web DSL](http://htmlpreview.github.io/?https://github.com/gwen-interpreter/gwen-web/blob/master/docs/dsl/gwen-web-dsl.html)
-- [REPL Console](https://github.com/gwen-interpreter/gwen-web/wiki/REPL-Console)
 
 Mail Group
 ----------
@@ -61,7 +61,12 @@ All announcements and discussions are posted and broadcast to all members in
 the following mail group. You are welcome to visit and subscribe to receive 
 notifications or get involved.
 
-- [gwen-interpreter](https://groups.google.com/d/forum/gwen-interpreter)
+- [Our mail group](https://groups.google.com/d/forum/gwen-interpreter)
+
+Credits
+-------
+- Selenium
+- Cucumber/Gherkin
 
 Contributions
 -------------

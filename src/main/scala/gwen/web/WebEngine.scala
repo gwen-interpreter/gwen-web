@@ -21,15 +21,12 @@ import org.openqa.selenium.Keys
 import gwen.Predefs.Formatting.DurationFormatter
 import gwen.Predefs.Kestrel
 import gwen.Predefs.RegexContext
-import gwen.{GwenSettings, Settings}
+import gwen.Settings
 import gwen.dsl._
 import gwen.errors.undefinedStepError
-import gwen.eval.EvalEngine
 import gwen.eval.GwenOptions
 import gwen.eval.ScopedDataStack
 import gwen.eval.support.DefaultEngineSupport
-
-import scala.util.Try
 
 /**
   * A web engine that uses the Selenium web driver
@@ -37,8 +34,7 @@ import scala.util.Try
   * 
   * @author Branko Juric, Brady Wood
   */
-trait WebEngine extends EvalEngine[WebEnvContext] 
-  with DefaultEngineSupport[WebEnvContext] {
+trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
   
   /**
     * Initialises and returns a new web environment context.
@@ -122,15 +118,15 @@ trait WebEngine extends EvalEngine[WebEnvContext]
       case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)$locator "(.+?)"$expression in (.+?)$$$container""" =>
         env.getLocatorBinding(container)
         val binding = LocatorBinding(s"${element}/list", locator, expression, Some(container))
-        foreach(binding, element, step, doStep, env)
+        foreach(() => env.execute(env.locateAll(env, binding)).getOrElse(List("DryRun[WebElement]")), element, step, doStep, env)
 
       case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)$locator "(.+?)"$$$expression""" =>
         val binding = LocatorBinding(s"${element}/list", locator, expression, None)
-        foreach(binding, element, step, doStep, env)
+        foreach(() => env.execute(env.locateAll(env, binding)).getOrElse(List("DryRun[WebElement]")), element, step, doStep, env)
 
       case r"""(.+?)$doStep for each (.+?)$element in (.+?)$$$iteration""" =>
         val binding = env.getLocatorBinding(iteration)
-        foreach(binding, element, step, doStep, env)
+        foreach(() => env.execute(env.locateAll(env, binding)).getOrElse(List("DryRun[WebElement]")), element, step, doStep, env)
 
       case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using no delay and (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit timeout""" =>
         repeat(operation, step, doStep, condition, Duration.Zero, Duration(timeoutPeriod.toLong, timeoutUnit), env)
@@ -192,7 +188,7 @@ trait WebEngine extends EvalEngine[WebEnvContext]
           env.scopes.set(s"$element/locator/$locator/container", null)
         }
 
-      case r"""(.+?)$element can be (clicked|submitted|checked|ticked|unchecked|unticked)$event by javascript "(.+?)"$$$expression""" =>
+      case r"""(.+?)$element can be (clicked|right clicked|submitted|checked|ticked|unchecked|unticked)$event by javascript "(.+?)"$$$expression""" =>
         env.getLocatorBinding(element)
         env.scopes.set(s"$element/action/${WebEvents.EventToAction(event)}/javascript", expression)
 
@@ -272,6 +268,10 @@ trait WebEngine extends EvalEngine[WebEnvContext]
           }
         }
 
+      case r"""I send "(.+?)"$keys to (.+?)$$$element""" =>
+        val elementBinding = env.getLocatorBinding(element)
+        env.sendKeys(elementBinding, keys.split(","))
+
       case r"""I (enter|type)$action "(.*?)"$value in (.+?)$$$element""" =>
         val elementBinding = env.getLocatorBinding(element)
         env.execute {
@@ -317,7 +317,7 @@ trait WebEngine extends EvalEngine[WebEnvContext]
           env.selectByVisibleText(elementBinding, value)
         }
 
-      case r"""I (click|check|tick|uncheck|untick)$action (.+?)$element of (.+?)$$$context""" =>
+      case r"""I (click|right click|check|tick|uncheck|untick)$action (.+?)$element of (.+?)$$$context""" =>
         try {
           val contextBinding = env.getLocatorBinding(context)
           val elementBinding = env.getLocatorBinding(element)
@@ -337,11 +337,15 @@ trait WebEngine extends EvalEngine[WebEnvContext]
             }
         }
 
-      case r"""I (click|submit|check|tick|uncheck|untick)$action (.+?)$$$element""" =>
+      case r"""I (click|right click|submit|check|tick|uncheck|untick)$action (.+?)$$$element""" =>
         val elementBinding = env.getLocatorBinding(element)
         env.execute {
           env.performAction(action, elementBinding)
         }
+
+      case r"""I (.+?)$modifiers (click|right click)$clickAction (.+?)$$$element""" =>
+        val elementBinding = env.getLocatorBinding(element)
+        env.holdAndClick(modifiers.split("\\+"), clickAction, elementBinding)
 
       case r"""I (?:highlight|locate) (.+?)$$$element""" =>
         val elementBinding = env.getLocatorBinding(element)
@@ -371,15 +375,15 @@ trait WebEngine extends EvalEngine[WebEnvContext]
         env.quit(session)
       }
 
-      case r"""I switch to the child window""" => env.execute {
+      case r"""I switch to the child (?:window|tab)""" => env.execute {
         env.withWebDriver(env.switchToChild)
       }
 
-      case r"""I close the child window""" => env.execute {
+      case r"""I close the child (?:window|tab)""" => env.execute {
         env.closeChild()
       }
 
-      case r"""I switch to the parent window""" => env.execute {
+      case r"""I switch to the parent (?:window|tab)""" => env.execute {
         env.switchToParent(false)
       }
 
@@ -456,51 +460,8 @@ trait WebEngine extends EvalEngine[WebEnvContext]
       }
     } getOrElse { 
       env.scopes.get(s"$condition/javascript")
-      this.evaluateStep(Step(step.keyword, doStep), env).evalStatus match {
-        case Failed(_, e) => throw e
-        case _ => step
-      }
+      this.evaluateStep(Step(step.keyword, doStep), env)
     }
-  }
-
-  /**
-    * Repeats a step for each web element in an iteration of elements.
-    */
-  private def foreach(elementsBinding: LocatorBinding, elementName: String, step: Step, doStep: String, env: WebEnvContext) {
-    val steps = env.execute {
-      env.locateAll(env, elementsBinding) match {
-        case Nil =>
-          logger.info(s"For-each[$elementName]: none found")
-          Nil
-        case webElements =>
-          val noOfElements = webElements.size
-          logger.info(s"For-each[$elementName]: $noOfElements found")
-          webElements.zipWithIndex.foldLeft(List[Step]()) { case (acc, (webElement, index)) =>
-            env.featureScope.objects.bind(elementName, webElement)
-            (try {
-              EvalStatus(acc.map(_.evalStatus)) match {
-                case Failed(_, _) if (env.execute(GwenSettings.`gwen.feature.failfast`).getOrElse(false)) =>
-                  logger.info(s"Skipping [$elementName] ${index + 1} of $noOfElements")
-                  Step(step.pos, if (index == 0) StepKeyword.Given else StepKeyword.And, doStep, Skipped)
-                case _ =>
-                  logger.info(s"Processing [$elementName] ${index + 1} of $noOfElements")
-                  evaluateStep(Step(step.pos, if (index == 0) StepKeyword.Given else StepKeyword.And, doStep), env)
-              }
-            } finally {
-              env.featureScope.objects.clear(elementName)
-            }) :: acc
-          } reverse
-      }
-    } getOrElse {
-      env.featureScope.objects.bind(elementName, "CurrentElement[DryRun]")
-      try {
-        List(evaluateStep(Step(step.keyword, doStep), env))
-      } finally {
-        env.featureScope.objects.clear(elementName)
-      }
-    }
-    val foreachStepDef = new Scenario(List(Tag.StepDefTag, Tag.ForEachTag), elementName, Nil, None, steps, false, Nil, None)
-    env.foreachStepDefs += (step.uniqueId -> foreachStepDef)
   }
   
   lazy val DefaultRepeatDelay: Duration = {

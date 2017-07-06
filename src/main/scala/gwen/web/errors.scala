@@ -21,16 +21,22 @@ package gwen {
 
   package web {
 
+    import org.openqa.selenium.Keys
+
     package object errors {
 
       def unsupportedWebDriverError(driverName: String) = throw new UnsupportedWebDriverException(driverName)
       def noSuchWindowError(msg: String) = throw new NoSuchWindowException(msg)
+      def unsupportedModifierKeyError(key: String) = throw new UnsupportedModifierKeyException(key)
 
       /** Thrown when an unsupported web driver is detected. */
       class UnsupportedWebDriverException(driverName: String) extends RuntimeException(s"Unsupported web driver: $driverName")
       
       /** Thrown when an attempt is made to switch to a window that does not exist. */
       class NoSuchWindowException(msg: String) extends RuntimeException(msg)
+
+      /** Thrown when an attempt is made to send an unsupported key to a field. */
+      class UnsupportedModifierKeyException(key: String) extends RuntimeException(s"Unsupported modifier key '$key'. Supported modifiers include: ${Keys.values().map(_.name()).mkString(",")}")
 
     }
   }

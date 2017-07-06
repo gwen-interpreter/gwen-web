@@ -13,18 +13,19 @@
 body {
 	padding: 40px;
 }
-
 .panel-heading {
 	padding: 5px 15px;
 }
-
 .panel-title {
 	font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
 	font-size: 13px;
 }
-
 a:visited {
 	text-decoration: none;
+}
+code.notes {
+    background-color: none;
+    color: #333
 }
 </style>
 </head>
@@ -225,9 +226,12 @@ a:visited {
 			<div id="collapse-9" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-9">
 				<div class="panel-body">
 					Checks that an element should or should not be in a given state.
-					<b>Note:</b> ticked and unticked supported by v2.4.0+
 					<ul>
 						<li><code>&lt;element&gt;</code> = the web element to check the state of</li>
+					</ul>
+					<b>Notes:</b>
+					<ul>
+						<li><code class="notes">ticked</code> and <code class="notes">unticked</code> supported since v2.4.0</li>
 					</ul>
 				</div>
 			</div>
@@ -856,16 +860,20 @@ a:visited {
 			<div class="panel-heading" role="tab" id="dsl-40">
 				<h4 class="panel-title">
 					<a role="button" data-toggle="collapse" data-parent="#accordion0" href="#collapse-40" aria-expanded="true" aria-controls="collapseOne">
-					I &lt;click|submit|check|tick|uncheck|untick&gt; <code>&lt;element&gt;</code>
+					I &lt;click|right click|submit|check|tick|uncheck|untick&gt; <code>&lt;element&gt;</code>
 					</a>
 				</h4>
 			</div>
 			<div id="collapse-40" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-40">
 				<div class="panel-body">
 					Performs the specified action on an element.
-					<b>Note:</b> tick and untick supported by v2.4.0+
 					<ul>
 						<li><code>&lt;element&gt;</code> = the element to perform the action on</li>
+					</ul>
+					<b>Notes:</b>
+					<ul>
+						<li><code class="notes">tick</code> and <code class="notes">untick</code> supported since v2.4.0</li>
+						<li><code class="notes">right click</code> supported since v2.8.0</li>
 					</ul>
 				</div>
 			</div>
@@ -875,17 +883,21 @@ a:visited {
 			<div class="panel-heading" role="tab" id="dsl-41">
 				<h4 class="panel-title">
 					<a role="button" data-toggle="collapse" data-parent="#accordion0" href="#collapse-41" aria-expanded="true" aria-controls="collapseOne">
-					I wait <code>&lt;duration&gt;</code> &lt;second|seconds&gt; when <code>&lt;element&gt;</code> is &lt;clicked|submitted|checked|ticked|unchecked|unticked|selected|typed|entered|tabbed|cleared&gt;
+					I wait <code>&lt;duration&gt;</code> &lt;second|seconds&gt; when <code>&lt;element&gt;</code> is &lt;clicked|right clicked|submitted|checked|ticked|unchecked|unticked|selected|typed|entered|tabbed|cleared&gt;
 					</a>
 				</h4>
 			</div>
 			<div id="collapse-41" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-41">
 				<div class="panel-body">
 					Waits a given number of seconds after an action is performed on an element.
-					<b>Note:</b> ticked and unticked supported by v2.4.0+
 					<ul>
 						<li><code>&lt;duration&gt;</code> = the number of seconds to wait</li>
 						<li><code>&lt;element&gt;</code> = the element the action was performed on</li>
+					</ul>
+					<b>Notes:</b>
+					<ul>
+						<li><code class="notes">ticked</code> and <code class="notes">unticked</code> supported since v2.4.0</li>
+						<li><code class="notes">right clicked</code> supported since v2.8.0</li>
 					</ul>
 				</div>
 			</div>
@@ -895,17 +907,21 @@ a:visited {
 			<div class="panel-heading" role="tab" id="dsl-42">
 				<h4 class="panel-title">
 					<a role="button" data-toggle="collapse" data-parent="#accordion0" href="#collapse-42" aria-expanded="true" aria-controls="collapseOne">
-					I wait until <code>&lt;condition&gt;</code> when <code>&lt;element&gt;</code> is &lt;clicked|submitted|checked|ticked|unchecked|unticked|selected|typed|entered|tabbed|cleared&gt;
+					I wait until <code>&lt;condition&gt;</code> when <code>&lt;element&gt;</code> is &lt;clicked|right clicked|submitted|checked|ticked|unchecked|unticked|selected|typed|entered|tabbed|cleared&gt;
 					</a>
 				</h4>
 			</div>
 			<div id="collapse-42" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-42">
 				<div class="panel-body">
 					Waits for a condition to be true after an action is performed on an element.
-					<b>Note:</b> ticked and unticked supported by v2.4.0+
 					<ul>
 						<li><code>&lt;condition&gt;</code> = the name of the bound attribute containing a javascript predicate expression</li>
 						<li><code>&lt;element&gt;</code> = the element the action was performed on</li>
+					</ul>
+					<b>Notes:</b>
+					<ul>
+						<li><code class="notes">ticked</code> and <code class="notes">unticked</code> supported since v2.4.0</li>
+						<li><code class="notes">right clicked</code> supported since v2.8.0</li>
 					</ul>
 				</div>
 			</div>
@@ -1198,17 +1214,21 @@ a:visited {
 			<div class="panel-heading" role="tab" id="dsl-1-2_5">
 				<h4 class="panel-title">
 					<a role="button" data-toggle="collapse" data-parent="#accordion2" href="#collapse-1-2_5" aria-expanded="true" aria-controls="collapseOne">
-					I &lt;click|check|tick|uncheck|untick&gt; <code>&lt;element&gt;</code> of <code>&lt;context&gt;</code>
+					I &lt;click|right click|check|tick|uncheck|untick&gt; <code>&lt;element&gt;</code> of <code>&lt;context&gt;</code>
 					</a>
 				</h4>
 			</div>
 			<div id="collapse-1-2_5" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-1-2_5">
 				<div class="panel-body">
 					Performs the specified action on a context sensitive element.
-					<b>Note:</b> tick and untick supported by v2.4.0+
 					<ul>
 						<li><code>&lt;element&gt;</code> = the element to perform the action on</li>
 						<li><code>&lt;context&gt;</code> = the context element to move into (in order to activate &lt;element&gt;)</li>
+					</ul>
+					<b>Notes:</b>
+					<ul>
+						<li><code class="notes">tick</code> and <code class="notes">untick</code> supported since v2.4.0</li>
+						<li><code class="notes">right click</code> supported since v2.8.0</li>
 					</ul>
 				</div>
 			</div>
@@ -1554,14 +1574,13 @@ a:visited {
 			<div class="panel-heading" role="tab" id="dsl-1-8_1">
 				<h4 class="panel-title">
 					<a role="button" data-toggle="collapse" data-parent="#accordion8" href="#collapse-1-8_1" aria-expanded="true" aria-controls="collapseOne">
-					<code>&lt;element&gt;</code> can be &lt;clicked|submitted|checked|ticked|unchecked|unticked&gt; by javascript &quot;<code>&lt;javascript&gt;</code>&quot;
+					<code>&lt;element&gt;</code> can be &lt;clicked|right clicked|submitted|checked|ticked|unchecked|unticked&gt; by javascript &quot;<code>&lt;javascript&gt;</code>&quot;
 					</a>
 				</h4>
 			</div>
 			<div id="collapse-1-8_1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-1-8_1">
 				<div class="panel-body">
 					Registers a javascript action on an element. When the action is performed, then the javascript will execute.
-					<b>Note:</b> ticked and unticked supported by v2.4.0+
 					<ul>
 					    <li><code>&lt;element&gt;</code> = the web element to perform the action on (a web element binding)</li>
 						<li><code>&lt;javascript&gt;</code> = a javascript function that performs the desired action on the element. 
@@ -1570,6 +1589,11 @@ a:visited {
 						    	<li>For example, &quot;element.click()&quot; will click the element</li>
 						    </ul>
 						</li>
+					</ul>
+					<b>Notes:</b>
+					<ul>
+						<li><code class="notes">ticked</code> and <code class="notes">unticked</code> supported since v2.4.0</li>
+						<li><code class="notes">right clicked</code> supported since v2.8.0</li>
 					</ul>
 				</div>
 			</div>
@@ -1683,7 +1707,10 @@ a:visited {
 			<div id="collapse-2-2_1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-2-2_1">
 				<div class="panel-body">
 					Maximizes the currently active browser window to fill the entire screen area.<br>
-					Note: We have observed odd behavior on some platforms. For example: chrome on Mac.
+					<b>Notes:</b>
+					<ul>
+						<li>We have observed odd behavior on some platforms. For example: chrome on Mac.</li>
+					</ul>
 				</div>
 			</div>
 		</div>
@@ -1785,6 +1812,82 @@ a:visited {
 						<li><code>&lt;source&gt;</code> = the source attribute to extract the value from</li>
 						<li><code>&lt;path&gt;</code> = the Json Path or XPath extractor expression</li>
 						<li><code>&lt;expression&gt;</code> = the expression to match against</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<em style="color:gray">Since v2.8.0</em>
+	<div class="panel-group" id="accordion280" role="tablist" aria-multiselectable="true">
+		<div class="panel panel-default">
+			<div class="panel-heading" role="tab" id="dsl-280_1">
+				<h4 class="panel-title">
+					<a role="button" data-toggle="collapse" data-parent="#accordion0" href="#collapse-280_1" aria-expanded="true" aria-controls="collapseOne">
+						<code>&lt;step&gt;</code> for each data record
+					</a>
+				</h4>
+			</div>
+			<div id="collapse-280_1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-280_1">
+				<div class="panel-body">
+					Executes the given step for each record in a data table.
+					<ul>
+						<li><code>&lt;step&gt;</code> = the step to run for each record</li>
+					</ul>
+					<b>Notes:</b>
+					<ul>
+						<li>The accessible current record data includes:
+							<ul>
+								<li><code class="notes">record</code> = the current record number (1st is 1, 2nd is 2, and so on)</li>
+								<li><code class="notes">data[name]</code> = the data of an element in the current record, where <code class="notes">name</code> = name of record element</li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="panel panel-default">
+			<div class="panel-heading" role="tab" id="dsl-280_2">
+				<h4 class="panel-title">
+					<a role="button" data-toggle="collapse" data-parent="#accordion0" href="#collapse-280_2" aria-expanded="true" aria-controls="collapseOne">
+						I <code>&lt;modifiers&gt;</code> &lt;click|right click&gt; <code>&lt;element&gt;</code>
+					</a>
+				</h4>
+			</div>
+			<div id="collapse-280_2" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-280_2">
+				<div class="panel-body">
+					Holds down the specified modifier keys and clicks an element
+					 <ul>
+						<li><code>&lt;modifiers&gt;</code> = '+' separated list of modifier keys to hold down (e.g: COMMAND+SHIFT)</li>
+						<li><code>&lt;element&gt;</code> = the name of the element to click</li>
+					</ul>
+					<b>Notes:</b>
+					<ul>
+						<li>Modifier keys can be any of the <a href="https://seleniumhq.github.io/selenium/docs/api/java/org/openqa/selenium/Keys.html">key constants here</a> (case does not have to match)</li>
+						<li>Keys behave differently on different platforms</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="panel panel-default">
+			<div class="panel-heading" role="tab" id="dsl-280_3">
+				<h4 class="panel-title">
+					<a role="button" data-toggle="collapse" data-parent="#accordion0" href="#collapse-280_3" aria-expanded="true" aria-controls="collapseOne">
+						I send &quot;<code>&lt;keys&gt;</code>&quot; to <code>&lt;element&gt;</code>
+					</a>
+				</h4>
+			</div>
+			<div id="collapse-280_3" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dsl-280_3">
+				<div class="panel-body">
+					Sends a sequence of keys to an element (for emulating keyboard shortcuts)
+					 <ul>
+						<li><code>&lt;modifiers&gt;</code> = '+' separated list of keys to send (e.g: CONTROL+C)</li>
+						<li><code>&lt;element&gt;</code> = the name of the element to send the keys to</li>
+					</ul>
+					<b>Notes:</b>
+					<ul>
+						<li>Keys can be any single keyboard character or any of the <a href="https://seleniumhq.github.io/selenium/docs/api/java/org/openqa/selenium/Keys.html">key constants here</a> (case for key constants does not have to match)</li>
+						<li>Keys behave differently on different platforms</li>
 					</ul>
 				</div>
 			</div>

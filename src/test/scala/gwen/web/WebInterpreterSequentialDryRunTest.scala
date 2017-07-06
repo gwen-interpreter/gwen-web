@@ -19,7 +19,7 @@ package gwen.web
 class WebInterpreterSequentialDryRunTest extends WebInterpreterTest {
 
   "Sequential mode dry run" should "validate all features in sequence" in {
-    evaluate(List("features/floodio", "features/blogs", "features/etsy"), parallel = false, dryRun = true, "target/reports/sequential-dry-run", None)
+    evaluate(List("features/floodio", "features/blogs", "features/google"), parallel = false, dryRun = true, "target/reports/sequential-dry-run", None)
   }
   
 }

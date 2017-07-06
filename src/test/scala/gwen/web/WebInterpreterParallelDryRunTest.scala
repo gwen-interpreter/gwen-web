@@ -19,7 +19,7 @@ package gwen.web
 class WebInterpreterParallelDryRunTest extends WebInterpreterTest {
 
   "Parallel mode dry run" should "validate all features in parallel" in {
-    evaluate(List("features/floodio", "features/blogs/pageObjectsBegone", "features/blogs/automationByMeta", "features/etsy"), parallel = true, dryRun = true, "target/reports/parallel-dry-run", None)
+    evaluate(List("features/floodio", "features/blogs/pageObjectsBegone", "features/blogs/automationByMeta", "features/google"), parallel = true, dryRun = true, "target/reports/parallel-dry-run", None)
   }
   
 }

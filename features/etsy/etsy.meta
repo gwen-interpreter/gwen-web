@@ -23,14 +23,13 @@
         And I wait until "!!document.getElementById('etsy-logo')"
        Then I am on the home page
         And the cart icon title can be located by class name "cart "
-        And the about link can be located by link text "About"
+        And the about link can be located by link text "Etsy, Inc."
         And the about link can be clicked by javascript "element.click()"
 
   @StepDef 
   Scenario: I go to find out more about Etsy
       Given I am on the home page
-       When I scroll to the top of the about link
-        And I click the about link
+       When I click the about link
         And I wait until "!!document.getElementsByClassName('about-banner')"
        Then I am on the about page
         And the about info can be located by id "about_intro"

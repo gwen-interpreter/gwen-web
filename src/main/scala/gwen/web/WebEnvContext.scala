@@ -26,6 +26,7 @@ import gwen.Predefs.Kestrel
 import gwen.dsl.Failed
 import gwen.eval.{EnvContext, GwenOptions, ScopedData, ScopedDataStack}
 import gwen.errors._
+import gwen.web.errors.unsupportedModifierKeyError
 
 import scala.io.Source
 import scala.collection.JavaConverters._
@@ -236,8 +237,8 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     try {
       val webElement =
         if (elementBinding.locator == "cache") {
-          featureScope.objects.get(elementBinding.element) match {
-            case Some(obj) if (obj.isInstanceOf[WebElement]) => obj.asInstanceOf[WebElement] tap { highlight(_)}
+          featureScope.getObject(elementBinding.element) match {
+            case Some(we: WebElement) => we tap { highlight }
             case _ => throw new NoSuchElementException(s"${elementBinding.element} not found")
           }
         } else {
@@ -246,9 +247,12 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
       action.foreach { actionString =>
         logger.debug(s"${actionString match {
           case "click" => "Clicking"
+          case "right click" => "Right clicking"
+          case "right click and send keys" => "Right clicking and sending keys"
           case "submit" => "Submitting"
           case "check" => "Checking"
           case "uncheck" => "Unchecking"
+          case "send keys" => "Sending keys"
          }} ${elementBinding.element}")
       }
       (try {
@@ -434,13 +438,9 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     * @param name the name of the bound attribute to find
     */
   def getAttribute(name: String): String = {
-    resolveBoundValue(name).getOrElse {
-      execute(super.getBoundReferenceValue(name)).getOrElse {
-        Try(super.getBoundReferenceValue(name)).getOrElse {
-          Try(getLocatorBinding(name).lookup).getOrElse {
-            unboundAttributeError(name)
-          }
-        }
+    Try(super.getBoundReferenceValue(name)).getOrElse {
+      Try(getLocatorBinding(name).lookup).getOrElse {
+        unboundAttributeError(name)
       }
     } tap { value =>
       logger.debug(s"getAttribute($name)='$value'")
@@ -472,7 +472,7 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
    * @param optional true to return None if not found; false to throw error
    */
   def getLocatorBinding(element: String, optional: Boolean): Option[LocatorBinding] = {
-    featureScope.objects.get(element) match {
+    featureScope.getObject(element) match {
       case None =>
         val locatorBinding = s"$element/locator"
         scopes.getOpt(locatorBinding) match {
@@ -616,6 +616,10 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
               executeJS("(function(element){element.focus();})(arguments[0]);", webElement)
               webElement.click()
             }
+          case "right click" =>
+            withDriverAndElement(action, elementBinding) { (driver, webElement) =>
+              new Actions(driver).contextClick(webElement).perform()
+            }
           case _ =>
             withWebElement(action, elementBinding) { webElement =>
               action match {
@@ -632,6 +636,41 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     }
     bindAndWait(elementBinding.element, action, "true")
   }
+
+  def holdAndClick(modifierKeys: Array[String], clickAction: String, elementBinding: LocatorBinding) {
+    val keys = modifierKeys.map(_.trim).map(key => Try(Keys.valueOf(key.toUpperCase)).getOrElse(unsupportedModifierKeyError(key)))
+    withDriverAndElement(clickAction, elementBinding) { (driver, webElement) =>
+      var actions = new Actions(driver)
+      keys.foreach { key => actions = actions.keyDown(key) }
+      actions = clickAction match {
+        case "click" => actions.click(webElement)
+        case "right click" => actions.contextClick(webElement)
+      }
+      keys.reverse.foreach { key => actions = actions.keyUp(key) }
+      actions.build().perform()
+    }
+    bindAndWait(elementBinding.element, clickAction, "true")
+  }
+
+  def sendKeys(elementBinding: LocatorBinding, keysToSend: Array[String]) = {
+    val keys = keysToSend.map(_.trim).map(key => Try(Keys.valueOf(key.toUpperCase)).getOrElse(key))
+    withDriverAndElement("send keys", elementBinding) { (driver, webElement) =>
+      var actions = new Actions(driver)
+      keys.foreach { key => actions = actions.sendKeys(webElement, key) }
+      actions.build().perform()
+    }
+  }
+
+  private def withDriverAndElement(desc: String, elementBinding: LocatorBinding)(doActions: (WebDriver, WebElement) => Unit) = {
+    execute {
+      withWebDriver { driver =>
+        withWebElement(elementBinding) { webElement =>
+          executeJS("(function(element){element.focus();})(arguments[0]);", webElement)
+          doActions(driver, webElement)
+        }
+      }
+    }
+  }
   
   private def performScriptAction(action: String, javascript: String, elementBinding: LocatorBinding) {
     withWebElement(action, elementBinding) { webElement =>
@@ -644,13 +683,14 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     def perform(webElement: WebElement, contextElement: WebElement)(buildAction: Actions => Actions) {
       withWebDriver { driver =>
         val moveTo = new Actions(driver).moveToElement(contextElement).moveToElement(webElement)
-        buildAction(moveTo).perform()
+        buildAction(moveTo).build().perform()
       }
     }
     withWebElement(action, contextBinding) { contextElement =>
       withWebElement(action, elementBinding) { webElement =>
         action match {
           case "click" => perform(webElement, contextElement) { _.click() }
+          case "right click" => perform(webElement, contextElement) { _.contextClick() }
           case "check" | "tick" =>
             if (!webElement.isSelected) perform(webElement, contextElement) { _.sendKeys(Keys.SPACE) }
             if (!webElement.isSelected) perform(webElement, contextElement) { _.click() }

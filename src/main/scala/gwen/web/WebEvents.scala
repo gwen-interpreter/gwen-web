@@ -17,16 +17,17 @@ package gwen.web
 
 object WebEvents {
   val EventToAction = Map(
-    "clicked"   -> "click",
-    "submitted" -> "submit", 
-    "checked"   -> "check",
-    "ticked"    -> "tick",
-    "unchecked" -> "uncheck",
-    "unticked"  -> "untick",
-    "selected"  -> "select", 
-    "typed"     -> "type", 
-    "entered"   -> "enter",
-    "tabbed"    -> "tab",
-    "cleared"   -> "clear"
+    "clicked"       -> "click",
+    "right clicked" -> "right click",
+    "submitted"     -> "submit",
+    "checked"       -> "check",
+    "ticked"        -> "tick",
+    "unchecked"     -> "uncheck",
+    "unticked"      -> "untick",
+    "selected"      -> "select",
+    "typed"         -> "type",
+    "entered"       -> "enter",
+    "tabbed"        -> "tab",
+    "cleared"       -> "clear"
   )
 }

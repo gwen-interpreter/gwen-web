@@ -232,16 +232,24 @@ I select "<text>" in <element> by value
 I select <reference> in <element>
 I select <reference> in <element> by value
 I click <element>
+I right click <element>
 I check <element>
 I tick <element>
 I uncheck <element>
 I untick <element>
 I submit <element>
+I <modifiers> click <element>
+I <modifiers> right click <element>
+I submit <element>
 I click <element> of <context>
+I right click <element> of <context>
 I check <element> of <context>
 I tick <element> of <context>
 I uncheck <element> of <context>
 I untick <element> of <context>
+I <modifiers> click <element>
+I <modifiers> right click <element>
+I send "<keys>" to <element>
 I wait 1 second when <element> is clicked
 I wait 1 second when <element> is submitted
 I wait 1 second when <element> is checked
@@ -361,6 +369,7 @@ I maximise the window
 <step> for each <element> located by partial link text "<expression>" in <container>
 <step> for each <element> located by javascript "<expression>" in <container>
 <step> for each <element> in <elements>
+<step> for each data record
 <attribute> should be absent
 <source> at json path "<path>" should be "<expression"
 <source> at json path "<path>" should contain "<expression"

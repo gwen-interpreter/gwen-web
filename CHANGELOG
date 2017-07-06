@@ -1,3 +1,17 @@
+2.8.0
+=====
+Jul 5, 2017
+- Update Gwen from v2.6.1 to v[2.7.0](https://github.com/gwen-interpreter/gwen/releases/tag/v2.7.0)
+  - PR gwen-interpreter/gwen#32 - Add support for Gherkin data tables (horizontal, vertical, and matrix forms)
+- Introduce right click wherever click is supported
+  - I right click <element>
+  - I right click <element> of <context>
+- Allow click with modifier keys
+  - I <modifiers> click <element>
+  - I <modifiers> right click <element>
+- Allow sending any key combinations to <elements> (for simulating browser shortcuts)
+  - I send "<keys>" to <element>
+
 2.7.1
 =====
 Jun 27, 2017

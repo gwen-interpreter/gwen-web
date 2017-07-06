@@ -1,14 +1,15 @@
 package gwen.web
 
 import org.scalatest.FlatSpec
-import gwen.dsl.Step
-import gwen.dsl.StepKeyword
+import org.scalatest.Matchers
+import gwen.dsl._
 import gwen.eval.GwenOptions
+import gwen.eval.ScopedData
 import gwen.eval.ScopedDataStack
 import gwen.Settings
 import gwen.UserOverrides
 
-class WebDslTest extends FlatSpec {
+class WebDslTest extends FlatSpec with Matchers {
 
   "gwen-web.dsl" should "pass --dry-run test" in {
     
@@ -29,15 +30,27 @@ class WebDslTest extends FlatSpec {
     env.scopes.set("<filepath>/file", "file.txt")
     env.scopes.set("<elements>/locator", "css selector")
     env.scopes.set("<elements>/locator/css selector", "expression")
+    env.featureScope.pushObject("table", new FlatTable(List(List("1", "2")), List("a", "b")))
         
     val interpreter = new WebInterpreter
     withSetting("<name>", "name") {
       env.dsl map { dsl =>
-        dsl.replace("<position>", "1").replace("<duration>", "2").replace("<delayPeriod>", "20").replace("<timeoutPeriod>", "3000000").replace("<w>", "375").replace("<h>", "667")
+        dsl
+          .replace("<position>", "1")
+          .replace("<duration>", "2")
+          .replace("<delayPeriod>", "20")
+          .replace("<timeoutPeriod>", "3000000")
+          .replace("<w>", "375")
+          .replace("<h>", "667")
+          .replace("<modifiers>", "Command+Shift")
+          .replace("<keys>", "Command,Shift,T")
       } foreach { dsl => 
         StepKeyword.values foreach { keyword =>
-          interpreter.evaluate(Step(keyword, dsl.replaceAll("<step>", "I refresh the current page")), env)
-        } 
+          interpreter.evaluateStep(Step(keyword, dsl.replaceAll("<step>", """a is "b"""")), env).evalStatus match {
+            case Failed(_, error) => fail(error)
+            case evalStatus => evalStatus.status should be (StatusKeyword.Passed)
+          }
+        }
       }
     }
   }
