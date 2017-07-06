@@ -438,12 +438,13 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     * @param name the name of the bound attribute to find
     */
   def getAttribute(name: String): String = {
-    Try(super.getBoundReferenceValue(name)).getOrElse {
-      Try(getLocatorBinding(name).lookup).getOrElse {
-        unboundAttributeError(name)
+    Try(super.getBoundReferenceValue(name)) match {
+      case Success(value) => value
+      case Failure(e) => e match {
+        case _: UnboundAttributeException =>
+          Try(getLocatorBinding(name).lookup).getOrElse(unboundAttributeError(name))
+        case _ => throw e
       }
-    } tap { value =>
-      logger.debug(s"getAttribute($name)='$value'")
     }
   }
   
@@ -493,6 +494,8 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
         }
       case _ => Some(LocatorBinding(element, "cache", element, None))
     }
+  } tap { binding =>
+      binding foreach { b => logger.debug(s"getLocatorBinding($element,$optional)='$b'") }
   }
   
   /**

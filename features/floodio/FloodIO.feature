@@ -25,6 +25,8 @@
       Given my gwen.web.useragent setting is "I AM ROBOT" 
       
   Scenario: Launch the challenge
+      #Given my User_id_long is defined by sql "select User_id_long from usr where USER_ID='BM1'" in the <dbName> database
+       #Then my User_id_long should be "BM1"
       Given I launch the floodio challenge
        Then I should be on the start page
        

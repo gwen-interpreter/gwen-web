@@ -11,6 +11,7 @@ Jul 5, 2017
   - I <modifiers> right click <element>
 - Allow sending any key combinations to <elements> (for simulating browser shortcuts)
   - I send "<keys>" to <element>
+- Propagate underlying exception messages that may occur when looking up bindings so that the user can see them
 
 2.7.1
 =====
