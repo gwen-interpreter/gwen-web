@@ -17,7 +17,7 @@ cache:
     - $HOME/.ivy2/cache
     - $HOME/.sbt/boot/
 addons:
-  firefox: "54.0"
+  firefox: "54.0.1"
 before_install:
   - wget https://github.com/mozilla/geckodriver/releases/download/v0.17.0/geckodriver-v0.17.0-linux64.tar.gz
   - mkdir geckodriver
