@@ -19,8 +19,6 @@ package gwen.web
 import java.net.URL
 import java.util.concurrent.TimeUnit
 
-import org.openqa.selenium.OutputType
-import org.openqa.selenium.TakesScreenshot
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.chrome.ChromeOptions
@@ -33,20 +31,25 @@ import org.openqa.selenium.remote.RemoteWebDriver
 import org.openqa.selenium.safari.SafariDriver
 import com.typesafe.scalalogging.LazyLogging
 import gwen.Predefs.Kestrel
-import org.apache.commons.io.FileUtils
-import gwen.eval.EnvContext
 import gwen.errors._
 import gwen.web.errors._
 
 import collection.JavaConverters._
 import scala.collection.mutable
 
-/** Provides access to the web driver used to drive the browser. */
-trait DriverManager extends LazyLogging { 
-  env: WebEnvContext =>
+/**
+  * Provides and manages access to the web drivers.
+  */
+class DriverManager extends LazyLogging {
     
   /** Map of web driver instances (keyed by name). */
   private[web] val drivers: mutable.Map[String, WebDriver] = mutable.Map()
+
+  /** The current web browser session. */
+  private var session = "primary"
+
+  /** Current stack of windows. */
+  private val windows = mutable.Stack[String]()
     
   /** Provides private access to the web driver */
   private def webDriver: WebDriver = drivers.getOrElse(session, {
@@ -55,12 +58,18 @@ trait DriverManager extends LazyLogging {
         windows push driver.getWindowHandle
       }
     })
-  
+
+  /** Resets the driver manager. */
+  def reset() {
+    session = "primary"
+    windows.clear()
+  }
+
   /** Quits all browsers and closes the web drivers (if any have loaded). */
   def quit() {
     drivers.keys.foreach(quit)
   }
-  
+
   /** Quits a named browser and associated web driver instance. */
   def quit(name: String) {
     drivers.get(name) foreach { driver =>
@@ -70,106 +79,13 @@ trait DriverManager extends LazyLogging {
     }
     session = "primary"
   }
-  
-  /** 
-    * Switches to the child window if one was just opened.
-    * 
-    * @param driver the current web driver 
-    */
-  private[web] def switchToChild(driver: WebDriver) {
-    val children = driver.getWindowHandles.asScala.filter(window => !windows.contains(window)).toList match {
-      case Nil if windows.size > 1 => windows.init
-      case cs => cs
-    }
-    if (children.size == 1) {
-      switchToWindow(children.head, isChild = true)
-    } else if (children.size > 1) {
-      ambiguousCaseError(s"Cannot determine which child window to switch to: ${children.size} were detected but only one is supported")
-    } else {
-      noSuchWindowError("Cannot switch to child window: no child window was found")
-    }
-  }
-  
-  /** Switches the driver to another window. 
-    * 
-    * @param handle the handle of the window to switch to
-    * @param isChild true if switching to a child window; false for parent window
-    */
-  private def switchToWindow(handle: String, isChild: Boolean) {
-    logger.info(s"Switching to ${if (isChild) "child" else "parent"} window ($handle)")
-    drivers.get(session).fold(noSuchWindowError("Cannot switch to window: no windows currently open")) { _.switchTo.window(handle) }
-    pushWindow(handle)
-  }
-  
-  private[web] def closeChild() {
-    if (windows.size > 1) {
-      val child = windows.pop
-      webDriver.switchTo.window(child)
-      logger.info(s"Closing child window ($child)")
-      webDriver.close() 
-      switchToParent(true)
-    } else {
-      noSuchWindowError("Cannot close child window: currently at root window which has no child")
-    }
-  }
-  
-  /** Switches to the parent window. */
-  private[web] def switchToParent(childClosed: Boolean) {
-    if (windows.nonEmpty) {
-      val child = windows.pop
-      val target = if (windows.nonEmpty) windows.top else child
-      switchToWindow(target, isChild = false)
-      if (!childClosed) { pushWindow(child) }
-    } else {
-      logger.warn("Bypassing switch to parent window: no child window currently open")
-    }
-  }
-  
-  private def pushWindow(window: String) {
-    if (windows.isEmpty || windows.top != window) {
-      windows push window
-    }
-  }
-    
-  /**
-    * Switches the web driver session
-    *
-    * @param session the name of the session to switch to 
-    */
-  def switchToSession(session: String) {
-    logger.info(s"Switching to browser session: $session")
-    this.session = session
-    webDriver
-  }
-  
+
    /**
-    * Invokes a function that performs an operation on the current web driver 
-    * session and conditionally captures the current screenshot if the specified 
-    * takeScreenShot is true.
+    * Invokes a function that performs an operation on the current web driver.
     *
     * @param f the function to perform
-    * @param takeScreenShot true to take screenshot after performing the function
     */
-  def withWebDriver[T](f: WebDriver => T)(implicit takeScreenShot: Boolean = false): T = {
-    f(webDriver) tap { _ =>
-      if (takeScreenShot) {
-        captureScreenshot(false)
-      }
-    }
-  }
-   
-  /** Captures and the current screenshot and adds it to the attachments list. */
-  private[web] def captureScreenshot(unconditional: Boolean) {
-    Thread.sleep(WebSettings.`gwen.web.throttle.msecs` / 2)
-    val screenshot = webDriver.asInstanceOf[TakesScreenshot].getScreenshotAs(OutputType.FILE)
-    val keep = unconditional || WebSettings.`gwen.web.capture.screenshots.duplicates` || lastScreenshotSize.fold(true) { _ != screenshot.length}
-    if (keep) {
-      if (!WebSettings.`gwen.web.capture.screenshots.duplicates`) lastScreenshotSize = Some(screenshot.length())
-      env.addAttachment("Screenshot", screenshot.getName.substring(screenshot.getName.lastIndexOf('.') + 1), null) tap { 
-        case (_, file) => FileUtils.copyFile(screenshot, file)
-      }
-    }
-  }
+  def withWebDriver[T](f: WebDriver => T): T = f(webDriver)
   
   /** Loads the selenium webdriver. */
   private[web] def loadWebDriver: WebDriver = withGlobalSettings {
@@ -295,6 +211,77 @@ trait DriverManager extends LazyLogging {
       driver.manage().window().maximize() 
     }
     driver
+  }
+
+  /**
+    * Switches to the child window if one was just opened.
+    *
+    * @param driver the current web driver
+    */
+  private[web] def switchToChild(driver: WebDriver) {
+    val children = driver.getWindowHandles.asScala.filter(window => !windows.contains(window)).toList match {
+      case Nil if windows.size > 1 => windows.init
+      case cs => cs
+    }
+    if (children.size == 1) {
+      switchToWindow(children.head, isChild = true)
+    } else if (children.size > 1) {
+      ambiguousCaseError(s"Cannot determine which child window to switch to: ${children.size} were detected but only one is supported")
+    } else {
+      noSuchWindowError("Cannot switch to child window: no child window was found")
+    }
+  }
+
+  /** Switches the driver to another window.
+    *
+    * @param handle the handle of the window to switch to
+    * @param isChild true if switching to a child window; false for parent window
+    */
+  private def switchToWindow(handle: String, isChild: Boolean) {
+    logger.info(s"Switching to ${if (isChild) "child" else "parent"} window ($handle)")
+    drivers.get(session).fold(noSuchWindowError("Cannot switch to window: no windows currently open")) { _.switchTo.window(handle) }
+    pushWindow(handle)
+  }
+
+  private[web] def closeChild() {
+    if (windows.size > 1) {
+      val child = windows.pop
+      webDriver.switchTo.window(child)
+      logger.info(s"Closing child window ($child)")
+      webDriver.close()
+      switchToParent(true)
+    } else {
+      noSuchWindowError("Cannot close child window: currently at root window which has no child")
+    }
+  }
+
+  /** Switches to the parent window. */
+  private[web] def switchToParent(childClosed: Boolean) {
+    if (windows.nonEmpty) {
+      val child = windows.pop
+      val target = if (windows.nonEmpty) windows.top else child
+      switchToWindow(target, isChild = false)
+      if (!childClosed) { pushWindow(child) }
+    } else {
+      logger.warn("Bypassing switch to parent window: no child window currently open")
+    }
+  }
+
+  private def pushWindow(window: String) {
+    if (windows.isEmpty || windows.top != window) {
+      windows push window
+    }
+  }
+
+  /**
+    * Switches the web driver session
+    *
+    * @param session the name of the session to switch to
+    */
+  def switchToSession(session: String) {
+    logger.info(s"Switching to browser session: $session")
+    this.session = session
+    webDriver
   }
   
 }

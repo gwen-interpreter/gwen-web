@@ -25,9 +25,13 @@ package gwen {
 
     package object errors {
 
+      def locatorBindingError(element: String, reason: String) = throw new LocatorBindingException(element, reason)
       def unsupportedWebDriverError(driverName: String) = throw new UnsupportedWebDriverException(driverName)
       def noSuchWindowError(msg: String) = throw new NoSuchWindowException(msg)
       def unsupportedModifierKeyError(key: String) = throw new UnsupportedModifierKeyException(key)
+
+      /** Thrown when a web element cannot be located. */
+      class LocatorBindingException(element: String, reason: String) extends RuntimeException(s"Could not locate $element: $reason")
 
       /** Thrown when an unsupported web driver is detected. */
       class UnsupportedWebDriverException(driverName: String) extends RuntimeException(s"Unsupported web driver: $driverName")

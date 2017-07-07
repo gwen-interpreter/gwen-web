@@ -28,40 +28,29 @@ class WebEngineTest extends FlatSpec with Matchers with MockitoSugar with WebEng
   
   val mockEnv: WebEnvContext = mock[WebEnvContext]
   val mockLocatorBinding: LocatorBinding = mock[LocatorBinding]
+  val mockWebContext: WebContext = mock[WebContext]
   
-  "Performing action on context sensitive web element" should "peform that action" in {
+  "Performing action on context sensitive web element" should "perform that action" in {
     val step = Step(StepKeyword.When, "I click the menu item of the menu")
- 
-    when(mockEnv.getLocatorBinding("the menu")).thenReturn(mockLocatorBinding)
-    when(mockEnv.getLocatorBinding("the menu item")).thenReturn(mockLocatorBinding)
-    
+
+    when(mockEnv.webContext).thenReturn(mockWebContext)
+
     evaluate(step, mockEnv)
-    
-    verify(mockEnv).getLocatorBinding("the menu")
-    verify(mockEnv).getLocatorBinding("the menu item")
-        
-  }
-  
-  "Performing action on web element bound to name containing 'of' literal" should "peform that action (issue #20 fix)" in {
-    val step = Step(StepKeyword.When, "I click the end of page button")
- 
-    when(mockEnv.getLocatorBinding("page button")).thenThrow(new LocatorBindingException("page button", "not bound"))
-    when(mockEnv.getLocatorBinding("the end of page button")).thenReturn(mockLocatorBinding)
-    
-    evaluate(step, mockEnv)
-    
-    verify(mockEnv).getLocatorBinding("the end of page button")
-        
+
+    verify(mockWebContext).performActionInContext("click", "the menu item", "the menu")
+
   }
   
   "Performing action on web element bound to name not containing 'of' literal" should "peform that action (issue #20 fix)" in {
     val step = Step(StepKeyword.When, "I click the submit button")
- 
+
+    when(mockEnv.webContext).thenReturn(mockWebContext)
     when(mockEnv.getLocatorBinding("the submit button")).thenReturn(mockLocatorBinding)
     
     evaluate(step, mockEnv)
     
     verify(mockEnv).getLocatorBinding("the submit button")
+    verify(mockWebContext).performAction("click", mockLocatorBinding)
         
   }
   

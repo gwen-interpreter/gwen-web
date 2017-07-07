@@ -34,9 +34,10 @@ import org.scalatest.Matchers
 import org.scalatest.mockito.MockitoSugar
 import gwen.eval.ScopedDataStack
 import gwen.eval.GwenOptions
+import gwen.web.errors.LocatorBindingException
 import org.openqa.selenium.WebDriver.{Options, TargetLocator, Timeouts}
 
-class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar with WebElementLocator {
+class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar {
 
   val mockWebDriver: FirefoxDriver = mock[FirefoxDriver]
   val mockWebElement: WebElement = mock[WebElement]
@@ -47,17 +48,17 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar wit
   val mockTargetLocator: TargetLocator = mock[TargetLocator]
   val mockWebDriverOptions: Options = mock[WebDriver.Options]
   val mockWebDriverTimeouts: Timeouts = mock[WebDriver.Timeouts]
-  
+
   "Attempt to locate non existent element" should "throw no such element error" in {
     
-    val env = newEnv
+    val locator = newLocator(None)
     
     when(mockWebDriver.manage()).thenReturn(mockWebDriverOptions)
     when(mockWebDriverOptions.timeouts()).thenReturn(mockWebDriverTimeouts)
     when(mockWebDriver.findElement(By.id("mname"))).thenReturn(null)
     
     val e = intercept[NoSuchElementException] {
-      locate(env, LocatorBinding("middleName", "id", "mname", None))
+      locator.locate(LocatorBinding("middleName", "id", "mname", None))
     }
     e.getMessage should be ("Web element not found: middleName")
   }
@@ -96,16 +97,16 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar wit
   
   "Attempt to locate existing element by javascript" should "return the element" in {
     
-    val locator = "javascript"
+    val locatorType = "javascript"
     val lookup = "document.getElementById('username')"
-    val env = newEnv
+    val locator = newLocator(None)
     
     when(mockWebDriver.manage()).thenReturn(mockWebDriverOptions)
     when(mockWebDriverOptions.timeouts()).thenReturn(mockWebDriverTimeouts)
     doReturn(mockWebElement).when(mockWebDriver).executeScript(s"return $lookup")
     when(mockWebElement.isDisplayed).thenReturn(true)
     
-    locate(env, LocatorBinding("username", locator, lookup, None)) should be (mockWebElement)
+    locator.locate(LocatorBinding("username", locatorType, lookup, None)) should be (mockWebElement)
     
     verify(mockWebDriver, times(1)).executeScript(s"return $lookup")
 
@@ -113,9 +114,9 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar wit
   
   "Timeout on locating element by javascript" should "throw error" in {
     
-    val locator = "javascript"
+    val locatorType = "javascript"
     val lookup = "document.getElementById('username')"
-    val env = newEnv
+    val locator = newLocator(None)
     
     val timeoutError = new TimeoutException()
     when(mockWebDriver.manage()).thenReturn(mockWebDriverOptions)
@@ -123,7 +124,7 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar wit
     doThrow(timeoutError).when(mockWebDriver).executeScript(s"return $lookup")
     
     intercept[TimeoutException] {
-      locate(env, LocatorBinding("username", locator, lookup, None))
+      locator.locate(LocatorBinding("username", locatorType, lookup, None))
     }
     
     verify(mockWebDriver, atLeastOnce()).executeScript(s"return $lookup")
@@ -143,9 +144,10 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar wit
 
   }
   
-  private def shouldFindWebElement(locator: String, lookup: String, by: By) {
-    
+  private def shouldFindWebElement(locatorType: String, lookup: String, by: By) {
+
     val env = newEnv
+    val locator = newLocator(Some(env))
     
     when(mockWebDriver.manage()).thenReturn(mockWebDriverOptions)
     when(mockWebDriverOptions.timeouts()).thenReturn(mockWebDriverTimeouts)
@@ -172,44 +174,47 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar wit
     env.scopes.set("frame/locator", "id")
     env.scopes.set("frame/locator/id", "frame")
 
-    locate(env, LocatorBinding("username", locator, lookup, None)) should be (mockWebElement)
-    locate(env, LocatorBinding("username", locator, lookup, Some("container"))) should be (mockWebElement)
-    locate(env, LocatorBinding("username", locator, lookup, Some("iframe"))) should be (mockWebElement)
-    locate(env, LocatorBinding("username", locator, lookup, Some("frame"))) should be (mockWebElement)
+    locator.locate(LocatorBinding("username", locatorType, lookup, None)) should be (mockWebElement)
+    locator.locate(LocatorBinding("username", locatorType, lookup, Some("container"))) should be (mockWebElement)
+    locator.locate(LocatorBinding("username", locatorType, lookup, Some("iframe"))) should be (mockWebElement)
+    locator.locate(LocatorBinding("username", locatorType, lookup, Some("frame"))) should be (mockWebElement)
     
     verify(mockWebDriver, times(3)).findElement(by)
     
   }
   
   "Attempt to locate element with unsupported locator" should "throw unsuported locator error" in {
+
     val env = newEnv
+    val locator = newLocator(Some(env))
+
     env.scopes.addScope("login").set("username/id", "unknown").set("username/id/unknown", "funkyness")
     val e = intercept[LocatorBindingException] {
-      locate(env, LocatorBinding("username", "unknown", "funkiness", None))
+      locator.locate(LocatorBinding("username", "unknown", "funkiness", None))
     }
     e.getMessage should be ("Could not locate username: unsupported locator: unknown")
   }
 
   "Attempt to locate all non existent elements" should "return an empty list when empty array is returned" in {
 
-    val env = newEnv
+    val locator = newLocator(None)
 
     when(mockWebDriver.manage()).thenReturn(mockWebDriverOptions)
     when(mockWebDriverOptions.timeouts()).thenReturn(mockWebDriverTimeouts)
     when(mockWebDriver.findElements(By.cssSelector(".mname"))).thenReturn(new java.util.ArrayList[WebElement]())
 
-    locateAll(env, LocatorBinding("middleNames", "css selector", ".mname", None)) should be (Nil)
+    locator.locateAll(LocatorBinding("middleNames", "css selector", ".mname", None)) should be (Nil)
   }
 
   "Attempt to locate all non existent elements" should "return an empty list when null is returned" in {
 
-    val env = newEnv
+    val locator = newLocator(None)
 
     when(mockWebDriver.manage()).thenReturn(mockWebDriverOptions)
     when(mockWebDriverOptions.timeouts()).thenReturn(mockWebDriverTimeouts)
     when(mockWebDriver.findElements(By.cssSelector(".mname"))).thenReturn(null)
 
-    locateAll(env, LocatorBinding("middleNames", "css selector", ".mname", None)) should be (Nil)
+    locator.locateAll(LocatorBinding("middleNames", "css selector", ".mname", None)) should be (Nil)
   }
 
   "Attempt to locate existing elements by id" should "return the elements" in {
@@ -246,9 +251,10 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar wit
 
   "Attempt to locate existing elements by javascript" should "return the elements" in {
 
-    val locator = "javascript"
+    val locatorType = "javascript"
     val lookup = "document.getElementsByName('username')"
-    val env = newEnv
+    val locator = newLocator(None)
+
     val mockWebElementsArrayList = new util.ArrayList[WebElement]()
     mockWebElementsArrayList.add(mockWebElements(0))
     mockWebElementsArrayList.add(mockWebElements(1))
@@ -258,7 +264,7 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar wit
     doReturn(mockWebElementsArrayList).when(mockWebDriver).executeScript(s"return $lookup")
     when(mockWebElement.isDisplayed).thenReturn(true)
 
-    locateAll(env, LocatorBinding("username", locator, lookup, None)) should be (mockWebElements)
+    locator.locateAll(LocatorBinding("username", locatorType, lookup, None)) should be (mockWebElements)
 
     verify(mockWebDriver, times(1)).executeScript(s"return $lookup")
 
@@ -266,9 +272,9 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar wit
 
   "Timeout on locating elements by javascript" should "throw error" in {
 
-    val locator = "javascript"
+    val locatorType = "javascript"
     val lookup = "document.getElementById('username')"
-    val env = newEnv
+    val locator = newLocator(None)
 
     val timeoutError = new TimeoutException()
     when(mockWebDriver.manage()).thenReturn(mockWebDriverOptions)
@@ -276,16 +282,17 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar wit
     doThrow(timeoutError).when(mockWebDriver).executeScript(s"return $lookup")
 
     intercept[TimeoutException] {
-      locate(env, LocatorBinding("username", locator, lookup, None))
+      locator.locate(LocatorBinding("username", locatorType, lookup, None))
     }
 
     verify(mockWebDriver, atLeastOnce()).executeScript(s"return $lookup")
 
   }
 
-  private def shouldFindAllWebElements(locator: String, lookup: String, by: By) {
+  private def shouldFindAllWebElements(locatorType: String, lookup: String, by: By) {
 
     val env = newEnv
+    val locator = newLocator(Some(env))
 
     val mockWebElementsJava = new util.ArrayList[WebElement]()
     mockWebElementsJava.add(mockWebElements(0))
@@ -316,17 +323,21 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar wit
     env.scopes.set("frame/locator", "id")
     env.scopes.set("frame/locator/id", "frame")
 
-    locateAll(env, LocatorBinding("username", locator, lookup, None)) should be (mockWebElements)
-    locateAll(env, LocatorBinding("username", locator, lookup, Some("container"))) should be (mockWebElements)
-    locateAll(env, LocatorBinding("username", locator, lookup, Some("iframe"))) should be (mockWebElements)
-    locateAll(env, LocatorBinding("username", locator, lookup, Some("frame"))) should be (mockWebElements)
+    locator.locateAll(LocatorBinding("username", locatorType, lookup, None)) should be (mockWebElements)
+    locator.locateAll(LocatorBinding("username", locatorType, lookup, Some("container"))) should be (mockWebElements)
+    locator.locateAll(LocatorBinding("username", locatorType, lookup, Some("iframe"))) should be (mockWebElements)
+    locator.locateAll(LocatorBinding("username", locatorType, lookup, Some("frame"))) should be (mockWebElements)
 
     verify(mockWebDriver, times(3)).findElements(by)
 
   }
   
-  private def newEnv = new WebEnvContext(GwenOptions(), new ScopedDataStack()) {
-    override def withWebDriver[T](f: WebDriver => T)(implicit takeScreenShot: Boolean = false): T = f(mockWebDriver)
-  }  
+  private def newLocator(env: Option[WebEnvContext]): WebElementLocator =
+    new WebContext(env.getOrElse(newEnv)) {
+     override def withWebDriver[T](function: WebDriver => T)(implicit takeScreenShot: Boolean = false): Option[T] =
+       Option(function(mockWebDriver))
+  }
+
+  private def newEnv: WebEnvContext = new WebEnvContext(GwenOptions(), new ScopedDataStack())
   
 }

@@ -1,8 +1,10 @@
 2.8.0
 =====
-Jul 5, 2017
+Jul 7, 2017
 - Update Gwen from v2.6.1 to v[2.7.0](https://github.com/gwen-interpreter/gwen/releases/tag/v2.7.0)
   - PR gwen-interpreter/gwen#32 - Add support for Gherkin data tables (horizontal, vertical, and matrix forms)
+  - Log the results of bound value lookups at debug level
+  - Refactor of code to support more seamless dry run
 - Introduce right click wherever click is supported
   - I right click <element>
   - I right click <element> of <context>
@@ -12,6 +14,8 @@ Jul 5, 2017
 - Allow sending any key combinations to <elements> (for simulating browser shortcuts)
   - I send "<keys>" to <element>
 - Propagate underlying exception messages that may occur when looking up bindings so that the user can see them
+- Refactor to code to separate web and environment context concerns
+  - All web actions now happen in WebContext instead of WebEnvContext
 
 2.7.1
 =====
