@@ -29,7 +29,7 @@ So you can drive web automation with Gherkin features like this..
        Then the first result should open a Gwen page
 ```
 
-..by writing [Meta features](https://github.com/gwen-interpreter/gwen/wiki/Meta-Features) like this:
+..by writing [Meta features](https://github.com/gwen-interpreter/gwen/wiki/Meta-Features) like this..
 ```gherkin
    Feature: Google search meta
 
@@ -51,7 +51,7 @@ So you can drive web automation with Gherkin features like this..
        When I click the first match
        Then the current URL should start with "https://github.com/gwen-interpreter/gwen"
 ```
-[Page Objects Begone](https://gweninterpreter.wordpress.com/2014/08/27/page-objects-begone/)!
+..and let [Page Objects Begone](https://gweninterpreter.wordpress.com/2014/08/27/page-objects-begone/)!
 
 - See also, our:
   - [Blog](https://gweninterpreter.wordpress.com)
