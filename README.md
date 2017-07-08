@@ -19,7 +19,7 @@ have to develop that code.
 
 Why Gwen-web?
 -------------
-So you can drive web automation with Gherkin features like this..
+So you can do web automation with Gherkin features like this..
 ```gherkin
    Feature: Google search
 
