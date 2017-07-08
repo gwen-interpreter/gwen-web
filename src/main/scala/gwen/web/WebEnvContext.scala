@@ -55,24 +55,6 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
   }
 
   /**
-    * Appends a return keyword in front of the given javascript expression in preparation for execute-with-return
-    * (since web driver requires return prefix).
-    *
-    * @param javascript the javascript function
-    */
-  override def jsReturn(javascript: String) = s"return $javascript"
-
-  /**
-    * Executes a javascript expression on the current page through the web driver.
-    *
-    * @param javascript the script expression to execute
-    * @param params optional parameters to the script
-    * @param takeScreenShot true to take screenshot after performing the function
-    */
-  override def executeJS(javascript: String, params: Any*)(implicit takeScreenShot: Boolean = false): Any =
-    webContext.executeJS(javascript, params.map(_.asInstanceOf[AnyRef]) : _*)(takeScreenShot)
-
-  /**
     * Add a list of error attachments which includes the current
     * screenshot and all current error attachments.
     *
@@ -195,7 +177,7 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
       val javascript = scopes.get(s"$condition/javascript")
       logger.debug(s"Waiting for script to return true: $javascript")
       webContext.waitUntil(s"Waiting until $condition (post-$action condition)") {
-        executeJSPredicate(javascript)
+        evaluateJSPredicate(javascript)
       }
     }
   }
@@ -234,5 +216,23 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
    */
   override def dsl: List[String] = 
     Source.fromInputStream(getClass.getResourceAsStream("/gwen-web.dsl")).getLines().toList ++ super.dsl
+
+  /**
+    * Appends a return keyword in front of the given javascript expression in preparation for execute-with-return
+    * (since web driver requires return prefix).
+    *
+    * @param javascript the javascript function
+    */
+  override def jsReturn(javascript: String) = s"return $javascript"
+
+  /**
+    * Executes a javascript expression on the current page through the web driver.
+    *
+    * @param javascript the script expression to execute
+    * @param params optional parameters to the script
+    * @param takeScreenShot true to take screenshot after performing the function
+    */
+  override def evaluateJS(javascript: String, params: Any*)(implicit takeScreenShot: Boolean = false): Any =
+    webContext.executeJS(javascript, params.map(_.asInstanceOf[AnyRef]) : _*)(takeScreenShot)
   
 }

@@ -18,13 +18,6 @@
    Feature: Google search
    
   Scenario: Perform a google search
-            
-            This scenario calls the a step definition defined in the Goolge.meta
-            file to perform a google search for "gwen-web". It then clicks the 
-            first link in the returned results and checks the title and URL of 
-            the page that is loaded.
-            
-      Given I do a google search for "gwen-web"
-       When I click the first result
-       Then the page title should contain "gwen-interpreter/gwen-web"
-        And the current URL should be "https://github.com/gwen-interpreter/gwen-web"
+      Given I have Google in my browser
+       When I do a search for "Gwen automation"
+       Then the first result should open a Gwen page

@@ -94,31 +94,31 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
 
       case r"""I wait until "(.+?)$javascript"""" =>
         webContext.waitUntil(s"Waiting until $javascript") {
-          env.executeJSPredicate(javascript)
+          env.evaluateJSPredicate(javascript)
         }
 
       case r"""I wait until (.+?)$$$condition""" =>
         val javascript = env.scopes.get(s"$condition/javascript")
         webContext.waitUntil(s"Waiting until $condition") {
-          env.executeJSPredicate(javascript)
+          env.evaluateJSPredicate(javascript)
         }
 
       case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)$locator "(.+?)"$expression in (.+?)$$$container""" =>
         env.getLocatorBinding(container)
         val binding = LocatorBinding(s"${element}/list", locator, expression, Some(container))
-        env.evaluate(foreach(() => List("DryRun[WebElement]"), element, step, doStep, env)) {
+        env.evaluate(foreach(() => List("dryRun[webElements]"), element, step, doStep, env)) {
           foreach(() => webContext.locateAll(binding), element, step, doStep, env)
         }
 
       case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)$locator "(.+?)"$$$expression""" =>
         val binding = LocatorBinding(s"${element}/list", locator, expression, None)
-        env.evaluate(foreach(() => List("DryRun[WebElement]"), element, step, doStep, env)) {
+        env.evaluate(foreach(() => List("dryRun[webElements]"), element, step, doStep, env)) {
           foreach(() => webContext.locateAll(binding), element, step, doStep, env)
         }
 
       case r"""(.+?)$doStep for each (.+?)$element in (.+?)$$$iteration""" =>
         val binding = env.getLocatorBinding(iteration)
-        env.evaluate(foreach(() => List("DryRun[WebElement]"), element, step, doStep, env)) {
+        env.evaluate(foreach(() => List("dryRun[webElements]"), element, step, doStep, env)) {
           foreach(() => webContext.locateAll(binding), element, step, doStep, env)
         }
 
@@ -181,14 +181,14 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
         env.scopes.set(s"$element/action/${WebEvents.EventToAction(event)}/javascript", expression)
 
       case r"""the page title should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator "(.*?)"$$$expression""" =>
-        webContext.getTitle foreach { title =>
-          env.compare("title", expression, () => title, operator, Option(negation).isDefined)
+        env.perform {
+          env.compare("title", expression, () => webContext.getTitle, operator, Option(negation).isDefined)
         }
 
       case r"""the page title should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$$$attribute""" =>
         val expected = env.getAttribute(attribute)
-        webContext.getTitle foreach { title =>
-          env.compare("title", expected, () => title, operator, Option(negation).isDefined)
+        env.perform {
+          env.compare("title", expected, () => webContext.getTitle, operator, Option(negation).isDefined)
         }
 
       case r"""(.+?)$element should( not)?$negation be (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$$$state""" =>
@@ -353,7 +353,7 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
               case Failed(_, e) => throw e
               case _ =>
                 val javascript = env.scopes.get(s"$condition/javascript")
-                env.executeJSPredicate(javascript) tap { result =>
+                env.evaluateJSPredicate(javascript) tap { result =>
                   if (!result) {
                     logger.info(s"Repeat-until[$attempt] not completed, ..${if (delay.gt(Duration.Zero)) s"will try again in ${DurationFormatter.format(delay)}" else "trying again"}")
                     Thread.sleep(delay.toMillis)
@@ -364,7 +364,7 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
             }
           case "while" =>
             val javascript = env.scopes.get(s"$condition/javascript")
-            val result = env.executeJSPredicate(javascript)
+            val result = env.evaluateJSPredicate(javascript)
             if (result) {
               logger.info(s"Repeat-while[$attempt]")
               evaluateStep(Step(step.keyword, doStep), env).evalStatus match {

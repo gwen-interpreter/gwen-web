@@ -332,11 +332,12 @@ class WebContext(env: WebEnvContext) extends WebElementLocator with LazyLogging 
   }
 
   /** Gets the title of the current page in the browser.*/
-  def getTitle: Option[String] = withWebDriver { webDriver =>
-    webDriver.getTitle tap { title =>
-      env.bindAndWait("page", "title", title)
-    }
-  }
+  def getTitle: String =
+    withWebDriver { driver =>
+      driver.getTitle tap { title =>
+        env.bindAndWait("page", "title", title)
+      }
+    }.getOrElse("DryRun[title]")
 
   /**
     * Sends a value to a web element (one character at a time).

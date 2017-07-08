@@ -1,12 +1,12 @@
 /*
  * Copyright 2014-2015 Brady Wood, Branko Juric
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,10 +16,14 @@
 
 package gwen.web
 
-class WebInterpreterParallelTest extends WebInterpreterTest {
+class WebInterpreterGoogleTest extends WebInterpreterTest {
 
-  "Parallel mode" should "evaluate all features in parallel" in {
-    evaluate(List("features/floodio", "features/bindings", "features/robotics/todoMVC/CompleteItems.feature", "features/google"), parallel = true, dryRun = false, "target/reports/parallel", None)
+  "Google feature" should "should evaluate" in {
+    evaluate(List("features/google"), parallel = false, dryRun = false, "target/reports/google", None)
+  }
+
+  "Google feature dry run" should "should [ass" in {
+    evaluate(List("features/google"), parallel = false, dryRun = true, "target/reports/google-dry-run", None)
   }
   
 }

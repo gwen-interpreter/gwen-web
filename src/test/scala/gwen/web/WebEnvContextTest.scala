@@ -95,7 +95,7 @@ class WebEnvContextTest extends FlatSpec with Matchers with MockitoSugar {
   "Attribute with javascript binding on dry run" should "not resolve" in {
     val env = newEnv(true)
     env.scopes.set("username/javascript", "$('#username').val()")
-    env.getAttribute("username") should be ("$[javascript:$('#username').val()]")
+    env.getAttribute("username") should be ("dryRun[javascript:$('#username').val()]")
   }
   
   "Attribute with xpath binding" should "resolve" in {
@@ -115,9 +115,9 @@ class WebEnvContextTest extends FlatSpec with Matchers with MockitoSugar {
     env.scopes.set("username/xpath/source", "xml")
     env.scopes.set("username/xpath/targetType", "text")
     env.scopes.set("username/xpath/expression", "users/user")
-    env.getAttribute("username") should be ("$[xpath:users/user]")
+    env.getAttribute("username") should be ("dryRun[xpath:users/user]")
     env.scopes.set("username/xpath/expression", "users/user[2]")
-    env.getAttribute("username") should be ("$[xpath:users/user[2]]")
+    env.getAttribute("username") should be ("dryRun[xpath:users/user[2]]")
   }
   
   "Attribute with regex binding" should "resolve" in {
@@ -136,10 +136,10 @@ class WebEnvContextTest extends FlatSpec with Matchers with MockitoSugar {
     env.scopes.set("url", "http://www.domain.com?param1=one&param2=two")
     env.scopes.set("param1/regex/source", "url")
     env.scopes.set("param1/regex/expression", "param1=(.+)&")
-    env.getAttribute("param1") should be ("$[regex:param1=(.+)&")
+    env.getAttribute("param1") should be ("dryRun[regex:param1=(.+)&")
     env.scopes.set("param2/regex/source", "url")
     env.scopes.set("param2/regex/expression", "param2=(.+)")
-    env.getAttribute("param2") should be ("$[regex:param2=(.+)")
+    env.getAttribute("param2") should be ("dryRun[regex:param2=(.+)")
   }
   
   "Attribute with json path binding" should "resolve" in {
@@ -155,7 +155,7 @@ class WebEnvContextTest extends FlatSpec with Matchers with MockitoSugar {
     env.scopes.set("env", """{"scopes":[{"scope":"login","atts":[{"username":"Gwen"}]}]}""")
     env.scopes.set("username/json path/source", "env")
     env.scopes.set("username/json path/expression", "$.scopes[0].atts[0].username")
-    env.getAttribute("username") should be ("$[json path:$.scopes[0].atts[0].username")
+    env.getAttribute("username") should be ("dryRun[json-path:$.scopes[0].atts[0].username")
   }
   
   "Attribute with sysproc binding" should "resolve" in {
@@ -167,20 +167,20 @@ class WebEnvContextTest extends FlatSpec with Matchers with MockitoSugar {
   "Attribute with sysproc binding on dry run" should "not resolve" in {
     val env = newEnv(true)
     env.scopes.set("hostname/sysproc", "local command")
-    env.getAttribute("hostname") should be ("$[sysproc:local command]")
+    env.getAttribute("hostname") should be ("dryRun[sysproc:local command]")
   }
   
   "Attribute with file binding on dry run" should "not resolve" in {
     val env = newEnv(true)
     env.scopes.set("xml/file", "path-to/file.xml")
-    env.getAttribute("xml") should be ("$[file:path-to/file.xml]")
+    env.getAttribute("xml") should be ("dryRun[file:path-to/file.xml]")
   }
   
   "Attribute with sql binding on dry run" should "not resolve" in {
     val env = newEnv(true)
     env.scopes.set("username/sql/selectStmt", "select username from users")
     env.scopes.set("username/sql/dbName", "subscribers")
-    env.getAttribute("username") should be ("$[sql:select username from users]")
+    env.getAttribute("username") should be ("dryRun[sql:select username from users]")
   }
 
   "Timeout on compare" should "result in assertion error" in {

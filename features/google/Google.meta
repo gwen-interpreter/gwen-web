@@ -14,19 +14,22 @@
 # limitations under the License.
 #
 
-   Feature: Google search
+   Feature: Google search meta
 
   @StepDef
-  Scenario: I do a google search for "<query>"
+  Scenario: I have Google in my browser
+      Given I start a new browser
+       When I navigate to "http://www.google.com"
+       Then the page title should be "Google"
 
-            This is a custom step definition that accepts a query string as 
-            input and performs a google search on it and checks for a returned 
-            match. It is not immediately executed but rather loaded into 
-            memory and executed only when referenced in another step by name.
-
-      Given I navigate to "http://www.google.com"
-        And the search field can be located by name "q"
+  @StepDef
+  Scenario: I do a search for "<query>"
+      Given the search field can be located by name "q"
        When I enter "$<query>" in the search field
-       Then the page title should start with "$<query>"
-        And the first result item can be located by class name "r"
-        And the first result can be located by tag name "a" in the first result item
+       Then the page title should contain "$<query>"
+
+  @StepDef
+  Scenario: the first result should open a Gwen page
+      Given the first match can be located by css selector ".r > a"
+       When I click the first match
+       Then the current URL should start with "https://github.com/gwen-interpreter/gwen"
