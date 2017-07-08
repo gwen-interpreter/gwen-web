@@ -51,8 +51,10 @@ So you can do web automation with Gherkin features like this..
 ```
 ..and let [Page Objects Begone](https://gweninterpreter.wordpress.com/2014/08/27/page-objects-begone/)!
 
-- See also, our:
-  - [Blog](https://gweninterpreter.wordpress.com)
+Links
+-----
+
+  - [Blog](https://gweninterpreter.wordpress.com)
   - [Wiki](https://github.com/gwen-interpreter/gwen-web/wiki)
   - [Gwen-Web FAQ](https://github.com/gwen-interpreter/gwen-web/wiki/FAQ)
   - and [Gwen FAQ](https://github.com/gwen-interpreter/gwen/wiki/FAQ)
