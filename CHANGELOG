@@ -1,3 +1,9 @@
+2.8.3
+=====
+Jul 11, 2017
+- Update Gwen from v2.7.2 to v[2.7.3](https://github.com/gwen-interpreter/gwen/releases/tag/v2.7.3)
+  - Fix fail handling where cause was not being reported correctly
+
 2.8.2
 =====
 Jul 10, 2017
