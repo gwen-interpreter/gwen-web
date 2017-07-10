@@ -16,12 +16,10 @@
 
 package gwen.web
 
-class WebInterpreterRoboticsTest extends WebInterpreterTest {
+class WebInterpreterTodoTest extends WebInterpreterTest {
 
-  // uncomment to run this test locally - do not commit uncommented to remote repo since travis-ci has issues
-  // running concurrent browser sessions
-//  "Robotocis todoMVC features" should "evaluate" in {
-//    evaluate(List("features/robotics/todoMVC"), parallel = false, dryRun = false, "target/reports/robotics/todoMVC", None)
-//  }
+  "todo features" should "evaluate" in {
+    evaluate(List("features/todo"), parallel = false, dryRun = false, "target/reports/todo", None)
+  }
   
 }

@@ -18,7 +18,7 @@
   
 @StepDef
 Scenario: I launch the Todo app
-    Given I resize the window to width 800 and height 505
+    Given I resize the window to width 800 and height 550
      When I navigate to "http://todomvc.com/examples/angularjs"
      Then I should be on the Todo page
 
@@ -55,13 +55,25 @@ Scenario: I copy item from session 1 to session 2
 @Examples("features-data/TodoItems1.csv")
 @Examples("features-data/TodoItems2.csv")
 Scenario Outline: I load items from CSV files
-    Given I add a <Status> "<Item>" item
+     When I add a <Status> "<Item>" item
 
 @StepDef
 Scenario: I add a pending "<todo>" item
-    Given I add a "$<todo>" item
+     When I add a "$<todo>" item
 
 @StepDef
 Scenario: I add a done "<todo>" item
-    Given I add a "$<todo>" item
+     When I add a "$<todo>" item
       And I tick the "$<todo>" item
+
+@StepDef
+Scenario: I complete the "<todo>" item
+     When I tick the "$<todo>" item
+
+@StepDef
+Scenario: the "<todo>" item should be active
+     Then the "$<todo>" item should be unticked
+
+@StepDef
+Scenario: the "<todo>" item should be completed
+     Then the "$<todo>" item should be ticked

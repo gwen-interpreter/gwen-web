@@ -1,3 +1,13 @@
+2.8.2
+=====
+Jul 10, 2017
+- Update Gwen from v2.7.1 to v[2.7.2](https://github.com/gwen-interpreter/gwen/releases/tag/v2.7.2)
+  - Add syntax checking for DataTable tags
+  - Report error if Data Table tag is specified without StepDef tag
+  - Give steps that call other steps execution priority over all other steps or StepDefs that may have the same
+    structure to ensure that they are evaluated and not raised as conflicts that require renaming.
+  - All data table cell references must be include data record index unless in foreach step
+
 2.8.1
 =====
 Jul 8, 2017
