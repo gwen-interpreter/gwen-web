@@ -7,6 +7,7 @@ Jul 10, 2017
   - Give steps that call other steps execution priority over all other steps or StepDefs that may have the same
     structure to ensure that they are evaluated and not raised as conflicts that require renaming.
   - All data table cell references must be include data record index unless in foreach step
+- Updated sample features to demonstrate and exercise data tables
 
 2.8.1
 =====

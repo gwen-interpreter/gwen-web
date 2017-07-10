@@ -41,7 +41,7 @@ class WebEngineTest extends FlatSpec with Matchers with MockitoSugar with WebEng
 
   }
   
-  "Performing action on web element bound to name not containing 'of' literal" should "peform that action (issue #20 fix)" in {
+  "Performing action on web element bound to name not containing 'of' literal" should "perform that action (issue #20 fix)" in {
     val step = Step(StepKeyword.When, "I click the submit button")
 
     when(mockEnv.webContext).thenReturn(mockWebContext)

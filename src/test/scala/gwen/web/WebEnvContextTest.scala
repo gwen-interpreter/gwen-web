@@ -155,7 +155,7 @@ class WebEnvContextTest extends FlatSpec with Matchers with MockitoSugar {
     env.scopes.set("env", """{"scopes":[{"scope":"login","atts":[{"username":"Gwen"}]}]}""")
     env.scopes.set("username/json path/source", "env")
     env.scopes.set("username/json path/expression", "$.scopes[0].atts[0].username")
-    env.getAttribute("username") should be ("dryRun[json-path:$.scopes[0].atts[0].username")
+    env.getAttribute("username") should be ("dryRun[json-path:$.scopes[0].atts[0].username]")
   }
   
   "Attribute with sysproc binding" should "resolve" in {
