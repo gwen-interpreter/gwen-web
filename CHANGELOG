@@ -1,3 +1,10 @@
+2.9.0
+=====
+Jul 14, 2017
+- Update Gwen from v2.7.3 to v[2.8.0](https://github.com/gwen-interpreter/gwen/releases/tag/v2.8.0)
+  - Add support for DocStrings
+  - Evaluate all javascript expressions in anonymous function block
+
 2.8.3
 =====
 Jul 11, 2017

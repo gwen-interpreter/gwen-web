@@ -189,7 +189,7 @@ class WebContext(env: WebEnvContext) extends WebElementLocator with LazyLogging 
     */
   def executeJS(javascript: String, params: Any*)(implicit takeScreenShot: Boolean = false): Any =
     withWebDriver { webDriver =>
-      webDriver.asInstanceOf[JavascriptExecutor].executeScript(s"$javascript", params.map(_.asInstanceOf[AnyRef]) : _*) tap { result =>
+      webDriver.asInstanceOf[JavascriptExecutor].executeScript(javascript, params.map(_.asInstanceOf[AnyRef]) : _*) tap { result =>
         if (takeScreenShot && WebSettings.`gwen.web.capture.screenshots`) {
           captureScreenshot(false)
         }
@@ -337,7 +337,7 @@ class WebContext(env: WebEnvContext) extends WebElementLocator with LazyLogging 
       driver.getTitle tap { title =>
         env.bindAndWait("page", "title", title)
       }
-    }.getOrElse("DryRun[title]")
+    }.getOrElse("$[dryRun:title]")
 
   /**
     * Sends a value to a web element (one character at a time).

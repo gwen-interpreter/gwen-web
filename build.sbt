@@ -18,6 +18,8 @@ scalaVersion := "2.12.1"
 
 crossPaths := false
 
+trapExit := false
+
 scalacOptions += "-feature"
 
 scalacOptions += "-language:postfixOps"
