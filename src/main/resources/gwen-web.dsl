@@ -289,6 +289,7 @@ I wait 1 second
 I wait <duration> seconds
 I highlight <element>
 I locate <element>
+I execute javascript "<javascript>"
 I execute system process "<command>"
 I execute a unix system process "<command>"
 I refresh the current page

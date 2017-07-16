@@ -165,6 +165,10 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
           env.evaluateJSPredicate(javascript)
         }
 
+      case r"""I execute javascript "(.+?)$javascript"""" => step.orDocString(javascript) tap { javascript =>
+        env.evaluateJS(javascript)
+      }
+
       case r"""I am on the (.+?)$$$page""" =>
         env.scopes.addScope(page)
 

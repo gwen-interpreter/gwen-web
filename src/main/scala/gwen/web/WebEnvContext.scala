@@ -223,16 +223,15 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     *
     * @param javascript the javascript function
     */
-  override def jsReturn(javascript: String) = s"return $javascript"
+  override def formatJSReturn(javascript: String) = s"return $javascript"
 
   /**
     * Executes a javascript expression on the current page through the web driver.
     *
     * @param javascript the script expression to execute
     * @param params optional parameters to the script
-    * @param takeScreenShot true to take screenshot after performing the function
     */
-  override def evaluateJS(javascript: String, params: Any*)(implicit takeScreenShot: Boolean = false): Any =
-    webContext.executeJS(javascript, params.map(_.asInstanceOf[AnyRef]) : _*)(takeScreenShot)
+  override def evaluateJS(javascript: String, params: Any*): Any =
+    webContext.executeJS(javascript, params.map(_.asInstanceOf[AnyRef]) : _*)
   
 }
