@@ -1,10 +1,11 @@
 2.9.0
 =====
-Jul 16, 2017
+Jul 17, 2017
 - Update Gwen from v2.7.3 to v[2.8.0](https://github.com/gwen-interpreter/gwen/releases/tag/v2.8.0)
   - Add support for DocStrings
   - Evaluate all javascript expressions in anonymous function block
   - Add paste mode to REPL to support multiline step evaluation (steps with tables or docStrings)
+  - Add Gherkin language header to Gwen model
 - Added DSL for executing arbitrary JavaScript
   - I execute javascript "<javascript>"
 
@@ -12,7 +13,7 @@ Jul 16, 2017
 =====
 Jul 11, 2017
 - Update Gwen from v2.7.2 to v[2.7.3](https://github.com/gwen-interpreter/gwen/releases/tag/v2.7.3)
-  - Fix fail handling where cause was not being reported correctly
+  - Fix fail handling where cause was not being reported to console
 
 2.8.2
 =====
