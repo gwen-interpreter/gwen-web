@@ -175,7 +175,7 @@ class DriverManager extends LazyLogging {
         } catch {
           case _: Throwable =>
             if (value.matches("(true|false)")) prefs.put(name, java.lang.Boolean.valueOf(value.trim))
-            prefs.put(name, value)
+            else prefs.put(name, value)
         }
       }
     }
