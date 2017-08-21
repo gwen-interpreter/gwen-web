@@ -7,6 +7,9 @@ Aug 21, 2017
 - Update Selenium from 3.4.0 to 3.5.1
 - Add DSL to clear web element by javascript
   - <element> can be cleared by javascript "<javascript>"
+- Added support for binding SQL query using DocString syntax
+  - <attribute> <is|will be> defined in the <dbName> database by sql "<selectStmt>"
+
 
 2.9.1
 =====
