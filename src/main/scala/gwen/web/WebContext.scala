@@ -351,7 +351,8 @@ class WebContext(env: WebEnvContext) extends WebElementLocator with LazyLogging 
     val element = elementBinding.element
     withWebElement(elementBinding) { webElement =>
       if (clearFirst) {
-        clearText(webElement, element)
+        webElement.clear()
+        env.bindAndWait(element, "clear", "true")
       }
       webElement.sendKeys(value)
       env.bindAndWait(element, "type", value)
@@ -360,15 +361,6 @@ class WebContext(env: WebEnvContext) extends WebElementLocator with LazyLogging 
         env.bindAndWait(element, "enter", "true")
       }
     }
-  }
-
-  def clearText(elementBinding: LocatorBinding) {
-    withWebElement(elementBinding) { clearText(_, elementBinding.element) }
-  }
-
-  private def clearText(webElement: WebElement, name: String) {
-    webElement.clear()
-    env.bindAndWait(name, "clear", "true")
   }
 
   /**
@@ -440,11 +432,13 @@ class WebContext(env: WebEnvContext) extends WebElementLocator with LazyLogging 
                 case "uncheck" | "untick" =>
                   if (webElement.isSelected) webElement.sendKeys(Keys.SPACE)
                   if (webElement.isSelected) webElement.click()
+                case "clear" =>
+                  webElement.clear()
               }
             }
         }
+        env.bindAndWait(elementBinding.element, action, "true")
     }
-    env.bindAndWait(elementBinding.element, action, "true")
   }
 
   def holdAndClick(modifierKeys: Array[String], clickAction: String, elementBinding: LocatorBinding) {

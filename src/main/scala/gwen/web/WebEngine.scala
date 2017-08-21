@@ -208,7 +208,7 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
         }
       }
 
-      case r"""(.+?)$element can be (clicked|right clicked|submitted|checked|ticked|unchecked|unticked)$event by javascript "(.+?)"$$$expression""" => step.orDocString(expression) tap { expression =>
+      case r"""(.+?)$element can be (clicked|right clicked|submitted|checked|ticked|unchecked|unticked|cleared)$event by javascript "(.+?)"$$$expression""" => step.orDocString(expression) tap { expression =>
         env.getLocatorBinding(element)
         env.scopes.set(s"$element/action/${WebEvents.EventToAction(event)}/javascript", expression)
       }
@@ -268,7 +268,7 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
 
       case r"""I clear (.+?)$$$element""" =>
         val elementBinding = env.getLocatorBinding(element)
-        webContext.clearText(elementBinding)
+        webContext.performAction("clear", elementBinding)
 
       case r"""I press (enter|tab)$key in (.+?)$$$element""" =>
         val elementBinding = env.getLocatorBinding(element)
