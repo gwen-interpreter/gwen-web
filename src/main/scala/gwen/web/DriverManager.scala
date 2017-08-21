@@ -102,7 +102,8 @@ class DriverManager extends LazyLogging {
       case "firefox" => firefoxCapabilities()
       case "chrome" => DesiredCapabilities.chrome tap { capabilities =>
         capabilities.setCapability(ChromeOptions.CAPABILITY, chromeOptions())
-        capabilities.setCapability(CapabilityType.ACCEPT_SSL_CERTS, WebSettings.`gwen.web.accept.untrusted.certs`);
+        //capabilities.setCapability(CapabilityType.ACCEPT_SSL_CERTS, WebSettings.`gwen.web.accept.untrusted.certs`)
+        capabilities.setAcceptInsecureCerts(WebSettings.`gwen.web.accept.untrusted.certs`)
       }
       case "ie" => ieCapabilities
     }
@@ -191,7 +192,8 @@ class DriverManager extends LazyLogging {
   }
   
   private def ieCapabilities(): DesiredCapabilities = new DesiredCapabilities() tap {capabilities =>
-    capabilities.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);  
+    //capabilities.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true)
+    capabilities.setAcceptInsecureCerts(true)
   }
   
   private[web] def chrome(): WebDriver = new ChromeDriver(chromeOptions())

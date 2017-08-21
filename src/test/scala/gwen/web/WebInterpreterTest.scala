@@ -32,7 +32,7 @@ abstract class WebInterpreterTest extends FlatSpec {
       if (dryRun) args = args ++ Array("-n")
       if (dataFile.nonEmpty) args = args ++ Array("-i", dataFile.get)
       args = args ++ features.toArray.asInstanceOf[Array[String]]
-      val options = GwenOptions(WebInterpreter.getClass, args)
+      val options = GwenOptions(args)
       val launcher = new GwenLauncher(new WebInterpreter)
       launcher.run(options, None) match {
         case Passed(_) => // woo hoo
