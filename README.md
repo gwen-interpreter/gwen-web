@@ -6,7 +6,7 @@ Gwen-web
 Gwen-Web is a web automation engine that runs inside the [Gwen](https://github.com/gwen-interpreter/gwen) interpreter.
 It enables teams to automate front end web tests and robotic web activities with 
 [Gherkin](https://github.com/cucumber/cucumber/wiki/Gherkin) feature specs.
-A [web DSL](http://htmlpreview.github.io/?https://github.com/gwen-interpreter/gwen-web/blob/master/docs/dsl/gwen-web-dsl.html) interacts with [Selenium WebDriver](http://www.seleniumhq.org/projects/webdriver) under the covers for you so you don't have to do all the programming work. It does however, allow you to [interpolate strings](https://github.com/gwen-interpreter/gwen/wiki/String-Interpolation) and use JavaScript bindings for flexibility and tailoring where necessary.
+A [web DSL](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL) interacts with [Selenium WebDriver](http://www.seleniumhq.org/projects/webdriver) under the covers for you so you don't have to do all the programming work. It does however, allow you to [interpolate strings](https://github.com/gwen-interpreter/gwen/wiki/String-Interpolation) and use JavaScript bindings for flexibility and tailoring where necessary.
 
 ### Current Status
 
@@ -49,7 +49,7 @@ So you can do web automation with Gherkin features like this..
        When I click the first match
        Then the current URL should start with "https://github.com/gwen-interpreter/gwen"
 ```
-..and let [Page Objects Begone](https://gweninterpreter.wordpress.com/2014/08/27/page-objects-begone/)!
+..and let [Page Objects Begone](https://gweninterpreter.wordpress.com/2016/03/08/nopageobjects-theres-no-long-way-to-go-were-already-there/)!
 
 Links
 -----
