@@ -1,3 +1,8 @@
+2.10.1
+======
+Aug 30, 2017
+- Fix dry run validation of repeat while/until steps
+
 2.10.0
 ======
 Aug 23, 2017

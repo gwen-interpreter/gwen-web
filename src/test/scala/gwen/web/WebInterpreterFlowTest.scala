@@ -16,14 +16,14 @@
 
 package gwen.web
 
-class WebInterpreterGoogleTest extends WebInterpreterTest {
+class WebInterpreterFlowTest extends WebInterpreterTest {
 
-  "Google feature" should "should evaluate" in {
-    evaluate(List("features/google"), parallel = false, dryRun = false, "target/reports/google", None)
+  "Flow features" should "should pass" in {
+    evaluate(List("features/flow"), parallel = false, dryRun = false, "target/reports/flow", None)
   }
 
-  "Google feature dry run" should "should pass" in {
-    evaluate(List("features/google"), parallel = false, dryRun = true, "target/reports/google-dry-run", None)
+  "Flow features dry run" should "should pass" in {
+    evaluate(List("features/flow"), parallel = false, dryRun = true, "target/reports/flow-dry-run", None)
   }
   
 }

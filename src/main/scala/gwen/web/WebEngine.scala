@@ -414,9 +414,15 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
             !result
         }
       }
-    } getOrElse { 
-      env.scopes.get(s"$condition/javascript")
-      this.evaluateStep(Step(step.keyword, doStep), env)
+    } getOrElse {
+      operation match {
+        case "until" =>
+          this.evaluateStep(Step(step.keyword, doStep), env)
+          env.scopes.get(s"$condition/javascript")
+        case "while" =>
+          env.scopes.get(s"$condition/javascript")
+          this.evaluateStep(Step(step.keyword, doStep), env)
+      }
     }
     step
   }
