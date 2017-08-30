@@ -16,6 +16,7 @@
 
 package gwen.web
 
+import gwen.{Settings, UserOverrides}
 import org.mockito.Mockito.when
 import org.mockito.Mockito.verify
 import org.mockito.Matchers.any
@@ -177,10 +178,14 @@ class WebEnvContextTest extends FlatSpec with Matchers with MockitoSugar {
   }
   
   "Attribute with sql binding on dry run" should "not resolve" in {
-    val env = newEnv(true)
-    env.scopes.set("username/sql/selectStmt", "select username from users")
-    env.scopes.set("username/sql/dbName", "subscribers")
-    env.getAttribute("username") should be ("$[dryRun:sql]")
+    withSetting("gwen.db.subscribers.driver", "jdbc.driver.class") {
+      withSetting("gwen.db.subscribers.url", "db:url") {
+        val env = newEnv(true)
+        env.scopes.set("username/sql/selectStmt", "select username from users")
+        env.scopes.set("username/sql/dbName", "subscribers")
+        env.getAttribute("username") should be ("$[dryRun:sql]")
+      }
+    }
   }
 
   "Timeout on compare" should "result in assertion error" in {
@@ -227,6 +232,17 @@ class WebEnvContextTest extends FlatSpec with Matchers with MockitoSugar {
       env.getLocatorBinding(element)
     }
     e.getMessage should be (expectedMsg)
+  }
+
+  private def withSetting[T](name: String, value: String)(f: => T):T = {
+    Settings.synchronized {
+      try {
+        sys.props += ((name, value))
+        f
+      } finally {
+        Settings.loadAll(UserOverrides.UserProperties.toList)
+      }
+    }
   }
   
 }
