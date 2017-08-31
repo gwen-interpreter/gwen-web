@@ -17,13 +17,15 @@
 package gwen.web
 
 import java.util
+import java.util.concurrent.TimeUnit
 
-import org.openqa.selenium.By
-import org.openqa.selenium.WebElement
-import gwen.web.errors.locatorBindingError
+import org.openqa.selenium.{By, WebElement}
+import gwen.web.errors.{locatorBindingError, WaitTimeoutException}
 import gwen.Predefs.Kestrel
 import com.typesafe.scalalogging.LazyLogging
+
 import scala.collection.JavaConverters._
+import scala.util.{Failure, Success, Try}
 
 /**
   * Locates web elements using the selenium web driver.
@@ -37,42 +39,78 @@ trait WebElementLocator extends LazyLogging {
     * Locates a bound web element.
     *
     *  @param elementBinding the web element locator binding
-    *  @return the found element (errors if not found)
+    *  @return the found element (or an error if not found)
     */
   private[web] def locate(elementBinding: LocatorBinding): WebElement = {
-    logger.debug(s"Locating ${elementBinding.element}")
-    findElementByLocator(elementBinding) match {
-      case Some(webElement) => webElement
-      case None => throw new NoSuchElementException(s"Web element not found: ${elementBinding.element}")
+    val elementName = elementBinding.element
+    val locators = elementBinding.locators
+    var result: Try[WebElement] = Failure(new NoSuchElementException(s"Could not locate $elementName by ${locators.mkString(" or ")}"))
+    if (locators.size == 1) {
+      val locator = locators.head
+      try {
+        findElementByLocator(elementName, locator) foreach { webElement =>
+          result = Success(webElement)
+        }
+      } catch {
+        case _: org.openqa.selenium.NoSuchElementException =>
+      }
+    } else {
+      // multiple locators: return first one that resolves to an element
+      withWebDriver { driver =>
+        // override implicit wait for each locator to configured throttle time (or 200 msecs if that is zero)
+        val wait = WebSettings.`gwen.web.throttle.msecs`
+        driver.manage().timeouts().implicitlyWait(if (wait > 0) wait else 200, TimeUnit.MILLISECONDS)
+        try {
+          // keep trying all locators until one of them resolves or timeout happens
+          try {
+            waitUntil {
+              val iter = locators.iterator.flatMap(loc => Try(findElementByLocator(elementName, loc)).getOrElse(None))
+              if (iter.hasNext) result = Success(iter.next)
+              result.isSuccess
+            }
+          } catch {
+            case _: WaitTimeoutException =>
+          }
+        } finally {
+          // restore implicit waits
+          driver.manage().timeouts().implicitlyWait(WebSettings.`gwen.web.wait.seconds`, TimeUnit.SECONDS)
+        }
+      }
+    }
+    result match {
+      case Success(webElement) => webElement
+      case Failure(e) => throw e
     }
   }
 
   /**
     * Locates a collection of web elements.
     *
-    *  @param elementBinding the web element collection binding
-    *  @return a list of elements or an empty list if none found
+    * @param elementBinding the web element collection locator binding
+    * @return a list of elements or an empty list if none found
     */
   private[web] def locateAll(elementBinding: LocatorBinding): List[WebElement] = {
-    logger.debug(s"Locating all ${elementBinding.element}")
-    findAllElementsByLocator(elementBinding)
+    val elementName = elementBinding.element
+    logger.debug(s"Locating all $elementName")
+    findAllElementsByLocator(elementName, elementBinding.locators.head)
   }
 
   /** Finds an element by the given locator expression. */
-  private def findElementByLocator(elementBinding: LocatorBinding): Option[WebElement] = {
-    val lookup = elementBinding.lookup
-    val locator = elementBinding.locator
-    (locator match {
-      case "id" => getElement(By.id(lookup), elementBinding)
-      case "name" => getElement(By.name(lookup), elementBinding)
-      case "tag name" => getElement(By.tagName(lookup), elementBinding)
-      case "css selector" => getElement(By.cssSelector(lookup), elementBinding)
-      case "xpath" => getElement(By.xpath(lookup), elementBinding)
-      case "class name" => getElement(By.className(lookup), elementBinding)
-      case "link text" => getElement(By.linkText(lookup), elementBinding)
-      case "partial link text" => getElement(By.partialLinkText(lookup), elementBinding)
-      case "javascript" => getElementByJavaScript(s"$lookup")
-      case _ => locatorBindingError(elementBinding.element, s"unsupported locator: $locator")
+  private def findElementByLocator(elementName: String, locator: Locator): Option[WebElement] = {
+    val locatorType = locator.locatorType
+    val expression = locator.expression
+    logger.debug(s"Locating $elementName by $locator")
+    (locatorType match {
+      case "id" => getElement(By.id(expression), locator)
+      case "name" => getElement(By.name(expression), locator)
+      case "tag name" => getElement(By.tagName(expression), locator)
+      case "css selector" => getElement(By.cssSelector(expression), locator)
+      case "xpath" => getElement(By.xpath(expression), locator)
+      case "class name" => getElement(By.className(expression), locator)
+      case "link text" => getElement(By.linkText(expression), locator)
+      case "partial link text" => getElement(By.partialLinkText(expression), locator)
+      case "javascript" => getElementByJavaScript(s"$expression")
+      case _ => locatorBindingError(elementName, s"unsupported locator: $locator")
     }) tap { optWebElement =>
       optWebElement foreach { webElement =>
         if (!webElement.isDisplayed) {
@@ -88,11 +126,11 @@ trait WebElementLocator extends LazyLogging {
     *
     * @param by the by locator
     */
-  private def getElement(by: By, elementBinding: LocatorBinding): Option[WebElement] =
+  private def getElement(by: By, locator: Locator): Option[WebElement] =
     webContext.withWebDriver { driver =>
       val handle = driver.getWindowHandle
       try {
-        elementBinding.container.fold(driver.findElement(by)) { containerName =>
+        locator.container.fold(driver.findElement(by)) { containerName =>
           getContainerElement(webContext.getLocatorBinding(containerName)) match {
             case Some(containerElem) => containerElem.findElement(by)
             case _ => driver.findElement(by)
@@ -111,15 +149,13 @@ trait WebElementLocator extends LazyLogging {
     * @param containerBinding the container binding
     */
   private def getContainerElement(containerBinding: LocatorBinding): Option[WebElement] = {
-    val container = findElementByLocator(containerBinding)
-    container flatMap { containerElem =>
-      containerElem.getTagName match {
-        case "iframe" | "frame" =>
-          webContext.withWebDriver(_.switchTo().frame(containerElem))
-          None
-        case _ =>
-          container
-      }
+    val container = locate(containerBinding)
+    container.getTagName match {
+      case "iframe" | "frame" =>
+        webContext.withWebDriver(_.switchTo().frame(container))
+        None
+      case _ =>
+        Some(container)
     }
   }
 
@@ -147,20 +183,20 @@ trait WebElementLocator extends LazyLogging {
   }
 
   /** Finds all elements bound by the given locator expression. */
-  private def findAllElementsByLocator(elementBinding: LocatorBinding): List[WebElement] = {
-    val lookup = elementBinding.lookup
-    val locator = elementBinding.locator
-    (locator match {
-      case "id" => getAllElements(By.id(lookup), elementBinding)
-      case "name" => getAllElements(By.name(lookup), elementBinding)
-      case "tag name" => getAllElements(By.tagName(lookup), elementBinding)
-      case "css selector" => getAllElements(By.cssSelector(lookup), elementBinding)
-      case "xpath" => getAllElements(By.xpath(lookup), elementBinding)
-      case "class name" => getAllElements(By.className(lookup), elementBinding)
-      case "link text" => getAllElements(By.linkText(lookup), elementBinding)
-      case "partial link text" => getAllElements(By.partialLinkText(lookup), elementBinding)
-      case "javascript" => getAllElementsByJavaScript(s"$lookup")
-      case _ => locatorBindingError(elementBinding.element, s"unsupported locator: $locator")
+  private def findAllElementsByLocator(elementName: String, locator: Locator): List[WebElement] = {
+    val expression = locator.expression
+    val locatorType = locator.locatorType
+    (locatorType match {
+      case "id" => getAllElements(By.id(expression), locator)
+      case "name" => getAllElements(By.name(expression), locator)
+      case "tag name" => getAllElements(By.tagName(expression), locator)
+      case "css selector" => getAllElements(By.cssSelector(expression), locator)
+      case "xpath" => getAllElements(By.xpath(expression), locator)
+      case "class name" => getAllElements(By.className(expression), locator)
+      case "link text" => getAllElements(By.linkText(expression), locator)
+      case "partial link text" => getAllElements(By.partialLinkText(expression), locator)
+      case "javascript" => getAllElementsByJavaScript(s"$expression")
+      case _ => locatorBindingError(elementName, s"unsupported locator: $locator")
     }) tap { webElements =>
       webElements.headOption foreach { webElement =>
         if (!webElement.isDisplayed) {
@@ -176,11 +212,11 @@ trait WebElementLocator extends LazyLogging {
     *
     * @param by the by locator
     */
-  private def getAllElements(by: By, elementBinding: LocatorBinding): List[WebElement] =
+  private def getAllElements(by: By, locator: Locator): List[WebElement] =
     webContext.withWebDriver { driver =>
       val handle = driver.getWindowHandle
       try {
-        Option(elementBinding.container.fold(driver.findElements(by)) { containerName =>
+        Option(locator.container.fold(driver.findElements(by)) { containerName =>
           getContainerElement(webContext.getLocatorBinding(containerName)) match {
             case Some(containerElem) => containerElem.findElements(by)
             case _ => driver.findElements(by)
@@ -218,11 +254,33 @@ trait WebElementLocator extends LazyLogging {
 }
 
 /**
-  *  Captures a web element locator binding.
+  *  Captures a web element locator binding. A binding can have one or more locators.
   *
   *  @param element the web element name
-  *  @param locator the locator type
-  *  @param lookup the lookup string
-  *  @param container optional parent container name
+  *  @param locators the locators
   */
-case class LocatorBinding(element: String, locator: String, lookup: String, container: Option[String])
+case class LocatorBinding(element: String, locators: List[Locator])
+
+/** Locator binding factory companion. */
+object LocatorBinding {
+  def apply(element: String, locatorType: String, expression: String, container: Option[String]): LocatorBinding =
+    LocatorBinding(element, List(Locator(locatorType, expression, container)))
+  def apply(binding: LocatorBinding, locator: Locator): LocatorBinding =
+    LocatorBinding(binding.element, List(locator))
+}
+
+/**
+  * Captures a web locator.
+  * @param locatorType the locator type
+  * @param expression the locator expression
+  * @param container optional parent container name
+  */
+case class Locator(locatorType: String, expression: String, container: Option[String]) {
+  override def toString: String =
+    s"($locatorType: $expression)${container.map(c => s" in $c").getOrElse("")}"
+}
+
+/** Locator factory companion. */
+object Locator {
+  def apply(locatorType: String, expression: String): Locator = Locator(locatorType, expression, None)
+}

@@ -22,9 +22,8 @@ import scala.util.Try
 import gwen.Predefs.Kestrel
 import gwen.dsl.Failed
 import gwen.eval.{EnvContext, GwenOptions, ScopedDataStack}
-import gwen.web.errors.locatorBindingError
+import gwen.web.errors.{locatorBindingError, WaitTimeoutException}
 import gwen.errors.{unboundAttributeError, UnboundAttributeException}
-import org.openqa.selenium.TimeoutException
 
 import scala.io.Source
 
@@ -99,7 +98,7 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
       case Success(value) => value
       case Failure(e) => e match {
         case _: UnboundAttributeException =>
-          Try(getLocatorBinding(name).lookup).getOrElse(unboundAttributeError(name))
+          Try(getLocatorBinding(name).locators.map(_.expression).mkString(",")).getOrElse(unboundAttributeError(name))
         case _ => throw e
       }
     }
@@ -134,19 +133,25 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
       case None =>
         val locatorBinding = s"$element/locator"
         scopes.getOpt(locatorBinding) match {
-          case Some(locator) =>
-            val lookupBinding = interpolate(s"$element/locator/$locator")(getBoundReferenceValue)
-            scopes.getOpt(lookupBinding) match {
-              case Some(expression) =>
-                val expr = interpolate(expression)(getBoundReferenceValue)
-                val container = scopes.getOpt(interpolate(s"$element/locator/$locator/container")(getBoundReferenceValue))
-                if (isDryRun) {
-                  container.foreach(c => getLocatorBinding(c, optional))
-                }
-                Some(LocatorBinding(element, locator, expr, container))
-              case None =>
-                if (optional) None else locatorBindingError(element, s"locator lookup binding not found: $lookupBinding")
+          case Some(boundValue) =>
+            val locators = boundValue.split(",") flatMap { locatorType =>
+              if (!locatorType.matches("(id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)"))
+                locatorBindingError(element, s"unsupported locator type: $locatorType")
+              val lookupBinding = interpolate(s"$element/locator/$locatorType")(getBoundReferenceValue)
+              scopes.getOpt(lookupBinding) match {
+                case Some(expression) =>
+                  val expr = interpolate(expression)(getBoundReferenceValue)
+                  val container: Option[String] = scopes.getOpt(interpolate(s"$element/locator/$locatorType/container")(getBoundReferenceValue))
+                  if (isDryRun) {
+                    container.foreach(c => getLocatorBinding(c, optional))
+                  }
+                  Some(Locator(locatorType, expr, container))
+                case None =>
+                  if (optional) None else locatorBindingError(element, s"locator lookup binding not found: $lookupBinding")
+              }
             }
+            if (locators.nonEmpty) Some(LocatorBinding(element, locators.toList))
+            else None
           case None => if (optional) None else locatorBindingError(element, s"locator binding not found: $locatorBinding")
         }
       case _ => Some(LocatorBinding(element, "cache", element, None))
@@ -176,7 +181,7 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     scopes.getOpt(s"$element/$action/condition") foreach { condition =>
       val javascript = scopes.get(s"$condition/javascript")
       logger.debug(s"Waiting for script to return true: $javascript")
-      webContext.waitUntil(s"Waiting until $condition (post-$action condition)") {
+      webContext.waitUntil(s"wait-until $condition (post-$action condition)") {
         evaluateJSPredicate(javascript)
       }
     }
@@ -205,7 +210,7 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
         }
       }
     } catch {
-      case _: TimeoutException => result = false
+      case _: WaitTimeoutException => result = false
     }
     assert(result, s"Expected $name to ${if(negate) "not " else ""}$operator '$expected' but got '$actualValue'")
   }

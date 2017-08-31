@@ -23,8 +23,7 @@ import gwen.Predefs.RegexContext
 import gwen.Settings
 import gwen.dsl._
 import gwen.errors.undefinedStepError
-import gwen.eval.GwenOptions
-import gwen.eval.ScopedDataStack
+import gwen.eval.{GwenOptions, ScopedDataStack, StepFailure}
 import gwen.eval.support.DefaultEngineSupport
 
 import scala.util.Try
@@ -122,25 +121,25 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
 
       case r"""I wait for (.+?)$element text for (.+?)$seconds second(?:s?)""" =>
         val elementBinding = env.getLocatorBinding(element)
-        webContext.waitUntil(s"Waiting for $element text after $seconds second(s)", seconds.toInt) {
+        webContext.waitUntil(seconds.toInt) {
           webContext.waitForText(elementBinding)
         }
 
       case r"""I wait for (.+?)$element text""" =>
         val elementBinding = env.getLocatorBinding(element)
-        webContext.waitUntil(s"Waiting for $element text") {
+        webContext.waitUntil {
           webContext.waitForText(elementBinding)
         }
 
       case r"""I wait for (.+?)$element for (.+?)$seconds second(?:s?)""" =>
         val elementBinding = env.getLocatorBinding(element)
-        webContext.waitUntil(s"Waiting for $element after $seconds second(s)", seconds.toInt) {
+        webContext.waitUntil(seconds.toInt) {
           Try(webContext.locate(elementBinding)).isSuccess
         }
 
       case r"""I wait for (.+?)$$$element""" =>
         val elementBinding = env.getLocatorBinding(element)
-        webContext.waitUntil(s"Waiting for $element") {
+        webContext.waitUntil {
           Try(webContext.locate(elementBinding)).isSuccess
         }
 
@@ -154,14 +153,14 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
         env.scopes.set(s"$element/${WebEvents.EventToAction(event)}/condition", condition)
 
       case r"""I wait until "(.+?)$javascript"""" => step.orDocString(javascript) tap { javascript =>
-        webContext.waitUntil(s"Waiting until $javascript") {
+        webContext.waitUntil {
           env.evaluateJSPredicate(javascript)
         }
       }
 
       case r"""I wait until (.+?)$$$condition""" =>
         val javascript = env.scopes.get(s"$condition/javascript")
-        webContext.waitUntil(s"Waiting until $condition") {
+        webContext.waitUntil {
           env.evaluateJSPredicate(javascript)
         }
 
@@ -205,6 +204,28 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
         env.scopes.set(s"$element/locator/$locator", expression)
         env.scopes.getOpt(s"$element/locator/$locator/container") foreach { _ =>
           env.scopes.set(s"$element/locator/$locator/container", null)
+        }
+      }
+
+      case r"""(.+?)$element can be located in (.+?)$container by""" if step.table.nonEmpty && step.table.head._2.size == 2 =>
+        env.getLocatorBinding(container)
+        env.scopes.set(s"$element/locator", step.table.map(_._2.head).mkString(","))
+        step.table foreach { case (_, row ) =>
+          val locator = row.head
+          val expression = row(1)
+          env.scopes.set(s"$element/locator/$locator", expression)
+          env.scopes.set(s"$element/locator/$locator/container", container)
+        }
+
+      case r"""(.+?)$element can be located by""" if step.table.nonEmpty && step.table.head._2.size == 2 => {
+        env.scopes.set(s"$element/locator", step.table.map(_._2.head).mkString(","))
+        step.table foreach { case (_, row ) =>
+          val locator = row.head
+          val expression = row(1)
+          env.scopes.set(s"$element/locator/$locator", expression)
+          env.scopes.getOpt(s"$element/locator/$locator/container") foreach { _ =>
+            env.scopes.set(s"$element/locator/$locator/container", null)
+          }
         }
       }
 
@@ -377,54 +398,61 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
     assert(delay.gteq(Duration.Zero), "delay cannot be less than zero")
     assert(timeout.gt(Duration.Zero), "timeout must be greater than zero")
     assert(timeout.gteq(delay), "timeout cannot be less than or equal to delay")
+    var evaluatedStep = step
     env.perform {
-      var attempt = 0L
-      env.webContext.waitUntil(s"Repeating $operation $condition", timeout.toSeconds) {
-        attempt = attempt + 1
-        operation match {
-          case "until" =>
-            logger.info(s"Repeat-until[$attempt]")
-            evaluateStep(Step(step.keyword, doStep), env).evalStatus match {
-              case Failed(_, e) => throw e
-              case _ =>
-                val javascript = env.scopes.get(s"$condition/javascript")
-                env.evaluateJSPredicate(javascript) tap { result =>
-                  if (!result) {
-                    logger.info(s"Repeat-until[$attempt] not completed, ..${if (delay.gt(Duration.Zero)) s"will try again in ${DurationFormatter.format(delay)}" else "trying again"}")
-                    Thread.sleep(delay.toMillis)
-                  } else {
-                    logger.info(s"Repeat-until[$attempt] completed")
-                  }
-                }
-            }
-          case "while" =>
-            val javascript = env.scopes.get(s"$condition/javascript")
-            val result = env.evaluateJSPredicate(javascript)
-            if (result) {
-              logger.info(s"Repeat-while[$attempt]")
+      var iteration = 0L
+      val start = System.nanoTime
+      try {
+        env.webContext.waitUntil(s"repeat-$operation $condition", timeout.toSeconds) {
+          iteration = iteration + 1
+          operation match {
+            case "until" =>
+              logger.info(s"repeat-until $condition: iteration $iteration")
               evaluateStep(Step(step.keyword, doStep), env).evalStatus match {
                 case Failed(_, e) => throw e
-                case _ => 
-                  logger.info(s"Repeat-while[$attempt] not completed, ..${if (delay.gt(Duration.Zero)) s"will try again in ${DurationFormatter.format(delay)}" else "trying again"}")
-                  Thread.sleep(delay.toMillis)
+                case _ =>
+                  val javascript = env.interpolate(env.scopes.get(s"$condition/javascript"))(env.getBoundReferenceValue)
+                  env.evaluateJSPredicate(javascript) tap { result =>
+                    if (!result) {
+                      logger.info(s"repeat-until $condition: not complete, will repeat ${if (delay.gt(Duration.Zero)) s"in ${DurationFormatter.format(delay)}" else "now"}")
+                      if (delay.gt(Duration.Zero)) Thread.sleep(delay.toMillis)
+                    } else {
+                      logger.info(s"repeat-until $condition: completed")
+                    }
+                  }
               }
-            } else {
-              logger.info(s"Repeat-while[$attempt] completed")
-            }
-            !result
+            case "while" =>
+              val javascript = env.interpolate(env.scopes.get(s"$condition/javascript"))(env.getBoundReferenceValue)
+              val result = env.evaluateJSPredicate(javascript)
+              if (result) {
+                logger.info(s"repeat-while $condition: iteration $iteration")
+                evaluateStep(Step(step.keyword, doStep), env).evalStatus match {
+                  case Failed(_, e) => throw e
+                  case _ =>
+                    logger.info(s"repeat-while $condition: not complete, will repeat ${if (delay.gt(Duration.Zero)) s"in ${DurationFormatter.format(delay)}" else "now"}")
+                    if (delay.gt(Duration.Zero)) Thread.sleep(delay.toMillis)
+                }
+              } else {
+                logger.info(s"repeat-while $condition: completed")
+              }
+              !result
+          }
         }
+      } catch {
+        case e: Throwable =>
+          evaluatedStep = Step(step, Failed(System.nanoTime - start, new StepFailure(step, e)), env.attachments)
       }
     } getOrElse {
       operation match {
         case "until" =>
           this.evaluateStep(Step(step.keyword, doStep), env)
           env.scopes.get(s"$condition/javascript")
-        case "while" =>
+        case _ =>
           env.scopes.get(s"$condition/javascript")
           this.evaluateStep(Step(step.keyword, doStep), env)
       }
     }
-    step
+    evaluatedStep
   }
   
   lazy val DefaultRepeatDelay: Duration = {

@@ -17,7 +17,7 @@ package gwen.web
 
 import com.typesafe.scalalogging.LazyLogging
 import gwen.Predefs.Kestrel
-import gwen.web.errors.{LocatorBindingException, unsupportedModifierKeyError}
+import gwen.web.errors.{LocatorBindingException, unsupportedModifierKeyError, waitTimeoutError}
 import org.apache.commons.io.FileUtils
 import org.openqa.selenium._
 import org.openqa.selenium.interactions.Actions
@@ -114,10 +114,11 @@ class WebContext(env: WebEnvContext) extends WebElementLocator with LazyLogging 
     */
   private def withWebElement[T](action: Option[String], elementBinding: LocatorBinding)(operation: WebElement => T): Option[T] =
     env.evaluate(None.asInstanceOf[Option[T]]) {
-      val wHandle = elementBinding.container.flatMap(_ => withWebDriver(_.getWindowHandle))
+      val locator = elementBinding.locators.head
+      val wHandle = locator.container.flatMap(_ => withWebDriver(_.getWindowHandle))
       try {
         val webElement =
-          if (elementBinding.locator == "cache") {
+          if (locator.locatorType == "cache") {
             env.featureScope.getObject(elementBinding.element) match {
               case Some(we: WebElement) => we tap { highlightElement }
               case _ => throw new NoSuchElementException(s"${elementBinding.element} not found")
@@ -268,7 +269,8 @@ class WebContext(env: WebEnvContext) extends WebElementLocator with LazyLogging 
           doWaitUntil(webDriver, timeout)
           timeout = -1
         } catch {
-          case e: TimeoutException=> throw e
+          case e: TimeoutException =>
+            waitTimeoutError(reason)
           case e: WebDriverException =>
             Thread.sleep(WebSettings`gwen.web.throttle.msecs`)
             timeout = timeoutSecs - ((System.nanoTime() - start) / 1000000000L)

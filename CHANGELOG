@@ -1,8 +1,19 @@
-2.10.1
+2.11.0
 ======
-Aug 30, 2017
+Aug 31, 2017
 - Fix dry run validation of repeat while/until steps
 - Update Selenium from 3.5.2 to 3.5.3
+- ensure that repeat while/until steps fail correctly if the terminating condition is not satisfied before timeout
+- Update Gwen from v2.9.0 to v[2.9.1](https://github.com/gwen-interpreter/gwen/releases/tag/v2.9.1)
+- Add multi-locator DSL for web elements (will return web element resolved by first locator in table)
+  - <element> can be located by
+      | locator 1  | expression 1  |
+      | locator 2  | expression 2  |
+      | locator .. | expression .. |
+      | locator N  | expression N  |
+  - Where
+    - column 1 = id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript
+    - column 2 = the lookup expression literal
 
 2.10.0
 ======
