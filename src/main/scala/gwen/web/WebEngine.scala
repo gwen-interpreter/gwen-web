@@ -121,25 +121,25 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
 
       case r"""I wait for (.+?)$element text for (.+?)$seconds second(?:s?)""" =>
         val elementBinding = env.getLocatorBinding(element)
-        webContext.waitUntil(seconds.toInt) {
+        webContext.waitUntil(s"waiting for $element text", seconds.toInt) {
           webContext.waitForText(elementBinding)
         }
 
       case r"""I wait for (.+?)$element text""" =>
         val elementBinding = env.getLocatorBinding(element)
-        webContext.waitUntil {
+        webContext.waitUntil(s"waiting for $element text") {
           webContext.waitForText(elementBinding)
         }
 
       case r"""I wait for (.+?)$element for (.+?)$seconds second(?:s?)""" =>
         val elementBinding = env.getLocatorBinding(element)
-        webContext.waitUntil(seconds.toInt) {
+        webContext.waitUntil(s"waiting for $element", seconds.toInt) {
           Try(webContext.locate(elementBinding)).isSuccess
         }
 
       case r"""I wait for (.+?)$$$element""" =>
         val elementBinding = env.getLocatorBinding(element)
-        webContext.waitUntil {
+        webContext.waitUntil(s"waiting for $element") {
           Try(webContext.locate(elementBinding)).isSuccess
         }
 
@@ -153,14 +153,14 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
         env.scopes.set(s"$element/${WebEvents.EventToAction(event)}/condition", condition)
 
       case r"""I wait until "(.+?)$javascript"""" => step.orDocString(javascript) tap { javascript =>
-        webContext.waitUntil {
+        webContext.waitUntil(s"waiting for javascript to return true: $javascript") {
           env.evaluateJSPredicate(javascript)
         }
       }
 
       case r"""I wait until (.+?)$$$condition""" =>
         val javascript = env.scopes.get(s"$condition/javascript")
-        webContext.waitUntil {
+        webContext.waitUntil(s"waiting until $condition") {
           env.evaluateJSPredicate(javascript)
         }
 
@@ -403,7 +403,7 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
       var iteration = 0L
       val start = System.nanoTime
       try {
-        env.webContext.waitUntil(s"repeat-$operation $condition", timeout.toSeconds) {
+        env.webContext.waitUntil(s"repeating $operation $condition", timeout.toSeconds) {
           iteration = iteration + 1
           operation match {
             case "until" =>

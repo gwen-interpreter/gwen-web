@@ -191,7 +191,6 @@ class WebEnvContextTest extends FlatSpec with Matchers with MockitoSugar {
   "Timeout on compare" should "result in assertion error" in {
     val mockWebContext = mock[WebContext]
     val env = newEnv(mockWebContext)
-    when(mockWebContext.waitUntil(any[Boolean])).thenThrow(new TimeoutException())
     intercept[AssertionError] {
       env.compare("a", "2", () => "1", "be", negate = false)
     }
@@ -200,7 +199,6 @@ class WebEnvContextTest extends FlatSpec with Matchers with MockitoSugar {
   "Timeout on negated compare" should "result in assertion error" in {
     val mockWebContext = mock[WebContext]
     val env = newEnv(mockWebContext)
-    when(mockWebContext.waitUntil(any[Boolean])).thenThrow(new TimeoutException())
     intercept[AssertionError] {
       env.compare("a", "2", () => "2", "be", negate = true)
     }

@@ -29,7 +29,7 @@ package gwen {
       def unsupportedWebDriverError(driverName: String) = throw new UnsupportedWebDriverException(driverName)
       def noSuchWindowError(msg: String) = throw new NoSuchWindowException(msg)
       def unsupportedModifierKeyError(key: String) = throw new UnsupportedModifierKeyException(key)
-      def waitTimeoutError(reason: Option[String]) = throw new WaitTimeoutException(reason)
+      def waitTimeoutError(reason: String) = throw new WaitTimeoutException(reason)
 
       /** Thrown when a web element cannot be located. */
       class LocatorBindingException(element: String, reason: String) extends RuntimeException(s"Could not locate $element: $reason")
@@ -44,7 +44,7 @@ package gwen {
       class UnsupportedModifierKeyException(key: String) extends RuntimeException(s"Unsupported modifier key '$key'. Supported modifiers include: ${Keys.values().map(_.name()).mkString(",")}")
 
       /** Thrown when a web element cannot be located. */
-      class WaitTimeoutException(reason: Option[String]) extends RuntimeException(s"Timed out before condition was satisfied${reason.map(r => s": $r").getOrElse("")}")
+      class WaitTimeoutException(reason: String) extends RuntimeException(s"Timed out $reason")
 
     }
   }

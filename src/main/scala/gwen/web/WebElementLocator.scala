@@ -63,7 +63,7 @@ trait WebElementLocator extends LazyLogging {
         try {
           // keep trying all locators until one of them resolves or timeout happens
           try {
-            waitUntil {
+            waitUntil(s"locating element by ${locators.mkString(" or ")}") {
               val iter = locators.iterator.flatMap(loc => Try(findElementByLocator(elementName, loc)).getOrElse(None))
               if (iter.hasNext) result = Success(iter.next)
               result.isSuccess
@@ -126,6 +126,7 @@ trait WebElementLocator extends LazyLogging {
     * Gets a web element using the given by locator.
     *
     * @param by the by locator
+    * @param locator the locator binding
     */
   private def getElement(by: By, locator: Locator): Option[WebElement] =
     webContext.withWebDriver { driver =>
@@ -167,10 +168,12 @@ trait WebElementLocator extends LazyLogging {
     * visible in the browser, then the element is brought into view by scrolling to it.
     *
     * @param javascript the javascript expression for returning the element
+    * @param locator the locator binding
+    *
     */
   private def getElementByJavaScript(javascript: String, locator: Locator): Option[WebElement] = {
     var element: Option[WebElement] = None
-    webContext.waitUntil {
+    webContext.waitUntil(s"locating element by javascript: $javascript") {
       val result = locator.container.fold(webContext.executeJS(s"return $javascript")) { containerName =>
         getContainerElement(webContext.getLocatorBinding(containerName)) match {
             case Some(containerElem) =>
@@ -248,7 +251,7 @@ trait WebElementLocator extends LazyLogging {
     */
   private def getAllElementsByJavaScript(javascript: String): List[WebElement] = {
     var elements: List[WebElement] = Nil
-    webContext.waitUntil {
+    webContext.waitUntil(s"locating elements by javascript: $javascript") {
       elements = webContext.executeJS(s"return $javascript") match {
         case elems: util.ArrayList[_] =>
           elems.asScala.toList.map(_.asInstanceOf[WebElement])

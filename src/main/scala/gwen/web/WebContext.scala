@@ -218,47 +218,14 @@ class WebContext(env: WebEnvContext) extends WebElementLocator with LazyLogging 
   }
 
   /**
-    * Waits or a given condition to be true. Errors on time out
-    * after "gwen.web.wait.seconds" (default is 10 seconds)
+    * Waits until a given condition is ready for a given number of seconds.
+    * Errors on given timeout out seconds.
     *
-    * @param condition the boolean condition to wait for (until true)
-    */
-  def waitUntil(condition: => Boolean): Unit = {
-    waitUntil(WebSettings.`gwen.web.wait.seconds`) { condition }
-  }
-
-  /**
-    * Waits for a given condition to be true for a given number of seconds.
-    * Errors after given timeout out seconds.
-    *
-    * @param reason the reason for waiting (used to report timeout error)
+    * @param reason reason for waiting (used to report timeout error)
     * @param timeoutSecs the number of seconds to wait before timing out
     * @param condition the boolean condition to wait for (until true)
     */
   def waitUntil(reason: String, timeoutSecs: Long)(condition: => Boolean): Unit = {
-    waitUntil(Some(reason), timeoutSecs)(condition)
-  }
-
-  /**
-    * Waits for a given condition to be true for a given number of seconds.
-    * Errors on given timeout out seconds.
-    *
-    * @param timeoutSecs the number of seconds to wait before timing out
-    * @param condition the boolean condition to wait for (until true)
-    */
-  def waitUntil(timeoutSecs: Long)(condition: => Boolean): Unit = {
-    waitUntil(None, timeoutSecs)(condition)
-  }
-
-  /**
-    * Waits until a given condition is ready for a given number of seconds.
-    * Errors on given timeout out seconds.
-    *
-    * @param reason optional reason for waiting (used to report timeout error)
-    * @param timeoutSecs the number of seconds to wait before timing out
-    * @param condition the boolean condition to wait for (until true)
-    */
-  private def waitUntil(reason: Option[String], timeoutSecs: Long)(condition: => Boolean): Unit = {
     def doWaitUntil(webDriver: WebDriver, timeout: Long) {
       new WebDriverWait(webDriver, timeout).until {
         (_: WebDriver) => condition
@@ -267,7 +234,6 @@ class WebContext(env: WebEnvContext) extends WebElementLocator with LazyLogging 
     // some drivers intermittently throw javascript errors, so have to track timeout and retry
     withWebDriver { webDriver =>
       val start = System.nanoTime()
-      reason foreach { r => logger.info(r) }
       var timeout = timeoutSecs
       while (timeout > -1) {
         try {

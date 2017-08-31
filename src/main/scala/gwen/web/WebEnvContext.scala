@@ -180,8 +180,9 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     // wait for javascript post condition if one is configured for this action
     scopes.getOpt(s"$element/$action/condition") foreach { condition =>
       val javascript = scopes.get(s"$condition/javascript")
+      logger.info(s"waiting until $condition (post-$action condition)")
       logger.debug(s"Waiting for script to return true: $javascript")
-      webContext.waitUntil(s"wait-until $condition (post-$action condition)") {
+      webContext.waitUntil(s"waiting until $condition (post-$action condition)") {
         evaluateJSPredicate(javascript)
       }
     }
@@ -201,7 +202,7 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     var result = false
     var actualValue = actual()
     try {
-      webContext.waitUntil {
+      webContext.waitUntil("waiting for comparison") {
         result = if (actualValue != null) {
           super.compare(expected, actualValue, operator, negate)
         } else false

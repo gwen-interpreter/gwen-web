@@ -14,6 +14,7 @@ Aug 31, 2017
     - column 1 = id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript
     - column 2 = the lookup expression literal
 - Support in container javascript locators (container references in javascript as `containerElem`)
+- Make timeout error messages more consistent and relevant
 - Update Gwen from v2.9.0 to v[2.9.1](https://github.com/gwen-interpreter/gwen/releases/tag/v2.9.1)
 
 2.10.0
