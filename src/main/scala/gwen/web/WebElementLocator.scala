@@ -19,8 +19,8 @@ package gwen.web
 import java.util
 import java.util.concurrent.TimeUnit
 
-import org.openqa.selenium.{By, WebElement}
-import gwen.web.errors.{locatorBindingError, WaitTimeoutException}
+import org.openqa.selenium.{By, NoSuchElementException, WebElement}
+import gwen.web.errors.{WaitTimeoutException, locatorBindingError}
 import gwen.Predefs.Kestrel
 import com.typesafe.scalalogging.LazyLogging
 
@@ -109,7 +109,8 @@ trait WebElementLocator extends LazyLogging {
       case "class name" => getElement(By.className(expression), locator)
       case "link text" => getElement(By.linkText(expression), locator)
       case "partial link text" => getElement(By.partialLinkText(expression), locator)
-      case "javascript" => getElementByJavaScript(s"$expression")
+      case "javascript" => getElementByJavaScript(s"$expression", locator)
+      case "cache" => webContext.getCachedWebElement(elementName)
       case _ => locatorBindingError(elementName, s"unsupported locator: $locator")
     }) tap { optWebElement =>
       optWebElement foreach { webElement =>
@@ -132,8 +133,10 @@ trait WebElementLocator extends LazyLogging {
       try {
         locator.container.fold(driver.findElement(by)) { containerName =>
           getContainerElement(webContext.getLocatorBinding(containerName)) match {
-            case Some(containerElem) => containerElem.findElement(by)
-            case _ => driver.findElement(by)
+            case Some(containerElem) =>
+              containerElem.findElement(by)
+            case _ =>
+              driver.findElement(by)
           }
         }
       } catch {
@@ -165,10 +168,18 @@ trait WebElementLocator extends LazyLogging {
     *
     * @param javascript the javascript expression for returning the element
     */
-  private def getElementByJavaScript(javascript: String): Option[WebElement] = {
+  private def getElementByJavaScript(javascript: String, locator: Locator): Option[WebElement] = {
     var element: Option[WebElement] = None
     webContext.waitUntil {
-      element = webContext.executeJS(s"return $javascript") match {
+      val result = locator.container.fold(webContext.executeJS(s"return $javascript")) { containerName =>
+        getContainerElement(webContext.getLocatorBinding(containerName)) match {
+            case Some(containerElem) =>
+              webContext.executeJS(s"return (function(containerElem) { return $javascript })(arguments[0])", containerElem)
+            case _ =>
+              webContext.executeJS(s"return $javascript")
+          }
+      }
+      element = result match {
         case elems: util.ArrayList[_] =>
           if (!elems.isEmpty) Option(elems.get(0).asInstanceOf[WebElement])
           else None

@@ -16,8 +16,6 @@
 
 package gwen.web
 
-import java.util
-
 import org.mockito.Mockito.atLeastOnce
 import org.mockito.Mockito.doReturn
 import org.mockito.Mockito.doThrow
@@ -36,6 +34,7 @@ import gwen.eval.ScopedDataStack
 import gwen.eval.GwenOptions
 import gwen.web.errors.{LocatorBindingException, WaitTimeoutException}
 import org.openqa.selenium.WebDriver.{Options, TargetLocator, Timeouts}
+import org.openqa.selenium.NoSuchElementException
 
 class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar {
 
@@ -60,7 +59,7 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar {
     val e = intercept[NoSuchElementException] {
       locator.locate(LocatorBinding("middleName", "id", "mname", None))
     }
-    e.getMessage should be ("Could not locate middleName by (id: mname)")
+    e.getMessage should startWith ("Could not locate middleName by (id: mname)")
   }
   
   "Attempt to locate existing element by id" should "return the element" in {
@@ -249,7 +248,7 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar {
     val mockWebDriver: FirefoxDriver = mock[FirefoxDriver]
     val locator = newLocator(None, mockWebDriver)
 
-    val mockWebElementsArrayList = new util.ArrayList[WebElement]()
+    val mockWebElementsArrayList = new java.util.ArrayList[WebElement]()
     mockWebElementsArrayList.add(mockWebElements(0))
     mockWebElementsArrayList.add(mockWebElements(1))
 
@@ -290,7 +289,7 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar {
     val mockWebDriver: FirefoxDriver = mock[FirefoxDriver]
     val locator = newLocator(Some(env), mockWebDriver)
 
-    val mockWebElementsJava = new util.ArrayList[WebElement]()
+    val mockWebElementsJava = new java.util.ArrayList[WebElement]()
     mockWebElementsJava.add(mockWebElements(0))
     mockWebElementsJava.add(mockWebElements(1))
 

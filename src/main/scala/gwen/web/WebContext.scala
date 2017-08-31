@@ -85,6 +85,19 @@ class WebContext(env: WebEnvContext) extends WebElementLocator with LazyLogging 
   def getLocatorBinding(element: String): LocatorBinding = env.getLocatorBinding(element)
 
   /**
+    * Gets a cached web element.
+    *
+    * @param element the name of the web element
+    * @return the cached web element
+    */
+  def getCachedWebElement(element: String): Option[WebElement] = env.featureScope.getObject(element) match {
+    case Some(we: WebElement) =>
+      highlightElement(we)
+      Some(we)
+    case _ => None
+  }
+
+  /**
     * Performs a function on a web element and transparently re-locates elements and
     * re-attempts the function if the web driver throws an exception.
     *
@@ -117,15 +130,7 @@ class WebContext(env: WebEnvContext) extends WebElementLocator with LazyLogging 
       val locator = elementBinding.locators.head
       val wHandle = locator.container.flatMap(_ => withWebDriver(_.getWindowHandle))
       try {
-        val webElement =
-          if (locator.locatorType == "cache") {
-            env.featureScope.getObject(elementBinding.element) match {
-              case Some(we: WebElement) => we tap { highlightElement }
-              case _ => throw new NoSuchElementException(s"${elementBinding.element} not found")
-            }
-          } else {
-            locate(elementBinding)
-          }
+        val webElement = locate(elementBinding)
         action.foreach { actionString =>
           logger.debug(s"${actionString match {
             case "click" => "Clicking"
