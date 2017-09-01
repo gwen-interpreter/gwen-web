@@ -4,7 +4,7 @@ Gwen-web
 ========
 
 Gwen-Web is a web automation engine that runs inside the [Gwen](https://github.com/gwen-interpreter/gwen) interpreter.
-It enables teams to automate front end web tests and robotic web activities with 
+It enables teams to automate front end web tests and online robotics with 
 [Gherkin](https://github.com/cucumber/cucumber/wiki/Gherkin) feature specs.
 A [web DSL](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL) interacts with [Selenium WebDriver](http://www.seleniumhq.org/projects/webdriver) under the covers for you so you don't have to do all the programming work. It does however, allow you to [interpolate strings](https://github.com/gwen-interpreter/gwen/wiki/String-Interpolation) and use JavaScript bindings for flexibility and tailoring where necessary.
 
