@@ -1,3 +1,10 @@
+2.11.1
+======
+Sep 2, 2017
+- Update Gwen from v2.9.1 to v[2.9.2](https://github.com/gwen-interpreter/gwen/releases/tag/v2.9.2)
+  - If no elements are found by for-each step, then set status to Passed instead of Skipped
+    and display none found in report line '-- none found --' in report line.
+
 2.11.0
 ======
 Aug 31, 2017
