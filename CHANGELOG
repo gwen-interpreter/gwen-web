@@ -1,3 +1,9 @@
+2.12.0
+======
+Sep 7, 2017
+- Implement #39: Add DSL for mousing over elements
+  - I move to <element>
+
 2.11.1
 ======
 Sep 2, 2017
