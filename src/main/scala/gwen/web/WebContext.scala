@@ -385,30 +385,25 @@ class WebContext(env: WebEnvContext) extends WebElementLocator with LazyLogging 
       case Some(javascript) =>
         performScriptAction(action, javascript, elementBinding)
       case None =>
-        action match {
-          case "click" =>
-            withWebElement(action, elementBinding) { webElement =>
+        withDriverAndElement(action, elementBinding) { (driver, webElement) =>
+          action match {
+            case "click" =>
               executeJS("(function(element){element.focus();})(arguments[0]);", webElement)
               webElement.click()
-            }
-          case "right click" =>
-            withDriverAndElement(action, elementBinding) { (driver, webElement) =>
+            case "right click" =>
               new Actions(driver).contextClick(webElement).perform()
-            }
-          case _ =>
-            withWebElement(action, elementBinding) { webElement =>
-              action match {
-                case "submit" => webElement.submit()
-                case "check" | "tick" =>
-                  if (!webElement.isSelected) webElement.sendKeys(Keys.SPACE)
-                  if (!webElement.isSelected) webElement.click()
-                case "uncheck" | "untick" =>
-                  if (webElement.isSelected) webElement.sendKeys(Keys.SPACE)
-                  if (webElement.isSelected) webElement.click()
-                case "clear" =>
-                  webElement.clear()
-              }
-            }
+            case "move to" =>
+              new Actions(driver).moveToElement(webElement).perform()
+            case "submit" => webElement.submit()
+            case "check" | "tick" =>
+              if (!webElement.isSelected) webElement.sendKeys(Keys.SPACE)
+              if (!webElement.isSelected) webElement.click()
+            case "uncheck" | "untick" =>
+              if (webElement.isSelected) webElement.sendKeys(Keys.SPACE)
+              if (webElement.isSelected) webElement.click()
+            case "clear" =>
+              webElement.clear()
+          }
         }
         env.bindAndWait(elementBinding.element, action, "true")
     }
