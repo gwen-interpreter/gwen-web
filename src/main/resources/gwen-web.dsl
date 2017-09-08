@@ -186,6 +186,10 @@ I capture <dropdown> text as <reference>
 I capture <dropdown> value as <reference>
 I capture <dropdown> text
 I capture <dropdown> value
+I capture <attribute> by javascript "<expression>"
+I capture <attribute> of <element> by javascript "<expression>"
+I capture <attribute> on <element> by javascript "<expression>"
+I capture <attribute> in <element> by javascript "<expression>"
 my <name> property is "<value>"
 my <name> property will be "<value>"
 my <name> setting is "<value>"

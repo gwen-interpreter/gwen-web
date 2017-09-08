@@ -1,8 +1,15 @@
 2.12.0
 ======
-Sep 7, 2017
+Sep 8, 2017
 - Implement #39: Add DSL for mousing over elements
   - I move to <element>
+- Add DSL for eager capture of a value by calling a javascript function on an element
+  - I capture <attribute> <of|on|in> <element> by javascript "<expression>"
+    - where <element> can be referenced as 'element' in javascript <expression> (e.g: element.value)
+- Update Gwen from v2.9.2 to v[2.9.3](https://github.com/gwen-interpreter/gwen/releases/tag/v2.9.3)
+  - Allow attributes in scoped data bindings to be overridden with blanks.
+  - Add DSL for eager capture by javascript
+    - I capture <attribute> by javascript "<expression>"
 
 2.11.1
 ======

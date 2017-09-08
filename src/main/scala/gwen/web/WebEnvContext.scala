@@ -22,8 +22,9 @@ import scala.util.Try
 import gwen.Predefs.Kestrel
 import gwen.dsl.Failed
 import gwen.eval.{EnvContext, GwenOptions, ScopedDataStack}
-import gwen.web.errors.{locatorBindingError, WaitTimeoutException}
-import gwen.errors.{unboundAttributeError, UnboundAttributeException}
+import gwen.web.errors.{WaitTimeoutException, locatorBindingError}
+import gwen.errors.{UnboundAttributeException, unboundAttributeError}
+import org.openqa.selenium.WebElement
 
 import scala.io.Source
 
@@ -94,12 +95,18 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     * @param name the name of the bound attribute to find
     */
   def getAttribute(name: String): String = {
-    Try(super.getBoundReferenceValue(name)) match {
-      case Success(value) => value
-      case Failure(e) => e match {
-        case _: UnboundAttributeException =>
-          Try(getLocatorBinding(name).locators.map(_.expression).mkString(",")).getOrElse(unboundAttributeError(name))
-        case _ => throw e
+    webContext.getCachedWebElement(s"$name/javascript/param/webElement") map { webElement =>
+      val javascript = interpolate(scopes.get(s"$name/javascript"))(getBoundReferenceValue)
+      val jsFunction = s"return (function(element) { return $javascript })(arguments[0])"
+      Option(webContext.executeJS(jsFunction, webElement)).map(_.toString).getOrElse("")
+    } getOrElse {
+      Try(super.getBoundReferenceValue(name)) match {
+        case Success(value) => value
+        case Failure(e) => e match {
+          case _: UnboundAttributeException =>
+            Try(getLocatorBinding(name).locators.map(_.expression).mkString(",")).getOrElse(unboundAttributeError(name))
+          case _ => throw e
+        }
       }
     }
   }

@@ -266,6 +266,24 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
           env.compare(element + Option(selection).getOrElse(""), expected, actual, operator, Option(negation).isDefined)
         }
 
+      case r"""I capture (.+?)$attribute (?:of|on|in) (.+?)$element by javascript "(.+?)"$$$expression""" => step.orDocString(expression) tap { expression =>
+        val elementBinding = env.getLocatorBinding(element)
+        env.activeScope.set(s"$attribute/javascript", expression)
+        try {
+          env.perform {
+            env.featureScope.pushObject(s"$attribute/javascript/param/webElement", webContext.locate(elementBinding))
+          }
+          val value = env.getBoundReferenceValue(attribute)
+          env.featureScope.set(attribute, value tap { content =>
+            env.addAttachment(attribute, "txt", content)
+          })
+        } finally {
+          env.perform {
+            env.featureScope.popObject(s"$attribute/javascript/param/webElement")
+          }
+        }
+      }
+
       case r"""I capture the current URL""" =>
         webContext.captureCurrentUrl(None)
 
