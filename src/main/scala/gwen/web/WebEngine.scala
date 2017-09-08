@@ -143,11 +143,11 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
           Try(webContext.locate(elementBinding)).isSuccess
         }
 
-      case r"""I wait ([0-9]+?)$duration second(?:s?) when (.+?)$element is (clicked|submitted|checked|ticked|unchecked|unticked|selected|typed|entered|tabbed|cleared)$$$event""" =>
+      case r"""I wait ([0-9]+?)$duration second(?:s?) when (.+?)$element is (clicked|submitted|checked|ticked|unchecked|unticked|selected|typed|entered|tabbed|cleared|moved to)$$$event""" =>
         env.getLocatorBinding(element)
         env.scopes.set(s"$element/${WebEvents.EventToAction(event)}/wait", duration)
 
-        case r"""I wait until (.+?)$condition when (.+?)$element is (clicked|submitted|checked|ticked|unchecked|unticked|selected|typed|entered|tabbed|cleared)$$$event""" =>
+        case r"""I wait until (.+?)$condition when (.+?)$element is (clicked|submitted|checked|ticked|unchecked|unticked|selected|typed|entered|tabbed|cleared|moved to)$$$event""" =>
         env.scopes.get(s"$condition/javascript")
         env.getLocatorBinding(element)
         env.scopes.set(s"$element/${WebEvents.EventToAction(event)}/condition", condition)
@@ -229,7 +229,7 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
         }
       }
 
-      case r"""(.+?)$element can be (clicked|right clicked|submitted|checked|ticked|unchecked|unticked|cleared)$event by javascript "(.+?)"$$$expression""" => step.orDocString(expression) tap { expression =>
+      case r"""(.+?)$element can be (clicked|right clicked|submitted|checked|ticked|unchecked|unticked|cleared|moved to)$event by javascript "(.+?)"$$$expression""" => step.orDocString(expression) tap { expression =>
         env.getLocatorBinding(element)
         env.scopes.set(s"$element/action/${WebEvents.EventToAction(event)}/javascript", expression)
       }

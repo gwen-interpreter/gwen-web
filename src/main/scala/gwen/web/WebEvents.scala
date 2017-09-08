@@ -28,6 +28,7 @@ object WebEvents {
     "typed"         -> "type",
     "entered"       -> "enter",
     "tabbed"        -> "tab",
-    "cleared"       -> "clear"
+    "cleared"       -> "clear",
+    "moved to"      -> "move to"
   )
 }
