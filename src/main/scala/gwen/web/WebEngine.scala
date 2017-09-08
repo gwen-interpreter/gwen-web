@@ -331,10 +331,10 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
         val elementBinding = env.getLocatorBinding(element)
         webContext.selectByVisibleText(elementBinding, value)
 
-      case r"""I (click|right click|check|tick|uncheck|untick)$action (.+?)$element of (.+?)$$$context""" =>
+      case r"""I (click|right click|check|tick|uncheck|untick|move to)$action (.+?)$element of (.+?)$$$context""" =>
         webContext.performActionInContext(action, element, context)
 
-      case r"""I (click|right click|submit|check|tick|uncheck|untick)$action (.+?)$$$element""" =>
+      case r"""I (click|right click|submit|check|tick|uncheck|untick|move to)$action (.+?)$$$element""" =>
         val elementBinding = env.getLocatorBinding(element)
         webContext.performAction(action, elementBinding)
 

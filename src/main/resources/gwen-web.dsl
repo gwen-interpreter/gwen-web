@@ -233,6 +233,7 @@ I select <reference> in <element>
 I select <reference> in <element> by value
 I click <element>
 I right click <element>
+I move to <element>
 I check <element>
 I tick <element>
 I uncheck <element>
