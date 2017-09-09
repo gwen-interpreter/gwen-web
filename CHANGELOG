@@ -11,6 +11,7 @@ Sep 9, 2017
   - Add DSL for eager capture by javascript
     - I capture <attribute> by javascript "<expression>"
 - Handle case where javascript returns null (by returning null instead of dry run marker value)
+- Implement #41: Add double click action support
 
 2.11.1
 ======

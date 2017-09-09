@@ -237,6 +237,7 @@ I select <reference> in <element>
 I select <reference> in <element> by value
 I click <element>
 I right click <element>
+I double click <element>
 I move to <element>
 I check <element>
 I tick <element>
@@ -245,17 +246,20 @@ I untick <element>
 I submit <element>
 I <modifiers> click <element>
 I <modifiers> right click <element>
+I <modifiers> double click <element>
 I submit <element>
 I click <element> of <context>
 I right click <element> of <context>
+I double click <element> of <context>
 I check <element> of <context>
 I tick <element> of <context>
 I uncheck <element> of <context>
 I untick <element> of <context>
-I <modifiers> click <element>
-I <modifiers> right click <element>
 I send "<keys>" to <element>
 I wait 1 second when <element> is clicked
+I wait 1 second when <element> is right clicked
+I wait 1 second when <element> is double clicked
+I wait 1 second when <element> is moved to
 I wait 1 second when <element> is submitted
 I wait 1 second when <element> is checked
 I wait 1 second when <element> is ticked
@@ -267,6 +271,9 @@ I wait 1 second when <element> is entered
 I wait 1 second when <element> is tabbed
 I wait 1 second when <element> is cleared
 I wait <duration> seconds when <element> is clicked
+I wait <duration> seconds when <element> is right clicked
+I wait <duration> seconds when <element> is double clicked
+I wait <duration> seconds when <element> is moved to
 I wait <duration> seconds when <element> is submitted
 I wait <duration> seconds when <element> is checked
 I wait <duration> seconds when <element> is ticked
@@ -278,6 +285,9 @@ I wait <duration> seconds when <element> is entered
 I wait <duration> seconds when <element> is tabbed
 I wait <duration> seconds when <element> is cleared
 I wait until <condition> when <element> is clicked
+I wait until <condition> when <element> is right clicked
+I wait until <condition> when <element> is double clicked
+I wait until <condition> when <element> is moved to
 I wait until <condition> when <element> is submitted
 I wait until <condition> when <element> is checked
 I wait until <condition> when <element> is ticked
@@ -346,6 +356,9 @@ I close the child window
 I switch to the parent window
 I capture the current screenshot
 <element> can be clicked by javascript "<javascript>"
+<element> can be right clicked by javascript "<javascript>"
+<element> can be double clicked by javascript "<javascript>"
+<element> can be moved to by javascript "<javascript>"
 <element> can be submitted by javascript "<javascript>"
 <element> can be checked by javascript "<javascript>"
 <element> can be ticked by javascript "<javascript>"

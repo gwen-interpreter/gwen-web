@@ -143,11 +143,11 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
           Try(webContext.locate(elementBinding)).isSuccess
         }
 
-      case r"""I wait ([0-9]+?)$duration second(?:s?) when (.+?)$element is (clicked|submitted|checked|ticked|unchecked|unticked|selected|typed|entered|tabbed|cleared|moved to)$$$event""" =>
+      case r"""I wait ([0-9]+?)$duration second(?:s?) when (.+?)$element is (clicked|right clicked|double clicked|submitted|checked|ticked|unchecked|unticked|selected|typed|entered|tabbed|cleared|moved to)$$$event""" =>
         env.getLocatorBinding(element)
         env.scopes.set(s"$element/${WebEvents.EventToAction(event)}/wait", duration)
 
-        case r"""I wait until (.+?)$condition when (.+?)$element is (clicked|submitted|checked|ticked|unchecked|unticked|selected|typed|entered|tabbed|cleared|moved to)$$$event""" =>
+        case r"""I wait until (.+?)$condition when (.+?)$element is (clicked|right clicked|double clicked||submitted|checked|ticked|unchecked|unticked|selected|typed|entered|tabbed|cleared|moved to)$$$event""" =>
         env.scopes.get(s"$condition/javascript")
         env.getLocatorBinding(element)
         env.scopes.set(s"$element/${WebEvents.EventToAction(event)}/condition", condition)
@@ -229,7 +229,7 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
         }
       }
 
-      case r"""(.+?)$element can be (clicked|right clicked|submitted|checked|ticked|unchecked|unticked|cleared|moved to)$event by javascript "(.+?)"$$$expression""" => step.orDocString(expression) tap { expression =>
+      case r"""(.+?)$element can be (clicked|right clicked|double clicked|submitted|checked|ticked|unchecked|unticked|cleared|moved to)$event by javascript "(.+?)"$$$expression""" => step.orDocString(expression) tap { expression =>
         env.getLocatorBinding(element)
         env.scopes.set(s"$element/action/${WebEvents.EventToAction(event)}/javascript", expression)
       }
@@ -349,14 +349,14 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
         val elementBinding = env.getLocatorBinding(element)
         webContext.selectByVisibleText(elementBinding, value)
 
-      case r"""I (click|right click|check|tick|uncheck|untick|move to)$action (.+?)$element of (.+?)$$$context""" =>
+      case r"""I (click|right click|double click|check|tick|uncheck|untick|move to)$action (.+?)$element of (.+?)$$$context""" =>
         webContext.performActionInContext(action, element, context)
 
-      case r"""I (click|right click|submit|check|tick|uncheck|untick|move to)$action (.+?)$$$element""" =>
+      case r"""I (click|right click|double click|submit|check|tick|uncheck|untick|move to)$action (.+?)$$$element""" =>
         val elementBinding = env.getLocatorBinding(element)
         webContext.performAction(action, elementBinding)
 
-      case r"""I (.+?)$modifiers (click|right click)$clickAction (.+?)$$$element""" =>
+      case r"""I (.+?)$modifiers (click|right click|double click)$clickAction (.+?)$$$element""" =>
         val elementBinding = env.getLocatorBinding(element)
         webContext.holdAndClick(modifiers.split("\\+"), clickAction, elementBinding)
 

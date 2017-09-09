@@ -132,15 +132,7 @@ class WebContext(env: WebEnvContext) extends WebElementLocator with LazyLogging 
       try {
         val webElement = locate(elementBinding)
         action.foreach { actionString =>
-          logger.debug(s"${actionString match {
-            case "click" => "Clicking"
-            case "right click" => "Right clicking"
-            case "right click and send keys" => "Right clicking and sending keys"
-            case "submit" => "Submitting"
-            case "check" => "Checking"
-            case "uncheck" => "Unchecking"
-            case "send keys" => "Sending keys"
-           }} ${elementBinding.element}")
+          logger.debug(s"$actionString ${elementBinding.element}")
         }
         Option {
           try {
@@ -395,6 +387,8 @@ class WebContext(env: WebEnvContext) extends WebElementLocator with LazyLogging 
               webElement.click()
             case "right click" =>
               new Actions(driver).contextClick(webElement).perform()
+            case "double click" =>
+              new Actions(driver).doubleClick(webElement).perform()
             case "move to" =>
               new Actions(driver).moveToElement(webElement).perform()
             case "submit" => webElement.submit()
@@ -420,6 +414,7 @@ class WebContext(env: WebEnvContext) extends WebElementLocator with LazyLogging 
       actions = clickAction match {
         case "click" => actions.click(webElement)
         case "right click" => actions.contextClick(webElement)
+        case "double click" => actions.doubleClick(webElement)
       }
       keys.reverse.foreach { key => actions = actions.keyUp(key) }
       actions.build().perform()
@@ -488,12 +483,14 @@ class WebContext(env: WebEnvContext) extends WebElementLocator with LazyLogging 
         action match {
           case "click" => perform(webElement, contextElement) { _.click() }
           case "right click" => perform(webElement, contextElement) { _.contextClick() }
+          case "double click" => perform(webElement, contextElement) { _.doubleClick() }
           case "check" | "tick" =>
             if (!webElement.isSelected) perform(webElement, contextElement) { _.sendKeys(Keys.SPACE) }
             if (!webElement.isSelected) perform(webElement, contextElement) { _.click() }
           case "uncheck" | "untick" =>
             if (webElement.isSelected) perform(webElement, contextElement) { _.sendKeys(Keys.SPACE) }
             if (webElement.isSelected) perform(webElement, contextElement) { _.click() }
+          case "move to" => perform(webElement, contextElement) { action => action }
         }
         env.bindAndWait(elementBinding.element, action, "true")
       }
