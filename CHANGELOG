@@ -1,6 +1,6 @@
 2.12.0
 ======
-Sep 8, 2017
+Sep 9, 2017
 - Implement #39: Add DSL for mousing over elements
   - I move to <element>
 - Add DSL for eager capture of a value by calling a javascript function on an element
@@ -10,6 +10,7 @@ Sep 8, 2017
   - Allow attributes in scoped data bindings to be overridden with blanks.
   - Add DSL for eager capture by javascript
     - I capture <attribute> by javascript "<expression>"
+- Handle case where javascript returns null (by returning null instead of dry run marker value)
 
 2.11.1
 ======

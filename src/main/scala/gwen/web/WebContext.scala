@@ -204,7 +204,10 @@ class WebContext(env: WebEnvContext) extends WebElementLocator with LazyLogging 
           Thread.sleep(WebSettings.`gwen.web.throttle.msecs`)
         }
       }
-    } getOrElse s"$$[javascript:$javascript]"
+    } getOrElse {
+      if (env.isDryRun) s"$$[javascript:$javascript]"
+      else null  //js returned null
+    }
 
   /**
     * Waits for a given condition to be true. Errors on time out
