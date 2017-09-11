@@ -368,6 +368,7 @@ I capture the current screenshot
 <reference> will be defined by sql "<selectStmt>" in the <dbName> database
 <reference> is defined in the <dbName> database by sql "<selectStmt>"
 <reference> will be defined in the <dbName> database by sql "<selectStmt>"
+I update the <dbName> database by sql "<updateSmt>"
 I resize the window to width <w> and height <h>
 I maximize the window
 I maximise the window

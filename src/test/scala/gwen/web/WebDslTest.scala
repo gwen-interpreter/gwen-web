@@ -32,24 +32,28 @@ class WebDslTest extends FlatSpec with Matchers {
     env.scopes.set("<elements>/locator/css selector", "expression")
     env.scopes.set("<source>", "source")
     env.featureScope.pushObject("table", new FlatTable(List(List("1", "2")), List("a", "b")))
-        
+
     val interpreter = new WebInterpreter
     withSetting("<name>", "name") {
-      env.dsl map { dsl =>
-        dsl
-          .replace("<position>", "1")
-          .replace("<duration>", "2")
-          .replace("<delayPeriod>", "20")
-          .replace("<timeoutPeriod>", "3000000")
-          .replace("<w>", "375")
-          .replace("<h>", "667")
-          .replace("<modifiers>", "Command+Shift")
-          .replace("<keys>", "Command,Shift,T")
-      } foreach { dsl => 
-        StepKeyword.values foreach { keyword =>
-          interpreter.evaluateStep(Step(keyword, dsl.replaceAll("<step>", """a is "b"""")), env).evalStatus match {
-            case Failed(_, error) => fail(error)
-            case evalStatus => evalStatus.status should be (StatusKeyword.Passed)
+      withSetting("gwen.db.<dbName>.driver", "jdbcDriver") {
+        withSetting("gwen.db.<dbName>.url", "jdbcUrl") {
+          env.dsl map { dsl =>
+            dsl
+              .replace("<position>", "1")
+              .replace("<duration>", "2")
+              .replace("<delayPeriod>", "20")
+              .replace("<timeoutPeriod>", "3000000")
+              .replace("<w>", "375")
+              .replace("<h>", "667")
+              .replace("<modifiers>", "Command+Shift")
+              .replace("<keys>", "Command,Shift,T")
+          } foreach { dsl =>
+            StepKeyword.values foreach { keyword =>
+              interpreter.evaluateStep(Step(keyword, dsl.replaceAll("<step>", """a is "b"""")), env).evalStatus match {
+                case Failed(_, error) => fail(error)
+                case evalStatus => evalStatus.status should be (StatusKeyword.Passed)
+              }
+            }
           }
         }
       }

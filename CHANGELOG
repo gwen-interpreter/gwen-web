@@ -19,6 +19,10 @@ Sep 12, 2017
       - Calls <step> for each string item in <source> text delimited by some value
     - <step> if <condition>
       - Calls <step> if a javascript predicate <condition> returns true (skips it otherwise)
+    - Issue gwen-interpreter/gwen#34 - SQL insert, update, and delete support
+      - I update the <dbName> database by sql "<updateSmt>"
+        - Runs an insert, update, or delete statement on a database
+        - Number of rows affected accessible as attribute named '<dbName> rows affected'
   - Make current record of data feed available through 'data record number' attribute
   - Make current record of for-each iteration available through '<element name> number' attribute
   - Make current record of repeat-until iteration available through '<element name> iteration' attribute
