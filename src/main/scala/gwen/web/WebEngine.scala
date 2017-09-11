@@ -73,7 +73,7 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
             foreach(() => webContext.locateAll(binding), element, step, doStep, env)
           }
 
-        case r"""(.+?)$doStep for each (.+?)$element in (.+?)$$$iteration""" =>
+        case r"""(.+?)$doStep for each (.+?)$element in (.+?)$$$iteration""" if element != "line item" && element != "value item" =>
           val binding = env.getLocatorBinding(iteration)
           env.evaluate(foreach(() => List("$[dryRun:webElements]"), element, step, doStep, env)) {
             foreach(() => webContext.locateAll(binding), element, step, doStep, env)
@@ -423,6 +423,7 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
       try {
         env.webContext.waitUntil(s"repeating $operation $condition", timeout.toSeconds) {
           iteration = iteration + 1
+          env.featureScope.set("iteration number", iteration.toString)
           operation match {
             case "until" =>
               logger.info(s"repeat-until $condition: iteration $iteration")
@@ -459,15 +460,17 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
       } catch {
         case e: Throwable =>
           evaluatedStep = Step(step, Failed(System.nanoTime - start, new StepFailure(step, e)), env.attachments)
+      } finally {
+        env.featureScope.set("iteration number", null)
       }
     } getOrElse {
       operation match {
         case "until" =>
-          this.evaluateStep(Step(step.keyword, doStep), env)
+          this.evaluateStep(Step(step.pos, step.keyword, doStep), env)
           env.scopes.get(s"$condition/javascript")
         case _ =>
           env.scopes.get(s"$condition/javascript")
-          this.evaluateStep(Step(step.keyword, doStep), env)
+          this.evaluateStep(Step(step.pos, step.keyword, doStep), env)
       }
     }
     evaluatedStep

@@ -30,6 +30,7 @@ class WebDslTest extends FlatSpec with Matchers {
     env.scopes.set("<filepath>/file", "file.txt")
     env.scopes.set("<elements>/locator", "css selector")
     env.scopes.set("<elements>/locator/css selector", "expression")
+    env.scopes.set("<source>", "source")
     env.featureScope.pushObject("table", new FlatTable(List(List("1", "2")), List("a", "b")))
         
     val interpreter = new WebInterpreter

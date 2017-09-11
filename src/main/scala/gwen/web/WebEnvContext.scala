@@ -161,7 +161,8 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
             else None
           case None => if (optional) None else locatorBindingError(element, s"locator binding not found: $locatorBinding")
         }
-      case _ => Some(LocatorBinding(element, "cache", element, None))
+      case Some(x) if x.isInstanceOf[WebElement] => Some(LocatorBinding(element, "cache", element, None))
+      case _ => None
     }
   } tap { binding =>
       binding foreach { b => logger.debug(s"getLocatorBinding($element,$optional)='$b'") }
