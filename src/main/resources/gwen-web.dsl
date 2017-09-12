@@ -413,6 +413,4 @@ I maximise the window
 <source> at xpath "<path>" should not start with "<expression>"
 <source> at xpath "<path>" should not end with "<expression>"
 <source> at xpath "<path>" should not match regex "<expression>"
-<step> for each line item in file "<filepath>"
-<step> for each value item in <source> delimited by "<delimiter>"
 <step> if <condition>
