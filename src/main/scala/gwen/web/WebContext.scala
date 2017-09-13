@@ -17,6 +17,7 @@ package gwen.web
 
 import com.typesafe.scalalogging.LazyLogging
 import gwen.Predefs.Kestrel
+import gwen.errors.javaScriptError
 import gwen.web.errors.{LocatorBindingException, unsupportedModifierKeyError, waitTimeoutError}
 import org.apache.commons.io.FileUtils
 import org.openqa.selenium._
@@ -187,14 +188,18 @@ class WebContext(env: WebEnvContext) extends WebElementLocator with LazyLogging 
     */
   def executeJS(javascript: String, params: Any*)(implicit takeScreenShot: Boolean = false): Any =
     withWebDriver { webDriver =>
-      webDriver.asInstanceOf[JavascriptExecutor].executeScript(javascript, params.map(_.asInstanceOf[AnyRef]) : _*) tap { result =>
-        if (takeScreenShot && WebSettings.`gwen.web.capture.screenshots`) {
-          captureScreenshot(false)
+      try {
+        webDriver.asInstanceOf[JavascriptExecutor].executeScript(javascript, params.map(_.asInstanceOf[AnyRef]) : _*) tap { result =>
+          if (takeScreenShot && WebSettings.`gwen.web.capture.screenshots`) {
+            captureScreenshot(false)
+          }
+          logger.debug(s"Evaluated javascript: $javascript, result='$result'")
+          if (result.isInstanceOf[Boolean] && result.asInstanceOf[Boolean]) {
+            Thread.sleep(WebSettings.`gwen.web.throttle.msecs`)
+          }
         }
-        logger.debug(s"Evaluated javascript: $javascript, result='$result'")
-        if (result.isInstanceOf[Boolean] && result.asInstanceOf[Boolean]) {
-          Thread.sleep(WebSettings.`gwen.web.throttle.msecs`)
-        }
+      } catch {
+        case e: Throwable => javaScriptError(javascript, e)
       }
     } getOrElse {
       if (env.isDryRun) s"$$[javascript:$javascript]"

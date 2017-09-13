@@ -23,6 +23,9 @@ Sep 12, 2017
   - Make current record of for-each iteration available through '<element name> number' attribute
   - Make current record of repeat-until iteration available through '<element name> iteration' attribute
   - Fix error reporting for priority steps
+  - Better error reporting for
+    - nested settings properties that fail to resolve at load time
+    - javascript errors
 
 2.11.1
 ======
