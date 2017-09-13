@@ -35,6 +35,7 @@ import gwen.eval.GwenOptions
 import gwen.web.errors.{LocatorBindingException, WaitTimeoutException}
 import org.openqa.selenium.WebDriver.{Options, TargetLocator, Timeouts}
 import org.openqa.selenium.NoSuchElementException
+import org.mockito.Matchers.{anyVararg, same}
 
 class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar {
 
@@ -118,11 +119,10 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar {
     val lookup = "document.getElementById('username')"
     val mockWebDriver: FirefoxDriver = mock[FirefoxDriver]
     val locator = newLocator(None, mockWebDriver)
-    
-    val timeoutError = new TimeoutException()
+
     when(mockWebDriver.manage()).thenReturn(mockWebDriverOptions)
     when(mockWebDriverOptions.timeouts()).thenReturn(mockWebDriverTimeouts)
-    doThrow(timeoutError).when(mockWebDriver).executeScript(s"return $lookup")
+    doReturn(null).when(mockWebDriver).executeScript(same(s"return $lookup"), anyVararg())
     
     intercept[WaitTimeoutException] {
       locator.locate(LocatorBinding("username", locatorType, lookup, None))
@@ -270,10 +270,9 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar {
     val mockWebDriver: FirefoxDriver = mock[FirefoxDriver]
     val locator = newLocator(None, mockWebDriver)
 
-    val timeoutError = new TimeoutException()
     when(mockWebDriver.manage()).thenReturn(mockWebDriverOptions)
     when(mockWebDriverOptions.timeouts()).thenReturn(mockWebDriverTimeouts)
-    doThrow(timeoutError).when(mockWebDriver).executeScript(s"return $lookup")
+    doReturn(null).when(mockWebDriver).executeScript(same(s"return $lookup"), anyVararg())
 
     intercept[WaitTimeoutException] {
       locator.locate(LocatorBinding("username", locatorType, lookup, None))
