@@ -26,6 +26,7 @@ Sep 12, 2017
   - Better error reporting for
     - nested settings properties that fail to resolve at load time
     - javascript errors
+  - Implement gwen-interpreter/gwen#36: access feature file name and scenario name
 
 2.11.1
 ======
