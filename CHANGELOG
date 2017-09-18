@@ -1,6 +1,6 @@
 2.12.0
 ======
-Sep 18, 2017
+Sep 19, 2017
 - Implement #39: Add DSL for mousing over elements
   - I move to <element>
 - Implement #41: Add double click action support
@@ -29,6 +29,7 @@ Sep 18, 2017
   - Implement gwen-interpreter/gwen#36: access feature file name and scenario name
   - Allow override when using the following DSL to set a property value:
     - my <name> <property|setting> <is|will be> "<value>"
+  - Add interpolation for filepath in @Examples tag
 
 2.11.1
 ======
