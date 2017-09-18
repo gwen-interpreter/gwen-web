@@ -8,7 +8,7 @@ Sep 19, 2017
   - I capture <attribute> <of|on|in> <element> by javascript "<expression>"
     - where <element> can be referenced as 'element' in javascript <expression> (e.g: element.value)
 - Handle case where javascript returns null (by returning null instead of script expression)
-- Update Gwen from v2.9.2 to v[2.9.3](https://github.com/gwen-interpreter/gwen/releases/tag/v2.9.3)
+- Update Gwen from v2.9.2 to v[2.10.0](https://github.com/gwen-interpreter/gwen/releases/tag/v2.10.0)
   - Allow attributes in scoped data bindings to be overridden with blanks.
   - Add new DSLs
     - I capture <attribute> by javascript "<expression>"
