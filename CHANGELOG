@@ -1,3 +1,9 @@
+2.12.1
+======
+Sep 21, 2017
+- Update Gwen from v2.10.0 to v[2.10.1](https://github.com/gwen-interpreter/gwen/releases/tag/v2.10.1)
+  - Improved error handling for @Examples tag
+
 2.12.0
 ======
 Sep 19, 2017

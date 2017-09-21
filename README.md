@@ -3,10 +3,11 @@
 Gwen-web
 ========
 
-Gwen-Web is a web automation engine that runs inside the [Gwen](https://github.com/gwen-interpreter/gwen) interpreter.
-It enables teams to automate front end web tests and online robotics with 
-[Gherkin](https://github.com/cucumber/cucumber/wiki/Gherkin) feature specs.
-A [web DSL](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL) interacts with [Selenium WebDriver](http://www.seleniumhq.org/projects/webdriver) under the covers for you so you don't have to do all the programming work. It does however, allow you to [interpolate strings](https://github.com/gwen-interpreter/gwen/wiki/String-Interpolation) and use JavaScript bindings for flexibility and tailoring where necessary.
+Gwen-Web enables teams to quickly automate front end web tests and robotic online processes with plain
+[Gherkin](https://github.com/cucumber/cucumber/wiki/Gherkin) feature specs instead of code.
+A [web DSL](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL) interacts with
+[Selenium](http://www.seleniumhq.org/projects/webdriver) under the covers for you so you don't have to do
+any of that programming or technical development work.
 
 ### Current Status
 
@@ -17,7 +18,7 @@ A [web DSL](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL) int
 
 Why Gwen-web?
 -------------
-So you can do web automation with Gherkin features like this..
+So you can drive automation with Gherkin features like this..
 ```gherkin
    Feature: Google search
 
@@ -27,7 +28,7 @@ So you can do web automation with Gherkin features like this..
        Then the first result should open a Gwen page
 ```
 
-..by writing [Meta features](https://github.com/gwen-interpreter/gwen/wiki/Meta-Features) like this..
+..by writing [Gwen Meta features](https://github.com/gwen-interpreter/gwen/wiki/Meta-Features) like this..
 ```gherkin
    Feature: Google search meta
 
@@ -49,7 +50,7 @@ So you can do web automation with Gherkin features like this..
        When I click the first match
        Then the current URL should start with "https://github.com/gwen-interpreter/gwen"
 ```
-..and let [Page Objects Begone](https://gweninterpreter.wordpress.com/2016/03/08/nopageobjects-theres-no-long-way-to-go-were-already-there/)!
+..with [no Page Objects](https://gweninterpreter.wordpress.com/2016/03/08/nopageobjects-theres-no-long-way-to-go-were-already-there/) or Selenium coding required!
 
 Links
 -----
@@ -95,10 +96,10 @@ Mail Group
 ----------
 
 All announcements and discussions are posted and broadcast to all members in
-the following mail group. You are welcome to visit and subscribe to receive
+the following mail group. You are welcome to visit and join to receive
 notifications or get involved.
 
-- [Our mail group](https://groups.google.com/d/forum/gwen-interpreter)
+- [Gwen mail group](https://groups.google.com/d/forum/gwen-interpreter)
 
 Credits
 -------
