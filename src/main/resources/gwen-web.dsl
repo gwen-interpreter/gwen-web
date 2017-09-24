@@ -414,3 +414,4 @@ I maximise the window
 <source> at xpath "<path>" should not end with "<expression>"
 <source> at xpath "<path>" should not match regex "<expression>"
 <step> if <condition>
+<step> for each <entry> in <source> delimited by "<delimiter>"

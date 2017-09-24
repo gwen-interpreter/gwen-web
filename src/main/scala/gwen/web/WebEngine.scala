@@ -73,7 +73,7 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
             foreach(() => webContext.locateAll(binding), element, step, doStep, env)
           }
 
-        case r"""(.+?)$doStep for each (.+?)$element in (.+?)$$$iteration""" =>
+        case r"""(.+?)$doStep for each (.+?)$element in (.+?)$$$iteration""" if !iteration.contains("delimited by") =>
           val binding = env.getLocatorBinding(iteration)
           env.evaluate(foreach(() => List("$[dryRun:webElements]"), element, step, doStep, env)) {
             foreach(() => webContext.locateAll(binding), element, step, doStep, env)

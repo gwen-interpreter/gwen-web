@@ -1,3 +1,9 @@
+2.13.0
+======
+Sep 23, 2017
+- <step> for each <entry> in <source> delimited by "<delimiter>"
+   - Calls <step> for each string entry in <source> text delimited by some value
+
 2.12.1
 ======
 Sep 21, 2017
