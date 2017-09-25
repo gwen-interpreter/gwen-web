@@ -47,6 +47,7 @@ class WebDslTest extends FlatSpec with Matchers {
               .replace("<h>", "667")
               .replace("<modifiers>", "Command+Shift")
               .replace("<keys>", "Command,Shift,T")
+              .replace("for each <element>", "for each <entry>")
           } foreach { dsl =>
             StepKeyword.values foreach { keyword =>
               interpreter.evaluateStep(Step(keyword, dsl.replaceAll("<step>", """a is "b"""")), env).evalStatus match {
