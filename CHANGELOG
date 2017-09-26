@@ -1,8 +1,10 @@
 2.13.0
 ======
-Sep 23, 2017
-- <step> for each <entry> in <source> delimited by "<delimiter>"
-   - Calls <step> for each string entry in <source> text delimited by some value
+Sep 26, 2017
+- Update Gwen from v2.10.1 to v[2.11.0](https://github.com/gwen-interpreter/gwen/releases/tag/v2.11.0)
+  - <step> for each <entry> in <source> delimited by "<delimiter>"
+     - Calls <step> for each string entry in <source> text delimited by some value
+  - Refactored attachments handling
 
 2.12.1
 ======

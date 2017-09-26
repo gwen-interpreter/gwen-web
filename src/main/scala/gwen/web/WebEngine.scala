@@ -455,7 +455,7 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
         }
       } catch {
         case e: Throwable =>
-          evaluatedStep = Step(step, Failed(System.nanoTime - start, new StepFailure(step, e)), env.attachments)
+          evaluatedStep = Step(step, Failed(System.nanoTime - start, new StepFailure(step, e)))
       } finally {
         env.featureScope.set("iteration number", null)
       }
