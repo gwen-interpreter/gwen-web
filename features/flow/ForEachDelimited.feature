@@ -21,5 +21,22 @@
        Then x is "${value}" for each value in values delimited by ","
         And value should be absent
 
+  @StepDef
+  @DataTable(header="top")
+  Scenario: I process the following user roles
+      Given processed roles is ""
+      Given I process user roles for each data record
+
+  @StepDef
+  Scenario: I process user roles
+      Given processed roles is "${processed roles}${role}" for each role in data[Roles] delimited by ","
+
+  Scenario: Process each delimited value for data record in table
+      Given I process the following user roles
+            | User | Roles       |
+            | abc  | role1,role2 |
+            | cbd  | role3,role4 |
+       Then processed roles should be "role1role2role3role4"
+
 
 
