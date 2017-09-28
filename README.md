@@ -3,12 +3,12 @@
 Gwen-web
 ========
 
-Gwen-Web enables teams to quickly automate front end web tests and robotic online processes with plain
-[Gherkin](https://github.com/cucumber/cucumber/wiki/Gherkin) feature specs instead of code.
+Gwen-Web enables teams to quickly automate front end web tests and robotic online processes with
+[Gherkin](https://github.com/cucumber/cucumber/wiki/Gherkin) feature specifications.
 A [web DSL](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL) interacts with
 [Selenium](http://www.seleniumhq.org/projects/webdriver) under the covers for you so you don't have to do
 any of that programming or technical development work. It does however allow you to inject JavaScript in places
-where dynamically locating web elements or running functions on pages are necessary.
+where dynamically locating web elements or running functions on pages may be necessary.
 
 ### Current Status
 
