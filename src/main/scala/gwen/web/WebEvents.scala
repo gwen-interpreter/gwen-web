@@ -26,6 +26,7 @@ object WebEvents {
     "unchecked"      -> "uncheck",
     "unticked"       -> "untick",
     "selected"       -> "select",
+    "deselected"     -> "deselect",
     "typed"          -> "type",
     "entered"        -> "enter",
     "tabbed"         -> "tab",

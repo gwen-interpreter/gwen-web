@@ -235,6 +235,14 @@ I select "<text>" in <element>
 I select "<text>" in <element> by value
 I select <reference> in <element>
 I select <reference> in <element> by value
+I deselect the <position>st option in <element>
+I deselect the <position>nd option in <element>
+I deselect the <position>rd option in <element>
+I deselect the <position>th option in <element>
+I deselect "<text>" in <element>
+I deselect "<text>" in <element> by value
+I deselect <reference> in <element>
+I deselect <reference> in <element> by value
 I click <element>
 I right click <element>
 I double click <element>
@@ -266,6 +274,7 @@ I wait 1 second when <element> is ticked
 I wait 1 second when <element> is unchecked
 I wait 1 second when <element> is unticked
 I wait 1 second when <element> is selected
+I wait 1 second when <element> is deselected
 I wait 1 second when <element> is typed
 I wait 1 second when <element> is entered
 I wait 1 second when <element> is tabbed
@@ -280,6 +289,7 @@ I wait <duration> seconds when <element> is ticked
 I wait <duration> seconds when <element> is unchecked
 I wait <duration> seconds when <element> is unticked
 I wait <duration> seconds when <element> is selected
+I wait <duration> seconds when <element> is deselected
 I wait <duration> seconds when <element> is typed
 I wait <duration> seconds when <element> is entered
 I wait <duration> seconds when <element> is tabbed
@@ -294,6 +304,7 @@ I wait until <condition> when <element> is ticked
 I wait until <condition> when <element> is unchecked
 I wait until <condition> when <element> is unticked
 I wait until <condition> when <element> is selected
+I wait until <condition> when <element> is deselected
 I wait until <condition> when <element> is typed
 I wait until <condition> when <element> is entered
 I wait until <condition> when <element> is tabbed

@@ -368,14 +368,57 @@ class WebContext(env: WebEnvContext) extends WebElementLocator with LazyLogging 
     * Selects a value in a dropdown (select control) by index.
     *
     * @param elementBinding the web element locator binding
-    * @param index the index to select (first index is 1)
+    * @param index the index to select (first index is 0)
     */
   def selectByIndex(elementBinding: LocatorBinding, index: Int) {
     withWebElement(elementBinding) { webElement =>
       logger.debug(s"Selecting option in ${elementBinding.element} by index: $index")
       val select = new Select(webElement)
       select.selectByIndex(index)
-      env.bindAndWait(elementBinding.element, "select", select.getFirstSelectedOption.getText)
+      env.bindAndWait(elementBinding.element, "select", select.getOptions.get(index).getText)
+    }
+  }
+
+  /**
+    * Deselects a value in a dropdown (select control) by visible text.
+    *
+    * @param elementBinding the web element locator binding
+    * @param value the value to select
+    */
+  def deselectByVisibleText(elementBinding: LocatorBinding, value: String) {
+    withWebElement(elementBinding) { webElement =>
+      logger.debug(s"Deselecting '$value' in ${elementBinding.element} by text")
+      new Select(webElement).deselectByVisibleText(value)
+      env.bindAndWait(elementBinding.element, "deselect", value)
+    }
+  }
+
+  /**
+    * Deselects a value in a dropdown (select control) by value.
+    *
+    * @param elementBinding the web element locator binding
+    * @param value the value to select
+    */
+  def deselectByValue(elementBinding: LocatorBinding, value: String) {
+    withWebElement(elementBinding) { webElement =>
+      logger.debug(s"Deselecting '$value' in ${elementBinding.element} by value")
+      new Select(webElement).deselectByValue(value)
+      env.bindAndWait(elementBinding.element, "deselect", value)
+    }
+  }
+
+  /**
+    * Deselects a value in a dropdown (select control) by index.
+    *
+    * @param elementBinding the web element locator binding
+    * @param index the index to select (first index is 0)
+    */
+  def deselectByIndex(elementBinding: LocatorBinding, index: Int) {
+    withWebElement(elementBinding) { webElement =>
+      logger.debug(s"Deselecting option in ${elementBinding.element} by index: $index")
+      val select = new Select(webElement)
+      select.deselectByIndex(index)
+      env.bindAndWait(elementBinding.element, "deselect", select.getOptions.get(index).getText)
     }
   }
 

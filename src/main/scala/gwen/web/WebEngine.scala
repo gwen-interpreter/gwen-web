@@ -143,11 +143,11 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
           Try(webContext.locate(elementBinding)).isSuccess
         }
 
-      case r"""I wait ([0-9]+?)$duration second(?:s?) when (.+?)$element is (clicked|right clicked|double clicked|submitted|checked|ticked|unchecked|unticked|selected|typed|entered|tabbed|cleared|moved to)$$$event""" =>
+      case r"""I wait ([0-9]+?)$duration second(?:s?) when (.+?)$element is (clicked|right clicked|double clicked|submitted|checked|ticked|unchecked|unticked|selected|deselected|typed|entered|tabbed|cleared|moved to)$$$event""" =>
         env.getLocatorBinding(element)
         env.scopes.set(s"$element/${WebEvents.EventToAction(event)}/wait", duration)
 
-        case r"""I wait until (.+?)$condition when (.+?)$element is (clicked|right clicked|double clicked||submitted|checked|ticked|unchecked|unticked|selected|typed|entered|tabbed|cleared|moved to)$$$event""" =>
+        case r"""I wait until (.+?)$condition when (.+?)$element is (clicked|right clicked|double clicked||submitted|checked|ticked|unchecked|unticked|selected|deselected|typed|entered|tabbed|cleared|moved to)$$$event""" =>
         env.scopes.get(s"$condition/javascript")
         env.getLocatorBinding(element)
         env.scopes.set(s"$element/${WebEvents.EventToAction(event)}/condition", condition)
@@ -323,27 +323,47 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
         val value = env.getAttribute(attribute)
         webContext.sendValue(elementBinding, value, clearFirst = true, sendEnterKey = action == "enter")
 
-      case r"""I select the (\d+?)$position(?:st|nd|rd|th) option in (.+?)$$$element""" =>
+      case r"""I (select|deselect)$action the (\d+?)$position(?:st|nd|rd|th) option in (.+?)$$$element""" =>
         val elementBinding = env.getLocatorBinding(element)
-        webContext.selectByIndex(elementBinding, position.toInt - 1)
+        if (action == "select") {
+          webContext.selectByIndex(elementBinding, position.toInt - 1)
+        } else {
+          webContext.deselectByIndex(elementBinding, position.toInt - 1)
+        }
 
-      case r"""I select "(.*?)"$value in (.+?)$element by value""" =>
+      case r"""I (select|deselect)$action "(.*?)"$value in (.+?)$element by value""" =>
         val elementBinding = env.getLocatorBinding(element)
-        webContext.selectByValue(elementBinding, value)
+        if (action == "select") {
+          webContext.selectByValue(elementBinding, value)
+        } else {
+          webContext.deselectByValue(elementBinding, value)
+        }
 
-      case r"""I select "(.*?)"$value in (.+?)$$$element""" =>
+      case r"""I (select|deselect)$action "(.*?)"$value in (.+?)$$$element""" =>
         val elementBinding = env.getLocatorBinding(element)
-        webContext.selectByVisibleText(elementBinding, value)
+        if (action == "select") {
+          webContext.selectByVisibleText(elementBinding, value)
+        } else {
+          webContext.deselectByVisibleText(elementBinding, value)
+        }
 
-      case r"""I select (.+?)$attribute in (.+?)$element by value""" =>
+      case r"""I (select|deselect)$action (.+?)$attribute in (.+?)$element by value""" =>
         val value = env.getAttribute(attribute)
         val elementBinding = env.getLocatorBinding(element)
-        webContext.selectByValue(elementBinding, value)
+        if (action == "select") {
+          webContext.selectByValue(elementBinding, value)
+        } else {
+          webContext.deselectByValue(elementBinding, value)
+        }
 
-      case r"""I select (.+?)$attribute in (.+?)$$$element""" =>
+      case r"""I (select|deselect)$action (.+?)$attribute in (.+?)$$$element""" =>
         val value = env.getAttribute(attribute)
         val elementBinding = env.getLocatorBinding(element)
-        webContext.selectByVisibleText(elementBinding, value)
+        if (action == "select") {
+          webContext.selectByVisibleText(elementBinding, value)
+        } else {
+          webContext.deselectByVisibleText(elementBinding, value)
+        }
 
       case r"""I (click|right click|double click|check|tick|uncheck|untick|move to)$action (.+?)$element of (.+?)$$$context""" =>
         webContext.performActionInContext(action, element, context)

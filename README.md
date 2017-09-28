@@ -7,7 +7,8 @@ Gwen-Web enables teams to quickly automate front end web tests and robotic onlin
 [Gherkin](https://github.com/cucumber/cucumber/wiki/Gherkin) feature specs instead of code.
 A [web DSL](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL) interacts with
 [Selenium](http://www.seleniumhq.org/projects/webdriver) under the covers for you so you don't have to do
-any of that programming or technical development work.
+any of that programming or technical development work. It does however allow you to inject JavaScript in places
+where dynamically locating web elements or running functions on pages are necessary.
 
 ### Current Status
 
