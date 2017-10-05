@@ -19,11 +19,11 @@ package gwen.web
 import java.net.URL
 import java.util.concurrent.TimeUnit
 
-import org.openqa.selenium.WebDriver
+import org.openqa.selenium.{MutableCapabilities, WebDriver}
 import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.chrome.ChromeOptions
 import org.openqa.selenium.firefox.{FirefoxDriver, FirefoxOptions, FirefoxProfile}
-import org.openqa.selenium.ie.InternetExplorerDriver
+import org.openqa.selenium.ie.{InternetExplorerDriver, InternetExplorerOptions}
 import org.openqa.selenium.remote.CapabilityType
 import org.openqa.selenium.remote.DesiredCapabilities
 import org.openqa.selenium.remote.HttpCommandExecutor
@@ -99,13 +99,16 @@ class DriverManager extends LazyLogging {
   
   private def remoteDriver(driverName: String, addr: String): WebDriver = {
     val capabilities = driverName match {
-      case "firefox" => firefoxCapabilities()
+      case "firefox" => DesiredCapabilities.firefox tap { capabilities =>
+        capabilities.setCapability(FirefoxDriver.PROFILE, firefoxOptions().getProfile)
+      }
       case "chrome" => DesiredCapabilities.chrome tap { capabilities =>
         capabilities.setCapability(ChromeOptions.CAPABILITY, chromeOptions())
-        //capabilities.setCapability(CapabilityType.ACCEPT_SSL_CERTS, WebSettings.`gwen.web.accept.untrusted.certs`)
-        capabilities.setAcceptInsecureCerts(WebSettings.`gwen.web.accept.untrusted.certs`)
+        capabilities.setCapability(CapabilityType.ACCEPT_SSL_CERTS, WebSettings.`gwen.web.accept.untrusted.certs`)
       }
-      case "ie" => ieCapabilities
+      case "ie" => DesiredCapabilities.internetExplorer() tap { capabilities =>
+        capabilities.setCapability(CapabilityType.ACCEPT_SSL_CERTS, WebSettings.`gwen.web.accept.untrusted.certs`)
+      }
     }
     capabilities.setJavascriptEnabled(true)
 
@@ -127,7 +130,7 @@ class DriverManager extends LazyLogging {
     case _ => unsupportedWebDriverError(driverName)
   }
   
-  private def firefoxCapabilities() : DesiredCapabilities = {
+  private def firefoxOptions() : FirefoxOptions = {
     val firefoxProfile = new FirefoxProfile() tap { profile =>
       WebSettings.`gwen.web.useragent` foreach {
         profile.setPreference("general.useragent.override", _)
@@ -146,7 +149,7 @@ class DriverManager extends LazyLogging {
     }
     new FirefoxOptions()
       .setProfile(firefoxProfile)
-      .addTo(DesiredCapabilities.firefox())
+      .merge(DesiredCapabilities.firefox())
   }
   
   private def chromeOptions() : ChromeOptions = new ChromeOptions() tap { options =>
@@ -190,17 +193,16 @@ class DriverManager extends LazyLogging {
       }
     }
   }
-  
-  private def ieCapabilities(): DesiredCapabilities = new DesiredCapabilities() tap {capabilities =>
-    //capabilities.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true)
-    capabilities.setAcceptInsecureCerts(true)
+
+  private def ieOptions(): InternetExplorerOptions = new InternetExplorerOptions() tap { options =>
+    options.asInstanceOf[MutableCapabilities].setCapability(CapabilityType.ACCEPT_SSL_CERTS, true)
   }
   
   private[web] def chrome(): WebDriver = new ChromeDriver(chromeOptions())
   
-  private[web] def firefox(): WebDriver = new FirefoxDriver(firefoxCapabilities())
+  private[web] def firefox(): WebDriver = new FirefoxDriver(firefoxOptions())
   
-  private[web] def ie(): WebDriver = new InternetExplorerDriver(ieCapabilities())
+  private[web] def ie(): WebDriver = new InternetExplorerDriver(ieOptions())
   
   private[web] def safari(): WebDriver = new SafariDriver()
   

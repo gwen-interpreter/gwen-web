@@ -24,7 +24,6 @@ import org.openqa.selenium.WebDriver
 import org.openqa.selenium.WebDriver.Options
 import org.openqa.selenium.WebDriver.Timeouts
 import org.openqa.selenium.WebDriver.Window
-import org.openqa.selenium.chrome.ChromeOptions
 import org.openqa.selenium.remote.DesiredCapabilities
 import org.openqa.selenium.remote.RemoteWebDriver
 import org.scalatest.FlatSpec
@@ -66,8 +65,6 @@ class DriverManagerTest extends FlatSpec with Matchers with MockitoSugar {
       val manager = newManager("chrome")
       val driver = manager.withWebDriver { _.asInstanceOf[RemoteWebDriver] }
       driver should be (mockRemoteDriver)
-      val capabilities = driver.getCapabilities
-      capabilities.getCapability(ChromeOptions.CAPABILITY).getClass should be (classOf[ChromeOptions])
     }
   }
   
