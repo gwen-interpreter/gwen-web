@@ -2,6 +2,9 @@
 ======
 Oct 5, 2017
 - Update Selenium WebDriver from 3.5.3. to 3.6.0
+- Implement gwen-interpreter/gwen#37: Assertion DSL's should not wait for global time out when
+  value for assertion is already captured
+  - Solution was to immediately return if the value compared has been captured beforehand
 
 2.13.0
 ======

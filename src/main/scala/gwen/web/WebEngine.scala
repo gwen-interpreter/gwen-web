@@ -25,6 +25,7 @@ import gwen.dsl._
 import gwen.errors.undefinedStepError
 import gwen.eval.{GwenOptions, ScopedDataStack, StepFailure}
 import gwen.eval.support.DefaultEngineSupport
+import gwen.web.errors.LocatorBindingException
 
 import scala.util.Try
 
@@ -249,8 +250,15 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
       case r"""(.+?)$element( text| value)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator "(.*?)"$$$expression""" => step.orDocString(expression) tap { expression =>
         if (element == "I") undefinedStepError(step)
         val actual = env.boundAttributeOrSelection(element, Option(selection))
+        val negate = Option(negation).isDefined
         env.perform {
-          env.compare(element + Option(selection).getOrElse(""), expression, actual, operator, Option(negation).isDefined)
+          if (env.scopes.getOpt(element).isEmpty) {
+            env.compare(element + Option(selection).getOrElse(""), expression, actual, operator, negate)
+          } else {
+            val actualValue = actual()
+            val result = env.compare(expression, actualValue, operator, negate)
+            assert(result, s"Expected $element to ${if(negate) "not " else ""}$operator '$expression' but got '$actualValue'")
+          }
         }
       }
 
@@ -290,16 +298,26 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
         webContext.captureScreenshot(true)
 
       case r"""I capture (.+?)$element( value| text)$selection as (.+?)$attribute""" =>
-        val value = webContext.getElementSelection(element, selection)
-        env.featureScope.set(attribute, value tap { content =>
-          env.addAttachment(attribute, "txt", content)
-        })
+        try {
+          val value = webContext.getElementSelection(element, selection)
+          env.featureScope.set(attribute, value tap { content =>
+            env.addAttachment(attribute, "txt", content)
+          })
+        } catch {
+          case _: LocatorBindingException =>
+            super.evaluate(step, env)
+        }
 
       case r"""I capture (.+?)$element( value| text)$$$selection""" =>
-        val value = webContext.getElementSelection(element, selection)
-        env.featureScope.set(element, value tap { content =>
-          env.addAttachment(element, "txt", content)
-        })
+        try {
+          val value = webContext.getElementSelection(element, selection)
+          env.featureScope.set(element, value tap { content =>
+            env.addAttachment(element, "txt", content)
+          })
+        } catch {
+          case _: LocatorBindingException =>
+            super.evaluate(step, env)
+        }
 
       case r"""I clear (.+?)$$$element""" =>
         val elementBinding = env.getLocatorBinding(element)
