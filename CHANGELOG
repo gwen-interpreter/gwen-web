@@ -1,10 +1,12 @@
-2.13.1
+2.14.0
 ======
-Oct 5, 2017
+Oct 6, 2017
 - Update Selenium WebDriver from 3.5.3. to 3.6.0
 - Implement gwen-interpreter/gwen#37: Assertion DSL's should not wait for global time out when
   value for assertion is already captured
   - Solution was to immediately return if the value compared has been captured beforehand
+- Add support for running chrome or firefox in headless mode through new Gwen setting:
+  - gwen.web.browser.headless=true|false (default is false)
 
 2.13.0
 ======

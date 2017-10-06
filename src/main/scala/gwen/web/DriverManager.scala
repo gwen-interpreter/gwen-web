@@ -149,7 +149,12 @@ class DriverManager extends LazyLogging {
     }
     new FirefoxOptions()
       .setProfile(firefoxProfile)
-      .merge(DesiredCapabilities.firefox())
+      .merge(DesiredCapabilities.firefox()) tap { options =>
+      if (WebSettings.`gwen.web.browser.headless`) {
+        logger.info(s"Firefox will run headless")
+        options.addArguments("-headless")
+      }
+    }
   }
   
   private def chromeOptions() : ChromeOptions = new ChromeOptions() tap { options =>
@@ -166,6 +171,10 @@ class DriverManager extends LazyLogging {
     WebSettings.`gwen.web.chrome.args` foreach { arg =>
       logger.info(s"Setting chrome driver argument: $arg")
       options.addArguments(arg)
+    }
+    if (WebSettings.`gwen.web.browser.headless`) {
+      logger.info(s"Chrome will run headless")
+      options.addArguments("headless")
     }
     val prefs = new java.util.HashMap[String, Object]()
     WebSettings.`gwen.web.chrome.prefs` foreach { pref =>

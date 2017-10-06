@@ -139,5 +139,11 @@ object WebSettings {
    * This setting accepts a comma separated list of agruments.
    */
   def `gwen.web.chrome.prefs`: List[String] = Settings.getOpt("gwen.web.chrome.prefs").map(_.split(",").toList).getOrElse(Nil)
+
+  /**
+    * Provides access to the `gwen.web.browser.headless` setting used to control whether
+    * or not the browser should run headless. (default value is `false`).
+    */
+  def `gwen.web.browser.headless`: Boolean = Settings.getOpt("gwen.web.browser.headless").getOrElse("false").toBoolean
   
 }

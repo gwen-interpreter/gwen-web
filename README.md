@@ -17,6 +17,10 @@ where dynamically locating web elements or running functions on pages may be nec
 - [Latest release](https://github.com/gwen-interpreter/gwen-web/releases/latest)
 - [Change log](CHANGELOG)
 
+### What's New?
+
+- [Headless support for Chrome and Firefox](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#gwenwebbrowserheadless)
+
 Why Gwen-web?
 -------------
 So you can drive automation with Gherkin features like this..
@@ -86,6 +90,7 @@ Key Features
 * Screenshot capture and slideshow playback
 * [Interchangeable Selenium](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#changing-the-selenium-version) implementation
 * [Locator Chaining](https://github.com/gwen-interpreter/gwen-web/wiki/Locator-Chaining)
+* [Headless Browser Execution](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#gwenwebbrowserheadless)
 
 Quick Links to Wiki Information
 -------------------------------
