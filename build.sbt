@@ -14,7 +14,7 @@ organizationHomepage := Some(url("http://gweninterpreter.org"))
 
 startYear := Some(2014)
 
-scalaVersion := "2.12.3"
+scalaVersion := "2.12.4"
 
 crossPaths := false
 
@@ -40,21 +40,21 @@ resolvers += "Typesafe Repo" at "http://repo.typesafe.com/typesafe/releases/"
 
 resolvers += "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"
 
-libraryDependencies += "org.seleniumhq.selenium" % "selenium-chrome-driver" % "3.6.0"
+libraryDependencies += "org.seleniumhq.selenium" % "selenium-chrome-driver" % "3.7.0"
 
-libraryDependencies += "org.seleniumhq.selenium" % "selenium-firefox-driver" % "3.6.0"
+libraryDependencies += "org.seleniumhq.selenium" % "selenium-firefox-driver" % "3.7.0"
 
-libraryDependencies += "org.seleniumhq.selenium" % "selenium-ie-driver" % "3.6.0"
+libraryDependencies += "org.seleniumhq.selenium" % "selenium-ie-driver" % "3.7.0"
 
-libraryDependencies += "org.seleniumhq.selenium" % "selenium-safari-driver" % "3.6.0"
+libraryDependencies += "org.seleniumhq.selenium" % "selenium-safari-driver" % "3.7.0"
 
-libraryDependencies += "org.seleniumhq.selenium" % "selenium-support" % "3.6.0" excludeAll(
+libraryDependencies += "org.seleniumhq.selenium" % "selenium-support" % "3.7.0" excludeAll(
   ExclusionRule(organization = "junit", name="junit")
 )
 
-libraryDependencies += "commons-io" % "commons-io" % "2.5"
+libraryDependencies += "commons-io" % "commons-io" % "2.6"
 
-libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.1" % "test"
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.4" % "test"
 
 libraryDependencies += "org.mockito" % "mockito-all" % "1.10.19" % "test"
 

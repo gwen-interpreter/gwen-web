@@ -1,3 +1,20 @@
+2.14.1
+======
+Nov 4, 2017
+- Update selenium from 3.6.0. to 3.7.0
+- Update commons-io from 2.5 to 2.6
+- Update Gwen from v2.11.0 to v[2.11.1](https://github.com/gwen-interpreter/gwen/releases/tag/v2.11.1)
+  - Update scala from 2.12.3 to 2.12.4
+  - Update gherkin from 4.1.3 to 5.0.0
+  - Update scopt from 3.6.0 to 3.7.0
+  - Update slf4j-log4j from 1.7.22 to 1.7.25
+  - Update scala-logging from 3.5.0 to 3.7.2
+  - Update jline from 2.14.2 to 2.14.5
+  - Update commons-codec from 1.10 to 1.11
+  - Update scala-csv from 1.3.4 to 1.3.5
+  - Update json-path from 2.2.0 to 2.4.0
+  - Update joda-time from 2.9.7 to 2.9.9
+
 2.14.0
 ======
 Oct 6, 2017
