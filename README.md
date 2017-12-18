@@ -19,6 +19,7 @@ where dynamically locating web elements or running functions on pages may be nec
 
 ### What's New?
 
+- [Gwen Workspaces](https://gweninterpreter.wordpress.com/2017/12/18/gwen-workspaces/)
 - [Headless support for Chrome and Firefox](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#gwenwebbrowserheadless)
 
 Why Gwen-web?
