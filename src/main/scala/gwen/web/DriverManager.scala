@@ -28,7 +28,7 @@ import org.openqa.selenium.remote.CapabilityType
 import org.openqa.selenium.remote.DesiredCapabilities
 import org.openqa.selenium.remote.HttpCommandExecutor
 import org.openqa.selenium.remote.RemoteWebDriver
-import org.openqa.selenium.safari.SafariDriver
+import org.openqa.selenium.safari.{SafariDriver, SafariOptions}
 import com.typesafe.scalalogging.LazyLogging
 import gwen.Predefs.Kestrel
 import gwen.errors._
@@ -98,7 +98,7 @@ class DriverManager extends LazyLogging {
   }
   
   private def remoteDriver(driverName: String, addr: String): WebDriver = {
-    val capabilities = driverName match {
+    val capabilities: DesiredCapabilities = driverName match {
       case "firefox" => DesiredCapabilities.firefox tap { capabilities =>
         capabilities.setCapability(FirefoxDriver.PROFILE, firefoxOptions().getProfile)
       }
@@ -111,7 +111,7 @@ class DriverManager extends LazyLogging {
       }
     }
     capabilities.setJavascriptEnabled(true)
-
+    setDesiredCapabilities(capabilities)
     remote(addr, capabilities)
   }
   
@@ -154,6 +154,7 @@ class DriverManager extends LazyLogging {
         logger.info(s"Firefox will run headless")
         options.addArguments("-headless")
       }
+      setDesiredCapabilities(options.asInstanceOf[MutableCapabilities])
     }
   }
   
@@ -201,10 +202,35 @@ class DriverManager extends LazyLogging {
         options.addExtensions(extensions:_*)
       }
     }
+    setDesiredCapabilities(options.asInstanceOf[MutableCapabilities])
   }
 
   private def ieOptions(): InternetExplorerOptions = new InternetExplorerOptions() tap { options =>
-    options.asInstanceOf[MutableCapabilities].setCapability(CapabilityType.ACCEPT_SSL_CERTS, true)
+    val capabilities = options.asInstanceOf[MutableCapabilities]
+    capabilities.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true)
+    setDesiredCapabilities(capabilities)
+  }
+
+  private def safariOptions(): SafariOptions = new SafariOptions() tap { options =>
+    setDesiredCapabilities(options.asInstanceOf[MutableCapabilities])
+  }
+
+  private def setDesiredCapabilities(capabilities: MutableCapabilities) {
+    WebSettings.`gwen.web.capabilities` foreach { capability =>
+      val nvp = capability.split('=')
+      if (nvp.length == 2) {
+        val name = nvp(0).trim
+        val value = nvp(1).trim
+        logger.info(s"Setting capability: $name=$value")
+        try {
+          capabilities.setCapability(name, Integer.valueOf(value.trim))
+        } catch {
+          case _: Throwable =>
+            if (value.matches("(true|false)")) capabilities.setCapability(name, java.lang.Boolean.valueOf(value.trim))
+            else capabilities.setCapability(name, value)
+        }
+      }
+    }
   }
   
   private[web] def chrome(): WebDriver = new ChromeDriver(chromeOptions())
@@ -213,7 +239,7 @@ class DriverManager extends LazyLogging {
   
   private[web] def ie(): WebDriver = new InternetExplorerDriver(ieOptions())
   
-  private[web] def safari(): WebDriver = new SafariDriver()
+  private[web] def safari(): WebDriver = new SafariDriver(safariOptions())
   
   private[web] def remote(hubUrl: String, capabilities: DesiredCapabilities): WebDriver =
     new RemoteWebDriver(new HttpCommandExecutor(new URL(hubUrl)), capabilities)

@@ -116,7 +116,7 @@ object WebSettings {
    * The settings accepts a comma separated list of paths to extensions (.crx files
    * or location paths). Each extension provided is loaded into the Chrome web driver.
    */
-  def `gwen.web.chrome.extensions`: List[File] = Settings.getOpt("gwen.web.chrome.extensions").map(_.split(",").toList).getOrElse(Nil).map(new File(_))
+  def `gwen.web.chrome.extensions`: List[File] = Settings.getOpt("gwen.web.chrome.extensions").map(_.split(",").toList.map(_.trim)).getOrElse(Nil).map(new File(_))
   
   /**
     * Provides access to the `gwen.web.capture.screenshots.duplicates` setting used to control whether 
@@ -129,21 +129,29 @@ object WebSettings {
   /**
    * Provides access to the `gwen.web.chrome.args` setting used to set
    * the list of Chrome web driver arguments to load (default is empty list).
-   * This setting accepts a comma separated list of agruments.
+   * This setting accepts a comma separated list of arguments.
    */
-  def `gwen.web.chrome.args`: List[String] = Settings.getOpt("gwen.web.chrome.args").map(_.split(",").toList).getOrElse(Nil)
+  def `gwen.web.chrome.args`: List[String] = Settings.getOpt("gwen.web.chrome.args").map(_.split(",").toList.map(_.trim)).getOrElse(Nil)
   
   /**
    * Provides access to the `gwen.web.chrome.prefs` setting used to set
    * the list of preferences to pass to Chrome (default is empty list).
-   * This setting accepts a comma separated list of agruments.
+   * This setting accepts a comma separated list of preferences.
    */
-  def `gwen.web.chrome.prefs`: List[String] = Settings.getOpt("gwen.web.chrome.prefs").map(_.split(",").toList).getOrElse(Nil)
+  def `gwen.web.chrome.prefs`: List[String] = Settings.getOpt("gwen.web.chrome.prefs").map(_.split(",").toList.map(_.trim)).getOrElse(Nil)
 
   /**
     * Provides access to the `gwen.web.browser.headless` setting used to control whether
     * or not the browser should run headless. (default value is `false`).
     */
   def `gwen.web.browser.headless`: Boolean = Settings.getOpt("gwen.web.browser.headless").getOrElse("false").toBoolean
-  
+
+  /**
+   * Provides access to the `gwen.web.capabilities` setting used to set
+   * desired web capabilities (default is empty list).
+   * This setting accepts a comma separated list of capabilities (name=value pairs).
+   * See: https://github.com/SeleniumHQ/selenium/wiki/DesiredCapabilities
+   */
+  def `gwen.web.capabilities`: List[String] = Settings.getOpt("gwen.web.capabilities").map(_.split(",").toList.map(_.trim)).getOrElse(Nil)
+
 }
