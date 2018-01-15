@@ -134,11 +134,10 @@ object WebSettings {
   def `gwen.web.chrome.args`: List[String] = Settings.getOpt("gwen.web.chrome.args").map(_.split(",").toList.map(_.trim)).getOrElse(Nil)
   
   /**
-   * Provides access to the `gwen.web.chrome.prefs` setting used to set
-   * the list of preferences to pass to Chrome (default is empty list).
-   * This setting accepts a comma separated list of preferences.
+   * Provides access to the chrome preference settings. This setting merges a comma separated list of preferences
+   * set in the `gwen.web.chrome.prefs` property with all properties that start with `gwen.web.chrome.pref.`.
    */
-  def `gwen.web.chrome.prefs`: List[String] = Settings.getOpt("gwen.web.chrome.prefs").map(_.split(",").toList.map(_.trim)).getOrElse(Nil)
+  def `gwen.web.chrome.prefs`: Map[String, String] = Settings.findAllMulti("gwen.web.chrome.prefs", "gwen.web.chrome.pref")
 
   /**
     * Provides access to the `gwen.web.browser.headless` setting used to control whether
@@ -147,11 +146,10 @@ object WebSettings {
   def `gwen.web.browser.headless`: Boolean = Settings.getOpt("gwen.web.browser.headless").getOrElse("false").toBoolean
 
   /**
-   * Provides access to the `gwen.web.capabilities` setting used to set
-   * desired web capabilities (default is empty list).
-   * This setting accepts a comma separated list of capabilities (name=value pairs).
+   * Provides access to the web capabilities settings. This setting merges a comma separated list of capabilities
+   * set in the `gwen.web.capabilities` property with all properties that start with `gwen.web.capability.`.
    * See: https://github.com/SeleniumHQ/selenium/wiki/DesiredCapabilities
    */
-  def `gwen.web.capabilities`: List[String] = Settings.getOpt("gwen.web.capabilities").map(_.split(",").toList.map(_.trim)).getOrElse(Nil)
+  def `gwen.web.capabilities`: Map[String, String] = Settings.findAllMulti("gwen.web.capabilities", "gwen.web.capability")
 
 }

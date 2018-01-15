@@ -178,19 +178,14 @@ class DriverManager extends LazyLogging {
       options.addArguments("headless")
     }
     val prefs = new java.util.HashMap[String, Object]()
-    WebSettings.`gwen.web.chrome.prefs` foreach { pref =>
-      val nvp = pref.split('=')
-      if (nvp.length == 2) {
-        val name = nvp(0).trim
-        val value = nvp(1).trim
-        logger.info(s"Setting chrome browser preference: $name=$value")
-        try {
-          prefs.put(name, Integer.valueOf(value.trim))
-        } catch {
-          case _: Throwable =>
-            if (value.matches("(true|false)")) prefs.put(name, java.lang.Boolean.valueOf(value.trim))
-            else prefs.put(name, value)
-        }
+    WebSettings.`gwen.web.chrome.prefs` foreach { case (name, value) =>
+      logger.info(s"Setting chrome browser preference: $name=$value")
+      try {
+        prefs.put(name, Integer.valueOf(value.trim))
+      } catch {
+        case _: Throwable =>
+          if (value.matches("(true|false)")) prefs.put(name, java.lang.Boolean.valueOf(value.trim))
+          else prefs.put(name, value)
       }
     }
     if (!prefs.isEmpty) {
@@ -216,19 +211,14 @@ class DriverManager extends LazyLogging {
   }
 
   private def setDesiredCapabilities(capabilities: MutableCapabilities) {
-    WebSettings.`gwen.web.capabilities` foreach { capability =>
-      val nvp = capability.split('=')
-      if (nvp.length == 2) {
-        val name = nvp(0).trim
-        val value = nvp(1).trim
-        logger.info(s"Setting capability: $name=$value")
-        try {
-          capabilities.setCapability(name, Integer.valueOf(value.trim))
-        } catch {
-          case _: Throwable =>
-            if (value.matches("(true|false)")) capabilities.setCapability(name, java.lang.Boolean.valueOf(value.trim))
-            else capabilities.setCapability(name, value)
-        }
+    WebSettings.`gwen.web.capabilities` foreach { case (name, value) =>
+      logger.info(s"Setting web capability: $name=$value")
+      try {
+        capabilities.setCapability(name, Integer.valueOf(value.trim))
+      } catch {
+        case _: Throwable =>
+          if (value.matches("(true|false)")) capabilities.setCapability(name, java.lang.Boolean.valueOf(value.trim))
+          else capabilities.setCapability(name, value)
       }
     }
   }
