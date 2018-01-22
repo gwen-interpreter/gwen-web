@@ -22,8 +22,9 @@ import gwen.Predefs.Kestrel
 import gwen.Predefs.RegexContext
 import gwen.Settings
 import gwen.dsl._
+import gwen.errors.StepFailure
 import gwen.errors.undefinedStepError
-import gwen.eval.{GwenOptions, ScopedDataStack, StepFailure}
+import gwen.eval.{GwenOptions, ScopedDataStack}
 import gwen.eval.support.DefaultEngineSupport
 import gwen.web.errors.LocatorBindingException
 

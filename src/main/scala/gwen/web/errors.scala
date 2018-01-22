@@ -22,6 +22,7 @@ package gwen {
   package web {
 
     import org.openqa.selenium.Keys
+    import gwen.errors.GwenException
 
     package object errors {
 
@@ -32,19 +33,19 @@ package gwen {
       def waitTimeoutError(reason: String) = throw new WaitTimeoutException(reason)
 
       /** Thrown when a web element cannot be located. */
-      class LocatorBindingException(element: String, reason: String) extends RuntimeException(s"Could not locate $element: $reason")
+      class LocatorBindingException(element: String, reason: String) extends GwenException(s"Could not locate $element: $reason")
 
       /** Thrown when an unsupported web driver is detected. */
-      class UnsupportedWebDriverException(driverName: String) extends RuntimeException(s"Unsupported web driver: $driverName")
+      class UnsupportedWebDriverException(driverName: String) extends GwenException(s"Unsupported web driver: $driverName")
       
       /** Thrown when an attempt is made to switch to a window that does not exist. */
-      class NoSuchWindowException(msg: String) extends RuntimeException(msg)
+      class NoSuchWindowException(msg: String) extends GwenException(msg)
 
       /** Thrown when an attempt is made to send an unsupported key to a field. */
-      class UnsupportedModifierKeyException(key: String) extends RuntimeException(s"Unsupported modifier key '$key'. Supported modifiers include: ${Keys.values().map(_.name()).mkString(",")}")
+      class UnsupportedModifierKeyException(key: String) extends GwenException(s"Unsupported modifier key '$key'. Supported modifiers include: ${Keys.values().map(_.name()).mkString(",")}")
 
       /** Thrown when a web element cannot be located. */
-      class WaitTimeoutException(reason: String) extends RuntimeException(s"Timed out $reason")
+      class WaitTimeoutException(reason: String) extends GwenException(s"Timed out $reason")
 
     }
   }

@@ -1,10 +1,12 @@
 2.15.0
 ======
 Jan 15, 2018
-- Update Gwen from v2.11.1 to v[2.12.0](https://github.com/gwen-interpreter/gwen/releases/tag/v2.12.0)
+- Update Gwen from v2.11.1 to v[2.12.1](https://github.com/gwen-interpreter/gwen/releases/tag/v2.12.1)
   - Fix issue gwen-interpreter/gwen#40 reopened by @Rahul9844: support empty StepDef params in any position
   - Fix issue #45 raised by @ketu4u2010: Gwen fails to handle DSL keywords in string literals
   - Add support for loading multi valued settings
+  - Improved error handling for Gherkin syntax errors
+   - Suppressed stack trace of errors handled by Gwen
 - Implement support for [desired capabilities](https://github.com/SeleniumHQ/selenium/wiki/DesiredCapabilities)
   (as requested in issue #43 raised by @Rahul9844)
   - Capabilities can be set using the `gwen.web.capabilities` setting.
