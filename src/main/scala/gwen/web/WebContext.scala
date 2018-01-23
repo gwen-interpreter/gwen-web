@@ -431,7 +431,6 @@ class WebContext(env: WebEnvContext) extends WebElementLocator with LazyLogging 
         withDriverAndElement(action, elementBinding) { (driver, webElement) =>
           action match {
             case "click" =>
-              executeJS("(function(element){element.focus();})(arguments[0]);", webElement)
               webElement.click()
             case "right click" =>
               new Actions(driver).contextClick(webElement).perform()
@@ -482,7 +481,7 @@ class WebContext(env: WebEnvContext) extends WebElementLocator with LazyLogging 
   private def withDriverAndElement(desc: String, elementBinding: LocatorBinding)(doActions: (WebDriver, WebElement) => Unit): Unit = {
     withWebDriver { driver =>
       withWebElement(elementBinding) { webElement =>
-        executeJS("(function(element){element.focus();})(arguments[0]);", webElement)
+        executeJS("""(function(element){ try { element.scrollIntoView(false); } finally { element.focus(); } })(arguments[0]);""", webElement)
         doActions(driver, webElement)
       }
     }
