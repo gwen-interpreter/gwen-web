@@ -3,6 +3,9 @@
 Jan 23, 2018
 - Fix issue #46 reopened by @anshu781126: unable to auto scroll and click
   - solution was to include the auto-scroll behavior on element before performing actions
+- Update Gwen from v2.12.1 to v[2.12.2](https://github.com/gwen-interpreter/gwen/releases/tag/v2.12.2)
+  - Fix issue #47 raised by @Rahul9844: infinite recursion error when calling a step that expects a data table with
+    no data table followed by another call with a data table
 
 2.15.0
 ======
