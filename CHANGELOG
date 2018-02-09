@@ -1,3 +1,10 @@
+2.15.4
+======
+Feb 9, 2018
+- Roll back implicit auto-scroll behavior introduced in issue #46 implementation
+  - This had negative side effects on select controls in that options could not be selected if they appear near the
+    viewport boundary
+
 2.15.3
 ======
 Feb 9, 2018
