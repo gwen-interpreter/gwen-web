@@ -1,3 +1,10 @@
+2.15.5
+======
+Feb 24, 2018
+- Update Gwen from v2.12.4 to v[2.12.5](https://github.com/gwen-interpreter/gwen/releases/tag/v2.12.5)
+  - Fix issue #50 raised by @Rahul9844
+    - Only log the visible environment bindings (global or global+scoped) on failure
+
 2.15.4
 ======
 Feb 9, 2018
