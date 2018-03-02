@@ -1,3 +1,15 @@
+2.15.6
+======
+Mar 3, 2018
+- Update library dependencies
+  - selenium-java from 2.9.1 to 3.10.0
+  - scalatest 3.0.4 to 3.0.5
+- Update Gwen from v2.12.5 to v[2.12.6](https://github.com/gwen-interpreter/gwen/releases/tag/v2.12.6)
+  - Update library dependencies
+    - scala-logging 3.7.2 to 3.8.0
+    - commons-text 1.1 to 1.2
+    - scalatest 3.0.4 to 3.0.5
+
 2.15.5
 ======
 Feb 24, 2018
