@@ -296,6 +296,9 @@ class DriverManager extends LazyLogging {
     }
   }
 
+  /** Switches to the top window / first frame */
+  private[web] def switchToDefaultContent(): Unit = webDriver.switchTo().defaultContent()
+
   private def pushWindow(window: String) {
     if (windows.isEmpty || windows.top != window) {
       windows push window
