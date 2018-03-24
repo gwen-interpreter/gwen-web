@@ -21,11 +21,11 @@ def setVersionOnly(selectVersion: Versions => String): ReleaseStep =  { st: Stat
 
 lazy val setReleaseVersion: ReleaseStep = setVersionOnly(_._1)
 
-releaseVersion <<= (releaseVersionBump)( bumper=>{
-   ver => Version(ver)
-          .map(_.withoutQualifier)
-          .map(_.bump(bumper).string).getOrElse(versionFormatError)
-})
+releaseVersion := { ver =>
+  Version(ver)
+    .map(_.withoutQualifier)
+    .map(_.bump(releaseVersionBump.value).string).getOrElse(versionFormatError)
+}
 
 releaseProcess := Seq(
   checkSnapshotDependencies,
