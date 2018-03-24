@@ -734,6 +734,13 @@ class WebContext(env: WebEnvContext) extends WebElementLocator with LazyLogging 
     }
   }
 
+  /** Switches to the top window / first frame */
+  def switchToDefaultContent(): Unit = {
+    env.perform {
+      driverManager.switchToDefaultContent()
+    }
+  }
+
   /** Refreshes the current page.*/
   def refreshPage(): Unit = {
     withWebDriver { driver =>

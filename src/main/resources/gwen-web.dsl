@@ -365,6 +365,7 @@ I dismiss the confirmation popup
 I switch to the child window
 I close the child window
 I switch to the parent window
+I switch to the default content
 I capture the current screenshot
 <element> can be clicked by javascript "<javascript>"
 <element> can be right clicked by javascript "<javascript>"

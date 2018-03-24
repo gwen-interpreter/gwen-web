@@ -16,6 +16,6 @@
 
  Feature: File binding test
       
-Scenario: Read attributr from file
+Scenario: Read attribute from file
 	Given the file value is defined by file "features/file/file.txt"
 	 Then the file value should be "gwen"
