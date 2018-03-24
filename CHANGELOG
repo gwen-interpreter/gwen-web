@@ -1,3 +1,33 @@
+2.16.0
+======
+Mar 24, 2018
+- Contribution by @acuciureanu: Add ability to switch from an iframe to a top window by using the functionality
+  already implemented in the web driver (ie: switching to the default content). The following DSL was added:
+  - `I switch to the default content`
+- Update Gwen from v2.12.6 to v[2.13.0](https://github.com/gwen-interpreter/gwen/releases/tag/v2.13.0)
+  - Contributions by @acuciureanu
+    - PR #42 - Unit tests for SQL support
+    - PR #43 - Refactoring of sbt build file
+- Introduce [template matching](https://github.com/gwen-interpreter/gwen/wiki/Template-Matching)
+  - The following DSL's where introduced
+    - `<reference> <should|should not> match template "<expression>"`
+    - `<reference> <should|should not> match template file "<filepath>"`
+    - `<source> at <json path|xpath> "<path>" <should|should not> match template "<expression>"`
+    - `<source> at <json path|xpath> "<path>" <should|should not> match template file "<filepath>"`
+    - `the page title <should|should not> match template "<expression>"`
+    - `the page title <should|should not> match template file "<filepath>"`
+    - `<dropdown> <text|value> <should|should not> match template "<expression>"`
+    - `<dropdown> <text|value> <should|should not> match template file "<filepath>"`
+    - `the current URL <should|should not> match template "<expression>"`
+    - `the current URL <should|should not> match template file "<filepath>"`
+  - Template expressions may contain:
+    - Extract attributes: `@{name}`
+      - Extracts and binds the source value at `@{name}` in the template to the `name` attribute in the feature scope
+    - Ignore values: `!{}`
+      - Ignores the source value at `!{}` in the template
+    - Inject values: `${name}`
+      - Injects the value bound to the `name` attribute into `${name}` in the template
+
 2.15.7
 ======
 Mar 14, 2018

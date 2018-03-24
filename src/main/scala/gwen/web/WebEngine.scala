@@ -28,7 +28,7 @@ import gwen.eval.{GwenOptions, ScopedDataStack}
 import gwen.eval.support.DefaultEngineSupport
 import gwen.web.errors.LocatorBindingException
 
-import scala.util.Try
+import scala.util.{Failure, Success, Try}
 
 /**
   * A web engine that uses the Selenium web driver
@@ -232,9 +232,10 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
         env.scopes.set(s"$element/action/${WebEvents.EventToAction(event)}/javascript", expression)
       }
 
-      case r"""the page title should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator "(.*?)"$$$expression""" => step.orDocString(expression) tap { expression =>
+      case r"""the page title should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file)$operator "(.*?)"$$$expression""" => step.orDocString(expression) tap { expression =>
+        val expected = env.parseExpression(operator, expression)
         env.perform {
-          env.compare("title", expression, () => webContext.getTitle, operator, Option(negation).isDefined)
+          env.compare("title", expected, () => webContext.getTitle, operator, Option(negation).isDefined)
         }
       }
 
@@ -248,17 +249,23 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
         val elementBinding = env.getLocatorBinding(element)
         webContext.checkElementState(elementBinding, state, Option(negation).nonEmpty)
 
-      case r"""(.+?)$element( text| value)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator "(.*?)"$$$expression""" => step.orDocString(expression) tap { expression =>
+      case r"""(.+?)$element( text| value)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file)$operator "(.*?)"$$$expression""" => step.orDocString(expression) tap { expression =>
         if (element == "I") undefinedStepError(step)
         val actual = env.boundAttributeOrSelection(element, Option(selection))
         val negate = Option(negation).isDefined
+        val expected = env.parseExpression(operator, expression)
         env.perform {
           if (env.scopes.getOpt(element).isEmpty) {
-            env.compare(element + Option(selection).getOrElse(""), expression, actual, operator, negate)
+            env.compare(element + Option(selection).getOrElse(""), expected, actual, operator, negate)
           } else {
             val actualValue = actual()
-            val result = env.compare(expression, actualValue, operator, negate)
-            assert(result, s"Expected $element to ${if(negate) "not " else ""}$operator '$expression' but got '$actualValue'")
+            val result = env.compare(element, expected, actualValue, operator, negate)
+            result match {
+              case Success(assertion) =>
+                assert(assertion, s"Expected $element to ${if(negate) "not " else ""}$operator '$expected' but got '$actualValue'")
+              case Failure(error) =>
+                assert(assertion = false, error.getMessage)
+            }
           }
         }
       }

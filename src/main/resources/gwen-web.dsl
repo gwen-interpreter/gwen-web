@@ -31,6 +31,8 @@ the page title should end with "<value>"
 the page title should match regex "<expression>"
 the page title should match xpath "<expression>"
 the page title should match json path "<expression>"
+the page title should match template "<expression>"
+the page title should match template file "<filepath>"
 the page title should not be "<value>"
 the page title should not contain "<value>"
 the page title should not start with "<value>"
@@ -38,6 +40,8 @@ the page title should not end with "<value>"
 the page title should not match regex "<expression>"
 the page title should not match xpath "<expression>"
 the page title should not match json path "<expression>"
+the page title should not match template "<expression>"
+the page title should not match template file "<filepath>"
 the page title should be <reference>
 the page title should contain <reference>
 the page title should start with <reference>
@@ -75,6 +79,8 @@ the page title should not match json path <reference>
 <reference> should match regex "<expression>"
 <reference> should match xpath "<expression>"
 <reference> should match json path "<expression>"
+<reference> should match template "<expression>"
+<reference> should match template file "<filepath>"
 <reference> should not be "<value>"
 <reference> should not contain "<value>"
 <reference> should not start with "<value>"
@@ -82,6 +88,8 @@ the page title should not match json path <reference>
 <reference> should not match regex "<expression>"
 <reference> should not match xpath "<expression>"
 <reference> should not match json path "<expression>"
+<reference> should not match template "<expression>"
+<reference> should not match template file "<filepath>"
 <reference> should be <reference>
 <reference> should contain <reference>
 <reference> should start with <reference>
@@ -102,28 +110,32 @@ the page title should not match json path <reference>
 <dropdown> text should end with "<value>"
 <dropdown> text should match regex "<expression>"
 <dropdown> text should match xpath "<expression>"
-<dropdown> content should match json path "<expression>"
+<dropdown> text should match json path "<expression>"
+<dropdown> text should match template "<expression>"
+<dropdown> text should match template file "<filepath>"
 <dropdown> text should not be "<value>"
 <dropdown> text should not contain "<value>"
 <dropdown> text should not start with "<value>"
 <dropdown> text should not end with "<value>"
 <dropdown> text should not match regex "<expression>"
 <dropdown> text should not match xpath "<expression>"
-<dropdown> content should not match json path "<expression>"
+<dropdown> text should not match json path "<expression>"
+<dropdown> text should not match template "<expression>"
+<dropdown> text should not match template file "<filepath>"
 <dropdown> text should be <reference>
 <dropdown> text should contain <reference>
 <dropdown> text should start with <reference>
 <dropdown> text should end with <reference>
 <dropdown> text should match regex <reference>
 <dropdown> text should match xpath <reference>
-<dropdown> content should match json path <reference>
+<dropdown> text should match json path <reference>
 <dropdown> text should not be <reference>
 <dropdown> text should not contain <reference>
 <dropdown> text should not start with <reference>
 <dropdown> text should not end with <reference>
 <dropdown> text should not match regex <reference>
 <dropdown> text should not match xpath <reference>
-<dropdown> content should not match json path <reference>
+<dropdown> text should not match json path <reference>
 <dropdown> value should be "<value>"
 <dropdown> value should contain "<value>"
 <dropdown> value should start with "<value>"
@@ -131,6 +143,8 @@ the page title should not match json path <reference>
 <dropdown> value should match regex "<expression>"
 <dropdown> value should match xpath "<expression>"
 <dropdown> value should match json path "<expression>"
+<dropdown> value should match template "<expression>"
+<dropdown> value should match template file "<filepath>"
 <dropdown> value should not be "<value>"
 <dropdown> value should not contain "<value>"
 <dropdown> value should not start with "<value>"
@@ -138,6 +152,8 @@ the page title should not match json path <reference>
 <dropdown> value should not match regex "<expression>"
 <dropdown> value should not match xpath "<expression>"
 <dropdown> value should not match json path "<expression>"
+<dropdown> value should not match template "<expression>"
+<dropdown> value should not match template file "<filepath>"
 <dropdown> value should be <reference>
 <dropdown> value should contain <reference>
 <dropdown> value should start with <reference>
@@ -157,11 +173,15 @@ the current URL should contain "<value>"
 the current URL should start with "<value>"
 the current URL should end with "<value>"
 the current URL should match regex "<expression>"
+the current URL should match template "<expression>"
+the current URL should match template file "<filepath>"
 the current URL should not be "<value>"
 the current URL should not contain "<value>"
 the current URL should not start with "<value>"
 the current URL should not end with "<value>"
 the current URL should not match regex "<expression>"
+the current URL should not match template "<expression>"
+the current URL should not match template file "<filepath>"
 the current URL should be <reference>
 the current URL should contain <reference>
 the current URL should start with <reference>
@@ -410,20 +430,28 @@ I maximise the window
 <source> at json path "<path>" should start with "<expression>"
 <source> at json path "<path>" should end with "<expression>"
 <source> at json path "<path>" should match regex "<expression>"
+<source> at json path "<path>" should match template "<expression>"
+<source> at json path "<path>" should match template file "<filepath>"
 <source> at json path "<path>" should not be "<expression>"
 <source> at json path "<path>" should not contain "<expression>"
 <source> at json path "<path>" should not start with "<expression>"
 <source> at json path "<path>" should not end with "<expression>"
 <source> at json path "<path>" should not match regex "<expression>"
+<source> at json path "<path>" should not match template "<expression>"
+<source> at json path "<path>" should not match template file "<filepath>"
 <source> at xpath "<path>" should be "<expression>"
 <source> at xpath "<path>" should contain "<expression>"
 <source> at xpath "<path>" should start with "<expression>"
 <source> at xpath "<path>" should end with "<expression>"
 <source> at xpath "<path>" should match regex "<expression>"
+<source> at xpath "<path>" should match template "<expression>"
+<source> at xpath "<path>" should match template file "<filepath>"
 <source> at xpath "<path>" should not be "<expression>"
 <source> at xpath "<path>" should not contain "<expression>"
 <source> at xpath "<path>" should not start with "<expression>"
 <source> at xpath "<path>" should not end with "<expression>"
 <source> at xpath "<path>" should not match regex "<expression>"
+<source> at xpath "<path>" should not match template "<expression>"
+<source> at xpath "<path>" should not match template file "<filepath>"
 <step> if <condition>
 <step> for each <entry> in <source> delimited by "<delimiter>"

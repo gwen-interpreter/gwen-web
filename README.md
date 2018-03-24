@@ -7,8 +7,11 @@ Gwen-Web enables teams to quickly automate front end web tests and robotic onlin
 [Gherkin](https://github.com/cucumber/cucumber/wiki/Gherkin) feature specifications.
 A [web DSL](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL) interacts with
 [Selenium](http://www.seleniumhq.org/projects/webdriver) under the covers for you so you don't have to do
-any of that programming or technical development work. It does however allow you to inject JavaScript in places
-where dynamically locating web elements or running functions on pages may be necessary.
+any of that programming or technical development work. It supports all the standard web element locators provided by
+Selenium and additionally allows you to inject JavaScript in places where dynamically locating web elements or running
+functions on pages may be necessary.
+
+- [Join our user community](#user-groups)
 
 ### Current Status
 
@@ -19,8 +22,8 @@ where dynamically locating web elements or running functions on pages may be nec
 
 ### What's New?
 
+- [Template matching](https://github.com/gwen-interpreter/gwen/wiki/Template-Matching)
 - [Gwen Workspaces](https://gweninterpreter.wordpress.com/2017/12/18/gwen-workspaces/)
-- [Headless support for Chrome and Firefox](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#gwenwebbrowserheadless)
 
 Why Gwen-web?
 -------------
@@ -80,19 +83,19 @@ Runtime Requirements
 Key Features
 ------------
 
-* Automation driven by plain text [Gherkin](https://github.com/cucumber/cucumber/wiki/Gherkin) specifications
-  * See [Gwen-Web DSL](http://htmlpreview.github.io/?https://github.com/gwen-interpreter/gwen-web/blob/master/docs/dsl/gwen-web-dsl.html)
-* Features can execute in [batch mode](https://github.com/gwen-interpreter/gwen/wiki/Execution-Modes#batch-execution) or [interactively](https://github.com/gwen-interpreter/gwen/wiki/Execution-Modes#interactive-repl-execution)
-* Features can execute [sequentially](https://github.com/gwen-interpreter/gwen/wiki/Execution-Modes#serial-execution) or in [parallel](https://github.com/gwen-interpreter/gwen/wiki/Execution-Modes#parallel-execution)
-* Execution can be [data driven](https://github.com/gwen-interpreter/gwen/wiki/Execution-Modes#csv-data-feeds) (using csv data feeds)
-* [REPL console](https://github.com/gwen-interpreter/gwen/wiki/REPL-Console) allows verifying before running
-* Cross browser support
-* Remote web driver support
-* Screenshot capture and slideshow playback
-* [Interchangeable Selenium](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#changing-the-selenium-version) implementation
-* [Locator Chaining](https://github.com/gwen-interpreter/gwen-web/wiki/Locator-Chaining)
-* [Headless Browser Execution](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#gwenwebbrowserheadless)
-* [Gwen Workspaces](https://gweninterpreter.wordpress.com/2017/12/18/gwen-workspaces/) for easy and consistent Gwen installation, configuration and execution on any workstation or build server.
+- Automation driven by plain text [Gherkin](https://github.com/cucumber/cucumber/wiki/Gherkin) specifications
+  - See [Gwen-Web DSL](http://htmlpreview.github.io/?https://github.com/gwen-interpreter/gwen-web/blob/master/docs/dsl/gwen-web-dsl.html)
+- Features can execute in [batch mode](https://github.com/gwen-interpreter/gwen/wiki/Execution-Modes#batch-execution) or [interactively](https://github.com/gwen-interpreter/gwen/wiki/Execution-Modes#interactive-repl-execution)
+- Features can execute [sequentially](https://github.com/gwen-interpreter/gwen/wiki/Execution-Modes#serial-execution) or in [parallel](https://github.com/gwen-interpreter/gwen/wiki/Execution-Modes#parallel-execution)
+- Execution can be [data driven](https://github.com/gwen-interpreter/gwen/wiki/Execution-Modes#csv-data-feeds) (using csv data feeds)
+- [REPL console](https://github.com/gwen-interpreter/gwen/wiki/REPL-Console) allows verifying before running
+- Cross browser support
+- Remote web driver support
+- Screenshot capture and slideshow playback
+- [Interchangeable Selenium](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#changing-the-selenium-version) implementation
+- [Locator Chaining](https://github.com/gwen-interpreter/gwen-web/wiki/Locator-Chaining)
+- [Headless Browser Execution](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#gwenwebbrowserheadless)
+- [Gwen Workspaces](https://gweninterpreter.wordpress.com/2017/12/18/gwen-workspaces/) for easy and consistent Gwen installation, configuration and execution on any workstation or build server.
 
 Quick Links to Wiki Information
 -------------------------------
@@ -100,14 +103,13 @@ Quick Links to Wiki Information
 - [Getting Started](https://github.com/gwen-interpreter/gwen-web/wiki/Getting-Started)
 - [Gwen-Web DSL](http://htmlpreview.github.io/?https://github.com/gwen-interpreter/gwen-web/blob/master/docs/dsl/gwen-web-dsl.html)
 
-Mail Group
-----------
+User Groups
+-----------
 
-All announcements and discussions are posted and broadcast to all members in
-the following mail group. You are welcome to visit and join to receive
-notifications or get involved.
+All announcements and discussions are posted and broadcast to all members in the
+[Gwen mail group](https://groups.google.com/d/forum/gwen-interpreter). Active users who join the mailing group will
+also receive an invitation to our Gwen Slack community where they can interact with other users and get more involved.
 
-- [Gwen mail group](https://groups.google.com/d/forum/gwen-interpreter)
 
 Credits
 -------
