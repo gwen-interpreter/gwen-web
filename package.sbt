@@ -16,13 +16,15 @@ publishLocal <<= (publishLocal) dependsOn (packageBin in Universal)
 
 PgpKeys.publishSigned <<= (PgpKeys.publishSigned) dependsOn (packageBin in Universal)
 
-mappings in Universal += file("LICENSE") -> "LICENSE"
+mappings in Universal += file("README.md") -> "README.txt"
 
-mappings in Universal += file("NOTICE") -> "NOTICE"
+mappings in Universal += file("LICENSE") -> "LICENSE.txt"
 
-mappings in Universal += file("LICENSE-THIRDPARTY") -> "LICENSE-THIRDPARTY"
+mappings in Universal += file("NOTICE") -> "NOTICE.txt"
 
-mappings in Universal += file("CHANGELOG") -> "CHANGELOG"
+mappings in Universal += file("LICENSE-THIRDPARTY") -> "LICENSE-THIRDPARTY.txt"
+
+mappings in Universal += file("CHANGELOG") -> "CHANGELOG.txt"
 
 mappings in Universal <++= (packageBin in Compile, target ) map { (_, target) =>
   val dir = file("./features")
