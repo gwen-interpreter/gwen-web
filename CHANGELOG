@@ -1,13 +1,15 @@
 2.16.0
 ======
 Mar 24, 2018
-- Contribution by @acuciureanu: Add ability to switch from an iframe to a top window by using the functionality
-  already implemented in the web driver (ie: switching to the default content). The following DSL was added:
-  - `I switch to the default content`
+- Contributions by @acuciureanu:
+  - Add ability to switch from an iframe to a top window by using the functionality
+    already implemented in the web driver (ie: switching to the default content). The following DSL was added:
+    - `I switch to the default content`
+  - PR #44 - Refactoring of sbt build file
 - Update Gwen from v2.12.6 to v[2.13.0](https://github.com/gwen-interpreter/gwen/releases/tag/v2.13.0)
   - Contributions by @acuciureanu
-    - PR #42 - Unit tests for SQL support
-    - PR #43 - Refactoring of sbt build file
+    - PR gwen-interpreter/gwen#42 - Unit tests for SQL support
+    - PR gwen-interpreter/gwen#43 - Refactoring of sbt build file
 - Introduce [template matching](https://github.com/gwen-interpreter/gwen/wiki/Template-Matching)
   - The following DSL's where introduced
     - `<reference> <should|should not> match template "<expression>"`

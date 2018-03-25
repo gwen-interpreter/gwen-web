@@ -23,7 +23,7 @@ functions on pages may be necessary.
 ### What's New?
 
 - [Template matching](https://github.com/gwen-interpreter/gwen/wiki/Template-Matching)
-- [Gwen Workspaces](https://gweninterpreter.wordpress.com/2017/12/18/gwen-workspaces/)
+- [Switch from an iframe to the top (default content) window](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL#i-switch-to-the-default-content) by @acuciureanu
 
 Why Gwen-web?
 -------------
