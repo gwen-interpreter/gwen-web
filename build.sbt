@@ -1,64 +1,63 @@
+import sbt.Keys.{description, homepage}
+
 // Use file URI for gwen dep until sbt issue 1284 is fixed: https://github.com/sbt/sbt/issues/1284
 lazy val gwen = ProjectRef(file("../gwen"), "root")
 // lazy val gwen = ProjectRef(uri("git://github.com/gwen-interpreter/gwen.git"), "gwen")
 
-val gwenWeb = project in file(".") dependsOn(gwen) 
-
-name := "gwen-web"
-
-description := "A Gwen automation engine for the web"
-
-organization := "org.gweninterpreter"
-
-organizationHomepage := Some(url("http://gweninterpreter.org"))
-
-startYear := Some(2014)
-
-scalaVersion := "2.12.4"
-
-crossPaths := false
-
-trapExit := false
-
-scalacOptions += "-feature"
-
-scalacOptions += "-language:postfixOps"
-
-scalacOptions += "-deprecation"
-
-scalacOptions += "-target:jvm-1.8"
-
-licenses += "Apache License, Version 2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0.html")
-
-homepage := Some(url("https://github.com/gwen-interpreter/gwen-web"))
-
-javaSource in Compile := baseDirectory.value / "src/main/scala"
-
-javaSource in Test := baseDirectory.value / "src/test/scala"
-
-resolvers += "Typesafe Repo" at "http://repo.typesafe.com/typesafe/releases/"
-
-resolvers += "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"
-
-libraryDependencies += "org.seleniumhq.selenium" % "selenium-chrome-driver" % "3.11.0"
-
-libraryDependencies += "org.seleniumhq.selenium" % "selenium-firefox-driver" % "3.11.0"
-
-libraryDependencies += "org.seleniumhq.selenium" % "selenium-ie-driver" % "3.11.0"
-
-libraryDependencies += "org.seleniumhq.selenium" % "selenium-safari-driver" % "3.11.0"
-
-libraryDependencies += "org.seleniumhq.selenium" % "selenium-support" % "3.11.0" excludeAll(
-  ExclusionRule(organization = "junit", name="junit")
+resolvers ++= Seq(
+  "Typesafe Repo" at "http://repo.typesafe.com/typesafe/releases/",
+  "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"
 )
 
-libraryDependencies += "commons-io" % "commons-io" % "2.6"
+lazy val gwenWebSettings = Seq(
+  name := "gwen-web",
+  description := "A Gwen automation engine for the web",
+  organization := "org.gweninterpreter",
+  organizationHomepage := Some(url("http://gweninterpreter.org")),
+  startYear := Some(2014),
+  scalaVersion := "2.12.4",
+  crossPaths := false,
+  trapExit := false,
+  scalacOptions ++= Seq(
+    "-feature",
+    "-language:postfixOps",
+    "-deprecation",
+    "-target:jvm-1.8"
+  ),
+  licenses += "Apache License, Version 2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0.html"),
+  homepage := Some(url("https://github.com/gwen-interpreter/gwen-web"))
+)
 
-libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.5" % "test"
+lazy val commonDependencies = {
+  val commonsIO = "2.6"
+  val selenium = "3.11.0"
 
-libraryDependencies += "org.mockito" % "mockito-all" % "1.10.19" % "test"
+  Seq(
+    "commons-io" % "commons-io" % commonsIO,
+    "org.seleniumhq.selenium" % "selenium-chrome-driver" % selenium,
+    "org.seleniumhq.selenium" % "selenium-firefox-driver" % selenium,
+    "org.seleniumhq.selenium" % "selenium-ie-driver" % selenium,
+    "org.seleniumhq.selenium" % "selenium-safari-driver" % selenium,
+    "org.seleniumhq.selenium" % "selenium-support" % selenium excludeAll ExclusionRule(organization = "junit", name = "junit")
+  )
+}
 
-mappings in (Compile, packageBin) ++= Seq(
+lazy val testDependencies = {
+  val scalaTest = "3.0.5"
+  val mockitoAll = "1.10.19"
+
+  Seq(
+    "org.scalatest" %% "scalatest" % scalaTest,
+    "org.mockito" % "mockito-all" % mockitoAll
+  ).map(_ % Test)
+}
+
+val gwenWeb = (project in file(".")).settings(
+  gwenWebSettings,
+  libraryDependencies ++= commonDependencies ++ testDependencies
+) dependsOn gwen
+
+mappings in(Compile, packageBin) ++= Seq(
   file("LICENSE") -> "LICENSE",
   file("NOTICE") -> "NOTICE",
   file("LICENSE-THIRDPARTY") -> "LICENSE-THIRDPARTY",
