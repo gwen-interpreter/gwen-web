@@ -53,5 +53,11 @@ class WebEngineTest extends FlatSpec with Matchers with MockitoSugar with WebEng
     verify(mockWebContext).performAction("click", mockLocatorBinding)
         
   }
+
+  "I switch to the default content" should "call webContext.switchToDefaultContent" in {
+    val step = Step(StepKeyword.When, "I switch to the default content")
+    evaluate(step, mockEnv)
+    verify(mockWebContext).switchToDefaultContent()
+  }
   
 }
