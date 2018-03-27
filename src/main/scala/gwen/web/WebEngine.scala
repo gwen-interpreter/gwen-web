@@ -434,11 +434,11 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
       case r"""I switch to the parent (?:window|tab)""" =>
         webContext.switchToParent(false)
 
-      case r"""I switch to (.+?)$session""" =>
-        webContext.switchToSession(session)
-
       case """I switch to the default content""" =>
         webContext.switchToDefaultContent()
+
+      case r"""I switch to (.+?)$session""" =>
+        webContext.switchToSession(session)
 
       case r"I (accept|dismiss)$action the (?:alert|confirmation) popup" =>
         webContext.handleAlert(action == "accept")
