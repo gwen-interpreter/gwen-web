@@ -22,6 +22,7 @@ functions on pages may be necessary.
 
 ### What's New?
 
+- [Drag and Drop](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL#i-drag-and-drop-sourceelement-to-targetelement)
 - [Template matching](https://github.com/gwen-interpreter/gwen/wiki/Template-Matching)
 - [Switch from an iframe to the top (default content) window](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL#i-switch-to-the-default-content) by @acuciureanu
 
@@ -77,7 +78,7 @@ Runtime Requirements
 - Native web driver
   - [Safari](https://webkit.org/blog/6900/webdriver-support-in-safari-10/)
   - [Chrome](https://sites.google.com/a/chromium.org/chromedriver/)
-  - [Edge](https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/)
+  - [IE](https://github.com/SeleniumHQ/selenium/wiki/InternetExplorerDriver)
   - [Firefox](https://github.com/mozilla/geckodriver/releases)
 
 Key Features
