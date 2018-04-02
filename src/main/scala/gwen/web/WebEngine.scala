@@ -327,6 +327,11 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
             super.evaluate(step, env)
         }
 
+      case r"""I drag and drop (.+?)$source to (.+?)$$$target""" =>
+        val sourceBinding = env.getLocatorBinding(source)
+        val targetBinding = env.getLocatorBinding(target)
+        webContext.dragAndDrop(sourceBinding, targetBinding)
+
       case r"""I clear (.+?)$$$element""" =>
         val elementBinding = env.getLocatorBinding(element)
         webContext.performAction("clear", elementBinding)

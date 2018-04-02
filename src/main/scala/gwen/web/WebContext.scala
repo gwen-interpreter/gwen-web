@@ -453,6 +453,16 @@ class WebContext(env: WebEnvContext) extends WebElementLocator with LazyLogging 
     }
   }
 
+  def dragAndDrop(sourceBinding: LocatorBinding, targetBinding: LocatorBinding): Unit = {
+    withWebDriver { driver =>
+      withWebElement(sourceBinding) { source =>
+        withWebElement(targetBinding) { target =>
+          new Actions(driver).dragAndDrop(source, target).perform()
+        }
+      }
+    }
+  }
+
   def holdAndClick(modifierKeys: Array[String], clickAction: String, elementBinding: LocatorBinding) {
     val keys = modifierKeys.map(_.trim).map(key => Try(Keys.valueOf(key.toUpperCase)).getOrElse(unsupportedModifierKeyError(key)))
     withDriverAndElement(clickAction, elementBinding) { (driver, webElement) =>

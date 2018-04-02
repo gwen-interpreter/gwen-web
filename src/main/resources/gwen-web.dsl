@@ -455,3 +455,4 @@ I maximise the window
 <source> at xpath "<path>" should not match template file "<filepath>"
 <step> if <condition>
 <step> for each <entry> in <source> delimited by "<delimiter>"
+I drag and drop <element> to <element>

@@ -59,5 +59,18 @@ class WebEngineTest extends FlatSpec with Matchers with MockitoSugar with WebEng
     evaluate(step, mockEnv)
     verify(mockWebContext).switchToDefaultContent()
   }
+
+  "I drag and drop element A to element B" should "call webContext.dragAndDrop" in {
+    val step = Step(StepKeyword.When, "I drag and drop element A to element B")
+
+    val mockLocatorA: LocatorBinding = mock[LocatorBinding]
+    val mockLocatorB: LocatorBinding = mock[LocatorBinding]
+    when(mockEnv.getLocatorBinding("element A")).thenReturn(mockLocatorA)
+    when(mockEnv.getLocatorBinding("element B")).thenReturn(mockLocatorB)
+
+    evaluate(step, mockEnv)
+
+    verify(mockWebContext).dragAndDrop(mockLocatorA, mockLocatorB)
+  }
   
 }
