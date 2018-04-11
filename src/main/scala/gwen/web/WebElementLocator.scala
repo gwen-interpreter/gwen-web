@@ -273,7 +273,23 @@ trait WebElementLocator extends LazyLogging {
   *  @param element the web element name
   *  @param locators the locators
   */
-case class LocatorBinding(element: String, locators: List[Locator])
+case class LocatorBinding(element: String, locators: List[Locator]) {
+  /** Gets the javascript equivalent of this locator binding (used as fallback on stale element reference). */
+  def jsEquivalent: Option[LocatorBinding] = {
+    val locs = locators.filter(_.container.isEmpty)
+    Option(locators.find(_.locatorType == "id").map(loc => Locator("javascript", s"document.getElementById('${loc.expression}')", None)).getOrElse {
+      locs.find(_.locatorType == "css selector").map(loc => Locator("javascript", s"document.querySelector('${loc.expression}')", None)).getOrElse {
+        locs.find(_.locatorType == "xpath").map(loc => Locator("javascript", s"document.evaluate('${loc.expression}', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue", None)).getOrElse {
+          locs.find(_.locatorType == "name").map(loc => Locator("javascript", s"document.getElementsByName('${loc.expression}')[0]", None)).getOrElse {
+            locs.find(_.locatorType == "class name").map(loc => Locator("javascript", s"document.getElementsByClassName('${loc.expression}')[0]", None)).getOrElse {
+              locs.find(_.locatorType == "tag name").map(loc => Locator("javascript", s"document.getElementsByTagName('${loc.expression}')[0]", None)).orNull
+            }
+          }
+        }
+      }
+    }) map { loc => LocatorBinding(this, loc) }
+  }
+}
 
 /** Locator binding factory companion. */
 object LocatorBinding {

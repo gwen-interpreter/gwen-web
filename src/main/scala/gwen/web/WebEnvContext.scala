@@ -39,7 +39,7 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
    Try(logger.info(s"SELENIUM_HOME = ${sys.env("SELENIUM_HOME")}"))
 
   /** The web context. */
-  val webContext = new WebContext(this)
+  val webContext = new WebContext(this, new DriverManager())
 
    /** Resets the current context and closes the web browser. */
   override def reset() {
@@ -207,25 +207,27 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     * @return true if the actual value matches the expected value
     */
   def compare(name: String, expected: String, actual: () => String, operator: String, negate: Boolean): Unit = {
-    var result = false
     var error: Option[String] = None
     var actualValue = actual()
-    try {
-      webContext.waitUntil("waiting for comparison") {
-        result = if (actualValue != null) {
-          super.compare(name, expected, actualValue, operator, negate) match {
-            case Success(condition) => condition
-            case Failure(e) =>
-              error = Some(e.getMessage)
-              false
+    var result = actualValue != null && super.compare(name, expected, actualValue, operator, negate).getOrElse(false)
+    if (!result) {
+      try {
+        webContext.waitUntil("waiting for comparison") {
+          result = if (actualValue != null) {
+            super.compare(name, expected, actualValue, operator, negate) match {
+              case Success(condition) => condition
+              case Failure(e) =>
+                error = Some(e.getMessage)
+                false
+            }
+          } else false
+          result tap { r =>
+            if (!r) actualValue = actual()
           }
-        } else false
-        result tap { r =>
-          if (!r) actualValue = actual()
         }
+      } catch {
+        case _: WaitTimeoutException => result = false
       }
-    } catch {
-      case _: WaitTimeoutException => result = false
     }
     error match {
       case Some(msg) =>

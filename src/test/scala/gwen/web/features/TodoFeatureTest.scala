@@ -1,12 +1,12 @@
 /*
- * Copyright 2014-2015 Brady Wood, Branko Juric
- * 
+ * Copyright 2017 Brady Wood, Branko Juric
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package gwen.web
+package gwen.web.features
 
-class WebInterpreterSequentialTest extends WebInterpreterTest {
+class TodoFeatureTest extends BaseFeatureTest {
 
-  "Sequential mode" should "evaluate all features in sequence" in {
-    evaluate(List("features/floodio", "features/blogs/automationByMeta", "features/todo/CompleteItems.feature"), parallel = false, dryRun = false, "target/reports/sequential", None)
+  "todo features" should "evaluate" in {
+    evaluate(List("features/todo"), parallel = false, dryRun = false, "target/reports/todo", None)
   }
   
 }

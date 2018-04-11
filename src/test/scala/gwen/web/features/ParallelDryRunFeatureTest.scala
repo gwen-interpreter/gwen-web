@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Brady Wood, Branko Juric
+ * Copyright 2014-2015 Brady Wood, Branko Juric
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,16 +14,12 @@
  * limitations under the License.
  */
 
-package gwen.web
+package gwen.web.features
 
-class WebInterpereterMultiLocatorsTest extends WebInterpreterTest {
+class ParallelDryRunFeatureTest extends BaseFeatureTest {
 
-  "Multi locators" should "pass" in {
-    evaluate(List("features/multi-locators/MultiLocators.feature"), parallel = false, dryRun = false, "target/reports/multi-locators", None)
-  }
-
-  "Multi locators dry run" should "pass" in {
-    evaluate(List("features/multi-locators/MultiLocators.feature"), parallel = false, dryRun = true, "target/reports/multi-locators-dry-run", None)
+  "Parallel mode dry run" should "validate all features in parallel" in {
+    evaluate(List("features/floodio", "features/blogs/pageObjectsBegone", "features/blogs/automationByMeta", "features/google"), parallel = true, dryRun = true, "target/reports/parallel-dry-run", None)
   }
   
 }

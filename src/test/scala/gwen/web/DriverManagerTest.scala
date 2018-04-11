@@ -31,6 +31,9 @@ import org.scalatest.Matchers
 import org.scalatest.mockito.MockitoSugar
 import gwen.Settings
 import gwen.UserOverrides
+import gwen.web.errors.NoSuchWindowException
+import gwen.errors.AmbiguousCaseException
+import scala.collection.JavaConverters._
 
 class DriverManagerTest extends FlatSpec with Matchers with MockitoSugar {
   
@@ -108,6 +111,74 @@ class DriverManagerTest extends FlatSpec with Matchers with MockitoSugar {
     val manager = newManager(mockWebDriver)
     manager.quit()
     verify(mockWebDriver, never()).quit()
+  }
+
+  "DriverManager.switchToChild" should "error when there is no child window" in {
+    val mockWebDriver = mock[WebDriver]
+    val manager = newManager(mockWebDriver)
+    intercept[NoSuchWindowException] {
+      manager.switchToChild(mockWebDriver)
+    }
+  }
+
+  "DriverManager.switchToChild" should "should switch to child window" in {
+    val mockWebDriver = mock[WebDriver]
+    val manager = newManager(mockWebDriver)
+    val mockTargetLocator = mock[WebDriver.TargetLocator]
+    manager.drivers.put("primary", mockWebDriver)
+    when(mockWebDriver.getWindowHandles).thenReturn(Set("child").asJava)
+    when(mockWebDriver.switchTo()).thenReturn(mockTargetLocator)
+    manager.switchToChild(mockWebDriver)
+    verify(mockTargetLocator).window("child")
+  }
+
+  "DriverManager.switchToChild" should "should error when there is more than one child window" in {
+    val mockWebDriver = mock[WebDriver]
+    val manager = newManager(mockWebDriver)
+    manager.drivers.put("primary", mockWebDriver)
+    when(mockWebDriver.getWindowHandles).thenReturn(Set("child1", "child2").asJava)
+    intercept[AmbiguousCaseException] {
+      manager.switchToChild(mockWebDriver)
+    }
+  }
+
+  "DriverManager.closeChild" should "error when there is no root or child window" in {
+    val mockWebDriver = mock[WebDriver]
+    val manager = newManager(mockWebDriver)
+    intercept[NoSuchWindowException] {
+      manager.closeChild()
+    }
+  }
+
+  "DriverManager.closeChild" should "error when there is a root window but no child window" in {
+    val mockWebDriver = mock[WebDriver]
+    val manager = newManager(mockWebDriver)
+    manager.pushWindow("root")
+    intercept[NoSuchWindowException] {
+      manager.closeChild()
+    }
+  }
+
+  "DriverManager.closeChild" should "should close child window" in {
+    val mockWebDriver = mock[WebDriver]
+    val manager = newManager(mockWebDriver)
+    val mockTargetLocator = mock[WebDriver.TargetLocator]
+    when(mockWebDriver.switchTo()).thenReturn(mockTargetLocator)
+    manager.pushWindow("root")
+    manager.pushWindow("child")
+    manager.closeChild()
+    verify(mockTargetLocator).window("child")
+    verify(mockTargetLocator).window("root")
+    verify(mockWebDriver).close()
+  }
+
+  "DriverManager.switchToDefaultContent" should "" in {
+    val mockWebDriver = mock[WebDriver]
+    val manager = newManager(mockWebDriver)
+    val mockTargetLocator = mock[WebDriver.TargetLocator]
+    when(mockWebDriver.switchTo()).thenReturn(mockTargetLocator)
+    manager.switchToDefaultContent()
+    verify(mockTargetLocator).defaultContent()
   }
   
   private def newManager(driverName: String): DriverManager = new DriverManager {

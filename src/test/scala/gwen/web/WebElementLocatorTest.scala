@@ -47,6 +47,7 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar {
   val mockTargetLocator: TargetLocator = mock[TargetLocator]
   val mockWebDriverOptions: Options = mock[WebDriver.Options]
   val mockWebDriverTimeouts: Timeouts = mock[WebDriver.Timeouts]
+  val mockDriverManager: DriverManager = mock[DriverManager]
 
   "Attempt to locate non existent element" should "throw no such element error" in {
 
@@ -406,9 +407,54 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar {
     verify(mockWebDriver, times(1)).findElement(By.className(".usrname"))
 
   }
+
+  "Locator bindings with JS equivalents" should "resolve" in {
+
+    val container = Some("container")
+
+    LocatorBinding("user name", "id", "username", None).jsEquivalent should be {
+      Some(LocatorBinding("user name", "javascript", "document.getElementById('username')", None))
+    }
+    LocatorBinding("user name", "id", "username", container).jsEquivalent should be {
+      Some(LocatorBinding("user name", "javascript", "document.getElementById('username')", None))
+    }
+    LocatorBinding("user name", "name", "username", None).jsEquivalent should be {
+      Some(LocatorBinding("user name", "javascript", "document.getElementsByName('username')[0]", None))
+    }
+    LocatorBinding("user name", "class name", "username", None).jsEquivalent should be {
+      Some(LocatorBinding("user name", "javascript", "document.getElementsByClassName('username')[0]", None))
+    }
+    LocatorBinding("user name", "css selector", ".username", None).jsEquivalent should be {
+      Some(LocatorBinding("user name", "javascript", "document.querySelector('.username')", None))
+    }
+    LocatorBinding("user name", "tag name", "input", None).jsEquivalent should be {
+      Some(LocatorBinding("user name", "javascript", "document.getElementsByTagName('input')[0]", None))
+    }
+    LocatorBinding("user name", "xpath", "//html/body/div/input", None).jsEquivalent should be {
+      Some(LocatorBinding("user name", "javascript", "document.evaluate('//html/body/div/input', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue", None))
+    }
+
+  }
+
+  "Locator bindings without JS equivalents" should "not resolve" in {
+
+    val container = Some("container")
+
+    LocatorBinding("user name", "name", "username", container).jsEquivalent should be (None)
+    LocatorBinding("user name", "class name", "username", container).jsEquivalent should be (None)
+    LocatorBinding("user name", "css selector", ".username", container).jsEquivalent should be (None)
+    LocatorBinding("user name", "tag name", "input", container).jsEquivalent should be (None)
+    LocatorBinding("user name", "xpath", "//html/body/div/input", container).jsEquivalent should be (None)
+    LocatorBinding("user name", "link text", "user name", None).jsEquivalent should be (None)
+    LocatorBinding("user name", "link text", "username", container).jsEquivalent should be (None)
+    LocatorBinding("user name", "partial link text", "user name", None).jsEquivalent should be (None)
+    LocatorBinding("user name", "partial link text", "username", container).jsEquivalent should be (None)
+    LocatorBinding("user name", "javascript", "document.getElementById('username')", container).jsEquivalent should be (None)
+
+  }
   
   private def newLocator(env: Option[WebEnvContext], webDriver: WebDriver): WebElementLocator =
-    new WebContext(env.getOrElse(newEnv)) {
+    new WebContext(env.getOrElse(newEnv), mockDriverManager) {
      override def withWebDriver[T](function: WebDriver => T)(implicit takeScreenShot: Boolean = false): Option[T] =
        Option(function(webDriver))
   }

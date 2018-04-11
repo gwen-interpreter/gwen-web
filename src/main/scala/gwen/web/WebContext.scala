@@ -30,10 +30,7 @@ import scala.util.Try
 /**
   * The web context. All web driver interactions happen here (and will do nothing when --dry-run is enabled).
   */
-class WebContext(env: WebEnvContext) extends WebElementLocator with LazyLogging {
-
-  /** The web driver manager. */
-  private val driverManager = new DriverManager()
+class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebElementLocator with LazyLogging {
 
   /** Last captured screenshot file size. */
   private var lastScreenshotSize: Option[Long] = None
@@ -144,9 +141,14 @@ class WebContext(env: WebEnvContext) extends WebElementLocator with LazyLogging 
               try {
                 operation(locate(elementBinding))
               } catch {
-                case _: StaleElementReferenceException =>
+                case se: StaleElementReferenceException =>
                   Thread.sleep(WebSettings.`gwen.web.throttle.msecs`)
-                  operation(locate(elementBinding))
+                  // try js equivalent locator (if one can be derived)
+                  val elem = elementBinding.jsEquivalent match {
+                    case Some(jsBinding) => Try(locate(jsBinding)).getOrElse(locate(elementBinding))
+                    case None => locate(elementBinding)
+                  }
+                  operation(elem)
               }
           }
         } tap { _ =>
@@ -294,14 +296,13 @@ class WebContext(env: WebEnvContext) extends WebElementLocator with LazyLogging 
         }
       } catch {
         case e: NoSuchElementException =>
-          if ((state == "displayed" && negate) || (state == "hidden" && !negate)) result = !negate
-          else if (state == "displayed" || state == "hidden") result = false
+          if (state == "displayed") result = false
+          else if (state == "hidden") result = true
           else throw e
       }
       if (!negate) assert(result, s"${elementBinding.element} should be $state")
       else assert(!result, s"${elementBinding.element} should not be $state")
     }
-    env.bindAndWait(elementBinding.element, state, "true")
   }
 
   /** Gets the title of the current page in the browser.*/
@@ -336,6 +337,8 @@ class WebContext(env: WebEnvContext) extends WebElementLocator with LazyLogging 
     }
   }
 
+   private[web] def createSelect(webElement: WebElement): Select = new Select(webElement)
+
   /**
     * Selects a value in a dropdown (select control) by visible text.
     *
@@ -345,7 +348,7 @@ class WebContext(env: WebEnvContext) extends WebElementLocator with LazyLogging 
   def selectByVisibleText(elementBinding: LocatorBinding, value: String) {
     withWebElement(elementBinding) { webElement =>
       logger.debug(s"Selecting '$value' in ${elementBinding.element} by text")
-      new Select(webElement).selectByVisibleText(value)
+      createSelect(webElement).selectByVisibleText(value)
       env.bindAndWait(elementBinding.element, "select", value)
     }
   }
@@ -359,7 +362,7 @@ class WebContext(env: WebEnvContext) extends WebElementLocator with LazyLogging 
   def selectByValue(elementBinding: LocatorBinding, value: String) {
     withWebElement(elementBinding) { webElement =>
       logger.debug(s"Selecting '$value' in ${elementBinding.element} by value")
-      new Select(webElement).selectByValue(value)
+      createSelect(webElement).selectByValue(value)
       env.bindAndWait(elementBinding.element, "select", value)
     }
   }
@@ -373,7 +376,7 @@ class WebContext(env: WebEnvContext) extends WebElementLocator with LazyLogging 
   def selectByIndex(elementBinding: LocatorBinding, index: Int) {
     withWebElement(elementBinding) { webElement =>
       logger.debug(s"Selecting option in ${elementBinding.element} by index: $index")
-      val select = new Select(webElement)
+      val select = createSelect(webElement)
       select.selectByIndex(index)
       env.bindAndWait(elementBinding.element, "select", select.getOptions.get(index).getText)
     }
@@ -388,7 +391,7 @@ class WebContext(env: WebEnvContext) extends WebElementLocator with LazyLogging 
   def deselectByVisibleText(elementBinding: LocatorBinding, value: String) {
     withWebElement(elementBinding) { webElement =>
       logger.debug(s"Deselecting '$value' in ${elementBinding.element} by text")
-      new Select(webElement).deselectByVisibleText(value)
+      createSelect(webElement).deselectByVisibleText(value)
       env.bindAndWait(elementBinding.element, "deselect", value)
     }
   }
@@ -402,7 +405,7 @@ class WebContext(env: WebEnvContext) extends WebElementLocator with LazyLogging 
   def deselectByValue(elementBinding: LocatorBinding, value: String) {
     withWebElement(elementBinding) { webElement =>
       logger.debug(s"Deselecting '$value' in ${elementBinding.element} by value")
-      new Select(webElement).deselectByValue(value)
+      createSelect(webElement).deselectByValue(value)
       env.bindAndWait(elementBinding.element, "deselect", value)
     }
   }
@@ -416,11 +419,13 @@ class WebContext(env: WebEnvContext) extends WebElementLocator with LazyLogging 
   def deselectByIndex(elementBinding: LocatorBinding, index: Int) {
     withWebElement(elementBinding) { webElement =>
       logger.debug(s"Deselecting option in ${elementBinding.element} by index: $index")
-      val select = new Select(webElement)
+      val select = createSelect(webElement)
       select.deselectByIndex(index)
       env.bindAndWait(elementBinding.element, "deselect", select.getOptions.get(index).getText)
     }
   }
+
+  private [web] def createActions(driver: WebDriver): Actions = new Actions(driver)
 
   def performAction(action: String, elementBinding: LocatorBinding) {
     val actionBinding = env.scopes.getOpt(s"${elementBinding.element}/action/$action/javascript")
@@ -433,11 +438,11 @@ class WebContext(env: WebEnvContext) extends WebElementLocator with LazyLogging 
             case "click" =>
               webElement.click()
             case "right click" =>
-              new Actions(driver).contextClick(webElement).perform()
+              createActions(driver).contextClick(webElement).perform()
             case "double click" =>
-              new Actions(driver).doubleClick(webElement).perform()
+              createActions(driver).doubleClick(webElement).perform()
             case "move to" =>
-              new Actions(driver).moveToElement(webElement).perform()
+              createActions(driver).moveToElement(webElement).perform()
             case "submit" => webElement.submit()
             case "check" | "tick" =>
               if (!webElement.isSelected) webElement.sendKeys(Keys.SPACE)
@@ -457,7 +462,7 @@ class WebContext(env: WebEnvContext) extends WebElementLocator with LazyLogging 
     withWebDriver { driver =>
       withWebElement(sourceBinding) { source =>
         withWebElement(targetBinding) { target =>
-          new Actions(driver).dragAndDrop(source, target).perform()
+          createActions(driver).dragAndDrop(source, target).perform()
         }
       }
     }
@@ -466,7 +471,7 @@ class WebContext(env: WebEnvContext) extends WebElementLocator with LazyLogging 
   def holdAndClick(modifierKeys: Array[String], clickAction: String, elementBinding: LocatorBinding) {
     val keys = modifierKeys.map(_.trim).map(key => Try(Keys.valueOf(key.toUpperCase)).getOrElse(unsupportedModifierKeyError(key)))
     withDriverAndElement(clickAction, elementBinding) { (driver, webElement) =>
-      var actions = new Actions(driver)
+      var actions = createActions(driver)
       keys.foreach { key => actions = actions.keyDown(key) }
       actions = clickAction match {
         case "click" => actions.click(webElement)
@@ -482,7 +487,7 @@ class WebContext(env: WebEnvContext) extends WebElementLocator with LazyLogging 
   def sendKeys(elementBinding: LocatorBinding, keysToSend: Array[String]): Unit = {
     val keys = keysToSend.map(_.trim).map(key => Try(Keys.valueOf(key.toUpperCase)).getOrElse(key))
     withDriverAndElement("send keys", elementBinding) { (driver, webElement) =>
-      var actions = new Actions(driver)
+      var actions = createActions(driver)
       keys.foreach { key => actions = actions.sendKeys(webElement, key) }
       actions.build().perform()
     }
@@ -531,7 +536,7 @@ class WebContext(env: WebEnvContext) extends WebElementLocator with LazyLogging 
   private def performActionIn(action: String, elementBinding: LocatorBinding, contextBinding: LocatorBinding) {
     def perform(webElement: WebElement, contextElement: WebElement)(buildAction: Actions => Actions) {
       withWebDriver { driver =>
-        val moveTo = new Actions(driver).moveToElement(contextElement).moveToElement(webElement)
+        val moveTo = createActions(driver).moveToElement(contextElement).moveToElement(webElement)
         buildAction(moveTo).build().perform()
       }
     }
@@ -661,7 +666,7 @@ class WebContext(env: WebEnvContext) extends WebElementLocator with LazyLogging 
   private def getSelectedElementText(name: String): Option[String] = {
     val elementBinding = env.getLocatorBinding(name)
     withWebElement(elementBinding) { webElement =>
-      val select = new Select(webElement)
+      val select = createSelect(webElement)
       (Option(select.getAllSelectedOptions.asScala.map(_.getText()).mkString(",")) match {
         case None | Some("") =>
           select.getAllSelectedOptions.asScala.map(_.getAttribute("text")).mkString(",")
@@ -684,7 +689,7 @@ class WebContext(env: WebEnvContext) extends WebElementLocator with LazyLogging 
   private def getSelectedElementValue(name: String): Option[String] = {
     val elementBinding = env.getLocatorBinding(name)
     withWebElement(elementBinding) { webElement =>
-      new Select(webElement).getAllSelectedOptions.asScala.map(_.getAttribute("value")).mkString(",") tap { value =>
+      createSelect(webElement).getAllSelectedOptions.asScala.map(_.getAttribute("value")).mkString(",") tap { value =>
         env.bindAndWait(elementBinding.element, "selectedValue", value)
       }
     } tap { value =>

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Brady Wood, Branko Juric
+ * Copyright 2014-2015 Brady Wood, Branko Juric
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package gwen.web
+package gwen.web.features
 
-class WebInterpreterTodoTest extends WebInterpreterTest {
+class BindingsFeatureTest extends BaseFeatureTest {
 
-  "todo features" should "evaluate" in {
-    evaluate(List("features/todo"), parallel = false, dryRun = false, "target/reports/todo", None)
+  "Bindings tests" should "pass" in {
+    evaluate(List("features/bindings"), parallel = false, dryRun = false, "target/reports/bindings", None)
   }
   
 }

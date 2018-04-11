@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package gwen.web
+package gwen.web.features
 
-class WebInterpreterGoogleTest extends WebInterpreterTest {
+class GoogleFeatureTest extends BaseFeatureTest {
 
   "Google feature" should "should evaluate" in {
     evaluate(List("features/google"), parallel = false, dryRun = false, "target/reports/google", None)

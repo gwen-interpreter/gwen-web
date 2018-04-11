@@ -199,11 +199,11 @@ I capture the text in <reference> by regex "<expression>" as <reference>
 I capture the content in <reference> by json path "<expression>" as <reference>
 I capture the text in the current URL by regex "<expression>" as <reference>
 I capture the current URL
-I capture the current URL as <reference>
+I capture the current URL as <attribute>
 I capture <reference> as <attribute>
 I capture <reference>
-I capture <dropdown> text as <reference>
-I capture <dropdown> value as <reference>
+I capture <dropdown> text as <attribute>
+I capture <dropdown> value as <attribute>
 I capture <dropdown> text
 I capture <dropdown> value
 I capture <attribute> by javascript "<expression>"
@@ -214,26 +214,28 @@ my <name> property is "<value>"
 my <name> property will be "<value>"
 my <name> setting is "<value>"
 my <name> setting will be "<value>"
-<reference> is defined by javascript "<expression>"
-<reference> is defined by system process "<process>"
-<reference> is defined by property "<name>"
-<reference> is defined by setting "<name>"
-<reference> is defined by file "<filepath>"
-<reference> will be defined by javascript "<expression>"
-<reference> will be defined by property "<name>"
-<reference> will be defined by setting "<name>"
-<reference> is defined by the text in <reference> by xpath "<expression>"
-<reference> is defined by the node in <reference> by xpath "<expression>"
-<reference> is defined by the nodeset in <reference> by xpath "<expression>"
-<reference> will be defined by the text in <reference> by xpath "<expression>"
-<reference> will be defined by the node in <reference> by xpath "<expression>"
-<reference> will be defined by the nodeset in <reference> by xpath "<expression>"
-<reference> is defined in <reference> by regex "<expression>"
-<reference> will be defined in <reference> by regex "<expression>"
-<reference> is defined in <reference> by json path "<expression>"
-<reference> will be defined in <reference> by json path "<expression>"
-<reference> is "<value>"
-<reference> will be "<value>"
+<attribute> is defined by javascript "<expression>"
+<attribute> is defined by system process "<process>"
+<attribute> is defined by property "<name>"
+<attribute> is defined by setting "<name>"
+<attribute> is defined by file "<filepath>"
+<attribute> will be defined by javascript "<expression>"
+<attribute> will be defined by system process "<process>"
+<attribute> will be defined by property "<name>"
+<attribute> will be defined by setting "<name>"
+<attribute> will be defined by file "<filepath>"
+<attribute> is defined by the text in <reference> by xpath "<expression>"
+<attribute> is defined by the node in <reference> by xpath "<expression>"
+<attribute> is defined by the nodeset in <reference> by xpath "<expression>"
+<attribute> will be defined by the text in <reference> by xpath "<expression>"
+<attribute> will be defined by the node in <reference> by xpath "<expression>"
+<attribute> will be defined by the nodeset in <reference> by xpath "<expression>"
+<attribute> is defined in <reference> by regex "<expression>"
+<attribute> will be defined in <reference> by regex "<expression>"
+<attribute> is defined in <reference> by json path "<expression>"
+<attribute> will be defined in <reference> by json path "<expression>"
+<attribute> is "<value>"
+<attribute> will be "<value>"
 I wait for <element> text for 1 second
 I wait for <element> text for <duration> seconds
 I wait for <element> text
@@ -275,7 +277,6 @@ I submit <element>
 I <modifiers> click <element>
 I <modifiers> right click <element>
 I <modifiers> double click <element>
-I submit <element>
 I click <element> of <context>
 I right click <element> of <context>
 I double click <element> of <context>
@@ -283,6 +284,7 @@ I check <element> of <context>
 I tick <element> of <context>
 I uncheck <element> of <context>
 I untick <element> of <context>
+I move to <element> of <context>
 I send "<keys>" to <element>
 I wait 1 second when <element> is clicked
 I wait 1 second when <element> is right clicked

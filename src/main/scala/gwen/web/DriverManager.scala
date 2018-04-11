@@ -244,8 +244,6 @@ class DriverManager extends LazyLogging {
 
   /**
     * Switches to the child window if one was just opened.
-    *
-    * @param driver the current web driver
     */
   private[web] def switchToChild(driver: WebDriver) {
     val children = driver.getWindowHandles.asScala.filter(window => !windows.contains(window)).toList match {
@@ -299,7 +297,7 @@ class DriverManager extends LazyLogging {
   /** Switches to the top window / first frame */
   private[web] def switchToDefaultContent(): Unit = webDriver.switchTo().defaultContent()
 
-  private def pushWindow(window: String) {
+  private[web] def pushWindow(window: String) {
     if (windows.isEmpty || windows.top != window) {
       windows push window
     }

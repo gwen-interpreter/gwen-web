@@ -14,16 +14,12 @@
  * limitations under the License.
  */
 
-package gwen.web
+package gwen.web.features
 
-class WebInterpreterFlowTest extends WebInterpreterTest {
+class MetaImportsDryRunFeatureTest extends BaseFeatureTest {
 
-  "Flow features" should "should pass" in {
-    evaluate(List("features/flow"), parallel = false, dryRun = false, "target/reports/flow", None)
-  }
-
-  "Flow features dry run" should "should pass" in {
-    evaluate(List("features/flow"), parallel = false, dryRun = true, "target/reports/flow-dry-run", None)
+  "Dry run on single feature with meta imports" should "validate feature" in {
+    evaluate(List("features/meta-imports/GoogleSearch.feature"), parallel = false, dryRun = true, "target/reports/meta-imports-dry-run", None)
   }
   
 }

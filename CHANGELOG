@@ -1,3 +1,10 @@
+2.17.1-SNAPSHOT
+======
+Apr 11, 2018
+- Add unit tests for WebContext and WebEngine classes
+- Move feature integration tests to integration sub package
+- Some refactoring
+
 2.17.0
 ======
 Apr 2, 2018

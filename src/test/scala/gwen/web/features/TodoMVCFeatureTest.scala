@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package gwen.web
+package gwen.web.features
 
-class WebInterpreterTodoMVCTest extends WebInterpreterTest {
+class TodoMVCFeatureTest extends BaseFeatureTest {
 
   // uncomment to run dry run test locally - do not commit uncommented to remove repo (log exceeds limit on travis CI)
 //  "Todo MVC dry run" should "pass" in {
