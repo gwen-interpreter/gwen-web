@@ -2,7 +2,7 @@
 ======
 Apr 11, 2018
 - Add unit tests for WebContext and WebEngine classes
-- Move feature integration tests to integration sub package
+- Move feature integration tests to sub package
 - Some refactoring
 
 2.17.0
