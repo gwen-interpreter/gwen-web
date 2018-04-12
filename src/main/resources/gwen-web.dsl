@@ -385,8 +385,11 @@ I accept the alert popup
 I accept the confirmation popup
 I dismiss the confirmation popup
 I switch to the child window
+I switch to the child tab
 I close the child window
+I close the child tab
 I switch to the parent window
+I switch to the parent tab
 I switch to the default content
 I capture the current screenshot
 <element> can be clicked by javascript "<javascript>"
@@ -398,11 +401,16 @@ I capture the current screenshot
 <element> can be ticked by javascript "<javascript>"
 <element> can be unchecked by javascript "<javascript>"
 <element> can be unticked by javascript "<javascript>"
+<element> can be selected by javascript "<javascript>"
+<element> can be deselected by javascript "<javascript>"
+<element> can be typed by javascript "<javascript>"
+<element> can be entered by javascript "<javascript>"
+<element> can be tabbed by javascript "<javascript>"
 <reference> is defined by sql "<selectStmt>" in the <dbName> database
 <reference> will be defined by sql "<selectStmt>" in the <dbName> database
 <reference> is defined in the <dbName> database by sql "<selectStmt>"
 <reference> will be defined in the <dbName> database by sql "<selectStmt>"
-I update the <dbName> database by sql "<updateSmt>"
+I update the <dbName> database by sql "<updateStmt>"
 I resize the window to width <w> and height <h>
 I maximize the window
 I maximise the window

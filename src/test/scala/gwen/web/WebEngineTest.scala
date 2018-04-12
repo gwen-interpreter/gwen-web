@@ -22,12 +22,13 @@ import gwen.{Settings, UserOverrides}
 import org.mockito.Mockito.{verify, _}
 import org.scalatest.{BeforeAndAfterEach, FlatSpec, Matchers}
 import org.scalatest.mockito.MockitoSugar
-import gwen.dsl.Step
-import gwen.dsl.StepKeyword
+import gwen.dsl.{FlatTable, Step, StepKeyword}
 import gwen.eval.{FeatureScope, GwenOptions, ScopedDataStack}
 import gwen.Predefs.Kestrel
 import gwen.Predefs.FileIO
 import org.openqa.selenium.WebElement
+import org.mockito.Matchers.any
+import gwen.errors.UnboundAttributeException
 
 class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSugar with BeforeAndAfterEach {
 
@@ -54,9 +55,23 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
       ("match template", "value", "value"),
       ("match template file", "value", templateFile.getPath)
     )
-  private val refMatchers = matchers.filter(!_._1.contains("template"))
+  private val matchers2 = matchers.filter(!_._1.contains("template"))
+  private val matchers3 = matchers.filter(!_._1.contains("path"))
+    List(
+      ("be", "value", "value"),
+      ("contain", "value", "a"),
+      ("start with", "value", "v"),
+      ("end with", "value", "e"),
+      ("match regex", "value", "value"),
+      ("match xpath", "<value>x</value>", "/value"),
+      ("match json path", """{value:"x"}""", "$.value"),
+      ("match template", "value", "value"),
+      ("match template file", "value", templateFile.getPath)
+    )
   private val elemStates = List("displayed", "hidden", "checked", "ticked", "unchecked", "unticked", "enabled", "disabled")
   private val events = List("clicked", "right clicked", "double clicked", "submitted", "checked", "ticked", "unchecked", "unticked", "selected", "deselected", "typed", "entered", "tabbed", "cleared", "moved to")
+  private val timeUnits1 = List("second", "millisecond")
+  private val timeUnits2= List("minute", "second", "millisecond")
   private var webContext: WebContext = _
   private var env: WebEnvContext = _
   private var mockScopes: ScopedDataStack = _
@@ -76,6 +91,10 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
 
   private def evaluate(expression: String): Unit = {
     evaluate(Step(StepKeyword.Given, expression), env)
+  }
+
+  private def evaluatePriority(expression: String): Option[Step] = {
+    evaluatePriority(Step(StepKeyword.Given, expression), env)
   }
 
   private def withSetting[T](name: String, value: String)(f: => T):T = {
@@ -182,7 +201,7 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
   }
 
   "the page title should <operator> <reference>" should "evaluate" in {
-    refMatchers.foreach { case (operator, source, expression) =>
+    matchers2.foreach { case (operator, source, expression) =>
       doReturn(source).when(webContext).getTitle
       doReturn(expression).when(env).getAttribute("<reference>")
       evaluate(s"""the page title should $operator "$expression"""")
@@ -191,7 +210,7 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
   }
 
   "the page title should not <operator> <reference>" should "evaluate" in {
-    refMatchers.foreach { case (operator, src, expression) =>
+    matchers2.foreach { case (operator, src, expression) =>
       val source = src.replaceAll("value", "other")
       doReturn(source).when(webContext).getTitle
       doReturn(expression).when(env).getAttribute("<reference>")
@@ -240,7 +259,7 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
   }
 
   "<reference A> should <operator> <reference B>" should "evaluate" in {
-    refMatchers.foreach { case (operator, source, expression) =>
+    matchers2.foreach { case (operator, source, expression) =>
       doReturn(() => source).when(env).boundAttributeOrSelection("<reference A>", None)
       doReturn(expression).when(env).getAttribute("<reference B>")
       doReturn(None).when(mockScopes).getOpt("<reference>")
@@ -249,7 +268,7 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
   }
 
   "<reference A> should not <operator> <reference B>" should "evaluate" in {
-    refMatchers.foreach { case (operator, src, expression) =>
+    matchers2.foreach { case (operator, src, expression) =>
       val source = src.replaceAll("value", "other")
       doReturn(() => source).when(env).boundAttributeOrSelection("<reference A>", None)
       doReturn(expression).when(env).getAttribute("<reference B>")
@@ -284,7 +303,7 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
   "<dropdown> text should <operator> <reference>" should "evaluate" in {
     val mockBinding = mock[LocatorBinding]
     doReturn(Some(mockBinding)).when(env).getLocatorBinding("<dropdown>", optional = false)
-    refMatchers.foreach { case (operator, source, expression) =>
+    matchers2.foreach { case (operator, source, expression) =>
       doReturn(() => source).when(env).boundAttributeOrSelection("<dropdown>", Some(" text"))
       doReturn(Some("<dropdown>")).when(mockScopes).getOpt("<dropdown>")
       doReturn(expression).when(env).getAttribute("<reference>")
@@ -295,7 +314,7 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
   "<dropdown> text should not <operator> <reference>" should "evaluate" in {
     val mockBinding = mock[LocatorBinding]
     doReturn(Some(mockBinding)).when(env).getLocatorBinding("<dropdown>", optional = false)
-    refMatchers.foreach { case (operator, src, expression) =>
+    matchers2.foreach { case (operator, src, expression) =>
       val source = src.replaceAll("value", "other")
       doReturn(() => source).when(env).boundAttributeOrSelection("<dropdown>", Some(" text"))
       doReturn(Some("<dropdown>")).when(mockScopes).getOpt("<dropdown>")
@@ -330,7 +349,7 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
   "<dropdown> value should <operator> <reference>" should "evaluate" in {
     val mockBinding = mock[LocatorBinding]
     doReturn(Some(mockBinding)).when(env).getLocatorBinding("<dropdown>", optional = false)
-    refMatchers.foreach { case (operator, source, expression) =>
+    matchers2.foreach { case (operator, source, expression) =>
       doReturn(() => source).when(env).boundAttributeOrSelection("<dropdown>", Some(" value"))
       doReturn(Some("<dropdown>")).when(mockScopes).getOpt("<dropdown>")
       doReturn(expression).when(env).getAttribute("<reference>")
@@ -341,7 +360,7 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
   "<dropdown> value should not <operator> <reference>" should "evaluate" in {
     val mockBinding = mock[LocatorBinding]
     doReturn(Some(mockBinding)).when(env).getLocatorBinding("<dropdown>", optional = false)
-    refMatchers.foreach { case (operator, src, expression) =>
+    matchers2.foreach { case (operator, src, expression) =>
       val source = src.replaceAll("value", "other")
       doReturn(() => source).when(env).boundAttributeOrSelection("<dropdown>", Some(" value"))
       doReturn(Some("<dropdown>")).when(mockScopes).getOpt("<dropdown>")
@@ -370,7 +389,7 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
   }
 
   "the current URL should <operator> <reference>" should "evaluate" in {
-    refMatchers.foreach { case (operator, source, expression) =>
+    matchers2.foreach { case (operator, source, expression) =>
       doReturn(() => source).when(env).boundAttributeOrSelection("the current URL", None)
       doReturn(None).when(mockScopes).getOpt("the current URL")
       doReturn(expression).when(env).getAttribute("<reference>")
@@ -380,7 +399,7 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
   }
 
   "the current URL should not <operator> <reference>" should "evaluate" in {
-    refMatchers.foreach { case (operator, src, expression) =>
+    matchers2.foreach { case (operator, src, expression) =>
       val source = src.replaceAll("value", "other")
       doReturn(() => source).when(env).boundAttributeOrSelection("the current URL", None)
       doReturn(None).when(mockScopes).getOpt("the current URL")
@@ -837,9 +856,355 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
     verify(mockScopes, times(events.size)).get("<condition>/javascript")
   }
 
+  """I wait until "<javascript>"""" should "evaluate" in {
+    evaluate("""I wait until "<javascript>"""")
+  }
+
+  "I wait until <condition>" should "evaluate" in {
+    doReturn("(function(){return true;})()").when(mockScopes).get("<condition>/javascript")
+    evaluate("I wait until <condition>")
+  }
+
+  "I wait 1 second" should "evaluate" in {
+    evaluate("I wait 1 second")
+  }
+
+  "I wait <duration> seconds" should "evaluate" in {
+    evaluate("I wait 2 seconds")
+  }
+
+  "I <highlight|locate> <element>" should "evaluate" in {
+    val mockBinding = mock[LocatorBinding]
+    val mockWebElement = mock[WebElement]
+    doReturn(mockBinding).when(env).getLocatorBinding("<element>")
+    doReturn(mockWebElement).when(webContext).locate(mockBinding)
+    List("highlight", "locate").foreach { x =>
+      evaluate(s"I $x <element>")
+    }
+    verify(webContext, times(2)).locate(mockBinding)
+  }
+
+  """I execute javascript "<javascript>"""" should "evaluate" in {
+    doReturn(true).when(env).evaluateJS("<javascript>")
+    evaluate("""I execute javascript "<javascript>"""")
+    verify(env).evaluateJS("<javascript>")
+  }
+
+  """I execute system process "<command>"""" should "evaluate" in {
+    evaluate("""I execute system process "hostname"""")
+  }
+
+  "I refresh the current page" should "evaluate" in {
+    doNothing().when(webContext).refreshPage()
+    evaluate("I refresh the current page")
+    verify(webContext).refreshPage()
+  }
+
+  "I base64 decode <reference> as <attribute>" should "evaluate" in {
+    doReturn("value").when(env).getBoundReferenceValue("<reference>")
+    doReturn("decoded").when(env).decodeBase64("value")
+    evaluate("I base64 decode <reference> as <attribute>")
+    verify(env).addAttachment("<attribute>", "txt", "decoded")
+    verify(mockFeatureScope).set("<attribute>", "decoded")
+  }
+
+  "I base64 decode <reference>" should "evaluate" in {
+    doReturn("value").when(env).getBoundReferenceValue("<reference>")
+    doReturn("decoded").when(env).decodeBase64("value")
+    evaluate("I base64 decode <reference>")
+    verify(env).addAttachment("<reference>", "txt", "decoded")
+    verify(mockFeatureScope).set("<reference>", "decoded")
+  }
+
+  "<step> <until|while> <condition> using <delayPeriod> <second|millisecond> delay and <timeoutPeriod> <minute|second|millisecond> timeout" should "evaluate" in {
+    timeUnits1.foreach { unit1 =>
+      timeUnits2.foreach { unit2 =>
+        List("until", "while").foreach { repeat =>
+          val step = evaluatePriority(s"""x is "1" $repeat <condition> using 1 $unit1 delay and 2000 $unit2 timeout""")
+          step should not be (None)
+          step.get.toString should be (s"""Given x is "1" $repeat <condition> using 1 $unit1 delay and 2000 $unit2 timeout""")
+        }
+      }
+    }
+  }
+
+  "<step> <until|while> <condition> using <delayPeriod> <second|millisecond> delay" should "evaluate" in {
+    timeUnits1.foreach { unit =>
+      List("until", "while").foreach { repeat =>
+        val step = evaluatePriority(s"""x is "1" $repeat <condition> using 1 $unit delay""")
+        step should not be (None)
+        step.get.toString should be (s"""Given x is "1" $repeat <condition> using 1 $unit delay""")
+      }
+    }
+  }
+
+  "<step> <until|while> <condition> using no delay and <timeoutPeriod> <minute|second|millisecond> timeout" should "evaluate" in {
+    timeUnits2.foreach { unit =>
+      List("until", "while").foreach { repeat =>
+        val step = evaluatePriority(s"""x is "1" $repeat <condition> using no delay and 2000 $unit timeout""")
+        step should not be (None)
+        step.get.toString should be (s"""Given x is "1" $repeat <condition> using no delay and 2000 $unit timeout""")
+      }
+    }
+  }
+
+  "<step> <until|while> <condition> using no delay" should "evaluate" in {
+    List("until", "while").foreach { repeat =>
+      val step = evaluatePriority(s"""x is "1" $repeat <condition> using no delay""")
+      step should not be (None)
+      step.get.toString should be (s"""Given x is "1" $repeat <condition> using no delay""")
+    }
+  }
+
+  "<step> <until|while> <condition>" should "evaluate" in {
+    List("until", "while").foreach { repeat =>
+      val step = evaluatePriority(s"""x is "1" $repeat <condition>""")
+      step should not be (None)
+      step.get.toString should be (s"""Given x is "1" $repeat <condition>""")
+    }
+  }
+
+  "I close the current browser" should "evaluate" in {
+    doNothing().when(webContext).close()
+    evaluate("I close the current browser")
+    verify(webContext).close()
+  }
+
+  "I close the browser" should "evaluate" in {
+    doNothing().when(webContext).close()
+    evaluate("I close the browser")
+    verify(webContext).close()
+  }
+
+  "I start a new browser" should "evaluate" in {
+    doNothing().when(webContext).close("primary")
+    doNothing().when(webContext).switchToSession("primary")
+    evaluate("I start a new browser")
+    verify(webContext).close("primary")
+    verify(webContext).switchToSession("primary")
+  }
+
+  "I start a browser for <session>" should "evaluate" in {
+    doNothing().when(webContext).close("<session>")
+    doNothing().when(webContext).switchToSession("<session>")
+    evaluate("I start a browser for <session>")
+    verify(webContext).close("<session>")
+    verify(webContext).switchToSession("<session>")
+  }
+
+  "I close the browser for <session>" should "evaluate" in {
+    doNothing().when(webContext).close("<session>")
+    evaluate("I close the browser for <session>")
+    verify(webContext).close("<session>")
+  }
+
+  "I switch to <session>" should "evaluate" in {
+    doNothing().when(webContext).switchToSession("<session>")
+    evaluate("I switch to <session>")
+    verify(webContext).switchToSession("<session>")
+  }
+
+  "I <accept|dismiss> the <alert|confirmation> popup" should "evaluate" in {
+    List("accept", "dismiss").foreach { action =>
+      val accept = action == "accept"
+      doNothing().when(webContext).handleAlert(accept)
+      List("alert", "confirmation").foreach { mode =>
+        evaluate(s"I $action the $mode popup")
+      }
+    }
+    verify(webContext, times(2)).handleAlert(true)
+    verify(webContext, times(2)).handleAlert(false)
+  }
+
+  "I switch to the child <window|tab>" should "evaluate" in {
+    doNothing().when(webContext).switchToChild()
+    List("window", "tab").foreach { x =>
+      evaluate(s"I switch to the child $x")
+    }
+    verify(webContext, times(2)).switchToChild()
+  }
+
+  "I close the child <window|tab>" should "evaluate" in {
+    doNothing().when(webContext).closeChild()
+    List("window", "tab").foreach { x =>
+      evaluate(s"I close the child $x")
+    }
+    verify(webContext, times(2)).closeChild()
+  }
+
+  "I switch to the parent <window|tab>" should "evaluate" in {
+    List("window", "tab").foreach { x =>
+      doNothing().when(webContext).switchToParent(false)
+      evaluate(s"I switch to the parent $x")
+    }
+    verify(webContext, times(2)).switchToParent(false)
+  }
+
   "I switch to the default content" should "evaluate" in {
+    doNothing().when(webContext).switchToDefaultContent()
     evaluate("I switch to the default content")
     verify(webContext).switchToDefaultContent()
+  }
+
+  "I capture the current screenshot" should "evaluate" in {
+    doNothing().when(webContext).captureScreenshot(true)
+    evaluate("I capture the current screenshot")
+    verify(webContext).captureScreenshot(true)
+  }
+
+  """<element> can be <clicked|right clicked|double clicked|submitted|checked|ticked|unchecked|unticked|selected|deselected|typed|entered|tabbed|cleared|moved to> by javascript "<javascript>"""" should "evaluate" in {
+    val mockBinding = mock[LocatorBinding]
+    doReturn(mockBinding).when(env).getLocatorBinding("<element>")
+    events.foreach { event =>
+      evaluate(s"""<element> can be $event by javascript "<javascript>"""")
+      verify(mockScopes).set(s"<element>/action/${WebEvents.EventToAction(event)}/javascript", "<javascript>")
+    }
+  }
+
+  """<reference> <is|will be> defined by sql "<selectStmt>" in the <dbName> database""" should "evaluate" in {
+    val mockActiveScope = mock[ScopedDataStack]
+    doReturn(mockActiveScope).when(env).activeScope
+    withSetting("gwen.db.<dbName>.driver", "driver") {
+      withSetting("gwen.db.<dbName>.url", "url") {
+        List("is", "will be").foreach { x =>
+          evaluate(s"""<reference> $x defined by sql "<selectStmt>" in the <dbName> database""")
+        }
+        verify(mockActiveScope, times(2)).set(s"<reference>/sql/selectStmt", "<selectStmt>")
+        verify(mockActiveScope, times(2)).set(s"<reference>/sql/dbName", "<dbName>")
+      }
+    }
+  }
+
+  """<reference> <is|will be> defined in the <dbName> database by sql "<selectStmt>"""" should "evaluate" in {
+    val mockActiveScope = mock[ScopedDataStack]
+    doReturn(mockActiveScope).when(env).activeScope
+    withSetting("gwen.db.<dbName>.driver", "driver") {
+      withSetting("gwen.db.<dbName>.url", "url") {
+        List("is", "will be").foreach { x =>
+          evaluate(s"""<reference> $x defined in the <dbName> database by sql "<selectStmt>"""")
+        }
+        verify(mockActiveScope, times(2)).set(s"<reference>/sql/selectStmt", "<selectStmt>")
+        verify(mockActiveScope, times(2)).set(s"<reference>/sql/dbName", "<dbName>")
+      }
+    }
+  }
+
+  """I update the <dbName> database by sql "<updateStmt>"""" should "evaluate" in {
+    val mockActiveScope = mock[ScopedDataStack]
+    doReturn(mockActiveScope).when(env).activeScope
+    doReturn(1).when(env).executeSQLUpdate("<updateStmt>", "<dbName>")
+    withSetting("gwen.db.<dbName>.driver", "driver") {
+      withSetting("gwen.db.<dbName>.url", "url") {
+        evaluate("""I update the <dbName> database by sql "<updateStmt>"""")
+        verify(mockActiveScope).set(s"<dbName> rows affected", "1")
+      }
+    }
+  }
+
+  "I resize the window to width <w> and height <h>" should "evaluate" in {
+    doNothing().when(webContext).resizeWindow(400, 200)
+    evaluate("I resize the window to width 400 and height 200")
+    verify(webContext).resizeWindow(400, 200)
+  }
+
+  "I <maximize|maximise> the window" should "evaluate" in {
+    doNothing().when(webContext).maximizeWindow()
+    List("maximize", "maximise").foreach { x =>
+      evaluate(s"I $x the window")
+    }
+    verify(webContext, times(2)).maximizeWindow()
+  }
+
+  """<step> for each <element> located by id "<expression>"""" should "evaluate" in {
+    doReturn(Nil).when(webContext).locateAll(any[LocatorBinding])
+    val step = evaluatePriority(s"""x is "1" for each <element> located by id "<expression>"""")
+    step should not be (None)
+    step.get.toString should be (s"""Given x is "1" for each <element> located by id "<expression>"""")
+  }
+
+  """<step> for each <element> located by id "<expression>" in <container>""" should "evaluate" in {
+    val mockBinding = mock[LocatorBinding]
+    doReturn(mockBinding).when(env).getLocatorBinding("<container>")
+    doReturn(Nil).when(webContext).locateAll(any[LocatorBinding])
+    val step = evaluatePriority(s"""x is "1" for each <element> located by id "<expression>" in <container>""")
+    step should not be (None)
+    step.get.toString should be (s"""Given x is "1" for each <element> located by id "<expression>" in <container>""")
+  }
+
+  "<step> for each <element> in <elements>" should "evaluate" in {
+    val mockBinding = mock[LocatorBinding]
+    doReturn(mockBinding).when(env).getLocatorBinding("<elements>")
+    doReturn(Nil).when(webContext).locateAll(any[LocatorBinding])
+    val step = evaluatePriority("""x is "1" for each <element> in <elements>""")
+    step should not be (None)
+    step.get.toString should be (s"""Given x is "1" for each <element> in <elements>""")
+  }
+
+  "<step> for each data record" should "evaluate" in {
+    val mockTable = mock[FlatTable]
+    doReturn(Some(mockTable)).when(mockFeatureScope).getObject("table")
+    doReturn(Nil).when(mockTable).records
+    val step = evaluatePriority("""x is "1" for each data record""")
+    step should not be (None)
+    step.get.toString should be (s"""Given x is "1" for each data record""")
+  }
+
+  "<attribute> should be absent" should "evaluate" in {
+    doThrow(new UnboundAttributeException("<attribute>", None)).when(env).getBoundReferenceValue("<attribute>")
+    evaluate("<attribute> should be absent")
+  }
+
+  """<source> at json path "<path>" should be "<expression>"""" should "evaluate" in {
+    val mockActiveScope = mock[ScopedDataStack]
+    doReturn(mockActiveScope).when(env).activeScope
+    matchers3.foreach { case (operator, _, expression) =>
+      doReturn("""{x:"value"}""").when(mockActiveScope).get("<source>")
+      doReturn(None).when(mockScopes).getOpt("<source>")
+      evaluate(s"""<source> at json path "$$.x" should $operator "$expression"""")
+    }
+  }
+
+  """<source> at json path "<path>" should not be "<expression>"""" should "evaluate" in {
+    val mockActiveScope = mock[ScopedDataStack]
+    doReturn(mockActiveScope).when(env).activeScope
+    matchers3.foreach { case (operator, _, expression) =>
+      doReturn("""{x:"other"}""").when(mockActiveScope).get("<source>")
+      doReturn(None).when(mockScopes).getOpt("<source>")
+      evaluate(s"""<source> at json path "$$.x" should not $operator "$expression"""")
+    }
+  }
+
+  """<source> at xpath "<path>" should be "<expression>"""" should "evaluate" in {
+    val mockActiveScope = mock[ScopedDataStack]
+    doReturn(mockActiveScope).when(env).activeScope
+    matchers3.foreach { case (operator, _, expression) =>
+      doReturn("""<x>value</x>""").when(mockActiveScope).get("<source>")
+      doReturn(None).when(mockScopes).getOpt("<source>")
+      evaluate(s"""<source> at xpath "x" should $operator "$expression"""")
+    }
+  }
+
+  """<source> at xpath "<path>" should not be "<expression>"""" should "evaluate" in {
+    val mockActiveScope = mock[ScopedDataStack]
+    doReturn(mockActiveScope).when(env).activeScope
+    matchers3.foreach { case (operator, _, expression) =>
+      doReturn("""<x>other</x>""").when(mockActiveScope).get("<source>")
+      doReturn(None).when(mockScopes).getOpt("<source>")
+      evaluate(s"""<source> at xpath "x" should not $operator "$expression"""")
+    }
+  }
+
+  "<step> if <condition>" should "evaluate" in {
+    val step = evaluatePriority("""x is "1" if <condition>""")
+    step should not be (None)
+    step.get.toString should be (s"""Given x is "1" if <condition>""")
+  }
+
+  """<step> for each <entry> in <source> delimited by "<delimiter>"""" should "evaluate" in {
+    doReturn("").when(env).getBoundReferenceValue("<source>")
+    val step = evaluatePriority("""x is "1" for each <entry> in <source> delimited by ","""")
+    step should not be (None)
+    step.get.toString should be (s"""Given x is "1" for each <entry> in <source> delimited by ","""")
   }
 
   "I drag and drop <element A> to <element B>" should "evaluate" in {
