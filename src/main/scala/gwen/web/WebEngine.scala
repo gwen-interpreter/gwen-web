@@ -240,7 +240,7 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
       }
 
       case r"""the page title should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$$$attribute""" =>
-        val expected = env.getAttribute(attribute)
+        val expected = env.getBoundReferenceValue(attribute)
         env.perform {
           env.compare("title", expected, () => webContext.getTitle, operator, Option(negation).isDefined)
         }
@@ -272,7 +272,7 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
 
       case r"""(.+?)$element( value| text)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$$$attribute""" if attribute != "absent" && !element.matches(".+at (json path|xpath).+") =>
         if (element == "I") undefinedStepError(step)
-        val expected = env.getAttribute(attribute)
+        val expected = env.getBoundReferenceValue(attribute)
         val actual = env.boundAttributeOrSelection(element, Option(selection))
         env.perform {
           env.compare(element + Option(selection).getOrElse(""), expected, actual, operator, Option(negation).isDefined)
@@ -351,7 +351,7 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
 
       case r"""I (enter|type)$action (.+?)$attribute in (.+?)$$$element""" =>
         val elementBinding = env.getLocatorBinding(element)
-        val value = env.getAttribute(attribute)
+        val value = env.getBoundReferenceValue(attribute)
         webContext.sendValue(elementBinding, value, clearFirst = true, sendEnterKey = action == "enter")
 
       case r"""I (select|deselect)$action the (\d+?)$position(?:st|nd|rd|th) option in (.+?)$$$element""" =>
@@ -379,7 +379,7 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
         }
 
       case r"""I (select|deselect)$action (.+?)$attribute in (.+?)$element by value""" =>
-        val value = env.getAttribute(attribute)
+        val value = env.getBoundReferenceValue(attribute)
         val elementBinding = env.getLocatorBinding(element)
         if (action == "select") {
           webContext.selectByValue(elementBinding, value)
@@ -388,7 +388,7 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
         }
 
       case r"""I (select|deselect)$action (.+?)$attribute in (.+?)$$$element""" =>
-        val value = env.getAttribute(attribute)
+        val value = env.getBoundReferenceValue(attribute)
         val elementBinding = env.getLocatorBinding(element)
         if (action == "select") {
           webContext.selectByVisibleText(elementBinding, value)
@@ -453,6 +453,15 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
 
       case r"""I maximi(?:z|s)e the window""" =>
         webContext.maximizeWindow()
+
+      case r"""I append "(.+?)"$text to (.+?)$$$element""" =>
+        val elementBinding = env.getLocatorBinding(element)
+        webContext.sendValue(elementBinding, text, clearFirst = false, sendEnterKey = false)
+
+      case r"""I append (.+?)$attribute to (.+?)$$$element""" =>
+        val elementBinding = env.getLocatorBinding(element)
+        val text = env.getBoundReferenceValue(attribute)
+        webContext.sendValue(elementBinding, text, clearFirst = false, sendEnterKey = false)
 
       case _ => super.evaluate(step, env)
 

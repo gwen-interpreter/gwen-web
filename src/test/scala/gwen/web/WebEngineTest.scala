@@ -203,7 +203,7 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
   "the page title should <operator> <reference>" should "evaluate" in {
     matchers2.foreach { case (operator, source, expression) =>
       doReturn(source).when(webContext).getTitle
-      doReturn(expression).when(env).getAttribute("<reference>")
+      doReturn(expression).when(env).getBoundReferenceValue("<reference>")
       evaluate(s"""the page title should $operator "$expression"""")
       verify(env).parseExpression(operator, expression)
     }
@@ -213,7 +213,7 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
     matchers2.foreach { case (operator, src, expression) =>
       val source = src.replaceAll("value", "other")
       doReturn(source).when(webContext).getTitle
-      doReturn(expression).when(env).getAttribute("<reference>")
+      doReturn(expression).when(env).getBoundReferenceValue("<reference>")
       evaluate(s"""the page title should not $operator "$expression"""")
       verify(env).parseExpression(operator, expression)
     }
@@ -261,7 +261,7 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
   "<reference A> should <operator> <reference B>" should "evaluate" in {
     matchers2.foreach { case (operator, source, expression) =>
       doReturn(() => source).when(env).boundAttributeOrSelection("<reference A>", None)
-      doReturn(expression).when(env).getAttribute("<reference B>")
+      doReturn(expression).when(env).getBoundReferenceValue("<reference B>")
       doReturn(None).when(mockScopes).getOpt("<reference>")
       evaluate(s"<reference A> should $operator <reference B>")
     }
@@ -271,7 +271,7 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
     matchers2.foreach { case (operator, src, expression) =>
       val source = src.replaceAll("value", "other")
       doReturn(() => source).when(env).boundAttributeOrSelection("<reference A>", None)
-      doReturn(expression).when(env).getAttribute("<reference B>")
+      doReturn(expression).when(env).getBoundReferenceValue("<reference B>")
       doReturn(None).when(mockScopes).getOpt("<reference>")
       evaluate(s"<reference A> should not $operator <reference B>")
     }
@@ -306,7 +306,7 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
     matchers2.foreach { case (operator, source, expression) =>
       doReturn(() => source).when(env).boundAttributeOrSelection("<dropdown>", Some(" text"))
       doReturn(Some("<dropdown>")).when(mockScopes).getOpt("<dropdown>")
-      doReturn(expression).when(env).getAttribute("<reference>")
+      doReturn(expression).when(env).getBoundReferenceValue("<reference>")
       evaluate(s"<dropdown> text should $operator <reference>")
     }
   }
@@ -318,7 +318,7 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
       val source = src.replaceAll("value", "other")
       doReturn(() => source).when(env).boundAttributeOrSelection("<dropdown>", Some(" text"))
       doReturn(Some("<dropdown>")).when(mockScopes).getOpt("<dropdown>")
-      doReturn(expression).when(env).getAttribute("<reference>")
+      doReturn(expression).when(env).getBoundReferenceValue("<reference>")
       evaluate(s"<dropdown> text should not $operator <reference>")
     }
   }
@@ -352,7 +352,7 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
     matchers2.foreach { case (operator, source, expression) =>
       doReturn(() => source).when(env).boundAttributeOrSelection("<dropdown>", Some(" value"))
       doReturn(Some("<dropdown>")).when(mockScopes).getOpt("<dropdown>")
-      doReturn(expression).when(env).getAttribute("<reference>")
+      doReturn(expression).when(env).getBoundReferenceValue("<reference>")
       evaluate(s"<dropdown> value should $operator <reference>")
     }
   }
@@ -364,7 +364,7 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
       val source = src.replaceAll("value", "other")
       doReturn(() => source).when(env).boundAttributeOrSelection("<dropdown>", Some(" value"))
       doReturn(Some("<dropdown>")).when(mockScopes).getOpt("<dropdown>")
-      doReturn(expression).when(env).getAttribute("<reference>")
+      doReturn(expression).when(env).getBoundReferenceValue("<reference>")
       evaluate(s"<dropdown> value should not $operator <reference>")
     }
   }
@@ -392,7 +392,7 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
     matchers2.foreach { case (operator, source, expression) =>
       doReturn(() => source).when(env).boundAttributeOrSelection("the current URL", None)
       doReturn(None).when(mockScopes).getOpt("the current URL")
-      doReturn(expression).when(env).getAttribute("<reference>")
+      doReturn(expression).when(env).getBoundReferenceValue("<reference>")
       evaluate(s"""the current URL should $operator "$expression"""")
       verify(env).parseExpression(operator, expression)
     }
@@ -403,26 +403,26 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
       val source = src.replaceAll("value", "other")
       doReturn(() => source).when(env).boundAttributeOrSelection("the current URL", None)
       doReturn(None).when(mockScopes).getOpt("the current URL")
-      doReturn(expression).when(env).getAttribute("<reference>")
+      doReturn(expression).when(env).getBoundReferenceValue("<reference>")
       evaluate(s"""the current URL should not $operator "$expression"""")
       verify(env).parseExpression(operator, expression)
     }
   }
 
   """I capture the text in <reference A> by xpath "<expression>" as <reference B>""" should "evaluate" in {
-    doReturn("<value>x</value>").when(env).getAttribute("<reference A>")
+    doReturn("<value>x</value>").when(env).getBoundReferenceValue("<reference A>")
     evaluate("""I capture the text in <reference A> by xpath "/value" as <reference B>""")
     verify(mockFeatureScope).set("<reference B>", "x")
   }
 
   """I capture the node in <reference A> by xpath "<expression>" as <reference B>""" should "evaluate" in {
-    doReturn("<value>x</value>").when(env).getAttribute("<reference A>")
+    doReturn("<value>x</value>").when(env).getBoundReferenceValue("<reference A>")
     evaluate("""I capture the node in <reference A> by xpath "/value" as <reference B>""")
     verify(mockFeatureScope).set("<reference B>", "<value>x</value>")
   }
 
   """I capture the nodeset in <reference A> by xpath "<expression>" as <reference B>""" should "evaluate" in {
-    doReturn("<values><value>x</value><value>y</value></values>").when(env).getAttribute("<reference A>")
+    doReturn("<values><value>x</value><value>y</value></values>").when(env).getBoundReferenceValue("<reference A>")
     evaluate("""I capture the nodeset in <reference A> by xpath "/values/value" as <reference B>""")
     verify(mockFeatureScope).set("<reference B>",
       """<value>x</value>
@@ -430,13 +430,13 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
   }
 
   """I capture the text in <referenceA> by regex "<expression>" as <reference B>""" should "evaluate" in {
-    doReturn("""Now get <this>""").when(env).getAttribute("<reference A>")
+    doReturn("""Now get <this>""").when(env).getBoundReferenceValue("<reference A>")
     evaluate("""I capture the text in <reference A> by regex "Now get (.+)" as <reference B>""")
     verify(mockFeatureScope).set("<reference B>", "<this>")
   }
 
   """I capture the content in <reference A> by json path "<expression B>" as <reference>""" should "evaluate" in {
-    doReturn("""{value:"<this>"}""").when(env).getAttribute("<reference A>")
+    doReturn("""{value:"<this>"}""").when(env).getBoundReferenceValue("<reference A>")
     evaluate("""I capture the content in <reference A> by json path "$.value" as <reference B>""")
     verify(mockFeatureScope).set("<reference B>", "<this>")
   }
@@ -696,7 +696,7 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
   "I <enter|type> <reference> in <element>" should "evaluate" in {
     val mockBinding = mock[LocatorBinding]
     doReturn(mockBinding).when(env).getLocatorBinding("<element>")
-    doReturn("<text>").when(env).getAttribute("<reference>")
+    doReturn("<text>").when(env).getBoundReferenceValue("<reference>")
     List("enter", "type").foreach { action =>
       doNothing().when(webContext).sendValue(mockBinding, "<text>", clearFirst = true, sendEnterKey = action == "enter")
       evaluate(s"I $action <reference> in <element>")
@@ -733,7 +733,7 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
   """I select <reference> in <element>""" should "evaluate" in {
     val mockBinding = mock[LocatorBinding]
     doReturn(mockBinding).when(env).getLocatorBinding("<element>")
-    doReturn("<text>").when(env).getAttribute("<reference>")
+    doReturn("<text>").when(env).getBoundReferenceValue("<reference>")
     doNothing().when(webContext).selectByVisibleText(mockBinding, "<text>")
     evaluate("""I select <reference> in <element>""")
     verify(webContext).selectByVisibleText(mockBinding, "<text>")
@@ -742,7 +742,7 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
   """I select <reference> in <element> by value""" should "evaluate" in {
     val mockBinding = mock[LocatorBinding]
     doReturn(mockBinding).when(env).getLocatorBinding("<element>")
-    doReturn("<text>").when(env).getAttribute("<reference>")
+    doReturn("<text>").when(env).getBoundReferenceValue("<reference>")
     doNothing().when(webContext).selectByValue(mockBinding, "<text>")
     evaluate("""I select <reference> in <element> by value""")
     verify(webContext).selectByValue(mockBinding, "<text>")
@@ -777,7 +777,7 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
   """I deselect <reference> in <element>""" should "evaluate" in {
     val mockBinding = mock[LocatorBinding]
     doReturn(mockBinding).when(env).getLocatorBinding("<element>")
-    doReturn("<text>").when(env).getAttribute("<reference>")
+    doReturn("<text>").when(env).getBoundReferenceValue("<reference>")
     doNothing().when(webContext).deselectByVisibleText(mockBinding, "<text>")
     evaluate("""I deselect <reference> in <element>""")
     verify(webContext).deselectByVisibleText(mockBinding, "<text>")
@@ -786,7 +786,7 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
   """I deselect <reference> in <element> by value""" should "evaluate" in {
     val mockBinding = mock[LocatorBinding]
     doReturn(mockBinding).when(env).getLocatorBinding("<element>")
-    doReturn("<text>").when(env).getAttribute("<reference>")
+    doReturn("<text>").when(env).getBoundReferenceValue("<reference>")
     doNothing().when(webContext).deselectByValue(mockBinding, "<text>")
     evaluate("""I deselect <reference> in <element> by value""")
     verify(webContext).deselectByValue(mockBinding, "<text>")
@@ -1214,6 +1214,23 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
     doReturn(mockLocatorB).when(env).getLocatorBinding("<element B>")
     evaluate("I drag and drop <element A> to <element B>")
     verify(webContext).dragAndDrop(mockLocatorA, mockLocatorB)
+  }
+
+  """I append "<text>" to <element>""" should "evaluate" in {
+    val mockBinding = mock[LocatorBinding]
+    doReturn(mockBinding).when(env).getLocatorBinding("<element>")
+    doNothing().when(webContext).sendValue(mockBinding, "<text>", clearFirst = false, sendEnterKey = false)
+    evaluate("""I append "<text>" to <element>""")
+    verify(webContext).sendValue(mockBinding, "<text>", clearFirst = false, sendEnterKey = false)
+  }
+
+  """I append <reference> to <element>""" should "evaluate" in {
+    doReturn("<text>").when(env).getBoundReferenceValue("<reference>")
+    val mockBinding = mock[LocatorBinding]
+    doReturn(mockBinding).when(env).getLocatorBinding("<element>")
+    doNothing().when(webContext).sendValue(mockBinding, "<text>", clearFirst = false, sendEnterKey = false)
+    evaluate("""I append <reference> to <element>""")
+    verify(webContext).sendValue(mockBinding, "<text>", clearFirst = false, sendEnterKey = false)
   }
   
 }

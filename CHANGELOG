@@ -1,9 +1,17 @@
-2.17.1-SNAPSHOT
+2.18.0
 ======
-Apr 11, 2018
+Apr 13, 2018
 - Add unit tests for WebContext and WebEngine classes
 - Move feature integration tests to sub package
 - Some refactoring
+- Fixed following DSL's which were not working:
+  - `<source> at json path "<path>" should ..`
+  - `<source> at xpath "<path>" should ..`
+- Add new DSL to support appending text to elements without clearing first or pressing enter at the end (requested
+  by @anshu781126)
+  - `I append "<text>" to <element>`
+  - `I append <reference> to <element>`
+- Update Gwen from v2.13.0 to v[2.13.1](https://github.com/gwen-interpreter/gwen/releases/tag/v2.13.1)
 
 2.17.0
 ======

@@ -466,3 +466,5 @@ I maximise the window
 <step> if <condition>
 <step> for each <entry> in <source> delimited by "<delimiter>"
 I drag and drop <element> to <element>
+I append "<text>" to <element>
+I append <reference> to <element>
