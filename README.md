@@ -22,9 +22,9 @@ functions on pages may be necessary.
 
 ### What's New?
 
+- [Append text to fields](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL#i-append-value-in-element)
 - [Drag and Drop](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL#i-drag-and-drop-sourceelement-to-targetelement)
 - [Template matching](https://github.com/gwen-interpreter/gwen/wiki/Template-Matching)
-- [Switch from an iframe to the top (default content) window](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL#i-switch-to-the-default-content) by @acuciureanu
 
 Why Gwen-web?
 -------------
