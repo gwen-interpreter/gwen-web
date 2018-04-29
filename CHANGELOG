@@ -1,3 +1,10 @@
+2.19.0
+======
+Apr 29, 2018
+- Do not highlight container elements
+- Add DSL to support inserting new lines into text fields (to address issue #56 raised by @anshu781126 )
+  - `I insert a new line in <element>`
+
 2.18.0
 ======
 Apr 13, 2018

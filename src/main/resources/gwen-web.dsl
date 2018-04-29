@@ -468,3 +468,4 @@ I maximise the window
 I drag and drop <element> to <element>
 I append "<text>" to <element>
 I append <reference> to <element>
+I insert a new line in <element>

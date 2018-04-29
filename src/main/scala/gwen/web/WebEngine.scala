@@ -27,6 +27,7 @@ import gwen.errors.undefinedStepError
 import gwen.eval.{GwenOptions, ScopedDataStack}
 import gwen.eval.support.DefaultEngineSupport
 import gwen.web.errors.LocatorBindingException
+import org.apache.commons.text.StringEscapeUtils
 
 import scala.util.{Failure, Success, Try}
 
@@ -462,6 +463,10 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
         val elementBinding = env.getLocatorBinding(element)
         val text = env.getBoundReferenceValue(attribute)
         webContext.sendValue(elementBinding, text, clearFirst = false, sendEnterKey = false)
+
+      case r"I insert a new line in (.+?)$$$element" =>
+        val elementBinding = env.getLocatorBinding(element)
+        webContext.sendValue(elementBinding, StringEscapeUtils.unescapeJava("""\n"""), clearFirst = false, sendEnterKey = false)
 
       case _ => super.evaluate(step, env)
 

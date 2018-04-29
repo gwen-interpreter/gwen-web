@@ -29,6 +29,7 @@ import gwen.Predefs.FileIO
 import org.openqa.selenium.WebElement
 import org.mockito.Matchers.any
 import gwen.errors.UnboundAttributeException
+import org.apache.commons.text.StringEscapeUtils
 
 class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSugar with BeforeAndAfterEach {
 
@@ -1231,6 +1232,15 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
     doNothing().when(webContext).sendValue(mockBinding, "<text>", clearFirst = false, sendEnterKey = false)
     evaluate("""I append <reference> to <element>""")
     verify(webContext).sendValue(mockBinding, "<text>", clearFirst = false, sendEnterKey = false)
+  }
+
+  """I insert a new line in <element>""" should "evaluate" in {
+    val mockBinding = mock[LocatorBinding]
+    doReturn(mockBinding).when(env).getLocatorBinding("<element>")
+    val newLine = StringEscapeUtils.unescapeJava("""\n""")
+    doNothing().when(webContext).sendValue(mockBinding, newLine, clearFirst = false, sendEnterKey = false)
+    evaluate("""I insert a new line in <element>""")
+    verify(webContext).sendValue(mockBinding, newLine, clearFirst = false, sendEnterKey = false)
   }
   
 }
