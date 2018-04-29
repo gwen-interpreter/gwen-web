@@ -117,7 +117,9 @@ trait WebElementLocator extends LazyLogging {
         if (!webElement.isDisplayed) {
           webContext.scrollIntoView(webElement, ScrollTo.top)
         }
-        webContext.highlightElement(webElement)
+        if (!locator.isContainer) {
+          webContext.highlightElement(webElement)
+        }
       }
     }
   }
@@ -133,7 +135,12 @@ trait WebElementLocator extends LazyLogging {
       val handle = driver.getWindowHandle
       try {
         locator.container.fold(driver.findElement(by)) { containerName =>
-          getContainerElement(webContext.getLocatorBinding(containerName)) match {
+          val binding = webContext.getLocatorBinding(containerName)
+          val containerBinding =
+            LocatorBinding(
+              binding.element,
+              binding.locators.map(loc => Locator(loc.locatorType, loc.expression, loc.container, isContainer = true)))
+          getContainerElement(containerBinding) match {
             case Some(containerElem) =>
               containerElem.findElement(by)
             case _ =>
@@ -216,7 +223,9 @@ trait WebElementLocator extends LazyLogging {
         if (!webElement.isDisplayed) {
           webContext.scrollIntoView(webElement, ScrollTo.top)
         }
-        webContext.highlightElement(webElement)
+        if (!locator.isContainer) {
+          webContext.highlightElement(webElement)
+        }
       }
     }
   }
@@ -304,13 +313,17 @@ object LocatorBinding {
   * @param locatorType the locator type
   * @param expression the locator expression
   * @param container optional parent container name
+  * @param isContainer true if this is a locaotr for a container element, false otherwise
   */
-case class Locator(locatorType: String, expression: String, container: Option[String]) {
+case class Locator(locatorType: String, expression: String, container: Option[String], isContainer: Boolean) {
   override def toString: String =
     s"($locatorType: $expression)${container.map(c => s" in $c").getOrElse("")}"
 }
 
 /** Locator factory companion. */
 object Locator {
-  def apply(locatorType: String, expression: String): Locator = Locator(locatorType, expression, None)
+  def apply(locatorType: String, expression: String, container: Option[String]): Locator =
+    Locator(locatorType, expression, container, isContainer = false)
+  def apply(locatorType: String, expression: String): Locator =
+    Locator(locatorType, expression, None, isContainer = false)
 }
