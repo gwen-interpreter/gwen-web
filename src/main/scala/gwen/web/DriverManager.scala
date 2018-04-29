@@ -235,7 +235,7 @@ class DriverManager extends LazyLogging {
     new RemoteWebDriver(new HttpCommandExecutor(new URL(hubUrl)), capabilities)
   
   private def withGlobalSettings(driver: WebDriver): WebDriver = {
-    driver.manage().timeouts().implicitlyWait(WebSettings.`gwen.web.wait.seconds`, TimeUnit.SECONDS)
+    driver.manage().timeouts().implicitlyWait(WebSettings.`gwen.web.locator.wait.seconds`, TimeUnit.SECONDS)
     if (WebSettings.`gwen.web.maximize`) {
       driver.manage().window().maximize() 
     }

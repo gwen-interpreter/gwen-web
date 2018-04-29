@@ -73,7 +73,7 @@ trait WebElementLocator extends LazyLogging {
           }
         } finally {
           // restore implicit waits
-          driver.manage().timeouts().implicitlyWait(WebSettings.`gwen.web.wait.seconds`, TimeUnit.SECONDS)
+          driver.manage().timeouts().implicitlyWait(WebSettings.`gwen.web.locator.wait.seconds`, TimeUnit.SECONDS)
         }
       }
     }

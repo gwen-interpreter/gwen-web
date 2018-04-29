@@ -4,6 +4,10 @@ Apr 29, 2018
 - Do not highlight container elements
 - Add DSL to support inserting new lines into text fields (to address issue #56 raised by @anshu781126 )
   - `I insert a new line in <element>`
+- Add following setting for tuning locator timeouts (implicit web driver waits) independently of Gwen repeats and
+  assertion timeouts.
+  - `gwen.web.locator.wait.seconds`
+    - will default to `gwen.web.wait.seconds` if not overridden or to 10 seconds if that value is not configured either
 
 2.18.0
 ======

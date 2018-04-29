@@ -53,10 +53,17 @@ object WebSettings {
   def `gwen.web.authorize.plugins`: Boolean = Settings.getOpt("gwen.web.authorize.plugins").getOrElse("false").toBoolean
   
   /**
-    * Provides access to the `gwen.web.wait.seconds` setting used to set the implicit 
-    * timeout/wait time in the web driver (default is 10 seconds).
+    * Provides access to the `gwen.web.wait.seconds` setting used to set the implicit
+    * timeout/wait time in the web driver (default is 10 seconds). This value is also used as the default for
+    * `gwen.web.locator.wait.seconds`.
     */
   def `gwen.web.wait.seconds`: Long = Settings.getOpt("gwen.web.wait.seconds").getOrElse("10").toLong
+
+  /**
+    * Provides access to the `gwen.web.locator.wait.seconds` setting used to set the implicit
+    * locator wait/timeout time in the web driver (default is `gwen.web.wait.seconds` seconds).
+    */
+  def `gwen.web.locator.wait.seconds`: Long = Settings.getOpt("gwen.web.locator.wait.seconds").map(_.toLong).getOrElse(`gwen.web.wait.seconds`)
   
   /**
     * Provides access to the `gwen.web.maximize` setting used to control whether 
