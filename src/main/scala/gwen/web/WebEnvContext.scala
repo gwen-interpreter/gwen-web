@@ -16,6 +16,8 @@
 
 package gwen.web
 
+import java.util.concurrent.TimeUnit
+
 import scala.util.Failure
 import scala.util.Success
 import scala.util.Try
@@ -26,6 +28,7 @@ import gwen.web.errors.{WaitTimeoutException, locatorBindingError}
 import gwen.errors.{UnboundAttributeException, unboundAttributeError}
 import org.openqa.selenium.WebElement
 
+import scala.concurrent.duration.Duration
 import scala.io.Source
 
 /**
@@ -152,7 +155,10 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
                   if (isDryRun) {
                     container.foreach(c => getLocatorBinding(c, optional))
                   }
-                  Some(Locator(locatorType, expr, container))
+                  val timeout = scopes.getOpt(interpolate(s"$element/locator/$locatorType/timeoutSecs")(getBoundReferenceValue)).map { timeoutSecs =>
+                    Duration.create(timeoutSecs.toLong, TimeUnit.SECONDS)
+                  }
+                  Some(Locator(locatorType, expr, container, timeout))
                 case None =>
                   if (optional) None else locatorBindingError(element, s"locator lookup binding not found: $lookupBinding")
               }
@@ -161,7 +167,7 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
             else None
           case None => if (optional) None else locatorBindingError(element, s"locator binding not found: $locatorBinding")
         }
-      case Some(x) if x.isInstanceOf[WebElement] => Some(LocatorBinding(element, "cache", element, None))
+      case Some(x) if x.isInstanceOf[WebElement] => Some(LocatorBinding(element, "cache", element, None, None))
       case _ => None
     }
   } tap { binding =>
