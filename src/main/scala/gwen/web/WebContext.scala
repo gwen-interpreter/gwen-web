@@ -143,11 +143,8 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
               } catch {
                 case se: StaleElementReferenceException =>
                   Thread.sleep(WebSettings.`gwen.web.throttle.msecs`)
-                  // try js equivalent locator (if one can be derived)
-                  val elem = elementBinding.jsEquivalent match {
-                    case Some(jsBinding) => Try(locate(jsBinding)).getOrElse(locate(elementBinding))
-                    case None => locate(elementBinding)
-                  }
+                  // try js equivalent locator
+                  val elem = Try(locate(elementBinding.jsEquivalent)).getOrElse(locate(elementBinding))
                   operation(elem)
               }
           }

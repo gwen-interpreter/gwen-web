@@ -23,6 +23,7 @@ import org.openqa.selenium.{By, NoSuchElementException, WebElement}
 import gwen.web.errors.{WaitTimeoutException, locatorBindingError}
 import gwen.Predefs.Kestrel
 import com.typesafe.scalalogging.LazyLogging
+import org.apache.commons.text.StringEscapeUtils
 
 import scala.collection.JavaConverters._
 import scala.concurrent.duration.Duration
@@ -317,19 +318,32 @@ trait WebElementLocator extends LazyLogging {
   */
 case class LocatorBinding(element: String, locators: List[Locator]) {
   /** Gets the javascript equivalent of this locator binding (used as fallback on stale element reference). */
-  def jsEquivalent: Option[LocatorBinding] = {
-    val locs = locators.filter(_.container.isEmpty)
-    Option(locators.find(_.locatorType == "id").map(loc => Locator("javascript", s"document.getElementById('${loc.expression}')", None)).getOrElse {
-      locs.find(_.locatorType == "css selector").map(loc => Locator("javascript", s"document.querySelector('${loc.expression}')", None)).getOrElse {
-        locs.find(_.locatorType == "xpath").map(loc => Locator("javascript", s"document.evaluate('${loc.expression}', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue", None)).getOrElse {
-          locs.find(_.locatorType == "name").map(loc => Locator("javascript", s"document.getElementsByName('${loc.expression}')[0]", None)).getOrElse {
-            locs.find(_.locatorType == "class name").map(loc => Locator("javascript", s"document.getElementsByClassName('${loc.expression}')[0]", None)).getOrElse {
-              locs.find(_.locatorType == "tag name").map(loc => Locator("javascript", s"document.getElementsByTagName('${loc.expression}')[0]", None)).orNull
-            }
-          }
-        }
+  def jsEquivalent: LocatorBinding = {
+    val jsLocators = locators.map { loc =>
+      val isListLocator = element.endsWith("/list")
+      val jsExpression = loc.locatorType match {
+        case "id" =>
+          if (!isListLocator) s"document.getElementById('${loc.expression}')"
+          else s"document.querySelectorAll('#${loc.expression}')"
+        case "css selector" =>
+          s"document.querySelector${if (isListLocator) "All" else ""}('${StringEscapeUtils.escapeEcmaScript(loc.expression)}')"
+        case "xpath" =>
+          s"document.evaluate('${StringEscapeUtils.escapeEcmaScript(loc.expression)}', document, null, XPathResult.${if (isListLocator) "ORDERED_NODE_ITERATOR_TYPE" else "FIRST_ORDERED_NODE_TYPE"}, null)${if (isListLocator) "" else ".singleNodeValue"}"
+        case "name" =>
+          s"document.getElementsByName('${loc.expression}')${if (isListLocator) "" else "[0]"}"
+        case "class name" =>
+          s"document.getElementsByClassName('${loc.expression}')${if (isListLocator) "" else "[0]"}"
+        case "tag name" =>
+          s"document.getElementsByTagName('${loc.expression}')${if (isListLocator) "" else "[0]"}"
+        case "link text" =>
+          s"""document.evaluate('//a[text()="${StringEscapeUtils.escapeEcmaScript(loc.expression)}"]'), document, null, XPathResult.${if (isListLocator) "ORDERED_NODE_ITERATOR_TYPE" else "FIRST_ORDERED_NODE_TYPE"}, null)${if (isListLocator) "" else ".singleNodeValue"}"""
+        case "partial link text" =>
+          s"""document.evaluate('//a[contains(text(), "${StringEscapeUtils.escapeEcmaScript(loc.expression)}")]'), document, null, XPathResult.${if (isListLocator) "ORDERED_NODE_ITERATOR_TYPE" else "FIRST_ORDERED_NODE_TYPE"}, null)${if (isListLocator) "" else ".singleNodeValue"}"""
+        case _ => loc.expression
       }
-    }) map { loc => LocatorBinding(this, loc) }
+      Locator("javascript", jsExpression, loc.container, loc.timeout)
+    }
+    LocatorBinding(element, jsLocators)
   }
 }
 
@@ -362,8 +376,6 @@ case class Locator(locatorType: String, expression: String, container: Option[St
 object Locator {
   def apply(locatorType: String, expression: String, container: Option[String], timeout: Option[Duration]): Locator =
     Locator(locatorType, expression, container, isContainer = false, timeout)
-  def apply(locatorType: String, expression: String, timeout: Option[Duration]): Locator =
-    Locator(locatorType, expression, None, isContainer = false, timeout)
   def apply(locatorType: String, expression: String): Locator =
     Locator(locatorType, expression, None, isContainer = false, None)
 }

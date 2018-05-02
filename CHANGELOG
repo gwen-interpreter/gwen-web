@@ -38,6 +38,12 @@ Apr 29, 2018
     - Where
       - column 1 = id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript
       - column 2 = the lookup expression literal
+- Add `gwen.web.implicit.js.locators` setting to enable Gwen to implicitly convert all locator bindings to JavaScript
+  equivalents and force all elements to be located by executing javascript on the page instead of looking them up
+  using web driver locators. Enabling this is useful when dealing with web sites that dynamically render or change
+  the visibility of elements on pages or manipulate the DOM. Value values are:
+  - `false` to disable (default)
+  - `false` to enable
 
 2.18.0
 ======

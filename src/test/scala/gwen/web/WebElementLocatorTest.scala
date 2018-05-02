@@ -19,7 +19,6 @@ package gwen.web
 import java.util.concurrent.TimeUnit
 
 import org.mockito.Mockito.atLeastOnce
-import org.mockito.Mockito.never
 import org.mockito.Mockito.doReturn
 import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
@@ -41,6 +40,9 @@ import org.mockito.Matchers.{anyVararg, same}
 import scala.concurrent.duration.Duration
 
 class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar with BeforeAndAfterEach {
+
+  // disable implicit js locators for unit test
+  sys.props += (("gwen.web.implicit.js.locators", "false"))
 
   private var mockWebElement: WebElement = _
   private var mockWebElements: List[WebElement] = _
@@ -647,48 +649,119 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar wit
 
   }
 
-  "Locator bindings with JS equivalents" should "resolve" in {
+  "Single element locator bindings with JS equivalents" should "resolve" in {
 
     val container = Some("container")
 
     LocatorBinding("user name", "id", "username", None).jsEquivalent should be {
-      Some(LocatorBinding("user name", "javascript", "document.getElementById('username')", None))
+     LocatorBinding("user name", "javascript", "document.getElementById('username')", None)
     }
     LocatorBinding("user name", "id", "username", container).jsEquivalent should be {
-      Some(LocatorBinding("user name", "javascript", "document.getElementById('username')", None))
+     LocatorBinding("user name", "javascript", "document.getElementById('username')", container)
     }
     LocatorBinding("user name", "name", "username", None).jsEquivalent should be {
-      Some(LocatorBinding("user name", "javascript", "document.getElementsByName('username')[0]", None))
+     LocatorBinding("user name", "javascript", "document.getElementsByName('username')[0]", None)
+    }
+    LocatorBinding("user name", "name", "username", container).jsEquivalent should be {
+     LocatorBinding("user name", "javascript", "document.getElementsByName('username')[0]", container)
     }
     LocatorBinding("user name", "class name", "username", None).jsEquivalent should be {
-      Some(LocatorBinding("user name", "javascript", "document.getElementsByClassName('username')[0]", None))
+     LocatorBinding("user name", "javascript", "document.getElementsByClassName('username')[0]", None)
+    }
+    LocatorBinding("user name", "class name", "username", container).jsEquivalent should be {
+     LocatorBinding("user name", "javascript", "document.getElementsByClassName('username')[0]", container)
     }
     LocatorBinding("user name", "css selector", ".username", None).jsEquivalent should be {
-      Some(LocatorBinding("user name", "javascript", "document.querySelector('.username')", None))
+     LocatorBinding("user name", "javascript", "document.querySelector('.username')", None)
+    }
+    LocatorBinding("user name", "css selector", ".username", container).jsEquivalent should be {
+     LocatorBinding("user name", "javascript", "document.querySelector('.username')", container)
     }
     LocatorBinding("user name", "tag name", "input", None).jsEquivalent should be {
-      Some(LocatorBinding("user name", "javascript", "document.getElementsByTagName('input')[0]", None))
+     LocatorBinding("user name", "javascript", "document.getElementsByTagName('input')[0]", None)
+    }
+    LocatorBinding("user name", "tag name", "input", container).jsEquivalent should be {
+     LocatorBinding("user name", "javascript", "document.getElementsByTagName('input')[0]", container)
     }
     LocatorBinding("user name", "xpath", "//html/body/div/input", None).jsEquivalent should be {
-      Some(LocatorBinding("user name", "javascript", "document.evaluate('//html/body/div/input', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue", None))
+     LocatorBinding("user name", "javascript", """document.evaluate('\/\/html\/body\/div\/input', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue""", None)
+    }
+    LocatorBinding("user link", "link text", "user", None).jsEquivalent should be {
+     LocatorBinding("user link", "javascript", """document.evaluate('//a[text()="user"]'), document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue""", None)
+    }
+    LocatorBinding("user link", "link text", "user", container).jsEquivalent should be {
+     LocatorBinding("user link", "javascript", """document.evaluate('//a[text()="user"]'), document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue""", container)
+    }
+    LocatorBinding("user link", "partial link text", "user", None).jsEquivalent should be {
+     LocatorBinding("user link", "javascript", """document.evaluate('//a[contains(text(), "user")]'), document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue""", None)
+    }
+    LocatorBinding("user link", "partial link text", "user", container).jsEquivalent should be {
+     LocatorBinding("user link", "javascript", """document.evaluate('//a[contains(text(), "user")]'), document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue""", container)
+    }
+    LocatorBinding("user name", "javascript", "document.getElementById('user')", None).jsEquivalent should be {
+     LocatorBinding("user name", "javascript", """document.getElementById('user')""", None)
+    }
+    LocatorBinding("user name", "javascript", "document.getElementById('user')", container).jsEquivalent should be {
+     LocatorBinding("user name", "javascript", """document.getElementById('user')""", container)
     }
 
   }
 
-  "Locator bindings without JS equivalents" should "not resolve" in {
+  "Multi element locator bindings with JS equivalents" should "resolve" in {
 
     val container = Some("container")
 
-    LocatorBinding("user name", "name", "username", container).jsEquivalent should be (None)
-    LocatorBinding("user name", "class name", "username", container).jsEquivalent should be (None)
-    LocatorBinding("user name", "css selector", ".username", container).jsEquivalent should be (None)
-    LocatorBinding("user name", "tag name", "input", container).jsEquivalent should be (None)
-    LocatorBinding("user name", "xpath", "//html/body/div/input", container).jsEquivalent should be (None)
-    LocatorBinding("user name", "link text", "user name", None).jsEquivalent should be (None)
-    LocatorBinding("user name", "link text", "username", container).jsEquivalent should be (None)
-    LocatorBinding("user name", "partial link text", "user name", None).jsEquivalent should be (None)
-    LocatorBinding("user name", "partial link text", "username", container).jsEquivalent should be (None)
-    LocatorBinding("user name", "javascript", "document.getElementById('username')", container).jsEquivalent should be (None)
+    LocatorBinding("user name/list", "id", "username", None).jsEquivalent should be {
+     LocatorBinding("user name/list", "javascript", "document.querySelectorAll('#username')", None)
+    }
+    LocatorBinding("user name/list", "id", "username", container).jsEquivalent should be {
+     LocatorBinding("user name/list", "javascript", "document.querySelectorAll('#username')", container)
+    }
+    LocatorBinding("user name/list", "name", "username", None).jsEquivalent should be {
+     LocatorBinding("user name/list", "javascript", "document.getElementsByName('username')", None)
+    }
+    LocatorBinding("user name/list", "name", "username", container).jsEquivalent should be {
+     LocatorBinding("user name/list", "javascript", "document.getElementsByName('username')", container)
+    }
+    LocatorBinding("user name/list", "class name", "username", None).jsEquivalent should be {
+     LocatorBinding("user name/list", "javascript", "document.getElementsByClassName('username')", None)
+    }
+    LocatorBinding("user name/list", "class name", "username", container).jsEquivalent should be {
+     LocatorBinding("user name/list", "javascript", "document.getElementsByClassName('username')", container)
+    }
+    LocatorBinding("user name/list", "css selector", ".username", None).jsEquivalent should be {
+     LocatorBinding("user name/list", "javascript", "document.querySelectorAll('.username')", None)
+    }
+    LocatorBinding("user name/list", "css selector", ".username", container).jsEquivalent should be {
+     LocatorBinding("user name/list", "javascript", "document.querySelectorAll('.username')", container)
+    }
+    LocatorBinding("user name/list", "tag name", "input", None).jsEquivalent should be {
+     LocatorBinding("user name/list", "javascript", "document.getElementsByTagName('input')", None)
+    }
+    LocatorBinding("user name/list", "tag name", "input", container).jsEquivalent should be {
+     LocatorBinding("user name/list", "javascript", "document.getElementsByTagName('input')", container)
+    }
+    LocatorBinding("user name/list", "xpath", "//html/body/div/input", None).jsEquivalent should be {
+     LocatorBinding("user name/list", "javascript", """document.evaluate('\/\/html\/body\/div\/input', document, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null)""", None)
+    }
+    LocatorBinding("user link/list", "link text", "user", None).jsEquivalent should be {
+     LocatorBinding("user link/list", "javascript", """document.evaluate('//a[text()="user"]'), document, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null)""", None)
+    }
+    LocatorBinding("user link/list", "link text", "user", container).jsEquivalent should be {
+     LocatorBinding("user link/list", "javascript", """document.evaluate('//a[text()="user"]'), document, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null)""", container)
+    }
+    LocatorBinding("user link/list", "partial link text", "user", None).jsEquivalent should be {
+     LocatorBinding("user link/list", "javascript", """document.evaluate('//a[contains(text(), "user")]'), document, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null)""", None)
+    }
+    LocatorBinding("user link/list", "partial link text", "user", container).jsEquivalent should be {
+     LocatorBinding("user link/list", "javascript", """document.evaluate('//a[contains(text(), "user")]'), document, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null)""", container)
+    }
+    LocatorBinding("user name/list", "javascript", "document.getElementsByName('user')", None).jsEquivalent should be {
+     LocatorBinding("user name/list", "javascript", """document.getElementsByName('user')""", None)
+    }
+    LocatorBinding("user name/list", "javascript", "document.getElementsByName('user')", container).jsEquivalent should be {
+     LocatorBinding("user name/list", "javascript", """document.getElementsByName('user')""", container)
+    }
 
   }
   
