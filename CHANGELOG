@@ -5,9 +5,39 @@ Apr 29, 2018
 - Add DSL to support inserting new lines into text fields (to address issue #56 raised by @anshu781126 )
   - `I insert a new line in <element>`
 - Add following setting for tuning locator timeouts (implicit web driver waits) independently of Gwen repeats and
-  assertion timeouts.
+  assertions:
   - `gwen.web.locator.wait.seconds`
     - will default to `gwen.web.wait.seconds` if not overridden or to 10 seconds if that value is not configured either
+- Add support for overriding configured timeouts (implicit waits) at the locator level.
+  The following DSLs were introduced:
+  - `<element> can be located by <locator> "<expression>" with no wait`
+  - `<element> can be located by <locator> "<expression>" with <timeoutPeriod> second timeout`
+  - `<element> can be located by <locator> "<expression>" in <container> with no wait`
+  - `<element> can be located by <locator> "<expression>" in <container> with <timeoutPeriod> second timeout`
+  - `<step> for each <element> located by <locator> "<expression>" with no wait`
+  - `<step> for each <element> located by <locator> "<expression>" with <timeoutPeriod> second timeout`
+  - `<step> for each <element> located by <locator> "<expression>" in <container> with no wait`
+  - `<step> for each <element> located by <locator> "<expression>" in <container> with <timeoutPeriod> second timeout`
+  - ```
+    <element> can be located with no wait by
+      | locator 1  | expression 1  |
+      | locator 2  | expression 2  |
+      | locator .. | expression .. |
+      | locator N  | expression N  |
+    ```
+    - Where
+      - column 1 = id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript
+      - column 2 = the lookup expression literal
+  - ```
+     <element> can be located with <timeoutPeriod> second timeout by
+      | locator 1  | expression 1  |
+      | locator 2  | expression 2  |
+      | locator .. | expression .. |
+      | locator N  | expression N  |
+    ```
+    - Where
+      - column 1 = id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript
+      - column 2 = the lookup expression literal
 
 2.18.0
 ======

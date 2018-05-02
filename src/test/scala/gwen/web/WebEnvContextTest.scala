@@ -17,10 +17,8 @@
 package gwen.web
 
 import gwen.{Settings, UserOverrides}
-import org.mockito.Mockito.when
 import org.mockito.Mockito.verify
-import org.mockito.Matchers.any
-import org.openqa.selenium.{TimeoutException, WebDriver}
+import org.openqa.selenium.WebDriver
 import org.scalatest.FlatSpec
 import org.scalatest.Matchers
 import org.scalatest.mockito.MockitoSugar

@@ -15,6 +15,24 @@ I scroll to the bottom of <element>
 <element> can be located by link text "<value>"
 <element> can be located by partial link text "<value>"
 <element> can be located by javascript "<expression>"
+<element> can be located by id "<value>" with no wait
+<element> can be located by name "<value>" with no wait
+<element> can be located by tag name "<value>" with no wait
+<element> can be located by css selector "<value>" with no wait
+<element> can be located by xpath "<value>" with no wait
+<element> can be located by class name "<value>" with no wait
+<element> can be located by link text "<value>" with no wait
+<element> can be located by partial link text "<value>" with no wait
+<element> can be located by javascript "<expression>" with no wait
+<element> can be located by id "<value>" with <timeoutPeriod> second timeout
+<element> can be located by name "<value>" with <timeoutPeriod> second timeout
+<element> can be located by tag name "<value>" with <timeoutPeriod> second timeout
+<element> can be located by css selector "<value>" with <timeoutPeriod> second timeout
+<element> can be located by xpath "<value>" with <timeoutPeriod> second timeout
+<element> can be located by class name "<value>" with <timeoutPeriod> second timeout
+<element> can be located by link text "<value>" with <timeoutPeriod> second timeout
+<element> can be located by partial link text "<value>" with <timeoutPeriod> second timeout
+<element> can be located by javascript "<expression>" with <timeoutPeriod> second timeout
 <element> can be located by id "<value>" in <container>
 <element> can be located by name "<value>" in <container>
 <element> can be located by tag name "<value>" in <container>
@@ -24,6 +42,24 @@ I scroll to the bottom of <element>
 <element> can be located by link text "<value>" in <container>
 <element> can be located by partial link text "<value>" in <container>
 <element> can be located by javascript "<expression>" in <container>
+<element> can be located by id "<value>" in <container> with no wait
+<element> can be located by name "<value>" in <container> with no wait
+<element> can be located by tag name "<value>" in <container> with no wait
+<element> can be located by css selector "<value>" in <container> with no wait
+<element> can be located by xpath "<value>" in <container> with no wait
+<element> can be located by class name "<value>" in <container> with no wait
+<element> can be located by link text "<value>" in <container> with no wait
+<element> can be located by partial link text "<value>" in <container> with no wait
+<element> can be located by javascript "<expression>" in <container> with no wait
+<element> can be located by id "<value>" in <container> with <timeoutPeriod> second timeout
+<element> can be located by name "<value>" in <container> with <timeoutPeriod> second timeout
+<element> can be located by tag name "<value>" in <container> with <timeoutPeriod> second timeout
+<element> can be located by css selector "<value>" in <container> with <timeoutPeriod> second timeout
+<element> can be located by xpath "<value>" in <container> with <timeoutPeriod> second timeout
+<element> can be located by class name "<value>" in <container> with <timeoutPeriod> second timeout
+<element> can be located by link text "<value>" in <container> with <timeoutPeriod> second timeout
+<element> can be located by partial link text "<value>" in <container> with <timeoutPeriod> second timeout
+<element> can be located by javascript "<expression>" in <container> with <timeoutPeriod> second timeout
 the page title should be "<value>"
 the page title should contain "<value>"
 the page title should start with "<value>"
@@ -423,6 +459,24 @@ I maximise the window
 <step> for each <element> located by link text "<expression>"
 <step> for each <element> located by partial link text "<expression>"
 <step> for each <element> located by javascript "<expression>"
+<step> for each <element> located by id "<expression>" with no wait
+<step> for each <element> located by name "<expression>" with no wait
+<step> for each <element> located by tag name "<expression>" with no wait
+<step> for each <element> located by css selector "<expression>" with no wait
+<step> for each <element> located by xpath "<expression>" with no wait
+<step> for each <element> located by class name "<expression>" with no wait
+<step> for each <element> located by link text "<expression>" with no wait
+<step> for each <element> located by partial link text "<expression>" with no wait
+<step> for each <element> located by javascript "<expression>" with no wait
+<step> for each <element> located by id "<expression>" with <timeoutPeriod> second timeout
+<step> for each <element> located by name "<expression>" with <timeoutPeriod> second timeout
+<step> for each <element> located by tag name "<expression>" with <timeoutPeriod> second timeout
+<step> for each <element> located by css selector "<expression>" with <timeoutPeriod> second timeout
+<step> for each <element> located by xpath "<expression>" with <timeoutPeriod> second timeout
+<step> for each <element> located by class name "<expression>" with <timeoutPeriod> second timeout
+<step> for each <element> located by link text "<expression>" with <timeoutPeriod> second timeout
+<step> for each <element> located by partial link text "<expression>" with <timeoutPeriod> second timeout
+<step> for each <element> located by javascript "<expression>" with <timeoutPeriod> second timeout
 <step> for each <element> located by id "<expression>" in <container>
 <step> for each <element> located by name "<expression>" in <container>
 <step> for each <element> located by tag name "<expression>" in <container>
@@ -432,6 +486,24 @@ I maximise the window
 <step> for each <element> located by link text "<expression>" in <container>
 <step> for each <element> located by partial link text "<expression>" in <container>
 <step> for each <element> located by javascript "<expression>" in <container>
+<step> for each <element> located by id "<expression>" in <container> with no wait
+<step> for each <element> located by name "<expression>" in <container> with no wait
+<step> for each <element> located by tag name "<expression>" in <container> with no wait
+<step> for each <element> located by css selector "<expression>" in <container> with no wait
+<step> for each <element> located by xpath "<expression>" in <container> with no wait
+<step> for each <element> located by class name "<expression>" in <container> with no wait
+<step> for each <element> located by link text "<expression>" in <container> with no wait
+<step> for each <element> located by partial link text "<expression>" in <container> with no wait
+<step> for each <element> located by javascript "<expression>" in <container> with no wait
+<step> for each <element> located by id "<expression>" in <container> with <timeoutPeriod> second timeout
+<step> for each <element> located by name "<expression>" in <container> with <timeoutPeriod> second timeout
+<step> for each <element> located by tag name "<expression>" in <container> with <timeoutPeriod> second timeout
+<step> for each <element> located by css selector "<expression>" in <container> with <timeoutPeriod> second timeout
+<step> for each <element> located by xpath "<expression>" in <container> with <timeoutPeriod> second timeout
+<step> for each <element> located by class name "<expression>" in <container> with <timeoutPeriod> second timeout
+<step> for each <element> located by link text "<expression>" in <container> with <timeoutPeriod> second timeout
+<step> for each <element> located by partial link text "<expression>" in <container> with <timeoutPeriod> second timeout
+<step> for each <element> located by javascript "<expression>" in <container> with <timeoutPeriod> second timeout
 <step> for each <element> in <elements>
 <step> for each data record
 <attribute> should be absent
