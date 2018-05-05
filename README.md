@@ -22,9 +22,9 @@ functions on pages may be necessary.
 
 ### What's New?
 
+- [Implicit JavaScript Locators](https://github.com/gwen-interpreter/gwen-web/wiki/Implicit-JavaScript-Locators)
+- [Locator level timeouts](https://github.com/gwen-interpreter/gwen-web/wiki/Locator-Level-Timeouts)
 - [Append text to fields](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL#i-append-value-in-element)
-- [Drag and Drop](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL#i-drag-and-drop-sourceelement-to-targetelement)
-- [Template matching](https://github.com/gwen-interpreter/gwen/wiki/Template-Matching)
 
 Why Gwen-web?
 -------------
@@ -97,6 +97,8 @@ Key Features
 - [Locator Chaining](https://github.com/gwen-interpreter/gwen-web/wiki/Locator-Chaining)
 - [Headless Browser Execution](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#gwenwebbrowserheadless)
 - [Gwen Workspaces](https://gweninterpreter.wordpress.com/2017/12/18/gwen-workspaces/) for easy and consistent Gwen installation, configuration and execution on any workstation or build server.
+- [Locator level timeouts](https://github.com/gwen-interpreter/gwen-web/wiki/Locator-Level-Timeouts)
+- [Implicit JavaScript Locators](https://github.com/gwen-interpreter/gwen-web/wiki/Implicit-JavaScript-Locators)
 
 Quick Links to Wiki Information
 -------------------------------

@@ -18,6 +18,8 @@ package gwen.web
 
 import java.util.concurrent.TimeUnit
 
+import gwen.GwenSettings
+
 import scala.util.Failure
 import scala.util.Success
 import scala.util.Try
@@ -163,7 +165,14 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
                   if (optional) None else locatorBindingError(element, s"locator lookup binding not found: $lookupBinding")
               }
             }
-            if (locators.nonEmpty) Some(LocatorBinding(element, locators.toList))
+            if (locators.nonEmpty) {
+              val locatorBinding = LocatorBinding(element, locators.toList)
+              if (WebSettings.`gwen.web.implicit.js.locators`) {
+                Some(locatorBinding.jsEquivalent)
+              } else {
+                Some(locatorBinding)
+              }
+            }
             else None
           case None => if (optional) None else locatorBindingError(element, s"locator binding not found: $locatorBinding")
         }

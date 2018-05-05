@@ -159,4 +159,11 @@ object WebSettings {
    */
   def `gwen.web.capabilities`: Map[String, String] = Settings.findAllMulti("gwen.web.capabilities", "gwen.web.capability")
 
+  /**
+    * Provides access to the `gwen.web.implicit.js.locators` setting used to determine whether or not Gwen should
+    * implicitly convert all locator bindings to JavaScript equivalents to force all elements to be located by
+    * executing javascript on the page. Default value is false.
+    */
+  def `gwen.web.implicit.js.locators`: Boolean = Settings.getOpt("gwen.web.implicit.js.locators").getOrElse("false").toBoolean
+
 }
