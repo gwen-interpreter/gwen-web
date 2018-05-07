@@ -687,16 +687,16 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar wit
      LocatorBinding("user name", "javascript", """document.evaluate('\/\/html\/body\/div\/input', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue""", None)
     }
     LocatorBinding("user link", "link text", "user", None).jsEquivalent should be {
-     LocatorBinding("user link", "javascript", """document.evaluate('//a[text()="user"]'), document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue""", None)
+     LocatorBinding("user link", "javascript", """document.evaluate('//a[text()="user"]', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue""", None)
     }
     LocatorBinding("user link", "link text", "user", container).jsEquivalent should be {
-     LocatorBinding("user link", "javascript", """document.evaluate('//a[text()="user"]'), document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue""", container)
+     LocatorBinding("user link", "javascript", """document.evaluate('//a[text()="user"]', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue""", container)
     }
     LocatorBinding("user link", "partial link text", "user", None).jsEquivalent should be {
-     LocatorBinding("user link", "javascript", """document.evaluate('//a[contains(text(), "user")]'), document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue""", None)
+     LocatorBinding("user link", "javascript", """document.evaluate('//a[contains(text(), "user")]', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue""", None)
     }
     LocatorBinding("user link", "partial link text", "user", container).jsEquivalent should be {
-     LocatorBinding("user link", "javascript", """document.evaluate('//a[contains(text(), "user")]'), document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue""", container)
+     LocatorBinding("user link", "javascript", """document.evaluate('//a[contains(text(), "user")]', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue""", container)
     }
     LocatorBinding("user name", "javascript", "document.getElementById('user')", None).jsEquivalent should be {
      LocatorBinding("user name", "javascript", """document.getElementById('user')""", None)
@@ -745,16 +745,16 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar wit
      LocatorBinding("user name/list", "javascript", """document.evaluate('\/\/html\/body\/div\/input', document, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null)""", None)
     }
     LocatorBinding("user link/list", "link text", "user", None).jsEquivalent should be {
-     LocatorBinding("user link/list", "javascript", """document.evaluate('//a[text()="user"]'), document, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null)""", None)
+     LocatorBinding("user link/list", "javascript", """document.evaluate('//a[text()="user"]', document, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null)""", None)
     }
     LocatorBinding("user link/list", "link text", "user", container).jsEquivalent should be {
-     LocatorBinding("user link/list", "javascript", """document.evaluate('//a[text()="user"]'), document, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null)""", container)
+     LocatorBinding("user link/list", "javascript", """document.evaluate('//a[text()="user"]', document, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null)""", container)
     }
     LocatorBinding("user link/list", "partial link text", "user", None).jsEquivalent should be {
-     LocatorBinding("user link/list", "javascript", """document.evaluate('//a[contains(text(), "user")]'), document, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null)""", None)
+     LocatorBinding("user link/list", "javascript", """document.evaluate('//a[contains(text(), "user")]', document, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null)""", None)
     }
     LocatorBinding("user link/list", "partial link text", "user", container).jsEquivalent should be {
-     LocatorBinding("user link/list", "javascript", """document.evaluate('//a[contains(text(), "user")]'), document, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null)""", container)
+     LocatorBinding("user link/list", "javascript", """document.evaluate('//a[contains(text(), "user")]', document, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null)""", container)
     }
     LocatorBinding("user name/list", "javascript", "document.getElementsByName('user')", None).jsEquivalent should be {
      LocatorBinding("user name/list", "javascript", """document.getElementsByName('user')""", None)

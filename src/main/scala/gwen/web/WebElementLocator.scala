@@ -336,9 +336,9 @@ case class LocatorBinding(element: String, locators: List[Locator]) {
         case "tag name" =>
           s"document.getElementsByTagName('${loc.expression}')${if (isListLocator) "" else "[0]"}"
         case "link text" =>
-          s"""document.evaluate('//a[text()="${StringEscapeUtils.escapeEcmaScript(loc.expression)}"]'), document, null, XPathResult.${if (isListLocator) "ORDERED_NODE_ITERATOR_TYPE" else "FIRST_ORDERED_NODE_TYPE"}, null)${if (isListLocator) "" else ".singleNodeValue"}"""
+          s"""document.evaluate('//a[text()="${StringEscapeUtils.escapeEcmaScript(loc.expression)}"]', document, null, XPathResult.${if (isListLocator) "ORDERED_NODE_ITERATOR_TYPE" else "FIRST_ORDERED_NODE_TYPE"}, null)${if (isListLocator) "" else ".singleNodeValue"}"""
         case "partial link text" =>
-          s"""document.evaluate('//a[contains(text(), "${StringEscapeUtils.escapeEcmaScript(loc.expression)}")]'), document, null, XPathResult.${if (isListLocator) "ORDERED_NODE_ITERATOR_TYPE" else "FIRST_ORDERED_NODE_TYPE"}, null)${if (isListLocator) "" else ".singleNodeValue"}"""
+          s"""document.evaluate('//a[contains(text(), "${StringEscapeUtils.escapeEcmaScript(loc.expression)}")]', document, null, XPathResult.${if (isListLocator) "ORDERED_NODE_ITERATOR_TYPE" else "FIRST_ORDERED_NODE_TYPE"}, null)${if (isListLocator) "" else ".singleNodeValue"}"""
         case _ => loc.expression
       }
       Locator("javascript", jsExpression, loc.container, loc.timeout)
