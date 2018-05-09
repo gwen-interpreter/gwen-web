@@ -143,8 +143,16 @@ object WebSettings {
   /**
    * Provides access to the chrome preference settings. This setting merges a comma separated list of preferences
    * set in the `gwen.web.chrome.prefs` property with all properties that start with `gwen.web.chrome.pref.`.
+   * List of chrome prefs: https://chromium.googlesource.com/chromium/src/+/master/chrome/common/pref_names.cc
    */
   def `gwen.web.chrome.prefs`: Map[String, String] = Settings.findAllMulti("gwen.web.chrome.prefs", "gwen.web.chrome.pref")
+
+  /**
+   * Provides access to the firefox preference settings. This setting merges a comma separated list of preferences
+   * set in the `gwen.web.firefox.prefs` property with all properties that start with `gwen.web.firefox.pref.`.
+   * List of firefox prefs: https://stackoverflow.com/questions/25251583/downloading-file-to-specified-location-with-selenium-and-python
+   */
+  def `gwen.web.firefox.prefs`: Map[String, String] = Settings.findAllMulti("gwen.web.firefox.prefs", "gwen.web.firefox.pref")
 
   /**
     * Provides access to the `gwen.web.browser.headless` setting used to control whether

@@ -1,6 +1,14 @@
+2.20.0
+======
+May 9, 2018
+- Add support for setting for setting firefox browser preferences
+  - `gwen.web.firefox.prefs`
+  - `gwen.web.firefox.pref.<name>`
+- Update Gwen from v2.13.1 to v[2.13.2](https://github.com/gwen-interpreter/gwen/releases/tag/v2.13.2)
+
 2.19.1
 ======
-May 5, 2018
+May 7, 2018
 - Fix link text js locator
 
 2.19.0

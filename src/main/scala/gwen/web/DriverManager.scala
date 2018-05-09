@@ -132,6 +132,16 @@ class DriverManager extends LazyLogging {
   
   private def firefoxOptions() : FirefoxOptions = {
     val firefoxProfile = new FirefoxProfile() tap { profile =>
+      WebSettings.`gwen.web.firefox.prefs` foreach { case (name, value) =>
+      logger.info(s"Setting firefox browser preference: $name=$value")
+        try {
+          profile.setPreference(name, Integer.valueOf(value.trim))
+        } catch {
+          case _: Throwable =>
+            if (value.matches("(true|false)")) profile.setPreference(name, java.lang.Boolean.valueOf(value.trim))
+            else profile.setPreference(name, value)
+        }
+      }
       WebSettings.`gwen.web.useragent` foreach {
         profile.setPreference("general.useragent.override", _)
       }
