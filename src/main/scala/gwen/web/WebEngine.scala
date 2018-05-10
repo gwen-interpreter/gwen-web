@@ -403,8 +403,8 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
 
       case r"""I capture (.+?)$element( value| text)$selection as (.+?)$attribute""" =>
         try {
-          val value = webContext.getElementSelection(element, selection)
-          env.featureScope.set(attribute, value tap { content =>
+          val value = env.boundAttributeOrSelection(element, Option(selection))
+          env.featureScope.set(attribute, value() tap { content =>
             env.addAttachment(attribute, "txt", content)
           })
         } catch {
@@ -414,8 +414,8 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
 
       case r"""I capture (.+?)$element( value| text)$$$selection""" =>
         try {
-          val value = webContext.getElementSelection(element, selection)
-          env.featureScope.set(element, value tap { content =>
+          val value = env.boundAttributeOrSelection(element, Option(selection))
+          env.featureScope.set(element, value() tap { content =>
             env.addAttachment(element, "txt", content)
           })
         } catch {

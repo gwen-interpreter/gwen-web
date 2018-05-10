@@ -1337,7 +1337,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     when(mockElement.getText).thenReturn("")
     when(mockElement.getAttribute("text")).thenReturn("")
     when(mockElement.getAttribute("value")).thenReturn("")
-    doReturn("").when(webContext).executeJS("(function(element){return element.innerText || element.textContent || ''})(arguments[0]);", mockElement)(takeScreenShot = false)
+    doReturn("").when(webContext).executeJS("return (function(element){return element.innerText || element.textContent || ''})(arguments[0]);", mockElement)(takeScreenShot = false)
     webContext.getElementText(elemBinding) should be (Some(""))
     envContext.scopes.get("element/text") should be ("")
   }
@@ -1350,7 +1350,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     when(mockElement.getText).thenReturn(null)
     when(mockElement.getAttribute("text")).thenReturn(null)
     when(mockElement.getAttribute("value")).thenReturn(null)
-    doReturn("JSValue").when(webContext).executeJS("(function(element){return element.innerText || element.textContent || ''})(arguments[0]);", mockElement)(takeScreenShot = false)
+    doReturn("JSValue").when(webContext).executeJS("return (function(element){return element.innerText || element.textContent || ''})(arguments[0]);", mockElement)(takeScreenShot = false)
     webContext.getElementText(elemBinding) should be (Some("JSValue"))
     envContext.scopes.get("element/text") should be ("JSValue")
   }
@@ -1396,7 +1396,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     doReturn(mockElement).when(webContext).locate(elemBinding)
     doReturn(mockSelect).when(webContext).createSelect(mockElement)
     when(mockSelect.getAllSelectedOptions).thenReturn(List[WebElement]().asJava, List[WebElement]().asJava)
-    webContext.getElementSelection("element", "text") should be ("")
+    webContext.getElementSelection("element", "text") should be (Some(""))
     envContext.scopes.get("element/selectedText") should be ("")
   }
 
@@ -1412,7 +1412,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     when(mockSelect.getAllSelectedOptions).thenReturn(List[WebElement]().asJava, List[WebElement](mockOptionElement1, mockOptionElement2).asJava)
     when(mockOptionElement1.getAttribute("text")).thenReturn("one")
     when(mockOptionElement2.getAttribute("text")).thenReturn("two")
-    webContext.getElementSelection("element", "text") should be ("one,two")
+    webContext.getElementSelection("element", "text") should be (Some("one,two"))
     envContext.scopes.get("element/selectedText") should be ("one,two")
   }
 
@@ -1428,7 +1428,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     when(mockSelect.getAllSelectedOptions).thenReturn(List[WebElement](mockOptionElement1, mockOptionElement2).asJava)
     when(mockOptionElement1.getText).thenReturn("one")
     when(mockOptionElement2.getText).thenReturn("two")
-    webContext.getElementSelection("element", "text") should be ("one,two")
+    webContext.getElementSelection("element", "text") should be (Some("one,two"))
     envContext.scopes.get("element/selectedText") should be ("one,two")
   }
 
@@ -1440,7 +1440,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     doReturn(mockElement).when(webContext).locate(elemBinding)
     doReturn(mockSelect).when(webContext).createSelect(mockElement)
     when(mockSelect.getAllSelectedOptions).thenReturn(List[WebElement]().asJava)
-    webContext.getElementSelection("element", "value") should be ("")
+    webContext.getElementSelection("element", "value") should be (Some(""))
     envContext.scopes.get("element/selectedValue") should be ("")
   }
 
@@ -1456,7 +1456,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     when(mockSelect.getAllSelectedOptions).thenReturn(List[WebElement](mockOptionElement1, mockOptionElement2).asJava)
     when(mockOptionElement1.getAttribute("value")).thenReturn("one")
     when(mockOptionElement2.getAttribute("value")).thenReturn("two")
-    webContext.getElementSelection("element", "value") should be ("one,two")
+    webContext.getElementSelection("element", "value") should be (Some("one,two"))
     envContext.scopes.get("element/selectedValue") should be ("one,two")
   }
 

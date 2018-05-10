@@ -524,28 +524,28 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
   }
 
   "I capture <dropdown> text as <attribute>" should "evaluate" in {
-    doReturn("value").when(webContext).getElementSelection("<dropdown>", " text")
+    doReturn(() => "value").when(env).boundAttributeOrSelection("<dropdown>", Some(" text"))
     evaluate("I capture <dropdown> text as <attribute>")
     verify(mockFeatureScope).set("<attribute>", "value")
     verify(env).addAttachment("<attribute>", "txt", "value")
   }
 
   "I capture <dropdown> value as <attribute>" should "evaluate" in {
-    doReturn("value").when(webContext).getElementSelection("<dropdown>", " value")
+    doReturn(() => "value").when(env).boundAttributeOrSelection("<dropdown>", Some(" value"))
     evaluate("I capture <dropdown> value as <attribute>")
     verify(mockFeatureScope).set("<attribute>", "value")
     verify(env).addAttachment("<attribute>", "txt", "value")
   }
 
   "I capture <dropdown> text" should "evaluate" in {
-    doReturn("value").when(webContext).getElementSelection("<dropdown>", " text")
+    doReturn(() => "value").when(env).boundAttributeOrSelection("<dropdown>", Some(" text"))
     evaluate("I capture <dropdown> text")
     verify(mockFeatureScope).set("<dropdown>", "value")
     verify(env).addAttachment("<dropdown>", "txt", "value")
   }
 
   "I capture <dropdown> value" should "evaluate" in {
-    doReturn("value").when(webContext).getElementSelection("<dropdown>", " value")
+    doReturn(() => "value").when(env).boundAttributeOrSelection("<dropdown>", Some(" value"))
     evaluate("I capture <dropdown> value")
     verify(mockFeatureScope).set("<dropdown>", "value")
     verify(env).addAttachment("<dropdown>", "txt", "value")

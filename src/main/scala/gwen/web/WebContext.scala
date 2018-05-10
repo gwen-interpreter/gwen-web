@@ -639,7 +639,7 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
             case None | Some("") =>
               Option(webElement.getAttribute("value")) match {
                 case None | Some("") =>
-                  val value = executeJS("(function(element){return element.innerText || element.textContent || ''})(arguments[0]);", webElement).asInstanceOf[String]
+                  val value = executeJS("return (function(element){return element.innerText || element.textContent || ''})(arguments[0]);", webElement).asInstanceOf[String]
                   if (value != null) value else ""
                 case Some(value) => value
               }
@@ -663,10 +663,15 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
   private def getSelectedElementText(name: String): Option[String] = {
     val elementBinding = env.getLocatorBinding(name)
     withWebElement(elementBinding) { webElement =>
-      val select = createSelect(webElement)
-      (Option(select.getAllSelectedOptions.asScala.map(_.getText()).mkString(",")) match {
-        case None | Some("") =>
-          select.getAllSelectedOptions.asScala.map(_.getAttribute("text")).mkString(",")
+      (getElementSelectionByJS(webElement, byText = true) match {
+        case None =>
+          Try(createSelect(webElement)) map { select =>
+            Option(select.getAllSelectedOptions.asScala.map(_.getText()).mkString(",")) match {
+              case None | Some("") =>
+                select.getAllSelectedOptions.asScala.map(_.getAttribute("text")).mkString(",")
+              case Some(value) => value
+            }
+          } getOrElse null
         case Some(value) => value
       }) tap { text =>
         env.bindAndWait(elementBinding.element, "selectedText", text)
@@ -686,12 +691,22 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
   private def getSelectedElementValue(name: String): Option[String] = {
     val elementBinding = env.getLocatorBinding(name)
     withWebElement(elementBinding) { webElement =>
-      createSelect(webElement).getAllSelectedOptions.asScala.map(_.getAttribute("value")).mkString(",") tap { value =>
-        env.bindAndWait(elementBinding.element, "selectedValue", value)
+      getElementSelectionByJS(webElement, byText = false) match {
+        case None =>
+          Try(createSelect(webElement)) map { select =>
+            select.getAllSelectedOptions.asScala.map(_.getAttribute("value")).mkString(",") tap { value =>
+              env.bindAndWait(elementBinding.element, "selectedValue", value)
+            }
+          } getOrElse null
+        case Some(value) => value
       }
     } tap { value =>
       logger.debug(s"getSelectedElementValue(${elementBinding.element})='$value'")
     }
+  }
+
+  private def getElementSelectionByJS(webElement: WebElement, byText: Boolean): Option[String] = {
+    Option(executeJS(s"""return (function(select){var byText=$byText;var result='';var options=select && select.options;if(!!options){var opt;for(var i=0,iLen=options.length;i<iLen;i++){opt=options[i];if(opt.selected){if(result.length>0){result=result+',';}if(byText){result=result+opt.text;}else{result=result+opt.value;}}}return result;}else{return null;}})(arguments[0])""", webElement).asInstanceOf[String])
   }
 
   /**
@@ -703,12 +718,12 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
    * @return the selected value or a comma seprated string containing all
    * the selected values if multiple values are selected.
    */
-  def getElementSelection(name: String, selection: String): String = {
+  def getElementSelection(name: String, selection: String): Option[String] = {
     selection.trim match {
       case "text" => getSelectedElementText(name)
       case _ => getSelectedElementValue(name)
     }
-  }.getOrElse(s"$$[$name $selection]")
+  }
 
   /**
     * Switches the web driver session

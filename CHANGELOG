@@ -1,3 +1,8 @@
+2.20.2
+======
+May 11, 2018
+- Fix slow dropdown select issue #59 (raised by @anshu781126)
+
 2.20.1
 ======
 May 9, 2018

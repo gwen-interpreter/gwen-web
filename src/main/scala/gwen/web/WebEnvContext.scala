@@ -18,8 +18,6 @@ package gwen.web
 
 import java.util.concurrent.TimeUnit
 
-import gwen.GwenSettings
-
 import scala.util.Failure
 import scala.util.Success
 import scala.util.Try
@@ -122,7 +120,8 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
       try { 
         getBoundReferenceValue(element + sel)
       } catch {
-        case _: UnboundAttributeException => webContext.getElementSelection(element, sel)
+        case _: UnboundAttributeException =>
+          webContext.getElementSelection(element, sel).getOrElse(getBoundReferenceValue(element))
         case e: Throwable => throw e
       }
   }
