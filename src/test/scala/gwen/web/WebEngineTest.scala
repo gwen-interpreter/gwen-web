@@ -98,18 +98,6 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
     evaluatePriority(Step(StepKeyword.Given, expression), env)
   }
 
-  private def withSetting[T](name: String, value: String)(f: => T):T = {
-    Settings.synchronized {
-      try {
-        sys.props += ((name, value))
-        f
-      } finally {
-        sys.props -= name
-        Settings.loadAll(UserOverrides.UserProperties.toList)
-      }
-    }
-  }
-
   "I am on the <page>" should "evaluate" in {
     evaluate("I am on the <page>")
     verify(mockScopes).addScope("<page>")
@@ -573,16 +561,26 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
 
   """my <name> property <is|will be> "<value>"""" should "evaluate" in {
     List("is", "will be").zipWithIndex.foreach { case (x, i) =>
-      evaluate(s"""my property-$i property $x "value-$i"""")
-      Settings.get(s"property-$i") should be (s"value-$i")
+      evaluate(s"""my gwen.property-$i property $x "value-$i"""")
+      Settings.get(s"gwen.property-$i") should be (s"value-$i")
     }
   }
 
   """my <name> setting <is|will be> "<value>"""" should "evaluate" in {
     List("is", "will be").zipWithIndex.foreach { case (x, i) =>
-      evaluate(s"""my setting-$i setting $x "value-$i"""")
-      Settings.get(s"setting-$i") should be (s"value-$i")
+      evaluate(s"""my gwen.setting-$i setting $x "value-$i"""")
+      Settings.get(s"gwen.setting-$i") should be (s"value-$i")
     }
+  }
+
+  "I reset my <name> property" should "evaluate" in {
+    evaluate(s"I reset my gwen.web property")
+    Settings.getOpt(s"gwen.web") should be (None)
+  }
+
+  "I reset my <name> setting" should "evaluate" in {
+    evaluate(s"I reset my gwen.web setting")
+    Settings.getOpt(s"gwen.web") should be (None)
   }
 
   """<attribute> <is|will> be defined by javascript "<expression>"""" should "evaluate" in {
@@ -596,19 +594,17 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
 
   """<attribute> <is|will> be defined by property "<name>"""" should "evaluate" in {
     List("is", "will be").zipWithIndex.foreach { case (x, i) =>
-      withSetting(s"name-$i", s"$i") {
-        evaluate(s"""attribute-$i $x defined by property "name-$i"""")
-        verify(mockFeatureScope).set(s"attribute-$i", s"$i")
-      }
+      Settings.set(s"name-$i", s"$i")
+      evaluate(s"""attribute-$i $x defined by property "name-$i"""")
+      verify(mockFeatureScope).set(s"attribute-$i", s"$i")
     }
   }
 
   """<attribute> <is|will> be defined by setting "<name>"""" should "evaluate" in {
     List("is", "will be").zipWithIndex.foreach { case (x, i) =>
-      withSetting(s"name-$i", s"$i") {
-        evaluate(s"""attribute-$i $x defined by setting "name-$i"""")
-        verify(mockFeatureScope).set(s"attribute-$i", s"$i")
-      }
+      Settings.set(s"name-$i", s"$i")
+      evaluate(s"""attribute-$i $x defined by setting "name-$i"""")
+      verify(mockFeatureScope).set(s"attribute-$i", s"$i")
     }
   }
 
@@ -1324,6 +1320,20 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
     doNothing().when(webContext).sendValue(mockBinding, newLine, clearFirst = false, sendEnterKey = false)
     evaluate("""I insert a new line in <element>""")
     verify(webContext).sendValue(mockBinding, newLine, clearFirst = false, sendEnterKey = false)
+  }
+
+  private def withSetting[T](name: String, value: String)(f: => T):T = {
+    Settings.synchronized {
+      val original = Settings.getOpt(name)
+      try {
+        Settings.set(name, value)
+        f
+      } finally {
+        original.fold(Settings.clear(name)) { v =>
+          Settings.set(name, v)
+        }
+      }
+    }
   }
   
 }

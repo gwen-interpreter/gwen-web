@@ -1,7 +1,13 @@
-2.20.2
+2.21.0
 ======
-May 11, 2018
+May 13, 2018
 - Fix slow dropdown select issue #59 (raised by @anshu781126)
+- Make all Gwen settings set in features or meta by following DSL thread-local
+  - `my <name> <property|setting> <is|will be> "<value>"`
+  -  The DSL documentation has been updated [here](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL#my-name-propertysetting-iswill-be-value)
+  - Also added following DSL to support resetting (undoing the thread-local setting)
+    - `I reset my <name> <property|setting>`
+- Update Gwen from v2.13.2 to v[2.14.0](https://github.com/gwen-interpreter/gwen/releases/tag/v2.14.0)
 
 2.20.1
 ======

@@ -706,7 +706,7 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
   }
 
   private def getElementSelectionByJS(webElement: WebElement, byText: Boolean): Option[String] = {
-    Option(executeJS(s"""return (function(select){var byText=$byText;var result='';var options=select && select.options;if(!!options){var opt;for(var i=0,iLen=options.length;i<iLen;i++){opt=options[i];if(opt.selected){if(result.length>0){result=result+',';}if(byText){result=result+opt.text;}else{result=result+opt.value;}}}return result;}else{return null;}})(arguments[0])""", webElement).asInstanceOf[String])
+    Option(executeJS(s"""return (function(select){try{var byText=$byText;var result='';var options=select && select.options;if(!!options){var opt;for(var i=0,iLen=options.length;i<iLen;i++){opt=options[i];if(opt.selected){if(result.length>0){result=result+',';}if(byText){result=result+opt.text;}else{result=result+opt.value;}}}return result;}else{return null;}}catch(e){return null;}})(arguments[0])""", webElement).asInstanceOf[String])
   }
 
   /**

@@ -49,12 +49,12 @@ class WebDslTest extends FlatSpec with Matchers {
               .replace("<keys>", "Command,Shift,T")
               .replace("for each <element>", "for each <entry>")
               .replace("<filepath>", "../gwen/features/sample/templates/json/StaticMultiLineTemplate.json")
+              .replace("<name> setting", "gwen.web setting")
+              .replace("<name> property", "gwen.web property")
           } foreach { dsl =>
-            StepKeyword.values foreach { keyword =>
-              interpreter.evaluateStep(Step(keyword, dsl.replaceAll("<step>", """a is "b"""")), env).evalStatus match {
-                case Failed(_, error) => fail(error)
-                case evalStatus => evalStatus.status should be (StatusKeyword.Passed)
-              }
+            interpreter.evaluateStep(Step(StepKeyword.Given, dsl.replaceAll("<step>", """a is "b"""")), env).evalStatus match {
+              case Failed(_, error) => fail(error)
+              case evalStatus => evalStatus.status should be (StatusKeyword.Passed)
             }
           }
         }
@@ -64,11 +64,14 @@ class WebDslTest extends FlatSpec with Matchers {
   
   private def withSetting[T](name: String, value: String)(f: => T):T = {
     Settings.synchronized {
+      val original = Settings.getOpt(name)
       try {
-        sys.props += ((name, value))
+        Settings.set(name, value)
         f
       } finally {
-        Settings.loadAll(UserOverrides.UserProperties.toList)
+        original.fold(Settings.clear(name)) { v =>
+          Settings.set(name, v)
+        }
       }
     }
   }

@@ -17,6 +17,7 @@
 package gwen.web
 
 import gwen.{Settings, UserOverrides}
+import gwen.Predefs.Kestrel
 import org.mockito.Mockito.verify
 import org.openqa.selenium.WebDriver
 import org.scalatest.FlatSpec
@@ -232,11 +233,14 @@ class WebEnvContextTest extends FlatSpec with Matchers with MockitoSugar {
 
   private def withSetting[T](name: String, value: String)(f: => T):T = {
     Settings.synchronized {
+      val original = Settings.getOpt(name)
       try {
-        sys.props += ((name, value))
+        Settings.set(name, value)
         f
       } finally {
-        Settings.loadAll(UserOverrides.UserProperties.toList)
+        original.fold(Settings.clear(name)) { v =>
+          Settings.set(name, v)
+        }
       }
     }
   }

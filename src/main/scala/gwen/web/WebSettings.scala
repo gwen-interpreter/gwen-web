@@ -92,7 +92,7 @@ object WebSettings {
     * report generator in core web component knows to generate the slideshow.
     */
   def `gwen.web.capture.screenshots`: Boolean = Settings.getOpt("gwen.web.capture.screenshots").getOrElse("false").toBoolean tap { isSet =>
-    if (isSet) sys.props += (("gwen.report.slideshow.create", "true"))
+    if (isSet) Settings.set("gwen.report.slideshow.create", "true")
   }
   
   /**

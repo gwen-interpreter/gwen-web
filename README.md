@@ -22,9 +22,9 @@ functions on pages may be necessary.
 
 ### What's New?
 
-- [Implicit JavaScript Locators](https://github.com/gwen-interpreter/gwen-web/wiki/Implicit-JavaScript-Locators)
+- [Thread local settings](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL#my-name-propertysetting-iswill-be-value)
+- [Implicit JavaScript locators](https://github.com/gwen-interpreter/gwen-web/wiki/Implicit-JavaScript-Locators)
 - [Locator level timeouts](https://github.com/gwen-interpreter/gwen-web/wiki/Locator-Level-Timeouts)
-- [Append text to fields](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL#i-append-value-in-element)
 
 Why Gwen-web?
 -------------

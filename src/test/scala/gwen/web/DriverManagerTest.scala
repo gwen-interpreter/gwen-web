@@ -30,7 +30,6 @@ import org.scalatest.FlatSpec
 import org.scalatest.Matchers
 import org.scalatest.mockito.MockitoSugar
 import gwen.Settings
-import gwen.UserOverrides
 import gwen.web.errors.NoSuchWindowException
 import gwen.errors.AmbiguousCaseException
 import scala.collection.JavaConverters._
@@ -216,15 +215,17 @@ class DriverManagerTest extends FlatSpec with Matchers with MockitoSugar {
     when(mockOptions.window()).thenReturn(mockWindow)
     mockDriver
   }
-  
+
   private def withSetting[T](name: String, value: String)(f: => T):T = {
     Settings.synchronized {
+      val original = Settings.getOpt(name)
       try {
-        sys.props += ((name, value))
+        Settings.set(name, value)
         f
       } finally {
-        sys.props -= name
-        Settings.loadAll(UserOverrides.UserProperties.toList)
+        original.fold(Settings.clear(name)) { v =>
+          Settings.set(name, v)
+        }
       }
     }
   }

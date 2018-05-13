@@ -32,6 +32,7 @@ import org.scalatest.{BeforeAndAfterEach, FlatSpec, Matchers}
 import org.scalatest.mockito.MockitoSugar
 import gwen.eval.ScopedDataStack
 import gwen.eval.GwenOptions
+import gwen.Settings
 import gwen.web.errors.{LocatorBindingException, WaitTimeoutException}
 import org.openqa.selenium.WebDriver.{Options, TargetLocator, Timeouts}
 import org.openqa.selenium.NoSuchElementException
@@ -42,7 +43,7 @@ import scala.concurrent.duration.Duration
 class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar with BeforeAndAfterEach {
 
   // disable implicit js locators for unit test
-  sys.props += (("gwen.web.implicit.js.locators", "false"))
+  Settings.set("gwen.web.implicit.js.locators", "false")
 
   private var mockWebElement: WebElement = _
   private var mockWebElements: List[WebElement] = _

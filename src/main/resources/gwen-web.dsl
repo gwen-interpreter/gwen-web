@@ -250,6 +250,8 @@ my <name> property is "<value>"
 my <name> property will be "<value>"
 my <name> setting is "<value>"
 my <name> setting will be "<value>"
+I reset my <name> property
+I reset my <name> setting
 <attribute> is defined by javascript "<expression>"
 <attribute> is defined by system process "<process>"
 <attribute> is defined by property "<name>"
