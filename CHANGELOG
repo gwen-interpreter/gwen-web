@@ -3,6 +3,8 @@
 May 18, 2018
 - Add setting to enable/disable implicit element focus (default is enabled, true)
   `gwen.web.implicit.element.focus=true|false`
+- Restore previous timeout behavior for compare operations
+  - Retry failed comparisons until timeout expires instead of returning immediately
 
 2.21.0
 ======

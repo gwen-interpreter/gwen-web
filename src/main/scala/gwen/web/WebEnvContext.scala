@@ -221,32 +221,33 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     * @return true if the actual value matches the expected value
     */
   def compare(name: String, expected: String, actual: () => String, operator: String, negate: Boolean): Unit = {
+    var result = false
     var error: Option[String] = None
     var actualValue = actual()
-    var result = actualValue != null && super.compare(name, expected, actualValue, operator, negate).getOrElse(false)
-    if (!result) {
-      try {
-        webContext.waitUntil("waiting for comparison") {
-          result = if (actualValue != null) {
-            super.compare(name, expected, actualValue, operator, negate) match {
-              case Success(condition) => condition
-              case Failure(e) =>
-                error = Some(e.getMessage)
-                false
-            }
-          } else false
-          result tap { r =>
-            if (!r) actualValue = actual()
+    try {
+      webContext.waitUntil("waiting for comparison") {
+        result = if (actualValue != null) {
+          super.compare(name, expected, actualValue, operator, negate) match {
+            case Success(condition) => condition
+            case Failure(e) =>
+              error = Some(e.getMessage)
+              false
           }
+        } else false
+        result tap { r =>
+          if (!r) actualValue = actual()
         }
-      } catch {
-        case _: WaitTimeoutException => result = false
       }
+    } catch {
+      case _: WaitTimeoutException => result = false
     }
     error match {
       case Some(msg) =>
         assert(assertion = false, msg)
       case None =>
+        if (!result) {
+          result = super.compare(name, expected, actual(), operator, negate).getOrElse(result)
+        }
         assert(result, s"Expected $name to ${if(negate) "not " else ""}$operator '$expected' but got '$actualValue'")
     }
 
