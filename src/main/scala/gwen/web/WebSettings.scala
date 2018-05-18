@@ -174,4 +174,10 @@ object WebSettings {
     */
   def `gwen.web.implicit.js.locators`: Boolean = Settings.getOpt("gwen.web.implicit.js.locators").getOrElse("false").toBoolean
 
+  /**
+    * Provides access to the `gwen.web.implicit.element.focus` setting used to determine whether or not Gwen should
+    * implicitly put the focus on all located web elements. Default value is true.
+    */
+  def `gwen.web.implicit.element.focus`: Boolean = Settings.getOpt("gwen.web.implicit.element.focus").getOrElse("true").toBoolean
+
 }

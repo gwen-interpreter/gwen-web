@@ -493,7 +493,9 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
   private def withDriverAndElement(desc: String, elementBinding: LocatorBinding)(doActions: (WebDriver, WebElement) => Unit): Unit = {
     withWebDriver { driver =>
       withWebElement(elementBinding) { webElement =>
-        executeJS("(function(element){element.focus();})(arguments[0]);", webElement)
+        if (WebSettings.`gwen.web.implicit.element.focus`) {
+          executeJS("(function(element){element.focus();})(arguments[0]);", webElement)
+        }
         doActions(driver, webElement)
       }
     }
