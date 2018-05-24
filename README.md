@@ -3,7 +3,7 @@
 Gwen-web
 ========
 
-Gwen-Web enables teams to quickly automate front end web tests and robotic online processes with
+A [Gwen](https://github.com/gwen-interpreter/gwen) interpreter that enables teams to quickly automate front end web tests and robotic online processes with
 [Gherkin](https://github.com/cucumber/cucumber/wiki/Gherkin) feature specifications.
 A [web DSL](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL) interacts with
 [Selenium](http://www.seleniumhq.org/projects/webdriver) under the covers for you so you don't have to do
