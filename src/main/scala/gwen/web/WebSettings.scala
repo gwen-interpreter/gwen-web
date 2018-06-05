@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Brady Wood, Branko Juric
+ * Copyright 2015-2018 Brady Wood, Branko Juric
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -136,9 +136,11 @@ object WebSettings {
   /**
    * Provides access to the `gwen.web.chrome.args` setting used to set
    * the list of Chrome web driver arguments to load (default is empty list).
-   * This setting accepts a comma separated list of arguments.
+   * This setting merges a comma separated list of arguments set in the `gwen.web.chrome.args` property with all
+   * the value of all properties that start with `gwen.web.chrome.args.`.
+   * List of chrome arguments: https://peter.sh/experiments/chromium-command-line-switches
    */
-  def `gwen.web.chrome.args`: List[String] = Settings.getOpt("gwen.web.chrome.args").map(_.split(",").toList.map(_.trim)).getOrElse(Nil)
+  def `gwen.web.chrome.args`: List[String] = Settings.findAllMulti("gwen.web.chrome.args")
   
   /**
    * Provides access to the chrome preference settings. This setting merges a comma separated list of preferences
