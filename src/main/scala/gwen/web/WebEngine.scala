@@ -341,6 +341,19 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
           env.compare("title", expected, () => webContext.getTitle, operator, Option(negation).isDefined)
         }
 
+      case r"""the (?:alert|confirmation) popup message should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file)$operator "(.*?)"$$$expression""" => step.orDocString(expression) tap { expression =>
+        val expected = env.parseExpression(operator, expression)
+        env.perform {
+          env.compare("title", expected, () => webContext.getPopupMessage, operator, Option(negation).isDefined)
+        }
+      }
+
+      case r"""the (?:alert|confirmation) popup message should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$$$attribute""" =>
+        val expected = env.getBoundReferenceValue(attribute)
+        env.perform {
+          env.compare("title", expected, () => webContext.getPopupMessage, operator, Option(negation).isDefined)
+        }
+
       case r"""(.+?)$element should( not)?$negation be (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$$$state""" =>
         val elementBinding = env.getLocatorBinding(element)
         webContext.checkElementState(elementBinding, state, Option(negation).nonEmpty)
@@ -422,6 +435,16 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
           case _: LocatorBindingException =>
             super.evaluate(step, env)
         }
+
+      case r"I capture the (alert|confirmation)$name popup message" =>
+        env.featureScope.set(s"the $name message", webContext.getPopupMessage tap { content =>
+          env.addAttachment(s"the $name message", "txt", content)
+        })
+
+      case r"I capture the (?:alert|confirmation) popup message as (.+?)$attribute" =>
+        env.featureScope.set(attribute, webContext.getPopupMessage tap { content =>
+          env.addAttachment(attribute, "txt", content)
+        })
 
       case r"""I drag and drop (.+?)$source to (.+?)$$$target""" =>
         val sourceBinding = env.getLocatorBinding(source)

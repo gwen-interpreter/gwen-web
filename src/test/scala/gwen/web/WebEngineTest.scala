@@ -259,6 +259,78 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
     }
   }
 
+   """the alert popup message should <operator> "<value>"""" should "evaluate" in {
+    matchers.foreach { case (operator, source, expression) =>
+      doReturn(source).when(webContext).getPopupMessage
+      evaluate(s"""the alert popup message should $operator "$expression"""")
+      verify(env).parseExpression(operator, expression)
+    }
+  }
+
+  """the alert popup message should not <operator> "<value>"""" should "evaluate" in {
+    matchers.foreach { case (operator, src, expression) =>
+      val source = src.replaceAll("value", "other")
+      doReturn(source).when(webContext).getPopupMessage
+      evaluate(s"""the alert popup message should not $operator "$expression"""")
+      verify(env).parseExpression(operator, expression)
+    }
+  }
+
+  "the alert popup message should <operator> <reference>" should "evaluate" in {
+    matchers2.foreach { case (operator, source, expression) =>
+      doReturn(source).when(webContext).getPopupMessage
+      doReturn(expression).when(env).getBoundReferenceValue("<reference>")
+      evaluate(s"""the alert popup message should $operator "$expression"""")
+      verify(env).parseExpression(operator, expression)
+    }
+  }
+
+  "the alert popup message should not <operator> <reference>" should "evaluate" in {
+    matchers2.foreach { case (operator, src, expression) =>
+      val source = src.replaceAll("value", "other")
+      doReturn(source).when(webContext).getPopupMessage
+      doReturn(expression).when(env).getBoundReferenceValue("<reference>")
+      evaluate(s"""the alert popup message should not $operator "$expression"""")
+      verify(env).parseExpression(operator, expression)
+    }
+  }
+
+  """the confirmation popup message should <operator> "<value>"""" should "evaluate" in {
+    matchers.foreach { case (operator, source, expression) =>
+      doReturn(source).when(webContext).getPopupMessage
+      evaluate(s"""the confirmation popup message should $operator "$expression"""")
+      verify(env).parseExpression(operator, expression)
+    }
+  }
+
+  """the confirmation popup message should not <operator> "<value>"""" should "evaluate" in {
+    matchers.foreach { case (operator, src, expression) =>
+      val source = src.replaceAll("value", "other")
+      doReturn(source).when(webContext).getPopupMessage
+      evaluate(s"""the confirmation popup message should not $operator "$expression"""")
+      verify(env).parseExpression(operator, expression)
+    }
+  }
+
+  "the confirmation popup message should <operator> <reference>" should "evaluate" in {
+    matchers2.foreach { case (operator, source, expression) =>
+      doReturn(source).when(webContext).getPopupMessage
+      doReturn(expression).when(env).getBoundReferenceValue("<reference>")
+      evaluate(s"""the confirmation popup message should $operator "$expression"""")
+      verify(env).parseExpression(operator, expression)
+    }
+  }
+
+  "the confirmation popup message should not <operator> <reference>" should "evaluate" in {
+    matchers2.foreach { case (operator, src, expression) =>
+      val source = src.replaceAll("value", "other")
+      doReturn(source).when(webContext).getPopupMessage
+      doReturn(expression).when(env).getBoundReferenceValue("<reference>")
+      evaluate(s"""the confirmation popup message should not $operator "$expression"""")
+      verify(env).parseExpression(operator, expression)
+    }
+  }
+
   "<element> should be <state>" should "evaluate" in {
     val mockBinding = mock[LocatorBinding]
     doReturn(mockBinding).when(env).getLocatorBinding("<element>")
@@ -509,6 +581,30 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
     doReturn("value").when(env).getBoundReferenceValue("<reference>")
     evaluate("I capture <reference>")
     verify(mockFeatureScope).set("<reference>", "value")
+  }
+
+  "I capture the alert popup message" should "evaluate" in {
+    doReturn("message").when(webContext).getPopupMessage
+    evaluate("I capture the alert popup message")
+    verify(mockFeatureScope).set("the alert popup message", "message")
+  }
+
+  "I capture the confirmation popup message" should "evaluate" in {
+    doReturn("message").when(webContext).getPopupMessage
+    evaluate("I capture the confirmation popup message")
+    verify(mockFeatureScope).set("the confirmation popup message", "message")
+  }
+
+  "I capture the alert popup message as <attribute>" should "evaluate" in {
+    doReturn("message").when(webContext).getPopupMessage
+    evaluate("I capture the alert popup message as <attribute>")
+    verify(mockFeatureScope).set("<attribute>", "message")
+  }
+
+  "I capture the confirmation popup message as <attribute>" should "evaluate" in {
+    doReturn("message").when(webContext).getPopupMessage
+    evaluate("I capture the confirmation popup message as <attribute>")
+    verify(mockFeatureScope).set("<attribute>", "message")
   }
 
   "I capture <dropdown> text as <attribute>" should "evaluate" in {

@@ -792,10 +792,26 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
     }
   }
 
+  /**
+    * Navigates the browser the given URL
+    *
+    * @param url the URL to navigate to
+    */
   def navigateTo(url: String): Unit = {
     withWebDriver { driver =>
       driver.get(url)
     } (WebSettings.`gwen.web.capture.screenshots`)
+  }
+
+  /**
+    * Gets the message of an alert of confirmation popup.
+    *
+    * @return the alert or confirmation message
+    */
+  def getPopupMessage: String = {
+    withWebDriver { driver =>
+      driver.switchTo().alert().getText
+    } getOrElse "$[dryRun:popupMessage]"
   }
 
 }

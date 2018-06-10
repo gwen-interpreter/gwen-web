@@ -1526,6 +1526,15 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     verify(mockWebDriver).get("http://site.com")
   }
 
+  "WebContext.getPopupMessage" should "return the message" in {
+    val mockTargetLocaotr = mock[WebDriver.TargetLocator]
+    val mockAlert = mock[Alert]
+    when(mockWebDriver.switchTo()).thenReturn(mockTargetLocaotr)
+    when(mockTargetLocaotr.alert()).thenReturn(mockAlert)
+    when(mockAlert.getText).thenReturn("popup message")
+    webContext.getPopupMessage should be ("popup message")
+  }
+
 }
 
 abstract class MockWebDriver extends WebDriver with TakesScreenshot with JavascriptExecutor

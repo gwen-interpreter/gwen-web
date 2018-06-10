@@ -92,6 +92,70 @@ the page title should not end with <reference>
 the page title should not match regex <reference>
 the page title should not match xpath <reference>
 the page title should not match json path <reference>
+the alert popup message should be "<value>"
+the alert popup message should contain "<value>"
+the alert popup message should start with "<value>"
+the alert popup message should end with "<value>"
+the alert popup message should match regex "<expression>"
+the alert popup message should match xpath "<expression>"
+the alert popup message should match json path "<expression>"
+the alert popup message should match template "<expression>"
+the alert popup message should match template file "<filepath>"
+the alert popup message should not be "<value>"
+the alert popup message should not contain "<value>"
+the alert popup message should not start with "<value>"
+the alert popup message should not end with "<value>"
+the alert popup message should not match regex "<expression>"
+the alert popup message should not match xpath "<expression>"
+the alert popup message should not match json path "<expression>"
+the alert popup message should not match template "<expression>"
+the alert popup message should not match template file "<filepath>"
+the alert popup message should be <reference>
+the alert popup message should contain <reference>
+the alert popup message should start with <reference>
+the alert popup message should end with <reference>
+the alert popup message should match regex <reference>
+the alert popup message should match xpath <reference>
+the alert popup message should match json path <reference>
+the alert popup message should not be <reference>
+the alert popup message should not contain <reference>
+the alert popup message should not start with <reference>
+the alert popup message should not end with <reference>
+the alert popup message should not match regex <reference>
+the alert popup message should not match xpath <reference>
+the alert popup message should not match json path <reference>
+the confirmation popup message should be "<value>"
+the confirmation popup message should contain "<value>"
+the confirmation popup message should start with "<value>"
+the confirmation popup message should end with "<value>"
+the confirmation popup message should match regex "<expression>"
+the confirmation popup message should match xpath "<expression>"
+the confirmation popup message should match json path "<expression>"
+the confirmation popup message should match template "<expression>"
+the confirmation popup message should match template file "<filepath>"
+the confirmation popup message should not be "<value>"
+the confirmation popup message should not contain "<value>"
+the confirmation popup message should not start with "<value>"
+the confirmation popup message should not end with "<value>"
+the confirmation popup message should not match regex "<expression>"
+the confirmation popup message should not match xpath "<expression>"
+the confirmation popup message should not match json path "<expression>"
+the confirmation popup message should not match template "<expression>"
+the confirmation popup message should not match template file "<filepath>"
+the confirmation popup message should be <reference>
+the confirmation popup message should contain <reference>
+the confirmation popup message should start with <reference>
+the confirmation popup message should end with <reference>
+the confirmation popup message should match regex <reference>
+the confirmation popup message should match xpath <reference>
+the confirmation popup message should match json path <reference>
+the confirmation popup message should not be <reference>
+the confirmation popup message should not contain <reference>
+the confirmation popup message should not start with <reference>
+the confirmation popup message should not end with <reference>
+the confirmation popup message should not match regex <reference>
+the confirmation popup message should not match xpath <reference>
+the confirmation popup message should not match json path <reference>
 <element> should be displayed
 <element> should be hidden
 <element> should be checked
@@ -246,6 +310,10 @@ I capture <attribute> by javascript "<expression>"
 I capture <attribute> of <element> by javascript "<expression>"
 I capture <attribute> on <element> by javascript "<expression>"
 I capture <attribute> in <element> by javascript "<expression>"
+I capture the alert popup message
+I capture the confirmation popup message
+I capture the alert popup message as <attribute>
+I capture the confirmation popup message as <attribute>
 my <name> property is "<value>"
 my <name> property will be "<value>"
 my <name> setting is "<value>"
