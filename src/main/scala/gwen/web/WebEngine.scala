@@ -437,8 +437,8 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
         }
 
       case r"I capture the (alert|confirmation)$name popup message" =>
-        env.featureScope.set(s"the $name message", webContext.getPopupMessage tap { content =>
-          env.addAttachment(s"the $name message", "txt", content)
+        env.featureScope.set(s"the $name popup message", webContext.getPopupMessage tap { content =>
+          env.addAttachment(s"the $name popup message", "txt", content)
         })
 
       case r"I capture the (?:alert|confirmation) popup message as (.+?)$attribute" =>
