@@ -1,11 +1,12 @@
 2.24.0
 ======
-June 10, 2018
+June 19, 2018
 - Add the following DSLs to support querying alert/confirmation popup messages:
   - `the <alert|confirmation> popup message <should|should not> <be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file> "<expression>"`
   - `the <alert|confirmation> popup message <should|should not> <be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file> <attribute>`
   - `I capture the <alert|confirmation> popup message`
   - `I capture the <alert|confirmation> popup message as <attribute>`
+- Update Gwen from v2.15.0 to v[2.15.1](https://github.com/gwen-interpreter/gwen/releases/tag/v2.15.1)
 
 2.23.0
 ======
