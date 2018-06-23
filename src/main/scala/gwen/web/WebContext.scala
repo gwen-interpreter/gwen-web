@@ -240,7 +240,7 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
           timeout = -1
         } catch {
           case e: TimeoutException =>
-            waitTimeoutError(reason)
+            waitTimeoutError(timeoutSecs, reason)
           case e: WebDriverException =>
             Thread.sleep(WebSettings`gwen.web.throttle.msecs`)
             timeout = timeoutSecs - ((System.nanoTime() - start) / 1000000000L)
@@ -279,7 +279,21 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
     */
   def checkElementState(elementBinding: LocatorBinding, state: String, negate: Boolean): Unit = {
     env.perform {
-      var result = false
+      var result = isElementState(elementBinding, state, negate)
+      assert(result, s"${elementBinding.element} should${if(negate) " not" else ""} be $state")
+    }
+  }
+
+  /**
+    * Checks the current state of an element.
+    *
+    * @param elementBinding the locator binding of the element
+    * @param state the state to check
+    * @param negate whether or not to negate the check
+    */
+  private def isElementState(elementBinding: LocatorBinding, state: String, negate: Boolean): Boolean = {
+    var result = false
+    env.perform {
       try {
         withWebElement(elementBinding) { webElement =>
           result = state match {
@@ -297,10 +311,21 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
           else if (state == "hidden") result = true
           else throw e
       }
-      if (!negate) assert(result, s"${elementBinding.element} should be $state")
-      else assert(!result, s"${elementBinding.element} should not be $state")
     }
+    if (negate) !result else result
   }
+
+  /**
+    * Waits the state of an element.
+    *
+    * @param elementBinding the locator binding of the element
+    * @param state the state to wait for
+    * @param negate whether or not to negate the check
+    */
+  def waitForElementState(elementBinding: LocatorBinding, state: String, negate: Boolean): Unit =
+    waitUntil(s"waiting until ${elementBinding.element} is${if(negate) " not" else ""} $state") {
+      isElementState(elementBinding, state, negate)
+    }
 
   /** Gets the title of the current page in the browser.*/
   def getTitle: String =

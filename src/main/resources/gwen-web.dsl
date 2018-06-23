@@ -439,6 +439,22 @@ I wait until <condition> when <element> is tabbed
 I wait until <condition> when <element> is cleared
 I wait until "<javascript>"
 I wait until <condition>
+I wait until <element> is displayed
+I wait until <element> is hidden
+I wait until <element> is checked
+I wait until <element> is ticked
+I wait until <element> is unchecked
+I wait until <element> is unticked
+I wait until <element> is enabled
+I wait until <element> is disabled
+I wait until <element> is not displayed
+I wait until <element> is not hidden
+I wait until <element> is not checked
+I wait until <element> is not ticked
+I wait until <element> is not unchecked
+I wait until <element> is not unticked
+I wait until <element> is not enabled
+I wait until <element> is not disabled
 I wait 1 second
 I wait <duration> seconds
 I highlight <element>

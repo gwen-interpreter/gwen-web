@@ -178,7 +178,7 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
         env.getLocatorBinding(element)
         env.scopes.set(s"$element/${WebEvents.EventToAction(event)}/wait", duration)
 
-        case r"""I wait until (.+?)$condition when (.+?)$element is (clicked|right clicked|double clicked||submitted|checked|ticked|unchecked|unticked|selected|deselected|typed|entered|tabbed|cleared|moved to)$$$event""" =>
+      case r"""I wait until (.+?)$condition when (.+?)$element is (clicked|right clicked|double clicked||submitted|checked|ticked|unchecked|unticked|selected|deselected|typed|entered|tabbed|cleared|moved to)$$$event""" =>
         env.scopes.get(s"$condition/javascript")
         env.getLocatorBinding(element)
         env.scopes.set(s"$element/${WebEvents.EventToAction(event)}/condition", condition)
@@ -188,6 +188,11 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
           env.evaluateJSPredicate(javascript)
         }
       }
+
+      case r"""I wait until (.+?)$element is( not)?$negation (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$$$state""" if env.scopes.getOpt(s"$element is${if(Option(negation).isDefined) " not" else ""} $state/javascript").isEmpty =>
+        val elementBinding = env.getLocatorBinding(element).jsEquivalent
+        val negate = Option(negation).isDefined
+        webContext.waitForElementState(elementBinding, state, negate)
 
       case r"""I wait until (.+?)$$$condition""" =>
         val javascript = env.scopes.get(s"$condition/javascript")
@@ -355,7 +360,7 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
         }
 
       case r"""(.+?)$element should( not)?$negation be (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$$$state""" =>
-        val elementBinding = env.getLocatorBinding(element)
+        val elementBinding = env.getLocatorBinding(element).jsEquivalent
         webContext.checkElementState(elementBinding, state, Option(negation).nonEmpty)
 
       case r"""(.+?)$element( text| value)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file)$operator "(.*?)"$$$expression""" if !element.matches(".+at (json path|xpath).+") => step.orDocString(expression) tap { expression =>

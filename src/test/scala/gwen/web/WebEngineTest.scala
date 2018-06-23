@@ -18,7 +18,7 @@ package gwen.web
 
 import java.io.File
 
-import gwen.{Settings, UserOverrides}
+import gwen.Settings
 import org.mockito.Mockito.{verify, _}
 import org.scalatest.{BeforeAndAfterEach, FlatSpec, Matchers}
 import org.scalatest.mockito.MockitoSugar
@@ -334,6 +334,7 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
   "<element> should be <state>" should "evaluate" in {
     val mockBinding = mock[LocatorBinding]
     doReturn(mockBinding).when(env).getLocatorBinding("<element>")
+    doReturn(mockBinding).when(mockBinding).jsEquivalent
     elemStates.foreach { state =>
       doNothing().when(webContext).checkElementState(mockBinding, state, negate = false)
       evaluate(s"<element> should be $state")
@@ -344,10 +345,35 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
    "<element> should not be <state>" should "evaluate" in {
     val mockBinding = mock[LocatorBinding]
     doReturn(mockBinding).when(env).getLocatorBinding("<element>")
+    doReturn(mockBinding).when(mockBinding).jsEquivalent
     elemStates.foreach { state =>
       doNothing().when(webContext).checkElementState(mockBinding, state, negate = true)
       evaluate(s"<element> should not be $state")
       verify(webContext).checkElementState(mockBinding, state, negate = true)
+    }
+  }
+
+  "I wait until <element> is <state>" should "evaluate" in {
+    val mockBinding = mock[LocatorBinding]
+    doReturn(mockBinding).when(env).getLocatorBinding("<element>")
+    doReturn(mockBinding).when(mockBinding).jsEquivalent
+    elemStates.foreach { state =>
+      doReturn(None).when(mockScopes).getOpt(s"<element> is $state/javascript")
+      doNothing().when(webContext).waitForElementState(mockBinding, state, false)
+      evaluate(s"I wait until <element> is $state")
+      verify(webContext).waitForElementState(mockBinding, state, false)
+    }
+  }
+
+  "I wait until <element> is not <state>" should "evaluate" in {
+    val mockBinding = mock[LocatorBinding]
+    doReturn(mockBinding).when(env).getLocatorBinding("<element>")
+    doReturn(mockBinding).when(mockBinding).jsEquivalent
+    elemStates.foreach { state =>
+      doReturn(None).when(mockScopes).getOpt(s"<element> is not $state/javascript")
+      doNothing().when(webContext).waitForElementState(mockBinding, state, true)
+      evaluate(s"I wait until <element> is not $state")
+      verify(webContext).waitForElementState(mockBinding, state, true)
     }
   }
 

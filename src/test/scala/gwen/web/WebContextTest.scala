@@ -18,6 +18,7 @@ package gwen.web
 
 import java.io.File
 
+import gwen.Settings
 import gwen.eval.{GwenOptions, ScopedDataStack}
 import org.mockito.Mockito._
 import org.openqa.selenium._
@@ -26,7 +27,7 @@ import org.scalatest.mockito.MockitoSugar
 import org.mockito.Matchers.any
 import org.mockito.Matchers.anyVararg
 import org.mockito.Matchers.same
-import gwen.web.errors.{UnsupportedModifierKeyException, WaitTimeoutException, LocatorBindingException}
+import gwen.web.errors.{LocatorBindingException, UnsupportedModifierKeyException, WaitTimeoutException}
 import org.openqa.selenium.interactions.{Action, Actions}
 import org.openqa.selenium.support.ui.Select
 
@@ -138,6 +139,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isDisplayed).thenReturn(true)
     webContext.checkElementState(elemBinding, "displayed", negate = false)
+    webContext.waitForElementState(elemBinding, "displayed", negate = false)
   }
 
   "WebContext.checkElementState" should "return when the state matches 'hidden'" in {
@@ -146,6 +148,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isDisplayed).thenReturn(false)
     webContext.checkElementState(elemBinding, "hidden", negate = false)
+    webContext.waitForElementState(elemBinding, "hidden", negate = false)
   }
 
   "WebContext.checkElementState" should "return when the state matches 'checked'" in {
@@ -154,6 +157,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isSelected).thenReturn(true)
     webContext.checkElementState(elemBinding, "checked", negate = false)
+    webContext.waitForElementState(elemBinding, "checked", negate = false)
   }
 
   "WebContext.checkElementState" should "return when the state matches 'ticked'" in {
@@ -162,6 +166,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isSelected).thenReturn(true)
     webContext.checkElementState(elemBinding, "ticked", negate = false)
+    webContext.waitForElementState(elemBinding, "ticked", negate = false)
   }
 
   "WebContext.checkElementState" should "return when the state matches 'unchecked'" in {
@@ -170,6 +175,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isSelected).thenReturn(false)
     webContext.checkElementState(elemBinding, "unchecked", negate = false)
+    webContext.waitForElementState(elemBinding, "unchecked", negate = false)
   }
 
   "WebContext.checkElementState" should "return when the state matches 'unticked'" in {
@@ -178,6 +184,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isSelected).thenReturn(false)
     webContext.checkElementState(elemBinding, "unticked", negate = false)
+    webContext.waitForElementState(elemBinding, "unticked", negate = false)
   }
 
   "WebContext.checkElementState" should "return when the state matches 'enabled'" in {
@@ -186,6 +193,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isEnabled).thenReturn(true)
     webContext.checkElementState(elemBinding, "enabled", negate = false)
+    webContext.waitForElementState(elemBinding, "enabled", negate = false)
   }
 
   "WebContext.checkElementState" should "return when the state matches 'disabled'" in {
@@ -194,6 +202,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isEnabled).thenReturn(false)
     webContext.checkElementState(elemBinding, "disabled", negate = false)
+    webContext.waitForElementState(elemBinding, "disabled", negate = false)
   }
 
   "WebContext.checkElementState" should "return when the state should not match 'displayed'" in {
@@ -202,6 +211,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isDisplayed).thenReturn(false)
     webContext.checkElementState(elemBinding, "displayed", negate = true)
+    webContext.waitForElementState(elemBinding, "displayed", negate = true)
   }
 
   "WebContext.checkElementState" should "return when the state should not match 'hidden'" in {
@@ -210,6 +220,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isDisplayed).thenReturn(true)
     webContext.checkElementState(elemBinding, "hidden", negate = true)
+    webContext.waitForElementState(elemBinding, "hidden", negate = true)
   }
 
   "WebContext.checkElementState" should "return when the state should not match 'checked'" in {
@@ -218,6 +229,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isSelected).thenReturn(false)
     webContext.checkElementState(elemBinding, "checked", negate = true)
+    webContext.waitForElementState(elemBinding, "checked", negate = true)
   }
 
   "WebContext.checkElementState" should "return when the state should not match 'ticked'" in {
@@ -226,6 +238,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isSelected).thenReturn(false)
     webContext.checkElementState(elemBinding, "ticked", negate = true)
+    webContext.waitForElementState(elemBinding, "ticked", negate = true)
   }
 
   "WebContext.checkElementState" should "return when the state should not match 'unchecked'" in {
@@ -234,6 +247,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isSelected).thenReturn(true)
     webContext.checkElementState(elemBinding, "unchecked", negate = true)
+    webContext.waitForElementState(elemBinding, "unchecked", negate = true)
   }
 
   "WebContext.checkElementState" should "return when the state should not match 'unticked'" in {
@@ -243,6 +257,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     when(mockElement.isSelected).thenReturn(true)
     webContext.checkElementState(elemBinding, "unticked", negate = true)
     envContext.scopes.allEntries.isEmpty should be (true)
+    webContext.waitForElementState(elemBinding, "unticked", negate = true)
   }
 
   "WebContext.checkElementState" should "return when the state should not match 'enabled'" in {
@@ -251,6 +266,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isEnabled).thenReturn(false)
     webContext.checkElementState(elemBinding, "enabled", negate = true)
+    webContext.waitForElementState(elemBinding, "enabled", negate = true)
   }
 
   "WebContext.checkElementState" should "return when the state should not match 'disabled'" in {
@@ -259,6 +275,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isEnabled).thenReturn(true)
     webContext.checkElementState(elemBinding, "disabled", negate = true)
+    webContext.waitForElementState(elemBinding, "disabled", negate = true)
   }
 
   "WebContext.checkElementState" should "fail when the state does not match 'displayed'" in {
@@ -266,8 +283,13 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isDisplayed).thenReturn(false)
-    intercept[AssertionError] {
-      webContext.checkElementState(elemBinding, "displayed", negate = false)
+    withSetting("gwen.web.wait.seconds", "1") {
+      intercept[AssertionError] {
+        webContext.checkElementState(elemBinding, "displayed", negate = false)
+      }
+      intercept[WaitTimeoutException] {
+        webContext.waitForElementState(elemBinding, "displayed", negate = false)
+      }
     }
   }
 
@@ -276,8 +298,13 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isDisplayed).thenReturn(true)
-    intercept[AssertionError] {
-      webContext.checkElementState(elemBinding, "hidden", negate = false)
+    withSetting("gwen.web.wait.seconds", "1") {
+      intercept[AssertionError] {
+        webContext.checkElementState(elemBinding, "hidden", negate = false)
+      }
+      intercept[WaitTimeoutException] {
+        webContext.waitForElementState(elemBinding, "hidden", negate = false)
+      }
     }
   }
 
@@ -286,8 +313,13 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isSelected).thenReturn(false)
-    intercept[AssertionError] {
-      webContext.checkElementState(elemBinding, "checked", negate = false)
+    withSetting("gwen.web.wait.seconds", "1") {
+      intercept[AssertionError] {
+        webContext.checkElementState(elemBinding, "checked", negate = false)
+      }
+      intercept[WaitTimeoutException] {
+        webContext.waitForElementState(elemBinding, "checked", negate = false)
+      }
     }
   }
 
@@ -296,8 +328,13 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isSelected).thenReturn(false)
-    intercept[AssertionError] {
-      webContext.checkElementState(elemBinding, "ticked", negate = false)
+    withSetting("gwen.web.wait.seconds", "1") {
+      intercept[AssertionError] {
+        webContext.checkElementState(elemBinding, "ticked", negate = false)
+      }
+      intercept[WaitTimeoutException] {
+        webContext.waitForElementState(elemBinding, "ticked", negate = false)
+      }
     }
   }
 
@@ -306,8 +343,13 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isSelected).thenReturn(true)
-    intercept[AssertionError] {
-      webContext.checkElementState(elemBinding, "unchecked", negate = false)
+    withSetting("gwen.web.wait.seconds", "1") {
+      intercept[AssertionError] {
+        webContext.checkElementState(elemBinding, "unchecked", negate = false)
+      }
+      intercept[WaitTimeoutException] {
+        webContext.waitForElementState(elemBinding, "unchecked", negate = false)
+      }
     }
   }
 
@@ -316,8 +358,13 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isSelected).thenReturn(true)
-    intercept[AssertionError] {
-      webContext.checkElementState(elemBinding, "unticked", negate = false)
+    withSetting("gwen.web.wait.seconds", "1") {
+      intercept[AssertionError] {
+        webContext.checkElementState(elemBinding, "unticked", negate = false)
+      }
+      intercept[WaitTimeoutException] {
+        webContext.waitForElementState(elemBinding, "unticked", negate = false)
+      }
     }
   }
 
@@ -326,8 +373,13 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isEnabled).thenReturn(false)
-    intercept[AssertionError] {
-      webContext.checkElementState(elemBinding, "enabled", negate = false)
+    withSetting("gwen.web.wait.seconds", "1") {
+      intercept[AssertionError] {
+        webContext.checkElementState(elemBinding, "enabled", negate = false)
+      }
+      intercept[WaitTimeoutException] {
+        webContext.waitForElementState(elemBinding, "enabled", negate = false)
+      }
     }
   }
 
@@ -336,8 +388,13 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isEnabled).thenReturn(true)
-    intercept[AssertionError] {
-      webContext.checkElementState(elemBinding, "disabled", negate = false)
+    withSetting("gwen.web.wait.seconds", "1") {
+      intercept[AssertionError] {
+        webContext.checkElementState(elemBinding, "disabled", negate = false)
+      }
+      intercept[WaitTimeoutException] {
+        webContext.waitForElementState(elemBinding, "disabled", negate = false)
+      }
     }
   }
   
@@ -346,8 +403,13 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isDisplayed).thenReturn(true)
-    intercept[AssertionError] {
-      webContext.checkElementState(elemBinding, "displayed", negate = true)
+    withSetting("gwen.web.wait.seconds", "1") {
+      intercept[AssertionError] {
+        webContext.checkElementState(elemBinding, "displayed", negate = true)
+      }
+      intercept[WaitTimeoutException] {
+        webContext.waitForElementState(elemBinding, "displayed", negate = true)
+      }
     }
   }
 
@@ -356,8 +418,13 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isDisplayed).thenReturn(false)
-    intercept[AssertionError] {
-      webContext.checkElementState(elemBinding, "hidden", negate = true)
+    withSetting("gwen.web.wait.seconds", "1") {
+      intercept[AssertionError] {
+        webContext.checkElementState(elemBinding, "hidden", negate = true)
+      }
+      intercept[WaitTimeoutException] {
+        webContext.waitForElementState(elemBinding, "hidden", negate = true)
+      }
     }
   }
 
@@ -366,8 +433,13 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isSelected).thenReturn(true)
-    intercept[AssertionError] {
-      webContext.checkElementState(elemBinding, "checked", negate = true)
+    withSetting("gwen.web.wait.seconds", "1") {
+      intercept[AssertionError] {
+       webContext.checkElementState(elemBinding, "checked", negate = true)
+      }
+      intercept[WaitTimeoutException] {
+        webContext.waitForElementState(elemBinding, "checked", negate = true)
+      }
     }
   }
 
@@ -376,8 +448,13 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isSelected).thenReturn(true)
-    intercept[AssertionError] {
-      webContext.checkElementState(elemBinding, "ticked", negate = true)
+    withSetting("gwen.web.wait.seconds", "1") {
+      intercept[AssertionError] {
+        webContext.checkElementState(elemBinding, "ticked", negate = true)
+      }
+      intercept[WaitTimeoutException] {
+        webContext.waitForElementState(elemBinding, "ticked", negate = true)
+      }
     }
   }
 
@@ -386,8 +463,13 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isSelected).thenReturn(false)
-    intercept[AssertionError] {
-      webContext.checkElementState(elemBinding, "unchecked", negate = true)
+    withSetting("gwen.web.wait.seconds", "1") {
+      intercept[AssertionError] {
+        webContext.checkElementState(elemBinding, "unchecked", negate = true)
+      }
+      intercept[WaitTimeoutException] {
+        webContext.waitForElementState(elemBinding, "unchecked", negate = true)
+      }
     }
   }
 
@@ -396,8 +478,13 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isSelected).thenReturn(false)
-    intercept[AssertionError] {
-      webContext.checkElementState(elemBinding, "unticked", negate = true)
+    withSetting("gwen.web.wait.seconds", "1") {
+      intercept[AssertionError] {
+        webContext.checkElementState(elemBinding, "unticked", negate = true)
+      }
+      intercept[WaitTimeoutException] {
+        webContext.waitForElementState(elemBinding, "unticked", negate = true)
+      }
     }
   }
 
@@ -406,8 +493,13 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isEnabled).thenReturn(true)
-    intercept[AssertionError] {
-      webContext.checkElementState(elemBinding, "enabled", negate = true)
+    withSetting("gwen.web.wait.seconds", "1") {
+      intercept[AssertionError] {
+        webContext.checkElementState(elemBinding, "enabled", negate = true)
+      }
+      intercept[WaitTimeoutException] {
+        webContext.waitForElementState(elemBinding, "enabled", negate = true)
+      }
     }
   }
 
@@ -416,8 +508,13 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isEnabled).thenReturn(false)
-    intercept[AssertionError] {
-      webContext.checkElementState(elemBinding, "disabled", negate = true)
+    withSetting("gwen.web.wait.seconds", "1") {
+      intercept[AssertionError] {
+        webContext.checkElementState(elemBinding, "disabled", negate = true)
+      }
+      intercept[WaitTimeoutException] {
+        webContext.waitForElementState(elemBinding, "disabled", negate = true)
+      }
     }
   }
 
@@ -425,27 +522,39 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("name", "id", "name", None)
     doThrow(new NoSuchElementException("no id")).when(webContext).locate(elemBinding)
     webContext.checkElementState(elemBinding, "displayed", negate = true)
+    webContext.waitForElementState(elemBinding, "displayed", negate = true)
   }
 
   "WebContext.checkElementState" should "return when the state should match 'hidden' and there is no such element" in {
     val elemBinding = LocatorBinding("name", "id", "name", None)
     doThrow(new NoSuchElementException("no id")).when(webContext).locate(elemBinding)
     webContext.checkElementState(elemBinding, "hidden", negate = false)
+    webContext.waitForElementState(elemBinding, "hidden", negate = false)
   }
 
   "WebContext.checkElementState" should "fail when the state should match 'displayed' and there is no such element" in {
     val elemBinding = LocatorBinding("name", "id", "name", None)
     doThrow(new NoSuchElementException("no id")).when(webContext).locate(elemBinding)
-    intercept[AssertionError] {
-      webContext.checkElementState(elemBinding, "displayed", negate = false)
+    withSetting("gwen.web.wait.seconds", "1") {
+      intercept[AssertionError] {
+        webContext.checkElementState(elemBinding, "displayed", negate = false)
+      }
+      intercept[WaitTimeoutException] {
+        webContext.waitForElementState(elemBinding, "displayed", negate = false)
+      }
     }
   }
 
   "WebContext.checkElementState" should "fail when the state should not match 'hidden' and there is no such element" in {
     val elemBinding = LocatorBinding("name", "id", "name", None)
     doThrow(new NoSuchElementException("no id")).when(webContext).locate(elemBinding)
-    intercept[AssertionError] {
-      webContext.checkElementState(elemBinding, "hidden", negate = true)
+    withSetting("gwen.web.wait.seconds", "1") {
+      intercept[AssertionError] {
+        webContext.checkElementState(elemBinding, "hidden", negate = true)
+      }
+      intercept[WaitTimeoutException] {
+        webContext.waitForElementState(elemBinding, "hidden", negate = true)
+      }
     }
   }
 
@@ -1533,6 +1642,20 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     when(mockTargetLocaotr.alert()).thenReturn(mockAlert)
     when(mockAlert.getText).thenReturn("popup message")
     webContext.getPopupMessage should be ("popup message")
+  }
+  
+  private def withSetting[T](name: String, value: String)(f: => T):T = {
+    Settings.synchronized {
+      val original = Settings.getOpt(name)
+      try {
+        Settings.set(name, value)
+        f
+      } finally {
+        original.fold(Settings.clear(name)) { v =>
+          Settings.set(name, v)
+        }
+      }
+    }
   }
 
 }

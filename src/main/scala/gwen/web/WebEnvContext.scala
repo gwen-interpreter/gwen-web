@@ -224,10 +224,13 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     var result = false
     var error: Option[String] = None
     var actualValue = actual()
-    var waited = false
+    var polled = false
     try {
       webContext.waitUntil("waiting for comparison") {
-        waited = true
+        if (polled) {
+          actualValue = actual()
+        }
+        polled = true
         result = if (actualValue != null) {
           super.compare(name, expected, actualValue, operator, negate) match {
             case Success(condition) => condition
@@ -236,9 +239,7 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
               false
           }
         } else false
-        result tap { r =>
-          if (!r) actualValue = actual()
-        }
+        result
       }
     } catch {
       case _: WaitTimeoutException => result = false
@@ -247,7 +248,7 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
       case Some(msg) =>
         assert(assertion = false, msg)
       case None =>
-        if (!waited) {
+        if (!polled) {
           result = super.compare(name, expected, actualValue, operator, negate).getOrElse(result)
         }
         assert(result, s"Expected $name to ${if(negate) "not " else ""}$operator '$expected' but got '$actualValue'")

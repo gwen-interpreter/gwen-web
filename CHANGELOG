@@ -1,3 +1,9 @@
+2.25.0
+======
+- June 23
+- Add DSL to support waiting for elmement state changes
+  - `I wait until <element> <is|is not> <displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled>`
+
 2.24.0
 ======
 June 19, 2018
