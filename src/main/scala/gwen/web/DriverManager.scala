@@ -89,29 +89,30 @@ class DriverManager extends LazyLogging {
   
   /** Loads the selenium webdriver. */
   private[web] def loadWebDriver: WebDriver = withGlobalSettings {
-    val driverName = WebSettings.`gwen.web.browser`.toLowerCase
-    logger.info(s"Starting $driverName browser session${ if(session == "primary") "" else s": $session"}")
     WebSettings.`gwen.web.remote.url` match {
-      case Some(addr) => remoteDriver(driverName, addr)
-      case None => localDriver(driverName)
+      case Some(addr) =>
+        remoteDriver(addr)
+      case None =>
+        val driverName = WebSettings.`gwen.web.browser`.toLowerCase
+        localDriver(driverName)
     }
   }
   
-  private def remoteDriver(driverName: String, addr: String): WebDriver = {
-    val capabilities: DesiredCapabilities = driverName match {
-      case "firefox" => DesiredCapabilities.firefox tap { capabilities =>
-        capabilities.setCapability(FirefoxDriver.PROFILE, firefoxOptions().getProfile)
-      }
-      case "chrome" => DesiredCapabilities.chrome tap { capabilities =>
-        capabilities.setCapability(ChromeOptions.CAPABILITY, chromeOptions())
-        capabilities.setCapability(CapabilityType.ACCEPT_SSL_CERTS, WebSettings.`gwen.web.accept.untrusted.certs`)
-      }
-      case "ie" => DesiredCapabilities.internetExplorer() tap { capabilities =>
-        capabilities.setCapability(CapabilityType.ACCEPT_SSL_CERTS, WebSettings.`gwen.web.accept.untrusted.certs`)
-      }
-    }
-    capabilities.setJavascriptEnabled(true)
-    setDesiredCapabilities(capabilities)
+  private def remoteDriver(addr: String): WebDriver = {
+    val capSettings = WebSettings.`gwen.web.capabilities`
+    val browser = capSettings.get("browserName").orElse(capSettings.get("browser")).orElse(capSettings.get("device")).getOrElse(WebSettings.`gwen.web.browser`)
+    val capabilities = new DesiredCapabilities(
+      browser.trim.toLowerCase match {
+        case "firefox" => firefoxOptions()
+        case "chrome" => chromeOptions()
+        case "ie" | "internet explorer" => ieOptions()
+        case "safari" => safariOptions()
+        case _ =>
+          new MutableCapabilities() tap { caps =>
+            setDesiredCapabilities(caps)
+          }
+      })
+    logger.info(s"Starting remote $browser session${ if(session == "primary") "" else s": $session"}")
     remote(addr, capabilities)
   }
   
@@ -122,19 +123,22 @@ class DriverManager extends LazyLogging {
     *  @throws gwen.web.errors.UnsupportedWebDriverException if the given
     *          web driver name is unsupported 
     */
-  private def localDriver(driverName: String): WebDriver = driverName match {
-    case "firefox" => firefox()
-    case "ie" => ie()
-    case "chrome" => chrome()
-    case "safari" => safari()
-    case _ => unsupportedWebDriverError(driverName)
+  private def localDriver(driverName: String): WebDriver = {
+    logger.info(s"Starting $driverName browser session${ if(session == "primary") "" else s": $session"}")
+    driverName match {
+      case "firefox" => firefox()
+      case "ie" => ie()
+      case "chrome" => chrome()
+      case "safari" => safari()
+      case _ => unsupportedWebDriverError(driverName)
+    }
   }
   
   private def firefoxOptions() : FirefoxOptions = {
     val firefoxProfile = new FirefoxProfile() tap { profile =>
       WebSettings.`gwen.web.firefox.prefs` foreach { case (name, value) =>
-      logger.info(s"Setting firefox browser preference: $name=$value")
         try {
+          logger.info(s"Setting firefox preference: $name=$value")
           profile.setPreference(name, Integer.valueOf(value.trim))
         } catch {
           case _: Throwable =>
@@ -142,54 +146,62 @@ class DriverManager extends LazyLogging {
             else profile.setPreference(name, value)
         }
       }
-      WebSettings.`gwen.web.useragent` foreach {
-        profile.setPreference("general.useragent.override", _)
+      WebSettings.`gwen.web.useragent` foreach { agent =>
+        logger.info(s"Setting firefox preference: general.useragent.override=$agent")
+        profile.setPreference("general.useragent.override", agent)
       }
       if (WebSettings.`gwen.web.authorize.plugins`) {
+        logger.info("Setting firefox preference: security.enable_java=true")
         profile.setPreference("security.enable_java", true)
+        logger.info("Setting firefox preference: plugin.state.java=2")
         profile.setPreference("plugin.state.java", 2)
       }
       WebSettings.`gwen.web.accept.untrusted.certs` tap { _ =>
+        logger.info("Setting firefox option: setAcceptUntrustedCertificates(true)")
         profile.setAcceptUntrustedCertificates(true)
+        logger.info("Setting firefox option: setAssumeUntrustedCertificateIssuer(false)")
         profile.setAssumeUntrustedCertificateIssuer(false)
       }
       if (WebSettings.`gwen.web.suppress.images`) {
+        logger.info("Setting firefox preference: permissions.default.image=2")
         profile.setPreference("permissions.default.image", 2)
       }
     }
     new FirefoxOptions()
-      .setProfile(firefoxProfile)
-      .merge(DesiredCapabilities.firefox()) tap { options =>
+      .setProfile(firefoxProfile) tap { options =>
       if (WebSettings.`gwen.web.browser.headless`) {
-        logger.info(s"Firefox will run headless")
+        logger.info(s"Setting firefox argument: -headless")
         options.addArguments("-headless")
       }
-      setDesiredCapabilities(options.asInstanceOf[MutableCapabilities])
+      setDesiredCapabilities(options)
     }
   }
   
   private def chromeOptions() : ChromeOptions = new ChromeOptions() tap { options =>
-    WebSettings.`gwen.web.useragent` foreach { 
-      agent => options.addArguments(s"--user-agent=$agent") 
+    WebSettings.`gwen.web.useragent` foreach { agent =>
+      logger.info(s"Setting chrome argument: --user-agent=$agent")
+      options.addArguments(s"--user-agent=$agent")
     }
     if (WebSettings.`gwen.web.authorize.plugins`) {
+      logger.info("Setting chrome argument: --always-authorize-plugins")
       options.addArguments("--always-authorize-plugins") 
     }
     options.addArguments("--test-type")
     if (WebSettings.`gwen.web.accept.untrusted.certs`) {
+      logger.info("Setting chrome argument: --ignore-certificate-errors")
       options.addArguments("--ignore-certificate-errors")
     }
     WebSettings.`gwen.web.chrome.args` foreach { arg =>
-      logger.info(s"Setting chrome driver argument: $arg")
+      logger.info(s"Setting chrome argument: $arg")
       options.addArguments(arg)
     }
     if (WebSettings.`gwen.web.browser.headless`) {
-      logger.info(s"Chrome will run headless")
+      logger.info("Setting chrome argument: headless")
       options.addArguments("headless")
     }
     val prefs = new java.util.HashMap[String, Object]()
     WebSettings.`gwen.web.chrome.prefs` foreach { case (name, value) =>
-      logger.info(s"Setting chrome browser preference: $name=$value")
+      logger.info(s"Setting chrome preference: $name=$value")
       try {
         prefs.put(name, Integer.valueOf(value.trim))
       } catch {
@@ -207,23 +219,21 @@ class DriverManager extends LazyLogging {
         options.addExtensions(extensions:_*)
       }
     }
-    setDesiredCapabilities(options.asInstanceOf[MutableCapabilities])
+    setDesiredCapabilities(options)
   }
 
   private def ieOptions(): InternetExplorerOptions = new InternetExplorerOptions() tap { options =>
-    val capabilities = options.asInstanceOf[MutableCapabilities]
-    capabilities.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true)
-    setDesiredCapabilities(capabilities)
+    setDesiredCapabilities(options)
   }
 
   private def safariOptions(): SafariOptions = new SafariOptions() tap { options =>
-    setDesiredCapabilities(options.asInstanceOf[MutableCapabilities])
+    setDesiredCapabilities(options)
   }
 
   private def setDesiredCapabilities(capabilities: MutableCapabilities) {
     WebSettings.`gwen.web.capabilities` foreach { case (name, value) =>
-      logger.info(s"Setting web capability: $name=$value")
       try {
+        logger.info(s"Setting web capability: $name=$value")
         capabilities.setCapability(name, Integer.valueOf(value.trim))
       } catch {
         case _: Throwable =>
@@ -231,6 +241,10 @@ class DriverManager extends LazyLogging {
           else capabilities.setCapability(name, value)
       }
     }
+    logger.info(s"Setting web capability: ${CapabilityType.ACCEPT_SSL_CERTS}=${WebSettings.`gwen.web.accept.untrusted.certs`}")
+    capabilities.setCapability(CapabilityType.ACCEPT_SSL_CERTS, WebSettings.`gwen.web.accept.untrusted.certs`)
+    logger.info(s"Setting web capability: javascriptEnabled=true")
+    capabilities.setCapability("javascriptEnabled", true)
   }
   
   private[web] def chrome(): WebDriver = new ChromeDriver(chromeOptions())
@@ -245,8 +259,10 @@ class DriverManager extends LazyLogging {
     new RemoteWebDriver(new HttpCommandExecutor(new URL(hubUrl)), capabilities)
   
   private def withGlobalSettings(driver: WebDriver): WebDriver = {
+    logger.info(s"Implicit wait (default locator timeout) = ${WebSettings.`gwen.web.locator.wait.seconds`} second(s)")
     driver.manage().timeouts().implicitlyWait(WebSettings.`gwen.web.locator.wait.seconds`, TimeUnit.SECONDS)
     if (WebSettings.`gwen.web.maximize`) {
+      logger.info(s"Maximizing window")
       driver.manage().window().maximize() 
     }
     driver

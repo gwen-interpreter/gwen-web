@@ -1,3 +1,9 @@
+2.25.1
+======
+June 25, 2018
+- Better support for remote web driver capabilities
+  - `gwen.web.browser` setting no longer mandatory if `browserName`, `browser` or `device` capabilities are provided
+
 2.25.0
 ======
 June 23, 2018
