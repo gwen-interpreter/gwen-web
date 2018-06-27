@@ -3,6 +3,8 @@ scala:
    - 2.12.3
 jdk:
   - oraclejdk8
+env:
+  - JAVA_OPTS=-Dgwen.web.browser=chrome
 before_script:
   # pull down gwen source dependency
   - cd ..
@@ -20,7 +22,7 @@ sudo: required
 addons:
   chrome: stable
 before_install:
-  - wget https://chromedriver.storage.googleapis.com/index.html?path=2.40/chromedriver_linux64.zip
+  - wget https://chromedriver.storage.googleapis.com/2.40/chromedriver_linux64.zip
   - mkdir chromedriver
   - tar -xzf chromedriver_linux64.zip -C chromedriver
   - export PATH=$PATH:$PWD/chromedriver
