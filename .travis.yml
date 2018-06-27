@@ -3,8 +3,6 @@ scala:
    - 2.12.3
 jdk:
   - oraclejdk8
-env:
-  - JAVA_OPTS="-Dgwen.web.browser=chrome -Dgwen.web.browser.headless=true"
 before_script:
   # pull down gwen source dependency
   - cd ..
@@ -22,3 +20,5 @@ before_install:
   - mkdir chromedriver
   - unzip -o chromedriver_linux64.zip -d chromedriver
   - export PATH=$PATH:$PWD/chromedriver
+script:
+  - sbt -Dgwen.web.browser=chrome -Dgwen.web.browser.headless=true ++$TRAVIS_SCALA_VERSION test
