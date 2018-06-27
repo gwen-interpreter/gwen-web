@@ -20,5 +20,4 @@ before_install:
   - mkdir chromedriver
   - unzip -o chromedriver_linux64.zip -d chromedriver
   - export PATH=$PATH:$PWD/chromedriver
-script:
-  - sbt -Dgwen.web.browser=chrome -Dgwen.web.browser.headless=true ++$TRAVIS_SCALA_VERSION test
+sbt_args: -Dgwen.web.browser=chrome -Dgwen.web.browser.headless=true
