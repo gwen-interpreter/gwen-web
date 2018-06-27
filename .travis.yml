@@ -24,5 +24,5 @@ addons:
 before_install:
   - wget https://chromedriver.storage.googleapis.com/2.40/chromedriver_linux64.zip
   - mkdir chromedriver
-  - tar -xzf chromedriver_linux64.zip -C chromedriver
+  - unzip chromedriver_linux64.zip
   - export PATH=$PATH:$PWD/chromedriver
