@@ -59,7 +59,7 @@ So you can drive automation with Gherkin features like this..
   Scenario: the first result should open a Gwen page
       Given the first match can be located by css selector ".r > a"
        When I click the first match
-       Then the current URL should start with "https://github.com/gwen-interpreter/gwen"
+       Then the current URL should contain "gwen-interpreter"
 ```
 ..with [no Page Objects](https://gweninterpreter.wordpress.com/2016/03/08/nopageobjects-theres-no-long-way-to-go-were-already-there/) or Selenium coding required!
 
