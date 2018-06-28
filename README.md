@@ -92,8 +92,8 @@ Key Features
 - Execution can be [data driven](https://github.com/gwen-interpreter/gwen/wiki/Execution-Modes#csv-data-feeds) (using csv data feeds)
 - [REPL console](https://github.com/gwen-interpreter/gwen/wiki/REPL-Console) allows verifying before running
 - Cross browser support
-- Remote web driver support
-- Screenshot capture and slideshow playback
+- [Remote web driver](https://gweninterpreter.wordpress.com/2015/04/23/remote-webdriver-feature-now-available-in-gwen-web/) support
+- [Screenshot capture and slideshow](https://github.com/gwen-interpreter/gwen-web/wiki/Screenshot-Capture-and-Slideshows) playback
 - [Interchangeable Selenium](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#changing-the-selenium-version) implementation
 - [Locator Chaining](https://github.com/gwen-interpreter/gwen-web/wiki/Locator-Chaining)
 - [Headless Browser Execution](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#gwenwebbrowserheadless)
