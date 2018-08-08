@@ -59,7 +59,7 @@ So you can drive automation with Gherkin features like this..
   Scenario: the first result should open a Gwen page
       Given the first match can be located by css selector ".r > a"
        When I click the first match
-       Then the current URL should start with "https://github.com/gwen-interpreter/gwen"
+       Then the current URL should contain "gwen-interpreter"
 ```
 ..with [no Page Objects](https://gweninterpreter.wordpress.com/2016/03/08/nopageobjects-theres-no-long-way-to-go-were-already-there/) or Selenium coding required!
 
@@ -92,8 +92,8 @@ Key Features
 - Execution can be [data driven](https://github.com/gwen-interpreter/gwen/wiki/Execution-Modes#csv-data-feeds) (using csv data feeds)
 - [REPL console](https://github.com/gwen-interpreter/gwen/wiki/REPL-Console) allows verifying before running
 - Cross browser support
-- Remote web driver support
-- Screenshot capture and slideshow playback
+- [Remote web driver](https://gweninterpreter.wordpress.com/2015/04/23/remote-webdriver-feature-now-available-in-gwen-web/) support
+- [Screenshot capture and slideshow](https://github.com/gwen-interpreter/gwen-web/wiki/Screenshot-Capture-and-Slideshows) playback
 - [Interchangeable Selenium](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#changing-the-selenium-version) implementation
 - [Locator Chaining](https://github.com/gwen-interpreter/gwen-web/wiki/Locator-Chaining)
 - [Headless Browser Execution](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#gwenwebbrowserheadless)
