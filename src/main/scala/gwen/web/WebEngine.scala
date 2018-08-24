@@ -136,7 +136,109 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
     }
   }
 
-  /**
+  
+	
+	//##################USED BY LOCK and LOCKTIMER OBJECTS #####################################################################
+import java.util.Calendar
+val infinity = 99999
+//##################USED BY LOCK and LOCKTIMER OBJECTS #####################################################################
+
+//######################### LOCK TIMER OBJECT ##############################################################################
+object LockTimer {
+    var owner = -1L //who owns the lock
+    var timeout = 0 //how long the lock is valid for
+    
+    
+    //Logic: 
+    //scenario  1: t1 aqcuires a lock, and finishes before or after his timeout and nobody else grabs the lock in that period
+    //then : t1 still owns the lock and simply resets the tineout to 0 so that it can become immediately available to other threads
+    
+    //Scenario 2: t1 acquires a lock, t2 tries to acquire a lock and start a countdown, and t1 finishes before t2 grabs the lock 
+    //at countdown reaching 0
+    //then: t1 still owns the lock and simply resets the timeout to 0 so that it can become immediately available to other threads
+    
+    //Scenario 3 : t1 acquires a lock, t2 tries to acquire the lock and the countdown has reached 0. So t2 becoems the owner of
+    //the lock
+    //then : t1 is not the owner hence do nothing since the lock is alread grabbed
+    
+    //Scenario 4 : t1 acquires a lock, t2 grabs it at countdown reaching 0, t2 releases the lock before t1 can release it
+    //then: t2 still owns the lock and simply resets the timeout to 0 so that it can become immediately available to other threads
+    //t1 will find he is still not the owner and hence do nothing
+    
+    
+    //If t1 acquires the lock, he sets it to timeout say 60 seconds. He also owns the lock.
+    //If t1 completes before t2 acquires a lock (i.e. t1 is still the owner of the lock ) then t2 simply sets the timeout to 0
+    //to make it available immediately to t2.
+    //If t1 completes after t2 acquires a lock do nothing since the lock has been stolen.
+    
+    //elaspedTime is in seconds
+    def InspectAndSet(newOwner : Long, elapsedTime : Int, newTimeout : Int ) : Int = synchronized {
+      var timeLeft = timeout
+      //Since i myself am the owner, no body else has acqured a lock. Hence I am free to reset it
+      //when i release the lock
+      if( owner == newOwner ) {
+        timeout = 0;
+        owner = -1
+        println("[THREAD ID: " + newOwner+ "] [had exclusive access upto : " + Calendar.getInstance().getTime()+"]")
+      }
+      else //somebody else has a lock and i will forcefully grab it when the timeout is <= 0
+      {  //since i forcefully grab it , i am the new owner (if timeout is not infinity) and i must set my own new timeout
+        if(newTimeout != infinity ) {
+            timeout=timeout-elapsedTime
+            timeLeft=timeout
+            if(timeout <= 0 ){
+              owner = newOwner;
+              timeout = newTimeout;
+            }
+        }
+      }
+      timeLeft //return the time left
+     }
+}
+//######################### LOCK TIMER OBJECT ##############################################################################
+
+  
+//######################### LOCK OBJECT ###################################################################################
+object Lock {
+    
+      var available = true
+    
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+      //Only one thread will enter here inorder to acquire the lock exclusively.
+      def acquire(seconds : Int) =  synchronized {
+          val id=Thread.currentThread().getId
+          var timeLeft=0; //for the sake of println purposes only
+          if(available) {
+              timeLeft = LockTimer.InspectAndSet(id, 0, seconds)  //since the lock is available, set the timeout and owner now itself.
+          }
+          else{//wait until the lock becomes available after the timer reaches 0
+                while (!available) {  
+                  Thread.sleep(5000); 
+                  timeLeft = LockTimer.InspectAndSet(id, 5, seconds)
+                  if ( timeLeft<=0 )  {available=true;} //breaking condition
+                  println("[THREAD ID: " + id  + "] " + "[WAITING FOR LOCK]" + "[At: " + Calendar.getInstance().getTime() + "         ]" + "[Time Left: " + timeLeft +" seconds]");
+                }
+        }
+        println("[THREAD ID: " + id  + "] " + "[WAITING FOR LOCK]" + "[Time Left: " + timeLeft +" seconds]");
+        println("[THREAD ID: " + id  + "] " + "[ACQUIRED LOCK   ]" + "[At: " + Calendar.getInstance().getTime() + " Owner : " + LockTimer.owner +"]" + "[For " + seconds + " seconds]");
+        available = false
+      }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+     //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+      def release() =  {
+          val id=Thread.currentThread().getId
+          val dontCare=5
+          LockTimer.InspectAndSet(id, dontCare, infinity)
+          println("[THREAD ID: " + id + "] " + "[RELEASED LOCK   ]" + "[At: " + Calendar.getInstance().getTime()+"]");
+      }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+}
+//######################### LOCK OBJECT #################################################################################
+
+ 
+	/**
     * Evaluates a given step.  This method matches the incoming step against a
     * set of supported steps and evaluates only those that are successfully
     * matched.
@@ -144,12 +246,27 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
     * @param step the step to evaluate
     * @param env the web environment context
     */
+	
+	
+	
   override def evaluate(step: Step, env: WebEnvContext): Unit = {
 
     val webContext = env.webContext
 
     step.expression match {
 
+	   case r"""I acquire a lock for (.+?)$seconds second(?:s?)""" =>
+            Lock.acquire(seconds.toInt);
+       case r"I release a lock" => 
+            Lock.release();
+          
+      case r"""I wait for (.+?)$element text for (.+?)$seconds second(?:s?)""" =>
+        val elementBinding = env.getLocatorBinding(element)
+        webContext.waitUntil(s"waiting for $element text", seconds.toInt) {
+          webContext.waitForText(elementBinding)
+        }
+	
+	
       case r"""I wait for (.+?)$element text for (.+?)$seconds second(?:s?)""" =>
         val elementBinding = env.getLocatorBinding(element)
         webContext.waitUntil(s"waiting for $element text", seconds.toInt) {
