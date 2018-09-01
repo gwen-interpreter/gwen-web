@@ -1,3 +1,13 @@
+2.26.0
+======
+September 1, 2018
+- Update Gwen core from v2.15.2 to v[2.16.0](https://github.com/gwen-interpreter/gwen/releases/tag/v2.16.0)
+  - Introduced @Synchronized annotation for StepDefs to support synchronized execution of certain steps.
+    StepDefs having this annotation will have their steps executed by a single feature thread at a time in the case
+    of parallel execution. This feature was requested through PR #63 raised by @rkevin99 and implemented in PR
+    gwen-interpreter/gwen#42 in the core interpreter.
+  - Number all attachment items in reports (requested by @Rahul9844)
+
 2.25.3
 ======
 August 8, 2018
@@ -17,7 +27,7 @@ June 25, 2018
 2.25.0
 ======
 June 23, 2018
-- Add DSL to support waiting for elmement state changes
+- Add DSL to support waiting for element state changes
   - `I wait until <element> <is|is not> <displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled>`
 - Update Gwen core from v2.15.1 to v[2.15.2](https://github.com/gwen-interpreter/gwen/releases/tag/v2.15.2)
   - Update scala from version 2.12.4 to 2.12.6

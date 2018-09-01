@@ -21,11 +21,10 @@ functions on pages may be necessary.
 - [Change log](CHANGELOG)
 
 ### What's New?
+- [Synchronized StepDef execution](https://github.com/gwen-interpreter/gwen/wiki/Synchronized-StepDefs)
 - [Running Gwen on BrowserStack](https://gweninterpreter.wordpress.com/2018/06/16/running-gwen-on-browserstack/)
   - ![browserstack-logo](https://user-images.githubusercontent.com/1369994/41496098-74652d14-717a-11e8-894e-2150298e62b8.png)
 - [Thread local settings](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL#my-name-propertysetting-iswill-be-value)
-- [Implicit JavaScript locators](https://github.com/gwen-interpreter/gwen-web/wiki/Implicit-JavaScript-Locators)
-- [Locator level timeouts](https://github.com/gwen-interpreter/gwen-web/wiki/Locator-Level-Timeouts)
 
 Why Gwen-web?
 -------------
@@ -178,6 +177,7 @@ The following users raised issues or requests that have been addressed:
 - [anshu781126](https://github.com/anshu781126)
 - [ketu4u2010](https://github.com/ketu4u2010)
 - [Rahul9844](https://github.com/Rahul9844)
+- [rkevin99](https://github.com/rkevin99)
 
 Credits
 -------
