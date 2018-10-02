@@ -365,14 +365,14 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
 
       case r"""(.+?)$element( text| value)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file)$operator "(.*?)"$$$expression""" if !element.matches(".+at (json path|xpath).+") => step.orDocString(expression) tap { expression =>
         if (element == "I") undefinedStepError(step)
-        val actual = env.boundAttributeOrSelection(element, Option(selection))
         val negate = Option(negation).isDefined
         val expected = env.parseExpression(operator, expression)
         env.perform {
-          if (env.scopes.getOpt(element).isEmpty) {
+          if (env.scopes.findEntry { case (n, _) => n.startsWith(element) } forall { case (n, _) => n != element }) {
+            val actual = env.boundAttributeOrSelection(element, Option(selection))
             env.compare(element + Option(selection).getOrElse(""), expected, actual, operator, negate)
           } else {
-            val actualValue = actual()
+            val actualValue = env.scopes.get(element)
             val result = env.compare(element, expected, actualValue, operator, negate)
             result match {
               case Success(assertion) =>

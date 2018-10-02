@@ -1,3 +1,12 @@
+2.26.1
+======
+October 2, 2018
+- Use `==` instead of `.equals` for string equality check in assertions (as per scala recommendation)
+- Fine tune implementation of original solution for gwen-interpreter/gwen#37
+  - Assertion DSL's should not wait for global time out when value for assertion is already captured
+- Update todoMVC meta in example features used in CI tests
+  - elements in angular site now need to be looked up by class instead of id (site has changed recently)
+
 2.26.0
 ======
 September 1, 2018

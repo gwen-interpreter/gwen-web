@@ -379,6 +379,7 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
 
   """<reference> should <operator> "<value>"""" should "evaluate" in {
     matchers.foreach { case (operator, source, expression) =>
+      doReturn(None).when(mockScopes).findEntry(any())
       doReturn(() => source).when(env).boundAttributeOrSelection("<reference>", None)
       doReturn(None).when(mockScopes).getOpt("<reference>")
       evaluate(s"""<reference> should $operator "$expression"""")
@@ -389,9 +390,29 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
   """<reference> should not <operator> "<value>"""" should "evaluate" in {
     matchers.foreach { case (operator, src, expression) =>
       val source = src.replaceAll("value", "other")
+      doReturn(None).when(mockScopes).findEntry(any())
       doReturn(() => source).when(env).boundAttributeOrSelection("<reference>", None)
       doReturn(None).when(mockScopes).getOpt("<reference>")
       evaluate(s"""<reference> should not $operator "$expression"""")
+      verify(env).parseExpression(operator, expression)
+    }
+  }
+
+  """<captured> should <operator> "<value>"""" should "evaluate" in {
+    matchers.foreach { case (operator, source, expression) =>
+      doReturn(Some(("<captured>", source))).when(mockScopes).findEntry(any())
+      doReturn(source).when(mockScopes).get("<captured>")
+      evaluate(s"""<captured> should $operator "$expression"""")
+      verify(env).parseExpression(operator, expression)
+    }
+  }
+
+  """<captured> should not <operator> "<value>"""" should "evaluate" in {
+    matchers.foreach { case (operator, src, expression) =>
+      val source = src.replaceAll("value", "other")
+      doReturn(Some(("<captured>", src))).when(mockScopes).findEntry(any())
+      doReturn(source).when(mockScopes).get("<captured>")
+      evaluate(s"""<captured> should not $operator "$expression"""")
       verify(env).parseExpression(operator, expression)
     }
   }
@@ -419,6 +440,7 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
     val mockBinding = mock[LocatorBinding]
     doReturn(Some(mockBinding)).when(env).getLocatorBinding("<dropdown>", optional = false)
     matchers.foreach { case (operator, source, expression) =>
+      doReturn(None).when(mockScopes).findEntry(any())
       doReturn(() => source).when(env).boundAttributeOrSelection("<dropdown>", Some(" text"))
       doReturn(Some("<dropdown>")).when(mockScopes).getOpt("<dropdown>")
       evaluate(s"""<dropdown> text should $operator "$expression"""")
@@ -431,6 +453,7 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
     doReturn(Some(mockBinding)).when(env).getLocatorBinding("<dropdown>", optional = false)
     matchers.foreach { case (operator, src, expression) =>
       val source = src.replaceAll("value", "other")
+      doReturn(None).when(mockScopes).findEntry(any())
       doReturn(() => source).when(env).boundAttributeOrSelection("<dropdown>", Some(" text"))
       doReturn(Some("<dropdown>")).when(mockScopes).getOpt("<dropdown>")
       evaluate(s"""<dropdown> text should not $operator "$expression"""")
@@ -454,6 +477,7 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
     doReturn(Some(mockBinding)).when(env).getLocatorBinding("<dropdown>", optional = false)
     matchers2.foreach { case (operator, src, expression) =>
       val source = src.replaceAll("value", "other")
+      doReturn(None).when(mockScopes).findEntry(any())
       doReturn(() => source).when(env).boundAttributeOrSelection("<dropdown>", Some(" text"))
       doReturn(Some("<dropdown>")).when(mockScopes).getOpt("<dropdown>")
       doReturn(expression).when(env).getBoundReferenceValue("<reference>")
@@ -465,6 +489,7 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
     val mockBinding = mock[LocatorBinding]
     doReturn(Some(mockBinding)).when(env).getLocatorBinding("<dropdown>", optional = false)
     matchers.foreach { case (operator, source, expression) =>
+      doReturn(None).when(mockScopes).findEntry(any())
       doReturn(() => source).when(env).boundAttributeOrSelection("<dropdown>", Some(" value"))
       doReturn(Some("<dropdown>")).when(mockScopes).getOpt("<dropdown>")
       evaluate(s"""<dropdown> value should $operator "$expression"""")
@@ -477,6 +502,7 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
     doReturn(Some(mockBinding)).when(env).getLocatorBinding("<dropdown>", optional = false)
     matchers.foreach { case (operator, src, expression) =>
       val source = src.replaceAll("value", "other")
+      doReturn(None).when(mockScopes).findEntry(any())
       doReturn(() => source).when(env).boundAttributeOrSelection("<dropdown>", Some(" value"))
       doReturn(Some("<dropdown>")).when(mockScopes).getOpt("<dropdown>")
       evaluate(s"""<dropdown> value should not $operator "$expression"""")
@@ -500,6 +526,7 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
     doReturn(Some(mockBinding)).when(env).getLocatorBinding("<dropdown>", optional = false)
     matchers2.foreach { case (operator, src, expression) =>
       val source = src.replaceAll("value", "other")
+      doReturn(None).when(mockScopes).findEntry(any())
       doReturn(() => source).when(env).boundAttributeOrSelection("<dropdown>", Some(" value"))
       doReturn(Some("<dropdown>")).when(mockScopes).getOpt("<dropdown>")
       doReturn(expression).when(env).getBoundReferenceValue("<reference>")
@@ -509,6 +536,7 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
 
   """the current URL should <operator> "<value>"""" should "evaluate" in {
     matchers.foreach { case (operator, source, expression) =>
+      doReturn(None).when(mockScopes).findEntry(any())
       doReturn(() => source).when(env).boundAttributeOrSelection("the current URL", None)
       doReturn(None).when(mockScopes).getOpt("the current URL")
       evaluate(s"""the current URL should $operator "$expression"""")
@@ -519,6 +547,7 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
   """the current URL should not <operator> "<value>"""" should "evaluate" in {
     matchers.foreach { case (operator, src, expression) =>
       val source = src.replaceAll("value", "other")
+      doReturn(None).when(mockScopes).findEntry(any())
       doReturn(() => source).when(env).boundAttributeOrSelection("the current URL", None)
       doReturn(None).when(mockScopes).getOpt("the current URL")
       evaluate(s"""the current URL should not $operator "$expression"""")
@@ -528,6 +557,7 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
 
   "the current URL should <operator> <reference>" should "evaluate" in {
     matchers2.foreach { case (operator, source, expression) =>
+      doReturn(None).when(mockScopes).findEntry(any())
       doReturn(() => source).when(env).boundAttributeOrSelection("the current URL", None)
       doReturn(None).when(mockScopes).getOpt("the current URL")
       doReturn(expression).when(env).getBoundReferenceValue("<reference>")
@@ -539,6 +569,7 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
   "the current URL should not <operator> <reference>" should "evaluate" in {
     matchers2.foreach { case (operator, src, expression) =>
       val source = src.replaceAll("value", "other")
+      doReturn(None).when(mockScopes).findEntry(any())
       doReturn(() => source).when(env).boundAttributeOrSelection("the current URL", None)
       doReturn(None).when(mockScopes).getOpt("the current URL")
       doReturn(expression).when(env).getBoundReferenceValue("<reference>")
