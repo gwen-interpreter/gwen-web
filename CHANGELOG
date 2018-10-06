@@ -1,3 +1,11 @@
+2.26.2
+======
+October 6, 2018
+- Update Gwen core from v2.16.1. to v[2.16.2](https://github.com/gwen-interpreter/gwen/releases/tag/v2.16.2)
+  - Use futures instead of parallel collections to ensure that all cores are utilised at all times during parallel
+    execution.
+  - Update Scala from version 2.12.6 to 2.12.7
+
 2.26.1
 ======
 October 2, 2018
