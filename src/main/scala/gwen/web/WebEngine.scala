@@ -367,12 +367,12 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
         if (element == "I") undefinedStepError(step)
         val negate = Option(negation).isDefined
         val expected = env.parseExpression(operator, expression)
+        val actual = env.boundAttributeOrSelection(element, Option(selection))
         env.perform {
           if (env.scopes.findEntry { case (n, _) => n.startsWith(element) } forall { case (n, _) => n != element }) {
-            val actual = env.boundAttributeOrSelection(element, Option(selection))
             env.compare(element + Option(selection).getOrElse(""), expected, actual, operator, negate)
           } else {
-            val actualValue = env.scopes.get(element)
+            val actualValue = env.scopes.getOpt(element).getOrElse(actual())
             val result = env.compare(element, expected, actualValue, operator, negate)
             result match {
               case Success(assertion) =>
@@ -381,6 +381,8 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
                 assert(assertion = false, error.getMessage)
             }
           }
+        } getOrElse  {
+          actual()
         }
       }
 
@@ -390,6 +392,8 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
         val actual = env.boundAttributeOrSelection(element, Option(selection))
         env.perform {
           env.compare(element + Option(selection).getOrElse(""), expected, actual, operator, Option(negation).isDefined)
+        } getOrElse  {
+          actual()
         }
 
       case r"""I capture (.+?)$attribute (?:of|on|in) (.+?)$element by javascript "(.+?)"$$$expression""" => step.orDocString(expression) tap { expression =>

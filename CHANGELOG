@@ -1,3 +1,8 @@
+2.26.3
+======
+October 9, 2018
+- Dry run fix for assertion DSL's ('should' matchers)
+
 2.26.2
 ======
 October 6, 2018

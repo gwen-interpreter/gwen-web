@@ -401,7 +401,7 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
   """<captured> should <operator> "<value>"""" should "evaluate" in {
     matchers.foreach { case (operator, source, expression) =>
       doReturn(Some(("<captured>", source))).when(mockScopes).findEntry(any())
-      doReturn(source).when(mockScopes).get("<captured>")
+      doReturn(Some(source)).when(mockScopes).getOpt("<captured>")
       evaluate(s"""<captured> should $operator "$expression"""")
       verify(env).parseExpression(operator, expression)
     }
@@ -411,7 +411,7 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
     matchers.foreach { case (operator, src, expression) =>
       val source = src.replaceAll("value", "other")
       doReturn(Some(("<captured>", src))).when(mockScopes).findEntry(any())
-      doReturn(source).when(mockScopes).get("<captured>")
+      doReturn(Some(source)).when(mockScopes).getOpt("<captured>")
       evaluate(s"""<captured> should not $operator "$expression"""")
       verify(env).parseExpression(operator, expression)
     }
