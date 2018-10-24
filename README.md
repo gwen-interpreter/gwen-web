@@ -182,7 +182,7 @@ Credits
 
 Known Users
 -----------
-<a href="https://www.matrak.com.au" target="_blank"><img src="https://gwen-interpreter.github.io/assets/img/users/matrak.png" height="50"/></a>
+<a href="https://www.matrak.com.au" target="_blank"><img src="https://gwen-interpreter.github.io/assets/img/users/matrak.png" height="45"/></a>
 
 ---
 
