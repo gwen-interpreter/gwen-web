@@ -157,15 +157,11 @@ Contributors
 
 We thank the following contributors and active users for helping to make Gwen better. You are all awesome!
 
-### Code Contributors
-
 The following [contributors](https://github.com/gwen-interpreter/gwen/graphs/contributors) submitted pull requests
 that have been merged:
 
 - [Jacob Juric](https://github.com/TheReturningVoid)
 - [Alexandru Cuciureanu](https://github.com/acuciureanu)
-
-### Active Users
 
 The following users raised issues or requests that have been addressed:
 
@@ -183,6 +179,10 @@ Credits
 -------
 - [Selenium](https://www.seleniumhq.org/)
 - [Cucumber/Gherkin](https://github.com/cucumber/cucumber/wiki/Gherkin)
+
+Known Users
+-----------
+<a href="https://www.matrak.com.au" target="_blank"><img src="https://gwen-interpreter.github.io/assets/img/users/matrak.png" height="50"/></a>
 
 ---
 
