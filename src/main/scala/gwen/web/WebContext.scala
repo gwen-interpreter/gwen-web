@@ -18,13 +18,14 @@ package gwen.web
 import com.typesafe.scalalogging.LazyLogging
 import gwen.Predefs.Kestrel
 import gwen.errors.javaScriptError
-import gwen.web.errors.{LocatorBindingException, unsupportedModifierKeyError, waitTimeoutError}
+import gwen.web.errors.{LocatorBindingException, WaitTimeoutException, unsupportedModifierKeyError, waitTimeoutError}
 import org.apache.commons.io.FileUtils
 import org.openqa.selenium._
 import org.openqa.selenium.interactions.Actions
 import org.openqa.selenium.support.ui.{Select, WebDriverWait}
 
 import scala.collection.JavaConverters._
+import scala.concurrent.duration.Duration
 import scala.util.Try
 
 /**
@@ -295,7 +296,9 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
     var result = false
     env.perform {
       try {
-        withWebElement(elementBinding) { webElement =>
+        def fastLocators = elementBinding.locators.map(l => Locator(l, Some(Duration.Zero)))
+        def fastBinding = LocatorBinding(elementBinding.element, fastLocators)
+        withWebElement(fastBinding) { webElement =>
           result = state match {
             case "displayed" => webElement.isDisplayed
             case "hidden" => !webElement.isDisplayed
@@ -306,7 +309,7 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
           }
         }
       } catch {
-        case e: NoSuchElementException =>
+        case e @ (_ :  NoSuchElementException | _ : WaitTimeoutException) =>
           if (state == "displayed") result = false
           else if (state == "hidden") result = true
           else throw e

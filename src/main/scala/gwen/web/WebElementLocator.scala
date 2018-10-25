@@ -378,4 +378,6 @@ object Locator {
     Locator(locatorType, expression, container, isContainer = false, timeout)
   def apply(locatorType: String, expression: String): Locator =
     Locator(locatorType, expression, None, isContainer = false, None)
+  def apply(locator: Locator, timeout: Option[Duration]): Locator =
+    Locator(locator.locatorType, locator.expression, locator.container, timeout)
 }

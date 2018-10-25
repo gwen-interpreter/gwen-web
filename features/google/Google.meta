@@ -21,6 +21,7 @@
       Given I start a new browser
        When I navigate to "http://www.google.com"
        Then the page title should be "Google"
+        And no results should be displayed
 
   @StepDef
   Scenario: I do a search for "<query>"
@@ -33,3 +34,8 @@
       Given the first match can be located by css selector ".r > a"
        When I click the first match
        Then the current URL should start with "https://github.com/gwen-interpreter/gwen"
+
+  @StepDef
+  Scenario: no results should be displayed
+      Given the results can be located by class name "r"
+       Then the results should not be displayed
