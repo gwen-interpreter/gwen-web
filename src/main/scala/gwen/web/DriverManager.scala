@@ -262,8 +262,19 @@ class DriverManager extends LazyLogging {
     logger.info(s"Implicit wait (default locator timeout) = ${WebSettings.`gwen.web.locator.wait.seconds`} second(s)")
     driver.manage().timeouts().implicitlyWait(WebSettings.`gwen.web.locator.wait.seconds`, TimeUnit.SECONDS)
     if (WebSettings.`gwen.web.maximize`) {
-      logger.info(s"Maximizing window")
-      driver.manage().window().maximize() 
+      logger.info(s"Attempting to maximize window")
+      try {
+        driver.manage().window().maximize()
+      } catch {
+        case _: Throwable =>
+          logger.warn(s"Maximizing window not supported on current platform, attempting to go full screen instead")
+          try {
+            driver.manage().window().fullscreen()
+          } catch {
+            case _: Throwable =>
+              logger.warn(s"Could not maximise or go full screen on current platform")
+          }
+      }
     }
     driver
   }

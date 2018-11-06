@@ -25,7 +25,6 @@ import org.openqa.selenium.interactions.Actions
 import org.openqa.selenium.support.ui.{Select, WebDriverWait}
 
 import scala.collection.JavaConverters._
-import scala.concurrent.duration.Duration
 import scala.util.Try
 
 /**
@@ -142,7 +141,7 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
               try {
                 operation(locate(elementBinding))
               } catch {
-                case se: StaleElementReferenceException =>
+                case _: StaleElementReferenceException =>
                   Thread.sleep(WebSettings.`gwen.web.throttle.msecs`)
                   // try js equivalent locator
                   val elem = Try(locate(elementBinding.jsEquivalent)).getOrElse(locate(elementBinding))
@@ -296,9 +295,7 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
     var result = false
     env.perform {
       try {
-        def fastLocators = elementBinding.locators.map(l => Locator(l, Some(Duration.Zero)))
-        def fastBinding = LocatorBinding(elementBinding.element, fastLocators)
-        withWebElement(fastBinding) { webElement =>
+        withWebElement(elementBinding) { webElement =>
           result = state match {
             case "displayed" => webElement.isDisplayed
             case "hidden" => !webElement.isDisplayed

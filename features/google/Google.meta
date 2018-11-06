@@ -37,5 +37,5 @@
 
   @StepDef
   Scenario: no results should be displayed
-      Given the results can be located by class name "r"
+      Given the results can be located by class name "r" with 1 second timeout
        Then the results should not be displayed

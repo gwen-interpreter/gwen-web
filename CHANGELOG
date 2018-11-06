@@ -1,3 +1,10 @@
+2.26.5
+======
+November 6, 2018
+- Restore timeout on negative assertions
+- Use full screen mode if max size is not supported
+- Upgrade Selenium WebDriver from v3.14.0 to v3.141.0
+
 2.26.4
 ======
 October 25, 2018

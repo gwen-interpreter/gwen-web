@@ -30,7 +30,7 @@ lazy val gwenWebSettings = Seq(
 
 lazy val commonDependencies = {
   val commonsIO = "2.6"
-  val selenium = "3.14.0"
+  val selenium = "3.141.0"
 
   Seq(
     "commons-io" % "commons-io" % commonsIO,
