@@ -23,7 +23,6 @@ functions on pages may be necessary.
 ### What's New?
 - [Synchronized StepDef execution](https://github.com/gwen-interpreter/gwen/wiki/Synchronized-StepDefs)
 - [Running Gwen on BrowserStack](https://gweninterpreter.wordpress.com/2018/06/16/running-gwen-on-browserstack/)
-  - ![browserstack-logo](https://user-images.githubusercontent.com/1369994/41496098-74652d14-717a-11e8-894e-2150298e62b8.png)
 - [Thread local settings](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL#my-name-propertysetting-iswill-be-value)
 
 Why Gwen-web?
