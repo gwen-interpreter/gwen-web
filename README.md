@@ -4,7 +4,7 @@ Gwen-web
 ========
 
 A [Gwen](https://github.com/gwen-interpreter/gwen) interpreter that enables teams to quickly automate front end web tests and robotic online processes with
-[Gherkin](https://github.com/cucumber/cucumber/wiki/Gherkin) feature specifications.
+[Gherkin](https://docs.cucumber.io/gherkin/reference/) feature specifications.
 A [web DSL](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL) interacts with
 [Selenium](http://www.seleniumhq.org/projects/webdriver) under the covers for you so you don't have to do
 any of that programming or technical development work. It supports all the standard web element locators provided by
@@ -21,10 +21,10 @@ functions on pages may be necessary.
 - [Change log](CHANGELOG)
 
 ### What's New?
+- [Browser size setting](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#gwenwebbrowsersize)
 - [Synchronized StepDef execution](https://github.com/gwen-interpreter/gwen/wiki/Synchronized-StepDefs)
 - [Running Gwen on BrowserStack](https://gweninterpreter.wordpress.com/2018/06/16/running-gwen-on-browserstack/)
   - ![browserstack-logo](https://user-images.githubusercontent.com/1369994/41496098-74652d14-717a-11e8-894e-2150298e62b8.png)
-- [Thread local settings](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL#my-name-propertysetting-iswill-be-value)
 
 Why Gwen-web?
 -------------
@@ -84,7 +84,7 @@ Runtime Requirements
 Key Features
 ------------
 
-- Automation driven by plain text [Gherkin](https://github.com/cucumber/cucumber/wiki/Gherkin) specifications
+- Automation driven by plain text [Gherkin](https://docs.cucumber.io/gherkin/reference/) specifications
   - See [Gwen-Web DSL](http://htmlpreview.github.io/?https://github.com/gwen-interpreter/gwen-web/blob/master/docs/dsl/gwen-web-dsl.html)
 - Features can execute in [batch mode](https://github.com/gwen-interpreter/gwen/wiki/Execution-Modes#batch-execution) or [interactively](https://github.com/gwen-interpreter/gwen/wiki/Execution-Modes#interactive-repl-execution)
 - Features can execute [sequentially](https://github.com/gwen-interpreter/gwen/wiki/Execution-Modes#serial-execution) or in [parallel](https://github.com/gwen-interpreter/gwen/wiki/Execution-Modes#parallel-execution)
@@ -178,7 +178,7 @@ The following users raised issues or requests that have been addressed:
 Credits
 -------
 - [Selenium](https://www.seleniumhq.org/)
-- [Cucumber/Gherkin](https://github.com/cucumber/cucumber/wiki/Gherkin)
+- [Cucumber/Gherkin](https://docs.cucumber.io/gherkin/reference/)
 
 Known Users
 -----------

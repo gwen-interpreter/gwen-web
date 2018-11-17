@@ -128,27 +128,31 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
       val locator = elementBinding.locators.head
       val wHandle = locator.container.flatMap(_ => withWebDriver(_.getWindowHandle))
       try {
-        val webElement = locate(elementBinding)
         action.foreach { actionString =>
           logger.debug(s"$actionString ${elementBinding.element}")
         }
-        Option {
-          try {
-            operation(webElement)
-          } catch {
-            case _: StaleElementReferenceException =>
-              Thread.sleep(WebSettings.`gwen.web.throttle.msecs`)
-              try {
-                operation(locate(elementBinding))
-              } catch {
-                case _: StaleElementReferenceException =>
-                  Thread.sleep(WebSettings.`gwen.web.throttle.msecs`)
-                  // try js equivalent locator
-                  val elem = Try(locate(elementBinding.jsEquivalent)).getOrElse(locate(elementBinding))
-                  operation(elem)
-              }
+        var result: Option[T] = None
+        var error: Option[Throwable] = None
+        try {
+          waitUntil(action.getOrElse("action")) {
+            val webElement = locate(elementBinding)
+            try {
+              result = Option(operation(webElement))
+              error = None
+              true
+            } catch {
+              case e: Throwable =>
+                error = Some(e)
+                Thread.sleep(200)
+                false
+            }
           }
-        } tap { _ =>
+        } catch {
+          case e: Throwable =>
+            if (error.isEmpty) error = Some(e)
+        }
+        if (result.isEmpty) error.map(e => throw e)
+        result tap { _ =>
           if (WebSettings.`gwen.web.capture.screenshots`) {
             captureScreenshot(false)
           }
@@ -345,15 +349,15 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
     */
   def sendValue(elementBinding: LocatorBinding, value: String, clearFirst: Boolean, sendEnterKey: Boolean) {
     val element = elementBinding.element
-    withWebElement(elementBinding) { webElement =>
+    withDriverAndElement("send keys", elementBinding) { (driver, webElement) =>
       if (clearFirst) {
         webElement.clear()
         env.bindAndWait(element, "clear", "true")
       }
-      webElement.sendKeys(value)
+      createActions(driver).sendKeys(webElement, value).perform()
       env.bindAndWait(element, "type", value)
       if (sendEnterKey) {
-        webElement.sendKeys(Keys.RETURN)
+        createActions(driver).sendKeys(webElement, Keys.RETURN).perform()
         env.bindAndWait(element, "enter", "true")
       }
     }
@@ -467,10 +471,11 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
               createActions(driver).moveToElement(webElement).perform()
             case "submit" => webElement.submit()
             case "check" | "tick" =>
-              if (!webElement.isSelected) webElement.sendKeys(Keys.SPACE)
+              if (!webElement.isSelected)
+                createActions(driver).sendKeys(webElement, Keys.SPACE).perform()
               if (!webElement.isSelected) webElement.click()
             case "uncheck" | "untick" =>
-              if (webElement.isSelected) webElement.sendKeys(Keys.SPACE)
+              createActions(driver).sendKeys(webElement, Keys.SPACE).perform()
               if (webElement.isSelected) webElement.click()
             case "clear" =>
               webElement.clear()

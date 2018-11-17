@@ -18,7 +18,11 @@ package gwen.web
 
 import gwen.Settings
 import java.io.File
+
 import gwen.Predefs.Kestrel
+import gwen.errors.invalidSettingError
+
+import scala.util.Try
 
 /**
   * Provides access to gwen web settings defined through system properties loaded 
@@ -181,5 +185,27 @@ object WebSettings {
     * implicitly put the focus on all located web elements. Default value is true.
     */
   def `gwen.web.implicit.element.focus`: Boolean = Settings.getOpt("gwen.web.implicit.element.focus").getOrElse("true").toBoolean
+
+  /**
+    * Provides access to the `gwen.web.browser.size` setting used to set the browser window size.
+    * Expects value matching `width x height (e:g 1200 x 800 for height 1200 and width 800).
+    * This setting is only applicable if the gwen.web.maximize` is not set to `true`.
+    */
+  def `gwen.web.browser.size`: Option[(Int, Int)] = {
+    if (!`gwen.web.maximize`) {
+      Settings.getOpt("gwen.web.browser.size") map { value =>
+        val values = value.split('x')
+        if (values != null && values.size == 2) {
+          Try(values(0).trim.toInt, values(1).trim.toInt) getOrElse {
+            invalidSettingError("gwen.web.browser.size", value, "width and height must be integers")
+          }
+        } else {
+          invalidSettingError("gwen.web.browser.size", value, "width x height expected")
+        }
+      }
+    } else {
+      None
+    }
+  }
 
 }

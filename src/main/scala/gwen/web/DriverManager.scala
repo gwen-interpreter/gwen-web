@@ -19,7 +19,7 @@ package gwen.web
 import java.net.URL
 import java.util.concurrent.TimeUnit
 
-import org.openqa.selenium.{MutableCapabilities, WebDriver}
+import org.openqa.selenium.{Dimension, MutableCapabilities, WebDriver}
 import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.chrome.ChromeOptions
 import org.openqa.selenium.firefox.{FirefoxDriver, FirefoxOptions, FirefoxProfile}
@@ -89,12 +89,17 @@ class DriverManager extends LazyLogging {
   
   /** Loads the selenium webdriver. */
   private[web] def loadWebDriver: WebDriver = withGlobalSettings {
-    WebSettings.`gwen.web.remote.url` match {
+    (WebSettings.`gwen.web.remote.url` match {
       case Some(addr) =>
         remoteDriver(addr)
       case None =>
         val driverName = WebSettings.`gwen.web.browser`.toLowerCase
         localDriver(driverName)
+    }) tap { driver =>
+      WebSettings.`gwen.web.browser.size` foreach { case (width, height) =>
+        logger.info(s"Resizing browser window to width $width and height $height")
+        driver.manage().window().setSize(new Dimension(width, height))
+      }
     }
   }
   

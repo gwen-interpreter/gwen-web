@@ -1,3 +1,11 @@
+2.27.0
+======
+November 27, 2018
+- Add `gwen.web.browser.size=width x height` setting for controlling browser window size
+- Retry failed web actions until `gwen.web.wait.seconds` expires
+- Wrap all sendKeys operations in web driver actions (cross browser fix)
+- Upgrade Selenium WebDriver from v3.141.0 to v3.141.59
+
 2.26.5
 ======
 November 6, 2018
