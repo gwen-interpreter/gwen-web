@@ -24,7 +24,6 @@ functions on pages may be necessary.
 - [Browser size setting](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#gwenwebbrowsersize)
 - [Synchronized StepDef execution](https://github.com/gwen-interpreter/gwen/wiki/Synchronized-StepDefs)
 - [Running Gwen on BrowserStack](https://gweninterpreter.wordpress.com/2018/06/16/running-gwen-on-browserstack/)
-  - ![browserstack-logo](https://user-images.githubusercontent.com/1369994/41496098-74652d14-717a-11e8-894e-2150298e62b8.png)
 
 Why Gwen-web?
 -------------
