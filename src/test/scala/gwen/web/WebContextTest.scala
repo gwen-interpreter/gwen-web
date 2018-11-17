@@ -48,7 +48,6 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     webContext = spy(new WebContext(envContext, driverManager))
   }
 
-
   "WebContext.reset" should "reset driver manager" in {
     doNothing().when(driverManager).reset()
     webContext.reset()
@@ -568,11 +567,14 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   "WebContext.sendValue without clear first and without send enter" should "send value to element" in {
     val elemBinding = LocatorBinding("name", "id", "name", None)
     val mockElement = mock[WebElement]
+    val mockActions = mock[Actions]
     doReturn(mockElement).when(webContext).locate(elemBinding)
+    doReturn(mockActions).when(webContext).createActions(mockWebDriver)
+    doReturn(mockActions).when(mockActions).sendKeys(mockElement, "Gwen")
     webContext.sendValue(elemBinding, "Gwen", clearFirst = false, sendEnterKey = false)
     verify(mockElement, never()).clear()
     envContext.scopes.getOpt("name/clear") should be (None)
-    verify(mockElement).sendKeys("Gwen")
+    verify(mockActions).perform()
     envContext.scopes.get("name/type") should be ("Gwen")
     verify(mockElement, never()).sendKeys(Keys.RETURN)
     envContext.scopes.getOpt("name/enter") should be (None)
@@ -581,39 +583,47 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   "WebContext.sendValue with clear first and without send enter" should "send value to element" in {
     val elemBinding = LocatorBinding("name", "id", "name", None)
     val mockElement = mock[WebElement]
+    val mockActions = mock[Actions]
     doReturn(mockElement).when(webContext).locate(elemBinding)
+    doReturn(mockActions).when(webContext).createActions(mockWebDriver)
+    doReturn(mockActions).when(mockActions).sendKeys(mockElement, "Gwen")
     webContext.sendValue(elemBinding, "Gwen", clearFirst = true, sendEnterKey = false)
     verify(mockElement).clear()
+    verify(mockActions).perform()
     envContext.scopes.get("name/clear") should be ("true")
-    verify(mockElement).sendKeys("Gwen")
     envContext.scopes.get("name/type") should be ("Gwen")
-    verify(mockElement, never()).sendKeys(Keys.RETURN)
     envContext.scopes.getOpt("name/enter") should be (None)
   }
 
   "WebContext.sendValue without clear first and with send enter" should "send value to element" in {
     val elemBinding = LocatorBinding("name", "id", "name", None)
     val mockElement = mock[WebElement]
+    val mockActions = mock[Actions]
     doReturn(mockElement).when(webContext).locate(elemBinding)
+    doReturn(mockActions).when(webContext).createActions(mockWebDriver)
+    doReturn(mockActions).when(mockActions).sendKeys(mockElement, "Gwen")
+    doReturn(mockActions).when(mockActions).sendKeys(mockElement, Keys.RETURN)
     webContext.sendValue(elemBinding, "Gwen", clearFirst = false, sendEnterKey = true)
     verify(mockElement, never()).clear()
+    verify(mockActions, times(2)).perform()
     envContext.scopes.getOpt("name/clear") should be (None)
-    verify(mockElement).sendKeys("Gwen")
     envContext.scopes.get("name/type") should be ("Gwen")
-    verify(mockElement).sendKeys(Keys.RETURN)
     envContext.scopes.get("name/enter") should be ("true")
   }
 
   "WebContext.sendValue with clear first and with send enter" should "send value to element" in {
     val elemBinding = LocatorBinding("name", "id", "name", None)
     val mockElement = mock[WebElement]
+    val mockActions = mock[Actions]
     doReturn(mockElement).when(webContext).locate(elemBinding)
+    doReturn(mockActions).when(webContext).createActions(mockWebDriver)
+    doReturn(mockActions).when(mockActions).sendKeys(mockElement, "Gwen")
+    doReturn(mockActions).when(mockActions).sendKeys(mockElement, Keys.RETURN)
     webContext.sendValue(elemBinding, "Gwen", clearFirst = true, sendEnterKey = true)
     verify(mockElement).clear()
+    verify(mockActions, times(2)).perform()
     envContext.scopes.get("name/clear") should be ("true")
-    verify(mockElement).sendKeys("Gwen")
     envContext.scopes.get("name/type") should be ("Gwen")
-    verify(mockElement).sendKeys(Keys.RETURN)
     envContext.scopes.get("name/enter") should be ("true")
   }
 
@@ -746,10 +756,13 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   "WebContext.performAction" should "check element by sending space char" in {
     val elemBinding = LocatorBinding("element", "id", "elem", None)
     val mockElement = mock[WebElement]
+    val mockActions = mock[Actions]
     doReturn(mockElement).when(webContext).locate(elemBinding)
+    doReturn(mockActions).when(webContext).createActions(mockWebDriver)
+    doReturn(mockActions).when(mockActions).sendKeys(mockElement, Keys.SPACE)
     when(mockElement.isSelected).thenReturn(false, true)
     webContext.performAction("check", elemBinding)
-    verify(mockElement).sendKeys(Keys.SPACE)
+    verify(mockActions).perform()
     verify(mockElement, never()).click()
     envContext.scopes.get("element/check") should be ("true")
   }
@@ -757,10 +770,13 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   "WebContext.performAction" should "check element by clicking it" in {
     val elemBinding = LocatorBinding("element", "id", "elem", None)
     val mockElement = mock[WebElement]
+    val mockActions = mock[Actions]
     doReturn(mockElement).when(webContext).locate(elemBinding)
+    doReturn(mockActions).when(webContext).createActions(mockWebDriver)
+    doReturn(mockActions).when(mockActions).sendKeys(mockElement, Keys.SPACE)
     when(mockElement.isSelected).thenReturn(false, false)
     webContext.performAction("check", elemBinding)
-    verify(mockElement).sendKeys(Keys.SPACE)
+    verify(mockActions).perform()
     verify(mockElement).click()
     envContext.scopes.get("element/check") should be ("true")
   }
@@ -779,10 +795,13 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   "WebContext.performAction" should "tick element by sending space char" in {
     val elemBinding = LocatorBinding("element", "id", "elem", None)
     val mockElement = mock[WebElement]
+    val mockActions = mock[Actions]
     doReturn(mockElement).when(webContext).locate(elemBinding)
+    doReturn(mockActions).when(webContext).createActions(mockWebDriver)
+    doReturn(mockActions).when(mockActions).sendKeys(mockElement, Keys.SPACE)
     when(mockElement.isSelected).thenReturn(false, true)
     webContext.performAction("tick", elemBinding)
-    verify(mockElement).sendKeys(Keys.SPACE)
+    verify(mockActions).perform()
     verify(mockElement, never()).click()
     envContext.scopes.get("element/tick") should be ("true")
   }
@@ -790,10 +809,13 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   "WebContext.performAction" should "tick element by clicking it" in {
     val elemBinding = LocatorBinding("element", "id", "elem", None)
     val mockElement = mock[WebElement]
+    val mockActions = mock[Actions]
     doReturn(mockElement).when(webContext).locate(elemBinding)
+    doReturn(mockActions).when(webContext).createActions(mockWebDriver)
+    doReturn(mockActions).when(mockActions).sendKeys(mockElement, Keys.SPACE)
     when(mockElement.isSelected).thenReturn(false, false)
     webContext.performAction("tick", elemBinding)
-    verify(mockElement).sendKeys(Keys.SPACE)
+    verify(mockActions).perform()
     verify(mockElement).click()
     envContext.scopes.get("element/tick") should be ("true")
   }
@@ -812,10 +834,14 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   "WebContext.performAction" should "uncheck element by sending space char" in {
     val elemBinding = LocatorBinding("element", "id", "elem", None)
     val mockElement = mock[WebElement]
+    val mockActions = mock[Actions]
     doReturn(mockElement).when(webContext).locate(elemBinding)
+    doReturn(mockActions).when(webContext).createActions(mockWebDriver)
+    doReturn(mockActions).when(mockActions).sendKeys(mockElement, Keys.SPACE)
     when(mockElement.isSelected).thenReturn(true, false)
+    doReturn(false).when(mockElement).isSelected
     webContext.performAction("uncheck", elemBinding)
-    verify(mockElement).sendKeys(Keys.SPACE)
+    verify(mockActions).perform()
     verify(mockElement, never()).click()
     envContext.scopes.get("element/uncheck") should be ("true")
   }
@@ -823,10 +849,13 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   "WebContext.performAction" should "uncheck element by clicking it" in {
     val elemBinding = LocatorBinding("element", "id", "elem", None)
     val mockElement = mock[WebElement]
+    val mockActions = mock[Actions]
     doReturn(mockElement).when(webContext).locate(elemBinding)
+    doReturn(mockActions).when(webContext).createActions(mockWebDriver)
+    doReturn(mockActions).when(mockActions).sendKeys(mockElement, Keys.SPACE)
     when(mockElement.isSelected).thenReturn(true, true)
     webContext.performAction("uncheck", elemBinding)
-    verify(mockElement).sendKeys(Keys.SPACE)
+    verify(mockActions).perform()
     verify(mockElement).click()
     envContext.scopes.get("element/uncheck") should be ("true")
   }
@@ -834,6 +863,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   "WebContext.performAction" should "not uncheck element that is already unchecked" in {
     val elemBinding = LocatorBinding("element", "id", "elem", None)
     val mockElement = mock[WebElement]
+    val mockActions = mock[Actions]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isSelected).thenReturn(false, false)
     webContext.performAction("uncheck", elemBinding)
@@ -845,10 +875,13 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   "WebContext.performAction" should "untick element by sending space char" in {
     val elemBinding = LocatorBinding("element", "id", "elem", None)
     val mockElement = mock[WebElement]
+    val mockActions = mock[Actions]
     doReturn(mockElement).when(webContext).locate(elemBinding)
-    when(mockElement.isSelected).thenReturn(true, false)
+    doReturn(mockActions).when(webContext).createActions(mockWebDriver)
+    doReturn(mockActions).when(mockActions).sendKeys(mockElement, Keys.SPACE)
+    when(mockElement.isSelected).thenReturn(false)
     webContext.performAction("untick", elemBinding)
-    verify(mockElement).sendKeys(Keys.SPACE)
+    verify(mockActions).perform()
     verify(mockElement, never()).click()
     envContext.scopes.get("element/untick") should be ("true")
   }
@@ -856,10 +889,14 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   "WebContext.performAction" should "untick element by clicking it" in {
     val elemBinding = LocatorBinding("element", "id", "elem", None)
     val mockElement = mock[WebElement]
+    val mockActions = mock[Actions]
     doReturn(mockElement).when(webContext).locate(elemBinding)
+    doReturn(mockActions).when(webContext).createActions(mockWebDriver)
+    doReturn(mockActions).when(mockActions).sendKeys(mockElement, Keys.SPACE)
+    doReturn(false).when(mockElement).isSelected
     when(mockElement.isSelected).thenReturn(true, true)
     webContext.performAction("untick", elemBinding)
-    verify(mockElement).sendKeys(Keys.SPACE)
+    verify(mockActions).perform()
     verify(mockElement).click()
     envContext.scopes.get("element/untick") should be ("true")
   }
