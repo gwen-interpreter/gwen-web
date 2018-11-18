@@ -65,14 +65,14 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
 
       step.expression match {
 
-        case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)$locator "(.+?)"$expression in (.+?)$container with no wait""" =>
+        case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)$locator "(.+?)"$expression in (.+?)$container with no (?:timeout|wait)""" =>
           env.getLocatorBinding(container)
           val binding = LocatorBinding(s"${element}/list", locator, expression, Some(container), Some(Duration.Zero))
           env.evaluate(foreach(() => List("$[dryRun:webElements]"), element, step, doStep, env)) {
             foreach(() => webContext.locateAll(binding), element, step, doStep, env)
           }
 
-        case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)$locator "(.+?)"$expression in (.+?)$container with (\d+)$timeout second timeout""" =>
+        case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)$locator "(.+?)"$expression in (.+?)$container with (\d+)$timeout second (?:timeout|wait)""" =>
           env.getLocatorBinding(container)
           val binding = LocatorBinding(s"${element}/list", locator, expression, Some(container), Some(Duration.create(timeout.toLong, TimeUnit.SECONDS)))
           env.evaluate(foreach(() => List("$[dryRun:webElements]"), element, step, doStep, env)) {
@@ -86,13 +86,13 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
             foreach(() => webContext.locateAll(binding), element, step, doStep, env)
           }
 
-        case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)$locator "(.+?)"$expression with no wait""" =>
+        case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)$locator "(.+?)"$expression with no (?:timeout|wait)""" =>
           val binding = LocatorBinding(s"${element}/list", locator, expression, None, Some(Duration.Zero))
           env.evaluate(foreach(() => List("$[dryRun:webElements]"), element, step, doStep, env)) {
             foreach(() => webContext.locateAll(binding), element, step, doStep, env)
           }
 
-        case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)$locator "(.+?)"$expression with (\d+)$timeout second timeout""" =>
+        case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)$locator "(.+?)"$expression with (\d+)$timeout second (?:timeout|wait)""" =>
           val binding = LocatorBinding(s"${element}/list", locator, step.orDocString(expression), None, Some(Duration.create(timeout.toLong, TimeUnit.SECONDS)))
           env.evaluate(foreach(() => List("$[dryRun:webElements]"), element, step, doStep, env)) {
             foreach(() => webContext.locateAll(binding), element, step, doStep, env)
@@ -110,20 +110,20 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
             foreach(() => webContext.locateAll(binding), element, step, doStep, env)
           }
 
-        case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using no delay and (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit timeout""" =>
+        case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using no delay and (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit (?:timeout|wait)""" =>
           repeat(operation, step, doStep, condition, Duration.Zero, Duration(timeoutPeriod.toLong, timeoutUnit), env)
 
         case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using no delay""" =>
           repeat(operation, step, doStep, condition, Duration.Zero, defaultRepeatTimeout(DefaultRepeatDelay), env)
 
-        case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using (.+?)$delayPeriod (second|millisecond)$delayUnit delay and (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit timeout""" =>
+        case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using (.+?)$delayPeriod (second|millisecond)$delayUnit delay and (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit (?:timeout|wait)""" =>
           repeat(operation, step, doStep, condition, Duration(delayPeriod.toLong, delayUnit), Duration(timeoutPeriod.toLong, timeoutUnit), env)
 
         case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using (.+?)$delayPeriod (second|millisecond)$delayUnit delay""" =>
           val delayDuration = Duration(delayPeriod.toLong, delayUnit)
           repeat(operation, step, doStep, condition, delayDuration, defaultRepeatTimeout(delayDuration), env)
 
-        case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit timeout""" =>
+        case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit (?:timeout|wait)""" =>
           repeat(operation, step, doStep, condition, DefaultRepeatDelay, Duration(timeoutPeriod.toLong, timeoutUnit), env)
 
         case r"""(.+?)$doStep (until|while)$operation (.+?)$$$condition""" if doStep != "I wait" =>
@@ -225,14 +225,14 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
         env.scopes.set("url", url)
       }
 
-      case r"""(.+?)$element can be located by (id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)$locator "(.+?)"$expression in (.+?)$container with no wait""" =>
+      case r"""(.+?)$element can be located by (id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)$locator "(.+?)"$expression in (.+?)$container with no (?:timeout|wait)""" =>
         env.getLocatorBinding(container)
         env.scopes.set(s"$element/locator", locator)
         env.scopes.set(s"$element/locator/$locator", expression)
         env.scopes.set(s"$element/locator/$locator/container", container)
         env.scopes.set(s"$element/locator/$locator/timeoutSecs", "0")
 
-      case r"""(.+?)$element can be located by (id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)$locator "(.+?)"$expression in (.+?)$container with (\d+)$timeout second timeout""" =>
+      case r"""(.+?)$element can be located by (id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)$locator "(.+?)"$expression in (.+?)$container with (\d+)$timeout second (?:timeout|wait)""" =>
         env.getLocatorBinding(container)
         env.scopes.set(s"$element/locator", locator)
         env.scopes.set(s"$element/locator/$locator", expression)
@@ -248,7 +248,7 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
           env.scopes.set(s"$element/locator/$locator/timeoutSecs", null)
         }
 
-      case r"""(.+?)$element can be located by (id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)$locator "(.+?)"$expression with no wait""" => step.orDocString(expression) tap { expression =>
+      case r"""(.+?)$element can be located by (id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)$locator "(.+?)"$expression with no (?:timeout|wait)""" => step.orDocString(expression) tap { expression =>
         env.scopes.set(s"$element/locator", locator)
         env.scopes.set(s"$element/locator/$locator", expression)
         env.scopes.getOpt(s"$element/locator/$locator/container") foreach { _ =>
@@ -257,7 +257,7 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
         env.scopes.set(s"$element/locator/$locator/timeoutSecs", "0")
       }
 
-      case r"""(.+?)$element can be located by (id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)$locator "(.+?)"$expression with (\d+)$timeout second timeout""" => step.orDocString(expression) tap { expression =>
+      case r"""(.+?)$element can be located by (id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)$locator "(.+?)"$expression with (\d+)$timeout second (?:timeout|wait)""" => step.orDocString(expression) tap { expression =>
         env.scopes.set(s"$element/locator", locator)
         env.scopes.set(s"$element/locator/$locator", expression)
         env.scopes.getOpt(s"$element/locator/$locator/container") foreach { _ =>
@@ -287,7 +287,7 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
           env.scopes.set(s"$element/locator/$locator/container", container)
         }
 
-      case r"""(.+?)$element can be located with no wait by""" if step.table.nonEmpty && step.table.head._2.size == 2 => {
+      case r"""(.+?)$element can be located with no (?:timeout|wait) by""" if step.table.nonEmpty && step.table.head._2.size == 2 => {
         env.scopes.set(s"$element/locator", step.table.map(_._2.head).mkString(","))
         step.table foreach { case (_, row ) =>
           val locator = row.head
@@ -300,7 +300,7 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
         }
       }
 
-      case r"""(.+?)$element can be located with (\d+)$timeout second timeout by""" if step.table.nonEmpty && step.table.head._2.size == 2 => {
+      case r"""(.+?)$element can be located with (\d+)$timeout second (?:timeout|wait) by""" if step.table.nonEmpty && step.table.head._2.size == 2 => {
         env.scopes.set(s"$element/locator", step.table.map(_._2.head).mkString(","))
         step.table foreach { case (_, row ) =>
           val locator = row.head

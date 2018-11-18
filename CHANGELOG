@@ -1,3 +1,8 @@
+2.28.0
+======
+November 27, 2018
+- Allow `wait` and `timeout` literals to be used interchangeably in all DSL steps
+
 2.27.0
 ======
 November 27, 2018

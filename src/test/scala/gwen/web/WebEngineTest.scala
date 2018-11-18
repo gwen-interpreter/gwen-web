@@ -73,6 +73,8 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
   private val events = List("clicked", "right clicked", "double clicked", "submitted", "checked", "ticked", "unchecked", "unticked", "selected", "deselected", "typed", "entered", "tabbed", "cleared", "moved to")
   private val timeUnits1 = List("second", "millisecond")
   private val timeUnits2= List("minute", "second", "millisecond")
+  private val waits = List("wait", "timeout")
+
   private var webContext: WebContext = _
   private var env: WebEnvContext = _
   private var mockScopes: ScopedDataStack = _
@@ -163,27 +165,33 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
     }
   }
 
-  """<element> can be located by <locator> "<value>" in <container> with no wait""" should "evaluate" in {
+  """<element> can be located by <locator> "<value>" in <container> with no <wait|timeout>""" should "evaluate" in {
     val mockBinding = mock[LocatorBinding]
     doReturn(mockBinding).when(env).getLocatorBinding("<container>")
     locators.foreach { locator =>
-      evaluate(s"""<element> can be located by $locator "<value>" in <container> with no wait""")
-      verify(mockScopes).set("<element>/locator", locator)
-      verify(mockScopes).set(s"<element>/locator/$locator", "<value>")
-      verify(mockScopes).set(s"<element>/locator/$locator/container", "<container>")
-      verify(mockScopes).set(s"<element>/locator/$locator/timeoutSecs", "0")
+      waits.foreach { wait =>
+        evaluate(s"""<element> can be located by $locator "<value>" in <container> with no $wait""")
+        verify(mockScopes).set("<element>/locator", locator)
+        verify(mockScopes).set(s"<element>/locator/$locator", "<value>")
+        verify(mockScopes).set(s"<element>/locator/$locator/container", "<container>")
+        verify(mockScopes).set(s"<element>/locator/$locator/timeoutSecs", "0")
+        reset(mockScopes)
+      }
     }
   }
 
-  """<element> can be located by <locator> "<value>" in <container> with <timeoutPeriod> second timeout""" should "evaluate" in {
+  """<element> can be located by <locator> "<value>" in <container> with <timeoutPeriod> second <wait|timeout>""" should "evaluate" in {
     val mockBinding = mock[LocatorBinding]
     doReturn(mockBinding).when(env).getLocatorBinding("<container>")
     locators.foreach { locator =>
-      evaluate(s"""<element> can be located by $locator "<value>" in <container> with 2 second timeout""")
-      verify(mockScopes).set("<element>/locator", locator)
-      verify(mockScopes).set(s"<element>/locator/$locator", "<value>")
-      verify(mockScopes).set(s"<element>/locator/$locator/container", "<container>")
-      verify(mockScopes).set(s"<element>/locator/$locator/timeoutSecs", "2")
+      waits.foreach { wait =>
+        evaluate(s"""<element> can be located by $locator "<value>" in <container> with 2 second $wait""")
+        verify(mockScopes).set("<element>/locator", locator)
+        verify(mockScopes).set(s"<element>/locator/$locator", "<value>")
+        verify(mockScopes).set(s"<element>/locator/$locator/container", "<container>")
+        verify(mockScopes).set(s"<element>/locator/$locator/timeoutSecs", "2")
+        reset(mockScopes)
+      }
     }
   }
 
@@ -199,27 +207,33 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
     }
   }
 
-   """<element> can be located by <locator> "<value>" with no wait""" should "evaluate" in {
+   """<element> can be located by <locator> "<value>" with no <wait|timeout>""" should "evaluate" in {
     locators.foreach { locator =>
-      when(mockScopes.getOpt(s"<element>/locator/$locator/container")).thenReturn(Some("container"))
-      when(mockScopes.getOpt(s"<element>/locator/$locator/timeoutSecs")).thenReturn(Some("2"))
-      evaluate(s"""<element> can be located by $locator "<value>" with no wait""")
-      verify(mockScopes).set("<element>/locator", locator)
-      verify(mockScopes).set(s"<element>/locator/$locator", "<value>")
-      verify(mockScopes).set(s"<element>/locator/$locator/container", null)
-      verify(mockScopes).set(s"<element>/locator/$locator/timeoutSecs", "0")
+      waits.foreach { wait =>
+        when(mockScopes.getOpt(s"<element>/locator/$locator/container")).thenReturn(Some("container"))
+        when(mockScopes.getOpt(s"<element>/locator/$locator/timeoutSecs")).thenReturn(Some("2"))
+        evaluate(s"""<element> can be located by $locator "<value>" with no $wait""")
+        verify(mockScopes).set("<element>/locator", locator)
+        verify(mockScopes).set(s"<element>/locator/$locator", "<value>")
+        verify(mockScopes).set(s"<element>/locator/$locator/container", null)
+        verify(mockScopes).set(s"<element>/locator/$locator/timeoutSecs", "0")
+        reset(mockScopes)
+      }
     }
   }
 
-  """<element> can be located by <locator> "<value>" with <timeoutPeriod> second timeout""" should "evaluate" in {
+  """<element> can be located by <locator> "<value>" with <timeoutPeriod> second <wait|timeout>""" should "evaluate" in {
     locators.foreach { locator =>
-      when(mockScopes.getOpt(s"<element>/locator/$locator/container")).thenReturn(Some("container"))
-      when(mockScopes.getOpt(s"<element>/locator/$locator/timeoutSecs")).thenReturn(Some("2"))
-      evaluate(s"""<element> can be located by $locator "<value>" with 2 second timeout""")
-      verify(mockScopes).set("<element>/locator", locator)
-      verify(mockScopes).set(s"<element>/locator/$locator", "<value>")
-      verify(mockScopes).set(s"<element>/locator/$locator/container", null)
-      verify(mockScopes).set(s"<element>/locator/$locator/timeoutSecs", "2")
+      waits.foreach { wait =>
+        when(mockScopes.getOpt(s"<element>/locator/$locator/container")).thenReturn(Some("container"))
+        when(mockScopes.getOpt(s"<element>/locator/$locator/timeoutSecs")).thenReturn(Some("2"))
+        evaluate(s"""<element> can be located by $locator "<value>" with 2 second $wait""")
+        verify(mockScopes).set("<element>/locator", locator)
+        verify(mockScopes).set(s"<element>/locator/$locator", "<value>")
+        verify(mockScopes).set(s"<element>/locator/$locator/container", null)
+        verify(mockScopes).set(s"<element>/locator/$locator/timeoutSecs", "2")
+        reset(mockScopes)
+      }
     }
   }
 
@@ -1117,13 +1131,15 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
     verify(mockFeatureScope).set("<reference>", "decoded")
   }
 
-  "<step> <until|while> <condition> using <delayPeriod> <second|millisecond> delay and <timeoutPeriod> <minute|second|millisecond> timeout" should "evaluate" in {
+  "<step> <until|while> <condition> using <delayPeriod> <second|millisecond> delay and <timeoutPeriod> <minute|second|millisecond> <wait|timeout>" should "evaluate" in {
     timeUnits1.foreach { unit1 =>
       timeUnits2.foreach { unit2 =>
-        List("until", "while").foreach { repeat =>
-          val step = evaluatePriority(s"""x is "1" $repeat <condition> using 1 $unit1 delay and 2000 $unit2 timeout""")
-          step should not be (None)
-          step.get.toString should be (s"""Given x is "1" $repeat <condition> using 1 $unit1 delay and 2000 $unit2 timeout""")
+        waits.foreach { wait =>
+          List("until", "while").foreach { repeat =>
+            val step = evaluatePriority(s"""x is "1" $repeat <condition> using 1 $unit1 delay and 2000 $unit2 $wait""")
+            step should not be (None)
+            step.get.toString should be (s"""Given x is "1" $repeat <condition> using 1 $unit1 delay and 2000 $unit2 $wait""")
+          }
         }
       }
     }
@@ -1139,12 +1155,14 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
     }
   }
 
-  "<step> <until|while> <condition> using no delay and <timeoutPeriod> <minute|second|millisecond> timeout" should "evaluate" in {
+  "<step> <until|while> <condition> using no delay and <timeoutPeriod> <minute|second|millisecond> <wait|timeout>" should "evaluate" in {
     timeUnits2.foreach { unit =>
       List("until", "while").foreach { repeat =>
-        val step = evaluatePriority(s"""x is "1" $repeat <condition> using no delay and 2000 $unit timeout""")
-        step should not be (None)
-        step.get.toString should be (s"""Given x is "1" $repeat <condition> using no delay and 2000 $unit timeout""")
+        waits.foreach { wait =>
+          val step = evaluatePriority(s"""x is "1" $repeat <condition> using no delay and 2000 $unit $wait""")
+          step should not be (None)
+          step.get.toString should be (s"""Given x is "1" $repeat <condition> using no delay and 2000 $unit $wait""")
+        }
       }
     }
   }
@@ -1323,19 +1341,23 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
     step.get.toString should be (s"""Given x is "1" for each <element> located by id "<expression>"""")
   }
 
-  """<step> for each <element> located by id "<expression>" with no wait""" should "evaluate" in {
-    doReturn(Nil).when(webContext).locateAll(any[LocatorBinding])
-    val step = evaluatePriority(s"""x is "1" for each <element> located by id "<expression>" with no wait""")
-    step should not be (None)
-    step.get.toString should be (s"""Given x is "1" for each <element> located by id "<expression>" with no wait""")
+  """<step> for each <element> located by id "<expression>" with no <wait|timeout>""" should "evaluate" in {
+    waits.foreach { wait =>
+      doReturn(Nil).when(webContext).locateAll(any[LocatorBinding])
+      val step = evaluatePriority(s"""x is "1" for each <element> located by id "<expression>" with no $wait""")
+      step should not be (None)
+      step.get.toString should be (s"""Given x is "1" for each <element> located by id "<expression>" with no $wait""")
+    }
   }
 
-   """<step> for each <element> located by id "<expression>" with <timeoutPeriod> second timeout""" should "evaluate" in {
-    doReturn(Nil).when(webContext).locateAll(any[LocatorBinding])
-    val step = evaluatePriority(s"""x is "1" for each <element> located by id "<expression>" with 2 second timeout""")
-    step should not be (None)
-    step.get.toString should be (s"""Given x is "1" for each <element> located by id "<expression>" with 2 second timeout""")
-  }
+   """<step> for each <element> located by id "<expression>" with <timeoutPeriod> second <wait|timeout>""" should "evaluate" in {
+     waits.foreach { wait =>
+       doReturn(Nil).when(webContext).locateAll(any[LocatorBinding])
+       val step = evaluatePriority(s"""x is "1" for each <element> located by id "<expression>" with 2 second $wait""")
+       step should not be (None)
+       step.get.toString should be (s"""Given x is "1" for each <element> located by id "<expression>" with 2 second $wait""")
+     }
+   }
 
   """<step> for each <element> located by id "<expression>" in <container>""" should "evaluate" in {
     val mockBinding = mock[LocatorBinding]
@@ -1346,22 +1368,26 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
     step.get.toString should be (s"""Given x is "1" for each <element> located by id "<expression>" in <container>""")
   }
 
-  """<step> for each <element> located by id "<expression>" in <container> with no wait""" should "evaluate" in {
-    val mockBinding = mock[LocatorBinding]
-    doReturn(mockBinding).when(env).getLocatorBinding("<container>")
-    doReturn(Nil).when(webContext).locateAll(any[LocatorBinding])
-    val step = evaluatePriority(s"""x is "1" for each <element> located by id "<expression>" in <container> with no wait""")
-    step should not be (None)
-    step.get.toString should be (s"""Given x is "1" for each <element> located by id "<expression>" in <container> with no wait""")
+  """<step> for each <element> located by id "<expression>" in <container> with no <wait|timeout>""" should "evaluate" in {
+    waits.foreach { wait =>
+      val mockBinding = mock[LocatorBinding]
+      doReturn(mockBinding).when(env).getLocatorBinding("<container>")
+      doReturn(Nil).when(webContext).locateAll(any[LocatorBinding])
+      val step = evaluatePriority(s"""x is "1" for each <element> located by id "<expression>" in <container> with no $wait""")
+      step should not be (None)
+      step.get.toString should be (s"""Given x is "1" for each <element> located by id "<expression>" in <container> with no $wait""")
+    }
   }
 
-  """<step> for each <element> located by id "<expression>" in <container> with <timeoutPeriod> second timeout""" should "evaluate" in {
-    val mockBinding = mock[LocatorBinding]
-    doReturn(mockBinding).when(env).getLocatorBinding("<container>")
-    doReturn(Nil).when(webContext).locateAll(any[LocatorBinding])
-    val step = evaluatePriority(s"""x is "1" for each <element> located by id "<expression>" in <container> with 2 second timeout""")
-    step should not be (None)
-    step.get.toString should be (s"""Given x is "1" for each <element> located by id "<expression>" in <container> with 2 second timeout""")
+  """<step> for each <element> located by id "<expression>" in <container> with <timeoutPeriod> second <wait|timeout>""" should "evaluate" in {
+    waits.foreach { wait =>
+      val mockBinding = mock[LocatorBinding]
+      doReturn(mockBinding).when(env).getLocatorBinding("<container>")
+      doReturn(Nil).when(webContext).locateAll(any[LocatorBinding])
+      val step = evaluatePriority(s"""x is "1" for each <element> located by id "<expression>" in <container> with 2 second $wait""")
+      step should not be (None)
+      step.get.toString should be (s"""Given x is "1" for each <element> located by id "<expression>" in <container> with 2 second $wait""")
+    }
   }
 
   "<step> for each <element> in <elements>" should "evaluate" in {
