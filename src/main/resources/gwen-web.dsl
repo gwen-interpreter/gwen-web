@@ -96,6 +96,105 @@ I scroll to the bottom of <element>
 <element> can be located by link text "<value>" in <container> with <timeoutPeriod> second wait
 <element> can be located by partial link text "<value>" in <container> with <timeoutPeriod> second wait
 <element> can be located by javascript "<expression>" in <container> with <timeoutPeriod> second wait
+<element> can be located by id "<value>" at index <index>
+<element> can be located by name "<value>" at index <index>
+<element> can be located by tag name "<value>" at index <index>
+<element> can be located by css selector "<value>" at index <index>
+<element> can be located by xpath "<value>" at index <index>
+<element> can be located by class name "<value>" at index <index>
+<element> can be located by link text "<value>" at index <index>
+<element> can be located by partial link text "<value>" at index <index>
+<element> can be located by javascript "<expression>" at index <index>
+<element> can be located by id "<value>" at index <index> with no timeout
+<element> can be located by name "<value>" at index <index> with no timeout
+<element> can be located by tag name "<value>" at index <index> with no timeout
+<element> can be located by css selector "<value>" at index <index> with no timeout
+<element> can be located by xpath "<value>" at index <index> with no timeout
+<element> can be located by class name "<value>" at index <index> with no timeout
+<element> can be located by link text "<value>" at index <index> with no timeout
+<element> can be located by partial link text "<value>" at index <index> with no timeout
+<element> can be located by javascript "<expression>" at index <index> with no timeout
+<element> can be located by id "<value>" at index <index> with no wait
+<element> can be located by name "<value>" at index <index> with no wait
+<element> can be located by tag name "<value>" at index <index> with no wait
+<element> can be located by css selector "<value>" at index <index> with no wait
+<element> can be located by xpath "<value>" at index <index> with no wait
+<element> can be located by class name "<value>" at index <index> with no wait
+<element> can be located by link text "<value>" at index <index> with no wait
+<element> can be located by partial link text "<value>" at index <index> with no wait
+<element> can be located by javascript "<expression>" at index <index> with no wait
+<element> can be located by id "<value>" at index <index> with <timeoutPeriod> second timeout
+<element> can be located by name "<value>" at index <index> with <timeoutPeriod> second timeout
+<element> can be located by tag name "<value>" at index <index> with <timeoutPeriod> second timeout
+<element> can be located by css selector "<value>" at index <index> with <timeoutPeriod> second timeout
+<element> can be located by xpath "<value>" at index <index> with <timeoutPeriod> second timeout
+<element> can be located by class name "<value>" at index <index> with <timeoutPeriod> second timeout
+<element> can be located by link text "<value>" at index <index> with <timeoutPeriod> second timeout
+<element> can be located by partial link text "<value>" at index <index> with <timeoutPeriod> second timeout
+<element> can be located by javascript "<expression>" at index <index> with <timeoutPeriod> second timeout
+<element> can be located by id "<value>" at index <index> with <timeoutPeriod> second wait
+<element> can be located by name "<value>" at index <index> with <timeoutPeriod> second wait
+<element> can be located by tag name "<value>" at index <index> with <timeoutPeriod> second wait
+<element> can be located by css selector "<value>" at index <index> with <timeoutPeriod> second wait
+<element> can be located by xpath "<value>" at index <index> with <timeoutPeriod> second wait
+<element> can be located by class name "<value>" at index <index> with <timeoutPeriod> second wait
+<element> can be located by link text "<value>" at index <index> with <timeoutPeriod> second wait
+<element> can be located by partial link text "<value>" at index <index> with <timeoutPeriod> second wait
+<element> can be located by javascript "<expression>" at index <index> with <timeoutPeriod> second wait
+<element> can be located by id "<value>" at index <index> in <container>
+<element> can be located by name "<value>" at index <index> in <container>
+<element> can be located by tag name "<value>" at index <index> in <container>
+<element> can be located by css selector "<value>" at index <index> in <container>
+<element> can be located by xpath "<value>" at index <index> in <container>
+<element> can be located by class name "<value>" at index <index> in <container>
+<element> can be located by link text "<value>" at index <index> in <container>
+<element> can be located by partial link text "<value>" at index <index> in <container>
+<element> can be located by javascript "<expression>" at index <index> in <container>
+<element> can be located by id "<value>" at index <index> in <container> with no timeout
+<element> can be located by name "<value>" at index <index> in <container> with no timeout
+<element> can be located by tag name "<value>" at index <index> in <container> with no timeout
+<element> can be located by css selector "<value>" at index <index> in <container> with no timeout
+<element> can be located by xpath "<value>" at index <index> in <container> with no timeout
+<element> can be located by class name "<value>" at index <index> in <container> with no timeout
+<element> can be located by link text "<value>" at index <index> in <container> with no timeout
+<element> can be located by partial link text "<value>" at index <index> in <container> with no timeout
+<element> can be located by javascript "<expression>" at index <index> in <container> with no timeout
+<element> can be located by id "<value>" at index <index> in <container> with no wait
+<element> can be located by name "<value>" at index <index> in <container> with no wait
+<element> can be located by tag name "<value>" at index <index> in <container> with no wait
+<element> can be located by css selector "<value>" at index <index> in <container> with no wait
+<element> can be located by xpath "<value>" at index <index> in <container> with no wait
+<element> can be located by class name "<value>" at index <index> in <container> with no wait
+<element> can be located by link text "<value>" at index <index> in <container> with no wait
+<element> can be located by partial link text "<value>" at index <index> in <container> with no wait
+<element> can be located by javascript "<expression>" at index <index> in <container> with no wait
+<element> can be located by id "<value>" at index <index> in <container> with <timeoutPeriod> second timeout
+<element> can be located by name "<value>" at index <index> in <container> with <timeoutPeriod> second timeout
+<element> can be located by tag name "<value>" at index <index> in <container> with <timeoutPeriod> second timeout
+<element> can be located by css selector "<value>" at index <index> in <container> with <timeoutPeriod> second timeout
+<element> can be located by xpath "<value>" at index <index> in <container> with <timeoutPeriod> second timeout
+<element> can be located by class name "<value>" at index <index> in <container> with <timeoutPeriod> second timeout
+<element> can be located by link text "<value>" at index <index> in <container> with <timeoutPeriod> second timeout
+<element> can be located by partial link text "<value>" at index <index> in <container> with <timeoutPeriod> second timeout
+<element> can be located by javascript "<expression>" at index <index> in <container> with <timeoutPeriod> second timeout
+<element> can be located by id "<value>" at index <index> in <container> with <timeoutPeriod> second wait
+<element> can be located by name "<value>" at index <index> in <container> with <timeoutPeriod> second wait
+<element> can be located by tag name "<value>" at index <index> in <container> with <timeoutPeriod> second wait
+<element> can be located by css selector "<value>" at index <index> in <container> with <timeoutPeriod> second wait
+<element> can be located by xpath "<value>" at index <index> in <container> with <timeoutPeriod> second wait
+<element> can be located by class name "<value>" at index <index> in <container> with <timeoutPeriod> second wait
+<element> can be located by link text "<value>" at index <index> in <container> with <timeoutPeriod> second wait
+<element> can be located by partial link text "<value>" at index <index> in <container> with <timeoutPeriod> second wait
+<element> can be located by javascript "<expression>" at index <index> in <container> with <timeoutPeriod> second wait
+<element> can be located at index <index> by id "<value>"
+<element> can be located at index <index> by name "<value>"
+<element> can be located at index <index> by tag name "<value>"
+<element> can be located at index <index> by css selector "<value>"
+<element> can be located at index <index> by xpath "<value>"
+<element> can be located at index <index> by class name "<value>"
+<element> can be located at index <index> by link text "<value>"
+<element> can be located at index <index> by partial link text "<value>"
+<element> can be located at index <index> by javascript "<expression>"
 the page title should be "<value>"
 the page title should contain "<value>"
 the page title should start with "<value>"

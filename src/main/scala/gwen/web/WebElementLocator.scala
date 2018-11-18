@@ -20,7 +20,7 @@ import java.util
 import java.util.concurrent.TimeUnit
 
 import org.openqa.selenium.{By, NoSuchElementException, WebElement}
-import gwen.web.errors.{WaitTimeoutException, locatorBindingError}
+import gwen.web.errors.{WaitTimeoutException, locatorBindingError, noSuchElementError}
 import gwen.Predefs.Kestrel
 import com.typesafe.scalalogging.LazyLogging
 import org.apache.commons.text.StringEscapeUtils
@@ -99,46 +99,56 @@ trait WebElementLocator extends LazyLogging {
 
   /** Finds an element by the given locator expression. */
   private def findElementByLocator(elementName: String, locator: Locator): Option[WebElement] = {
-    val locatorType = locator.locatorType
-    val expression = locator.expression
-    logger.debug(s"Locating $elementName by $locator")
-    try {
-      // override implicit wait for locator if overridden
-      locator.timeout foreach { _ =>
-        val wait = locator.timeoutMilliseconds
-        withWebDriver { driver =>
-          driver.manage().timeouts().implicitlyWait(if (wait > 0) wait else 200, TimeUnit.MILLISECONDS)
+    locator.index match {
+      case Some(index) if index > 0 =>
+        val elements = findAllElementsByLocator(elementName, locator)
+        if (index < elements.size) {
+          Option(elements(index))
+        } else {
+          noSuchElementError(s"No such element at index $index for element named '$elementName', locator: $locator")
         }
-      }
-      (locatorType match {
-        case "id" => getElement(By.id(expression), locator)
-        case "name" => getElement(By.name(expression), locator)
-        case "tag name" => getElement(By.tagName(expression), locator)
-        case "css selector" => getElement(By.cssSelector(expression), locator)
-        case "xpath" => getElement(By.xpath(expression), locator)
-        case "class name" => getElement(By.className(expression), locator)
-        case "link text" => getElement(By.linkText(expression), locator)
-        case "partial link text" => getElement(By.partialLinkText(expression), locator)
-        case "javascript" => getElementByJavaScript(s"$expression", locator)
-        case "cache" => webContext.getCachedWebElement(elementName)
-        case _ => locatorBindingError(elementName, s"unsupported locator: $locator")
-      }) tap { optWebElement =>
-        optWebElement foreach { webElement =>
-          if (!webElement.isDisplayed) {
-            webContext.scrollIntoView(webElement, ScrollTo.top)
+      case _ =>
+        val locatorType = locator.locatorType
+        val expression = locator.expression
+        logger.debug(s"Locating $elementName by $locator")
+        try {
+          // override implicit wait for locator if overridden
+          locator.timeout foreach { _ =>
+            val wait = locator.timeoutMilliseconds
+            withWebDriver { driver =>
+              driver.manage().timeouts().implicitlyWait(if (wait > 0) wait else 200, TimeUnit.MILLISECONDS)
+            }
           }
-          if (!locator.isContainer) {
-            webContext.highlightElement(webElement)
+          (locatorType match {
+            case "id" => getElement(By.id(expression), locator)
+            case "name" => getElement(By.name(expression), locator)
+            case "tag name" => getElement(By.tagName(expression), locator)
+            case "css selector" => getElement(By.cssSelector(expression), locator)
+            case "xpath" => getElement(By.xpath(expression), locator)
+            case "class name" => getElement(By.className(expression), locator)
+            case "link text" => getElement(By.linkText(expression), locator)
+            case "partial link text" => getElement(By.partialLinkText(expression), locator)
+            case "javascript" => getElementByJavaScript(s"$expression", locator)
+            case "cache" => webContext.getCachedWebElement(elementName)
+            case _ => locatorBindingError(elementName, s"unsupported locator: $locator")
+          }) tap { optWebElement =>
+            optWebElement foreach { webElement =>
+              if (!webElement.isDisplayed) {
+                webContext.scrollIntoView(webElement, ScrollTo.top)
+              }
+              if (!locator.isContainer) {
+                webContext.highlightElement(webElement)
+              }
+            }
+          }
+        } finally {
+          // restore default implicit wait if overriden
+          locator.timeout foreach { _ =>
+            withWebDriver { driver =>
+              driver.manage().timeouts().implicitlyWait(WebSettings.`gwen.web.locator.wait.seconds`, TimeUnit.SECONDS)
+            }
           }
         }
-      }
-    } finally {
-      // restore default implicit wait if overriden
-      locator.timeout foreach { _ =>
-        withWebDriver { driver =>
-          driver.manage().timeouts().implicitlyWait(WebSettings.`gwen.web.locator.wait.seconds`, TimeUnit.SECONDS)
-        }
-      }
     }
   }
 
@@ -157,7 +167,9 @@ trait WebElementLocator extends LazyLogging {
           val containerBinding =
             LocatorBinding(
               binding.element,
-              binding.locators.map(loc => Locator(loc.locatorType, loc.expression, loc.container, isContainer = true, loc.timeout)))
+              binding.locators.map(loc =>
+                Locator(loc.locatorType, loc.expression, loc.container, isContainer = true, loc.timeout, loc.index))
+              )
           getContainerElement(containerBinding) match {
             case Some(containerElem) =>
               containerElem.findElement(by)
@@ -341,7 +353,7 @@ case class LocatorBinding(element: String, locators: List[Locator]) {
           s"""document.evaluate('//a[contains(text(), "${StringEscapeUtils.escapeEcmaScript(loc.expression)}")]', document, null, XPathResult.${if (isListLocator) "ORDERED_NODE_ITERATOR_TYPE" else "FIRST_ORDERED_NODE_TYPE"}, null)${if (isListLocator) "" else ".singleNodeValue"}"""
         case _ => loc.expression
       }
-      Locator("javascript", jsExpression, loc.container, loc.timeout)
+      Locator("javascript", jsExpression, loc.container, loc.timeout, loc.index)
     }
     LocatorBinding(element, jsLocators)
   }
@@ -349,10 +361,10 @@ case class LocatorBinding(element: String, locators: List[Locator]) {
 
 /** Locator binding factory companion. */
 object LocatorBinding {
-  def apply(element: String, locatorType: String, expression: String, container: Option[String], timeout: Option[Duration]): LocatorBinding =
-    LocatorBinding(element, List(Locator(locatorType, expression, container, timeout)))
-  def apply(element: String, locatorType: String, expression: String, container: Option[String]): LocatorBinding =
-    LocatorBinding(element, List(Locator(locatorType, expression, container, None)))
+  def apply(element: String, locatorType: String, expression: String, container: Option[String], timeout: Option[Duration], index: Option[Int]): LocatorBinding =
+    LocatorBinding(element, List(Locator(locatorType, expression, container, timeout, index)))
+  def apply(element: String, locatorType: String, expression: String, container: Option[String], index: Option[Int]): LocatorBinding =
+    LocatorBinding(element, List(Locator(locatorType, expression, container, None, index)))
   def apply(binding: LocatorBinding, locator: Locator): LocatorBinding =
     LocatorBinding(binding.element, List(locator))
 }
@@ -364,20 +376,21 @@ object LocatorBinding {
   * @param container optional parent container name
   * @param isContainer true if this is a locaotr for a container element, false otherwise
   * @param timeout optional timeout (defaults to `gwen.web.locator.wait.seconds` if not provided)
+  * @param index optional index (if locator returns more than one element then index is required)
   */
-case class Locator(locatorType: String, expression: String, container: Option[String], isContainer: Boolean, timeout: Option[Duration]) {
+case class Locator(locatorType: String, expression: String, container: Option[String], isContainer: Boolean, timeout: Option[Duration], index: Option[Int]) {
   override def toString: String =
-    s"($locatorType: $expression)${container.map(c => s" in $c").getOrElse("")}"
+    s"($locatorType: $expression)${container.map(c => s" in $c").getOrElse("")}${index.map(i => s" at index $i").getOrElse("")}"
   lazy val timeoutSeconds = timeout.map(_.toSeconds).getOrElse(WebSettings.`gwen.web.locator.wait.seconds`)
   lazy val timeoutMilliseconds = timeoutSeconds * 1000
 }
 
 /** Locator factory companion. */
 object Locator {
-  def apply(locatorType: String, expression: String, container: Option[String], timeout: Option[Duration]): Locator =
-    Locator(locatorType, expression, container, isContainer = false, timeout)
+  def apply(locatorType: String, expression: String, container: Option[String], timeout: Option[Duration], index: Option[Int]): Locator =
+    Locator(locatorType, expression, container, isContainer = false, timeout, index)
   def apply(locatorType: String, expression: String): Locator =
-    Locator(locatorType, expression, None, isContainer = false, None)
-  def apply(locator: Locator, timeout: Option[Duration]): Locator =
-    Locator(locator.locatorType, locator.expression, locator.container, timeout)
+    Locator(locatorType, expression, None, isContainer = false, None, None)
+  def apply(locator: Locator, timeout: Option[Duration], index: Option[Int]): Locator =
+    Locator(locator.locatorType, locator.expression, locator.container, timeout, index)
 }

@@ -51,6 +51,7 @@ class WebDslTest extends FlatSpec with Matchers {
               .replace("<filepath>", "../gwen/features/sample/templates/json/StaticMultiLineTemplate.json")
               .replace("<name> setting", "gwen.web setting")
               .replace("<name> property", "gwen.web property")
+              .replace("<index>", "1")
           } foreach { dsl =>
             interpreter.evaluateStep(Step(StepKeyword.Given, dsl.replaceAll("<step>", """a is "b"""")), env).evalStatus match {
               case Failed(_, error) => fail(error)

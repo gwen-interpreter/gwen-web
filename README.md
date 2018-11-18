@@ -21,9 +21,9 @@ functions on pages may be necessary.
 - [Change log](CHANGELOG)
 
 ### What's New?
+- [Indexed locators](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL#element-can-be-located-by-idnametag-namecss-selectorxpathclass-namelink-textpartial-link-textjavascript-expression-at-index-index)
 - [Browser size setting](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#gwenwebbrowsersize)
 - [Synchronized StepDef execution](https://github.com/gwen-interpreter/gwen/wiki/Synchronized-StepDefs)
-- [Running Gwen on BrowserStack](https://gweninterpreter.wordpress.com/2018/06/16/running-gwen-on-browserstack/)
 
 Why Gwen-web?
 -------------

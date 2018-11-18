@@ -159,7 +159,8 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
                   val timeout = scopes.getOpt(interpolate(s"$element/locator/$locatorType/timeoutSecs")(getBoundReferenceValue)).map { timeoutSecs =>
                     Duration.create(timeoutSecs.toLong, TimeUnit.SECONDS)
                   }
-                  Some(Locator(locatorType, expr, container, timeout))
+                  val index = scopes.getOpt(interpolate(s"$element/locator/$locatorType/index")(getBoundReferenceValue)).map(_.toInt)
+                  Some(Locator(locatorType, expr, container, timeout, index))
                 case None =>
                   if (optional) None else locatorBindingError(element, s"locator lookup binding not found: $lookupBinding")
               }
@@ -175,7 +176,7 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
             else None
           case None => if (optional) None else locatorBindingError(element, s"locator binding not found: $locatorBinding")
         }
-      case Some(x) if x.isInstanceOf[WebElement] => Some(LocatorBinding(element, "cache", element, None, None))
+      case Some(x) if x.isInstanceOf[WebElement] => Some(LocatorBinding(element, "cache", element, None, None, None))
       case _ => None
     }
   } tap { binding =>

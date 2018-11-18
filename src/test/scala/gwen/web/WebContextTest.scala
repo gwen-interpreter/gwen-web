@@ -134,7 +134,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.checkElementState" should "return when the state matches 'displayed'" in {
-    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero))
+    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isDisplayed).thenReturn(true)
@@ -143,7 +143,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.checkElementState" should "return when the state matches 'hidden'" in {
-    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero))
+    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isDisplayed).thenReturn(false)
@@ -152,7 +152,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.checkElementState" should "return when the state matches 'checked'" in {
-    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero))
+    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isSelected).thenReturn(true)
@@ -161,7 +161,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.checkElementState" should "return when the state matches 'ticked'" in {
-    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero))
+    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isSelected).thenReturn(true)
@@ -170,7 +170,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.checkElementState" should "return when the state matches 'unchecked'" in {
-    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero))
+    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isSelected).thenReturn(false)
@@ -179,7 +179,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.checkElementState" should "return when the state matches 'unticked'" in {
-    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero))
+    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isSelected).thenReturn(false)
@@ -188,7 +188,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.checkElementState" should "return when the state matches 'enabled'" in {
-    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero))
+    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isEnabled).thenReturn(true)
@@ -197,7 +197,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.checkElementState" should "return when the state matches 'disabled'" in {
-    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero))
+    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isEnabled).thenReturn(false)
@@ -206,7 +206,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.checkElementState" should "return when the state should not match 'displayed'" in {
-    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero))
+    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isDisplayed).thenReturn(false)
@@ -215,7 +215,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.checkElementState" should "return when the state should not match 'hidden'" in {
-    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero))
+    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isDisplayed).thenReturn(true)
@@ -224,7 +224,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.checkElementState" should "return when the state should not match 'checked'" in {
-    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero))
+    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isSelected).thenReturn(false)
@@ -233,7 +233,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.checkElementState" should "return when the state should not match 'ticked'" in {
-    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero))
+    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isSelected).thenReturn(false)
@@ -242,7 +242,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.checkElementState" should "return when the state should not match 'unchecked'" in {
-    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero))
+    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isSelected).thenReturn(true)
@@ -251,7 +251,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.checkElementState" should "return when the state should not match 'unticked'" in {
-    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero))
+    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isSelected).thenReturn(true)
@@ -261,7 +261,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.checkElementState" should "return when the state should not match 'enabled'" in {
-    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero))
+    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isEnabled).thenReturn(false)
@@ -270,7 +270,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.checkElementState" should "return when the state should not match 'disabled'" in {
-    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero))
+    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isEnabled).thenReturn(true)
@@ -279,7 +279,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.checkElementState" should "fail when the state does not match 'displayed'" in {
-    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero))
+    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isDisplayed).thenReturn(false)
@@ -294,7 +294,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.checkElementState" should "fail when the state does not match 'hidden'" in {
-    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero))
+    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isDisplayed).thenReturn(true)
@@ -309,7 +309,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.checkElementState" should "fail when the state does not match 'checked'" in {
-    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero))
+    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isSelected).thenReturn(false)
@@ -324,7 +324,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.checkElementState" should "fail when the state does not match 'ticked'" in {
-    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero))
+    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isSelected).thenReturn(false)
@@ -339,7 +339,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.checkElementState" should "fail when the state does not match 'unchecked'" in {
-    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero))
+    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isSelected).thenReturn(true)
@@ -354,7 +354,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.checkElementState" should "fail when the state does not match 'unticked'" in {
-    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero))
+    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isSelected).thenReturn(true)
@@ -369,7 +369,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.checkElementState" should "fail when the state does not match 'enabled'" in {
-    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero))
+    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isEnabled).thenReturn(false)
@@ -384,7 +384,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.checkElementState" should "fail when the state does not match 'disabled'" in {
-    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero))
+    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isEnabled).thenReturn(true)
@@ -399,7 +399,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
   
   "WebContext.checkElementState" should "fail when the state should not but does match 'displayed'" in {
-    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero))
+    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isDisplayed).thenReturn(true)
@@ -414,7 +414,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.checkElementState" should "fail when the state should not but does match 'hidden'" in {
-    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero))
+    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isDisplayed).thenReturn(false)
@@ -429,7 +429,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.checkElementState" should "fail when the state should not but does match 'checked'" in {
-    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero))
+    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isSelected).thenReturn(true)
@@ -444,7 +444,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.checkElementState" should "fail when the state should not but does match 'ticked'" in {
-    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero))
+    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isSelected).thenReturn(true)
@@ -459,7 +459,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.checkElementState" should "fail when the state should not but does match 'unchecked'" in {
-    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero))
+    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isSelected).thenReturn(false)
@@ -474,7 +474,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.checkElementState" should "fail when the state should not but does match 'unticked'" in {
-    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero))
+    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isSelected).thenReturn(false)
@@ -489,7 +489,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.checkElementState" should "fail when the state should not but does match 'enabled'" in {
-    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero))
+    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isEnabled).thenReturn(true)
@@ -504,7 +504,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.checkElementState" should "fail when the state should not but does match 'disabled'" in {
-    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero))
+    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isEnabled).thenReturn(false)
@@ -519,21 +519,21 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.checkElementState" should "return when the state should not match 'displayed' and there is no such element" in {
-    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero))
+    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     doThrow(new NoSuchElementException("no id")).when(webContext).locate(elemBinding)
     webContext.checkElementState(elemBinding, "displayed", negate = true)
     webContext.waitForElementState(elemBinding, "displayed", negate = true)
   }
 
   "WebContext.checkElementState" should "return when the state should match 'hidden' and there is no such element" in {
-    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero))
+    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     doThrow(new NoSuchElementException("no id")).when(webContext).locate(elemBinding)
     webContext.checkElementState(elemBinding, "hidden", negate = false)
     webContext.waitForElementState(elemBinding, "hidden", negate = false)
   }
 
   "WebContext.checkElementState" should "fail when the state should match 'displayed' and there is no such element" in {
-    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero))
+    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     doThrow(new NoSuchElementException("no id")).when(webContext).locate(elemBinding)
     withSetting("gwen.web.wait.seconds", "1") {
       intercept[AssertionError] {
@@ -546,7 +546,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.checkElementState" should "fail when the state should not match 'hidden' and there is no such element" in {
-    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero))
+    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     doThrow(new NoSuchElementException("no id")).when(webContext).locate(elemBinding)
     withSetting("gwen.web.wait.seconds", "1") {
       intercept[AssertionError] {
@@ -565,7 +565,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.sendValue without clear first and without send enter" should "send value to element" in {
-    val elemBinding = LocatorBinding("name", "id", "name", None)
+    val elemBinding = LocatorBinding("name", "id", "name", None, None)
     val mockElement = mock[WebElement]
     val mockActions = mock[Actions]
     doReturn(mockElement).when(webContext).locate(elemBinding)
@@ -581,7 +581,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.sendValue with clear first and without send enter" should "send value to element" in {
-    val elemBinding = LocatorBinding("name", "id", "name", None)
+    val elemBinding = LocatorBinding("name", "id", "name", None, None)
     val mockElement = mock[WebElement]
     val mockActions = mock[Actions]
     doReturn(mockElement).when(webContext).locate(elemBinding)
@@ -596,7 +596,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.sendValue without clear first and with send enter" should "send value to element" in {
-    val elemBinding = LocatorBinding("name", "id", "name", None)
+    val elemBinding = LocatorBinding("name", "id", "name", None, None)
     val mockElement = mock[WebElement]
     val mockActions = mock[Actions]
     doReturn(mockElement).when(webContext).locate(elemBinding)
@@ -612,7 +612,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.sendValue with clear first and with send enter" should "send value to element" in {
-    val elemBinding = LocatorBinding("name", "id", "name", None)
+    val elemBinding = LocatorBinding("name", "id", "name", None, None)
     val mockElement = mock[WebElement]
     val mockActions = mock[Actions]
     doReturn(mockElement).when(webContext).locate(elemBinding)
@@ -628,7 +628,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.selectByVisibleText" should "select value provided" in {
-    val elemBinding = LocatorBinding("names", "id", "names", None)
+    val elemBinding = LocatorBinding("names", "id", "names", None, None)
     val mockElement = mock[WebElement]
     val mockSelect = mock[Select]
     doReturn(mockElement).when(webContext).locate(elemBinding)
@@ -639,7 +639,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.selectByValue" should "select value provided" in {
-    val elemBinding = LocatorBinding("names", "id", "names", None)
+    val elemBinding = LocatorBinding("names", "id", "names", None, None)
     val mockElement = mock[WebElement]
     val mockSelect = mock[Select]
     doReturn(mockElement).when(webContext).locate(elemBinding)
@@ -650,7 +650,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.selectByIndex" should "select value at index provided" in {
-    val elemBinding = LocatorBinding("names", "id", "names", None)
+    val elemBinding = LocatorBinding("names", "id", "names", None, None)
     val mockElement = mock[WebElement]
     val mockSelect = mock[Select]
     val mockOption = mock[WebElement]
@@ -664,7 +664,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.deselectByVisibleText" should "deselect value provided" in {
-    val elemBinding = LocatorBinding("names", "id", "names", None)
+    val elemBinding = LocatorBinding("names", "id", "names", None, None)
     val mockElement = mock[WebElement]
     val mockSelect = mock[Select]
     doReturn(mockElement).when(webContext).locate(elemBinding)
@@ -675,7 +675,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.deselectByValue" should "deselect value provided" in {
-    val elemBinding = LocatorBinding("names", "id", "names", None)
+    val elemBinding = LocatorBinding("names", "id", "names", None, None)
     val mockElement = mock[WebElement]
     val mockSelect = mock[Select]
     doReturn(mockElement).when(webContext).locate(elemBinding)
@@ -686,7 +686,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.deselectByIndex" should "deselect value at index provided" in {
-    val elemBinding = LocatorBinding("names", "id", "names", None)
+    val elemBinding = LocatorBinding("names", "id", "names", None, None)
     val mockElement = mock[WebElement]
     val mockSelect = mock[Select]
     val mockOption = mock[WebElement]
@@ -700,7 +700,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.performAction" should "click element" in {
-    val elemBinding = LocatorBinding("element", "id", "elem", None)
+    val elemBinding = LocatorBinding("element", "id", "elem", None, None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     webContext.performAction("click", elemBinding)
@@ -709,7 +709,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.performAction" should "right click element" in {
-    val elemBinding = LocatorBinding("element", "id", "elem", None)
+    val elemBinding = LocatorBinding("element", "id", "elem", None, None)
     val mockElement = mock[WebElement]
     val mockActions = mock[Actions]
     doReturn(mockElement).when(webContext).locate(elemBinding)
@@ -721,7 +721,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.performAction" should "double click element" in {
-    val elemBinding = LocatorBinding("element", "id", "elem", None)
+    val elemBinding = LocatorBinding("element", "id", "elem", None, None)
     val mockElement = mock[WebElement]
     val mockActions = mock[Actions]
     doReturn(mockElement).when(webContext).locate(elemBinding)
@@ -733,7 +733,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.performAction" should "move to element" in {
-    val elemBinding = LocatorBinding("element", "id", "elem", None)
+    val elemBinding = LocatorBinding("element", "id", "elem", None, None)
     val mockElement = mock[WebElement]
     val mockActions = mock[Actions]
     doReturn(mockElement).when(webContext).locate(elemBinding)
@@ -745,7 +745,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.performAction" should "submit element" in {
-    val elemBinding = LocatorBinding("element", "id", "elem", None)
+    val elemBinding = LocatorBinding("element", "id", "elem", None, None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     webContext.performAction("submit", elemBinding)
@@ -754,7 +754,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.performAction" should "check element by sending space char" in {
-    val elemBinding = LocatorBinding("element", "id", "elem", None)
+    val elemBinding = LocatorBinding("element", "id", "elem", None, None)
     val mockElement = mock[WebElement]
     val mockActions = mock[Actions]
     doReturn(mockElement).when(webContext).locate(elemBinding)
@@ -768,7 +768,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.performAction" should "check element by clicking it" in {
-    val elemBinding = LocatorBinding("element", "id", "elem", None)
+    val elemBinding = LocatorBinding("element", "id", "elem", None, None)
     val mockElement = mock[WebElement]
     val mockActions = mock[Actions]
     doReturn(mockElement).when(webContext).locate(elemBinding)
@@ -782,7 +782,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.performAction" should "not check element that is already checked" in {
-    val elemBinding = LocatorBinding("element", "id", "elem", None)
+    val elemBinding = LocatorBinding("element", "id", "elem", None, None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isSelected).thenReturn(true, true)
@@ -793,7 +793,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.performAction" should "tick element by sending space char" in {
-    val elemBinding = LocatorBinding("element", "id", "elem", None)
+    val elemBinding = LocatorBinding("element", "id", "elem", None, None)
     val mockElement = mock[WebElement]
     val mockActions = mock[Actions]
     doReturn(mockElement).when(webContext).locate(elemBinding)
@@ -807,7 +807,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.performAction" should "tick element by clicking it" in {
-    val elemBinding = LocatorBinding("element", "id", "elem", None)
+    val elemBinding = LocatorBinding("element", "id", "elem", None, None)
     val mockElement = mock[WebElement]
     val mockActions = mock[Actions]
     doReturn(mockElement).when(webContext).locate(elemBinding)
@@ -821,7 +821,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.performAction" should "not tick element that is already ticked" in {
-    val elemBinding = LocatorBinding("element", "id", "elem", None)
+    val elemBinding = LocatorBinding("element", "id", "elem", None, None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isSelected).thenReturn(true, true)
@@ -832,7 +832,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.performAction" should "uncheck element by sending space char" in {
-    val elemBinding = LocatorBinding("element", "id", "elem", None)
+    val elemBinding = LocatorBinding("element", "id", "elem", None, None)
     val mockElement = mock[WebElement]
     val mockActions = mock[Actions]
     doReturn(mockElement).when(webContext).locate(elemBinding)
@@ -847,7 +847,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.performAction" should "uncheck element by clicking it" in {
-    val elemBinding = LocatorBinding("element", "id", "elem", None)
+    val elemBinding = LocatorBinding("element", "id", "elem", None, None)
     val mockElement = mock[WebElement]
     val mockActions = mock[Actions]
     doReturn(mockElement).when(webContext).locate(elemBinding)
@@ -861,7 +861,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.performAction" should "not uncheck element that is already unchecked" in {
-    val elemBinding = LocatorBinding("element", "id", "elem", None)
+    val elemBinding = LocatorBinding("element", "id", "elem", None, None)
     val mockElement = mock[WebElement]
     val mockActions = mock[Actions]
     doReturn(mockElement).when(webContext).locate(elemBinding)
@@ -873,7 +873,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.performAction" should "untick element by sending space char" in {
-    val elemBinding = LocatorBinding("element", "id", "elem", None)
+    val elemBinding = LocatorBinding("element", "id", "elem", None, None)
     val mockElement = mock[WebElement]
     val mockActions = mock[Actions]
     doReturn(mockElement).when(webContext).locate(elemBinding)
@@ -887,7 +887,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.performAction" should "untick element by clicking it" in {
-    val elemBinding = LocatorBinding("element", "id", "elem", None)
+    val elemBinding = LocatorBinding("element", "id", "elem", None, None)
     val mockElement = mock[WebElement]
     val mockActions = mock[Actions]
     doReturn(mockElement).when(webContext).locate(elemBinding)
@@ -902,7 +902,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
    "WebContext.performAction" should "not untick element that is already unticked" in {
-    val elemBinding = LocatorBinding("element", "id", "elem", None)
+    val elemBinding = LocatorBinding("element", "id", "elem", None, None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isSelected).thenReturn(false, false)
@@ -913,7 +913,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.performAction" should "clear element" in {
-    val elemBinding = LocatorBinding("element", "id", "elem", None)
+    val elemBinding = LocatorBinding("element", "id", "elem", None, None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     webContext.performAction("clear", elemBinding)
@@ -922,7 +922,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.performAction" should "perform javascript action on element" in {
-    val elemBinding = LocatorBinding("element", "id", "elem", None)
+    val elemBinding = LocatorBinding("element", "id", "elem", None, None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     envContext.scopes.set(s"element/action/click/javascript", "element.click()")
@@ -933,8 +933,8 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.dragAndDrop" should "drag source to target" in {
-    val sourceBinding = LocatorBinding("source", "id", "source", None)
-    val targetBinding = LocatorBinding("target", "id", "target", None)
+    val sourceBinding = LocatorBinding("source", "id", "source", None, None)
+    val targetBinding = LocatorBinding("target", "id", "target", None, None)
     val sourceElement = mock[WebElement]
     val targetElement = mock[WebElement]
     val mockActions = mock[Actions]
@@ -947,7 +947,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.holdAndClick" should "should command-shift click element" in {
-    val elemBinding = LocatorBinding("element", "id", "elem", None)
+    val elemBinding = LocatorBinding("element", "id", "elem", None, None)
     val mockElement = mock[WebElement]
     val modifierKeys = Array("COMMAND", "SHIFT")
     val mockActions = mock[Actions]
@@ -966,7 +966,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.holdAndClick" should "should command double click element" in {
-    val elemBinding = LocatorBinding("element", "id", "elem", None)
+    val elemBinding = LocatorBinding("element", "id", "elem", None, None)
     val mockElement = mock[WebElement]
     val modifierKeys = Array("command")
     val mockActions = mock[Actions]
@@ -983,7 +983,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.holdAndClick" should "should command-shift right click element" in {
-    val elemBinding = LocatorBinding("element", "id", "elem", None)
+    val elemBinding = LocatorBinding("element", "id", "elem", None, None)
     val mockElement = mock[WebElement]
     val modifierKeys = Array("Command", "Shift")
     val mockActions = mock[Actions]
@@ -1002,7 +1002,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.holdAndClick" should "should error when given unknown modifier key" in {
-    val elemBinding = LocatorBinding("element", "id", "elem", None)
+    val elemBinding = LocatorBinding("element", "id", "elem", None, None)
     val modifierKeys = Array("Unknown")
     intercept[UnsupportedModifierKeyException] {
       webContext.holdAndClick(modifierKeys, "click", elemBinding)
@@ -1010,7 +1010,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.sendKeys" should "" in {
-    val elemBinding = LocatorBinding("element", "id", "elem", None)
+    val elemBinding = LocatorBinding("element", "id", "elem", None, None)
     val mockElement = mock[WebElement]
     val mockActions = mock[Actions]
     val mockAction = mock[Action]
@@ -1025,8 +1025,8 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.performActionInContext" should "click element in context of another element" in {
-    val elemBinding = LocatorBinding("element", "id", "elem", None)
-    val ctxBinding = LocatorBinding("context", "id", "ctx", None)
+    val elemBinding = LocatorBinding("element", "id", "elem", None, None)
+    val ctxBinding = LocatorBinding("context", "id", "ctx", None, None)
     val mockElement = mock[WebElement]
     val mockContext = mock[WebElement]
     val mockActions = mock[Actions]
@@ -1046,8 +1046,8 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.performActionInContext" should "right click element in context of another element" in {
-    val elemBinding = LocatorBinding("element", "id", "elem", None)
-    val ctxBinding = LocatorBinding("context", "id", "ctx", None)
+    val elemBinding = LocatorBinding("element", "id", "elem", None, None)
+    val ctxBinding = LocatorBinding("context", "id", "ctx", None, None)
     val mockElement = mock[WebElement]
     val mockContext = mock[WebElement]
     val mockActions = mock[Actions]
@@ -1067,8 +1067,8 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.performActionInContext" should "double click element in context of another element" in {
-    val elemBinding = LocatorBinding("element", "id", "elem", None)
-    val ctxBinding = LocatorBinding("context", "id", "ctx", None)
+    val elemBinding = LocatorBinding("element", "id", "elem", None, None)
+    val ctxBinding = LocatorBinding("context", "id", "ctx", None, None)
     val mockElement = mock[WebElement]
     val mockContext = mock[WebElement]
     val mockActions = mock[Actions]
@@ -1088,8 +1088,8 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.performActionInContext" should "check element in context of another element by sending a space char" in {
-    val elemBinding = LocatorBinding("element", "id", "elem", None)
-    val ctxBinding = LocatorBinding("context", "id", "ctx", None)
+    val elemBinding = LocatorBinding("element", "id", "elem", None, None)
+    val ctxBinding = LocatorBinding("context", "id", "ctx", None, None)
     val mockElement = mock[WebElement]
     val mockContext = mock[WebElement]
     val mockActions = mock[Actions]
@@ -1111,8 +1111,8 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.performActionInContext" should "check element in context of another element by clicking it" in {
-    val elemBinding = LocatorBinding("element", "id", "elem", None)
-    val ctxBinding = LocatorBinding("context", "id", "ctx", None)
+    val elemBinding = LocatorBinding("element", "id", "elem", None, None)
+    val ctxBinding = LocatorBinding("context", "id", "ctx", None, None)
     val mockElement = mock[WebElement]
     val mockContext = mock[WebElement]
     val mockActions = mock[Actions]
@@ -1134,8 +1134,8 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.performActionInContext" should "not check element in context of another element when it is already checked" in {
-    val elemBinding = LocatorBinding("element", "id", "elem", None)
-    val ctxBinding = LocatorBinding("context", "id", "ctx", None)
+    val elemBinding = LocatorBinding("element", "id", "elem", None, None)
+    val ctxBinding = LocatorBinding("context", "id", "ctx", None, None)
     val mockElement = mock[WebElement]
     val mockContext = mock[WebElement]
     val mockActions = mock[Actions]
@@ -1155,8 +1155,8 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.performActionInContext" should "tick element in context of another element by sending a space char" in {
-    val elemBinding = LocatorBinding("element", "id", "elem", None)
-    val ctxBinding = LocatorBinding("context", "id", "ctx", None)
+    val elemBinding = LocatorBinding("element", "id", "elem", None, None)
+    val ctxBinding = LocatorBinding("context", "id", "ctx", None, None)
     val mockElement = mock[WebElement]
     val mockContext = mock[WebElement]
     val mockActions = mock[Actions]
@@ -1178,8 +1178,8 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.performActionInContext" should "tick element in context of another element by clicking it" in {
-    val elemBinding = LocatorBinding("element", "id", "elem", None)
-    val ctxBinding = LocatorBinding("context", "id", "ctx", None)
+    val elemBinding = LocatorBinding("element", "id", "elem", None, None)
+    val ctxBinding = LocatorBinding("context", "id", "ctx", None, None)
     val mockElement = mock[WebElement]
     val mockContext = mock[WebElement]
     val mockActions = mock[Actions]
@@ -1201,8 +1201,8 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.performActionInContext" should "not tick element in context of another element when it is already ticked" in {
-    val elemBinding = LocatorBinding("element", "id", "elem", None)
-    val ctxBinding = LocatorBinding("context", "id", "ctx", None)
+    val elemBinding = LocatorBinding("element", "id", "elem", None, None)
+    val ctxBinding = LocatorBinding("context", "id", "ctx", None, None)
     val mockElement = mock[WebElement]
     val mockContext = mock[WebElement]
     val mockActions = mock[Actions]
@@ -1222,8 +1222,8 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.performActionInContext" should "uncheck element in context of another element by sending a space char" in {
-    val elemBinding = LocatorBinding("element", "id", "elem", None)
-    val ctxBinding = LocatorBinding("context", "id", "ctx", None)
+    val elemBinding = LocatorBinding("element", "id", "elem", None, None)
+    val ctxBinding = LocatorBinding("context", "id", "ctx", None, None)
     val mockElement = mock[WebElement]
     val mockContext = mock[WebElement]
     val mockActions = mock[Actions]
@@ -1245,8 +1245,8 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.performActionInContext" should "uncheck element in context of another element by clicking it" in {
-    val elemBinding = LocatorBinding("element", "id", "elem", None)
-    val ctxBinding = LocatorBinding("context", "id", "ctx", None)
+    val elemBinding = LocatorBinding("element", "id", "elem", None, None)
+    val ctxBinding = LocatorBinding("context", "id", "ctx", None, None)
     val mockElement = mock[WebElement]
     val mockContext = mock[WebElement]
     val mockActions = mock[Actions]
@@ -1268,8 +1268,8 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.performActionInContext" should "not uncheck element in context of another element when it is already unchecked" in {
-    val elemBinding = LocatorBinding("element", "id", "elem", None)
-    val ctxBinding = LocatorBinding("context", "id", "ctx", None)
+    val elemBinding = LocatorBinding("element", "id", "elem", None, None)
+    val ctxBinding = LocatorBinding("context", "id", "ctx", None, None)
     val mockElement = mock[WebElement]
     val mockContext = mock[WebElement]
     val mockActions = mock[Actions]
@@ -1289,8 +1289,8 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.performActionInContext" should "untick element in context of another element by sending a space char" in {
-    val elemBinding = LocatorBinding("element", "id", "elem", None)
-    val ctxBinding = LocatorBinding("context", "id", "ctx", None)
+    val elemBinding = LocatorBinding("element", "id", "elem", None, None)
+    val ctxBinding = LocatorBinding("context", "id", "ctx", None, None)
     val mockElement = mock[WebElement]
     val mockContext = mock[WebElement]
     val mockActions = mock[Actions]
@@ -1312,8 +1312,8 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.performActionInContext" should "untick element in context of another element by clicking it" in {
-    val elemBinding = LocatorBinding("element", "id", "elem", None)
-    val ctxBinding = LocatorBinding("context", "id", "ctx", None)
+    val elemBinding = LocatorBinding("element", "id", "elem", None, None)
+    val ctxBinding = LocatorBinding("context", "id", "ctx", None, None)
     val mockElement = mock[WebElement]
     val mockContext = mock[WebElement]
     val mockActions = mock[Actions]
@@ -1335,8 +1335,8 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.performActionInContext" should "not untick element in context of another element when it is already unticked" in {
-    val elemBinding = LocatorBinding("element", "id", "elem", None)
-    val ctxBinding = LocatorBinding("context", "id", "ctx", None)
+    val elemBinding = LocatorBinding("element", "id", "elem", None, None)
+    val ctxBinding = LocatorBinding("context", "id", "ctx", None, None)
     val mockElement = mock[WebElement]
     val mockContext = mock[WebElement]
     val mockActions = mock[Actions]
@@ -1356,8 +1356,8 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.performActionInContext" should "move to element in context of another element" in {
-    val elemBinding = LocatorBinding("element", "id", "elem", None)
-    val ctxBinding = LocatorBinding("context", "id", "ctx", None)
+    val elemBinding = LocatorBinding("element", "id", "elem", None, None)
+    val ctxBinding = LocatorBinding("context", "id", "ctx", None, None)
     val mockElement = mock[WebElement]
     val mockContext = mock[WebElement]
     val mockActions = mock[Actions]
@@ -1376,7 +1376,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.performActionInContext" should "fall back to non context action when element name contains 'of' literal" in {
-    val elemBinding = LocatorBinding("element", "id", "elem", None)
+    val elemBinding = LocatorBinding("element", "id", "elem", None, None)
     val mockElement = mock[WebElement]
     val mockActions = mock[Actions]
     doThrow(new LocatorBindingException("element", "not found")).when(envContext).getLocatorBinding("element")
@@ -1398,25 +1398,25 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.waitForText" should "should return true when text is present" in {
-    val elemBinding = LocatorBinding("element", "id", "elem", None)
+    val elemBinding = LocatorBinding("element", "id", "elem", None, None)
     doReturn(Some("text")).when(webContext).getElementText(elemBinding)
     webContext.waitForText(elemBinding) should be (true)
   }
 
   "WebContext.waitForText" should "should return false when text is absent" in {
-    val elemBinding = LocatorBinding("element", "id", "elem", None)
+    val elemBinding = LocatorBinding("element", "id", "elem", None, None)
     doReturn(None).when(webContext).getElementText(elemBinding)
     webContext.waitForText(elemBinding) should be (false)
   }
 
   "WebContext.waitForText" should "should return false when text is blank" in {
-    val elemBinding = LocatorBinding("element", "id", "elem", None)
+    val elemBinding = LocatorBinding("element", "id", "elem", None, None)
     doReturn(Some("")).when(webContext).getElementText(elemBinding)
     webContext.waitForText(elemBinding) should be (false)
   }
 
   "WebContext.scrollIntoView" should "scroll to top of element" in {
-    val elemBinding = LocatorBinding("element", "id", "elem", None)
+    val elemBinding = LocatorBinding("element", "id", "elem", None, None)
     val mockElement = mock[WebElement]
     doReturn(elemBinding).when(envContext).getLocatorBinding("element")
     doReturn(mockElement).when(webContext).locate(elemBinding)
@@ -1425,7 +1425,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.scrollIntoView" should "scroll to bottom of element" in {
-    val elemBinding = LocatorBinding("element", "id", "elem", None)
+    val elemBinding = LocatorBinding("element", "id", "elem", None, None)
     val mockElement = mock[WebElement]
     doReturn(elemBinding).when(envContext).getLocatorBinding("element")
     doReturn(mockElement).when(webContext).locate(elemBinding)
@@ -1464,7 +1464,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.getElementText" should "return blank on element with null text value, null text attribute, null value attribute, and null JS value" in {
-    val elemBinding = LocatorBinding("element", "id", "elem", None)
+    val elemBinding = LocatorBinding("element", "id", "elem", None, None)
     val mockElement = mock[WebElement]
     doReturn(elemBinding).when(envContext).getLocatorBinding("element")
     doReturn(mockElement).when(webContext).locate(elemBinding)
@@ -1477,7 +1477,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.getElementText" should "return blank on element with blank text value, blank text attribute, blank value attribute, and blank JS value" in {
-    val elemBinding = LocatorBinding("element", "id", "elem", None)
+    val elemBinding = LocatorBinding("element", "id", "elem", None, None)
     val mockElement = mock[WebElement]
     doReturn(elemBinding).when(envContext).getLocatorBinding("element")
     doReturn(mockElement).when(webContext).locate(elemBinding)
@@ -1490,7 +1490,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.getElementText" should "return JS value on element with null text value, null text attribute, null value attribute, and non null JS value" in {
-    val elemBinding = LocatorBinding("element", "id", "elem", None)
+    val elemBinding = LocatorBinding("element", "id", "elem", None, None)
     val mockElement = mock[WebElement]
     doReturn(elemBinding).when(envContext).getLocatorBinding("element")
     doReturn(mockElement).when(webContext).locate(elemBinding)
@@ -1503,7 +1503,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.getElementText" should "return value attribute on element with null text value, null text attribute, and non null value attribute" in {
-    val elemBinding = LocatorBinding("element", "id", "elem", None)
+    val elemBinding = LocatorBinding("element", "id", "elem", None, None)
     val mockElement = mock[WebElement]
     doReturn(elemBinding).when(envContext).getLocatorBinding("element")
     doReturn(mockElement).when(webContext).locate(elemBinding)
@@ -1515,7 +1515,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.getElementText" should "return text attribute on element with null text value, and non null text attribute" in {
-    val elemBinding = LocatorBinding("element", "id", "elem", None)
+    val elemBinding = LocatorBinding("element", "id", "elem", None, None)
     val mockElement = mock[WebElement]
     doReturn(elemBinding).when(envContext).getLocatorBinding("element")
     doReturn(mockElement).when(webContext).locate(elemBinding)
@@ -1526,7 +1526,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.getElementText" should "return text on element with non null text value" in {
-    val elemBinding = LocatorBinding("element", "id", "elem", None)
+    val elemBinding = LocatorBinding("element", "id", "elem", None, None)
     val mockElement = mock[WebElement]
     doReturn(elemBinding).when(envContext).getLocatorBinding("element")
     doReturn(mockElement).when(webContext).locate(elemBinding)
@@ -1536,7 +1536,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.getElementSelection by text" should "return blank when no options are selected" in {
-    val elemBinding = LocatorBinding("element", "id", "elem", None)
+    val elemBinding = LocatorBinding("element", "id", "elem", None, None)
     val mockElement = mock[WebElement]
     val mockSelect = mock[Select]
     doReturn(elemBinding).when(envContext).getLocatorBinding("element")
@@ -1548,7 +1548,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.getElementSelection by text" should "return text attribute of selected options" in {
-    val elemBinding = LocatorBinding("element", "id", "elem", None)
+    val elemBinding = LocatorBinding("element", "id", "elem", None, None)
     val mockElement = mock[WebElement]
     val mockSelect = mock[Select]
     val mockOptionElement1 = mock[WebElement]
@@ -1564,7 +1564,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.getElementSelection by text" should "return text value of selected options" in {
-    val elemBinding = LocatorBinding("element", "id", "elem", None)
+    val elemBinding = LocatorBinding("element", "id", "elem", None, None)
     val mockElement = mock[WebElement]
     val mockSelect = mock[Select]
     val mockOptionElement1 = mock[WebElement]
@@ -1580,7 +1580,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.getElementSelection by value" should "return blank when no options are selected" in {
-    val elemBinding = LocatorBinding("element", "id", "elem", None)
+    val elemBinding = LocatorBinding("element", "id", "elem", None, None)
     val mockElement = mock[WebElement]
     val mockSelect = mock[Select]
     doReturn(elemBinding).when(envContext).getLocatorBinding("element")
@@ -1592,7 +1592,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.getElementSelection by value" should "return value attribute of selected options" in {
-    val elemBinding = LocatorBinding("element", "id", "elem", None)
+    val elemBinding = LocatorBinding("element", "id", "elem", None, None)
     val mockElement = mock[WebElement]
     val mockSelect = mock[Select]
     val mockOptionElement1 = mock[WebElement]

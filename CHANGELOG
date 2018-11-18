@@ -1,15 +1,46 @@
 2.28.0
 ======
-November 27, 2018
+November 18, 2018
 - Allow `wait` and `timeout` literals to be used interchangeably in all DSL steps
+- Add support to DSL for indexed locators:
+  - `<element> can be located by <id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript> "<expression>" at index <index>`
+  - `<element> can be located at index <index> by <id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript> "<expression>"`
+  - `<element> can be located by <id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript> "<expression>" at index <index> in <container>`
+  - ```
+    <element> can be located at index <index> by
+      | <locator 1>  | <expression 1> |
+      | <locator 2>  | <expression 2> |
+      | ..           | ..             |
+      | <locator N>  | <expression N> |
+    ```
+  - `<element> can be located by <id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript> "<expression>" at index <index> with no <wait|timeout>`
+  - `<element> can be located by <id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript> "<expression>" at index <index> with <timeoutPeriod> second <wait|timeout>`
+  - `<element> can be located by <id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript> "<expression>" at index <index> in <container> with no <wait|timeout>`
+  - `<element> can be located by <id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript> "<expression>" at index <index> in <container> with <timeoutPeriod> second <wait|timeout>`
+  - ```
+    <element> can be located at index <index> with no <wait|timeout> by
+      | <locator 1>  | <expression 1> |
+      | <locator 2>  | <expression 2> |
+      | ..           | ..             |
+      | <locator N>  | <expression N> |
+    ```
+  - ```
+    <element> can be located at index <index> with <timeoutPeriod> second <wait|timeout> by
+      | <locator 1>  | <expression 1> |
+      | <locator 2>  | <expression 2> |
+      | ..           | ..             |
+      | <locator N>  | <expression N> |
+    ```
 
 2.27.0
 ======
-November 27, 2018
+November 17, 2018
 - Add `gwen.web.browser.size=width x height` setting for controlling browser window size
 - Retry failed web actions until `gwen.web.wait.seconds` expires
 - Wrap all sendKeys operations in web driver actions (cross browser fix)
 - Upgrade Selenium WebDriver from v3.141.0 to v3.141.59
+- Update Gwen core from v2.15.2 to v[2.16.2](https://github.com/gwen-interpreter/gwen/releases/tag/v2.16.3)
+  - Add settings exception for raising invalid settings errors
 
 2.26.5
 ======

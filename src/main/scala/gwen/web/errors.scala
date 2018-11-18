@@ -31,6 +31,7 @@ package gwen {
       def noSuchWindowError(msg: String) = throw new NoSuchWindowException(msg)
       def unsupportedModifierKeyError(key: String) = throw new UnsupportedModifierKeyException(key)
       def waitTimeoutError(timeoutSecs: Long, reason: String) = throw new WaitTimeoutException(timeoutSecs, reason)
+      def noSuchElementError(msg: String) = throw new NoSuchElementException(msg)
 
       /** Thrown when a web element cannot be located. */
       class LocatorBindingException(element: String, reason: String) extends GwenException(s"Could not locate $element: $reason")
