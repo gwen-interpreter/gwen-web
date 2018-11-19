@@ -1,3 +1,8 @@
+2.28.1
+======
+November 19, 2018
+- Improve locator error handling and retries
+
 2.28.0
 ======
 November 18, 2018

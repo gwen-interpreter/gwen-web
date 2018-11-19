@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Branko Juric, Brady Wood
+ * Copyright 2014-2018 Branko Juric, Brady Wood
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@ import java.util.concurrent.TimeUnit
 
 import org.openqa.selenium.{By, NoSuchElementException, WebElement}
 import gwen.web.errors.{WaitTimeoutException, locatorBindingError, noSuchElementError}
-import gwen.Predefs.Kestrel
 import com.typesafe.scalalogging.LazyLogging
 import org.apache.commons.text.StringEscapeUtils
 
@@ -119,7 +118,7 @@ trait WebElementLocator extends LazyLogging {
               driver.manage().timeouts().implicitlyWait(if (wait > 0) wait else 200, TimeUnit.MILLISECONDS)
             }
           }
-          (locatorType match {
+          locatorType match {
             case "id" => getElement(By.id(expression), locator)
             case "name" => getElement(By.name(expression), locator)
             case "tag name" => getElement(By.tagName(expression), locator)
@@ -131,15 +130,6 @@ trait WebElementLocator extends LazyLogging {
             case "javascript" => getElementByJavaScript(s"$expression", locator)
             case "cache" => webContext.getCachedWebElement(elementName)
             case _ => locatorBindingError(elementName, s"unsupported locator: $locator")
-          }) tap { optWebElement =>
-            optWebElement foreach { webElement =>
-              if (!webElement.isDisplayed) {
-                webContext.scrollIntoView(webElement, ScrollTo.top)
-              }
-              if (!locator.isContainer) {
-                webContext.highlightElement(webElement)
-              }
-            }
           }
         } finally {
           // restore default implicit wait if overriden
@@ -245,7 +235,7 @@ trait WebElementLocator extends LazyLogging {
           driver.manage().timeouts().implicitlyWait(if (wait > 0) wait else 200, TimeUnit.MILLISECONDS)
         }
       }
-      (locatorType match {
+      locatorType match {
         case "id" => getAllElements(By.id(expression), locator)
         case "name" => getAllElements(By.name(expression), locator)
         case "tag name" => getAllElements(By.tagName(expression), locator)
@@ -256,15 +246,6 @@ trait WebElementLocator extends LazyLogging {
         case "partial link text" => getAllElements(By.partialLinkText(expression), locator)
         case "javascript" => getAllElementsByJavaScript(s"$expression", locator)
         case _ => locatorBindingError(elementName, s"unsupported locator: $locator")
-      }) tap { webElements =>
-        webElements.headOption foreach { webElement =>
-          if (!webElement.isDisplayed) {
-            webContext.scrollIntoView(webElement, ScrollTo.top)
-          }
-          if (!locator.isContainer) {
-            webContext.highlightElement(webElement)
-          }
-        }
       }
     } finally {
       // restore default implicit wait if overriden

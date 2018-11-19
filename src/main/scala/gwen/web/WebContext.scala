@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Brady Wood, Branko Juric
+ * Copyright 2015-2018 Brady Wood, Branko Juric
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -135,8 +135,14 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
         var error: Option[Throwable] = None
         try {
           waitUntil(action.getOrElse("action")) {
-            val webElement = locate(elementBinding)
             try {
+              val webElement = locate(elementBinding)
+              if (!webElement.isDisplayed) {
+                scrollIntoView(webElement, ScrollTo.top)
+              }
+              if (!locator.isContainer) {
+                highlightElement(webElement)
+              }
               result = Option(operation(webElement))
               error = None
               true
@@ -148,8 +154,7 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
             }
           }
         } catch {
-          case e: Throwable =>
-            if (error.isEmpty) error = Some(e)
+          case e: Throwable if result.isEmpty && error.isEmpty => error = Some(e)
         }
         if (result.isEmpty) error.map(e => throw e)
         result tap { _ =>
