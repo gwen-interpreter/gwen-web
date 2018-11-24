@@ -16,8 +16,7 @@
 
 package gwen.web
 
-import gwen.{Settings, UserOverrides}
-import gwen.Predefs.Kestrel
+import gwen.Settings
 import org.mockito.Mockito.verify
 import org.openqa.selenium.WebDriver
 import org.scalatest.FlatSpec
