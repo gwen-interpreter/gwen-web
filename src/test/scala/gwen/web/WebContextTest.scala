@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2015 Brady Wood, Branko Juric
+ * Copyright 2014-2018 Brady Wood, Branko Juric
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -111,12 +111,12 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.waitUntil" should "return when predicate returns true" in {
-    webContext.waitUntil("testing", 10) { true }
+    webContext.waitUntil(10) { true }
   }
 
   "WebContext.waitUntil" should "timeout when predicate returns false" in {
     intercept[WaitTimeoutException] {
-      webContext.waitUntil("testing", 1) { false }
+      webContext.waitUntil(1) { false }
     }
   }
 
@@ -1379,7 +1379,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("element", "id", "elem", None, None)
     val mockElement = mock[WebElement]
     val mockActions = mock[Actions]
-    doThrow(new LocatorBindingException("element", "not found")).when(envContext).getLocatorBinding("element")
+    doThrow(new LocatorBindingException("element not bound")).when(envContext).getLocatorBinding("element")
     doReturn(elemBinding).when(envContext).getLocatorBinding("element of context")
     doReturn(mockElement).when(webContext).locate(elemBinding)
     doReturn(mockActions).when(webContext).createActions(mockWebDriver)
@@ -1390,8 +1390,8 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.performActionInContext" should "fail when elmenet cannot be located" in {
-    doThrow(new LocatorBindingException("element", "not found")).when(envContext).getLocatorBinding("element")
-    doThrow(new LocatorBindingException("element", "not found")).when(envContext).getLocatorBinding("element of context")
+    doThrow(new LocatorBindingException("element not bound")).when(envContext).getLocatorBinding("element")
+    doThrow(new LocatorBindingException("element not bound")).when(envContext).getLocatorBinding("element of context")
     intercept[LocatorBindingException] {
       webContext.performActionInContext("move to", "element", "context")
     }

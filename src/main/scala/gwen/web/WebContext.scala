@@ -18,14 +18,15 @@ package gwen.web
 import com.typesafe.scalalogging.LazyLogging
 import gwen.Predefs.Kestrel
 import gwen.errors.javaScriptError
-import gwen.web.errors.{LocatorBindingException, WaitTimeoutException, unsupportedModifierKeyError, waitTimeoutError}
+import gwen.web.errors._
 import org.apache.commons.io.FileUtils
 import org.openqa.selenium._
 import org.openqa.selenium.interactions.Actions
 import org.openqa.selenium.support.ui.{Select, WebDriverWait}
 
 import scala.collection.JavaConverters._
-import scala.util.Try
+import scala.concurrent.duration.Duration
+import scala.util.{Failure, Success, Try}
 
 /**
   * The web context. All web driver interactions happen here (and will do nothing when --dry-run is enabled).
@@ -96,45 +97,21 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
   }
 
   /**
-    * Performs a function on a web element and transparently re-locates elements and
-    * re-attempts the function if the web driver throws an exception.
+    * Locates a web element and performs an operation on it.
     *
-    * @param action the action string
-    * @param elementBinding the web element locator binding
-    * @param f the function to perform on the element
-    */
-  private def withWebElement[T](action: String, elementBinding: LocatorBinding)(f: WebElement => T): Option[T] =
-     withWebElement(Some(action), elementBinding)(f)
-
-  /**
-    * Performs a function on a web element and transparently re-locates elements and
-    * re-attempts the function if the web driver throws an exception.
-    *
-    * @param elementBinding the web element locator binding
-    * @param f the function to perform on the element
-    */
-  private def withWebElement[T](elementBinding: LocatorBinding)(f: WebElement => T): Option[T] =
-     withWebElement(None, elementBinding)(f)
-
-  /**
-    * Locates a web element and performs a operation on it.
-    *
-    * @param action optional action string
     * @param elementBinding the web element locator binding
     * @param operation the operation to perform on the element
     */
-  private def withWebElement[T](action: Option[String], elementBinding: LocatorBinding)(operation: WebElement => T): Option[T] =
+  private def withWebElement[T](elementBinding: LocatorBinding)(operation: WebElement => T): Option[T] =
     env.evaluate(None.asInstanceOf[Option[T]]) {
       val locator = elementBinding.locators.head
       val wHandle = locator.container.flatMap(_ => withWebDriver(_.getWindowHandle))
       try {
-        action.foreach { actionString =>
-          logger.debug(s"$actionString ${elementBinding.element}")
-        }
-        var result: Option[T] = None
-        var error: Option[Throwable] = None
+        var result: Option[Try[T]] = None
+        val start = System.nanoTime()
         try {
-          waitUntil(action.getOrElse("action")) {
+          var lapsed = 0L
+          waitUntil {
             try {
               val webElement = locate(elementBinding)
               if (!webElement.isDisplayed) {
@@ -143,24 +120,43 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
               if (!locator.isContainer) {
                 highlightElement(webElement)
               }
-              result = Option(operation(webElement))
-              error = None
+              val res = operation(webElement)
+              result = Some(Success(res))
               true
             } catch {
               case e: Throwable =>
-                error = Some(e)
-                Thread.sleep(200)
-                false
+                lapsed = Duration.fromNanos(System.nanoTime() - start).toSeconds
+                if (e.isInstanceOf[InvalidElementStateException] || e.isInstanceOf[NoSuchElementException]) {
+                  if (lapsed >= elementBinding.timeoutSeconds) {
+                    result =  if (e.isInstanceOf[WebElementNotFoundException]) {
+                      Some(Failure(e))
+                    } else {
+                      Some(Try(elementNotInteractableError(elementBinding, e)))
+                    }
+                    true
+                  } else {
+                    result = Some(Failure(e))
+                    false
+                  }
+                } else {
+                  result = Some(Failure(e))
+                  false
+                }
             }
           }
         } catch {
-          case e: Throwable if result.isEmpty && error.isEmpty => error = Some(e)
+          case _: WaitTimeoutException if result.exists(_.isFailure) =>
+            waitTimeoutError(WebSettings.`gwen.web.wait.seconds`, result.get.failed.get)
         }
-        if (result.isEmpty) error.map(e => throw e)
-        result tap { _ =>
-          if (WebSettings.`gwen.web.capture.screenshots`) {
-            captureScreenshot(false)
-          }
+        result.map {
+          case Success(res) =>
+            res tap { _ =>
+              if (WebSettings.`gwen.web.capture.screenshots`) {
+                captureScreenshot(false)
+              }
+            }
+          case Failure(e) =>
+            throw e
         }
       } finally {
         wHandle foreach { handle =>
@@ -218,44 +214,29 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
     * Waits for a given condition to be true. Errors on time out
     * after "gwen.web.wait.seconds" (default is 10 seconds)
     *
-    * @param reason the reason for waiting (used to report timeout error)
     * @param condition the boolean condition to wait for (until true)
     */
-  def waitUntil(reason: String)(condition: => Boolean): Unit = {
-    waitUntil(reason, WebSettings.`gwen.web.wait.seconds`) { condition }
+  def waitUntil(condition: => Boolean): Unit = {
+    waitUntil(WebSettings.`gwen.web.wait.seconds`) { condition }
   }
 
   /**
     * Waits until a given condition is ready for a given number of seconds.
     * Errors on given timeout out seconds.
     *
-    * @param reason reason for waiting (used to report timeout error)
     * @param timeoutSecs the number of seconds to wait before timing out
     * @param condition the boolean condition to wait for (until true)
     */
-  def waitUntil(reason: String, timeoutSecs: Long)(condition: => Boolean): Unit = {
-    def doWaitUntil(webDriver: WebDriver, timeout: Long) {
-      new WebDriverWait(webDriver, timeout).until {
-        (_: WebDriver) => condition
-      }
-    }
-    // some drivers intermittently throw javascript errors, so have to track timeout and retry
-    withWebDriver { webDriver =>
-      val start = System.nanoTime()
-      var timeout = timeoutSecs
-      while (timeout > -1) {
-        try {
-          doWaitUntil(webDriver, timeout)
-          timeout = -1
-        } catch {
-          case e: TimeoutException =>
-            waitTimeoutError(timeoutSecs, reason)
-          case e: WebDriverException =>
-            Thread.sleep(WebSettings`gwen.web.throttle.msecs`)
-            timeout = timeoutSecs - ((System.nanoTime() - start) / 1000000000L)
-            if (timeout <= 0) throw e
+  def waitUntil(timeoutSecs: Long)(condition: => Boolean): Unit = {
+    try {
+      withWebDriver { webDriver =>
+        new WebDriverWait(webDriver, timeoutSecs).until {
+          (_: WebDriver) => condition
         }
       }
+    } catch {
+      case e: TimeoutException =>
+        waitTimeoutError(timeoutSecs, e)
     }
   }
 
@@ -332,7 +313,7 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
     * @param negate whether or not to negate the check
     */
   def waitForElementState(elementBinding: LocatorBinding, state: String, negate: Boolean): Unit =
-    waitUntil(s"waiting until ${elementBinding.element} is${if(negate) " not" else ""} $state") {
+    waitUntil {
       isElementState(elementBinding, state, negate)
     }
 
@@ -368,7 +349,7 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
     }
   }
 
-   private[web] def createSelect(webElement: WebElement): Select = new Select(webElement)
+  private[web] def createSelect(webElement: WebElement): Select = new Select(webElement)
 
   /**
     * Selects a value in a dropdown (select control) by visible text.
@@ -537,7 +518,7 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
   }
 
   private def performScriptAction(action: String, javascript: String, elementBinding: LocatorBinding) {
-    withWebElement(action, elementBinding) { webElement =>
+    withWebElement(elementBinding) { webElement =>
       executeJS(s"(function(element) { $javascript })(arguments[0])", webElement)
       env.bindAndWait(elementBinding.element, action, "true")
     }
@@ -562,7 +543,7 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
             performAction(action, elementBinding)
           } catch {
             case e2: LocatorBindingException =>
-              throw new LocatorBindingException(s"'$element', '$context', or '$element of $context'", s"${e1.getMessage}, ${e2.getMessage}")
+              throw new LocatorBindingException(s"${e1.getMessage}. ${e2.getMessage}.")
           }
       }
   }
@@ -574,8 +555,8 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
         buildAction(moveTo).build().perform()
       }
     }
-    withWebElement(action, contextBinding) { contextElement =>
-      withWebElement(action, elementBinding) { webElement =>
+    withWebElement(contextBinding) { contextElement =>
+      withWebElement(elementBinding) { webElement =>
         action match {
           case "click" => perform(webElement, contextElement) { _.click() }
           case "right click" => perform(webElement, contextElement) { _.contextClick() }

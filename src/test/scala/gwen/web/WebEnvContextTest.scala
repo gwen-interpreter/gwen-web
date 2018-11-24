@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2015 Brady Wood, Branko Juric
+ * Copyright 2014-2018 Brady Wood, Branko Juric
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -203,15 +203,15 @@ class WebEnvContextTest extends FlatSpec with Matchers with MockitoSugar {
     }
   }
 
-  "Attempt to locate unbound element "should "throw locator binding not found error" in {
+  "Attempt to locate unbound element "should "throw locator bindingerror" in {
     val env = newEnv()
-    shouldFailWithLocatorBindingError("username", env, "Could not locate username: locator binding not found: username/locator")
+    shouldFailWithLocatorBindingError("username", env, "Undefined locator binding for username: username/locator")
   }
 
-  "Attempt to locate element with unbound locator" should "throw locator not found error" in {
+  "Attempt to locate element with unbound locator" should "throw locator binding error" in {
     val env = newEnv()
     env.scopes.addScope("login").set("username/locator", "id")
-    shouldFailWithLocatorBindingError("username", env, "Could not locate username: locator lookup binding not found: username/locator/id")
+    shouldFailWithLocatorBindingError("username", env, "Undefined locator lookup binding for username: username/locator/id")
   }
 
   def newEnv(dry:Boolean = false): WebEnvContext = {

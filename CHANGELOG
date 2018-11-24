@@ -1,3 +1,17 @@
+2.28.2
+======
+November 24, 2018
+- Fix timeout overrides for javascript locators
+- Improve element locator performance and robustness
+  - If element is not present in DOM (and hence not found), a WebElementNotFoundException will be thrown
+  - If element is not present in DOM but not interactable, a WebElementNotInteractableException will be thrown
+  - Both exceptions are treated the same way and are not thrown during retries until in the locator timeout period has
+    expired. The timeout period defined by either:
+    - the locator level wait/timeout assigned to an element (overridden locator level timeout)
+    - the global locator wait/timeout setting: `gwen.web.locator.wait.seconds` (configured locator timeout)
+    - the global wait/timeout setting: `gwen.web.wait.seconds` (configured global timeout)
+    - or 10 seconds (default global timeout)
+
 2.28.1
 ======
 November 19, 2018

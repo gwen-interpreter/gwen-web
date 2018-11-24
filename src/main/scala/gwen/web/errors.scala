@@ -22,31 +22,46 @@ package gwen {
   package web {
 
     import org.openqa.selenium.Keys
+    import org.openqa.selenium.NoSuchElementException
     import gwen.errors.GwenException
 
     package object errors {
 
-      def locatorBindingError(element: String, reason: String) = throw new LocatorBindingException(element, reason)
+      def locatorBindingError(msg: String) = throw new LocatorBindingException(msg)
       def unsupportedWebDriverError(driverName: String) = throw new UnsupportedWebDriverException(driverName)
       def noSuchWindowError(msg: String) = throw new NoSuchWindowException(msg)
       def unsupportedModifierKeyError(key: String) = throw new UnsupportedModifierKeyException(key)
-      def waitTimeoutError(timeoutSecs: Long, reason: String) = throw new WaitTimeoutException(timeoutSecs, reason)
-      def noSuchElementError(msg: String) = throw new NoSuchElementException(msg)
+      def waitTimeoutError(timeoutSecs: Long, cause: Throwable) = throw new WaitTimeoutException(timeoutSecs, cause)
+      def elementNotInteractableError(elementBinding: LocatorBinding, cause: Throwable) =
+        throw new WebElementNotInteractableException(elementBinding, cause)
+      def elementNotFoundError(element: String, cause: Throwable = null) =
+        throw new WebElementNotFoundException(element, cause)
 
-      /** Thrown when a web element cannot be located. */
-      class LocatorBindingException(element: String, reason: String) extends GwenException(s"Could not locate $element: $reason")
+      /** Thrown when an unsupported of . */
+      class LocatorBindingException(msg: String) extends GwenException(msg)
 
       /** Thrown when an unsupported web driver is detected. */
-      class UnsupportedWebDriverException(driverName: String) extends GwenException(s"Unsupported web driver: $driverName")
+      class UnsupportedWebDriverException(driverName: String)
+        extends GwenException(s"Unsupported web driver: $driverName")
       
       /** Thrown when an attempt is made to switch to a window that does not exist. */
       class NoSuchWindowException(msg: String) extends GwenException(msg)
 
       /** Thrown when an attempt is made to send an unsupported key to a field. */
-      class UnsupportedModifierKeyException(key: String) extends GwenException(s"Unsupported modifier key '$key'. Supported modifiers include: ${Keys.values().map(_.name()).mkString(",")}")
+      class UnsupportedModifierKeyException(key: String)
+        extends GwenException(s"Unsupported modifier key '$key'. Supported modifiers include: ${Keys.values().map(_.name()).mkString(",")}")
+
+      /** Thrown when a timeout error occurs. */
+      class WaitTimeoutException(timeoutSecs: Long, cause: Throwable)
+        extends GwenException(s"Operation timed out after $timeoutSecs second(s)", cause)
+
+      /** Thrown when a web element cannot be interacted with. */
+      class WebElementNotInteractableException(elementBinding: LocatorBinding, cause: Throwable)
+        extends NoSuchElementException(s"Could not interact with element: ${elementBinding.element}", cause)
 
       /** Thrown when a web element cannot be located. */
-      class WaitTimeoutException(timeoutSecs: Long, reason: String) extends GwenException(s"Timed out after $timeoutSecs second(s) $reason")
+      class WebElementNotFoundException(element: String, cause: Throwable)
+        extends NoSuchElementException(s"Could not locate element: $element", cause)
 
     }
   }

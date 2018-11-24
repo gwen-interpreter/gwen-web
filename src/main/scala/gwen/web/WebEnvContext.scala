@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Brady Wood, Branko Juric
+ * Copyright 2014-2018 Brady Wood, Branko Juric
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -147,7 +147,7 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
           case Some(boundValue) =>
             val locators = boundValue.split(",") flatMap { locatorType =>
               if (!locatorType.matches("(id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)"))
-                locatorBindingError(element, s"unsupported locator type: $locatorType")
+                locatorBindingError(s"Unsupported locator type defined for $element: $locatorType")
               val lookupBinding = interpolate(s"$element/locator/$locatorType")(getBoundReferenceValue)
               scopes.getOpt(lookupBinding) match {
                 case Some(expression) =>
@@ -162,7 +162,7 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
                   val index = scopes.getOpt(interpolate(s"$element/locator/$locatorType/index")(getBoundReferenceValue)).map(_.toInt)
                   Some(Locator(locatorType, expr, container, timeout, index))
                 case None =>
-                  if (optional) None else locatorBindingError(element, s"locator lookup binding not found: $lookupBinding")
+                  if (optional) None else locatorBindingError(s"Undefined locator lookup binding for $element: $lookupBinding")
               }
             }
             if (locators.nonEmpty) {
@@ -174,7 +174,7 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
               }
             }
             else None
-          case None => if (optional) None else locatorBindingError(element, s"locator binding not found: $locatorBinding")
+          case None => if (optional) None else locatorBindingError(s"Undefined locator binding for $element: $locatorBinding")
         }
       case Some(x) if x.isInstanceOf[WebElement] => Some(LocatorBinding(element, "cache", element, None, None, None))
       case _ => None
@@ -205,7 +205,7 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
       val javascript = scopes.get(s"$condition/javascript")
       logger.info(s"waiting until $condition (post-$action condition)")
       logger.debug(s"Waiting for script to return true: $javascript")
-      webContext.waitUntil(s"waiting until $condition (post-$action condition)") {
+      webContext.waitUntil {
         evaluateJSPredicate(javascript)
       }
     }
@@ -227,7 +227,7 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     var actualValue = actual()
     var polled = false
     try {
-      webContext.waitUntil("waiting for comparison") {
+      webContext.waitUntil {
         if (polled) {
           actualValue = actual()
         }

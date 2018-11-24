@@ -20,8 +20,9 @@ import java.util
 import java.util.concurrent.TimeUnit
 
 import org.openqa.selenium.{By, NoSuchElementException, WebElement}
-import gwen.web.errors.{WaitTimeoutException, locatorBindingError, noSuchElementError}
+import gwen.web.errors._
 import com.typesafe.scalalogging.LazyLogging
+import gwen.errors.ScriptException
 import org.apache.commons.text.StringEscapeUtils
 
 import scala.collection.JavaConverters._
@@ -45,7 +46,7 @@ trait WebElementLocator extends LazyLogging {
   private[web] def locate(elementBinding: LocatorBinding): WebElement = {
     val elementName = elementBinding.element
     val locators = elementBinding.locators
-    var result: Try[WebElement] = Failure(new NoSuchElementException(s"Could not locate $elementName by ${locators.mkString(" or ")}"))
+    var result: Try[WebElement] = Try(elementNotFoundError(elementName))
     if (locators.size == 1) {
       val locator = locators.head
       try {
@@ -53,7 +54,8 @@ trait WebElementLocator extends LazyLogging {
           result = Success(webElement)
         }
       } catch {
-        case _: org.openqa.selenium.NoSuchElementException =>
+        case e: NoSuchElementException =>
+          result = Try(elementNotFoundError(elementName, e))
       }
     } else {
       // multiple locators: return first one that resolves to an element
@@ -62,15 +64,10 @@ trait WebElementLocator extends LazyLogging {
         val wait = WebSettings.`gwen.web.throttle.msecs`
         driver.manage().timeouts().implicitlyWait(if (wait > 0) wait else 200, TimeUnit.MILLISECONDS)
         try {
-          // keep trying all locators until one of them resolves or timeout happens
-          try {
-            waitUntil(s"locating element by ${locators.mkString(" or ")}") {
-              val iter = locators.iterator.flatMap(loc => Try(findElementByLocator(elementName, loc)).getOrElse(None))
-              if (iter.hasNext) result = Success(iter.next)
-              result.isSuccess
-            }
-          } catch {
-            case _: WaitTimeoutException =>
+          // return the first one that resolves
+          val iter = locators.iterator.flatMap(loc => Try(findElementByLocator(elementName, loc)).getOrElse(None))
+          if (iter.hasNext) {
+            result = Success(iter.next)
           }
         } finally {
           // restore implicit waits
@@ -104,7 +101,7 @@ trait WebElementLocator extends LazyLogging {
         if (index < elements.size) {
           Option(elements(index))
         } else {
-          noSuchElementError(s"No such element at index $index for element named '$elementName', locator: $locator")
+          elementNotFoundError(elementName, null)
         }
       case _ =>
         val locatorType = locator.locatorType
@@ -127,9 +124,15 @@ trait WebElementLocator extends LazyLogging {
             case "class name" => getElement(By.className(expression), locator)
             case "link text" => getElement(By.linkText(expression), locator)
             case "partial link text" => getElement(By.partialLinkText(expression), locator)
-            case "javascript" => getElementByJavaScript(s"$expression", locator)
+            case "javascript" =>
+              try {
+                getElementByJavaScript(s"$expression", locator)
+              } catch {
+                case e: ScriptException =>
+                  elementNotFoundError(elementName, e)
+              }
             case "cache" => webContext.getCachedWebElement(elementName)
-            case _ => locatorBindingError(elementName, s"unsupported locator: $locator")
+            case _ => locatorBindingError(s"Unsupported locator defined for $elementName: $locator")
           }
         } finally {
           // restore default implicit wait if overriden
@@ -200,27 +203,23 @@ trait WebElementLocator extends LazyLogging {
     */
   private def getElementByJavaScript(javascript: String, locator: Locator): Option[WebElement] = {
     var element: Option[WebElement] = None
-    webContext.waitUntil(s"locating element by javascript: $javascript", locator.timeoutSeconds) {
-      val result = locator.container.fold(webContext.executeJS(s"return $javascript")) { containerName =>
-        getContainerElement(webContext.getLocatorBinding(containerName)) match {
-            case Some(containerElem) =>
-              webContext.executeJS(s"return (function(containerElem) { return $javascript })(arguments[0])", containerElem)
-            case _ =>
-              webContext.executeJS(s"return $javascript")
-          }
-      }
-      element = result match {
-        case elems: util.ArrayList[_] =>
-          if (!elems.isEmpty) Option(elems.get(0).asInstanceOf[WebElement])
-          else None
-        case elem => Option(elem) match {
-          case Some(e) => Option(e.asInstanceOf[WebElement])
-          case None => None
+    val result = locator.container.fold(webContext.executeJS(s"return $javascript")) { containerName =>
+      getContainerElement(webContext.getLocatorBinding(containerName)) match {
+          case Some(containerElem) =>
+            webContext.executeJS(s"return (function(containerElem) { return $javascript })(arguments[0])", containerElem)
+          case _ =>
+            webContext.executeJS(s"return $javascript")
         }
-      }
-      element.isDefined
     }
-    element
+    result match {
+      case elems: util.ArrayList[_] =>
+        if (!elems.isEmpty) Option(elems.get(0).asInstanceOf[WebElement])
+        else None
+      case elem => Option(elem) match {
+        case Some(e) => Option(e.asInstanceOf[WebElement])
+        case None => None
+      }
+    }
   }
 
   /** Finds all elements bound by the given locator expression. */
@@ -244,8 +243,14 @@ trait WebElementLocator extends LazyLogging {
         case "class name" => getAllElements(By.className(expression), locator)
         case "link text" => getAllElements(By.linkText(expression), locator)
         case "partial link text" => getAllElements(By.partialLinkText(expression), locator)
-        case "javascript" => getAllElementsByJavaScript(s"$expression", locator)
-        case _ => locatorBindingError(elementName, s"unsupported locator: $locator")
+        case "javascript" =>
+          try {
+            getAllElementsByJavaScript(s"$expression", locator)
+          } catch {
+            case e: ScriptException =>
+              elementNotFoundError(elementName, e)
+          }
+        case _ => locatorBindingError(s"Unsupported locator defined for $elementName: $locator")
       }
     } finally {
       // restore default implicit wait if overriden
@@ -287,7 +292,7 @@ trait WebElementLocator extends LazyLogging {
     */
   private def getAllElementsByJavaScript(javascript: String, locator: Locator): List[WebElement] = {
     var elements: List[WebElement] = Nil
-    webContext.waitUntil(s"locating elements by javascript: $javascript", locator.timeoutSeconds) {
+    webContext.waitUntil(locator.timeoutSeconds) {
       elements = webContext.executeJS(s"return $javascript") match {
         case elems: util.ArrayList[_] =>
           elems.asScala.toList.map(_.asInstanceOf[WebElement])
@@ -310,6 +315,7 @@ trait WebElementLocator extends LazyLogging {
   *  @param locators the locators
   */
 case class LocatorBinding(element: String, locators: List[Locator]) {
+  lazy val timeoutSeconds: Long = locators.map(_.timeoutSeconds).sum
   /** Gets the javascript equivalent of this locator binding (used as fallback on stale element reference). */
   def jsEquivalent: LocatorBinding = {
     val jsLocators = locators.map { loc =>
@@ -338,6 +344,7 @@ case class LocatorBinding(element: String, locators: List[Locator]) {
     }
     LocatorBinding(element, jsLocators)
   }
+  def withJSEquivalent = LocatorBinding(element, locators ++ List(jsEquivalent.locators.head))
 }
 
 /** Locator binding factory companion. */

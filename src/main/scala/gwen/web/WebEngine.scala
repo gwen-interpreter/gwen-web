@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Branko Juric, Brady Wood
+ * Copyright 2014-2018 Branko Juric, Brady Wood
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -152,25 +152,25 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
 
       case r"""I wait for (.+?)$element text for (.+?)$seconds second(?:s?)""" =>
         val elementBinding = env.getLocatorBinding(element)
-        webContext.waitUntil(s"waiting for $element text", seconds.toInt) {
+        webContext.waitUntil(seconds.toInt) {
           webContext.waitForText(elementBinding)
         }
 
       case r"""I wait for (.+?)$element text""" =>
         val elementBinding = env.getLocatorBinding(element)
-        webContext.waitUntil(s"waiting for $element text") {
+        webContext.waitUntil {
           webContext.waitForText(elementBinding)
         }
 
       case r"""I wait for (.+?)$element for (.+?)$seconds second(?:s?)""" =>
         val elementBinding = env.getLocatorBinding(element)
-        webContext.waitUntil(s"waiting for $element", seconds.toInt) {
+        webContext.waitUntil(seconds.toInt) {
           Try(webContext.locate(elementBinding)).isSuccess
         }
 
       case r"""I wait for (.+?)$$$element""" =>
         val elementBinding = env.getLocatorBinding(element)
-        webContext.waitUntil(s"waiting for $element") {
+        webContext.waitUntil {
           Try(webContext.locate(elementBinding)).isSuccess
         }
 
@@ -184,7 +184,7 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
         env.scopes.set(s"$element/${WebEvents.EventToAction(event)}/condition", condition)
 
       case r"""I wait until "(.+?)$javascript"""" => step.orDocString(javascript) tap { javascript =>
-        webContext.waitUntil(s"waiting for javascript to return true: $javascript") {
+        webContext.waitUntil {
           env.evaluateJSPredicate(javascript)
         }
       }
@@ -196,7 +196,7 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
 
       case r"""I wait until (.+?)$$$condition""" =>
         val javascript = env.scopes.get(s"$condition/javascript")
-        webContext.waitUntil(s"waiting until $condition") {
+        webContext.waitUntil {
           env.evaluateJSPredicate(javascript)
         }
 
@@ -762,7 +762,7 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
       var iteration = 0L
       val start = System.nanoTime
       try {
-        env.webContext.waitUntil(s"repeating $operation $condition", timeout.toSeconds) {
+        env.webContext.waitUntil(timeout.toSeconds) {
           iteration = iteration + 1
           env.featureScope.set("iteration number", iteration.toString)
           operation match {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Brady Wood, Branko Juric
+ * Copyright 2014-2018 Brady Wood, Branko Juric
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ import org.scalatest.mockito.MockitoSugar
 import gwen.eval.ScopedDataStack
 import gwen.eval.GwenOptions
 import gwen.Settings
-import gwen.web.errors.{LocatorBindingException, WaitTimeoutException}
+import gwen.web.errors._
 import org.openqa.selenium.WebDriver.{Options, TargetLocator, Timeouts}
 import org.openqa.selenium.NoSuchElementException
 import org.mockito.Matchers.{anyVararg, same}
@@ -69,7 +69,7 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar wit
     mockDriverManager = mock[DriverManager]
   }
 
-  "Attempt to locate non existent element" should "throw no such element error" in {
+  "Attempt to locate non existent element" should "throw no element not found error" in {
 
     val mockWebDriver: FirefoxDriver = mock[FirefoxDriver]
     val locator = newLocator(None, mockWebDriver)
@@ -78,10 +78,16 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar wit
     when(mockWebDriverOptions.timeouts()).thenReturn(mockWebDriverTimeouts)
     when(mockWebDriver.findElement(By.id("mname"))).thenReturn(null)
     
-    val e = intercept[NoSuchElementException] {
-      locator.locate(LocatorBinding("middleName", "id", "mname", None, None))
+    val e = intercept[WebElementNotFoundException] {
+      try {
+        locator.locate(LocatorBinding("middleName", "id", "mname", None, None))
+      } catch {
+        case e: Throwable =>
+          e.printStackTrace()
+          throw e
+      }
     }
-    e.getMessage should startWith ("Could not locate middleName by (id: mname)")
+    e.getMessage should startWith ("Could not locate element: middleName")
   }
   
   "Attempt to locate existing element by id" should "return the element" in {
@@ -442,7 +448,7 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar wit
 
   }
   
-  "Timeout on locating element by javascript" should "throw error" in {
+  "Timeout on locating element by javascript" should "throw not found error" in {
     
     val locatorType = "javascript"
     val lookup = "document.getElementById('username')"
@@ -453,7 +459,7 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar wit
     when(mockWebDriverOptions.timeouts()).thenReturn(mockWebDriverTimeouts)
     doReturn(null).when(mockWebDriver).executeScript(same(s"return $lookup"), anyVararg())
     
-    intercept[WaitTimeoutException] {
+    intercept[WebElementNotFoundException] {
       locator.locate(LocatorBinding("username", locatorType, lookup, None, None))
     }
     
@@ -461,7 +467,7 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar wit
 
   }
 
-  "Timeout on locating element by javascriptat index 0" should "throw error" in {
+  "Timeout on locating element by javascriptat index 0" should "throw not found error" in {
 
     val locatorType = "javascript"
     val lookup = "document.getElementById('username')"
@@ -472,7 +478,7 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar wit
     when(mockWebDriverOptions.timeouts()).thenReturn(mockWebDriverTimeouts)
     doReturn(null).when(mockWebDriver).executeScript(same(s"return $lookup"), anyVararg())
 
-    intercept[WaitTimeoutException] {
+    intercept[WebElementNotFoundException] {
       locator.locate(LocatorBinding("username", locatorType, lookup, None, Some(0)))
     }
 
@@ -574,7 +580,7 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar wit
     val e = intercept[LocatorBindingException] {
       locator.locate(LocatorBinding("username", "unknown", "funkiness", None, None))
     }
-    e.getMessage should be ("Could not locate username: unsupported locator: (unknown: funkiness)")
+    e.getMessage should be ("Unsupported locator defined for username: (unknown: funkiness)")
   }
 
   "Attempt to locate all non existent elements" should "return an empty list when empty array is returned" in {
@@ -779,7 +785,7 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar wit
     when(mockWebDriverOptions.timeouts()).thenReturn(mockWebDriverTimeouts)
     doReturn(null).when(mockWebDriver).executeScript(same(s"return $lookup"), anyVararg())
 
-    intercept[WaitTimeoutException] {
+    intercept[WebElementNotFoundException] {
       locator.locate(LocatorBinding("username", locatorType, lookup, None, None))
     }
 
