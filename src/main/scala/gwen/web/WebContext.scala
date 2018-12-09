@@ -340,7 +340,7 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
         webElement.clear()
         env.bindAndWait(element, "clear", "true")
       }
-      createActions(driver).sendKeys(webElement, value).perform()
+      createActions(driver).moveToElement(webElement).sendKeys(value).perform()
       env.bindAndWait(element, "type", value)
       if (sendEnterKey) {
         createActions(driver).sendKeys(webElement, Keys.RETURN).perform()

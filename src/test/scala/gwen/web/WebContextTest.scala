@@ -570,7 +570,8 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     val mockActions = mock[Actions]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     doReturn(mockActions).when(webContext).createActions(mockWebDriver)
-    doReturn(mockActions).when(mockActions).sendKeys(mockElement, "Gwen")
+    doReturn(mockActions).when(mockActions).moveToElement(mockElement)
+    doReturn(mockActions).when(mockActions).sendKeys("Gwen")
     webContext.sendValue(elemBinding, "Gwen", clearFirst = false, sendEnterKey = false)
     verify(mockElement, never()).clear()
     envContext.scopes.getOpt("name/clear") should be (None)
@@ -586,7 +587,8 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     val mockActions = mock[Actions]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     doReturn(mockActions).when(webContext).createActions(mockWebDriver)
-    doReturn(mockActions).when(mockActions).sendKeys(mockElement, "Gwen")
+    doReturn(mockActions).when(mockActions).moveToElement(mockElement)
+    doReturn(mockActions).when(mockActions).sendKeys("Gwen")
     webContext.sendValue(elemBinding, "Gwen", clearFirst = true, sendEnterKey = false)
     verify(mockElement).clear()
     verify(mockActions).perform()
@@ -601,7 +603,8 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     val mockActions = mock[Actions]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     doReturn(mockActions).when(webContext).createActions(mockWebDriver)
-    doReturn(mockActions).when(mockActions).sendKeys(mockElement, "Gwen")
+    doReturn(mockActions).when(mockActions).moveToElement(mockElement)
+    doReturn(mockActions).when(mockActions).sendKeys("Gwen")
     doReturn(mockActions).when(mockActions).sendKeys(mockElement, Keys.RETURN)
     webContext.sendValue(elemBinding, "Gwen", clearFirst = false, sendEnterKey = true)
     verify(mockElement, never()).clear()
@@ -617,7 +620,8 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     val mockActions = mock[Actions]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     doReturn(mockActions).when(webContext).createActions(mockWebDriver)
-    doReturn(mockActions).when(mockActions).sendKeys(mockElement, "Gwen")
+    doReturn(mockActions).when(mockActions).moveToElement(mockElement)
+    doReturn(mockActions).when(mockActions).sendKeys("Gwen")
     doReturn(mockActions).when(mockActions).sendKeys(mockElement, Keys.RETURN)
     webContext.sendValue(elemBinding, "Gwen", clearFirst = true, sendEnterKey = true)
     verify(mockElement).clear()

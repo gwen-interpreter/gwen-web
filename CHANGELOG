@@ -1,3 +1,9 @@
+2.29.1
+======
+December 9, 2018
+- Fix append DSL issue #65 raised by @Rahul9844
+  - Solution was to move into the field before sending keys
+
 2.29.0
 ======
 November 24, 2018
