@@ -108,9 +108,7 @@ Quick Links to Wiki Information
 User Community
 --------------
 
-All announcements and discussions are posted and broadcast to all members in the Gwen mail group. Active users who
-[join the group](https://groups.google.com/d/forum/gwen-interpreter) will also receive an invitation to our Gwen Slack
-community where they can interact with other users and help each other out.
+All announcements and discussions are posted and broadcast to all users in our slack network. A private support channel is also provided to companies who register. [Submit your request to join here](https://www.gwenify.com/). 
 
 License
 -------
