@@ -108,7 +108,7 @@ Quick Links to Wiki Information
 User Community
 --------------
 
-All announcements and discussions are posted and broadcast to all users in our slack network. A private support channel is also provided to companies who register. [Submit your request to join here](https://www.gwenify.com/). 
+All announcements and discussions are posted and broadcast to all users in our Gwen slack network. A private support channel is also provided to companies who register. [Submit your request to join here](https://www.gwenify.com/). 
 
 License
 -------
