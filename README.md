@@ -11,7 +11,7 @@ any of that programming or technical development work. It supports all the stand
 Selenium and additionally allows you to inject JavaScript in places where dynamically locating web elements or running
 functions on pages may be necessary.
 
-- [Join our user community](#user-community)
+- [Join our user community and get support](#user-community)
 
 ### Current Status
 
