@@ -11,7 +11,7 @@ any of that programming or technical development work. It supports all the stand
 Selenium and additionally allows you to inject JavaScript in places where dynamically locating web elements or running
 functions on pages may be necessary.
 
-- [Join our user network and get support](#user-network)
+> [User network and support](https://www.gwenify.com/)
 
 ### Current Status
 
@@ -104,11 +104,6 @@ Quick Links to Wiki Information
 - [Installation](https://github.com/gwen-interpreter/gwen-web/wiki/Installation)
 - [Getting Started](https://github.com/gwen-interpreter/gwen-web/wiki/Getting-Started)
 - [Gwen-Web DSL](http://htmlpreview.github.io/?https://github.com/gwen-interpreter/gwen-web/blob/master/docs/dsl/gwen-web-dsl.html)
-
-User Network
-------------
-
-All announcements and discussions are posted and broadcast to all users in our Gwen slack network. A private support channel is also provided to companies who register. [Submit your request to join here](https://www.gwenify.com/). 
 
 License
 -------
