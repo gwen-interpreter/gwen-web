@@ -1194,12 +1194,17 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
   "I <highlight|locate> <element>" should "evaluate" in {
     val mockBinding = mock[LocatorBinding]
     val mockWebElement = mock[WebElement]
+    val mockLocator = mock[Locator]
+    val mockLocators = List(mockLocator)
     doReturn(mockBinding).when(env).getLocatorBinding("<element>")
+    doReturn(mockLocators).when(mockBinding).locators
+    doReturn(None).when(mockLocator).container
     doReturn(mockWebElement).when(webContext).locate(mockBinding)
+
     List("highlight", "locate").foreach { x =>
       evaluate(s"I $x <element>")
     }
-    verify(webContext, times(2)).locate(mockBinding)
+    verify(webContext, times(2)).locateAndHighlight(mockBinding)
   }
 
   """I execute javascript "<javascript>"""" should "evaluate" in {

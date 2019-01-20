@@ -165,13 +165,13 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
       case r"""I wait for (.+?)$element for (.+?)$seconds second(?:s?)""" =>
         val elementBinding = env.getLocatorBinding(element)
         webContext.waitUntil(seconds.toInt) {
-          Try(webContext.locate(elementBinding)).isSuccess
+          Try(webContext.locateAndHighlight(elementBinding)).isSuccess
         }
 
       case r"""I wait for (.+?)$$$element""" =>
         val elementBinding = env.getLocatorBinding(element)
         webContext.waitUntil {
-          Try(webContext.locate(elementBinding)).isSuccess
+          Try(webContext.locateAndHighlight(elementBinding)).isSuccess
         }
 
       case r"""I wait ([0-9]+?)$duration second(?:s?) when (.+?)$element is (clicked|right clicked|double clicked|submitted|checked|ticked|unchecked|unticked|selected|deselected|typed|entered|tabbed|cleared|moved to)$$$event""" =>
@@ -688,7 +688,7 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
       case r"""I (?:highlight|locate) (.+?)$$$element""" =>
         val elementBinding = env.getLocatorBinding(element)
         env.perform {
-          webContext.locate(elementBinding)
+          webContext.locateAndHighlight(elementBinding)
         }
 
       case "I refresh the current page" =>
