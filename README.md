@@ -21,9 +21,9 @@ functions on pages may be necessary.
 - [Change log](CHANGELOG)
 
 ### What's New?
+- Hard, soft, and sustained [assertion modes](https://github.com/gwen-interpreter/gwen/wiki/Assertion-Modes)
 - [Indexed locators](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL#element-can-be-located-by-idnametag-namecss-selectorxpathclass-namelink-textpartial-link-textjavascript-expression-at-index-index)
 - [Browser size setting](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#gwenwebbrowsersize)
-- [Synchronized StepDef execution](https://github.com/gwen-interpreter/gwen/wiki/Synchronized-StepDefs)
 
 Why Gwen-web?
 -------------
@@ -87,6 +87,7 @@ Key Features
   - See [Gwen-Web DSL](http://htmlpreview.github.io/?https://github.com/gwen-interpreter/gwen-web/blob/master/docs/dsl/gwen-web-dsl.html)
 - Features can execute in [batch mode](https://github.com/gwen-interpreter/gwen/wiki/Execution-Modes#batch-execution) or [interactively](https://github.com/gwen-interpreter/gwen/wiki/Execution-Modes#interactive-repl-execution)
 - Features can execute [sequentially](https://github.com/gwen-interpreter/gwen/wiki/Execution-Modes#serial-execution) or in [parallel](https://github.com/gwen-interpreter/gwen/wiki/Execution-Modes#parallel-execution)
+- [Runtime settings](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings)
 - Execution can be [data driven](https://github.com/gwen-interpreter/gwen/wiki/Execution-Modes#csv-data-feeds) (using csv data feeds)
 - [REPL console](https://github.com/gwen-interpreter/gwen/wiki/REPL-Console) allows verifying before running
 - Cross browser support
@@ -98,6 +99,7 @@ Key Features
 - [Gwen Workspaces](https://gweninterpreter.wordpress.com/2017/12/18/gwen-workspaces/) for easy and consistent Gwen installation, configuration and execution on any workstation or build server.
 - [Locator level timeouts](https://github.com/gwen-interpreter/gwen-web/wiki/Locator-Level-Timeouts)
 - [Implicit JavaScript Locators](https://github.com/gwen-interpreter/gwen-web/wiki/Implicit-JavaScript-Locators)
+- Hard, soft, and sustained [assertion modes](https://github.com/gwen-interpreter/gwen/wiki/Assertion-Modes)
 
 Quick Links to Wiki Information
 -------------------------------
