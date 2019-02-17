@@ -1,7 +1,7 @@
 2.30.1
 ======
 February 17, 2019
-- Updated Gwen core from v2.18.0 to v[2.18.1](https://github.com/gwen-interpreter/gwen/releases/tag/v2.18.1)
+- Updated Gwen core from v2.18.0 to v[2.18.2](https://github.com/gwen-interpreter/gwen/releases/tag/v2.18.2)
   - Honor hard, soft, and sustained assertion modes when processing data table records
   - Add implicit `record.index` attribute to data table record scope
     - `record.index` starts at 0 (whereas `record.number` starts at 1)
