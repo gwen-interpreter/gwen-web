@@ -564,7 +564,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     envContext.scopes.get("page/title") should be ("Gwen")
   }
 
-  "WebContext.sendValue without clear first and without send enter" should "send value to element" in {
+  "WebContext.sendValue without enter" should "send value to element" in {
     val elemBinding = LocatorBinding("name", "id", "name", None, None)
     val mockElement = mock[WebElement]
     val mockActions = mock[Actions]
@@ -572,7 +572,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     doReturn(mockActions).when(webContext).createActions(mockWebDriver)
     doReturn(mockActions).when(mockActions).moveToElement(mockElement)
     doReturn(mockActions).when(mockActions).sendKeys("Gwen")
-    webContext.sendValue(elemBinding, "Gwen", clearFirst = false, sendEnterKey = false)
+    webContext.sendValue(elemBinding, "Gwen", sendEnterKey = false)
     verify(mockElement, never()).clear()
     envContext.scopes.getOpt("name/clear") should be (None)
     verify(mockActions).perform()
@@ -581,23 +581,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     envContext.scopes.getOpt("name/enter") should be (None)
   }
 
-  "WebContext.sendValue with clear first and without send enter" should "send value to element" in {
-    val elemBinding = LocatorBinding("name", "id", "name", None, None)
-    val mockElement = mock[WebElement]
-    val mockActions = mock[Actions]
-    doReturn(mockElement).when(webContext).locate(elemBinding)
-    doReturn(mockActions).when(webContext).createActions(mockWebDriver)
-    doReturn(mockActions).when(mockActions).moveToElement(mockElement)
-    doReturn(mockActions).when(mockActions).sendKeys("Gwen")
-    webContext.sendValue(elemBinding, "Gwen", clearFirst = true, sendEnterKey = false)
-    verify(mockElement).clear()
-    verify(mockActions).perform()
-    envContext.scopes.get("name/clear") should be ("true")
-    envContext.scopes.get("name/type") should be ("Gwen")
-    envContext.scopes.getOpt("name/enter") should be (None)
-  }
-
-  "WebContext.sendValue without clear first and with send enter" should "send value to element" in {
+  "WebContext.sendValue with send enter" should "send value to element" in {
     val elemBinding = LocatorBinding("name", "id", "name", None, None)
     val mockElement = mock[WebElement]
     val mockActions = mock[Actions]
@@ -606,27 +590,10 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     doReturn(mockActions).when(mockActions).moveToElement(mockElement)
     doReturn(mockActions).when(mockActions).sendKeys("Gwen")
     doReturn(mockActions).when(mockActions).sendKeys(mockElement, Keys.RETURN)
-    webContext.sendValue(elemBinding, "Gwen", clearFirst = false, sendEnterKey = true)
+    webContext.sendValue(elemBinding, "Gwen", sendEnterKey = true)
     verify(mockElement, never()).clear()
     verify(mockActions, times(2)).perform()
     envContext.scopes.getOpt("name/clear") should be (None)
-    envContext.scopes.get("name/type") should be ("Gwen")
-    envContext.scopes.get("name/enter") should be ("true")
-  }
-
-  "WebContext.sendValue with clear first and with send enter" should "send value to element" in {
-    val elemBinding = LocatorBinding("name", "id", "name", None, None)
-    val mockElement = mock[WebElement]
-    val mockActions = mock[Actions]
-    doReturn(mockElement).when(webContext).locate(elemBinding)
-    doReturn(mockActions).when(webContext).createActions(mockWebDriver)
-    doReturn(mockActions).when(mockActions).moveToElement(mockElement)
-    doReturn(mockActions).when(mockActions).sendKeys("Gwen")
-    doReturn(mockActions).when(mockActions).sendKeys(mockElement, Keys.RETURN)
-    webContext.sendValue(elemBinding, "Gwen", clearFirst = true, sendEnterKey = true)
-    verify(mockElement).clear()
-    verify(mockActions, times(2)).perform()
-    envContext.scopes.get("name/clear") should be ("true")
     envContext.scopes.get("name/type") should be ("Gwen")
     envContext.scopes.get("name/enter") should be ("true")
   }

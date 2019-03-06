@@ -339,16 +339,11 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
     *
     * @param elementBinding the web element locator binding
     * @param value the value to send
-    * @param clearFirst true to clear field first (if element is a text field)
     * @param sendEnterKey true to send the Enter key after sending the value
     */
-  def sendValue(elementBinding: LocatorBinding, value: String, clearFirst: Boolean, sendEnterKey: Boolean) {
+  def sendValue(elementBinding: LocatorBinding, value: String, sendEnterKey: Boolean) {
     val element = elementBinding.element
     withDriverAndElement("send keys", elementBinding) { (driver, webElement) =>
-      if (clearFirst) {
-        webElement.clear()
-        env.bindAndWait(element, "clear", "true")
-      }
       createActions(driver).moveToElement(webElement).sendKeys(value).perform()
       env.bindAndWait(element, "type", value)
       if (sendEnterKey) {
