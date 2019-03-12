@@ -31,6 +31,7 @@ lazy val gwenWebSettings = Seq(
 lazy val commonDependencies = {
   val commonsIO = "2.6"
   val selenium = "3.141.59"
+  val appliTools = "3.148.1"
 
   Seq(
     "commons-io" % "commons-io" % commonsIO,
@@ -38,7 +39,8 @@ lazy val commonDependencies = {
     "org.seleniumhq.selenium" % "selenium-firefox-driver" % selenium,
     "org.seleniumhq.selenium" % "selenium-ie-driver" % selenium,
     "org.seleniumhq.selenium" % "selenium-safari-driver" % selenium,
-    "org.seleniumhq.selenium" % "selenium-support" % selenium excludeAll ExclusionRule(organization = "junit", name = "junit")
+    "org.seleniumhq.selenium" % "selenium-support" % selenium excludeAll ExclusionRule(organization = "junit", name = "junit"),
+    "com.applitools" % "eyes-selenium-java3" % appliTools
   )
 }
 

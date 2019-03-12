@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Branko Juric, Brady Wood
+ * Copyright 2014-2019 Branko Juric, Brady Wood
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,8 @@
 package gwen.web
 
 import java.util.concurrent.TimeUnit
+
+import com.applitools.eyes.RectangleSize
 
 import scala.concurrent.duration.Duration
 import gwen.Predefs.Formatting.DurationFormatter
@@ -604,6 +606,15 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
         env.featureScope.set(attribute, webContext.getPopupMessage tap { content =>
           env.addAttachment(attribute, "txt", content)
         })
+
+      case r"""I checkpoint( full page)?$fullPage visual as "(.+?)"$name""" =>
+        webContext.checkpointVisual(name, Option(fullPage).isDefined, None)
+
+      case r"""I checkpoint( full page)?$fullPage (\d+?)${width}x(\d+?)$height visual as "(.+?)"$name""" =>
+        webContext.checkpointVisual(name, Option(fullPage).isDefined, Some(new RectangleSize(width.toInt, height.toInt)))
+
+      case r"visual check(?:s?) should pass" =>
+        webContext.checkVisuals()
 
       case r"""I drag and drop (.+?)$source to (.+?)$$$target""" =>
         val sourceBinding = env.getLocatorBinding(source)

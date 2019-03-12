@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2015 Brady Wood, Branko Juric
+ * Copyright 2014-2019 Brady Wood, Branko Juric
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,15 @@
 
 package gwen.web.features
 
+import gwen.Settings
+
 class SequentialFeatureTest extends BaseFeatureTest {
 
   "Sequential mode" should "evaluate all features in sequence" in {
     evaluate(List("features/floodio", "features/blogs/automationByMeta", "features/todo/CompleteItems.feature"), parallel = false, dryRun = false, "target/reports/sequential", None)
+    sys.env.get("APPLITOOLS_API_KEY").foreach { _ =>
+      evaluate(List("features/visual"), parallel = false, dryRun = false, "target/reports/visual", None)
+    }
   }
   
 }
