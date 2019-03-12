@@ -1,3 +1,13 @@
+2.31.0
+======
+March 12, 2019
+- Introduce `gwen.web.sendKeys.clearFirst` setting to control whether or not Gwen will clear text fields before
+  sending keys to them. (default value is `false`).
+- Update Gwen core from v2.18.2 to v[2.18.3](https://github.com/gwen-interpreter/gwen/releases/tag/v2.18.3)
+  - Clear thread local settings before executing each feature
+  - Log non assertion exceptions as errors in console
+  - Update Scala from 2.12.7 to 2.12.8
+
 2.30.2
 ======
 March 4, 2019

@@ -1,6 +1,6 @@
 language: scala
 scala:
-   - 2.12.7
+   - 2.12.8
 jdk:
   - oraclejdk8
 before_script:
@@ -16,7 +16,7 @@ sudo: required
 addons:
   chrome: stable
 before_install:
-  - wget https://chromedriver.storage.googleapis.com/2.43/chromedriver_linux64.zip
+  - wget https://chromedriver.storage.googleapis.com/2.46/chromedriver_linux64.zip
   - mkdir chromedriver
   - unzip -o chromedriver_linux64.zip -d chromedriver
   - export PATH=$PATH:$PWD/chromedriver

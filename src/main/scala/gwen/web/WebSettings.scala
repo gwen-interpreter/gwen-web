@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2018 Brady Wood, Branko Juric
+ * Copyright 2015-2019 Brady Wood, Branko Juric
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -207,5 +207,11 @@ object WebSettings {
       None
     }
   }
+
+  /**
+    * Provides access to the `gwen.web.sendKeys.clearFirst` setting used to control whether
+    * or not Gwen will clear fields before sending keys to them. (default value is `false`).
+    */
+  def `gwen.web.sendKeys.clearFirst`: Boolean = Settings.getOpt("gwen.web.sendKeys.clearFirst").getOrElse("false").toBoolean
 
 }
