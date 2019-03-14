@@ -581,6 +581,25 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     envContext.scopes.getOpt("name/enter") should be (None)
   }
 
+  "WebContext.sendValue with clear and without enter" should "clear field and send value to element" in {
+    withSetting("gwen.web.sendKeys.clearFirst", "true") {
+      val elemBinding = LocatorBinding("name", "id", "name", None, None)
+      val mockElement = mock[WebElement]
+      val mockActions = mock[Actions]
+      doReturn(mockElement).when(webContext).locate(elemBinding)
+      doReturn(mockActions).when(webContext).createActions(mockWebDriver)
+      doReturn(mockActions).when(mockActions).moveToElement(mockElement)
+      doReturn(mockActions).when(mockActions).sendKeys("Gwen")
+      webContext.sendValue(elemBinding, "Gwen", sendEnterKey = false)
+      verify(mockElement).clear()
+      envContext.scopes.get("name/clear") should be ("true")
+      verify(mockActions).perform()
+      envContext.scopes.get("name/type") should be ("Gwen")
+      verify(mockElement, never()).sendKeys(Keys.RETURN)
+      envContext.scopes.getOpt("name/enter") should be (None)
+    }
+  }
+
   "WebContext.sendValue with send enter" should "send value to element" in {
     val elemBinding = LocatorBinding("name", "id", "name", None, None)
     val mockElement = mock[WebElement]
@@ -596,6 +615,25 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     envContext.scopes.getOpt("name/clear") should be (None)
     envContext.scopes.get("name/type") should be ("Gwen")
     envContext.scopes.get("name/enter") should be ("true")
+  }
+
+  "WebContext.sendValue with clear and send enter" should "clear and send value to element" in {
+    withSetting("gwen.web.sendKeys.clearFirst", "true") {
+      val elemBinding = LocatorBinding("name", "id", "name", None, None)
+      val mockElement = mock[WebElement]
+      val mockActions = mock[Actions]
+      doReturn(mockElement).when(webContext).locate(elemBinding)
+      doReturn(mockActions).when(webContext).createActions(mockWebDriver)
+      doReturn(mockActions).when(mockActions).moveToElement(mockElement)
+      doReturn(mockActions).when(mockActions).sendKeys("Gwen")
+      doReturn(mockActions).when(mockActions).sendKeys(mockElement, Keys.RETURN)
+      webContext.sendValue(elemBinding, "Gwen", sendEnterKey = true)
+      verify(mockElement).clear()
+      verify(mockActions, times(2)).perform()
+      envContext.scopes.get("name/clear") should be ("true")
+      envContext.scopes.get("name/type") should be ("Gwen")
+      envContext.scopes.get("name/enter") should be ("true")
+    }
   }
 
   "WebContext.selectByVisibleText" should "select value provided" in {

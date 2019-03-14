@@ -351,6 +351,9 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
   def sendValue(elementBinding: LocatorBinding, value: String, sendEnterKey: Boolean) {
     val element = elementBinding.element
     withDriverAndElement("send keys", elementBinding) { (driver, webElement) =>
+      if (WebSettings.`gwen.web.sendKeys.clearFirst`) {
+        performAction("clear", elementBinding)
+      }
       createActions(driver).moveToElement(webElement).sendKeys(value).perform()
       env.bindAndWait(element, "type", value)
       if (sendEnterKey) {
