@@ -14,13 +14,12 @@
 # limitations under the License.
 #
 
-   Feature: Gwen Report
-   
-  Scenario: Check report visuals
-      Given I start a new browser
-       When I navigate to "file://${user.dir}/target/reports/sequential/index.html"
-       Then I checkpoint 1200x600 visual as "Summary Report"
-        And the detail report link can be located by css selector "a[class='text-success']"
-       When I click the detail report link
-       Then I checkpoint full page visual as "Detail Report"
-        And visual checks should pass
+   Feature: Visual Report Tests
+
+  Scenario: Report summary and detail should pass visual layout checks
+      Given I navigate to "file://${user.dir}/target/reports/sequential/html/feature-summary.html"
+       When I start visual test as "Report Layout Test" in 1200 x 600 viewport
+        And I check viewport visual as "Summary Report" using LAYOUT2 match
+        And I navigate to "file://${user.dir}/target/reports/sequential/html/features-floodio/FloodIO/FloodIO.feature.html"
+        And I check full page visual as "Detail Report" using LAYOUT2 match
+       Then the visual test should pass

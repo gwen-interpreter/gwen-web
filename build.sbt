@@ -11,7 +11,7 @@ resolvers ++= Seq(
 
 lazy val gwenWebSettings = Seq(
   name := "gwen-web",
-  description := "A Gwen automation engine for the web",
+  description := "Gwen web automation",
   organization := "org.gweninterpreter",
   organizationHomepage := Some(url("http://gweninterpreter.org")),
   startYear := Some(2014),
@@ -40,7 +40,10 @@ lazy val commonDependencies = {
     "org.seleniumhq.selenium" % "selenium-ie-driver" % selenium,
     "org.seleniumhq.selenium" % "selenium-safari-driver" % selenium,
     "org.seleniumhq.selenium" % "selenium-support" % selenium excludeAll ExclusionRule(organization = "junit", name = "junit"),
-    "com.applitools" % "eyes-selenium-java3" % appliTools
+    "com.applitools" % "eyes-selenium-java3" % appliTools excludeAll(
+      ExclusionRule(organization = "org.aspectj", name = "aspectjweaver"),
+      ExclusionRule(organization = "org.openpnp", name = "opencv")
+     )
   )
 }
 

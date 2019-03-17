@@ -16,8 +16,6 @@
 
 package gwen.web.features
 
-import gwen.Settings
-
 class SequentialFeatureTest extends BaseFeatureTest {
 
   "Sequential mode" should "evaluate all features in sequence" in {
@@ -25,6 +23,7 @@ class SequentialFeatureTest extends BaseFeatureTest {
     sys.env.get("APPLITOOLS_API_KEY").foreach { _ =>
       evaluate(List("features/visual"), parallel = false, dryRun = false, "target/reports/visual", None)
     }
+    evaluate(List("features/visual"), parallel = false, dryRun = true, "target/reports/visual-dry-run", None)
   }
   
 }

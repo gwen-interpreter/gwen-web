@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Brady Wood, Branko Juric
+ * Copyright 2014-2019 Brady Wood, Branko Juric
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -64,8 +64,12 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     * @param failure the failed status
     */
   override def addErrorAttachments(failure: Failed): Unit = {
-    super.addErrorAttachments(failure)
-    webContext.captureScreenshot(true)
+    if (failure.isTechError) {
+      super.addErrorAttachments(failure)
+    }
+    if (!failure.isLicenseError) {
+      webContext.captureScreenshot(true)
+    }
   }
 
   /**

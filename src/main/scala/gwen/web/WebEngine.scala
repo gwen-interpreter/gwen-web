@@ -18,7 +18,7 @@ package gwen.web
 
 import java.util.concurrent.TimeUnit
 
-import com.applitools.eyes.RectangleSize
+import com.applitools.eyes.{MatchLevel, RectangleSize}
 
 import scala.concurrent.duration.Duration
 import gwen.Predefs.Formatting.DurationFormatter
@@ -28,6 +28,7 @@ import gwen.Settings
 import gwen.dsl._
 import gwen.errors.StepFailure
 import gwen.errors.undefinedStepError
+import gwen.errors.disabledStepError
 import gwen.eval.{GwenOptions, ScopedDataStack}
 import gwen.eval.support.DefaultEngineSupport
 import gwen.web.errors.LocatorBindingException
@@ -607,14 +608,40 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
           env.addAttachment(attribute, "txt", content)
         })
 
-      case r"""I checkpoint( full page)?$fullPage visual as "(.+?)"$name""" =>
-        webContext.checkpointVisual(name, Option(fullPage).isDefined, None)
+      case r"""I start visual test as "(.+?)"$testName in (\d+?)$width x (\d+?)$height viewport""" =>
+        if (EyesSettings.`gwen.applitools.eyes.enabled`) {
+          webContext.startVisualTest(testName, Some(new RectangleSize(width.toInt, height.toInt)))
+        } else {
+          disabledStepError(step)
+        }
 
-      case r"""I checkpoint( full page)?$fullPage (\d+?)${width}x(\d+?)$height visual as "(.+?)"$name""" =>
-        webContext.checkpointVisual(name, Option(fullPage).isDefined, Some(new RectangleSize(width.toInt, height.toInt)))
+      case r"""I start visual test as "(.+?)"$testName""" =>
+        if (EyesSettings.`gwen.applitools.eyes.enabled`) {
+          webContext.startVisualTest(testName, None)
+        } else {
+          disabledStepError(step)
+        }
 
-      case r"visual check(?:s?) should pass" =>
-        webContext.checkVisuals()
+      case r"""I check (viewport|full page)?$mode visual as "(.+?)"$name using (.+?)$matchLevel match""" =>
+        if (EyesSettings.`gwen.applitools.eyes.enabled`) {
+          webContext.checkVisual(name, mode == "full page", Some(MatchLevel.valueOf(matchLevel)))
+        } else {
+          disabledStepError(step)
+        }
+
+      case r"""I check (viewport|full page)?$mode visual as "(.+?)"$name""" =>
+        if (EyesSettings.`gwen.applitools.eyes.enabled`) {
+          webContext.checkVisual(name, mode == "full page", None)
+        } else {
+          disabledStepError(step)
+        }
+
+      case "the visual test should pass" =>
+        if (EyesSettings.`gwen.applitools.eyes.enabled`) {
+          webContext.asertVisuals()
+        } else {
+          disabledStepError(step)
+        }
 
       case r"""I drag and drop (.+?)$source to (.+?)$$$target""" =>
         val sourceBinding = env.getLocatorBinding(source)
