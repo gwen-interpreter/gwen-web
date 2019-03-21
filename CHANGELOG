@@ -4,6 +4,12 @@ March 17, 2019
 - Introduce AppliTools integration for visual testing
 - Update Gwen core from v2.18.3 to v[2.19.0](https://github.com/gwen-interpreter/gwen/releases/tag/v2.19.0)
   - Introduce Disabled evaluation status to support conditionally disabling steps
+  - Upgrade library dependencies
+    - scopt from 3.7.0 to 3.7.1
+    - scala-logging from 3.9.0 to 3.9.2
+    - commons-codec from 1.11 to 1.12
+    - commons-text from 1.4 to 1.6
+    - joda-time from 2.10 to 2.10.1
 
 2.31.0
 ======

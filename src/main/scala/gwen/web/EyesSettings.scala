@@ -34,10 +34,10 @@ object EyesSettings {
 
   /**
     * Provides access to the `gwen.applitools.eyes.batchName` setting used to set the AppliTools batch name (default
-    * value is 'Gwen Visual Tests').
+    * value is 'Gwen visual tests').
     */
   def `gwen.applitools.eyes.batchName`: String =
-    Settings.getOpt("gwen.applitools.eyes.batchName").getOrElse("Gwen Visual Tests")
+    Settings.getOpt("gwen.applitools.eyes.batchName").getOrElse("Gwen visual tests")
 
   /**
     * Provides access to the optional `gwen.applitools.eyes.appName`. If not set then the appName will be derived

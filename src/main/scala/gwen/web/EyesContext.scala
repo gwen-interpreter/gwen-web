@@ -25,18 +25,23 @@ import gwen.web.errors.invalidVisualSessionStateError
 import org.openqa.selenium.WebDriver
 
 /**
+  * AppliTools Eyes context companion (constants).
+  */
+object EyesContext {
+  private lazy val API_KEY_NAME = "APPLITOOLS_API_KEY"
+  private lazy val EYES_BATCH = new BatchInfo(EyesSettings.`gwen.applitools.eyes.batchName`)
+}
+
+/**
   * AppliTools Eyes context for performing visual checks.
   */
 class EyesContext(env: WebEnvContext) extends LazyLogging {
 
-  private val API_KEY_NAME = "APPLITOOLS_API_KEY"
-
-  private lazy val eyesBatch = new BatchInfo(EyesSettings.`gwen.applitools.eyes.batchName`)
   private var eyesSession: Option[Eyes] = None
 
   private def withApiKey[T](f: String => T): T = {
-    sys.env.get(API_KEY_NAME).map(f).getOrElse {
-      licenseError(s"This operation integrates with AppliTools and requires the $API_KEY_NAME environment variable to be set to your licensed API key. Please set the variable or visit https://applitools.com/ to acquire a license if you don't have one.")
+    sys.env.get(EyesContext.API_KEY_NAME).map(f).getOrElse {
+      licenseError(s"This operation integrates with AppliTools and requires the ${EyesContext.API_KEY_NAME} environment variable to be set to your licensed API key. Please set the variable or visit https://applitools.com/ to acquire a license if you don't have one.")
     }
   }
 
@@ -51,7 +56,7 @@ class EyesContext(env: WebEnvContext) extends LazyLogging {
   def open[T](driver: WebDriver, testName: String, viewportSize: Option[RectangleSize]): Eyes = withApiKey { apiKey =>
     new Eyes() tap { eyes =>
       eyes.setApiKey(apiKey)
-      eyes.setBatch(eyesBatch)
+      eyes.setBatch(EyesContext.EYES_BATCH)
       val appName = EyesSettings.`gwen.applitools.eyes.appName` getOrElse {
         env.scopes.getOpt("gwen.feature.file.path").map(path => path.substring(0, path.lastIndexOf('.'))).getOrElse("Gwen REPL")
       }

@@ -20,10 +20,6 @@ class SequentialFeatureTest extends BaseFeatureTest {
 
   "Sequential mode" should "evaluate all features in sequence" in {
     evaluate(List("features/floodio", "features/blogs/automationByMeta", "features/todo/CompleteItems.feature"), parallel = false, dryRun = false, "target/reports/sequential", None)
-    sys.env.get("APPLITOOLS_API_KEY").foreach { _ =>
-      evaluate(List("features/visual"), parallel = false, dryRun = false, "target/reports/visual", None)
-    }
-    evaluate(List("features/visual"), parallel = false, dryRun = true, "target/reports/visual-dry-run", None)
   }
   
 }
