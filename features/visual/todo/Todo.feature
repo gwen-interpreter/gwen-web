@@ -26,13 +26,11 @@ Scenario: Add items in my Todo list
       And I check viewport visual as "Active Todo items" using STRICT match
 
 Scenario: Complete one item
-    Given I am on the Todo page
      When I tick the "Get the milk" item
      Then the number of active items should be "1"
       And I check viewport visual as "One completed Todo item" using STRICT match
 
 Scenario: Complete another item
-    Given I am on the Todo page
      When I tick the "Walk the dog" item
      Then the number of active items should be "0"
       And I check viewport visual as "All completed Todo items" using STRICT match
