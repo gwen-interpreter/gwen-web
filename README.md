@@ -21,9 +21,9 @@ functions on pages may be necessary.
 - [Change log](CHANGELOG)
 
 ### What's New?
+- [Visual Testing with AppliTools](https://github.com/gwen-interpreter/gwen-web/wiki/Visual-Testing)
 - Hard, soft, and sustained [assertion modes](https://github.com/gwen-interpreter/gwen/wiki/Assertion-Modes)
 - [Indexed locators](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL#element-can-be-located-by-idnametag-namecss-selectorxpathclass-namelink-textpartial-link-textjavascript-expression-at-index-index)
-- [Browser size setting](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#gwenwebbrowsersize)
 
 Why Gwen-web?
 -------------
@@ -100,6 +100,7 @@ Key Features
 - [Locator level timeouts](https://github.com/gwen-interpreter/gwen-web/wiki/Locator-Level-Timeouts)
 - [Implicit JavaScript Locators](https://github.com/gwen-interpreter/gwen-web/wiki/Implicit-JavaScript-Locators)
 - Hard, soft, and sustained [assertion modes](https://github.com/gwen-interpreter/gwen/wiki/Assertion-Modes)
+- [Visual Testing with AppliTools](https://github.com/gwen-interpreter/gwen-web/wiki/Visual-Testing)
 
 Quick Links to Wiki Information
 -------------------------------
@@ -173,6 +174,7 @@ Credits
 -------
 - [Selenium](https://www.seleniumhq.org/)
 - [Cucumber/Gherkin](https://docs.cucumber.io/gherkin/reference/)
+- [Applitools](https://docs.cucumber.io/gherkin/reference/)
 
 Known Users
 -----------
