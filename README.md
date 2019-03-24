@@ -174,11 +174,14 @@ Credits
 -------
 - [Selenium](https://www.seleniumhq.org/)
 - [Cucumber/Gherkin](https://docs.cucumber.io/gherkin/reference/)
-- [Applitools](https://applitools.com/)
 
 Known Users
 -----------
 <a href="https://www.matrak.com.au" target="_blank"><img src="https://gwen-interpreter.github.io/assets/img/users/matrak-logo.png" height="40"/></a> &nbsp; &nbsp; &nbsp; <a href="https://www.smartstream-stp.com/" target="_blank"><img src="https://gwen-interpreter.github.io/assets/img/users/smartstream-logo.png" height="40"/></a> &nbsp; &nbsp; &nbsp; <a href="https://crystaldelta.com/" target="_blank"><img src="https://gwen-interpreter.github.io/assets/img/users/crystaldelta-logo.png" height="70"/></a>
+
+Integrates With
+---------------
+<a href="https://applitools.com/" target="_blank"><img src="https://gwen-interpreter.github.io/assets/img/integration/applitools-logo.png" height="40"/></a>
 
 ---
 
