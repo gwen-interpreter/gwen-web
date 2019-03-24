@@ -18,7 +18,7 @@
   
 @StepDef
 Scenario: I launch the Todo app
-    Given I resize the window to width 800 and height 550
+    Given I resize the window to width 800 and height 800
      When I navigate to "http://todomvc.com/examples/angularjs"
      Then I should be on the Todo page
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2015 Branko Juric, Brady Wood
+ * Copyright 2014-2019 Branko Juric, Brady Wood
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@
 package gwen {
 
   package web {
-
+    
     import org.openqa.selenium.Keys
     import org.openqa.selenium.NoSuchElementException
     import gwen.errors.GwenException
@@ -36,8 +36,9 @@ package gwen {
         throw new WebElementNotInteractableException(elementBinding, cause)
       def elementNotFoundError(element: String, cause: Throwable = null) =
         throw new WebElementNotFoundException(element, cause)
+      def invalidVisualSessionStateError(msg: String) = throw new InvalidVisualSessionStateException(msg)
 
-      /** Thrown when an unsupported of . */
+      /** Thrown when a locator binding error is detected . */
       class LocatorBindingException(msg: String) extends GwenException(msg)
 
       /** Thrown when an unsupported web driver is detected. */
@@ -62,6 +63,9 @@ package gwen {
       /** Thrown when a web element cannot be located. */
       class WebElementNotFoundException(element: String, cause: Throwable)
         extends NoSuchElementException(s"Could not locate element: $element", cause)
+
+      /** Thrown when a visual checking session is in an invalid state. */
+      class InvalidVisualSessionStateException(msg: String) extends AssertionError(msg)
 
     }
   }

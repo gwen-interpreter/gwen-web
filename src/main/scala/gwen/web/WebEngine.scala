@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Branko Juric, Brady Wood
+ * Copyright 2014-2019 Branko Juric, Brady Wood
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,8 @@ package gwen.web
 
 import java.util.concurrent.TimeUnit
 
+import com.applitools.eyes.{MatchLevel, RectangleSize}
+
 import scala.concurrent.duration.Duration
 import gwen.Predefs.Formatting.DurationFormatter
 import gwen.Predefs.Kestrel
@@ -26,6 +28,7 @@ import gwen.Settings
 import gwen.dsl._
 import gwen.errors.StepFailure
 import gwen.errors.undefinedStepError
+import gwen.errors.disabledStepError
 import gwen.eval.{GwenOptions, ScopedDataStack}
 import gwen.eval.support.DefaultEngineSupport
 import gwen.web.errors.LocatorBindingException
@@ -604,6 +607,41 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
         env.featureScope.set(attribute, webContext.getPopupMessage tap { content =>
           env.addAttachment(attribute, "txt", content)
         })
+
+      case r"""I start visual test as "(.+?)"$testName in (\d+?)$width x (\d+?)$height viewport""" =>
+        if (EyesSettings.`gwen.applitools.eyes.enabled`) {
+          webContext.startVisualTest(testName, Some(new RectangleSize(width.toInt, height.toInt)))
+        } else {
+          disabledStepError(step)
+        }
+
+      case r"""I start visual test as "(.+?)"$testName""" =>
+        if (EyesSettings.`gwen.applitools.eyes.enabled`) {
+          webContext.startVisualTest(testName, None)
+        } else {
+          disabledStepError(step)
+        }
+
+      case r"""I check (viewport|full page)?$mode visual as "(.+?)"$name using (.+?)$matchLevel match""" =>
+        if (EyesSettings.`gwen.applitools.eyes.enabled`) {
+          webContext.checkVisual(name, mode == "full page", Some(MatchLevel.valueOf(matchLevel)))
+        } else {
+          disabledStepError(step)
+        }
+
+      case r"""I check (viewport|full page)?$mode visual as "(.+?)"$name""" =>
+        if (EyesSettings.`gwen.applitools.eyes.enabled`) {
+          webContext.checkVisual(name, mode == "full page", None)
+        } else {
+          disabledStepError(step)
+        }
+
+      case "the visual test should pass" =>
+        if (EyesSettings.`gwen.applitools.eyes.enabled`) {
+          webContext.asertVisuals()
+        } else {
+          disabledStepError(step)
+        }
 
       case r"""I drag and drop (.+?)$source to (.+?)$$$target""" =>
         val sourceBinding = env.getLocatorBinding(source)

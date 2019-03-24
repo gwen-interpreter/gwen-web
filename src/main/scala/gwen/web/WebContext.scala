@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2018 Brady Wood, Branko Juric
+ * Copyright 2015-2019 Brady Wood, Branko Juric
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package gwen.web
 
+import com.applitools.eyes.{MatchLevel, RectangleSize}
 import com.typesafe.scalalogging.LazyLogging
 import gwen.Predefs.Kestrel
 import gwen.errors.javaScriptError
@@ -36,15 +37,21 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
   /** Last captured screenshot file size. */
   private var lastScreenshotSize: Option[Long] = None
 
+  /** Applitools Eyes context. */
+  private var eyesContext: Option[EyesContext] = None
+
   /** Resets the driver context. */
   def reset() {
     driverManager.reset()
     lastScreenshotSize = None
+    eyesContext.foreach(_.close())
+    eyesContext = None
   }
 
   /** Closes all browsers and associated web drivers (if any have loaded). */
   def close(): Unit = {
     env.perform {
+      eyesContext.foreach(_.close())
       driverManager.quit()
     }
   }
@@ -835,6 +842,58 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
     withWebDriver { driver =>
       driver.switchTo().alert().getText
     } getOrElse "$[dryRun:popupMessage]"
+  }
+
+  /**
+    * Performs the given function on the eyes context.
+    *
+    * @param f the function to perform
+    * @return the result of the function
+    */
+  private def withEyesContext[T](f: EyesContext => T): Option[T] = {
+    env.evaluate(None.asInstanceOf[Option[T]]) {
+      if (eyesContext.isEmpty) {
+        eyesContext = Some(new EyesContext(env))
+      }
+      eyesContext.map(f)
+    }
+  }
+
+  /**
+    * Starts a visual text.
+    *
+    * @param testName the name of the visual test
+    * @param viewportSize optional viewport size
+    */
+  def startVisualTest(testName: String, viewportSize: Option[RectangleSize]): Unit =
+    withEyesContext { context =>
+      withWebDriver { driver =>
+        context.open(driver, testName, viewportSize)
+      }
+    }
+
+  /**
+    * Performs a visual checkpoint of the contents in the current browser window.
+    *
+    * @param checkpoint the checkpoint name
+    * @param fullPage true to capture full page, false otherwise
+    * @param matchLevel optional match Level
+    */
+  def checkVisual(checkpoint: String, fullPage: Boolean, matchLevel: Option[MatchLevel]): Unit =
+    withEyesContext { context =>
+      context.check(checkpoint, fullPage, matchLevel)
+    }
+
+  /**
+    * Performs a visual check of all checkpoints in current eyes session.
+    */
+  def asertVisuals(): Unit = {
+    withEyesContext { context =>
+      context.results() tap { results =>
+        env.addAttachment("AppliTools dashboard", "url", results.getUrl)
+        assert(results.isNew || results.isPassed, s"Expected visual check to pass but was: ${results.getStatus}")
+      }
+    }
   }
 
 }

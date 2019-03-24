@@ -11,7 +11,7 @@ resolvers ++= Seq(
 
 lazy val gwenWebSettings = Seq(
   name := "gwen-web",
-  description := "A Gwen automation engine for the web",
+  description := "Web automation engine for Gwen",
   organization := "org.gweninterpreter",
   organizationHomepage := Some(url("http://gweninterpreter.org")),
   startYear := Some(2014),
@@ -31,6 +31,7 @@ lazy val gwenWebSettings = Seq(
 lazy val commonDependencies = {
   val commonsIO = "2.6"
   val selenium = "3.141.59"
+  val appliTools = "3.150.0"
 
   Seq(
     "commons-io" % "commons-io" % commonsIO,
@@ -38,7 +39,14 @@ lazy val commonDependencies = {
     "org.seleniumhq.selenium" % "selenium-firefox-driver" % selenium,
     "org.seleniumhq.selenium" % "selenium-ie-driver" % selenium,
     "org.seleniumhq.selenium" % "selenium-safari-driver" % selenium,
-    "org.seleniumhq.selenium" % "selenium-support" % selenium excludeAll ExclusionRule(organization = "junit", name = "junit")
+    "org.seleniumhq.selenium" % "selenium-support" % selenium excludeAll ExclusionRule(organization = "junit", name = "junit"),
+    "com.applitools" % "eyes-selenium-java3" % appliTools excludeAll(
+      ExclusionRule(organization = "org.apache.ant", name = "ant"),
+      ExclusionRule(organization = "org.aspectj", name = "aspectjweaver"),
+      ExclusionRule(organization = "org.openpnp", name = "opencv"),
+      ExclusionRule(organization = "org.seleniumhq.selenium", name = "selenium-java"),
+      ExclusionRule(organization = "org.springframework", name = "spring-context")
+     )
   )
 }
 
