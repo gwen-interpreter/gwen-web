@@ -174,7 +174,7 @@ Credits
 -------
 - [Selenium](https://www.seleniumhq.org/)
 - [Cucumber/Gherkin](https://docs.cucumber.io/gherkin/reference/)
-- [Applitools](https://docs.cucumber.io/gherkin/reference/)
+- [Applitools](https://applitools.com/)
 
 Known Users
 -----------

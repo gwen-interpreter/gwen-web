@@ -40,8 +40,10 @@ class EyesContext(env: WebEnvContext) extends LazyLogging {
   private var eyesSession: Option[Eyes] = None
 
   private def withApiKey[T](f: String => T): T = {
-    sys.env.get(EyesContext.API_KEY_NAME).map(f).getOrElse {
+    sys.env.get(EyesContext.API_KEY_NAME).map(_.trim).filter(_ != "").fold(
       licenseError(s"This operation integrates with AppliTools and requires the ${EyesContext.API_KEY_NAME} environment variable to be set to your licensed API key. Please set the variable or visit https://applitools.com/ to acquire a license if you don't have one.")
+    ) { apiKey =>
+      f(apiKey)
     }
   }
 
@@ -76,7 +78,7 @@ class EyesContext(env: WebEnvContext) extends LazyLogging {
     */
   def check(checkpoint: String, fullPage: Boolean, matchLevel: Option[MatchLevel]): Unit = withApiKey { _ =>
     if (eyesSession.isEmpty) {
-      invalidVisualSessionStateError("""Please start a visual test first by calling DSL: I start visual test as "your test name" in width x height viewport""")
+      invalidVisualSessionStateError("""Please start a visual test session first using DSL step at: https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL#i-start-visual-test-as-name""")
     }
     eyesSession foreach { eyes =>
       eyes.setForceFullPageScreenshot(fullPage)
@@ -90,7 +92,7 @@ class EyesContext(env: WebEnvContext) extends LazyLogging {
     */
   def results(): TestResults = withApiKey { _ =>
     eyesSession.map(getResults).getOrElse {
-      invalidVisualSessionStateError("""Please start a visual test first by calling DSL: I start visual test as "your test name" in width x height viewport""")
+      invalidVisualSessionStateError("""Please start a visual test session first using DSL step at: https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL#i-start-visual-test-as-name""")
     }
   }
 
@@ -117,6 +119,7 @@ class EyesContext(env: WebEnvContext) extends LazyLogging {
   def close(): Unit = {
     eyesSession foreach { eyes =>
       try {
+        logger.warn("Closing visual test session that was started but not explicitly ended. Consider explicitly closing it using DSL step at: https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL#the-visual-test-should-pass")
         getResults(eyes)
       } finally {
         eyes.abortIfNotClosed()

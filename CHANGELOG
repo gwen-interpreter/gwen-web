@@ -1,6 +1,6 @@
 2.32.0
 ======
-March 17, 2019
+March 24, 2019
 - Introduce AppliTools integration for visual testing
 - Update Gwen core from v2.18.3 to v[2.19.0](https://github.com/gwen-interpreter/gwen/releases/tag/v2.19.0)
   - Introduce Disabled evaluation status to support conditionally disabling steps

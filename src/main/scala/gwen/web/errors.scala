@@ -65,7 +65,7 @@ package gwen {
         extends NoSuchElementException(s"Could not locate element: $element", cause)
 
       /** Thrown when a visual checking session is in an invalid state. */
-      class InvalidVisualSessionStateException(msg: String) extends GwenException(msg)
+      class InvalidVisualSessionStateException(msg: String) extends AssertionError(msg)
 
     }
   }
