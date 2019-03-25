@@ -11,7 +11,7 @@ any of that programming or technical development work. It supports all the stand
 Selenium and additionally allows you to inject JavaScript in places where dynamically locating web elements or running
 functions on pages may be necessary.
 
-> [User network and support](https://www.gwenify.com/)
+>  [User network and support](https://www.gwenify.com/)
 
 ### Current Status
 
@@ -24,6 +24,15 @@ functions on pages may be necessary.
 - [Visual Testing with AppliTools](https://github.com/gwen-interpreter/gwen-web/wiki/Visual-Testing)
 - Hard, soft, and sustained [assertion modes](https://github.com/gwen-interpreter/gwen/wiki/Assertion-Modes)
 - [Indexed locators](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL#element-can-be-located-by-idnametag-namecss-selectorxpathclass-namelink-textpartial-link-textjavascript-expression-at-index-index)
+
+Quick Links
+-------------------------------
+- [Installation](https://github.com/gwen-interpreter/gwen-web/wiki/Installation)
+- [Getting Started](https://github.com/gwen-interpreter/gwen-web/wiki/Getting-Started)
+- [Gwen Web DSL](http://htmlpreview.github.io/?https://github.com/gwen-interpreter/gwen-web/blob/master/docs/dsl/gwen-web-dsl.html)
+- [Blog](https://gweninterpreter.wordpress.com)
+- [Wiki](https://github.com/gwen-interpreter/gwen-web/wiki)
+- [FAQ](https://github.com/gwen-interpreter/gwen-web/wiki/FAQ)
 
 Why Gwen-web?
 -------------
@@ -61,14 +70,6 @@ So you can drive automation with Gherkin features like this..
 ```
 ..with [no Page Objects](https://gweninterpreter.wordpress.com/2016/03/08/nopageobjects-theres-no-long-way-to-go-were-already-there/) or Selenium coding required!
 
-Links
------
-
-- [Blog](https://gweninterpreter.wordpress.com)
-- [Wiki](https://github.com/gwen-interpreter/gwen-web/wiki)
-- [Gwen-Web FAQ](https://github.com/gwen-interpreter/gwen-web/wiki/FAQ)
-- [Gwen FAQ](https://github.com/gwen-interpreter/gwen/wiki/FAQ)
-
 Runtime Requirements
 --------------------
 
@@ -101,12 +102,6 @@ Key Features
 - [Implicit JavaScript Locators](https://github.com/gwen-interpreter/gwen-web/wiki/Implicit-JavaScript-Locators)
 - Hard, soft, and sustained [assertion modes](https://github.com/gwen-interpreter/gwen/wiki/Assertion-Modes)
 - [Visual Testing with AppliTools](https://github.com/gwen-interpreter/gwen-web/wiki/Visual-Testing)
-
-Quick Links to Wiki Information
--------------------------------
-- [Installation](https://github.com/gwen-interpreter/gwen-web/wiki/Installation)
-- [Getting Started](https://github.com/gwen-interpreter/gwen-web/wiki/Getting-Started)
-- [Gwen-Web DSL](http://htmlpreview.github.io/?https://github.com/gwen-interpreter/gwen-web/blob/master/docs/dsl/gwen-web-dsl.html)
 
 License
 -------
