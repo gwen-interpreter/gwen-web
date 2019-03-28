@@ -3,6 +3,7 @@
 March 28, 2019
 - Update Gwen core from v2.19.0 to v[2.19.1](https://github.com/gwen-interpreter/gwen/releases/tag/v2.19.1)
   - Resolve hostname in JUnit reports
+- Restore clear first behavior in sendKeys operation when `gwen.web.sendKeys.clearFirst=true`
 
 2.32.0
 ======

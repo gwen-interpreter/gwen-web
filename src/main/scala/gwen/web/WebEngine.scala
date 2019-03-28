@@ -663,12 +663,12 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
 
       case r"""I (enter|type)$action "(.*?)"$value in (.+?)$$$element""" =>
         val elementBinding = env.getLocatorBinding(element)
-        webContext.sendValue(elementBinding, value, sendEnterKey = action == "enter")
+        webContext.sendValue(elementBinding, value, clearFirst = WebSettings.`gwen.web.sendKeys.clearFirst`, sendEnterKey = action == "enter")
 
       case r"""I (enter|type)$action (.+?)$attribute in (.+?)$$$element""" =>
         val elementBinding = env.getLocatorBinding(element)
         val value = env.getBoundReferenceValue(attribute)
-        webContext.sendValue(elementBinding, value, sendEnterKey = action == "enter")
+        webContext.sendValue(elementBinding, value, clearFirst = WebSettings.`gwen.web.sendKeys.clearFirst`, sendEnterKey = action == "enter")
 
       case r"""I (select|deselect)$action the (\d+?)$position(?:st|nd|rd|th) option in (.+?)$$$element""" =>
         val elementBinding = env.getLocatorBinding(element)
@@ -772,16 +772,16 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
 
       case r"""I append "(.+?)"$text to (.+?)$$$element""" =>
         val elementBinding = env.getLocatorBinding(element)
-        webContext.sendValue(elementBinding, text, sendEnterKey = false)
+        webContext.sendValue(elementBinding, text, clearFirst = false, sendEnterKey = false)
 
       case r"""I append (.+?)$attribute to (.+?)$$$element""" =>
         val elementBinding = env.getLocatorBinding(element)
         val text = env.getBoundReferenceValue(attribute)
-        webContext.sendValue(elementBinding, text, sendEnterKey = false)
+        webContext.sendValue(elementBinding, text, clearFirst = false, sendEnterKey = false)
 
       case r"I insert a new line in (.+?)$$$element" =>
         val elementBinding = env.getLocatorBinding(element)
-        webContext.sendValue(elementBinding, StringEscapeUtils.unescapeJava("""\n"""), sendEnterKey = false)
+        webContext.sendValue(elementBinding, StringEscapeUtils.unescapeJava("""\n"""), clearFirst = false, sendEnterKey = false)
 
       case _ => super.evaluate(step, env)
 
