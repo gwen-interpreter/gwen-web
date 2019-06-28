@@ -1,3 +1,17 @@
+2.33.0
+======
+Jun 28, 2019
+- Manage child windows at web driver session level
+- Add settings for [mobile emulation in Chrome](https://github.com/gwen-interpreter/gwen-web/wiki/Mobile-Emulation) browser by:
+  - device name
+    - `gwen.web.chrome.mobile.deviceName`
+  - device metrics
+    - `gwen.web.chrome.mobile.width` (integer)
+    - `gwen.web.chrome.mobile.height` (integer)
+    - `gwen.web.chrome.mobile.pixelRatio` (double)
+    - `gwen.web.chrome.mobile.touch` (boolean)
+    - `gwen.web.chrome.mobile.userAgent` (string)
+
 2.32.1
 ======
 March 28, 2019

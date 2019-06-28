@@ -214,4 +214,14 @@ object WebSettings {
     */
   def `gwen.web.sendKeys.clearFirst`: Boolean = Settings.getOpt("gwen.web.sendKeys.clearFirst").getOrElse("false").toBoolean
 
+  /**
+   * Provides access to the chrome mobile emulation settings. This setting merges a comma separated list of values
+   * set in the `gwen.web.chrome.mobile` property with all properties that start with
+   * `gwen.web.chrome.mobile.`.
+   * See: https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#mobile-emulation-by-device-name
+   * See: https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#mobile-emulation-by-device-metrics
+   */
+  def `gwen.web.chrome.mobile`: Map[String, String] =
+    Settings.findAllMulti("gwen.web.chrome.mobile", "gwen.web.chrome.mobile")
+
 }

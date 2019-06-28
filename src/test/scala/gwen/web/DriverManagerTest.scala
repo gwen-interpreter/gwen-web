@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Brady Wood, Branko Juric
+ * Copyright 2015-2019 Brady Wood, Branko Juric
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,22 +46,22 @@ class DriverManagerTest extends FlatSpec with Matchers with MockitoSugar {
     val manager = newManager("firefox")
     manager.withWebDriver { _ should be (mockFirefoxDriver) }
   }
-  
+
   "Chrome setting" should "load chrome driver" in {
     val manager = newManager("chrome")
     manager.withWebDriver { _ should be (mockChromeDriver) }
   }
-  
+
   "IE setting" should "load IE driver" in {
     val manager = newManager("ie")
     manager.withWebDriver { _ should be (mockIeDriver) }
   }
-  
+
   "Safari setting" should "load safari driver" in {
     val manager = newManager("safari")
     manager.withWebDriver { _ should be (mockSafariDriver) }
   }
-  
+
   "Hub URL setting" should "load remote web driver" in {
     withSetting("gwen.web.remote.url", "http://localhost:44466/wd/hub") {
       val manager = newManager("chrome")
@@ -69,14 +69,14 @@ class DriverManagerTest extends FlatSpec with Matchers with MockitoSugar {
       driver should be (mockRemoteDriver)
     }
   }
-  
+
   "Web driver" should "quit on manager quit" in {
     val manager = newManager()
     val mockWebDriver = manager.withWebDriver { webDriver => webDriver }
     manager.quit()
     verify(mockWebDriver).quit()
   }
-  
+
   "Quitting manager" should "create new webdriver on subsequent access" in {
     val manager = newManager()
     val webDriver1 = manager.withWebDriver { webDriver => webDriver }
@@ -85,15 +85,15 @@ class DriverManagerTest extends FlatSpec with Matchers with MockitoSugar {
     val webDriver2 = manager.withWebDriver { webDriver => webDriver }
     webDriver1 should not be webDriver2
   }
-  
+
   "Accessing web driver without closing manager" should "return the same web driver instance" in {
-    
+
     val manager = newManager()
     val webDriver1 = manager.withWebDriver { webDriver => webDriver }
     val webDriver2 = manager.withWebDriver { webDriver => webDriver }
     webDriver1 should be (webDriver2)
   }
-  
+
   "Quitting the manager multiple times" should "quit the web driver only once" in {
 
     val manager = newManager()
@@ -104,7 +104,7 @@ class DriverManagerTest extends FlatSpec with Matchers with MockitoSugar {
     manager.quit()
     verify(mockWebDriver, times(1)).quit()
   }
-  
+
   "Quitting new manager without referencing webdriver" should "not quit the web driver" in {
     val mockWebDriver = mock[WebDriver]
     val manager = newManager(mockWebDriver)
@@ -158,7 +158,7 @@ class DriverManagerTest extends FlatSpec with Matchers with MockitoSugar {
     }
   }
 
-  "DriverManager.closeChild" should "should close child window" in {
+  "DriverManager.closeChild" should "close child window" in {
     val mockWebDriver = mock[WebDriver]
     val manager = newManager(mockWebDriver)
     val mockTargetLocator = mock[WebDriver.TargetLocator]

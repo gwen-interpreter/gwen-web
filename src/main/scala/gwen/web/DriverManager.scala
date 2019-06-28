@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Brady Wood, Branko Juric
+ * Copyright 2015-2019 Brady Wood, Branko Juric
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,14 +48,14 @@ class DriverManager extends LazyLogging {
   /** The current web browser session. */
   private var session = "primary"
 
-  /** Current stack of windows. */
-  private val windows = mutable.Stack[String]()
+  /** Current stack of windows (per session). */
+  private val windows = mutable.Map[String, List[String]]()
     
   /** Provides private access to the web driver */
   private def webDriver: WebDriver = drivers.getOrElse(session, {
       loadWebDriver tap { driver =>
         drivers += (session -> driver)
-        windows push driver.getWindowHandle
+        addSessionWindow(driver.getWindowHandle)
       }
     })
 
@@ -76,6 +76,7 @@ class DriverManager extends LazyLogging {
       logger.info(s"Closing browser session${ if(name == "primary") "" else s": $name"}")
       driver.quit()
       drivers.remove(name)
+      windows.remove(name)
     }
     session = "primary"
   }
@@ -224,6 +225,26 @@ class DriverManager extends LazyLogging {
         options.addExtensions(extensions:_*)
       }
     }
+    val mobileSettings = WebSettings.`gwen.web.chrome.mobile`
+    if (mobileSettings.nonEmpty) {
+      val mobileEmulation = new java.util.HashMap[String, Object]()
+      mobileSettings.get("deviceName").fold({
+        val deviceMetrics = new java.util.HashMap[String, Object]()
+        mobileSettings foreach { case (name, value) =>
+          name match {
+            case "width" | "height" => deviceMetrics.put(name, java.lang.Integer.valueOf(value.trim))
+            case "pixelRatio" => deviceMetrics.put(name, java.lang.Double.valueOf(value.trim))
+            case "touch" => deviceMetrics.put(name, java.lang.Boolean.valueOf(value.trim))
+            case _ => mobileEmulation.put(name, value)
+          }
+        }
+        mobileEmulation.put("deviceMetrics", deviceMetrics)
+      }) { deviceName: String =>
+        mobileEmulation.put("deviceName", deviceName)
+      }
+      logger.info(s"Chrome mobile emulation options: $mobileEmulation")
+      options.setExperimentalOption("mobileEmulation", mobileEmulation)
+    }
     setDesiredCapabilities(options)
   }
 
@@ -288,8 +309,9 @@ class DriverManager extends LazyLogging {
     * Switches to the child window if one was just opened.
     */
   private[web] def switchToChild(driver: WebDriver) {
-    val children = driver.getWindowHandles.asScala.filter(window => !windows.contains(window)).toList match {
-      case Nil if windows.size > 1 => windows.init
+    val sWindows = sessionWindows()
+    val children = driver.getWindowHandles.asScala.filter(window => !sWindows.contains(window)).toList match {
+      case Nil if sWindows.size > 1 => sWindows.init
       case cs => cs
     }
     if (children.size == 1) {
@@ -313,8 +335,9 @@ class DriverManager extends LazyLogging {
   }
 
   private[web] def closeChild() {
-    if (windows.size > 1) {
-      val child = windows.pop
+    val sWindows = sessionWindows()
+    if (sWindows.size > 1) {
+      val child = popSessionWindow()
       webDriver.switchTo.window(child)
       logger.info(s"Closing child window ($child)")
       webDriver.close()
@@ -326,9 +349,10 @@ class DriverManager extends LazyLogging {
 
   /** Switches to the parent window. */
   private[web] def switchToParent(childClosed: Boolean) {
-    if (windows.nonEmpty) {
-      val child = windows.pop
-      val target = if (windows.nonEmpty) windows.top else child
+    val sWindows = sessionWindows()
+    if (sWindows.nonEmpty) {
+      val child = popSessionWindow()
+      val target = if (sWindows.nonEmpty) sWindows.head else child
       switchToWindow(target, isChild = false)
       if (!childClosed) { pushWindow(child) }
     } else {
@@ -340,8 +364,9 @@ class DriverManager extends LazyLogging {
   private[web] def switchToDefaultContent(): Unit = webDriver.switchTo().defaultContent()
 
   private[web] def pushWindow(window: String) {
-    if (windows.isEmpty || windows.top != window) {
-      windows push window
+    val sWindows = sessionWindows()
+    if (sWindows.isEmpty || sWindows.head != window) {
+      addSessionWindow(window)
     }
   }
 
@@ -354,6 +379,25 @@ class DriverManager extends LazyLogging {
     logger.info(s"Switching to browser session: $session")
     this.session = session
     webDriver
+  }
+
+  private def sessionWindows(): List[String] = {
+    if (!windows.contains(session)) {
+      windows += (session -> Nil)
+    }
+    windows(session)
+  }
+
+  private def addSessionWindow(window: String): Unit = {
+    if (window != null) {
+      windows += (session -> (window :: sessionWindows()))
+    }
+  }
+
+  private def popSessionWindow(): String = {
+    val sWindows = sessionWindows()
+    windows += (session -> sWindows.tail)
+    sWindows.head
   }
   
 }
