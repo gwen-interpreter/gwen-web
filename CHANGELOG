@@ -11,6 +11,8 @@ Jun 28, 2019
     - `gwen.web.chrome.mobile.pixelRatio` (double)
     - `gwen.web.chrome.mobile.touch` (boolean)
     - `gwen.web.chrome.mobile.userAgent` (string)
+- Resolve current URL on demand in URL comparison checks
+- Do not create new page scope when navigating by URL
 
 2.32.1
 ======

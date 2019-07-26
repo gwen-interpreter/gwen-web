@@ -118,16 +118,18 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     }
   }
   
-  def boundAttributeOrSelection(element: String, selection: Option[String]): () => String = () => selection match {
-    case None => getBoundReferenceValue(element)
-    case Some(sel) => 
-      try { 
-        getBoundReferenceValue(element + sel)
-      } catch {
-        case _: UnboundAttributeException =>
-          webContext.getElementSelection(element, sel).getOrElse(getBoundReferenceValue(element))
-        case e: Throwable => throw e
-      }
+  def boundAttributeOrSelection(element: String, selection: Option[String]): () => String = () => {
+    selection match {
+      case None => getBoundReferenceValue(element)
+      case Some(sel) =>
+        try {
+          getBoundReferenceValue(element + sel)
+        } catch {
+          case _: UnboundAttributeException =>
+            webContext.getElementSelection(element, sel).getOrElse(getBoundReferenceValue(element))
+          case e: Throwable => throw e
+        }
+    }
   }
 
   /**

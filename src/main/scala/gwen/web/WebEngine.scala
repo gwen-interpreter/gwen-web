@@ -212,7 +212,6 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
         webContext.navigateTo(url)
 
       case r"""I navigate to "(.+?)"$$$url""" => step.orDocString(url) tap { url =>
-        env.scopes.addScope(url)
         webContext.navigateTo(url)
       }
 
@@ -499,17 +498,17 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
           env.compare("title", expected, () => webContext.getTitle, operator, Option(negation).isDefined)
         }
 
-      case r"""the (?:alert|confirmation) popup message should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file)$operator "(.*?)"$$$expression""" => step.orDocString(expression) tap { expression =>
+      case r"""the (alert|confirmation)$name popup message should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file)$operator "(.*?)"$$$expression""" => step.orDocString(expression) tap { expression =>
         val expected = env.parseExpression(operator, expression)
         env.perform {
-          env.compare("title", expected, () => webContext.getPopupMessage, operator, Option(negation).isDefined)
+          env.compare(name, expected, () => webContext.getPopupMessage, operator, Option(negation).isDefined)
         }
       }
 
-      case r"""the (?:alert|confirmation) popup message should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$$$attribute""" =>
+      case r"""the (alert|confirmation)$name popup message should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$$$attribute""" =>
         val expected = env.getBoundReferenceValue(attribute)
         env.perform {
-          env.compare("title", expected, () => webContext.getPopupMessage, operator, Option(negation).isDefined)
+          env.compare(name, expected, () => webContext.getPopupMessage, operator, Option(negation).isDefined)
         }
 
       case r"""(.+?)$element should( not)?$negation be (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$$$state""" =>
@@ -518,6 +517,7 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
 
       case r"""(.+?)$element( text| value)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file)$operator "(.*?)"$$$expression""" if !element.matches(".+at (json path|xpath).+") => step.orDocString(expression) tap { expression =>
         if (element == "I") undefinedStepError(step)
+        if (element == "the current URL") webContext.captureCurrentUrl(None)
         val negate = Option(negation).isDefined
         val expected = env.parseExpression(operator, expression)
         val actual = env.boundAttributeOrSelection(element, Option(selection))
@@ -541,6 +541,7 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
 
       case r"""(.+?)$element( value| text)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$$$attribute""" if attribute != "absent" && !element.matches(".+at (json path|xpath).+") =>
         if (element == "I") undefinedStepError(step)
+        if (element == "the current URL") webContext.captureCurrentUrl(None)
         val expected = env.getBoundReferenceValue(attribute)
         val actual = env.boundAttributeOrSelection(element, Option(selection))
         env.perform {

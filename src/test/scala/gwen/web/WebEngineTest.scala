@@ -133,7 +133,6 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
 
   """I navigate to "<url>""""" should "evaluate" in {
     evaluate("""I navigate to "<url>"""")
-    verify(mockScopes).addScope("<url>")
     verify(webContext).navigateTo("<url>")
   }
 
@@ -653,6 +652,7 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
 
   """the current URL should <operator> "<value>"""" should "evaluate" in {
     matchers.foreach { case (operator, source, expression) =>
+      doNothing().when(webContext).captureCurrentUrl(None)
       doReturn(None).when(mockScopes).findEntry(any())
       doReturn(() => source).when(env).boundAttributeOrSelection("the current URL", None)
       doReturn(None).when(mockScopes).getOpt("the current URL")
@@ -664,6 +664,7 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
   """the current URL should not <operator> "<value>"""" should "evaluate" in {
     matchers.foreach { case (operator, src, expression) =>
       val source = src.replaceAll("value", "other")
+      doNothing().when(webContext).captureCurrentUrl(None)
       doReturn(None).when(mockScopes).findEntry(any())
       doReturn(() => source).when(env).boundAttributeOrSelection("the current URL", None)
       doReturn(None).when(mockScopes).getOpt("the current URL")
@@ -674,6 +675,7 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
 
   "the current URL should <operator> <reference>" should "evaluate" in {
     matchers2.foreach { case (operator, source, expression) =>
+      doNothing().when(webContext).captureCurrentUrl(None)
       doReturn(None).when(mockScopes).findEntry(any())
       doReturn(() => source).when(env).boundAttributeOrSelection("the current URL", None)
       doReturn(None).when(mockScopes).getOpt("the current URL")
@@ -686,6 +688,7 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
   "the current URL should not <operator> <reference>" should "evaluate" in {
     matchers2.foreach { case (operator, src, expression) =>
       val source = src.replaceAll("value", "other")
+      doNothing().when(webContext).captureCurrentUrl(None)
       doReturn(None).when(mockScopes).findEntry(any())
       doReturn(() => source).when(env).boundAttributeOrSelection("the current URL", None)
       doReturn(None).when(mockScopes).getOpt("the current URL")
