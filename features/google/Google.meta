@@ -33,7 +33,7 @@
   Scenario: the first result should open a Gwen page
       Given the first match can be located by css selector ".r > a"
        When I click the first match
-       Then the current URL should start with "https://github.com/gwen-interpreter/gwen"
+       Then the current URL should contain "gwen"
 
   @StepDef
   Scenario: no results should be displayed
