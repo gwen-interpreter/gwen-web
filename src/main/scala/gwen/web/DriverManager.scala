@@ -275,22 +275,22 @@ class DriverManager extends LazyLogging {
   }
   
   private[web] def chrome(): WebDriver = {
-    WebSettings.`webdriver.chrome.driver`.fold(WebDriverManager.chromedriver().setup()) { driverPath =>
-      logger.info(s"Using chrome driver specified by setting: webdriver.chrome.driver=$driverPath")
+    if (WebSettings.`webdriver.chrome.driver`.isEmpty) { 
+      WebDriverManager.chromedriver().setup()
     }
     new ChromeDriver(chromeOptions())
   }
   
   private[web] def firefox(): WebDriver = {
-    WebSettings.`webdriver.gecko.driver`.fold(WebDriverManager.firefoxdriver().setup()) { driverPath =>
-      logger.info(s"Using gecko driver specified by setting: webdriver.chrome.driver=$driverPath")
+    if (WebSettings.`webdriver.gecko.driver`.isEmpty) {
+      WebDriverManager.firefoxdriver().setup()
     }
     new FirefoxDriver(firefoxOptions())
   }
   
   private[web] def ie(): WebDriver = {
-    WebSettings.`webdriver.ie.driver`.fold(WebDriverManager.iedriver().setup()) { driverPath =>
-      logger.info(s"Using IE driver specified by setting: webdriver.ie.driver=$driverPath")
+    if (WebSettings.`webdriver.ie.driver`.isEmpty) {
+      WebDriverManager.iedriver().setup()
     }
     new InternetExplorerDriver(ieOptions())
   }

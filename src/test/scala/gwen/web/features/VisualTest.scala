@@ -24,6 +24,7 @@ class VisualTest extends BaseFeatureTest {
 
   "sequential visual tests" should "pass" in {
     sys.env.get("APPLITOOLS_API_KEY").foreach { _ =>
+      evaluate(List("features/floodio", "features/blogs", "features/google"), parallel = false, dryRun = false, "target/reports/sequential", None)
       evaluate(List("features/visual/gwen-reports", "features/visual/todo"), parallel = false, dryRun = false, "target/reports/visual-test-sequential", None)
     }
   }
