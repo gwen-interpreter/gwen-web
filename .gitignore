@@ -6,5 +6,7 @@ project/project/target/
 .history
 .settings/
 .idea/
+.metals/
+.bloop/
 *.log
 /bin/

@@ -33,6 +33,7 @@ import com.typesafe.scalalogging.LazyLogging
 import gwen.Predefs.Kestrel
 import gwen.errors._
 import gwen.web.errors._
+import io.github.bonigarcia.wdm.WebDriverManager
 
 import collection.JavaConverters._
 import scala.collection.mutable
@@ -273,13 +274,30 @@ class DriverManager extends LazyLogging {
     capabilities.setCapability("javascriptEnabled", true)
   }
   
-  private[web] def chrome(): WebDriver = new ChromeDriver(chromeOptions())
+  private[web] def chrome(): WebDriver = {
+    WebSettings.`webdriver.chrome.driver`.fold(WebDriverManager.chromedriver().setup()) { driverPath =>
+      logger.info(s"Using chrome driver specified by setting: webdriver.chrome.driver=$driverPath")
+    }
+    new ChromeDriver(chromeOptions())
+  }
   
-  private[web] def firefox(): WebDriver = new FirefoxDriver(firefoxOptions())
+  private[web] def firefox(): WebDriver = {
+    WebSettings.`webdriver.gecko.driver`.fold(WebDriverManager.firefoxdriver().setup()) { driverPath =>
+      logger.info(s"Using gecko driver specified by setting: webdriver.chrome.driver=$driverPath")
+    }
+    new FirefoxDriver(firefoxOptions())
+  }
   
-  private[web] def ie(): WebDriver = new InternetExplorerDriver(ieOptions())
+  private[web] def ie(): WebDriver = {
+    WebSettings.`webdriver.ie.driver`.fold(WebDriverManager.iedriver().setup()) { driverPath =>
+      logger.info(s"Using IE driver specified by setting: webdriver.ie.driver=$driverPath")
+    }
+    new InternetExplorerDriver(ieOptions())
+  }
   
-  private[web] def safari(): WebDriver = new SafariDriver(safariOptions())
+  private[web] def safari(): WebDriver = {
+    new SafariDriver(safariOptions())
+  }
   
   private[web] def remote(hubUrl: String, capabilities: DesiredCapabilities): WebDriver =
     new RemoteWebDriver(new HttpCommandExecutor(new URL(hubUrl)), capabilities)

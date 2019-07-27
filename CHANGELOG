@@ -1,3 +1,12 @@
+2.34.0
+======
+Jul 27, 2019
+- Embedded [WebDriverManager](https://github.com/bonigarcia/webdrivermanager) now manages all native drivers for
+  you unless explicit driver locations (`webdriver.xxx.driver`) are set in Gwen settings files.
+  WebDriverManger (`wdm.*`) properties can be stored in Gwen settings files for custom configurations.
+  All downloaded native web driver binaries are stored in the .gwen/wdm folder in the user's home directory.
+- Update Gwen core from v2.19.1 to v[2.19.2](https://github.com/gwen-interpreter/gwen/releases/tag/v2.19.2)
+
 2.33.0
 ======
 Jun 28, 2019

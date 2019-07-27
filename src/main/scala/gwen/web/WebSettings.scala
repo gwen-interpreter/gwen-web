@@ -16,10 +16,10 @@
 
 package gwen.web
 
-import gwen.Settings
+import gwen.{Predefs, Settings}
 import java.io.File
 
-import gwen.Predefs.Kestrel
+import gwen.Predefs.{FileIO, Kestrel}
 import gwen.errors.invalidSettingError
 
 import scala.util.Try
@@ -31,6 +31,18 @@ import scala.util.Try
   * @author Branko Juric
   */
 object WebSettings {
+
+  // put drivers downloaded by WebDriverManager in ~.gwen/wdm dir
+  System.setProperty("wdm.targetPath", new File(new File(System.getProperty("user.home")), ".gwen/drivers").getAbsolutePath)
+
+  /** Chrome driver setting. */
+  def `webdriver.chrome.driver`: Option[String] = Settings.getOpt("webdriver.chrome.driver")
+
+  /** Gecko (firefox) driver setting. */
+  def `webdriver.gecko.driver`: Option[String] = Settings.getOpt("webdriver.gecko.driver")
+
+  /** IE driver setting. */
+  def `webdriver.ie.driver`: Option[String] = Settings.getOpt("webdriver.ie.driver")
   
   /**
     * Provides access to the `gwen.web.browser` setting used to set the target browser 

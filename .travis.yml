@@ -15,9 +15,4 @@ cache:
 sudo: required
 addons:
   chrome: stable
-before_install:
-  - wget https://chromedriver.storage.googleapis.com/2.46/chromedriver_linux64.zip
-  - mkdir chromedriver
-  - unzip -o chromedriver_linux64.zip -d chromedriver
-  - export PATH=$PATH:$PWD/chromedriver
 sbt_args: -Dgwen.web.browser=chrome -Dgwen.web.browser.headless=true
