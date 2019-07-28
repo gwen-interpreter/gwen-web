@@ -6,7 +6,7 @@ Gwen-web
 A [Gwen](https://github.com/gwen-interpreter/gwen) interpreter that enables teams to quickly automate front end web
 tests and robotic online processes with [Gherkin](https://docs.cucumber.io/gherkin/reference/) feature specifications.
 A [web DSL](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL) interacts with
-[Selenium](http://www.seleniumhq.org/projects/webdriver) under the covers for you so you don't have to setup up native
+[Selenium](http://www.seleniumhq.org/projects/webdriver) under the covers for you so you don't have to setup up
 drivers or do any selenium programming or technical development work. It supports all the standard web element locators
 provided by Selenium and additionally allows you to inject JavaScript in places where dynamically locating web elements
 or running functions on pages may be necessary.
