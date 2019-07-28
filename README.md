@@ -21,7 +21,7 @@ or running functions on pages may be necessary.
 - [Change log](CHANGELOG)
 
 ### What's New?
-- Integrated [WebDriverManager](https://github.com/bonigarcia/webdrivermanager) now managed all native webdrivers for you
+- Integrated [WebDriverManager](https://github.com/bonigarcia/webdrivermanager) now manages all native webdrivers for you
 - [Mobile Emulation](https://github.com/gwen-interpreter/gwen-web/wiki/Mobile-Emulation)
 - [Visual Testing with AppliTools](https://github.com/gwen-interpreter/gwen-web/wiki/Visual-Testing)
 
