@@ -108,7 +108,7 @@ Key Features
 - Hard, soft, and sustained [assertion modes](https://github.com/gwen-interpreter/gwen/wiki/Assertion-Modes)
 - [Visual Testing with AppliTools](https://github.com/gwen-interpreter/gwen-web/wiki/Visual-Testing)
 - [Mobile Emulation](https://github.com/gwen-interpreter/gwen-web/wiki/Mobile-Emulation)
-- Integrated [WebDriverManager]
+- Integrated [WebDriverManager](https://github.com/bonigarcia/webdrivermanager)
 
 License
 -------
