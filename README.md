@@ -14,6 +14,7 @@ or running functions on pages may be necessary.
 > [Installation](https://github.com/gwen-interpreter/gwen-web/wiki/Installation)
   | [Getting Started](https://github.com/gwen-interpreter/gwen-web/wiki/Getting-Started)
   | [DSL](http://htmlpreview.github.io/?https://github.com/gwen-interpreter/gwen-web/blob/master/docs/dsl/gwen-web-dsl.html)
+  | [Settings](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings)
   | [Blog](https://gweninterpreter.wordpress.com)
   | [Wiki](https://github.com/gwen-interpreter/gwen-web/wiki)
   | [FAQ](https://github.com/gwen-interpreter/gwen-web/wiki/FAQ)
