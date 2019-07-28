@@ -11,7 +11,13 @@ drivers or do any selenium programming or technical development work. It support
 provided by Selenium and additionally allows you to inject JavaScript in places where dynamically locating web elements
 or running functions on pages may be necessary.
 
->  [User network and support](https://www.gwenify.com/)
+> [Installation](https://github.com/gwen-interpreter/gwen-web/wiki/Installation)
+  | [Getting Started](https://github.com/gwen-interpreter/gwen-web/wiki/Getting-Started)
+  | [DSL](http://htmlpreview.github.io/?https://github.com/gwen-interpreter/gwen-web/blob/master/docs/dsl/gwen-web-dsl.html)
+  | [Blog](https://gweninterpreter.wordpress.com)
+  | [Wiki](https://github.com/gwen-interpreter/gwen-web/wiki)
+  | [FAQ](https://github.com/gwen-interpreter/gwen-web/wiki/FAQ)
+  | [Support](https://www.gwenify.com/)
 
 ### Current Status
 
@@ -24,15 +30,6 @@ or running functions on pages may be necessary.
 - Integrated [WebDriverManager](https://github.com/bonigarcia/webdrivermanager) now manages all native webdrivers for you
 - [Mobile Emulation](https://github.com/gwen-interpreter/gwen-web/wiki/Mobile-Emulation)
 - [Visual Testing with AppliTools](https://github.com/gwen-interpreter/gwen-web/wiki/Visual-Testing)
-
-Quick Links
--------------------------------
-- [Installation](https://github.com/gwen-interpreter/gwen-web/wiki/Installation)
-- [Getting Started](https://github.com/gwen-interpreter/gwen-web/wiki/Getting-Started)
-- [Gwen Web DSL](http://htmlpreview.github.io/?https://github.com/gwen-interpreter/gwen-web/blob/master/docs/dsl/gwen-web-dsl.html)
-- [Blog](https://gweninterpreter.wordpress.com)
-- [Wiki](https://github.com/gwen-interpreter/gwen-web/wiki)
-- [FAQ](https://github.com/gwen-interpreter/gwen-web/wiki/FAQ)
 
 Why Gwen-web?
 -------------
