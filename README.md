@@ -71,18 +71,13 @@ So you can drive automation with Gherkin features like this..
 Runtime Requirements
 --------------------
 
-- Java SE 8 Runtime Environment
-- A web browser
-- Native web driver
-  - [Safari](https://webkit.org/blog/6900/webdriver-support-in-safari-10/)
-  - [Chrome](https://sites.google.com/a/chromium.org/chromedriver/)
-  - [IE](https://github.com/SeleniumHQ/selenium/wiki/InternetExplorerDriver)
-  - [Firefox](https://github.com/mozilla/geckodriver/releases)
+- Java SE 8+ Runtime Environment
+- Chrome, Firefox, IE, or Safari web browser
 
 Key Features
 ------------
 
-- Automation driven by plain text [Gherkin](https://docs.cucumber.io/gherkin/reference/) specifications
+- Automation driven by [Gherkin](https://docs.cucumber.io/gherkin/reference/) specifications
   - See [Gwen-Web DSL](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL)
 - Features can execute in [batch mode](https://github.com/gwen-interpreter/gwen/wiki/Execution-Modes#batch-execution) or [interactively](https://github.com/gwen-interpreter/gwen/wiki/Execution-Modes#interactive-repl-execution)
 - Features can execute [sequentially](https://github.com/gwen-interpreter/gwen/wiki/Execution-Modes#serial-execution) or in [parallel](https://github.com/gwen-interpreter/gwen/wiki/Execution-Modes#parallel-execution)
@@ -100,9 +95,9 @@ Key Features
 - [Drag and Drop](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL#i-drag-and-drop-sourceelement-to-targetelement)
 - [Locator level timeouts](https://github.com/gwen-interpreter/gwen-web/wiki/Locator-Level-Timeouts)
 - [Implicit JavaScript Locators](https://github.com/gwen-interpreter/gwen-web/wiki/Implicit-JavaScript-Locators)
-- [Running Gwen on BrowserStack](https://gweninterpreter.wordpress.com/2018/06/16/running-gwen-on-browserstack/)
+- [Remote BrowserStack execution](https://gweninterpreter.wordpress.com/2018/06/16/running-gwen-on-browserstack/)
 - [Synchronized StepDef execution](https://github.com/gwen-interpreter/gwen/wiki/Synchronized-StepDefs)
-- [Indexed locators](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL#element-can-be-located-by-idnametag-namecss-selectorxpathclass-namelink-textpartial-link-textjavascript-expression-at-index-index)
+- [Indexed element locators](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL#element-can-be-located-by-idnametag-namecss-selectorxpathclass-namelink-textpartial-link-textjavascript-expression-at-index-index)
 - Hard, soft, and sustained [assertion modes](https://github.com/gwen-interpreter/gwen/wiki/Assertion-Modes)
 - [Visual Testing with AppliTools](https://github.com/gwen-interpreter/gwen-web/wiki/Visual-Testing)
 - [Mobile Emulation](https://github.com/gwen-interpreter/gwen-web/wiki/Mobile-Emulation)
