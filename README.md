@@ -13,7 +13,7 @@ or running functions on pages may be necessary.
 
 > [Installation](https://github.com/gwen-interpreter/gwen-web/wiki/Installation)
   | [Getting Started](https://github.com/gwen-interpreter/gwen-web/wiki/Getting-Started)
-  | [DSL](http://htmlpreview.github.io/?https://github.com/gwen-interpreter/gwen-web/blob/master/docs/dsl/gwen-web-dsl.html)
+  | [DSL](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL)
   | [Settings](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings)
   | [Blog](https://gweninterpreter.wordpress.com)
   | [Wiki](https://github.com/gwen-interpreter/gwen-web/wiki)
@@ -83,7 +83,7 @@ Key Features
 ------------
 
 - Automation driven by plain text [Gherkin](https://docs.cucumber.io/gherkin/reference/) specifications
-  - See [Gwen-Web DSL](http://htmlpreview.github.io/?https://github.com/gwen-interpreter/gwen-web/blob/master/docs/dsl/gwen-web-dsl.html)
+  - See [Gwen-Web DSL](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL)
 - Features can execute in [batch mode](https://github.com/gwen-interpreter/gwen/wiki/Execution-Modes#batch-execution) or [interactively](https://github.com/gwen-interpreter/gwen/wiki/Execution-Modes#interactive-repl-execution)
 - Features can execute [sequentially](https://github.com/gwen-interpreter/gwen/wiki/Execution-Modes#serial-execution) or in [parallel](https://github.com/gwen-interpreter/gwen/wiki/Execution-Modes#parallel-execution)
 - [Runtime settings](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings)

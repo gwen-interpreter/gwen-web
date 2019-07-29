@@ -1,3 +1,9 @@
+2.34.1
+======
+Jul 29, 2019
+- Update Gwen core from v2.19.2 to v[2.19.3](https://github.com/gwen-interpreter/gwen/releases/tag/v2.19.3)
+  - Ensure error attachments are always added to reports for failing steps
+
 2.34.0
 ======
 Jul 27, 2019

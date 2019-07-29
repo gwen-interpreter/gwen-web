@@ -81,7 +81,7 @@ class EyesContext(env: WebEnvContext) extends LazyLogging {
       invalidVisualSessionStateError("""Please start a visual test session first using DSL step at: https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL#i-start-visual-test-as-name""")
     }
     eyesSession foreach { eyes =>
-      Thread.sleep(WebSettings.`gwen.web.throttle.msecs`)
+      Thread.sleep(1000 + WebSettings.`gwen.web.throttle.msecs`)
       eyes.setForceFullPageScreenshot(fullPage)
       eyes.setMatchLevel(matchLevel.orNull)
       eyes.checkWindow(checkpoint)
