@@ -16,6 +16,7 @@
 
 package gwen.web
 
+import java.io.File
 import java.net.URL
 import java.util.concurrent.TimeUnit
 
@@ -42,6 +43,11 @@ import scala.collection.mutable
   * Provides and manages access to the web drivers.
   */
 class DriverManager extends LazyLogging {
+
+  // put drivers downloaded by WebDriverManager in ~.gwen/wdm dir by default
+  if (sys.props.get("wdm.targetPath").isEmpty) {
+    sys.props += (("wdm.targetPath", new File(new File(System.getProperty("user.home")), ".gwen/wdm").getAbsolutePath))
+  }
     
   /** Map of web driver instances (keyed by name). */
   private[web] val drivers: mutable.Map[String, WebDriver] = mutable.Map()

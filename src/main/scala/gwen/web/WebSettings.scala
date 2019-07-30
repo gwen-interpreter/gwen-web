@@ -32,9 +32,6 @@ import scala.util.Try
   */
 object WebSettings {
 
-  // put drivers downloaded by WebDriverManager in ~.gwen/wdm dir
-  System.setProperty("wdm.targetPath", new File(new File(System.getProperty("user.home")), ".gwen/wdm").getAbsolutePath)
-
   /** Chrome driver setting. */
   def `webdriver.chrome.driver`: Option[String] = Settings.getOpt("webdriver.chrome.driver")
 
