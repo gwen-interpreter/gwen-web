@@ -3,6 +3,7 @@
 Jul 30, 2019
 - Set default WebDriverManager download directory to `~.gwen/wdm` only if the `wdm.targetPath` system 
   property is not already set
+- Do not capture screenshot for visual assertion errors when we have link to AppliTools dashboard
 
 2.34.1
 ======

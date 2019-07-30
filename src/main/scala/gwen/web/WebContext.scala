@@ -893,7 +893,11 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
     withEyesContext { context =>
       context.results() tap { results =>
         env.addAttachment("AppliTools dashboard", "url", results.getUrl)
-        assert(results.isNew || results.isPassed, s"Expected visual check to pass but was: ${results.getStatus}")
+        try {
+          assert(results.isNew || results.isPassed, s"Expected visual check to pass but was: ${results.getStatus}")
+        } catch {
+          case e: AssertionError => visualAssertionError(e.getMessage)
+        }
       }
     }
   }

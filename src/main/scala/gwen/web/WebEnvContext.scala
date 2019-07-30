@@ -24,7 +24,8 @@ import scala.util.Try
 import gwen.Predefs.Kestrel
 import gwen.dsl.Failed
 import gwen.eval.{EnvContext, GwenOptions, ScopedDataStack}
-import gwen.web.errors.{WaitTimeoutException, locatorBindingError}
+import gwen.errors.StepFailure
+import gwen.web.errors.{WaitTimeoutException, locatorBindingError, VisualAssertionException}
 import gwen.errors.{UnboundAttributeException, unboundAttributeError}
 import org.openqa.selenium.WebElement
 
@@ -67,7 +68,9 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     if (failure.isTechError) {
       super.addErrorAttachments(failure)
     }
-    if (!failure.isLicenseError) {
+    val isVisualAssertionError = 
+      failure.cause.map(_.isInstanceOf[VisualAssertionException]).getOrElse(false)
+    if (!failure.isLicenseError && !isVisualAssertionError) {
       webContext.captureScreenshot(true)
     }
   }

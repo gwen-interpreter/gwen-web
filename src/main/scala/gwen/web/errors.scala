@@ -37,6 +37,7 @@ package gwen {
       def elementNotFoundError(element: String, cause: Throwable = null) =
         throw new WebElementNotFoundException(element, cause)
       def invalidVisualSessionStateError(msg: String) = throw new InvalidVisualSessionStateException(msg)
+      def visualAssertionError(msg: String) = throw new VisualAssertionException(msg)
 
       /** Thrown when a locator binding error is detected . */
       class LocatorBindingException(msg: String) extends GwenException(msg)
@@ -66,6 +67,9 @@ package gwen {
 
       /** Thrown when a visual checking session is in an invalid state. */
       class InvalidVisualSessionStateException(msg: String) extends AssertionError(msg)
+
+      /** Thrown when a visual assertion fails. */
+      class VisualAssertionException(msg: String) extends AssertionError(msg)
 
     }
   }
