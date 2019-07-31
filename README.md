@@ -164,6 +164,7 @@ The following users raised issues or requests that have been addressed:
 - [ketu4u2010](https://github.com/ketu4u2010)
 - [Rahul9844](https://github.com/Rahul9844)
 - [rkevin99](https://github.com/rkevin99)
+- [Sergio Freire](https://github.com/bitcoder)
 
 Credits
 -------
