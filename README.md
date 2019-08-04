@@ -11,13 +11,15 @@ drivers or do any selenium programming or technical development work. It support
 provided by Selenium and additionally allows you to inject JavaScript in places where dynamically locating web elements
 or running functions on pages may be necessary.
 
-> [Installation](https://github.com/gwen-interpreter/gwen-web/wiki/Installation)
+> [Home](http://gweninterpreter.org)
+  | [Installation](https://github.com/gwen-interpreter/gwen-web/wiki/Installation)
   | [Getting Started](https://github.com/gwen-interpreter/gwen-web/wiki/Getting-Started)
   | [DSL](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL)
   | [Settings](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings)
   | [Blog](https://gweninterpreter.wordpress.com)
   | [Wiki](https://github.com/gwen-interpreter/gwen-web/wiki)
   | [FAQ](https://github.com/gwen-interpreter/gwen-web/wiki/FAQ)
+  | [License](https://github.com/gwen-interpreter/gwen-web/blob/master/README.md#license)
   | [Support](https://www.gwenify.com/)
 
 ### Current Status
