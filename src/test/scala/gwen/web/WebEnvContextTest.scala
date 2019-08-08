@@ -49,10 +49,10 @@ class WebEnvContextTest extends FlatSpec with Matchers with MockitoSugar {
   
   "json on new env context" should "be empty" in {
     val env = newEnv()
-    env.scopes.asString should be (
+    env.scopes.asString.replace("\r", "") should be (
       """{
         |  scopes { }
-        |}""".stripMargin)
+        |}""".stripMargin.replace("\r", ""))
   }
   
   "Bound scope attribute" should "show up in JSON string" in {
@@ -60,14 +60,15 @@ class WebEnvContextTest extends FlatSpec with Matchers with MockitoSugar {
     env.scopes.addScope("login")
     env.scopes.set("username", "Gwen")
     env.scopes.get("username") should be ("Gwen")
-    env.scopes.asString should be (
+    println(env.scopes.asString)
+    env.scopes.asString.replace("\r", "") should be (
       """{
         |  scopes {
         |    scope : "login" {
         |      username : "Gwen"
         |    }
         |  }
-        |}""".stripMargin)
+        |}""".stripMargin.replace("\r", ""))
                                       
   }
   

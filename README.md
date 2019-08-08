@@ -30,9 +30,11 @@ or running functions on pages may be necessary.
 - [Change log](CHANGELOG)
 
 ### What's New?
+- Microsoft Edge brwoser support
 - Integrated [WebDriverManager](https://github.com/bonigarcia/webdrivermanager) now manages all native webdrivers for you
 - [Mobile Emulation](https://github.com/gwen-interpreter/gwen-web/wiki/Mobile-Emulation)
-- [Visual Testing with AppliTools](https://github.com/gwen-interpreter/gwen-web/wiki/Visual-Testing)
+
+Visual-Testing)
 
 Why Gwen-web?
 -------------
@@ -74,19 +76,19 @@ Runtime Requirements
 --------------------
 
 - Java SE 8+ Runtime Environment
-- Chrome, Firefox, IE, or Safari web browser
+- Chrome, Firefox, Edge, IE, or Safari web browser
 
 Key Features
 ------------
 
 - Automation driven by [Gherkin](https://docs.cucumber.io/gherkin/reference/) specifications
   - See [Gwen-Web DSL](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL)
+- Cross browser support including Chrome, Firefox, Safari, Edge and IE
 - Features can execute in [batch mode](https://github.com/gwen-interpreter/gwen/wiki/Execution-Modes#batch-execution) or [interactively](https://github.com/gwen-interpreter/gwen/wiki/Execution-Modes#interactive-repl-execution)
 - Features can execute [sequentially](https://github.com/gwen-interpreter/gwen/wiki/Execution-Modes#serial-execution) or in [parallel](https://github.com/gwen-interpreter/gwen/wiki/Execution-Modes#parallel-execution)
 - [Runtime settings](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings)
 - Execution can be [data driven](https://github.com/gwen-interpreter/gwen/wiki/Execution-Modes#csv-data-feeds) (using csv data feeds)
 - [REPL console](https://github.com/gwen-interpreter/gwen/wiki/REPL-Console) allows verifying before running
-- Cross browser support
 - [Remote web driver](https://gweninterpreter.wordpress.com/2015/04/23/remote-webdriver-feature-now-available-in-gwen-web/) support
 - [Screenshot capture and slideshow](https://github.com/gwen-interpreter/gwen-web/wiki/Screenshot-Capture-and-Slideshows) playback
 - [Interchangeable Selenium](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#changing-the-selenium-version) implementation

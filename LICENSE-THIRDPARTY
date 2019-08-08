@@ -71,6 +71,7 @@ org.scala-lang                           scala-library                      | 2.
 org.scala-lang                           scala-reflect                      | 2.12.8    | [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 org.seleniumhq.selenium                  selenium-api                       | 3.141.59  | [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 org.seleniumhq.selenium                  selenium-chrome-driver             | 3.141.59  | [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+org.seleniumhq.selenium                  selenium-edge-driver               | 3.141.59  | [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 org.seleniumhq.selenium                  selenium-firefox-driver            | 3.141.59  | [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 org.seleniumhq.selenium                  selenium-ie-driver                 | 3.141.59  | [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 org.seleniumhq.selenium                  selenium-remote-driver             | 3.141.59  | [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)

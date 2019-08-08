@@ -69,7 +69,7 @@ class WebDslTest extends FlatSpec with Matchers {
           } foreach { dsl =>
             interpreter.evaluateStep(Step(StepKeyword.Given, dsl.replaceAll("<step>", """a is "b"""")), env).evalStatus match {
               case Failed(_, error) => fail(error)
-              case evalStatus => evalStatus.status should be (StatusKeyword.Passed)
+              case evalStatus => evalStatus.status should not be (StatusKeyword.Failed)
             }
           }
         }

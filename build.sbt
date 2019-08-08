@@ -38,6 +38,7 @@ lazy val commonDependencies = {
     "commons-io" % "commons-io" % commonsIO,
     "org.seleniumhq.selenium" % "selenium-chrome-driver" % selenium,
     "org.seleniumhq.selenium" % "selenium-firefox-driver" % selenium,
+    "org.seleniumhq.selenium" % "selenium-edge-driver" % selenium,
     "org.seleniumhq.selenium" % "selenium-ie-driver" % selenium,
     "org.seleniumhq.selenium" % "selenium-safari-driver" % selenium,
     "org.seleniumhq.selenium" % "selenium-support" % selenium excludeAll ExclusionRule(organization = "junit", name = "junit"),

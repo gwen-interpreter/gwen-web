@@ -157,6 +157,9 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
             val locators = boundValue.split(",") flatMap { locatorType =>
               if (!locatorType.matches("(id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)"))
                 locatorBindingError(s"Unsupported locator type defined for $element: $locatorType")
+              if (locatorType == "xpath" && WebSettings.`gwen.web.browser` == "ie" ) {
+                locatorBindingError("Cannot locate element by XPath because IE does not support it")
+              }
               val lookupBinding = interpolate(s"$element/locator/$locatorType")(getBoundReferenceValue)
               scopes.getOpt(lookupBinding) match {
                 case Some(expression) =>

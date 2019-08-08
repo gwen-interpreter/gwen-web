@@ -39,6 +39,7 @@ class DriverManagerTest extends FlatSpec with Matchers with MockitoSugar {
   val mockChromeDriver: WebDriver = createMockLocalDriver
   val mockFirefoxDriver: WebDriver = createMockLocalDriver
   val mockIeDriver: WebDriver = createMockLocalDriver
+  val mockEdgeDriver: WebDriver = createMockLocalDriver
   val mockSafariDriver: WebDriver = createMockLocalDriver
   val mockRemoteDriver: RemoteWebDriver = createMockRemoteDriver
   
@@ -55,6 +56,11 @@ class DriverManagerTest extends FlatSpec with Matchers with MockitoSugar {
   "IE setting" should "load IE driver" in {
     val manager = newManager("ie")
     manager.withWebDriver { _ should be (mockIeDriver) }
+  }
+
+  "Edge setting" should "load Edge driver" in {
+    val manager = newManager("edge")
+    manager.withWebDriver { _ should be (mockEdgeDriver) }
   }
 
   "Safari setting" should "load safari driver" in {
@@ -184,6 +190,7 @@ class DriverManagerTest extends FlatSpec with Matchers with MockitoSugar {
     override private[web] def chrome(): WebDriver = mockChromeDriver
     override private[web] def firefox(): WebDriver = mockFirefoxDriver
     override private[web] def ie(): WebDriver = mockIeDriver
+    override private[web] def edge(): WebDriver = mockEdgeDriver
     override private[web] def safari(): WebDriver = mockSafariDriver
     override private[web] def remote(hubUrl: String, capabilities: DesiredCapabilities): WebDriver = {
       val mockDriver = mockRemoteDriver

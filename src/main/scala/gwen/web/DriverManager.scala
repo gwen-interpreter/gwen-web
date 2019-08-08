@@ -25,6 +25,7 @@ import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.chrome.ChromeOptions
 import org.openqa.selenium.firefox.{FirefoxDriver, FirefoxOptions, FirefoxProfile}
 import org.openqa.selenium.ie.{InternetExplorerDriver, InternetExplorerOptions}
+import org.openqa.selenium.edge.{EdgeDriver, EdgeOptions}
 import org.openqa.selenium.remote.CapabilityType
 import org.openqa.selenium.remote.DesiredCapabilities
 import org.openqa.selenium.remote.HttpCommandExecutor
@@ -118,7 +119,8 @@ class DriverManager extends LazyLogging {
       browser.trim.toLowerCase match {
         case "firefox" => firefoxOptions()
         case "chrome" => chromeOptions()
-        case "ie" | "internet explorer" => ieOptions()
+        case "ie" => ieOptions()
+        case "edge" => edgeOptions()
         case "safari" => safariOptions()
         case _ =>
           new MutableCapabilities() tap { caps =>
@@ -141,6 +143,7 @@ class DriverManager extends LazyLogging {
     driverName match {
       case "firefox" => firefox()
       case "ie" => ie()
+      case "edge" => edge()
       case "chrome" => chrome()
       case "safari" => safari()
       case _ => unsupportedWebDriverError(driverName)
@@ -256,6 +259,16 @@ class DriverManager extends LazyLogging {
   }
 
   private def ieOptions(): InternetExplorerOptions = new InternetExplorerOptions() tap { options =>
+    def caps = setDesiredCapabilities(options)
+    setDefaultCapability("requireWindowFocus", true, options)
+    setDefaultCapability("nativeEvents", false, options);    
+    setDefaultCapability("unexpectedAlertBehaviour", "accept", options);
+    setDefaultCapability("ignoreProtectedModeSettings", true, options);
+    setDefaultCapability("disable-popup-blocking", true, options);
+    setDefaultCapability("enablePersistentHover", true, options);
+  }
+
+  private def edgeOptions(): EdgeOptions = new EdgeOptions() tap { options =>
     setDesiredCapabilities(options)
   }
 
@@ -263,21 +276,32 @@ class DriverManager extends LazyLogging {
     setDesiredCapabilities(options)
   }
 
-  private def setDesiredCapabilities(capabilities: MutableCapabilities) {
-    WebSettings.`gwen.web.capabilities` foreach { case (name, value) =>
-      try {
-        logger.info(s"Setting web capability: $name=$value")
-        capabilities.setCapability(name, Integer.valueOf(value.trim))
-      } catch {
-        case _: Throwable =>
-          if (value.matches("(true|false)")) capabilities.setCapability(name, java.lang.Boolean.valueOf(value.trim))
-          else capabilities.setCapability(name, value)
+  private def setDesiredCapabilities(capabilities: MutableCapabilities): MutableCapabilities = {
+    capabilities tap { caps =>
+      WebSettings.`gwen.web.capabilities` foreach { case (name, value) =>
+        setCapabilty(name, value, caps);
       }
+      setDefaultCapability(CapabilityType.ACCEPT_SSL_CERTS, WebSettings.`gwen.web.accept.untrusted.certs`, caps)
+      setDefaultCapability("javascriptEnabled", true, caps)
     }
-    logger.info(s"Setting web capability: ${CapabilityType.ACCEPT_SSL_CERTS}=${WebSettings.`gwen.web.accept.untrusted.certs`}")
-    capabilities.setCapability(CapabilityType.ACCEPT_SSL_CERTS, WebSettings.`gwen.web.accept.untrusted.certs`)
-    logger.info(s"Setting web capability: javascriptEnabled=true")
-    capabilities.setCapability("javascriptEnabled", true)
+  }
+
+  private def setDefaultCapability(name: String, value: Any, capabilities: MutableCapabilities) {
+    if (capabilities.getCapability(name) == null) {
+      setCapabilty(name, value, capabilities)
+    }
+  }
+
+  private def setCapabilty(name: String, value: Any, capabilities: MutableCapabilities) {
+    def strValue = String.valueOf(value).trim
+    try {
+      logger.info(s"Setting web capability: $name=$strValue")
+      capabilities.setCapability(name, Integer.valueOf(strValue))
+    } catch {
+      case _: Throwable =>
+        if (strValue.matches("(true|false)")) capabilities.setCapability(name, java.lang.Boolean.valueOf(strValue))
+        else capabilities.setCapability(name, strValue)
+    }
   }
   
   private[web] def chrome(): WebDriver = {
@@ -299,6 +323,13 @@ class DriverManager extends LazyLogging {
       WebDriverManager.iedriver().setup()
     }
     new InternetExplorerDriver(ieOptions())
+  }
+
+  private[web] def edge(): WebDriver = {
+    if (WebSettings.`webdriver.edge.driver`.isEmpty) {
+      WebDriverManager.edgedriver().setup()
+    }
+    new EdgeDriver(edgeOptions())
   }
   
   private[web] def safari(): WebDriver = {

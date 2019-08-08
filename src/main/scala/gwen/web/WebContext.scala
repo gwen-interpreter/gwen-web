@@ -130,9 +130,7 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
           waitUntil {
             try {
               val webElement = locate(elementBinding)
-              if (!isDisplayed(webElement)) {
-                scrollIntoView(webElement, ScrollTo.top)
-              }
+              tryMoveTo(webElement)
               if (!locator.isContainer) {
                 highlightElement(webElement)
               }
@@ -182,6 +180,14 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
         }
       }
     }
+
+  def tryMoveTo(webElement: WebElement) {
+    if (!webElement.isDisplayed && !isInViewport(webElement)) {
+      withWebDriver { driver => 
+        createActions(driver).moveToElement(webElement).perform()
+      }
+    }
+  }
 
   /** Captures and the current screenshot and adds it to the attachments list. */
   def captureScreenshot(unconditional: Boolean): Unit =
@@ -303,22 +309,28 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
       try {
         withWebElement(elementBinding) { webElement =>
           result = state match {
-            case "displayed" => webElement.isDisplayed
-            case "hidden" => !webElement.isDisplayed
-            case "checked" | "ticked" => webElement.isSelected
-            case "unchecked" | "unticked" => !webElement.isSelected
-            case "enabled" => webElement.isEnabled
-            case "disabled" => !webElement.isEnabled
+            case "displayed" if !negate => isDisplayed(webElement)
+            case "displayed" if negate => !isDisplayed(webElement)
+            case "hidden" if !negate => !isDisplayed(webElement)
+            case "hidden" if negate => isDisplayed(webElement)
+            case "checked" | "ticked" if !negate => webElement.isSelected
+            case "checked" | "ticked" if negate => !webElement.isSelected
+            case "unchecked" | "unticked" if !negate => !webElement.isSelected
+            case "unchecked" | "unticked" if negate => webElement.isSelected
+            case "enabled" if !negate => webElement.isEnabled
+            case "enabled" if negate => !webElement.isEnabled
+            case "disabled" if !negate => !webElement.isEnabled
+            case "disabled" if negate => webElement.isEnabled
           }
         }
       } catch {
         case e @ (_ :  NoSuchElementException | _ : WaitTimeoutException) =>
-          if (state == "displayed") result = false
-          else if (state == "hidden") result = true
+          if (state == "displayed") result = negate
+          else if (state == "hidden") result = !negate
           else throw e
       }
     }
-    if (negate) !result else result
+    result
   }
 
   /**
@@ -473,12 +485,13 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
               createActions(driver).moveToElement(webElement).perform()
             case "submit" => webElement.submit()
             case "check" | "tick" =>
-              if (!webElement.isSelected)
-                createActions(driver).sendKeys(webElement, Keys.SPACE).perform()
               if (!webElement.isSelected) webElement.click()
+              if (!webElement.isSelected) 
+                createActions(driver).sendKeys(webElement, Keys.SPACE).perform()
             case "uncheck" | "untick" =>
-              createActions(driver).sendKeys(webElement, Keys.SPACE).perform()
               if (webElement.isSelected) webElement.click()
+              if (webElement.isSelected) 
+                createActions(driver).sendKeys(webElement, Keys.SPACE).perform()
             case "clear" =>
               webElement.clear()
           }
@@ -578,11 +591,11 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
           case "right click" => perform(webElement, contextElement) { _.contextClick() }
           case "double click" => perform(webElement, contextElement) { _.doubleClick() }
           case "check" | "tick" =>
-            if (!webElement.isSelected) perform(webElement, contextElement) { _.sendKeys(Keys.SPACE) }
             if (!webElement.isSelected) perform(webElement, contextElement) { _.click() }
+            if (!webElement.isSelected) perform(webElement, contextElement) { _.sendKeys(Keys.SPACE) }
           case "uncheck" | "untick" =>
-            if (webElement.isSelected) perform(webElement, contextElement) { _.sendKeys(Keys.SPACE) }
             if (webElement.isSelected) perform(webElement, contextElement) { _.click() }
+            if (webElement.isSelected) perform(webElement, contextElement) { _.sendKeys(Keys.SPACE) }
           case "move to" => perform(webElement, contextElement) { action => action }
         }
         env.bindAndWait(elementBinding.element, action, "true")
@@ -846,8 +859,13 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
     } getOrElse "$[dryRun:popupMessage]"
   }
 
-  /** Checks if an element id displayed (visible in viewport). */
-  private def isDisplayed(webElement: WebElement): Boolean = {
+  /** Checks if an element is displayed. */
+  def isDisplayed(webElement: WebElement): Boolean = {
+    webElement.isDisplayed && isInViewport(webElement)
+  }
+
+  /** Checks if an element is not in the view port. */
+  def isInViewport(webElement: WebElement): Boolean = {
     executeJS("return (function(elem){var b=elem.getBoundingClientRect(); return b.top>=0 && b.left>=0 && b.bottom<=(window.innerHeight || document.documentElement.clientHeight) && b.right<=(window.innerWidth || document.documentElement.clientWidth);})(arguments[0])", webElement).asInstanceOf[Boolean]
   }
 

@@ -40,13 +40,16 @@ object WebSettings {
 
   /** IE driver setting. */
   def `webdriver.ie.driver`: Option[String] = Settings.getOpt("webdriver.ie.driver")
+
+  /** Edge driver setting. */
+  def `webdriver.edge.driver`: Option[String] = Settings.getOpt("webdriver.edge.driver")
   
   /**
     * Provides access to the `gwen.web.browser` setting used to set the target browser 
-    * (default value is `firefox`).
+    * (default value is `chrome`). Valid values include chrome, firefox, safari, ie, and edge
     */
   def `gwen.web.browser`: String = 
-    Settings.getOpt("gwen.web.browser").getOrElse("firefox")
+    Settings.getOpt("gwen.web.browser").getOrElse("chrome")
   
   /**
     * Provides access to the `gwen.web.useragent` setting used to set the user agent header 
