@@ -130,7 +130,7 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
           waitUntil {
             try {
               val webElement = locate(elementBinding)
-              if (!webElement.isDisplayed) {
+              if (!isDisplayed(webElement)) {
                 scrollIntoView(webElement, ScrollTo.top)
               }
               if (!locator.isContainer) {
@@ -844,6 +844,11 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
     withWebDriver { driver =>
       driver.switchTo().alert().getText
     } getOrElse "$[dryRun:popupMessage]"
+  }
+
+  /** Checks if an element id displayed (visible in viewport). */
+  private def isDisplayed(webElement: WebElement): Boolean = {
+    executeJS("return (function(elem){var b=elem.getBoundingClientRect(); return b.top>=0 && b.left>=0 && b.bottom<=(window.innerHeight || document.documentElement.clientHeight) && b.right<=(window.innerWidth || document.documentElement.clientWidth);})(arguments[0])", webElement).asInstanceOf[Boolean]
   }
 
   /**
