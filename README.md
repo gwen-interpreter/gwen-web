@@ -1,19 +1,17 @@
 [![Gwen-web](https://github.com/gwen-interpreter/gwen/wiki/img/gwen-attractor.png)](https://github.com/gwen-interpreter/gwen/wiki/The-Gwen-Logo)
 
-Gwen-web
-========
+Gwen Web Automation
+===================
 
-A [Gwen](https://github.com/gwen-interpreter/gwen) interpreter that enables teams to quickly automate front end web
-tests and robotic online processes with [Gherkin](https://docs.cucumber.io/gherkin/reference/) feature specifications.
-A [web DSL](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL) interacts with
-[Selenium](http://www.seleniumhq.org/projects/webdriver) under the covers for you so you don't have to setup up
-drivers or do any selenium programming or technical development work. It supports all the standard web element locators
-provided by Selenium and additionally allows you to inject JavaScript in places where dynamically locating web elements
-or running functions on pages may be necessary.
+A [Gwen](https://github.com/gwen-interpreter/gwen) interpreter that enables teams to quickly 
+automate front end web tests and repetitive online processes with 
+[Gherkin](https://docs.cucumber.io/gherkin/reference/) feature specifications. A 
+[web DSL](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL) interacts with 
+[Selenium](http://www.seleniumhq.org/projects/webdriver) under the covers for you so you don't have to do any of that programming or technical development work. All the standard Selenium 
+locators are supported and you can additionally inject JavaScript in places where dynamically 
+finding elements or running functions on web pages may be necessary.
 
-> [Home](http://gweninterpreter.org)
-  | [Installation](https://github.com/gwen-interpreter/gwen-web/wiki/Installation)
-  | [Getting Started](https://github.com/gwen-interpreter/gwen-web/wiki/Getting-Started)
+> [Get Started](https://github.com/gwen-interpreter/gwen-web/wiki/Getting-Started)
   | [DSL](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL)
   | [Settings](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings)
   | [Blog](https://gweninterpreter.wordpress.com)
@@ -21,8 +19,9 @@ or running functions on pages may be necessary.
   | [FAQ](https://github.com/gwen-interpreter/gwen-web/wiki/FAQ)
   | [License](https://github.com/gwen-interpreter/gwen-web/blob/master/README.md#license)
   | [Support](https://www.gwenify.com/)
+  | [Twitter](https://twitter.com/gweninterpreter)
 
-### Current Status
+## Current Status
 
 [![Build Status](https://travis-ci.org/gwen-interpreter/gwen-web.svg?branch=master)](https://travis-ci.org/gwen-interpreter/gwen-web)
 
@@ -30,71 +29,127 @@ or running functions on pages may be necessary.
 - [Change log](CHANGELOG)
 
 ### What's New?
-- Microsoft Edge brwoser support
+- Microsoft Edge browser support
 - Integrated [WebDriverManager](https://github.com/bonigarcia/webdrivermanager) now manages all native webdrivers for you
 - [Mobile Emulation](https://github.com/gwen-interpreter/gwen-web/wiki/Mobile-Emulation)
 
-Visual-Testing)
-
-Why Gwen-web?
--------------
-So you can drive automation with Gherkin features like this..
+Why Gwen?
+---------
+So you can drive web automation with declarative [Gherkin features](https://docs.cucumber.io/gherkin/reference/) like this ..
 ```gherkin
-   Feature: Google search
+ Feature: Google search
 
-  Scenario: Perform a google search
-      Given I have Google in my browser
-       When I do a search for "Gwen automation"
-       Then the first result should open a Gwen page
+Scenario: Perform a google search
+
+    Given I have Google in my browser
+     When I do a search for "Gwen automation"
+      And I'm feeling lucky
+     Then I should land on a Gwen page
 ```
 
-..by writing [Gwen Meta features](https://github.com/gwen-interpreter/gwen/wiki/Meta-Features) like this..
+.. by defining separate and imperative [Meta features](https://github.com/gwen-interpreter/gwen/wiki/Meta-Features) like this ..
 ```gherkin
-   Feature: Google search meta
 
-  @StepDef
-  Scenario: I have Google in my browser
-      Given I start a new browser
-       When I navigate to "http://www.google.com"
-       Then the page title should be "Google"
+ # Gwen meta features are defined in Gherkin too. They define locators 
+ # and step definitions that are matched against steps in features to
+ # find elements and perform browser operations. They are loaded into 
+ # memory before feature execution commences.
 
-  @StepDef
-  Scenario: I do a search for "<query>"
-      Given the search field can be located by name "q"
-       When I enter "$<query>" in the search field
-       Then the page title should contain "$<query>"
+ Feature: Google search meta
 
-  @StepDef
-  Scenario: the first result should open a Gwen page
-      Given the first match can be located by css selector ".r > a"
-       When I click the first match
-       Then the current URL should contain "gwen-interpreter"
+        # @StepDef annotated Scenarios are step definitions in Gwen. The
+        # name of the Scenario becomes the name of the step def. Steps
+        # in features that match this name are executed by Gwen by 
+        # evaluating the sequence of steps defined in that step def.
+
+@StepDef
+Scenario: I have Google in my browser
+
+          Gwen will match the name of this step def to the first step
+          in the feature above and evaluate the steps that follow. These
+          steps are matched against predefined steps in the Gwen Web DSL
+          to perform browser operations for you at runtime.
+
+    Given I start a new browser
+     When I navigate to "http://www.google.com"
+     Then the page title should be "Google"
+
+@StepDef
+Scenario: I do a search for "<query>"
+
+          Gwen will match the name of this step def to the seconond
+          step in the feature above and assign the <query> parameter to the
+          value provided at the matching location. Gwen will then evaluate the
+          steps below and resolve any $<query> references to that value.
+
+    Given the search field can be located by name "q"
+     When I enter "$<query>" in the search field
+     Then the page title should be "$<query> - Google Search"
+
+@StepDef
+Scenario: I'm feeling lucky
+
+          Gwen will match the name of this step def to the third
+          step in the feature above and evaluate the steps that follow.
+
+    Given the first match can be located by css selector ".r > a"
+     When I click the first match
+     Then the page title should not contain "Google"
+
+@StepDef
+Scenario: I should land on a Gwen page
+
+          Gwen will match the name of this step def to the last
+          step in the feature above and evaluate the step that follows.
+
+     Then the current URL should match regex ".+[G|g]wen.*"
 ```
-..with [no Page Objects](https://gweninterpreter.wordpress.com/2016/03/08/nopageobjects-theres-no-long-way-to-go-were-already-there/) or Selenium coding required!
-
-Runtime Requirements
---------------------
-
-- Java SE 8+ Runtime Environment
-- Chrome, Firefox, Edge, IE, or Safari web browser
+.. without having to develop any [page objects or framework](https://gweninterpreter.wordpress.com/2016/03/08/nopageobjects-theres-no-long-way-to-go-were-already-there/) code!
 
 Key Features
 ------------
 
-- Automation driven by [Gherkin](https://docs.cucumber.io/gherkin/reference/) specifications
-  - See [Gwen-Web DSL](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL)
-- Cross browser support including Chrome, Firefox, Safari, Edge and IE
+- Web automation is driven by [Gherkin](https://docs.cucumber.io/gherkin/reference/)
+ specifications
+  - Declarative features describe behavioral requirements in Gherkin
+  - Imperative [Meta features](https://github.com/gwen-interpreter/gwen/wiki/Meta-Features) describe browser interactions in Gherkin
+  - Gwen binds the two at runtime to achieve web automation
+- A prescribed [Web DSL](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL) performs all browser interactions for you
+- Automation across browsers and platforms is consistent
+- Chrome, Firefox, Safari, Edge and IE are supported
+- An interactive [REPL console](https://github.com/gwen-interpreter/gwen/wiki/REPL-Console) provides a step by step execution environment
+
+Get Started
+-----------
+
+### System Requirements
+
+- Linux, Mac or Windows OS
+- Chrome, Firefox, Safari, Edge or IE web browser
+- Java JRE or JDK 8 (version 1.8) or higher
+  - You can verify that you have Java installed by opening a command prompt and typing `java -version`. A version will be displayed if you have Java installed.
+  - [Install Java](https://www.java.com/en/download/manual.jsp) if you do not see a version displayed 
+
+### Install Gwen and Go!
+
+Ensure that your system meets the above requirements and then perform the following:
+
+1. Download and extract [gwen-workspace.zip](https://github.com/gwen-interpreter/gwen-web/releases/latest/download/gwen-workspace.zip) into to a folder on your computer
+2. [Start automating](https://github.com/gwen-interpreter/gwen-web/wiki/Getting-Started)
+
+Learn More
+----------
+
 - Features can execute in [batch mode](https://github.com/gwen-interpreter/gwen/wiki/Execution-Modes#batch-execution) or [interactively](https://github.com/gwen-interpreter/gwen/wiki/Execution-Modes#interactive-repl-execution)
 - Features can execute [sequentially](https://github.com/gwen-interpreter/gwen/wiki/Execution-Modes#serial-execution) or in [parallel](https://github.com/gwen-interpreter/gwen/wiki/Execution-Modes#parallel-execution)
 - [Runtime settings](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings)
 - Execution can be [data driven](https://github.com/gwen-interpreter/gwen/wiki/Execution-Modes#csv-data-feeds) (using csv data feeds)
-- [REPL console](https://github.com/gwen-interpreter/gwen/wiki/REPL-Console) allows verifying before running
 - [Remote web driver](https://gweninterpreter.wordpress.com/2015/04/23/remote-webdriver-feature-now-available-in-gwen-web/) support
 - [Screenshot capture and slideshow](https://github.com/gwen-interpreter/gwen-web/wiki/Screenshot-Capture-and-Slideshows) playback
 - [Interchangeable Selenium](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#changing-the-selenium-version) implementation
 - [Locator Chaining](https://github.com/gwen-interpreter/gwen-web/wiki/Locator-Chaining)
 - [Headless Browser Execution](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#gwenwebbrowserheadless)
-- [Gwen Workspaces](https://gweninterpreter.wordpress.com/2017/12/18/gwen-workspaces/) for easy and consistent Gwen installation, configuration and execution on any workstation or build server.
+- [Gwen Workspaces](https://gweninterpreter.wordpress.com/2017/12/18/gwen-workspaces/) for easy installation
 - [Template matching](https://github.com/gwen-interpreter/gwen/wiki/Template-Matching)
 - [Drag and Drop](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL#i-drag-and-drop-sourceelement-to-targetelement)
 - [Locator level timeouts](https://github.com/gwen-interpreter/gwen-web/wiki/Locator-Level-Timeouts)
@@ -117,7 +172,7 @@ This software is open sourced under the
 
 See also: [LICENSE](LICENSE).
 
-This project has dependencies on [gwen](https://github.com/gwen-interpreter/gwen) and other open source projects. All
+This project has dependencies on [Gwen](https://github.com/gwen-interpreter/gwen) and other open source projects. All
 distributed third party dependencies and their licenses are listed in the [LICENSE-THIRDPARTY](LICENSE-THIRDPARTY) file.
 
 Open sourced 28 June 2014 03:27 pm AEST
@@ -125,10 +180,10 @@ Open sourced 28 June 2014 03:27 pm AEST
 Contributions
 -------------
 
-New capabilities, improvements, and fixes are all valid candidates for contribution. Submissions can be made using
-pull requests. Each submission is reviewed and verified by the project [maintainers](#maintainers) before being
-integrated and released to the community. We ask that all code submissions include unit tests or sample test features
-providing relevant coverage.
+New capabilities, improvements, fixes, and documentation are all welcomed candidates for 
+contribution. Each submission is reviewed and verified by the project [maintainers](#maintainers) 
+before being integrated and released to the community. We ask that all code submissions include 
+unit tests or sample test features providing relevant coverage.
 
 By submitting contributions, you agree to release your work under the [license](#license) that covers this software.
 
@@ -155,20 +210,20 @@ The following [contributors](https://github.com/gwen-interpreter/gwen/graphs/con
 that have been merged:
 
 - [Jacob Juric](https://github.com/TheReturningVoid)
-- [Alexandru Cuciureanu](https://github.com/acuciureanu)
+| [Alexandru Cuciureanu](https://github.com/acuciureanu)
 
 The following users raised issues or requests that have been addressed:
 
 - [Rebecca Abriam](https://github.com/mairbar)
-- [George Tsihitas](https://github.com/gtsihitas)
-- [Zoltan Penzeli](https://github.com/siaynoq)
-- [inkbleed](https://github.com/inkbleed)
-- [Pradeep Thawani](https://github.com/pradeep-thawani)
-- [anshu781126](https://github.com/anshu781126)
-- [ketu4u2010](https://github.com/ketu4u2010)
-- [Rahul9844](https://github.com/Rahul9844)
-- [rkevin99](https://github.com/rkevin99)
-- [Sergio Freire](https://github.com/bitcoder)
+| [George Tsihitas](https://github.com/gtsihitas)
+| [Zoltan Penzeli](https://github.com/siaynoq)
+| [inkbleed](https://github.com/inkbleed)
+| [Pradeep Thawani](https://github.com/pradeep-thawani)
+| [anshu781126](https://github.com/anshu781126)
+| [ketu4u2010](https://github.com/ketu4u2010)
+| [Rahul9844](https://github.com/Rahul9844)
+| [rkevin99](https://github.com/rkevin99)
+| [Sergio Freire](https://github.com/bitcoder)
 
 Credits
 -------
@@ -185,4 +240,3 @@ Integrates With
 <a href="https://applitools.com/" target="_blank"><img src="https://gwen-interpreter.github.io/assets/img/integration/applitools-logo.png" height="40"/></a>
 
 ---
-
