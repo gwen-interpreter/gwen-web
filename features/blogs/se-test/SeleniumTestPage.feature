@@ -21,3 +21,4 @@ Scenario: Submit the test form
     When I provide some contact details
      And I submit the test form
     Then nothing should happen
+     And the page should still function

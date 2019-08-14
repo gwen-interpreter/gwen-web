@@ -14,22 +14,65 @@
 # limitations under the License.
 #
 
-Feature: Selenium Test Page Meta
+ Feature: Selenium Test Page Meta
 
- @StepDef
- Scenario: I am on the Selenium test page
-     Given I navigate to "https://automationintesting.com/selenium/testpage/"
-      Then firstNameById can be located by id "firstname"
-       And formByName can be located by name "contactform"
+@StepDef
+Scenario: I am on the Selenium test page
+     When I go to the Selenium test page
+     Then firstNameById can be located by id "firstname"
+      And formByName can be located by name "contactform"
+      And genderByClass can be located by class name "gender"
+      And firstNameByXPath can be located by xpath "//*[@id="firstname"]"
+      And linkByTag can be located by tag name "a"
+      And linkByCSS can be located by css selector "div a"
+      And linkByLinkText can be located by link text "Our Policy"
+      And linkByPartialText can be located by partial link text "Policy"
+      And formByJS can be located by javascript "document.getElementsByName('contactform')[0]"
+      And formByJQuery can be located by javascript "$('#contactus').get(0)"
+      And formByJSFunc can be located by javascript
+          """
+          (function() {
+            return document.getElementsByName('contactform')[0]
+          })();
+          """
 
- @StepDef
- Scenario: I provide some contact details
-      When I type "Gwen" in firstNameById
+@StepDef
+Scenario: I provide some contact details
+     When I type "Gwen" in firstNameById
 
- @StepDef
- Scenario: I submit the test form
-      When I submit formByName
+@StepDef
+Scenario: I submit the test form
+     When I submit formByName
 
- @StepDef
- Scenario: nothing should happen
-      Then the current URL should end with "?"
+@StepDef
+Scenario: nothing should happen
+     Then the current URL should end with "?"
+
+@StepDef
+Scenario: the page should still function
+     When I select "Female" in genderByClass
+      And I clear firstNameByXPath
+      And I click linkByTag
+     Then the current URL should be "https://automationintesting.com/"
+     When I go to the Selenium test page
+      And I click linkByCSS
+     Then the current URL should be "https://automationintesting.com/blog"
+     When I go to the Selenium test page
+      And I click linkByLinkText
+     Then the current URL should be "https://automationintesting.com/selenium/testpage/#"
+     When I click linkByPartialText
+     Then the current URL should be "https://automationintesting.com/selenium/testpage/#"
+     When I go to the Selenium test page
+      And I submit formByJS
+     Then nothing should happen
+     When I submit formByJQuery
+     Then nothing should happen
+     When I submit formByJSFunc
+     Then nothing should happen
+
+@StepDef
+Scenario: I go to the Selenium test page
+    Given I navigate to "https://automationintesting.com/selenium/testpage/"
+
+
+
