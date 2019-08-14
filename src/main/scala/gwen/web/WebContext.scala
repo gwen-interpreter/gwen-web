@@ -109,7 +109,10 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
     * @param elementBinding the web element locator binding
     */
   def locateAndHighlight(elementBinding: LocatorBinding): Unit = {
-    withWebElement(elementBinding) { webElement => webElement }
+    withDriverAndElement("locate", elementBinding) { (driver, webElement) =>
+      createActions(driver).moveToElement(webElement).perform()
+      webElement 
+    }
   }
 
   /**

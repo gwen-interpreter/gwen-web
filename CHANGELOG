@@ -1,3 +1,8 @@
+2.35.1
+======
+Aug 14, 2019
+- Move to elements when using locate|highlight DSL
+
 2.35.0
 ======
 Aug 9, 2019
