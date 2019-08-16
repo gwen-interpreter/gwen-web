@@ -1,3 +1,11 @@
+2.35.2
+======
+Aug 15
+- Fix screenshot capture when including highlighting and when moving to elements
+- Update Gwen core from v2.19.3 to v[2.19.4](https://github.com/gwen-interpreter/gwen/releases/tag/v2.19.4)
+  - Only log stack traces to console if DEBUG logging is enabled
+  - Allow up to 18 frames per second in slideshow playback (and default is now 5 instead of 1)
+
 2.35.1
 ======
 Aug 14, 2019

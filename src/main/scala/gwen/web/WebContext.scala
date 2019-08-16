@@ -110,8 +110,7 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
     */
   def locateAndHighlight(elementBinding: LocatorBinding): Unit = {
     withDriverAndElement("locate", elementBinding) { (driver, webElement) =>
-      createActions(driver).moveToElement(webElement).perform()
-      webElement 
+      createActions(driver).moveToElement(webElement).perform() 
     }
   }
 
@@ -195,8 +194,8 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
   /** Captures and the current screenshot and adds it to the attachments list. */
   def captureScreenshot(unconditional: Boolean): Unit =
     env.perform {
-      Thread.sleep(WebSettings.`gwen.web.throttle.msecs` / 2)
       val screenshot = driverManager.withWebDriver { driver =>
+        Thread.sleep(150) // give browser time to render
         driver.asInstanceOf[TakesScreenshot].getScreenshotAs(OutputType.FILE)
       }
       val keep = unconditional || WebSettings.`gwen.web.capture.screenshots.duplicates` || lastScreenshotSize.fold(true) { _ != screenshot.length}
@@ -224,7 +223,7 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
           }
           logger.debug(s"Evaluated javascript: $javascript, result='$result'")
           if (result.isInstanceOf[Boolean] && result.asInstanceOf[Boolean]) {
-            Thread.sleep(WebSettings.`gwen.web.throttle.msecs`)
+            Thread.sleep(150) // observed volatile results for booleans without wait
           }
         }
       } catch {
@@ -277,10 +276,17 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
   def highlightElement(element: WebElement): Unit = {
     env.perform {
       val msecs = WebSettings`gwen.web.throttle.msecs`; // need semi-colon (compiler bug?)
-      if (msecs > 0) {
+      val duration = if (WebSettings.`gwen.web.capture.screenshots` && 
+          WebSettings.`gwen.web.capture.screenshots.highlighting` 
+          && msecs < 500) {
+        500
+      } else {
+        msecs
+      }
+      if (duration > 0) {
         val style = WebSettings.`gwen.web.highlight.style`
-        executeJS(s"element = arguments[0]; type = element.getAttribute('type'); if (('radio' == type || 'checkbox' == type) && element.parentElement.getElementsByTagName('input').length == 1) { element = element.parentElement; } original_style = element.getAttribute('style'); element.setAttribute('style', original_style + '; $style'); setTimeout(function() { element.setAttribute('style', original_style); }, $msecs);", element)(WebSettings.`gwen.web.capture.screenshots.highlighting`)
-        Thread.sleep(msecs)
+        executeJS(s"element = arguments[0]; type = element.getAttribute('type'); if (('radio' == type || 'checkbox' == type) && element.parentElement.getElementsByTagName('input').length == 1) { element = element.parentElement; } original_style = element.getAttribute('style'); element.setAttribute('style', original_style + '; $style'); setTimeout(function() { element.setAttribute('style', original_style); }, $duration);", element)(WebSettings.`gwen.web.capture.screenshots.highlighting`)
+        Thread.sleep(duration)
       }
     }
   }
@@ -373,6 +379,8 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
       }
       createActions(driver).moveToElement(webElement).sendKeys(value).perform()
       env.bindAndWait(element, "type", value)
+    }
+    withDriverAndElement("send enter key", elementBinding) { (driver, webElement) =>
       if (sendEnterKey) {
         createActions(driver).sendKeys(webElement, Keys.RETURN).perform()
         env.bindAndWait(element, "enter", "true")
@@ -477,15 +485,18 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
         performScriptAction(action, javascript, elementBinding)
       case None =>
         withDriverAndElement(action, elementBinding) { (driver, webElement) =>
+          if (action != "move to") {
+            moveToAndCapture(driver, webElement)
+          }
           action match {
             case "click" =>
-              webElement.click()
+            webElement.click()
             case "right click" =>
               createActions(driver).contextClick(webElement).perform()
             case "double click" =>
               createActions(driver).doubleClick(webElement).perform()
             case "move to" =>
-              createActions(driver).moveToElement(webElement).perform()
+              moveToAndCapture(driver, webElement)
             case "submit" => webElement.submit()
             case "check" | "tick" =>
               if (!webElement.isSelected) webElement.click()
@@ -503,6 +514,13 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
     }
   }
 
+  def moveToAndCapture(driver: WebDriver, webElement: WebElement) {
+    createActions(driver).moveToElement(webElement).perform()
+    if (WebSettings.`gwen.web.capture.screenshots`) {
+      captureScreenshot(false)
+    }
+  }
+
   def dragAndDrop(sourceBinding: LocatorBinding, targetBinding: LocatorBinding): Unit = {
     withWebDriver { driver =>
       withWebElement(sourceBinding) { source =>
@@ -516,6 +534,7 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
   def holdAndClick(modifierKeys: Array[String], clickAction: String, elementBinding: LocatorBinding) {
     val keys = modifierKeys.map(_.trim).map(key => Try(Keys.valueOf(key.toUpperCase)).getOrElse(unsupportedModifierKeyError(key)))
     withDriverAndElement(clickAction, elementBinding) { (driver, webElement) =>
+      moveToAndCapture(driver, webElement)
       var actions = createActions(driver)
       keys.foreach { key => actions = actions.keyDown(key) }
       actions = clickAction match {
@@ -550,7 +569,10 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
   }
 
   private def performScriptAction(action: String, javascript: String, elementBinding: LocatorBinding) {
-    withWebElement(elementBinding) { webElement =>
+    withDriverAndElement(action, elementBinding) { (driver, webElement) =>
+      if (action != "move to") {
+        moveToAndCapture(driver, webElement)
+      }
       executeJS(s"(function(element) { $javascript })(arguments[0])", webElement)
       env.bindAndWait(elementBinding.element, action, "true")
     }
@@ -585,6 +607,9 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
       withWebDriver { driver =>
         val moveTo = createActions(driver).moveToElement(contextElement).moveToElement(webElement)
         buildAction(moveTo).build().perform()
+        if (WebSettings.`gwen.web.capture.screenshots`) {
+          captureScreenshot(false)
+        }
       }
     }
     withWebElement(contextBinding) { contextElement =>
@@ -909,6 +934,7 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
     */
   def checkVisual(checkpoint: String, fullPage: Boolean, matchLevel: Option[MatchLevel]): Unit =
     withEyesContext { context =>
+      Thread.sleep(150) // give browser time to render
       context.check(checkpoint, fullPage, matchLevel)
     }
 

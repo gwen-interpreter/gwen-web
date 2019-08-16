@@ -722,9 +722,10 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     val mockActions = mock[Actions]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     doReturn(mockActions).when(webContext).createActions(mockWebDriver)
+    when(mockActions.moveToElement(mockElement)).thenReturn(mockActions)
     when(mockActions.contextClick(mockElement)).thenReturn(mockActions)
     webContext.performAction("right click", elemBinding)
-    verify(mockActions).perform()
+    verify(mockActions, times(2)).perform()
     envContext.scopes.get("element/right click") should be ("true")
   }
 
@@ -734,9 +735,10 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     val mockActions = mock[Actions]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     doReturn(mockActions).when(webContext).createActions(mockWebDriver)
+    when(mockActions.moveToElement(mockElement)).thenReturn(mockActions)
     when(mockActions.doubleClick(mockElement)).thenReturn(mockActions)
     webContext.performAction("double click", elemBinding)
-    verify(mockActions).perform()
+    verify(mockActions, times(2)).perform()
     envContext.scopes.get("element/double click") should be ("true")
   }
 
@@ -769,8 +771,9 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     doReturn(mockActions).when(webContext).createActions(mockWebDriver)
     doReturn(mockActions).when(mockActions).sendKeys(mockElement, Keys.SPACE)
     when(mockElement.isSelected).thenReturn(false, false)
+    when(mockActions.moveToElement(mockElement)).thenReturn(mockActions)
     webContext.performAction("check", elemBinding)
-    verify(mockActions).perform()
+    verify(mockActions, times(2)).perform()
     verify(mockElement).click()
     envContext.scopes.get("element/check") should be ("true")
   }
@@ -782,7 +785,9 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     doReturn(mockElement).when(webContext).locate(elemBinding)
     doReturn(mockActions).when(webContext).createActions(mockWebDriver)
     when(mockElement.isSelected).thenReturn(false, true)
+    when(mockActions.moveToElement(mockElement)).thenReturn(mockActions)
     webContext.performAction("check", elemBinding)
+    verify(mockActions).perform()
     verify(mockElement).click()
     envContext.scopes.get("element/check") should be ("true")
   }
@@ -805,8 +810,9 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     doReturn(mockActions).when(webContext).createActions(mockWebDriver)
     doReturn(mockActions).when(mockActions).sendKeys(mockElement, Keys.SPACE)
     when(mockElement.isSelected).thenReturn(false, false)
+    when(mockActions.moveToElement(mockElement)).thenReturn(mockActions)
     webContext.performAction("tick", elemBinding)
-    verify(mockActions).perform()
+    verify(mockActions, times(2)).perform()
     verify(mockElement).click()
     envContext.scopes.get("element/tick") should be ("true")
   }
@@ -819,8 +825,9 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     doReturn(mockActions).when(webContext).createActions(mockWebDriver)
     doReturn(mockActions).when(mockActions).sendKeys(mockElement, Keys.SPACE)
     when(mockElement.isSelected).thenReturn(false, false)
+    when(mockActions.moveToElement(mockElement)).thenReturn(mockActions)
     webContext.performAction("tick", elemBinding)
-    verify(mockActions).perform()
+    verify(mockActions, times(2)).perform()
     verify(mockElement).click()
     envContext.scopes.get("element/tick") should be ("true")
   }
@@ -843,8 +850,9 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     doReturn(mockActions).when(webContext).createActions(mockWebDriver)
     doReturn(mockActions).when(mockActions).sendKeys(mockElement, Keys.SPACE)
     when(mockElement.isSelected).thenReturn(true, true)
+    when(mockActions.moveToElement(mockElement)).thenReturn(mockActions)
     webContext.performAction("uncheck", elemBinding)
-    verify(mockActions).perform()
+    verify(mockActions, times(2)).perform()
     verify(mockElement).click()
     envContext.scopes.get("element/uncheck") should be ("true")
   }
@@ -856,7 +864,9 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     doReturn(mockElement).when(webContext).locate(elemBinding)
     doReturn(mockActions).when(webContext).createActions(mockWebDriver)
     when(mockElement.isSelected).thenReturn(true, false)
+    when(mockActions.moveToElement(mockElement)).thenReturn(mockActions)
     webContext.performAction("uncheck", elemBinding)
+    verify(mockActions).perform()
     verify(mockElement).click()
     envContext.scopes.get("element/uncheck") should be ("true")
   }
@@ -867,7 +877,10 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     val mockActions = mock[Actions]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isSelected).thenReturn(false, false)
+    doReturn(mockActions).when(webContext).createActions(mockWebDriver)
+    when(mockActions.moveToElement(mockElement)).thenReturn(mockActions)
     webContext.performAction("uncheck", elemBinding)
+    verify(mockActions).perform()
     verify(mockElement, never()).sendKeys(Keys.SPACE)
     verify(mockElement, never()).click()
     envContext.scopes.get("element/uncheck") should be ("true")
@@ -881,8 +894,9 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     doReturn(mockActions).when(webContext).createActions(mockWebDriver)
     doReturn(mockActions).when(mockActions).sendKeys(mockElement, Keys.SPACE)
     when(mockElement.isSelected).thenReturn(true, true)
+    when(mockActions.moveToElement(mockElement)).thenReturn(mockActions)
     webContext.performAction("untick", elemBinding)
-    verify(mockActions).perform()
+    verify(mockActions, times(2)).perform()
     verify(mockElement).click()
     envContext.scopes.get("element/untick") should be ("true")
   }
@@ -896,8 +910,9 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     doReturn(mockActions).when(mockActions).sendKeys(mockElement, Keys.SPACE)
     doReturn(false).when(mockElement).isSelected
     when(mockElement.isSelected).thenReturn(true, true)
+    when(mockActions.moveToElement(mockElement)).thenReturn(mockActions)
     webContext.performAction("untick", elemBinding)
-    verify(mockActions).perform()
+    verify(mockActions, times(2)).perform()
     verify(mockElement).click()
     envContext.scopes.get("element/untick") should be ("true")
   }
@@ -955,6 +970,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     val mockAction = mock[Action]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     doReturn(mockActions).when(webContext).createActions(mockWebDriver)
+    when(mockActions.moveToElement(mockElement)).thenReturn(mockActions)
     when(mockActions.keyDown(Keys.COMMAND)).thenReturn(mockActions)
     when(mockActions.keyDown(Keys.SHIFT)).thenReturn(mockActions)
     when(mockActions.click(mockElement)).thenReturn(mockActions)
@@ -974,6 +990,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     val mockAction = mock[Action]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     doReturn(mockActions).when(webContext).createActions(mockWebDriver)
+    when(mockActions.moveToElement(mockElement)).thenReturn(mockActions)
     when(mockActions.keyDown(Keys.COMMAND)).thenReturn(mockActions)
     when(mockActions.doubleClick(mockElement)).thenReturn(mockActions)
     when(mockActions.keyUp(Keys.COMMAND)).thenReturn(mockActions)
@@ -991,6 +1008,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     val mockAction = mock[Action]
     doReturn(mockElement).when(webContext).locate(elemBinding)
     doReturn(mockActions).when(webContext).createActions(mockWebDriver)
+    when(mockActions.moveToElement(mockElement)).thenReturn(mockActions)
     when(mockActions.keyDown(Keys.COMMAND)).thenReturn(mockActions)
     when(mockActions.keyDown(Keys.SHIFT)).thenReturn(mockActions)
     when(mockActions.contextClick(mockElement)).thenReturn(mockActions)
