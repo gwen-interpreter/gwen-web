@@ -123,14 +123,19 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
 
   "WebContext.highlightElement" should "call javascript to highlight element" in {
     val mockElement = mock[WebElement]
+    val hStyle = WebSettings.`gwen.web.highlight.style`
+    val oStyle = ""
+    val js1 = s"element = arguments[0]; type = element.getAttribute('type'); if (('radio' == type || 'checkbox' == type) && element.parentElement.getElementsByTagName('input').length == 1) { element = element.parentElement; } original_style = element.getAttribute('style'); element.setAttribute('style', original_style + '; $hStyle'); return original_style;"
+    val js2 = s"element = arguments[0]; type = element.getAttribute('type'); if (('radio' == type || 'checkbox' == type) && element.parentElement.getElementsByTagName('input').length == 1) { element = element.parentElement; } element.setAttribute('style', '$oStyle');"
+    doReturn(oStyle).when(webContext).executeJS(js1, mockElement)(WebSettings.`gwen.web.capture.screenshots.highlighting`)
     webContext.highlightElement(mockElement)
-    val msecs = WebSettings`gwen.web.throttle.msecs`
-    val style = WebSettings.`gwen.web.highlight.style`
-    val js = s"element = arguments[0]; type = element.getAttribute('type'); if (('radio' == type || 'checkbox' == type) && element.parentElement.getElementsByTagName('input').length == 1) { element = element.parentElement; } original_style = element.getAttribute('style'); element.setAttribute('style', original_style + '; $style'); setTimeout(function() { element.setAttribute('style', original_style); }, $msecs);"
+    val msecs = WebSettings`gwen.web.throttle.msecs`;
     if (msecs > 0) {
-      verify(webContext).executeJS(js, mockElement)(WebSettings.`gwen.web.capture.screenshots.highlighting`)
+      verify(webContext).executeJS(js1, mockElement)(WebSettings.`gwen.web.capture.screenshots.highlighting`)
+      verify(webContext).executeJS(js2, mockElement)(WebSettings.`gwen.web.capture.screenshots.highlighting`)
     } else {
-      verify(webContext, never()).executeJS(js, mockElement)(WebSettings.`gwen.web.capture.screenshots.highlighting`)
+      verify(webContext, never()).executeJS(js1, mockElement)(WebSettings.`gwen.web.capture.screenshots.highlighting`)
+      verify(webContext, never()).executeJS(js2, mockElement)(WebSettings.`gwen.web.capture.screenshots.highlighting`)
     }
   }
 

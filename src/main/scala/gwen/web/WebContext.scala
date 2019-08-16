@@ -276,17 +276,16 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
   def highlightElement(element: WebElement): Unit = {
     env.perform {
       val msecs = WebSettings`gwen.web.throttle.msecs`; // need semi-colon (compiler bug?)
-      val duration = if (WebSettings.`gwen.web.capture.screenshots` && 
-          WebSettings.`gwen.web.capture.screenshots.highlighting` 
-          && msecs < 500) {
-        500
-      } else {
-        msecs
-      }
-      if (duration > 0) {
+      if (msecs > 0) {
         val style = WebSettings.`gwen.web.highlight.style`
-        executeJS(s"element = arguments[0]; type = element.getAttribute('type'); if (('radio' == type || 'checkbox' == type) && element.parentElement.getElementsByTagName('input').length == 1) { element = element.parentElement; } original_style = element.getAttribute('style'); element.setAttribute('style', original_style + '; $style'); setTimeout(function() { element.setAttribute('style', original_style); }, $duration);", element)(WebSettings.`gwen.web.capture.screenshots.highlighting`)
-        Thread.sleep(duration)
+        val origStyle = executeJS(s"element = arguments[0]; type = element.getAttribute('type'); if (('radio' == type || 'checkbox' == type) && element.parentElement.getElementsByTagName('input').length == 1) { element = element.parentElement; } original_style = element.getAttribute('style'); element.setAttribute('style', original_style + '; $style'); return original_style;", element)(WebSettings.`gwen.web.capture.screenshots.highlighting`)
+        try {
+          if (!WebSettings.`gwen.web.capture.screenshots.highlighting` || !WebSettings.`gwen.web.capture.screenshots`) {
+            Thread.sleep(msecs)
+          }
+        } finally {
+          executeJS(s"element = arguments[0]; type = element.getAttribute('type'); if (('radio' == type || 'checkbox' == type) && element.parentElement.getElementsByTagName('input').length == 1) { element = element.parentElement; } element.setAttribute('style', '$origStyle');", element)(false)
+        }
       }
     }
   }

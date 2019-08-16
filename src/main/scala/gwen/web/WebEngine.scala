@@ -24,7 +24,7 @@ import scala.concurrent.duration.Duration
 import gwen.Predefs.Formatting.DurationFormatter
 import gwen.Predefs.Kestrel
 import gwen.Predefs.RegexContext
-import gwen.Settings
+import gwen.{GwenSettings, Settings}
 import gwen.dsl._
 import gwen.errors.StepFailure
 import gwen.errors.undefinedStepError
@@ -50,7 +50,13 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
     * @param options command line options
     * @param scopes initial data scopes
     */
-  override def init(options: GwenOptions, scopes: ScopedDataStack) = new WebEnvContext(options, scopes)
+  override def init(options: GwenOptions, scopes: ScopedDataStack) = {
+    if (WebSettings.`gwen.web.capture.screenshots.highlighting`) {
+      val fps = GwenSettings.`gwen.report.slideshow.framespersecond`
+      Settings.setLocal("gwen.report.slideshow.framespersecond", (fps.toDouble * 1.8d).toInt.toString)
+    }
+    new WebEnvContext(options, scopes)
+  }
 
   /**
     * Evaluates priority steps supported by this engine. For example, a step that calls another step needs to execute
