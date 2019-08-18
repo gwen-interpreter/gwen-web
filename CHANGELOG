@@ -1,6 +1,12 @@
+2.36.0
+======
+August 18, 2019
+- Update Gwen core from v2.19.4 to v[2.20.0](https://github.com/gwen-interpreter/gwen/releases/tag/v2.20.0)
+  - Add support for interpolating environment variables using ${env.VARNAME} syntax
+
 2.35.2
 ======
-Aug 15
+August 15
 - Fix screenshot capture when including highlighting and when moving to elements
 - Update Gwen core from v2.19.3 to v[2.19.4](https://github.com/gwen-interpreter/gwen/releases/tag/v2.19.4)
   - Only log stack traces to console if DEBUG logging is enabled
@@ -8,12 +14,12 @@ Aug 15
 
 2.35.1
 ======
-Aug 14, 2019
+August 14, 2019
 - Move to elements when using locate|highlight DSL
 
 2.35.0
 ======
-Aug 9, 2019
+August 9, 2019
 - Add supoprt for Edge browser
 - Cross browser fixes
   - Bring elements that are outside of the visibile vewport into view
@@ -24,20 +30,20 @@ Aug 9, 2019
 
 2.34.2
 ======
-Jul 30, 2019
+July 30, 2019
 - Set default WebDriverManager download directory to `~.gwen/wdm` only if the `wdm.targetPath` system 
   property is not already set
 - Do not capture screenshot for visual assertion errors when we have link to AppliTools dashboard
 
 2.34.1
 ======
-Jul 29, 2019
+July 29, 2019
 - Update Gwen core from v2.19.2 to v[2.19.3](https://github.com/gwen-interpreter/gwen/releases/tag/v2.19.3)
   - Ensure error attachments are always added to reports for failing steps
 
 2.34.0
 ======
-Jul 27, 2019
+July 27, 2019
 - Embedded [WebDriverManager](https://github.com/bonigarcia/webdrivermanager) now manages all native drivers for
   you unless explicit driver locations (`webdriver.xxx.driver`) are set in Gwen settings files.
   WebDriverManger (`wdm.*`) properties can be stored in Gwen settings files for custom configurations.
@@ -46,7 +52,7 @@ Jul 27, 2019
 
 2.33.0
 ======
-Jun 28, 2019
+June 28, 2019
 - Manage child windows at web driver session level
 - Add settings for [mobile emulation in Chrome](https://github.com/gwen-interpreter/gwen-web/wiki/Mobile-Emulation) browser by:
   - device name
