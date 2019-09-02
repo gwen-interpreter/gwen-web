@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 #
-#  Copyright 2016 Brady Wood, Branko Juric
+#  Copyright 2019 Brady Wood, Branko Juric
 #  
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 #
 
 #  ------------------------------------------------------------
-#  Convenience BASH script allowing invocation from install dir
+#  delegator script
 #  ------------------------------------------------------------
 
-./bin/gwen-web "$@"
+./gwen-web "$@"

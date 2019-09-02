@@ -1,3 +1,8 @@
+2.36.1
+======
+September 2, 2019
+- Use latest native pakcage manager to pick up java version checking fix
+
 2.36.0
 ======
 August 18, 2019
@@ -6,7 +11,7 @@ August 18, 2019
 
 2.35.2
 ======
-August 15
+August 15, 2019
 - Fix screenshot capture when including highlighting and when moving to elements
 - Update Gwen core from v2.19.3 to v[2.19.4](https://github.com/gwen-interpreter/gwen/releases/tag/v2.19.4)
   - Only log stack traces to console if DEBUG logging is enabled

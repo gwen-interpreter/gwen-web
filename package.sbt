@@ -8,13 +8,13 @@ artifact in (Universal, packageZip) ~= { (art:Artifact) => art.copy(`type` = "zi
 
 addArtifact(artifact in (Universal, packageZip), packageZip in Universal)
 
-publish <<= (publish) dependsOn (packageBin in Universal)
+publish := ((publish) dependsOn (packageBin in Universal)).value
 
-publishM2 <<= (publishM2) dependsOn (packageBin in Universal)
+publishM2 := ((publishM2) dependsOn (packageBin in Universal)).value
 
-publishLocal <<= (publishLocal) dependsOn (packageBin in Universal)
+publishLocal := ((publishLocal) dependsOn (packageBin in Universal)).value
 
-PgpKeys.publishSigned <<= (PgpKeys.publishSigned) dependsOn (packageBin in Universal)
+PgpKeys.publishSigned := ((PgpKeys.publishSigned) dependsOn (packageBin in Universal)).value
 
 mappings in Universal += file("README.md") -> "README.txt"
 
@@ -36,22 +36,10 @@ mappings in Universal <++= (packageBin in Compile, target ) map { (_, target) =>
   (dir.***) pair relativeTo(dir.getParentFile)
 }
 
-mappings in Universal <++= (com.typesafe.sbt.packager.Keys.makeBashScript in Universal, normalizedName in Universal) map { (script, name) =>
-  for {
-    s <- script.toSeq
-  } yield s -> ("bin/gwen") 
-}
-
-mappings in Universal <++= (com.typesafe.sbt.packager.Keys.makeBatScript in Universal, normalizedName in Universal) map { (script, name) =>
-  for {
-    s <- script.toSeq
-  } yield s -> ("bin/gwen.bat") 
-}
-
-val BashClasspathPattern = "declare -r app_classpath=\"(.*)\"\n".r
+val bashClasspathPattern = "declare -r app_classpath=\"(.*)\"\n".r
 
 bashScriptDefines := bashScriptDefines.value.map {
-  case BashClasspathPattern(classpath) => "declare -r app_classpath=\"$GWEN_CLASSPATH:$SELENIUM_HOME/*:$SELENIUM_HOME/libs/*:" + classpath + "\"\n"
+  case bashClasspathPattern(classpath) => "declare -r app_classpath=\"$GWEN_CLASSPATH:$SELENIUM_HOME/*:$SELENIUM_HOME/libs/*:" + classpath + "\"\n"
   case _@entry => entry
 }
 
