@@ -1,5 +1,7 @@
 enablePlugins(JavaAppPackaging)
 
+enablePlugins(ClasspathJarPlugin)
+
 val packageZip = taskKey[File]("package-zip")
 
 packageZip := (baseDirectory in Compile).value / "target" / "universal" / (name.value + "-" + version.value + ".zip")

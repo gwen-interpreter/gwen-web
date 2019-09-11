@@ -1,3 +1,8 @@
+2.36.2
+======
+September 11, 2019
+- Store classpath in JAR manifest to fix Windows 'file is too long' issue
+
 2.36.1
 ======
 September 2, 2019
