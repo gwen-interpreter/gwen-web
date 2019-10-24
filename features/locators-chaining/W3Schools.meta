@@ -10,6 +10,6 @@ Feature: W3Schools Meta
   Scenario: I switch to default content from within an iframe
     Given my frame can be located by css selector "iframe[src='default.asp']"
     And the iframe heading can be located by tag name "h1" in my frame
-    Then the iframe heading should be "HTML5 Tutorial"
+    Then the iframe heading should be "HTML Tutorial"
     And I switch to the default content
     And the heading should be "HTML Iframes"
