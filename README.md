@@ -43,13 +43,11 @@ Scenario: Perform a google search
 
     Given I have Google in my browser
      When I do a search for "Gwen automation"
-      And I'm feeling lucky
      Then I should land on a Gwen page
 ```
 
 .. by defining separate and imperative [Meta features](https://github.com/gwen-interpreter/gwen/wiki/Meta-Features) like this ..
 ```gherkin
-
  # Gwen meta features are defined in Gherkin too. They define locators 
  # and step definitions that are matched against steps in features to
  # find elements and perform browser operations. They are loaded into 
@@ -83,18 +81,10 @@ Scenario: I do a search for "<query>"
           steps below and resolve any $<query> references to that value.
 
     Given the search field can be located by name "q"
+      And link 1 can be located by css selector ".r > a"
      When I enter "$<query>" in the search field
-     Then the page title should be "$<query> - Google Search"
-
-@StepDef
-Scenario: I'm feeling lucky
-
-          Gwen will match the name of this step def to the third
-          step in the feature above and evaluate the steps that follow.
-
-    Given the first match can be located by css selector ".r > a"
-     When I click the first match
-     Then the page title should not contain "Google"
+      And I click link 1
+     Then the page title should not be "Google"
 
 @StepDef
 Scenario: I should land on a Gwen page
@@ -103,7 +93,7 @@ Scenario: I should land on a Gwen page
           step in the feature above and evaluate the step that follows.
 
      Then the current URL should match regex ".+[G|g]wen.*"
-```
+ ```
 .. without having to develop any [page objects or framework](https://gweninterpreter.wordpress.com/2016/03/08/nopageobjects-theres-no-long-way-to-go-were-already-there/) code!
 
 Key Features
