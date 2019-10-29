@@ -39,8 +39,7 @@ So you can drive web automation with declarative [Gherkin features](https://docs
 ```gherkin
  Feature: Google search
 
-Scenario: Perform a google search
-
+Scenario: Lucky Google search
     Given I have Google in my browser
      When I do a search for "Gwen automation"
      Then I should land on a Gwen page
@@ -48,38 +47,16 @@ Scenario: Perform a google search
 
 .. by defining separate and imperative [Meta features](https://github.com/gwen-interpreter/gwen/wiki/Meta-Features) like this ..
 ```gherkin
- # Gwen meta features are defined in Gherkin too. They define locators 
- # and step definitions that are matched against steps in features to
- # find elements and perform browser operations. They are loaded into 
- # memory before feature execution commences.
-
  Feature: Google search meta
-
-        # @StepDef annotated Scenarios are step definitions in Gwen. The
-        # name of the Scenario becomes the name of the step def. Steps
-        # in features that match this name are executed by Gwen by 
-        # evaluating the sequence of steps defined in that step def.
 
 @StepDef
 Scenario: I have Google in my browser
-
-          Gwen will match the name of this step def to the first step
-          in the feature above and evaluate the steps that follow. These
-          steps are matched against predefined steps in the Gwen Web DSL
-          to perform browser operations for you at runtime.
-
     Given I start a new browser
      When I navigate to "http://www.google.com"
      Then the page title should be "Google"
 
 @StepDef
 Scenario: I do a search for "<query>"
-
-          Gwen will match the name of this step def to the seconond
-          step in the feature above and assign the <query> parameter to the
-          value provided at the matching location. Gwen will then evaluate the
-          steps below and resolve any $<query> references to that value.
-
     Given the search field can be located by name "q"
       And link 1 can be located by css selector ".r > a"
      When I enter "$<query>" in the search field
@@ -88,13 +65,11 @@ Scenario: I do a search for "<query>"
 
 @StepDef
 Scenario: I should land on a Gwen page
-
-          Gwen will match the name of this step def to the last
-          step in the feature above and evaluate the step that follows.
-
      Then the current URL should match regex ".+[G|g]wen.*"
  ```
 .. without having to develop any [page objects or framework](https://gweninterpreter.wordpress.com/2016/03/08/nopageobjects-theres-no-long-way-to-go-were-already-there/) code!
+
+Meta features are the dynamic automation glue in Gwen and they are defined in Gherkin too. They define locators and step definitions that are matched against steps in features to find elements and perform browser operations. They are loaded into memory before feature execution commences. `@StepDef` annotated Scenarios are step definitions in Gwen. The name of the Scenario becomes the name of the step definition. Steps in features that match this name are executed by Gwen by evaluating the sequence of steps defined in that step definition.
 
 Key Features
 ------------
