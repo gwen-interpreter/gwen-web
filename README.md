@@ -42,7 +42,7 @@ So you can drive web automation with declarative [Gherkin features](https://docs
 Scenario: Lucky Google search
     Given I have Google in my browser
      When I do a search for "Gwen automation"
-     Then I should land on a Gwen page
+     Then I should find a Gwen page
 ```
 
 .. by defining separate and imperative [Meta features](https://github.com/gwen-interpreter/gwen/wiki/Meta-Features) like this ..
@@ -58,13 +58,13 @@ Scenario: I have Google in my browser
 @StepDef
 Scenario: I do a search for "<query>"
     Given the search field can be located by name "q"
-      And link 1 can be located by css selector ".r > a"
      When I enter "$<query>" in the search field
-      And I click link 1
-     Then the page title should not be "Google"
+     Then the page title should contain "$<query>"
 
 @StepDef
-Scenario: I should land on a Gwen page
+Scenario: I should find a Gwen page
+    Given link 1 can be located by css selector ".r > a"
+     When And I click link 1
      Then the current URL should match regex ".+[G|g]wen.*"
  ```
 .. without having to develop any [page objects or framework](https://gweninterpreter.wordpress.com/2016/03/08/nopageobjects-theres-no-long-way-to-go-were-already-there/) code!
