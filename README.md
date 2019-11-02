@@ -69,7 +69,7 @@ Scenario: I should find a Gwen page
  ```
 .. without having to develop any [page objects or framework](https://gweninterpreter.wordpress.com/2016/03/08/nopageobjects-theres-no-long-way-to-go-were-already-there/) code!
 
-Meta features are the dynamic automation glue in Gwen and they are defined in Gherkin too. They define locators and step definitions that are matched against steps in features to find elements and perform browser operations. They are loaded into memory before feature execution commences. `@StepDef` annotated Scenarios are step definitions. The name of the Scenario is the name of the step definition. Steps in features that match this name are executed by Gwen by evaluating the sequence of steps defined in that step definition.
+Meta features are the dynamic automation glue in Gwen and they are defined in Gherkin too. They define locators and step definitions that are matched against steps in features to find elements and perform browser operations using the Gwen [web DSL](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL). They are loaded into memory before feature execution commences. `@StepDef` annotated Scenarios are step definitions. The name of the Scenario is the name of the step definition. Steps in features that match this name are executed by Gwen by evaluating the sequence of steps defined in that step definition.
 
 Key Features
 ------------
