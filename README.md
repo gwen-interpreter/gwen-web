@@ -45,7 +45,7 @@ Scenario: Lucky Google search
      Then I should find a Gwen page
 ```
 
-.. by defining separate and imperative [Meta features](https://github.com/gwen-interpreter/gwen/wiki/Meta-Features) like this ..
+.. by defining step definitions in separate Gherkin [Meta features](https://github.com/gwen-interpreter/gwen/wiki/Meta-Features) like this ..
 ```gherkin
  Feature: Google search meta
 
@@ -64,12 +64,12 @@ Scenario: I do a search for "<query>"
 @StepDef
 Scenario: I should find a Gwen page
     Given link 1 can be located by css selector ".r > a"
-     When And I click link 1
+     When I click link 1
      Then the current URL should match regex ".+[G|g]wen.*"
  ```
 .. without having to develop any [page objects or framework](https://gweninterpreter.wordpress.com/2016/03/08/nopageobjects-theres-no-long-way-to-go-were-already-there/) code!
 
-Meta features are the dynamic automation glue in Gwen and they are defined in Gherkin too. They define locators and step definitions that are matched against steps in features to find elements and perform browser operations. They are loaded into memory before feature execution commences. `@StepDef` annotated Scenarios are step definitions in Gwen. The name of the Scenario becomes the name of the step definition. Steps in features that match this name are executed by Gwen by evaluating the sequence of steps defined in that step definition.
+Meta features are the dynamic automation glue in Gwen and they are defined in Gherkin too. They define locators and step definitions that are matched against steps in features to find elements and perform browser operations. They are loaded into memory before feature execution commences. `@StepDef` annotated Scenarios are step definitions. The name of the Scenario is the name of the step definition. Steps in features that match this name are executed by Gwen by evaluating the sequence of steps defined in that step definition.
 
 Key Features
 ------------
