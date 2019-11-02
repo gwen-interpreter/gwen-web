@@ -11,7 +11,8 @@ automate front end web tests and repetitive online processes with
 locators are supported and you can additionally inject JavaScript in places where dynamically 
 finding elements or running functions on web pages may be necessary.
 
-> [Get Started](https://github.com/gwen-interpreter/gwen-web/wiki/Getting-Started)
+> [Home](http://gweninterpreter.org)
+  | [Get Started](https://github.com/gwen-interpreter/gwen-web/wiki/Getting-Started)
   | [DSL](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL)
   | [Settings](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings)
   | [Blog](https://gweninterpreter.wordpress.com)
