@@ -45,7 +45,7 @@ Scenario: Lucky Google search
      Then I should find a Gwen page
 ```
 
-.. by defining step definitions in separate Gherkin [Meta features](https://github.com/gwen-interpreter/gwen/wiki/Meta-Features) like this ..
+.. by defining locators and step definitions in separate and imperative Gherkin [Meta features](https://github.com/gwen-interpreter/gwen/wiki/Meta-Features) like this ..
 ```gherkin
  Feature: Google search meta
 
