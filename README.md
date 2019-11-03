@@ -36,7 +36,7 @@ finding elements or running functions on web pages may be necessary.
 
 Why Gwen?
 ---------
-So you can drive web automation with declarative [Gherkin features](https://docs.cucumber.io/gherkin/reference/) like this ..
+So you can drive web based tests and online processes with declarative Gherkin [feature](https://docs.cucumber.io/gherkin/reference/) specs that describe behavior ..
 ```gherkin
  Feature: Google search
 
@@ -46,7 +46,7 @@ Scenario: Lucky Google search
      Then I should find a Gwen page
 ```
 
-.. by defining locators and step definitions in separate and imperative Gherkin [Meta features](https://github.com/gwen-interpreter/gwen/wiki/Meta-Features) like this ..
+.. by defining locators and step definitions in separate and imperative Gherkin [meta](https://github.com/gwen-interpreter/gwen/wiki/Meta-Features) specs that describe automation.
 ```gherkin
  Feature: Google search meta
 
@@ -68,7 +68,7 @@ Scenario: I should find a Gwen page
      When I click link 1
      Then the current URL should match regex ".+[G|g]wen.*"
  ```
-.. without having to develop any [page objects or framework](https://gweninterpreter.wordpress.com/2016/03/08/nopageobjects-theres-no-long-way-to-go-were-already-there/) code!
+Launch Gwen to bind the meta and execute the feature without developing any framework, page objects or Selenium code.
 
 Meta features are the dynamic automation glue in Gwen and they are defined in Gherkin too. They define locators and step definitions that are matched against steps in features to find elements and perform browser operations using the Gwen [web DSL](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL). They are loaded into memory before feature execution commences. `@StepDef` annotated Scenarios are step definitions. The name of the Scenario is the name of the step definition. Steps in features that match this name are executed by Gwen by evaluating the sequence of steps defined in that step definition.
 
