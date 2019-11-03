@@ -79,11 +79,10 @@ Meta features are the dynamic automation glue in Gwen and they are defined in Gh
 Key Features
 ------------
 
-- Web automation is driven by [Gherkin](https://docs.cucumber.io/gherkin/reference/)
- specifications
-  - Declarative features describe behavioral requirements in Gherkin
-  - Imperative [Meta features](https://github.com/gwen-interpreter/gwen/wiki/Meta-Features) describe browser interactions in Gherkin
-  - Gwen binds the two at runtime to achieve web automation
+- Behavour driven automation
+  - Declarative features describe behavior
+  - Imperative [Meta features](https://github.com/gwen-interpreter/gwen/wiki/Meta-Features) describe automation
+  - Gwen binds the two at runtime to drive automation
 - A prescribed [Web DSL](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL) performs all browser interactions for you
 - Automation across browsers and platforms is consistent
 - Chrome, Firefox, Safari, Edge and IE are supported
