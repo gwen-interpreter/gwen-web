@@ -84,8 +84,7 @@ Key Features
   - Imperative [Meta features](https://github.com/gwen-interpreter/gwen/wiki/Meta-Features) describe automation
   - Gwen binds the two at runtime to drive automation
 - A prescribed [Web DSL](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL) performs all browser interactions for you
-- Automation across browsers and platforms is consistent
-- Chrome, Firefox, Safari, Edge and IE are supported
+- Automation across browsers and platforms is consistent (Chrome, Firefox, Safari, Edge and IE)
 - An interactive [REPL console](https://github.com/gwen-interpreter/gwen/wiki/REPL-Console) provides a step by step execution environment
 
 Get Started
