@@ -1,3 +1,11 @@
+2.37.0
+======
+November 15, 2019
+- Update Gwen core from v2.20.0 to v[2.21.0](https://github.com/gwen-interpreter/gwen/releases/tag/v2.21.0)
+  to pickup latest Gherkin 8.1.1 parser from Cucumber to support rules and 
+  [example mapping](https://cucumber.io/blog/2015/12/08/example-mapping-introduction) 
+   - `Rule` and `Example` keywords, synonyms, etc..
+
 2.36.2
 ======
 September 11, 2019

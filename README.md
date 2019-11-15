@@ -30,9 +30,9 @@ finding elements or running functions on web pages may be necessary.
 - [Change log](CHANGELOG)
 
 ### What's New?
+- Integated the latest [Gherkin parser](https://github.com/cucumber/cucumber/tree/master/gherkin/java) from Cucumber to support [example mapping](https://cucumber.io/blog/2015/12/08/example-mapping-introduction)
 - Microsoft Edge browser support
 - Integrated [WebDriverManager](https://github.com/bonigarcia/webdrivermanager) now manages all native webdrivers for you
-- [Mobile Emulation](https://github.com/gwen-interpreter/gwen-web/wiki/Mobile-Emulation)
 
 Why Gwen?
 ---------
@@ -84,6 +84,7 @@ Key Features
 - Automation across browsers and platforms is consistent
 - Chrome, Firefox, Safari, Edge and IE are supported
 - An interactive [REPL console](https://github.com/gwen-interpreter/gwen/wiki/REPL-Console) provides a step by step execution environment
+- [Mobile Emulation](https://github.com/gwen-interpreter/gwen-web/wiki/Mobile-Emulation)
 
 Get Started
 -----------
