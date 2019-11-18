@@ -86,7 +86,6 @@ Key Features
 - A prescribed [Web DSL](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL) performs all browser interactions for you
 - Automation across browsers and platforms is consistent (Chrome, Firefox, Safari, Edge and IE)
 - An interactive [REPL console](https://github.com/gwen-interpreter/gwen/wiki/REPL-Console) provides a step by step execution environment
-- [Mobile Emulation](https://github.com/gwen-interpreter/gwen-web/wiki/Mobile-Emulation)
 
 Get Started
 -----------
@@ -130,6 +129,7 @@ Learn More
 - [Visual Testing with AppliTools](https://github.com/gwen-interpreter/gwen-web/wiki/Visual-Testing)
 - [Mobile Emulation](https://github.com/gwen-interpreter/gwen-web/wiki/Mobile-Emulation)
 - Integrated [WebDriverManager](https://github.com/bonigarcia/webdrivermanager)
+- [Mobile Emulation](https://github.com/gwen-interpreter/gwen-web/wiki/Mobile-Emulation)
 
 License
 -------
