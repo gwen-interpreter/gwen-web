@@ -18,8 +18,10 @@ package gwen.web.features
 
 class TodoFeatureTest extends BaseFeatureTest {
 
-  "todo features" should "evaluate" in {
-    evaluate(List("features/todo"), parallel = false, dryRun = false, "target/reports/todo", None)
+  "todo features using feature-level state" should "evaluate" in {
+    withSetting("gwen.state.level", "feature") {
+      evaluate(List("features/todo"), parallel = false, dryRun = false, "target/reports/todo/feature-level", None)
+    }
   }
   
 }

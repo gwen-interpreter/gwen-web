@@ -19,22 +19,22 @@ package gwen.web
 import gwen.Settings
 import org.mockito.Mockito.verify
 import org.openqa.selenium.WebDriver
-import org.scalatest.FlatSpec
 import org.scalatest.Matchers
 import org.scalatest.mockito.MockitoSugar
+import gwen.dsl.StateLevel
 import gwen.eval.ScopedDataStack
 import gwen.eval.GwenOptions
 import gwen.web.errors.LocatorBindingException
 import org.openqa.selenium.WebDriver.{Options, Timeouts}
 
-class WebEnvContextTest extends FlatSpec with Matchers with MockitoSugar {
+class WebEnvContextTest extends BaseTest with Matchers with MockitoSugar {
   
   val mockWebDriverOptions: Options = mock[WebDriver.Options]
   val mockWebDriverTimeouts: Timeouts = mock[WebDriver.Timeouts]
   
-  "New web env context" should "have 'feature' scope" in {
+  "New web env context" should "have 'top' scope" in {
     val env = newEnv()
-    env.scopes.current.isFeatureScope should be (true)
+    env.scopes.current.isTopScope should be (true)
   }
   
   "Bound scope attribute" should "be recreated after reset" in {
@@ -42,8 +42,8 @@ class WebEnvContextTest extends FlatSpec with Matchers with MockitoSugar {
     env.scopes.addScope("login")
     env.scopes.set("username", "Gwen")
     env.scopes.get("username") should be ("Gwen")
-    env.reset()
-    env.scopes.current.isFeatureScope should be (true)
+    env.reset(StateLevel.feature)
+    env.scopes.current.isTopScope should be (true)
     env.scopes.getOpt("username") should be (None)
   }
   
@@ -72,10 +72,17 @@ class WebEnvContextTest extends FlatSpec with Matchers with MockitoSugar {
                                       
   }
   
-  "Resetting env context" should "reset web context" in {
+  "Resetting env context at feature level" should "reset web context" in {
     val mockWebContext = mock[WebContext]
     val env = newEnv(mockWebContext)
-    env.reset()
+    env.reset(StateLevel.feature)
+    verify(mockWebContext).reset()
+  }
+
+  "Resetting env context at scenario level" should "reset web context" in {
+    val mockWebContext = mock[WebContext]
+    val env = newEnv(mockWebContext)
+    env.reset(StateLevel.scenario)
     verify(mockWebContext).reset()
   }
 
@@ -215,11 +222,11 @@ class WebEnvContextTest extends FlatSpec with Matchers with MockitoSugar {
   }
 
   def newEnv(dry:Boolean = false): WebEnvContext = {
-   new WebEnvContext(GwenOptions(dryRun=dry), new ScopedDataStack())
+   new WebEnvContext(GwenOptions(dryRun=dry))
   }
 
   def newEnv(mockWebContext: WebContext): WebEnvContext = {
-   new WebEnvContext(GwenOptions(), new ScopedDataStack()) {
+   new WebEnvContext(GwenOptions()) {
      override val webContext = mockWebContext
    }
   }
@@ -229,20 +236,6 @@ class WebEnvContextTest extends FlatSpec with Matchers with MockitoSugar {
       env.getLocatorBinding(element)
     }
     e.getMessage should be (expectedMsg)
-  }
-
-  private def withSetting[T](name: String, value: String)(f: => T):T = {
-    Settings.synchronized {
-      val original = Settings.getOpt(name)
-      try {
-        Settings.set(name, value)
-        f
-      } finally {
-        original.fold(Settings.clear(name)) { v =>
-          Settings.set(name, v)
-        }
-      }
-    }
   }
   
 }

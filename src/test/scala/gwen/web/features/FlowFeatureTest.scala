@@ -16,14 +16,24 @@
 
 package gwen.web.features
 
+import org.scalatest.prop.TableDrivenPropertyChecks.forAll
+
 class FlowFeatureTest extends BaseFeatureTest {
 
-  "Flow features" should "should pass" in {
-    evaluate(List("features/flow"), parallel = false, dryRun = false, "target/reports/flow", None)
+  forAll (levels) { level => 
+    s"Flow features using $level-level state" should "should pass" in {
+      withSetting("gwen.state.level", level) {
+        evaluate(List("features/flow"), parallel = false, dryRun = false, s"target/reports/flow/$level-level", None)
+      }
+    }
   }
 
-  "Flow features dry run" should "should pass" in {
-    evaluate(List("features/flow"), parallel = false, dryRun = true, "target/reports/flow-dry-run", None)
+  forAll (levels) { level => 
+    s"Flow features dry run using $level-level state" should "should pass" in {
+      withSetting("gwen.state.level", level) {
+        evaluate(List("features/flow"), parallel = false, dryRun = true, s"target/reports/flow-dry-run/$level-level", None)
+      }
+    }
   }
   
 }

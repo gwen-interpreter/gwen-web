@@ -23,7 +23,8 @@ import scala.util.Success
 import scala.util.Try
 import gwen.Predefs.Kestrel
 import gwen.dsl.Failed
-import gwen.eval.{EnvContext, GwenOptions, ScopedDataStack}
+import gwen.dsl.StateLevel
+import gwen.eval.{EnvContext, GwenOptions}
 import gwen.errors.StepFailure
 import gwen.web.errors.{WaitTimeoutException, locatorBindingError, VisualAssertionException}
 import gwen.errors.{UnboundAttributeException, unboundAttributeError}
@@ -37,7 +38,7 @@ import scala.io.Source
   *
   *  @author Branko Juric
   */
-class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) extends EnvContext(options, scopes) {
+class WebEnvContext(val options: GwenOptions) extends EnvContext(options) {
 
    Try(logger.info(s"GWEN_CLASSPATH = ${sys.env("GWEN_CLASSPATH")}"))
    Try(logger.info(s"SELENIUM_HOME = ${sys.env("SELENIUM_HOME")}"))
@@ -46,8 +47,8 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
   val webContext = new WebContext(this, new DriverManager())
 
    /** Resets the current context and closes the web browser. */
-  override def reset() {
-    super.reset()
+  override def reset(level: StateLevel.Value) {
+    super.reset(level)
     webContext.reset()
     close()
   }
@@ -80,7 +81,7 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
     * the following order and the first value found is returned:
     *  - Web element text on the current page
     *  - Currently active page scope
-    *  - The global feature scope
+    *  - The top scope
     *  - Settings
     *  
     * @param name the name of the bound value to find
@@ -149,7 +150,7 @@ class WebEnvContext(val options: GwenOptions, val scopes: ScopedDataStack) exten
    * @param optional true to return None if not found; false to throw error
    */
   def getLocatorBinding(element: String, optional: Boolean): Option[LocatorBinding] = {
-    featureScope.getObject(element) match {
+    topScope.getObject(element) match {
       case None =>
         val locatorBinding = s"$element/locator"
         scopes.getOpt(locatorBinding) match {

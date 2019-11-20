@@ -16,8 +16,8 @@
 
    Feature: Multi locators
 
-  Scenario: Open browser to google
-     Given I navigate to "http://google.com"
+Background: Open browser to google
+      Given I navigate to "http://google.com"
    
   Scenario: Last locator of three should find the search field
             Defines three locators for the search field.

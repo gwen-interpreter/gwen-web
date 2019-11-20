@@ -18,8 +18,10 @@ package gwen.web.features
 
 class ParallelDryRunFeatureTest extends BaseFeatureTest {
 
-  "Parallel mode dry run" should "validate all features in parallel" in {
-    evaluate(List("features/floodio", "features/blogs/pageObjectsBegone", "features/blogs/automationByMeta", "features/google"), parallel = true, dryRun = true, "target/reports/parallel-dry-run", None)
+  "Parallel mode dry run using feature-level state" should "validate all features in parallel" in {
+    withSetting("gwen.state.level", "feature") {
+      evaluate(List("features/floodio", "features/blogs/pageObjectsBegone", "features/blogs/automationByMeta", "features/google"), parallel = true, dryRun = true, "target/reports/parallel-dry-run/feature-level", None)
+    }
   }
   
 }

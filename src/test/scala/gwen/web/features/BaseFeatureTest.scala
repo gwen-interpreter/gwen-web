@@ -17,12 +17,12 @@
 package gwen.web.features
 
 import gwen.Settings
+import gwen.web.BaseTest
 import gwen.dsl.{Failed, Passed}
 import gwen.eval.{GwenLauncher, GwenOptions}
-import org.scalatest.FlatSpec
 import gwen.web.WebInterpreter
 
-abstract class BaseFeatureTest extends FlatSpec {
+abstract class BaseFeatureTest extends BaseTest {
 
   private[web] def evaluate(features: List[String], parallel: Boolean, dryRun: Boolean, reportDir: String, dataFile: Option[String]) {
     Settings.synchronized {

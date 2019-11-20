@@ -96,7 +96,7 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
     * @param element the name of the web element
     * @return the cached web element
     */
-  def getCachedWebElement(element: String): Option[WebElement] = env.featureScope.getObject(element) match {
+  def getCachedWebElement(element: String): Option[WebElement] = env.topScope.getObject(element) match {
     case Some(we: WebElement) =>
       highlightElement(we)
       Some(we)
@@ -686,7 +686,7 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
 
   def captureCurrentUrl(asName: Option[String]): Unit = {
     val name = asName.getOrElse("the current URL")
-    env.featureScope.set(name, withWebDriver { driver =>
+    env.topScope.set(name, withWebDriver { driver =>
       driver.getCurrentUrl tap { content =>
         env.addAttachment(name, "txt", content)
       }

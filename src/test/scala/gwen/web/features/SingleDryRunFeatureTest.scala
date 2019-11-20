@@ -18,8 +18,10 @@ package gwen.web.features
 
 class SingleDryRunFeatureTest extends BaseFeatureTest {
 
-  "Single feature dry run" should "validate feature" in {
-    evaluate(List("features/floodio/FloodIO.feature"), parallel = false, dryRun = true, "target/reports/single-dry-run", None)
+  "Single feature dry run using feature-level state" should "validate feature" in {
+    withSetting("gwen.state.level", "feature") {
+      evaluate(List("features/floodio/FloodIO.feature"), parallel = false, dryRun = true, "target/reports/single-dry-run/feature-level", None)
+    }
   }
   
 }

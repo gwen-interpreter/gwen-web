@@ -16,10 +16,16 @@
 
 package gwen.web.features
 
+import org.scalatest.prop.TableDrivenPropertyChecks.forAll
+
 class SeleniumTestPage extends BaseFeatureTest {
 
-  "Single floodio feature" should "evaluate" in {
-    evaluate(List("features/blogs/se-test"), parallel = false, dryRun = false, "target/reports/single/se-test", None)
+  forAll (levels) { level => 
+    s"Single floodio using $level-level state" should "evaluate" in {
+      withSetting("gwen.state.level", level) {
+        evaluate(List("features/blogs/se-test"), parallel = false, dryRun = false, s"target/reports/single/se-test/$level-level", None)
+      }
+    }
   }
   
 }

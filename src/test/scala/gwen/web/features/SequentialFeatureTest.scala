@@ -18,8 +18,10 @@ package gwen.web.features
 
 class SequentialFeatureTest extends BaseFeatureTest {
 
-  "Sequential mode" should "evaluate all features in sequence" in {
-    evaluate(List("features/floodio", "features/blogs/automationByMeta", "features/todo/CompleteItems.feature"), parallel = false, dryRun = false, "target/reports/sequential", None)
+  "Sequential mode using feature-level state" should "evaluate all features in sequence" in {
+    withSetting("gwen.state.level", "feature") {
+      evaluate(List("features/floodio", "features/blogs/automationByMeta", "features/todo/CompleteItems.feature"), parallel = false, dryRun = false, "target/reports/sequential/feature-level", None)
+    }
   }
   
 }

@@ -1,3 +1,20 @@
+2.38.0
+======
+November 23, 2019
+- Introduce state levels and parallel execution for scenarions in addition to features.
+  State levels are configurable with the `gwen.state.level` setting which can be set to:
+  - `feature`: to give each feature a state that is shared across scenarios (default)
+  - `scenario`: to give each scenario a new state that is not shared across scenarios
+- The `--parallel` option now runs:
+  - features in parallel when configured state level is `feature`
+  - scenarios in parallel when the configured state level is `scenario`
+- Added `--parallel-features` command line option to force parallel feature execution
+  regardless of state level
+- Input CSV data records are now resolved to Backgrounds instead of top level Scenarios
+  to support both feature and scenario level states
+- Update Gwen core from v2.21.0 to v[2.22.1](https://github.com/gwen-interpreter/gwen/releases/tag/v2.22.1)
+  to pick up the above
+
 2.37.0
 ======
 November 15, 2019
