@@ -22,7 +22,7 @@ import gwen.Settings
 import gwen.eval.{GwenOptions, ScopedDataStack}
 import org.mockito.Mockito._
 import org.openqa.selenium._
-import org.scalatest.{BeforeAndAfterEach, FlatSpec, Matchers}
+import org.scalatest.{BeforeAndAfterEach, Matchers}
 import org.scalatest.mockito.MockitoSugar
 import org.mockito.Matchers.any
 import org.mockito.Matchers.anyVararg
@@ -34,7 +34,7 @@ import org.openqa.selenium.support.ui.Select
 import scala.collection.JavaConverters._
 import scala.concurrent.duration.Duration
 
-class WebContextTest extends FlatSpec with Matchers with MockitoSugar with BeforeAndAfterEach {
+class WebContextTest extends BaseTest with Matchers with MockitoSugar with BeforeAndAfterEach {
 
   private var driverManager: DriverManager = _
   private var envContext: WebEnvContext = _
@@ -44,7 +44,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   override def beforeEach(): Unit = {
     mockWebDriver = mock[MockWebDriver]
     driverManager = spy(new MockDriverManager(mockWebDriver))
-    envContext = spy(new WebEnvContext(GwenOptions(), new ScopedDataStack()))
+    envContext = spy(new WebEnvContext(GwenOptions()))
     webContext = spy(new WebContext(envContext, driverManager))
     doNothing().when(webContext).tryMoveTo(any[WebElement])
   }
@@ -82,7 +82,7 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
 
   "WebContext.getCachedWebElement" should "return element when it is in the cache" in  {
     val mockElement = mock[WebElement]
-    envContext.featureScope.pushObject("name", mockElement)
+    envContext.topScope.pushObject("name", mockElement)
     doNothing().when(webContext).highlightElement(mockElement)
     webContext.getCachedWebElement("name") should be (Some(mockElement))
   }
@@ -1481,13 +1481,13 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
   "webContext.captureCurrentUrl" should "capture url in default attribute" in {
     when(mockWebDriver.getCurrentUrl).thenReturn("http://site.com")
     webContext.captureCurrentUrl(None)
-    envContext.featureScope.get("the current URL") should be ("http://site.com")
+    envContext.topScope.get("the current URL") should be ("http://site.com")
   }
 
   "webContext.captureCurrentUrl" should "capture url in provided attribute" in {
     when(mockWebDriver.getCurrentUrl).thenReturn("http://site.com")
     webContext.captureCurrentUrl(Some("my URL"))
-    envContext.featureScope.get("my URL") should be ("http://site.com")
+    envContext.topScope.get("my URL") should be ("http://site.com")
   }
 
   "WebContext.getElementText" should "return blank on element with null text value, null text attribute, null value attribute, and null JS value" in {
@@ -1707,20 +1707,6 @@ class WebContextTest extends FlatSpec with Matchers with MockitoSugar with Befor
     when(mockTargetLocaotr.alert()).thenReturn(mockAlert)
     when(mockAlert.getText).thenReturn("popup message")
     webContext.getPopupMessage should be ("popup message")
-  }
-  
-  private def withSetting[T](name: String, value: String)(f: => T):T = {
-    Settings.synchronized {
-      val original = Settings.getOpt(name)
-      try {
-        Settings.set(name, value)
-        f
-      } finally {
-        original.fold(Settings.clear(name)) { v =>
-          Settings.set(name, v)
-        }
-      }
-    }
   }
 
 }

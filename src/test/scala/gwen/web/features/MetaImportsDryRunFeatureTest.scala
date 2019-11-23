@@ -16,10 +16,16 @@
 
 package gwen.web.features
 
+import org.scalatest.prop.TableDrivenPropertyChecks.forAll
+
 class MetaImportsDryRunFeatureTest extends BaseFeatureTest {
 
-  "Dry run on single feature with meta imports" should "validate feature" in {
-    evaluate(List("features/meta-imports/GoogleSearch.feature"), parallel = false, dryRun = true, "target/reports/meta-imports-dry-run", None)
+  forAll (levels) { level => 
+    s"Dry run on single feature with meta imports using $level-level state" should "validate feature" in {
+      withSetting("gwen.state.level", level) {
+        evaluate(List("features/meta-imports/GoogleSearch.feature"), parallel = false, dryRun = true, s"target/reports/meta-imports-dry-run/$level-level", None)
+      }
+    }
   }
   
 }

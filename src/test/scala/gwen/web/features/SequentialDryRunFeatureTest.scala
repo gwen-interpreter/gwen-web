@@ -18,8 +18,10 @@ package gwen.web.features
 
 class SequentialDryRunFeatureTest extends BaseFeatureTest {
 
-  "Sequential mode dry run" should "validate all features in sequence" in {
-    evaluate(List("features/floodio", "features/blogs", "features/google"), parallel = false, dryRun = true, "target/reports/sequential-dry-run", None)
+  "Sequential mode dry run using feature-level state" should "validate all features in sequence" in {
+    withSetting("gwen.state.level", "feature") {
+      evaluate(List("features/floodio", "features/blogs", "features/google"), parallel = false, dryRun = true, "target/reports/sequential-dry-run/feature-level", None)
+    }
   }
   
 }

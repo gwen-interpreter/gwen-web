@@ -18,8 +18,10 @@ package gwen.web.features
 
 class SingleFeatureTest extends BaseFeatureTest {
 
-  "Single floodio feature" should "evaluate" in {
-    evaluate(List("features/floodio/FloodIO.feature"), parallel = false, dryRun = false, "target/reports/single/floodio", None)
+  "Single floodio feature using feature-level state" should "evaluate" in {
+    withSetting("gwen.state.level", "feature") {
+      evaluate(List("features/floodio/FloodIO.feature"), parallel = false, dryRun = false, "target/reports/single/floodio/feature-level", None)
+    }
   }
   
 }

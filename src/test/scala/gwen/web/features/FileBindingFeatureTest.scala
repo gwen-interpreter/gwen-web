@@ -16,10 +16,16 @@
 
 package gwen.web.features
 
+import org.scalatest.prop.TableDrivenPropertyChecks.forAll
+
 class FileBindingFeatureTest extends BaseFeatureTest {
 
-  "File bindings tests" should "pass" in {
-    evaluate(List("features/file"), parallel = false, dryRun = false, "target/reports/file", None)
+  forAll (levels) { level => 
+    withSetting("gwen.state.level", level) {
+      s"File bindings tests using $level-level state" should "pass" in {
+        evaluate(List("features/file"), parallel = false, dryRun = false, s"target/reports/file/$level-level", None)
+      }
+    }
   }
   
 }

@@ -16,14 +16,24 @@
 
 package gwen.web.features
 
+import org.scalatest.prop.TableDrivenPropertyChecks.forAll
+
 class GoogleFeatureTest extends BaseFeatureTest {
 
-  "Google feature" should "should evaluate" in {
-    evaluate(List("features/google"), parallel = false, dryRun = false, "target/reports/google", None)
+  forAll (levels) { level => 
+    s"Google feature using $level-level state" should "should evaluate" in {
+      withSetting("gwen.state.level", level) {
+        evaluate(List("features/google"), parallel = false, dryRun = false, s"target/reports/google/$level-level", None)
+      }
+    }
   }
 
-  "Google feature dry run" should "should pass" in {
-    evaluate(List("features/google"), parallel = false, dryRun = true, "target/reports/google-dry-run", None)
+  forAll (levels) { level => 
+    s"Google feature dry run using $level-level state" should "should pass" in {
+      withSetting("gwen.state.level", level) {
+        evaluate(List("features/google"), parallel = false, dryRun = true, s"target/reports/google-dry-run/$level-level", None)
+      }
+    }
   }
   
 }

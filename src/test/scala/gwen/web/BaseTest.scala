@@ -14,13 +14,27 @@
  * limitations under the License.
  */
 
-package gwen.web.features
+package gwen.web
 
-class ParallelFeatureTest extends BaseFeatureTest {
+import org.scalatest.FlatSpec
+import org.scalatest.prop.TableDrivenPropertyChecks.Table
+import gwen.Settings
 
-  "Parallel mode using feature-level state" should "evaluate all features in parallel" in {
-    withSetting("gwen.state.level", "feature") {
-      evaluate(List("features/floodio", "features/bindings", "features/todo/CompleteItems.feature", "features/google"), parallel = true, dryRun = false, "target/reports/parallel/feature-level", None)
+abstract class BaseTest extends FlatSpec {
+
+  val levels = Table ( ("level"), ("feature"), ("scenario") )
+
+  def withSetting[T](name: String, value: String)(f: => T):T = {
+    Settings.synchronized {
+      val original = Settings.getOpt(name)
+      try {
+        Settings.set(name, value)
+        f
+      } finally {
+        original.fold(Settings.clear(name)) { v =>
+          Settings.set(name, v)
+        }
+      }
     }
   }
   

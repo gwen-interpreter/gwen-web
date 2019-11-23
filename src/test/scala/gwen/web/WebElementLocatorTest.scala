@@ -29,7 +29,7 @@ import org.openqa.selenium.By
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.WebElement
 import org.openqa.selenium.firefox.FirefoxDriver
-import org.scalatest.{BeforeAndAfterEach, FlatSpec, Matchers}
+import org.scalatest.{BeforeAndAfterEach, Matchers}
 import org.scalatest.mockito.MockitoSugar
 import gwen.eval.ScopedDataStack
 import gwen.eval.GwenOptions
@@ -42,7 +42,7 @@ import org.mockito.Matchers.{anyVararg, same}
 import collection.JavaConverters._
 import scala.concurrent.duration.Duration
 
-class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar with BeforeAndAfterEach {
+class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar with BeforeAndAfterEach {
 
   // disable implicit js locators for unit test
   Settings.set("gwen.web.implicit.js.locators", "false")
@@ -1049,6 +1049,6 @@ class WebElementLocatorTest extends FlatSpec with Matchers with MockitoSugar wit
        Option(function(webDriver))
   }
 
-  private def newEnv: WebEnvContext = new WebEnvContext(GwenOptions(), new ScopedDataStack())
+  private def newEnv: WebEnvContext = new WebEnvContext(GwenOptions())
   
 }

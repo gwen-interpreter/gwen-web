@@ -16,20 +16,19 @@
 
 package gwen.web
 
-import org.scalatest.FlatSpec
 import org.scalatest.Matchers
 import gwen.dsl._
 import gwen.eval.GwenOptions
 import gwen.eval.ScopedDataStack
 import gwen.Settings
 
-class WebDslTest extends FlatSpec with Matchers {
+class WebDslTest extends BaseTest with Matchers {
 
   "gwen-web.dsl" should "pass --dry-run test" in {
     
     val options = new GwenOptions(dryRun = true)
     
-    val env = new WebEnvContext(options, new ScopedDataStack())
+    val env = new WebEnvContext(options)
     env.scopes.set("<element>/locator", "id")
     env.scopes.set("<element>/locator/id", "id")
     env.scopes.set("<reference>", "reference")
@@ -45,7 +44,7 @@ class WebDslTest extends FlatSpec with Matchers {
     env.scopes.set("<elements>/locator", "css selector")
     env.scopes.set("<elements>/locator/css selector", "expression")
     env.scopes.set("<source>", "source")
-    env.featureScope.pushObject("table", new FlatTable(List(List("1", "2")), List("a", "b")))
+    env.topScope.pushObject("table", new FlatTable(List(List("1", "2")), List("a", "b")))
 
     val interpreter = new WebInterpreter
     withSetting("<name>", "name") {
@@ -72,20 +71,6 @@ class WebDslTest extends FlatSpec with Matchers {
               case evalStatus => evalStatus.status should not be (StatusKeyword.Failed)
             }
           }
-        }
-      }
-    }
-  }
-  
-  private def withSetting[T](name: String, value: String)(f: => T):T = {
-    Settings.synchronized {
-      val original = Settings.getOpt(name)
-      try {
-        Settings.set(name, value)
-        f
-      } finally {
-        original.fold(Settings.clear(name)) { v =>
-          Settings.set(name, v)
         }
       }
     }

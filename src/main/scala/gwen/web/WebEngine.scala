@@ -48,14 +48,13 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
     * Initialises and returns a new web environment context.
     * 
     * @param options command line options
-    * @param scopes initial data scopes
     */
-  override def init(options: GwenOptions, scopes: ScopedDataStack) = {
+  override def init(options: GwenOptions) = {
     if (WebSettings.`gwen.web.capture.screenshots.highlighting`) {
       val fps = GwenSettings.`gwen.report.slideshow.framespersecond`
       Settings.setLocal("gwen.report.slideshow.framespersecond", (fps.toDouble * 1.8d).toInt.toString)
     }
-    new WebEnvContext(options, scopes)
+    new WebEnvContext(options)
   }
 
   /**
@@ -558,18 +557,18 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
 
       case r"""I capture (.+?)$attribute (?:of|on|in) (.+?)$element by javascript "(.+?)"$$$expression""" => step.orDocString(expression) tap { expression =>
         val elementBinding = env.getLocatorBinding(element)
-        env.activeScope.set(s"$attribute/javascript", expression)
+        env.scopes.set(s"$attribute/javascript", expression)
         try {
           env.perform {
-            env.featureScope.pushObject(s"$attribute/javascript/param/webElement", webContext.locate(elementBinding))
+            env.topScope.pushObject(s"$attribute/javascript/param/webElement", webContext.locate(elementBinding))
           }
           val value = env.getBoundReferenceValue(attribute)
-          env.featureScope.set(attribute, value tap { content =>
+          env.topScope.set(attribute, value tap { content =>
             env.addAttachment(attribute, "txt", content)
           })
         } finally {
           env.perform {
-            env.featureScope.popObject(s"$attribute/javascript/param/webElement")
+            env.topScope.popObject(s"$attribute/javascript/param/webElement")
           }
         }
       }
@@ -586,7 +585,7 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
       case r"""I capture (.+?)$element( value| text)$selection as (.+?)$attribute""" =>
         try {
           val value = env.boundAttributeOrSelection(element, Option(selection))
-          env.featureScope.set(attribute, value() tap { content =>
+          env.topScope.set(attribute, value() tap { content =>
             env.addAttachment(attribute, "txt", content)
           })
         } catch {
@@ -597,7 +596,7 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
       case r"""I capture (.+?)$element( value| text)$$$selection""" =>
         try {
           val value = env.boundAttributeOrSelection(element, Option(selection))
-          env.featureScope.set(element, value() tap { content =>
+          env.topScope.set(element, value() tap { content =>
             env.addAttachment(element, "txt", content)
           })
         } catch {
@@ -606,12 +605,12 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
         }
 
       case r"I capture the (alert|confirmation)$name popup message" =>
-        env.featureScope.set(s"the $name popup message", webContext.getPopupMessage tap { content =>
+        env.topScope.set(s"the $name popup message", webContext.getPopupMessage tap { content =>
           env.addAttachment(s"the $name popup message", "txt", content)
         })
 
       case r"I capture the (?:alert|confirmation) popup message as (.+?)$attribute" =>
-        env.featureScope.set(attribute, webContext.getPopupMessage tap { content =>
+        env.topScope.set(attribute, webContext.getPopupMessage tap { content =>
           env.addAttachment(attribute, "txt", content)
         })
 
@@ -809,7 +808,7 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
       try {
         env.webContext.waitUntil(timeout.toSeconds) {
           iteration = iteration + 1
-          env.featureScope.set("iteration number", iteration.toString)
+          env.topScope.set("iteration number", iteration.toString)
           operation match {
             case "until" =>
               logger.info(s"repeat-until $condition: iteration $iteration")
@@ -847,7 +846,7 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
         case e: Throwable =>
           evaluatedStep = Step(step, Failed(System.nanoTime - start, new StepFailure(step, e)))
       } finally {
-        env.featureScope.set("iteration number", null)
+        env.topScope.set("iteration number", null)
       }
     } getOrElse {
       operation match {

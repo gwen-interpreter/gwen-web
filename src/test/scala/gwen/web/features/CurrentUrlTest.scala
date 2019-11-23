@@ -16,10 +16,16 @@
 
 package gwen.web.features
 
+import org.scalatest.prop.TableDrivenPropertyChecks.forAll
+
 class CurrentUrlTest extends BaseFeatureTest {
 
-  "Current URL tests" should "pass" in {
-    evaluate(List("features/current-url"), parallel = false, dryRun = false, "target/reports/current-url", None)
+  forAll (levels) { level => 
+    s"Current URL tests using $level-level state" should "pass" in {
+      withSetting("gwen.state.level", level) {
+        evaluate(List("features/current-url"), parallel = false, dryRun = false, s"target/reports/current-url/$level-level", None)
+      }
+    }
   }
   
 }

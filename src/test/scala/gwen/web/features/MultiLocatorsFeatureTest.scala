@@ -16,14 +16,24 @@
 
 package gwen.web.features
 
+import org.scalatest.prop.TableDrivenPropertyChecks.forAll
+
 class MultiLocatorsFeatureTest extends BaseFeatureTest {
 
-  "Multi locators" should "pass" in {
-    evaluate(List("features/multi-locators/MultiLocators.feature"), parallel = false, dryRun = false, "target/reports/multi-locators", None)
+  forAll (levels) { level => 
+    s"Multi locators using $level level-state" should "pass" in {
+      withSetting("gwen.state.level", level) {
+        evaluate(List("features/multi-locators/MultiLocators.feature"), parallel = false, dryRun = false, s"target/reports/multi-locators/$level-level", None)
+      }
+    }
   }
 
-  "Multi locators dry run" should "pass" in {
-    evaluate(List("features/multi-locators/MultiLocators.feature"), parallel = false, dryRun = true, "target/reports/multi-locators-dry-run", None)
+  forAll (levels) { level => 
+    s"Multi locators dry run using $level-level state" should "pass" in {
+      withSetting("gwen.state.level", level) {
+        evaluate(List("features/multi-locators/MultiLocators.feature"), parallel = false, dryRun = true, s"target/reports/multi-locators-dry-run/$level-level", None)
+      }
+    }
   }
   
 }

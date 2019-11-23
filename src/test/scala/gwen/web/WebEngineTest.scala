@@ -20,10 +20,10 @@ import java.io.File
 
 import gwen.Settings
 import org.mockito.Mockito.{verify, _}
-import org.scalatest.{BeforeAndAfterEach, FlatSpec, Matchers}
+import org.scalatest.{BeforeAndAfterEach, Matchers}
 import org.scalatest.mockito.MockitoSugar
 import gwen.dsl.{FlatTable, Step, StepKeyword}
-import gwen.eval.{FeatureScope, GwenOptions, ScopedDataStack}
+import gwen.eval.{TopScope, GwenOptions, ScopedDataStack}
 import gwen.Predefs.Kestrel
 import gwen.Predefs.FileIO
 import org.openqa.selenium.WebElement
@@ -31,7 +31,7 @@ import org.mockito.Matchers.any
 import gwen.errors.UnboundAttributeException
 import org.apache.commons.text.StringEscapeUtils
 
-class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSugar with BeforeAndAfterEach {
+class WebEngineTest extends BaseTest with WebEngine with Matchers with MockitoSugar with BeforeAndAfterEach {
 
   val templateFile: File = {
     val rootDir: File = new File("target" + File.separator + "WebEngineTest") tap { _.mkdirs() }
@@ -78,18 +78,18 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
   private var webContext: WebContext = _
   private var env: WebEnvContext = _
   private var mockScopes: ScopedDataStack = _
-  private var mockFeatureScope: FeatureScope = _
+  private var mockTopScope: TopScope = _
   private var mockDriverManager: DriverManager = _
 
   override def beforeEach(): Unit = {
-    env = spy(new WebEnvContext(GwenOptions(), new ScopedDataStack()))
+    env = spy(new WebEnvContext(GwenOptions()))
     mockDriverManager = mock[DriverManager]
     webContext = spy(new WebContext(env, mockDriverManager))
     mockScopes = mock[ScopedDataStack]
-    mockFeatureScope = mock[FeatureScope]
+    mockTopScope = mock[TopScope]
     doReturn(webContext).when(env).webContext
     doReturn(mockScopes).when(env).scopes
-    doReturn(mockFeatureScope).when(env).featureScope
+    doReturn(mockTopScope).when(env).topScope
   }
 
   private def evaluate(expression: String): Unit = {
@@ -701,19 +701,19 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
   """I capture the text in <reference A> by xpath "<expression>" as <reference B>""" should "evaluate" in {
     doReturn("<value>x</value>").when(env).getBoundReferenceValue("<reference A>")
     evaluate("""I capture the text in <reference A> by xpath "/value" as <reference B>""")
-    verify(mockFeatureScope).set("<reference B>", "x")
+    verify(mockTopScope).set("<reference B>", "x")
   }
 
   """I capture the node in <reference A> by xpath "<expression>" as <reference B>""" should "evaluate" in {
     doReturn("<value>x</value>").when(env).getBoundReferenceValue("<reference A>")
     evaluate("""I capture the node in <reference A> by xpath "/value" as <reference B>""")
-    verify(mockFeatureScope).set("<reference B>", "<value>x</value>")
+    verify(mockTopScope).set("<reference B>", "<value>x</value>")
   }
 
   """I capture the nodeset in <reference A> by xpath "<expression>" as <reference B>""" should "evaluate" in {
     doReturn("<values><value>x</value><value>y</value></values>").when(env).getBoundReferenceValue("<reference A>")
     evaluate("""I capture the nodeset in <reference A> by xpath "/values/value" as <reference B>""")
-    verify(mockFeatureScope).set("<reference B>",
+    verify(mockTopScope).set("<reference B>",
       """<value>x</value>
         |<value>y</value>""".stripMargin)
   }
@@ -721,19 +721,19 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
   """I capture the text in <referenceA> by regex "<expression>" as <reference B>""" should "evaluate" in {
     doReturn("""Now get <this>""").when(env).getBoundReferenceValue("<reference A>")
     evaluate("""I capture the text in <reference A> by regex "Now get (.+)" as <reference B>""")
-    verify(mockFeatureScope).set("<reference B>", "<this>")
+    verify(mockTopScope).set("<reference B>", "<this>")
   }
 
   """I capture the content in <reference A> by json path "<expression B>" as <reference>""" should "evaluate" in {
     doReturn("""{value:"<this>"}""").when(env).getBoundReferenceValue("<reference A>")
     evaluate("""I capture the content in <reference A> by json path "$.value" as <reference B>""")
-    verify(mockFeatureScope).set("<reference B>", "<this>")
+    verify(mockTopScope).set("<reference B>", "<this>")
   }
 
   """I capture the text in the current URL by regex "<expression>" as <reference>""" should "evaluate" in {
     doReturn("http://site.com?param1=<this>&param2=<that>").when(env).getBoundReferenceValue("the current URL")
     evaluate("""I capture the text in the current URL by regex "param1=(.+)&" as <reference>""")
-    verify(mockFeatureScope).set("<reference>", "<this>")
+    verify(mockTopScope).set("<reference>", "<this>")
   }
 
   "I capture the current URL" should "evaluate" in {
@@ -751,71 +751,71 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
   "I capture <reference> as <attribute>" should "evaluate" in {
     doReturn("value").when(env).getBoundReferenceValue("<reference>")
     evaluate("I capture <reference> as <attribute>")
-    verify(mockFeatureScope).set("<attribute>", "value")
+    verify(mockTopScope).set("<attribute>", "value")
   }
 
   "I capture <reference>" should "evaluate" in {
     doReturn("value").when(env).getBoundReferenceValue("<reference>")
     evaluate("I capture <reference>")
-    verify(mockFeatureScope).set("<reference>", "value")
+    verify(mockTopScope).set("<reference>", "value")
   }
 
   "I capture the alert popup message" should "evaluate" in {
     doReturn("message").when(webContext).getPopupMessage
     evaluate("I capture the alert popup message")
-    verify(mockFeatureScope).set("the alert popup message", "message")
+    verify(mockTopScope).set("the alert popup message", "message")
   }
 
   "I capture the confirmation popup message" should "evaluate" in {
     doReturn("message").when(webContext).getPopupMessage
     evaluate("I capture the confirmation popup message")
-    verify(mockFeatureScope).set("the confirmation popup message", "message")
+    verify(mockTopScope).set("the confirmation popup message", "message")
   }
 
   "I capture the alert popup message as <attribute>" should "evaluate" in {
     doReturn("message").when(webContext).getPopupMessage
     evaluate("I capture the alert popup message as <attribute>")
-    verify(mockFeatureScope).set("<attribute>", "message")
+    verify(mockTopScope).set("<attribute>", "message")
   }
 
   "I capture the confirmation popup message as <attribute>" should "evaluate" in {
     doReturn("message").when(webContext).getPopupMessage
     evaluate("I capture the confirmation popup message as <attribute>")
-    verify(mockFeatureScope).set("<attribute>", "message")
+    verify(mockTopScope).set("<attribute>", "message")
   }
 
   "I capture <dropdown> text as <attribute>" should "evaluate" in {
     doReturn(() => "value").when(env).boundAttributeOrSelection("<dropdown>", Some(" text"))
     evaluate("I capture <dropdown> text as <attribute>")
-    verify(mockFeatureScope).set("<attribute>", "value")
+    verify(mockTopScope).set("<attribute>", "value")
     verify(env).addAttachment("<attribute>", "txt", "value")
   }
 
   "I capture <dropdown> value as <attribute>" should "evaluate" in {
     doReturn(() => "value").when(env).boundAttributeOrSelection("<dropdown>", Some(" value"))
     evaluate("I capture <dropdown> value as <attribute>")
-    verify(mockFeatureScope).set("<attribute>", "value")
+    verify(mockTopScope).set("<attribute>", "value")
     verify(env).addAttachment("<attribute>", "txt", "value")
   }
 
   "I capture <dropdown> text" should "evaluate" in {
     doReturn(() => "value").when(env).boundAttributeOrSelection("<dropdown>", Some(" text"))
     evaluate("I capture <dropdown> text")
-    verify(mockFeatureScope).set("<dropdown>", "value")
+    verify(mockTopScope).set("<dropdown>", "value")
     verify(env).addAttachment("<dropdown>", "txt", "value")
   }
 
   "I capture <dropdown> value" should "evaluate" in {
     doReturn(() => "value").when(env).boundAttributeOrSelection("<dropdown>", Some(" value"))
     evaluate("I capture <dropdown> value")
-    verify(mockFeatureScope).set("<dropdown>", "value")
+    verify(mockTopScope).set("<dropdown>", "value")
     verify(env).addAttachment("<dropdown>", "txt", "value")
   }
 
   """I capture <attribute> by javascript "<expression>"""" should "evaluate" in {
     doReturn("value").when(env).evaluateJS("""return (function(){return "value"})()""")
     evaluate("""I capture <attribute> by javascript "(function(){return "value"})()"""")
-    verify(mockFeatureScope).set("<attribute>", "value")
+    verify(mockTopScope).set("<attribute>", "value")
     verify(env).addAttachment("<attribute>", "txt", "value")
   }
 
@@ -828,7 +828,7 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
     List("of", "on", "in").foreach { x =>
       evaluate(s"""I capture <attribute> $x <element> by javascript "<expression>"""")
     }
-    verify(mockFeatureScope, times(3)).set("<attribute>", "value")
+    verify(mockTopScope, times(3)).set("<attribute>", "value")
     verify(env, times(3)).addAttachment("<attribute>", "txt", "value")
   }
 
@@ -857,11 +857,11 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
   }
 
   """<attribute> <is|will> be defined by javascript "<expression>"""" should "evaluate" in {
-    val mockActiveScope = mock[ScopedDataStack]
-    doReturn(mockActiveScope).when(env).activeScope
+    val mockScopes = mock[ScopedDataStack]
+    doReturn(mockScopes).when(env).scopes
     List("is", "will be").zipWithIndex.foreach { case (x, i) =>
       evaluate(s"""attribute-$i $x defined by javascript "expression-$i"""")
-      verify(mockActiveScope).set(s"attribute-$i/javascript", s"expression-$i")
+      verify(mockScopes).set(s"attribute-$i/javascript", s"expression-$i")
     }
   }
 
@@ -869,7 +869,7 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
     List("is", "will be").zipWithIndex.foreach { case (x, i) =>
       Settings.set(s"name-$i", s"$i")
       evaluate(s"""attribute-$i $x defined by property "name-$i"""")
-      verify(mockFeatureScope).set(s"attribute-$i", s"$i")
+      verify(mockTopScope).set(s"attribute-$i", s"$i")
     }
   }
 
@@ -877,74 +877,74 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
     List("is", "will be").zipWithIndex.foreach { case (x, i) =>
       Settings.set(s"name-$i", s"$i")
       evaluate(s"""attribute-$i $x defined by setting "name-$i"""")
-      verify(mockFeatureScope).set(s"attribute-$i", s"$i")
+      verify(mockTopScope).set(s"attribute-$i", s"$i")
     }
   }
 
    """<attribute> <is|will> be defined by system process "<process>"""" should "evaluate" in {
-      val mockActiveScope = mock[ScopedDataStack]
-      doReturn(mockActiveScope).when(env).activeScope
+      val mockScopes = mock[ScopedDataStack]
+      doReturn(mockScopes).when(env).scopes
       List("is", "will be").zipWithIndex.foreach { case (x, i) =>
         evaluate(s"""attribute-$i $x defined by system process "process-$i"""")
-        verify(mockActiveScope).set(s"attribute-$i/sysproc", s"process-$i")
+        verify(mockScopes).set(s"attribute-$i/sysproc", s"process-$i")
       }
     }
 
   """<attribute> <is|will> be defined by file "<filepath>"""" should "evaluate" in {
-    val mockActiveScope = mock[ScopedDataStack]
-    doReturn(mockActiveScope).when(env).activeScope
+    val mockScopes = mock[ScopedDataStack]
+    doReturn(mockScopes).when(env).scopes
     List("is", "will be").zipWithIndex.foreach { case (x, i) =>
       evaluate(s"""attribute-$i $x defined by file "filepath-$i"""")
-      verify(mockActiveScope).set(s"attribute-$i/file", s"filepath-$i")
+      verify(mockScopes).set(s"attribute-$i/file", s"filepath-$i")
     }
   }
 
   """<attribute> is defined by the <text|node|nodeset> in <reference> by xpath "<expression>"""" should "evaluate" in {
-    val mockActiveScope = mock[ScopedDataStack]
-    doReturn(mockActiveScope).when(env).activeScope
+    val mockScopes = mock[ScopedDataStack]
+    doReturn(mockScopes).when(env).scopes
     List("text", "node", "nodeset").zipWithIndex.foreach { case (x, i) =>
       evaluate(s"""<attribute> is defined by the $x in <reference-$i> by xpath "<expression-$i>"""")
-      verify(mockActiveScope).set("<attribute>/xpath/source", s"<reference-$i>")
-      verify(mockActiveScope).set("<attribute>/xpath/targetType", x)
-      verify(mockActiveScope).set("<attribute>/xpath/expression", s"<expression-$i>")
+      verify(mockScopes).set("<attribute>/xpath/source", s"<reference-$i>")
+      verify(mockScopes).set("<attribute>/xpath/targetType", x)
+      verify(mockScopes).set("<attribute>/xpath/expression", s"<expression-$i>")
     }
   }
 
   """<attribute> will be defined by the <text|node|nodeset> in <reference> by xpath "<expression>"""" should "evaluate" in {
-    val mockActiveScope = mock[ScopedDataStack]
-    doReturn(mockActiveScope).when(env).activeScope
+    val mockScopes = mock[ScopedDataStack]
+    doReturn(mockScopes).when(env).scopes
     List("text", "node", "nodeset").zipWithIndex.foreach { case (x, i) =>
       evaluate(s"""<attribute> will be defined by the $x in <reference-$i> by xpath "<expression-$i>"""")
-      verify(mockActiveScope).set("<attribute>/xpath/source", s"<reference-$i>")
-      verify(mockActiveScope).set("<attribute>/xpath/targetType", x)
-      verify(mockActiveScope).set("<attribute>/xpath/expression", s"<expression-$i>")
+      verify(mockScopes).set("<attribute>/xpath/source", s"<reference-$i>")
+      verify(mockScopes).set("<attribute>/xpath/targetType", x)
+      verify(mockScopes).set("<attribute>/xpath/expression", s"<expression-$i>")
     }
   }
 
   """<attribute> <is|will be> defined in <reference> by regex "<expression>"""" should "evaluate" in {
-    val mockActiveScope = mock[ScopedDataStack]
-    doReturn(mockActiveScope).when(env).activeScope
+    val mockScopes = mock[ScopedDataStack]
+    doReturn(mockScopes).when(env).scopes
     List("is", "will be").zipWithIndex.foreach { case (x, i) =>
       evaluate(s"""<attribute> $x defined in <reference-$i> by regex "<expression-$i>"""")
-      verify(mockActiveScope).set(s"<attribute>/regex/source", s"<reference-$i>")
-      verify(mockActiveScope).set(s"<attribute>/regex/expression", s"<expression-$i>")
+      verify(mockScopes).set(s"<attribute>/regex/source", s"<reference-$i>")
+      verify(mockScopes).set(s"<attribute>/regex/expression", s"<expression-$i>")
     }
   }
 
   """<attribute> <is|will be> defined in <reference> by json path "<expression>"""" should "evaluate" in {
-    val mockActiveScope = mock[ScopedDataStack]
-    doReturn(mockActiveScope).when(env).activeScope
+    val mockScopes = mock[ScopedDataStack]
+    doReturn(mockScopes).when(env).scopes
     List("is", "will be").zipWithIndex.foreach { case (x, i) =>
       evaluate(s"""<attribute> $x defined in <reference-$i> by json path "<expression-$i>"""")
-      verify(mockActiveScope).set(s"<attribute>/json path/source", s"<reference-$i>")
-      verify(mockActiveScope).set(s"<attribute>/json path/expression", s"<expression-$i>")
+      verify(mockScopes).set(s"<attribute>/json path/source", s"<reference-$i>")
+      verify(mockScopes).set(s"<attribute>/json path/expression", s"<expression-$i>")
     }
   }
 
   """<attribute> <is|will be> "<value>"""" should "evaluate" in {
     List("is", "will be").zipWithIndex.foreach { case (x, i) =>
       evaluate(s"""<attribute-$i> $x "<value-$i>"""")
-      verify(mockFeatureScope).set(s"<attribute-$i>", s"<value-$i>")
+      verify(mockTopScope).set(s"<attribute-$i>", s"<value-$i>")
     }
   }
 
@@ -1231,7 +1231,7 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
     doReturn("decoded").when(env).decodeBase64("value")
     evaluate("I base64 decode <reference> as <attribute>")
     verify(env).addAttachment("<attribute>", "txt", "decoded")
-    verify(mockFeatureScope).set("<attribute>", "decoded")
+    verify(mockTopScope).set("<attribute>", "decoded")
   }
 
   "I base64 decode <reference>" should "evaluate" in {
@@ -1239,7 +1239,7 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
     doReturn("decoded").when(env).decodeBase64("value")
     evaluate("I base64 decode <reference>")
     verify(env).addAttachment("<reference>", "txt", "decoded")
-    verify(mockFeatureScope).set("<reference>", "decoded")
+    verify(mockTopScope).set("<reference>", "decoded")
   }
 
   "<step> <until|while> <condition> using <delayPeriod> <second|millisecond> delay and <timeoutPeriod> <minute|second|millisecond> <wait|timeout>" should "evaluate" in {
@@ -1392,41 +1392,41 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
   }
 
   """<reference> <is|will be> defined by sql "<selectStmt>" in the <dbName> database""" should "evaluate" in {
-    val mockActiveScope = mock[ScopedDataStack]
-    doReturn(mockActiveScope).when(env).activeScope
+    val mockScopes = mock[ScopedDataStack]
+    doReturn(mockScopes).when(env).scopes
     withSetting("gwen.db.<dbName>.driver", "driver") {
       withSetting("gwen.db.<dbName>.url", "url") {
         List("is", "will be").foreach { x =>
           evaluate(s"""<reference> $x defined by sql "<selectStmt>" in the <dbName> database""")
         }
-        verify(mockActiveScope, times(2)).set(s"<reference>/sql/selectStmt", "<selectStmt>")
-        verify(mockActiveScope, times(2)).set(s"<reference>/sql/dbName", "<dbName>")
+        verify(mockScopes, times(2)).set(s"<reference>/sql/selectStmt", "<selectStmt>")
+        verify(mockScopes, times(2)).set(s"<reference>/sql/dbName", "<dbName>")
       }
     }
   }
 
   """<reference> <is|will be> defined in the <dbName> database by sql "<selectStmt>"""" should "evaluate" in {
-    val mockActiveScope = mock[ScopedDataStack]
-    doReturn(mockActiveScope).when(env).activeScope
+    val mockScopes = mock[ScopedDataStack]
+    doReturn(mockScopes).when(env).scopes
     withSetting("gwen.db.<dbName>.driver", "driver") {
       withSetting("gwen.db.<dbName>.url", "url") {
         List("is", "will be").foreach { x =>
           evaluate(s"""<reference> $x defined in the <dbName> database by sql "<selectStmt>"""")
         }
-        verify(mockActiveScope, times(2)).set(s"<reference>/sql/selectStmt", "<selectStmt>")
-        verify(mockActiveScope, times(2)).set(s"<reference>/sql/dbName", "<dbName>")
+        verify(mockScopes, times(2)).set(s"<reference>/sql/selectStmt", "<selectStmt>")
+        verify(mockScopes, times(2)).set(s"<reference>/sql/dbName", "<dbName>")
       }
     }
   }
 
   """I update the <dbName> database by sql "<updateStmt>"""" should "evaluate" in {
-    val mockActiveScope = mock[ScopedDataStack]
-    doReturn(mockActiveScope).when(env).activeScope
+    val mockScopes = mock[ScopedDataStack]
+    doReturn(mockScopes).when(env).scopes
     doReturn(1).when(env).executeSQLUpdate("<updateStmt>", "<dbName>")
     withSetting("gwen.db.<dbName>.driver", "driver") {
       withSetting("gwen.db.<dbName>.url", "url") {
         evaluate("""I update the <dbName> database by sql "<updateStmt>"""")
-        verify(mockActiveScope).set(s"<dbName> rows affected", "1")
+        verify(mockScopes).set(s"<dbName> rows affected", "1")
       }
     }
   }
@@ -1512,7 +1512,7 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
 
   "<step> for each data record" should "evaluate" in {
     val mockTable = mock[FlatTable]
-    doReturn(Some(mockTable)).when(mockFeatureScope).getObject("table")
+    doReturn(Some(mockTable)).when(mockTopScope).getObject("table")
     doReturn(Nil).when(mockTable).records
     val step = evaluatePriority("""x is "1" for each data record""")
     step should not be (None)
@@ -1525,40 +1525,40 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
   }
 
   """<source> at json path "<path>" should be "<expression>"""" should "evaluate" in {
-    val mockActiveScope = mock[ScopedDataStack]
-    doReturn(mockActiveScope).when(env).activeScope
+    val mockScopes = mock[ScopedDataStack]
+    doReturn(mockScopes).when(env).scopes
     matchers3.foreach { case (operator, _, expression) =>
-      doReturn("""{x:"value"}""").when(mockActiveScope).get("<source>")
+      doReturn("""{x:"value"}""").when(mockScopes).get("<source>")
       doReturn(None).when(mockScopes).getOpt("<source>")
       evaluate(s"""<source> at json path "$$.x" should $operator "$expression"""")
     }
   }
 
   """<source> at json path "<path>" should not be "<expression>"""" should "evaluate" in {
-    val mockActiveScope = mock[ScopedDataStack]
-    doReturn(mockActiveScope).when(env).activeScope
+    val mockScopes = mock[ScopedDataStack]
+    doReturn(mockScopes).when(env).scopes
     matchers3.foreach { case (operator, _, expression) =>
-      doReturn("""{x:"other"}""").when(mockActiveScope).get("<source>")
+      doReturn("""{x:"other"}""").when(mockScopes).get("<source>")
       doReturn(None).when(mockScopes).getOpt("<source>")
       evaluate(s"""<source> at json path "$$.x" should not $operator "$expression"""")
     }
   }
 
   """<source> at xpath "<path>" should be "<expression>"""" should "evaluate" in {
-    val mockActiveScope = mock[ScopedDataStack]
-    doReturn(mockActiveScope).when(env).activeScope
+    val mockScopes = mock[ScopedDataStack]
+    doReturn(mockScopes).when(env).scopes
     matchers3.foreach { case (operator, _, expression) =>
-      doReturn("""<x>value</x>""").when(mockActiveScope).get("<source>")
+      doReturn("""<x>value</x>""").when(mockScopes).get("<source>")
       doReturn(None).when(mockScopes).getOpt("<source>")
       evaluate(s"""<source> at xpath "x" should $operator "$expression"""")
     }
   }
 
   """<source> at xpath "<path>" should not be "<expression>"""" should "evaluate" in {
-    val mockActiveScope = mock[ScopedDataStack]
-    doReturn(mockActiveScope).when(env).activeScope
+    val mockScopes = mock[ScopedDataStack]
+    doReturn(mockScopes).when(env).scopes
     matchers3.foreach { case (operator, _, expression) =>
-      doReturn("""<x>other</x>""").when(mockActiveScope).get("<source>")
+      doReturn("""<x>other</x>""").when(mockScopes).get("<source>")
       doReturn(None).when(mockScopes).getOpt("<source>")
       evaluate(s"""<source> at xpath "x" should not $operator "$expression"""")
     }
@@ -1610,20 +1610,6 @@ class WebEngineTest extends FlatSpec with WebEngine with Matchers with MockitoSu
     doNothing().when(webContext).sendValue(mockBinding, newLine, clearFirst = false, sendEnterKey = false)
     evaluate("""I insert a new line in <element>""")
     verify(webContext).sendValue(mockBinding, newLine, clearFirst = false, sendEnterKey = false)
-  }
-
-  private def withSetting[T](name: String, value: String)(f: => T):T = {
-    Settings.synchronized {
-      val original = Settings.getOpt(name)
-      try {
-        Settings.set(name, value)
-        f
-      } finally {
-        original.fold(Settings.clear(name)) { v =>
-          Settings.set(name, v)
-        }
-      }
-    }
   }
   
 }
