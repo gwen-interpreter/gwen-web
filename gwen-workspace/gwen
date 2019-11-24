@@ -1,0 +1,118 @@
+#!/usr/bin/env bash
+
+# Gwen workspace
+# ==============
+
+#  ---------------------------------------------------------------------------
+#  Gwen workspace script for linux environments
+#  ---------------------------------------------------------------------------
+
+# Defaults
+DEFAULT_BROWSER="chrome"
+DEFAULT_ENV="local"
+
+# Help and usage
+if [[ $1 = "help" ]] || [[ $1 = "--help" ]] || [[ $1 = "-h" ]];
+  then
+    echo
+    echo "Usage:"
+    echo "  ./gwen [browser] [env] [options] [features]"
+    echo "    [browser] ="
+    echo "      chrome  : to use chrome browser (default)"
+    echo "      firefox : to use firefox browser"
+    echo "      safari  : to use safari browser"
+    echo "       other  : name of browser properties file in browsers directory"
+    echo "    [env]     ="
+    echo "      local   : to use local user environment (default)"
+    echo "      name    : name of environment to use"
+    echo "                (e.g: dev will load env/dev.properties)"
+    echo "    [options] ="
+    echo "      --version"
+    echo "              : Prints the implementation version"
+    echo "      -h, --help, help"
+    echo "              : Prints this usage text"
+    echo "      -b --batch"
+    echo "              : Batch/server mode"
+    echo "      --parallel"
+    echo "              : Run features or scenarios in parallel depending"
+    echo "                on state level"
+    echo "      --parallel-features"
+    echo "              : Run features in parallel regardless of state level"
+    echo "      --parallel"
+    echo "              : Parallel batch execution mode"
+    echo "      -f, --formats <formats>"
+    echo "              : Comma separated report formats to produce."
+    echo "                Supported formats include: html slideshow junit json"
+    echo "                (default is html)"
+    echo "      -t, --tags <tags>"
+    echo "              : Comma separated list of @include or ~@exclude tags"
+    echo "      -n, --dry-run"
+    echo "              : Check syntax and validate only"
+    echo "      -i, --input-data <input data file>"
+    echo "              : Input data (CSV file with column headers)"
+    echo "      -m, --meta <meta files>"
+    echo "              : Comma separated list of meta files and directories"
+    echo "   <features> = Space separated list of feature files/directories"
+    echo
+    exit 1
+fi
+
+# Set target browser
+if [[ -f browsers/$1.properties ]];
+  then
+    TARGET_BROWSER="$1"
+    shift
+  else
+    TARGET_BROWSER=$DEFAULT_BROWSER
+fi
+
+# Set target environment
+if [[ $1 = "local" ]] || [[ -f env/$1.properties ]];
+  then
+    TARGET_ENV="$1"
+    shift
+  else
+    TARGET_ENV=$DEFAULT_ENV
+fi
+
+echo "Target browser is $TARGET_BROWSER"
+echo "Target environment is $TARGET_ENV"
+
+# Prepare Gwen JVM args and properties
+GWEN_JVM_ARGS="-Dgwen.web.browser=$TARGET_BROWSER"
+GWEN_PROPS="gwen.properties,browsers/$TARGET_BROWSER.properties,env/$TARGET_ENV.properties"
+
+# Install gwen-web
+GWEN_WEB_HOME="target/gwen-web"
+java -jar gwen-gpm.jar update gwen-web gwen.gwen-web.version $GWEN_WEB_HOME -p "$GWEN_PROPS"
+rc=$?
+if [ $rc == 1 ];
+  then
+    echo "Failed to auto-install gwen-web"
+    exit $rc
+fi
+
+# If gwen.selenium.version is set to a specific version, then install that
+# selenium-java API version and set SELENIUM_HOME to the installed location
+# Otherwise do nothing if gwen.selenium.version=provided (exit code 2).
+java -jar gwen-gpm.jar update selenium gwen.selenium.version target/selenium -p "$GWEN_PROPS"
+rc=$?
+if [ $rc == 0 ];
+  then
+    SELENIUM_HOME="target/selenium"
+fi
+if [ $rc != 0 ];
+  then
+    unset SELENIUM_HOME
+fi
+if [ $rc == 1 ];
+then
+  echo "Failed to auto-install selenium Java package"
+  exit $rc
+fi
+
+# Call Gwen passing in the arguments
+echo
+echo "Launching gwen"
+$GWEN_WEB_HOME/bin/gwen-web $GWEN_JVM_ARGS -r target/reports -p "$GWEN_PROPS" "$@"
+exit $?

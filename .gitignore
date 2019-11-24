@@ -10,3 +10,4 @@ project/project/target/
 .bloop/
 *.log
 /bin/
+*.jar
