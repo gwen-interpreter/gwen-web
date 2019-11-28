@@ -1,3 +1,10 @@
+2.38.1
+======
+November 28, 2019
+- Calculate summary overhead to be the sum of all feature overheads
+- Update Gwen core from v2.22.1 to v[2.22.2](https://github.com/gwen-interpreter/gwen/releases/tag/v2.22.2)
+  to pick up the above
+
 2.38.0
 ======
 November 23, 2019

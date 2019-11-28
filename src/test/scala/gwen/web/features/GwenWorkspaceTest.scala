@@ -34,19 +34,19 @@ class GwenWorkspaceTest extends BaseFeatureTest {
 
   "Todo sample using scenario level state" should "should evaluate" in {
     withSetting("gwen.state.level", "scenario") {
-      evaluate(List("gwen-workspace/samples/todo/scenario-level"), parallel = false, dryRun = false, "target/reports/gwen-workspace/samples-todo/scenario-level", None)
+      evaluate(List("gwen-workspace/samples/todo/scenario-level", "gwen-workspace/samples/todo/single-scenario"), parallel = false, dryRun = false, "target/reports/gwen-workspace/samples-todo/scenario-level", None)
     }
   }
 
   "Todo sample using scenario level state in parallel" should "should evaluate" in {
     withSetting("gwen.state.level", "scenario") {
-      evaluate(List("gwen-workspace/samples/todo/scenario-level"), parallel = true, dryRun = false, "target/reports/gwen-workspace/samples-todo/scenario-level-parallel", None)
+      evaluate(List("gwen-workspace/samples/todo/scenario-level", "gwen-workspace/samples/todo/single-scenario"), parallel = true, dryRun = false, "target/reports/gwen-workspace/samples-todo/scenario-level-parallel", None)
     }
   }
 
   "Todo sample using scenario level state in dry run mode" should "should evaluate" in {
     withSetting("gwen.state.level", "scenario") {
-      evaluate(List("gwen-workspace/samples/todo/scenario-level"), parallel = false, dryRun = true, "target/reports/gwen-workspace/samples-todo/scenario-level-dryRun", None)
+      evaluate(List("gwen-workspace/samples/todo/scenario-level", "gwen-workspace/samples/todo/single-scenario"), parallel = false, dryRun = true, "target/reports/gwen-workspace/samples-todo/scenario-level-dryRun", None)
     }
   }
   
