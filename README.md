@@ -30,9 +30,9 @@ finding elements or running functions on web pages may be necessary.
 - [Change log](CHANGELOG)
 
 ### What's New?
+- [Declarative feature mode](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#gwenassertionmode) to force all imperative steps to meta and promote cleaner features.
 - [State levels](https://github.com/gwen-interpreter/gwen/wiki/State-Levels) and [parallel execution](https://github.com/gwen-interpreter/gwen/wiki/Execution-Modes#parallel-scenario-execution) for scenarios in additon to features
 - Integated the latest [Gherkin parser](https://github.com/cucumber/cucumber/tree/master/gherkin/java) from Cucumber to support [example mapping](https://cucumber.io/blog/2015/12/08/example-mapping-introduction)
-- Microsoft Edge browser support
 
 Why Gwen?
 ---------
@@ -131,6 +131,7 @@ Learn More
 - Integrated [WebDriverManager](https://github.com/bonigarcia/webdrivermanager)
 - [Mobile Emulation](https://github.com/gwen-interpreter/gwen-web/wiki/Mobile-Emulation)
 - Integrated [WebDriverManager](https://github.com/bonigarcia/webdrivermanager) manages all native webdrivers for you
+- Microsoft Edge browser support
 
 License
 -------
