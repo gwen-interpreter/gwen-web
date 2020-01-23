@@ -128,8 +128,6 @@ Learn More
 - Hard, soft, and sustained [assertion modes](https://github.com/gwen-interpreter/gwen/wiki/Assertion-Modes)
 - [Visual Testing with AppliTools](https://github.com/gwen-interpreter/gwen-web/wiki/Visual-Testing)
 - [Mobile Emulation](https://github.com/gwen-interpreter/gwen-web/wiki/Mobile-Emulation)
-- Integrated [WebDriverManager](https://github.com/bonigarcia/webdrivermanager)
-- [Mobile Emulation](https://github.com/gwen-interpreter/gwen-web/wiki/Mobile-Emulation)
 - Integrated [WebDriverManager](https://github.com/bonigarcia/webdrivermanager) manages all native webdrivers for you
 - Microsoft Edge browser support
 
