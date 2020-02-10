@@ -376,7 +376,12 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
         webElement.clear()
         env.bindAndWait(element, "clear", "true")
       }
-      createActions(driver).moveToElement(webElement).sendKeys(value).perform()
+      if ("file" == webElement.getAttribute("type")) {
+        createActions(driver).moveToElement(webElement).perform()
+        webElement.sendKeys(value)
+      } else {
+        createActions(driver).moveToElement(webElement).sendKeys(value).perform()
+      }
       env.bindAndWait(element, "type", value)
     }
     withDriverAndElement("send enter key", elementBinding) { (driver, webElement) =>

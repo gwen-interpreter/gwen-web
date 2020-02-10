@@ -1,3 +1,8 @@
+2.40.1
+======
+February 10, 2020
+- Fix for issue #70: make DSL work with file input type
+
 2.40.0
 ======
 January 29, 2020
