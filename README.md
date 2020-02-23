@@ -19,7 +19,7 @@ finding elements or running functions on web pages may be necessary.
   | [Wiki](https://github.com/gwen-interpreter/gwen-web/wiki)
   | [FAQ](https://github.com/gwen-interpreter/gwen-web/wiki/FAQ)
   | [License](https://github.com/gwen-interpreter/gwen-web/blob/master/README.md#license)
-  | [Support](https://www.gwenify.com/)
+  | [Support](#user-network-and-support)
   | [Twitter](https://twitter.com/gweninterpreter)
 
 ## Current Status
@@ -201,6 +201,11 @@ Credits
 - [Selenium](https://www.seleniumhq.org/)
 - [Cucumber/Gherkin](https://docs.cucumber.io/gherkin/reference/)
 - [WebDriverManager](https://github.com/bonigarcia/webdrivermanager)
+
+User Network and Support
+------------------------
+
+Join our user network at [Gwenify](https://www.gwenify.com/) to get access to the Gwen community and company level chat and support for your workplace.
 
 Known Users
 -----------
