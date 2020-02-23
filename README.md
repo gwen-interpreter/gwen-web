@@ -196,12 +196,6 @@ The following users raised issues or requests that have been addressed:
 | [Sergio Freire](https://github.com/bitcoder)
 | [David](https://github.com/dfriquet)
 
-Credits
--------
-- [Selenium](https://www.seleniumhq.org/)
-- [Cucumber/Gherkin](https://docs.cucumber.io/gherkin/reference/)
-- [WebDriverManager](https://github.com/bonigarcia/webdrivermanager)
-
 User Network and Support
 ------------------------
 
@@ -214,5 +208,11 @@ Known Users
 Integrates With
 ---------------
 <a href="https://applitools.com/" target="_blank"><img src="https://gwen-interpreter.github.io/assets/img/integration/applitools-logo.png" height="40"/></a>
+
+Credits
+-------
+- [Selenium](https://www.seleniumhq.org/)
+- [Cucumber/Gherkin](https://docs.cucumber.io/gherkin/reference/)
+- [WebDriverManager](https://github.com/bonigarcia/webdrivermanager)
 
 ---
