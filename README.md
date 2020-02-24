@@ -135,7 +135,7 @@ Learn More
 User Network and Support
 ------------------------
 
-Join our user network at [Gwenify](https://www.gwenify.com/) to get access to the Gwen community and company level chat and support for your workplace.
+Join our user network at [Gwenify](https://www.gwenify.com/) to get access to the community and company level chat and support for your workplace.
 
 License
 -------
