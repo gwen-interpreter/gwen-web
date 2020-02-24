@@ -105,11 +105,6 @@ Ensure that your system meets the above requirements and then perform the follow
 1. Download and extract [gwen-workspace.zip](https://github.com/gwen-interpreter/gwen-web/releases/latest/download/gwen-workspace.zip) into to a folder on your computer
 2. [Start automating](https://github.com/gwen-interpreter/gwen-web/wiki/Getting-Started)
 
-User Network and Support
-------------------------
-
-Join our user network at [Gwenify](https://www.gwenify.com/) to get access to the Gwen community and company level chat and support for your workplace.
-
 Learn More
 ----------
 
@@ -136,6 +131,11 @@ Learn More
 - Integrated [WebDriverManager](https://github.com/bonigarcia/webdrivermanager) manages all native webdrivers for you
 - Microsoft Edge browser support
 - Supports full Gherkin syntax including [example mapping](https://cucumber.io/blog/2015/12/08/example-mapping-introduction)
+
+User Network and Support
+------------------------
+
+Join our user network at [Gwenify](https://www.gwenify.com/) to get access to the Gwen community and company level chat and support for your workplace.
 
 License
 -------
