@@ -17,12 +17,26 @@
  Feature: TodoMVC meta
   
 @StepDef
+@Context
 Scenario: I launch the Todo app
     Given I resize the window to width 800 and height 800
      When I navigate to "http://todomvc.com/examples/angularjs"
      Then I should be on the Todo page
 
 @StepDef
+@Context
+Scenario: I launch the Todo app in session 1
+    Given I start a browser for session 1
+      And I launch the Todo app
+
+@StepDef
+@Context
+Scenario: I launch the Todo app in session 2
+    Given I start a browser for session 2
+      And I launch the Todo app
+
+@StepDef
+@Assertion
 Scenario: I should be on the Todo page
     Given the heading can be located by tag name "h1"
      Then the heading should be "todos"
@@ -33,18 +47,21 @@ Scenario: I should be on the Todo page
       And the number of active items should not be displayed
 
 @StepDef
+@Action
 Scenario: I add a "<todo>" item
     Given the "$<todo>" item can be located by xpath "//label[contains(.,'$<todo>')]/preceding-sibling::input"
      When I enter "$<todo>" in the todo field
      Then the "$<todo>" item should be unchecked
 
 @StepDef
+@Action
 Scenario: I copy all items from session 1 to session 2
     Given I switch to session 1
      When I copy item from session 1 to session 2 for each item located by css selector ".todo-list > li > div > label"
      Then I switch to session 2
 
 @StepDef
+@Action
 Scenario: I copy item from session 1 to session 2
     Given I capture item as copied item
      When I switch to session 2
@@ -54,26 +71,32 @@ Scenario: I copy item from session 1 to session 2
 @StepDef
 @Examples("features-data/TodoItems1.csv")
 @Examples("features-data/TodoItems2.csv")
+@Action
 Scenario Outline: I load items from CSV files
      When I add a <Status> "<Item>" item
 
 @StepDef
+@Action
 Scenario: I add a pending "<todo>" item
      When I add a "$<todo>" item
 
 @StepDef
+@Action
 Scenario: I add a done "<todo>" item
      When I add a "$<todo>" item
       And I tick the "$<todo>" item
 
 @StepDef
+@Action
 Scenario: I complete the "<todo>" item
      When I tick the "$<todo>" item
 
 @StepDef
+@Assertion
 Scenario: the "<todo>" item should be active
      Then the "$<todo>" item should be unticked
 
 @StepDef
+@Assertion
 Scenario: the "<todo>" item should be completed
      Then the "$<todo>" item should be ticked

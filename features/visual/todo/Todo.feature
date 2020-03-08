@@ -18,20 +18,25 @@
 
 Scenario: Add items in my Todo list
     Given I launch the Todo app
-      And I start visual test as "Todo items" in 600 x 600 viewport
+     When I start visual test as "Todo items" in 600 x 600 viewport
       And I check viewport visual as "No Todo items" using STRICT match
-     When I add a "Walk the dog" item
+      And I add a "Walk the dog" item
       And I add a "Get the milk" item
      Then the number of active items should be "2"
-      And I check viewport visual as "Active Todo items" using STRICT match
 
 Scenario: Complete one item
-     When I tick the "Get the milk" item
+    Given I am on the todo page
+     When I check viewport visual as "Active Todo items" using STRICT match
+      And I tick the "Get the milk" item
      Then the number of active items should be "1"
-      And I check viewport visual as "One completed Todo item" using STRICT match
 
 Scenario: Complete another item
-     When I tick the "Walk the dog" item
+    Given I am on the todo page
+     When I check viewport visual as "One completed Todo item" using STRICT match
+      And I tick the "Walk the dog" item
      Then the number of active items should be "0"
-      And I check viewport visual as "All completed Todo items" using STRICT match
-      And the visual test should pass
+
+Scenario: Finalise
+    Given I am on the todo page
+     When I check viewport visual as "All completed Todo items" using STRICT match
+     Then the visual test should pass

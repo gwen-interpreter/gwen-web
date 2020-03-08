@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Brady Wood, Branko Juric
+ * Copyright 2016-2020 Brady Wood, Branko Juric
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import org.mockito.Mockito.{verify, _}
 import org.scalatest.{BeforeAndAfterEach, Matchers}
 import org.scalatest.mockito.MockitoSugar
 import gwen.dsl.{FlatTable, Step, StepKeyword}
-import gwen.eval.{TopScope, GwenOptions, ScopedDataStack}
+import gwen.eval.{TopScope, GwenOptions, ScopedDataStack, LocalDataStack}
 import gwen.Predefs.Kestrel
 import gwen.Predefs.FileIO
 import org.openqa.selenium.WebElement
@@ -80,6 +80,7 @@ class WebEngineTest extends BaseTest with WebEngine with Matchers with MockitoSu
   private var mockScopes: ScopedDataStack = _
   private var mockTopScope: TopScope = _
   private var mockDriverManager: DriverManager = _
+  private val stepScope = new LocalDataStack()
 
   override def beforeEach(): Unit = {
     env = spy(new WebEnvContext(GwenOptions()))
@@ -90,6 +91,9 @@ class WebEngineTest extends BaseTest with WebEngine with Matchers with MockitoSu
     doReturn(webContext).when(env).webContext
     doReturn(mockScopes).when(env).scopes
     doReturn(mockTopScope).when(env).topScope
+    doReturn(false).when(env).isEvaluatingTopLevelStep
+    doReturn(false).when(env).isEvaluatingFeatureFile
+    when(mockTopScope.getOpt("gwen.feature.file.path")).thenReturn(Some("file.feature"))
   }
 
   private def evaluate(expression: String): Unit = {
@@ -122,6 +126,12 @@ class WebEngineTest extends BaseTest with WebEngine with Matchers with MockitoSu
       evaluate("""the url will be defined by setting "<name>"""")
       verify(mockScopes).set("url", "http://site.com")
     }
+  }
+
+  """the <page> url is "<url>""""" should "evaluate" in {
+    evaluate("""the page url is "https://site.com"""")
+    verify(mockScopes).addScope("page")
+    verify(mockScopes).set("url", "https://site.com")
   }
 
   "I navigate to the <page>" should "evaluate" in {
@@ -1320,6 +1330,28 @@ class WebEngineTest extends BaseTest with WebEngine with Matchers with MockitoSu
     evaluate("I start a browser for <session>")
     verify(webContext).close("<session>")
     verify(webContext).switchToSession("<session>")
+  }
+
+  "I should have 1 open browser" should "evaluate" in {
+    doReturn(1).when(webContext).noOfSessions()
+    evaluate("I should have 1 open browser")
+    verify(webContext).noOfSessions()
+  }
+
+  "I should have 2 open browsers" should "evaluate" in {
+    doReturn(2).when(webContext).noOfSessions()
+    evaluate("I should have 2 open browsers")
+    verify(webContext).noOfSessions()
+  }
+
+  "I have no open browser" should "evaluate" in {
+    evaluate("I have no open browser")
+    verify(webContext).close()
+  }
+
+  "I have an open browser" should "evaluate" in {
+    evaluate("I have an open browser")
+    verify(webContext).newOrCurrentSession()
   }
 
   "I close the browser for <session>" should "evaluate" in {

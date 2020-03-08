@@ -17,6 +17,7 @@
  Feature: Selenium Test Page Meta
 
 @StepDef
+@Context
 Scenario: I am on the Selenium test page
      When I go to the Selenium test page
      Then firstNameById can be located by id "firstname"
@@ -37,18 +38,22 @@ Scenario: I am on the Selenium test page
           """
 
 @StepDef
+@Action
 Scenario: I provide some contact details
      When I type "Gwen" in firstNameById
 
 @StepDef
+@Action
 Scenario: I submit the test form
      When I submit formByName
 
 @StepDef
+@Assertion
 Scenario: nothing should happen
      Then the current URL should end with "?"
 
 @StepDef
+@Assertion
 Scenario: the page should still function
      When I select "Female" in genderByClass
       And I clear firstNameByXPath
@@ -71,6 +76,7 @@ Scenario: the page should still function
      Then nothing should happen
 
 @StepDef
+@Action
 Scenario: I go to the Selenium test page
     Given I navigate to "https://automationintesting.com/selenium/testpage/"
 

@@ -24,7 +24,8 @@
        So that I can verify that it works
 
   Scenario: Launch the challenge
-      Given I launch the floodio challenge
+      Given the start page url is "https://challengers.flood.io/start"  
+       When I navigate to the start page
        Then I should be on the start page
 
   Scenario: Complete step 1

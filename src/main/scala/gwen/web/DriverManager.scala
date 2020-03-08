@@ -436,6 +436,18 @@ class DriverManager extends LazyLogging {
     webDriver
   }
 
+  /** Gets the number of open sesions. */
+  def noOfSessions(): Int = drivers.size
+
+  /**
+    * Starts a new session if there isn't one or stays in the current one.
+    */
+  def newOrCurrentSession(): Unit = {
+    if (noOfSessions == 0) {
+      switchToSession("primary")
+    }
+  }
+
   private def sessionWindows(): List[String] = {
     if (!windows.contains(session)) {
       windows += (session -> Nil)

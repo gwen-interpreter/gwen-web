@@ -19,13 +19,10 @@
      As a gwen user
      I want to automate the floodio challenge
      So that I can verify that it works
-  
-  @Robot
-  Scenario: Initialise user agent
-      Given my gwen.web.useragent setting is "I AM ROBOT" 
-      
+
   Scenario: Launch the challenge
-      Given I launch the floodio challenge
+      Given the start page url is "https://challengers.flood.io/start"  
+       When I navigate to the start page
        Then I should be on the start page
        
   Scenario: Complete step 1
@@ -36,9 +33,7 @@
   Scenario: Complete step 2
       Given I am on the step 2 page
        When I select "21" in the how old are you dropdown
-       Then the how old are you dropdown text should be "21"
-        And the how old are you dropdown value should be "21"
-       When I click the next button
+        And I click the next button
        Then I should be on the step 3 page
        
   Scenario: Complete step 3
@@ -58,9 +53,4 @@
         And I capture the one time token
         And I click the next button
        Then I should be on the challenge completed page
-       
-  @Robot
-  Scenario: Verify robot completion
-      Given I am on the challenge completed page
-       Then the lead paragraph should contain "Congratulations, your scripting skills are impressive"
-       
+            

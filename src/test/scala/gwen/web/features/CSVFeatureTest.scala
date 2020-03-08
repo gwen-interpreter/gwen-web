@@ -17,18 +17,6 @@
 package gwen.web.features
 
 class CSVFeatureTest extends BaseFeatureTest {
-
-  "Dry run implicit CSV data-driven feature" should "pass" in {
-    withSetting("gwen.state.level", "feature") {
-      evaluate(List("features/csvdriven/FloodIO.feature"), parallel = false, dryRun = true, "target/reports/dryrun-csvdriven-1/feature-level", None)  // will auto discover csv in same folder
-    }
-  }
-  
-  "Dry run explicit CSV data-driven feature" should "pass" in {
-    withSetting("gwen.state.level", "feature") {
-      evaluate(List("features/csvdriven/FloodIO.feature"), parallel = false, dryRun = true, "target/reports/dryrun-csvdriven-2/feature-level", Some("features/csvdriven/FloodIO.csv"))
-    }
-  }
   
   "Sequential explicit CSV data-driven feature" should "evaluate" in {
     withSetting("gwen.state.level", "feature") {

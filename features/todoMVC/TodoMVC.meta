@@ -25,6 +25,7 @@
  Feature: Todos meta
   
 @StepDef
+@Action
 Scenario: I browse to the application home page
     Given I navigate to "http://todomvc.com/examples/${js-framework}"
      Then the heading can be located by tag name "h1"
@@ -38,52 +39,63 @@ Scenario: I browse to the application home page
       And I wait for the todo field
 
 @StepDef
+@Action
 Scenario: I toggle all items
-    Given I click the toggle all checkbox
+    Given I type " " in the toggle all checkbox
 
 @StepDef
+@Action
 Scenario: I clear all completed items
     Given I click the clear completed button
                   
 @StepDef
+@Action
 Scenario: I clear all items
-    Given I check the toggle all checkbox
+    Given I type " " in the toggle all checkbox
      When I clear all completed items
       Then the number of items left should not be displayed
 
 @StepDef
+@Action
 Scenario: I add a "<todo>" item
       When I enter "$<todo>" in the todo field
       Then the "$<todo>" item can be located by xpath "${xpath-todo-list}//input[@type='checkbox']/following-sibling::label[contains(.,'$<todo>')]"
        And the "$<todo>" item checkbox can be located by xpath "${xpath-todo-list}//input[@type='checkbox']/following-sibling::label[contains(.,'$<todo>')]/preceding-sibling::input"
 
 @StepDef
+@Action
 Scenario: I complete the "<todo>" item
     Given I click the "$<todo>" item checkbox
      
 @StepDef
+@Assertion
 Scenario: the "<todo>" item should be completed
     Given the "$<todo>" item checkbox should be checked
      
 @StepDef
+@Assertion
 Scenario: the "<todo>" item should be active
     Given the "$<todo>" item checkbox should not be checked
     
 @StepDef
+@Action
 Scenario: I delete the "<todo>" item
     Given the delete button can be located by xpath "${xpath-todo-list}//input[@type='checkbox']/following-sibling::label[contains(.,'$<todo>')]/following-sibling::button"
       And I click the delete button of the "$<todo>" item  
 
 @StepDef
+@Assertion
 Scenario: the clear completed items option should be unavailable
     Given the clear completed button should not be displayed
     
 @StepDef
+@Action
 Scenario: I apply the "<filter>" filter
     Given the filter can be located by link text "$<filter>" 
      When I click the filter
      Then the "$<filter>" filter is selected is defined by javascript "document.querySelector('.selected').textContent == '$<filter>'"
      
 @StepDef
+@Assertion
 Scenario: the "<filter>" filter should be selected
     Given the "$<filter>" filter is selected should be "true"

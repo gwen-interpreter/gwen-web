@@ -17,8 +17,9 @@
    Feature: Gwen reports visual test
 
   Scenario: Report summary and detail should pass visual layout checks
-      Given I navigate to "file://${user.dir}/target/reports/sequential/feature-level/html/feature-summary.html"
-       When I start visual test as "Gwen reports" in 1200 x 600 viewport
+      Given the report page url is "file://${user.dir}/target/reports/sequential/feature-level/html/feature-summary.html"
+       When I navigate to the report page
+        And I start visual test as "Gwen reports" in 1200 x 600 viewport
         And I check viewport visual as "Summary report" using LAYOUT2 match
         And I navigate to "file://${user.dir}/target/reports/sequential/feature-level/html/features-floodio/FloodIO/FloodIO.feature.html"
         And I check full page visual as "Detail report" using LAYOUT2 match

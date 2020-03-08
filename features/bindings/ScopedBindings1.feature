@@ -14,6 +14,7 @@
 # limitations under the License.
 #
 
+ @Lenient
  Feature: Scoped binding tests
       
 Scenario: Init globals

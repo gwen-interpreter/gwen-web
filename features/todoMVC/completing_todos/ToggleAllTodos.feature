@@ -20,19 +20,23 @@
    Feature: Toggle all todos
   
 Background: Open a new browser
-      Given I start a browser for James
+      Given I have no open browser
+       When I start a browser for James
+       Then I should have 1 open browser
       
   Scenario: I should be able to quickly complete all todos
-      Given I browse to the application home page
-       When I add a "Walk the dog" item
+      Given I have an open browser
+       When I browse to the application home page
+        And I add a "Walk the dog" item
         And I add a "Put out the garbage" item
         And I toggle all items
        Then the "Walk the dog" item should be completed
         And the "Put out the garbage" item should be completed
 
   Scenario: I should be able to toggle status of all todos
-      Given I browse to the application home page
-       When I add a "Walk the dog" item
+      Given I have an open browser
+       When I browse to the application home page
+        And I add a "Walk the dog" item
         And I add a "Put out the garbage" item
         And I toggle all items
         And I toggle all items

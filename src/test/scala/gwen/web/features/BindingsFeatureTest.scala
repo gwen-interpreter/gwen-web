@@ -22,7 +22,7 @@ class BindingsFeatureTest extends BaseFeatureTest {
 
   "Bindings with scenario initializer using feature state level" should "pass exeuction" in {
     withSetting("gwen.state.level", "feature") {
-      evaluate(List("features/bindings/ScopedBindings1.feature"), parallel = true, dryRun = false, "target/reports/bindings1/feature-level", None)
+      evaluate(List("features/bindings/ScopedBindings1.feature"), parallel = false, dryRun = false, "target/reports/bindings1/feature-level", None)
     }
   }
 

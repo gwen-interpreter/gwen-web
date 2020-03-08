@@ -17,12 +17,15 @@
  Feature: TodoMVC meta
   
 @StepDef
+@Context
 Scenario: I launch the Todo app
     Given I resize the window to width 800 and height 800
      When I navigate to "http://todomvc.com/examples/angularjs"
-     Then the number of active items can be located by css selector ".todo-count > strong"
+     Then I am on the todo page
+      And the number of active items can be located by css selector ".todo-count > strong"
 
 @StepDef
+@Action
 Scenario: I add a "<todo>" item
     Given the new item field can be located by class name "new-todo"
      When I enter "$<todo>" in the new item field

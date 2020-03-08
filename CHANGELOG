@@ -1,3 +1,24 @@
+2.41.0
+======
+March 8, 2020
+- Introduce behavior rules setting to enforce good Gherkin style
+  - `gwen.behavior.rules=strict|lenient`
+    - `strict`: The following rules are enforced in feature files with violations reported as errors:
+      - Steps in scenarios and backgrounds must satisfy *Given-When-Then order*
+      - *Given* steps must set context
+      - *When* steps must perform actions
+      - *Then* steps must perform assertions
+      - *But* steps must perform assertions (and are permitted after *Then* steps)
+      - StepDefs tagged with:
+        - `@Context` : can only be called by *Givens*
+        - `@Action` : can only be called by *Whens*
+        - `@Assertion` : can only be called by *Thens* or *Buts*
+    - `lenient`: no rules are enforced
+    - Default is `lenient` for backwards compatiblity but plan is to change it 
+      to `strict` in upcoming major (v3.0.0) release
+- Update AppliTools Eyes JDK from v3.150.0 to v3.160.2
+- Update Gwen core from v2.24.0 to v[2.25.0](https://github.com/gwen-interpreter/gwen/releases/tag/v2.25.0)
+
 2.40.1
 ======
 February 10, 2020

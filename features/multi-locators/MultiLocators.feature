@@ -17,7 +17,9 @@
    Feature: Multi locators
 
 Background: Open browser to google
-      Given I navigate to "http://google.com"
+     Given the current URL is "" 
+      When I navigate to "http://google.com"
+      Then the current URL should contain "google"
    
   Scenario: Last locator of three should find the search field
             Defines three locators for the search field.
@@ -26,4 +28,5 @@ Background: Open browser to google
             | id         | search        |
             | class name | .search-field |
             | name       | q             |
-       Then I locate the search field
+       When I locate the search field
+       Then the search field should be displayed

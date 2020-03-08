@@ -18,4 +18,5 @@
       
 Scenario: Read attribute from file
 	Given the file value is defined by file "features/file/file.txt"
+	 When I capture the file value
 	 Then the file value should be "gwen"

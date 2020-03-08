@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 Brady Wood, Branko Juric
+ * Copyright 2015-2020 Brady Wood, Branko Juric
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -816,6 +816,18 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
   }
 
   /**
+    * Starts a new session if there isn't one or stays in the current one.
+    */
+  def newOrCurrentSession(): Unit = {
+    env.perform {
+      driverManager.newOrCurrentSession()
+    }
+  }
+
+  /** Gets the number of open sesions. */
+  def noOfSessions(): Int = driverManager.noOfSessions
+
+  /**
     * Switches to the child window if one was just opened.
     */
   def switchToChild(): Unit = {
@@ -950,7 +962,7 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
       context.results() tap { results =>
         env.addAttachment("AppliTools dashboard", "url", results.getUrl)
         try {
-          assert(results.isNew || results.isPassed, s"Expected visual check to pass but was: ${results.getStatus}")
+          assert(results.isNew || results.isPassed, s"Expected visual check to pass but status was: ${results.getStatus}")
         } catch {
           case e: AssertionError => visualAssertionError(e.getMessage)
         }

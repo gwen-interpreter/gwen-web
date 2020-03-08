@@ -17,6 +17,7 @@
    Feature: Repeat until example
 
   @StepDef
+  @Action
   Scenario: I increment counter
       Given counter is defined by javascript "${counter} + 1"
         And counter > 3 is defined by javascript "${counter} > 3"

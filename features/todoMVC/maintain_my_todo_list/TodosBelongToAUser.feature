@@ -20,11 +20,14 @@
    Feature: Todos belong to a user
   
 Background: Open two browser sessions for two users
-      Given I start a browser for James
+      Given I have no open browser
+       When I start a browser for James
         And I start a browser for Jane
+       Then I should have 2 open browsers
         
   Scenario: I should not affect todos belonging to another user 
-      Given I switch to James
+      Given I have an open browser
+       When I switch to James
         And I browse to the application home page
         And I add a "Walk the dog" item
         And I add a "Put out the garbage" item
@@ -34,5 +37,5 @@ Background: Open two browser sessions for two users
         And I add a "Walk the cat" item
         And I switch to James
         And I complete the "Walk the dog" item
-       When I switch to Jane
+        And I switch to Jane
        Then the displayed items should be "Walk the dog,Walk the cat"

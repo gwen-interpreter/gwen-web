@@ -12,6 +12,7 @@
  Feature: Google search meta
 
 @StepDef
+@Context
 Scenario: I have Google in my browser
           
           Gwen will match the name of this step def to the first step
@@ -24,6 +25,7 @@ Scenario: I have Google in my browser
      Then the page title should be "Google"
 
 @StepDef
+@Action
 Scenario: I do a search for "<query>"
 
           Gwen will match the name of this step def to the second
@@ -36,6 +38,7 @@ Scenario: I do a search for "<query>"
      Then the page title should contain "$<query>"
 
 @StepDef
+@Assertion
 Scenario: I should find a Gwen page
 
           Gwen will match the name of this step def to the last

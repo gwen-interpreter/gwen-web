@@ -19,5 +19,6 @@ Feature: Switch to default content
 
   @Import("features/locators-chaining/W3Schools.meta")
   Scenario: Switch to default content
-    Given I have W3Schools HTML Iframes Page in my browser
-    Then I switch to default content from within an iframe
+     Given I have W3Schools HTML Iframes Page in my browser
+      When I switch to default content from within an iframe
+      Then the heading should be "HTML Iframes"

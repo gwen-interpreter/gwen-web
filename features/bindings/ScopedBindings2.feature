@@ -14,12 +14,13 @@
 # limitations under the License.
 #
 
+ @Lenient
  Feature: Scoped binding tests with background initializer
       
 Background: Init attributes
-	Given a is "1"
-	  And b is defined by javascript "1"
-	  And c is "1"
+    Given a is "1"
+      And b is defined by javascript "1"
+      And c is "1"
       And d is defined by javascript "${c}"
       And e is "1"
      Then a should be "1"

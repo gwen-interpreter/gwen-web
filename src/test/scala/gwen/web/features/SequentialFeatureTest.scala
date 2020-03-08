@@ -23,5 +23,11 @@ class SequentialFeatureTest extends BaseFeatureTest {
       evaluate(List("features/floodio", "features/blogs/automationByMeta", "features/todo/CompleteItems.feature"), parallel = false, dryRun = false, "target/reports/sequential/feature-level", None)
     }
   }
+
+  "Workspace Todo sample using scenario level state" should "should evaluate" in {
+    withSetting("gwen.state.level", "scenario") {
+      evaluate(List("gwen-workspace/samples/todo/scenario-level", "gwen-workspace/samples/todo/single-scenario"), parallel = false, dryRun = false, "target/reports/gwen-workspace/samples-todo/scenario-level", None)
+    }
+  }
   
 }

@@ -17,6 +17,7 @@
    Feature: Google search meta
 
   @StepDef
+  @Context
   Scenario: I have Google in my browser
       Given I start a new browser
        When I navigate to "http://www.google.com"
@@ -24,18 +25,21 @@
         And no results should be displayed
 
   @StepDef
+  @Action
   Scenario: I do a search for "<query>"
       Given the search field can be located by name "q"
        When I enter "$<query>" in the search field
        Then the page title should contain "$<query>"
 
   @StepDef
+  @Assertion
   Scenario: the first result should open a Gwen page
       Given the first match can be located by css selector ".r > a"
        When I click the first match
        Then the current URL should match regex ".+[G|g]wen.*"
 
   @StepDef
+  @Assertion
   Scenario: no results should be displayed
       Given the results can be located by class name "r" with no wait
        Then the results should not be displayed

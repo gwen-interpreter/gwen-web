@@ -21,6 +21,7 @@ import gwen.web.BaseTest
 import gwen.dsl.{Failed, Passed}
 import gwen.eval.{GwenLauncher, GwenOptions}
 import gwen.web.WebInterpreter
+import gwen.dsl.BehaviorRules
 
 abstract class BaseFeatureTest extends BaseTest {
 
@@ -30,6 +31,7 @@ abstract class BaseFeatureTest extends BaseTest {
       if (parallel) args = args ++ Array("--parallel")
       if (dryRun) args = args ++ Array("-n")
       if (dataFile.nonEmpty) args = args ++ Array("-i", dataFile.get)
+      if (BehaviorRules.isStrict) args = args ++ Array("-t", "~@Lenient")
       args = args ++ features.toArray.asInstanceOf[Array[String]]
       val options = GwenOptions(args)
       val launcher = new GwenLauncher(new WebInterpreter)

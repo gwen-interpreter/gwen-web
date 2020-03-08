@@ -18,6 +18,7 @@
   
 @StepDef
 @DataTable(horizontal="Item")
+@Context
 Scenario: I have the following active items
     Given I launch the Todo app
      When I add a "${data[Item]}" item for each data record
@@ -25,5 +26,6 @@ Scenario: I have the following active items
 
 @StepDef
 @DataTable(header="top")
+@Assertion
 Scenario: the status of my items should be
      Then the "${data[Item]}" item should be ${data[Status]} for each data record

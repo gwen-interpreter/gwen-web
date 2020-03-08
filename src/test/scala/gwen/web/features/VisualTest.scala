@@ -20,12 +20,6 @@ import gwen.web.EyesSettings
 
 class VisualTest extends BaseFeatureTest {
 
-  "visual test dry runs using feature-level state" should "pass" in {
-    withSetting("gwen.state.level", "feature") {
-      evaluate(List("features/visual/gwen-reports", "features/visual/todo"), parallel = false, dryRun = true, "target/reports/visual-test-dry-run/feature-level", None)
-    }
-  }
-
   "sequential visual tests using feature-level state" should "pass" in {
     if (EyesSettings.`gwen.applitools.eyes.enabled`) {
       sys.env.get("APPLITOOLS_API_KEY").foreach { _ =>

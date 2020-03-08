@@ -23,20 +23,18 @@
   Scenario: Initialise
       Given the heading can be located by tag name "h2"
         And the next button can be located by class name "btn"
-       
-  @StepDef
-  Scenario: I launch the floodio challenge
-      Given I navigate to "https://challengers.flood.io/start"
-  
+         
   @StepDef 
+  @Assertion
   Scenario: I should be on the start page
       Given I wait until "$('h1').text().trim() == 'Welcome to our Script Challenge'"
-       Then I am on the start page
-        And the heading can be located by tag name "h1"
+       When I am on the start page
+       Then the heading can be located by tag name "h1"
         And the heading should be "Welcome to our Script Challenge"
         And the Start button can be located by name "commit"
 
   @StepDef
+  @Assertion
   Scenario: I should be on the step 2 page
       Given I wait until "$('h2').text().trim() == 'Step 2'"
        Then I am on the step 2 page
@@ -44,6 +42,7 @@
         And the how old are you dropdown can be located by id "challenger_age"
 
  @StepDef
+ @Assertion
   Scenario: I should be on the step 3 page
       Given I wait until "$('h2').text().trim() == 'Step 3'"
        Then I am on the step 3 page
@@ -53,12 +52,14 @@
         And the largest order radio button can be located by javascript "$('.radio:contains(${the largest order value}) input').get(0);"
       
   @StepDef  
+  @Assertion
   Scenario: I should be on the step 4 page
       Given I wait until "$('h2').text().trim() == 'Step 4'"
        Then I am on the step 4 page
         And the heading should be "Step 4"
         
   @StepDef
+  @Assertion
   Scenario: I should be on the step 5 page
       Given I wait until "$('h2').text().trim() == 'Step 5'"
        Then I am on the step 5 page
@@ -67,17 +68,20 @@
         And the one time token field can be located by id "challenger_one_time_token"
         
   @StepDef
+  @Assertion
   Scenario: I should be on the challenge completed page
       Given I wait until "$('h2').text().trim() == "You're Done!""
        Then I am on the challenge completed page
         And the heading should be "You're Done!"
      
   @StepDef
+  @Action
   Scenario: I select and enter the largest order value
       Given I type the largest order value in the largest order input field
         And I click the largest order radio button
   
   @StepDef
+  @Action
   Scenario: I enter the one time token
       Given I wait for the one time token text
         And I type the one time token in the one time token field

@@ -17,6 +17,7 @@
  Feature: Todo meta
   
 @StepDef
+@Context
 Scenario: I launch the Todo app
     Given I start a new browser
      When I resize the window to width 800 and height 800
@@ -24,6 +25,7 @@ Scenario: I launch the Todo app
      Then I should be on the Todo page
 
 @StepDef
+@Assertion
 Scenario: I should be on the Todo page
     Given the heading can be located by tag name "h1"
      Then the heading should be "todos"
@@ -34,21 +36,25 @@ Scenario: I should be on the Todo page
       And the number of open items should not be displayed
 
 @StepDef
+@Action
 Scenario: I add a "<todo>" item
     Given the "$<todo>" item can be located by xpath "//label[contains(.,'$<todo>')]/preceding-sibling::input"
      When I enter "$<todo>" in the todo field
      Then the "$<todo>" item should be unchecked
 
 @StepDef
+@Action
 Scenario: I complete the "<todo>" item
      When I tick the "$<todo>" item
      Then the "$<todo>" item should be ticked
 
 @StepDef
+@Action
 Scenario: I clear all completed items
      When I click the clear completed button
 
 @StepDef
+@Context
 Scenario: I have three open items
     Given I launch the Todo app
      When I add a "Walk the dog" item
@@ -57,6 +63,7 @@ Scenario: I have three open items
      Then the number of open items should be "3"
 
 @StepDef
+@Action
 Scenario: I complete each open item
     Given I am on the Todo page
      When I complete the "Get the milk" item
@@ -67,6 +74,7 @@ Scenario: I complete each open item
      Then the number of open items should be "0"
 
 @StepDef 
+@Assertion
 Scenario: I should have no items left
      Then the number of open items should not be displayed
 

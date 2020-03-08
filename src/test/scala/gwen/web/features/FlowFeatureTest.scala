@@ -27,13 +27,5 @@ class FlowFeatureTest extends BaseFeatureTest {
       }
     }
   }
-
-  forAll (levels) { level => 
-    s"Flow features dry run using $level-level state" should "should pass" in {
-      withSetting("gwen.state.level", level) {
-        evaluate(List("features/flow"), parallel = false, dryRun = true, s"target/reports/flow-dry-run/$level-level", None)
-      }
-    }
-  }
   
 }

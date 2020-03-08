@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2015 Brady Wood, Branko Juric
+ * Copyright 2019-2020 Brady Wood, Branko Juric
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,15 +24,24 @@ abstract class BaseTest extends FlatSpec {
 
   val levels = Table ( ("level"), ("feature"), ("scenario") )
 
-  def withSetting[T](name: String, value: String)(f: => T):T = {
-    Settings.synchronized {
-      val original = Settings.getOpt(name)
+  def withSetting[T](name: String, value: String)(body: => T):T = {
+    if (name.startsWith("gwen.")) {
       try {
-        Settings.set(name, value)
-        f
+        Settings.setLocal(name, value)
+        body
       } finally {
-        original.fold(Settings.clear(name)) { v =>
-          Settings.set(name, v)
+        Settings.clearLocal()
+      }
+    } else {
+      Settings.exclusively {
+        val original = Settings.getOpt(name)
+        try {
+          Settings.set(name, value)
+          body
+        } finally {
+          original.fold(Settings.clear(name)) { v =>
+            Settings.set(name, v)
+          }
         }
       }
     }

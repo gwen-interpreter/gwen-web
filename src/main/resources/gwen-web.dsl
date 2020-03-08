@@ -2,6 +2,7 @@ I am on the <page>
 the url will be "<url>"
 the url will be defined by property "<name>"
 the url will be defined by setting "<name>"
+the <page> url is "<url>"
 I navigate to the <page>
 I navigate to "<url>"
 I scroll to the top of <element>
@@ -660,8 +661,12 @@ I close the current browser
 I close the browser
 I start a new browser
 I start a browser for <session>
+I should have 1 open browser
+I should have <count> open browsers
 I close the browser for <session>
 I switch to <session>
+I have no open browser
+I have an open browser
 I accept the alert popup
 I accept the confirmation popup
 I dismiss the confirmation popup
