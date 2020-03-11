@@ -189,7 +189,7 @@ class WebEnvContext(val options: GwenOptions) extends EnvContext(options) {
             else None
           case None => if (optional) None else locatorBindingError(s"Undefined locator binding for $element: $locatorBinding")
         }
-      case Some(x) if x.isInstanceOf[WebElement] => Some(LocatorBinding(element, "cache", element, None, None, None))
+      case Some(x) if x.isInstanceOf[WebElement] || isDryRun => Some(LocatorBinding(element, "cache", element, None, None, None))
       case _ => None
     }
   } tap { binding =>

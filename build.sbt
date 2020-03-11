@@ -32,7 +32,7 @@ lazy val commonDependencies = {
   val commonsIO = "2.6"
   val selenium = "3.141.59"
   val appliTools = "3.160.2"
-  val driverMgr = "3.6.2"
+  val driverMgr = "3.8.1"
 
   Seq(
     "commons-io" % "commons-io" % commonsIO,

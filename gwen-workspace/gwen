@@ -88,8 +88,7 @@ java -jar gwen-gpm.jar update gwen-web gwen.gwen-web.version $GWEN_WEB_HOME -p "
 rc=$?
 if [ $rc == 1 ];
   then
-    echo "Failed to auto-install gwen-web"
-    exit $rc
+    echo "Failed to auto update/install gwen-web (no internet connection maybe)"
 fi
 
 # If gwen.selenium.version is set to a specific version, then install that
@@ -107,8 +106,7 @@ if [ $rc != 0 ];
 fi
 if [ $rc == 1 ];
 then
-  echo "Failed to auto-install selenium Java package"
-  exit $rc
+  echo "Failed to auto update/install selenium Java package (no internet connection maybe)"
 fi
 
 # Call Gwen passing in the arguments

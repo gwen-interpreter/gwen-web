@@ -63,8 +63,7 @@ SET GWEN_WEB_HOME=target\gwen-web
 java -jar gwen-gpm.jar -p "%GWEN_PROPS%" update gwen-web gwen.gwen-web.version %GWEN_WEB_HOME%
 SET EXITCODE=!ERRORLEVEL!
 IF !EXITCODE! EQU 1 (
-  ECHO Failed to auto-install gwen-web
-  EXIT /B !EXITCODE!
+  ECHO Failed to auto update/install gwen-web ^(no internet connection maybe^)
 )
 
 REM If gwen.selenium.version is set to a specific version, then install that
@@ -79,8 +78,7 @@ IF !EXITCODE! NEQ 0 (
   SET "SELENIUM_HOME="
 )
 IF !EXITCODE! EQU 1 (
-  ECHO "Failed to auto-install selenium Java package"
-  EXIT /B !EXITCODE!
+  ECHO Failed to auto update/install selenium Java package ^(no internet connection maybe^)
 )
 
 REM Remove browser & env from Gwen program args

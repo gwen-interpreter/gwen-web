@@ -28,19 +28,6 @@ Background: Add items to my Todo list
        When I complete the "Get the milk" item
        Then the number of open items should be "2"
 
-  Scenario: Complete second and first item
-      Given I am on the Todo page
-       When I complete the "Get the milk" item
-        And I complete the "Walk the dog" item
-       Then the number of open items should be "1"
-
-  Scenario: Complete second, first, and third item
-      Given I am on the Todo page
-       When I complete the "Get the milk" item
-        And I complete the "Walk the dog" item
-        And I complete the "Feed the cat" item
-       Then the number of open items should be "0"
-
   Scenario: Complete and clear all items
       Given I am on the Todo page
        When I complete the "Get the milk" item

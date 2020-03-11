@@ -23,10 +23,11 @@ class DryRunTest extends BaseFeatureTest {
       evaluate(
         List(
           "features",
+          "features-visual",
           "gwen-workspace/samples"), 
         parallel = false, 
         dryRun = true, 
-        "target/reports/dry-run/feature-level/sequential", 
+        "target/reports/sequential-features-dry-run/feature-level/sequential", 
         None)
     }
   }
@@ -36,10 +37,11 @@ class DryRunTest extends BaseFeatureTest {
       evaluate(
         List(
           "features",
+          "features-visual",
           "gwen-workspace/samples"),
         parallel = true, 
         dryRun = true, 
-        "target/reports/dry-run/feature-level/parallel", 
+        "target/reports/features-parallel-feature-level-dry-run", 
         None)
     }
   }
@@ -55,7 +57,7 @@ class DryRunTest extends BaseFeatureTest {
           "gwen-workspace/samples/todo/single-scenario"), 
         parallel = false, 
         dryRun = true, 
-        "target/reports/dry-run/scenario-level/sequential", 
+        "target/reports/features-sequential-scenario-level-dry-run", 
         None)
     }
   }
@@ -71,14 +73,14 @@ class DryRunTest extends BaseFeatureTest {
           "gwen-workspace/samples/todo/single-scenario"), 
         parallel = true, 
         dryRun = true, 
-        "target/reports/dry-run/scenario-level/parallel", 
+        "target/reports/features-parallel-scenario-level-dry-run", 
         None)
     }
   }
   
   "Dry run explicit CSV data-driven scenario-level feature" should "pass" in {
     withSetting("gwen.state.level", "scenario") {
-      evaluate(List("features/csvdriven/FloodIO.feature"), parallel = false, dryRun = true, "target/reports/dry-run/scenario-level/sequential/explicit-csv", Some("features/csvdriven/FloodIO.csv"))
+      evaluate(List("features/csvdriven/"), parallel = false, dryRun = true, "target/reports/features-sequential-scenario-level-dry-run-implicit-csv", Some("features/csvdriven/FloodIO.csv"))
     }
   }
   

@@ -14,29 +14,26 @@
 # limitations under the License.
 #
 
-  Feature: Todo items visual test
+  Feature: Todo items (with visual tests)
 
 Scenario: Add items in my Todo list
     Given I launch the Todo app
      When I start visual test as "Todo items" in 600 x 600 viewport
-      And I check viewport visual as "No Todo items" using STRICT match
+      And I check viewport visual as "No items" using STRICT match
       And I add a "Walk the dog" item
       And I add a "Get the milk" item
+      And I check viewport visual as "Active items" using STRICT match
      Then the number of active items should be "2"
 
 Scenario: Complete one item
     Given I am on the todo page
-     When I check viewport visual as "Active Todo items" using STRICT match
-      And I tick the "Get the milk" item
+     When I tick the "Get the milk" item
+      And I check viewport visual as "One completed item" using STRICT match
      Then the number of active items should be "1"
 
 Scenario: Complete another item
     Given I am on the todo page
-     When I check viewport visual as "One completed Todo item" using STRICT match
-      And I tick the "Walk the dog" item
+     When I tick the "Walk the dog" item
+      And I check viewport visual as "All completed items" using STRICT match
      Then the number of active items should be "0"
-
-Scenario: Finalise
-    Given I am on the todo page
-     When I check viewport visual as "All completed Todo items" using STRICT match
-     Then the visual test should pass
+      And the visual test should pass

@@ -20,22 +20,11 @@ import gwen.web.EyesSettings
 
 class VisualTest extends BaseFeatureTest {
 
-  "sequential visual tests using feature-level state" should "pass" in {
+  "Visual tests" should "pass" in  {
     if (EyesSettings.`gwen.applitools.eyes.enabled`) {
       sys.env.get("APPLITOOLS_API_KEY").foreach { _ =>
         withSetting("gwen.state.level", "feature") {
-          evaluate(List("features/floodio", "features/blogs", "features/google"), parallel = false, dryRun = false, "target/reports/sequential/feature-level", None)
-          evaluate(List("features/visual/gwen-reports", "features/visual/todo"), parallel = false, dryRun = false, "target/reports/visual-test-sequential/feature-level", None)
-        }
-      }
-    }
-  }
-
-  "parallel visual tests using feature-level state" should "pass" in {
-    if (EyesSettings.`gwen.applitools.eyes.enabled`) {
-      sys.env.get("APPLITOOLS_API_KEY").foreach { _ =>
-        withSetting("gwen.state.level", "feature") {
-          evaluate(List("features/visual/gwen-reports", "features/visual/todo"), parallel = true, dryRun = false, "target/reports/visual-test-parallel/feature-level", None)
+          evaluate(List("features-visual"), parallel = false, dryRun = false, "target/reports/features-visual", None)
         }
       }
     }
