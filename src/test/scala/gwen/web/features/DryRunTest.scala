@@ -16,71 +16,98 @@
 
 package gwen.web.features
 
+import gwen.dsl.BehaviorRules
+
 class DryRunTest extends BaseFeatureTest {
 
   "Sequential dry run using feature-level state" should "validate all features" in {
-    withSetting("gwen.state.level", "feature") {
-      evaluate(
-        List(
-          "features",
-          "features-visual",
-          "gwen-workspace/samples"), 
-        parallel = false, 
-        dryRun = true, 
-        "target/reports/sequential-features-dry-run/feature-level/sequential", 
-        None)
+    BehaviorRules.values.foreach { rule => 
+      withSetting("gwen.behavior.rules", rule.toString) {
+        withSetting("gwen.state.level", "feature") {
+          evaluate(
+            List(
+              "features",
+              "features-visual",
+              "gwen-workspace/samples"), 
+            parallel = false, 
+            dryRun = true, 
+            s"target/reports/features-dryRun/sequential/feature-level/$rule-rules", 
+            None)
+        }
+      }
     }
   }
 
   "Parallel dry run using feature-level state" should "validate all features" in {
-    withSetting("gwen.state.level", "feature") {
-      evaluate(
-        List(
-          "features",
-          "features-visual",
-          "gwen-workspace/samples"),
-        parallel = true, 
-        dryRun = true, 
-        "target/reports/features-parallel-feature-level-dry-run", 
-        None)
+    BehaviorRules.values.foreach { rule => 
+      withSetting("gwen.behavior.rules", rule.toString) {
+        withSetting("gwen.state.level", "feature") {
+          evaluate(
+            List(
+              "features",
+              "features-visual",
+              "gwen-workspace/samples"),
+            parallel = true, 
+            dryRun = true, 
+           s"target/reports/features-dryRun/parallel/feature-level/$rule-rules", 
+            None)
+        }
+      }
     }
   }
 
   "Sequential dry run using scenario-level state" should "validate all features" in {
-    withSetting("gwen.state.level", "scenario") {
-      evaluate(
-        List(
-          "features/flow",
-          "features/multi-locators",
-          "features/csvdriven",
-          "gwen-workspace/samples/todo/scenario-level",
-          "gwen-workspace/samples/todo/single-scenario"), 
-        parallel = false, 
-        dryRun = true, 
-        "target/reports/features-sequential-scenario-level-dry-run", 
-        None)
+    BehaviorRules.values.foreach { rule => 
+      withSetting("gwen.behavior.rules", rule.toString) {
+        withSetting("gwen.state.level", "scenario") {
+          evaluate(
+            List(
+              "features/flow",
+              "features/multi-locators",
+              "features/csvdriven",
+              "gwen-workspace/samples/todo/scenario-level",
+              "gwen-workspace/samples/todo/single-scenario"), 
+            parallel = false, 
+            dryRun = true, 
+            s"target/reports/features-dryRun/sequential/scenario-level/$rule-rules", 
+            None)
+        }
+      }
     }
   }
 
   "Parallel dry run using scenario-level state" should "validate all features" in {
-    withSetting("gwen.state.level", "scenario") {
-      evaluate(
-        List(
-          "features/flow",
-          "features/multi-locators",
-          "features/csvdriven",
-          "gwen-workspace/samples/todo/scenario-level",
-          "gwen-workspace/samples/todo/single-scenario"), 
-        parallel = true, 
-        dryRun = true, 
-        "target/reports/features-parallel-scenario-level-dry-run", 
-        None)
+    BehaviorRules.values.foreach { rule => 
+      withSetting("gwen.behavior.rules", rule.toString) {
+        withSetting("gwen.state.level", "scenario") {
+          evaluate(
+            List(
+              "features/flow",
+              "features/multi-locators",
+              "features/csvdriven",
+              "gwen-workspace/samples/todo/scenario-level",
+              "gwen-workspace/samples/todo/single-scenario"), 
+            parallel = true, 
+            dryRun = true, 
+            s"target/reports/features-dryRun/parallel/scenario-level/$rule-rules", 
+            None)
+        }
+      }
     }
   }
   
   "Dry run explicit CSV data-driven scenario-level feature" should "pass" in {
-    withSetting("gwen.state.level", "scenario") {
-      evaluate(List("features/csvdriven/"), parallel = false, dryRun = true, "target/reports/features-sequential-scenario-level-dry-run-implicit-csv", Some("features/csvdriven/FloodIO.csv"))
+    BehaviorRules.values.foreach { rule => 
+      withSetting("gwen.behavior.rules", rule.toString) {
+        withSetting("gwen.state.level", "scenario") {
+          evaluate(
+            List("features/csvdriven/"), 
+            parallel = false, 
+            dryRun = true, 
+            s"target/reports/features-dryRun/sequential/scenario-level/explicit-csv/$rule-rules", 
+            Some("features/csvdriven/FloodIO.csv"))
+        }
+      }
     }
   }
   

@@ -24,10 +24,15 @@ class VisualTest extends BaseFeatureTest {
     if (EyesSettings.`gwen.applitools.eyes.enabled`) {
       sys.env.get("APPLITOOLS_API_KEY").foreach { _ =>
         withSetting("gwen.state.level", "feature") {
-          evaluate(List("features-visual"), parallel = false, dryRun = false, "target/reports/features-visual", None)
+          evaluate(
+            List("features-visual"), 
+            parallel = false, 
+            dryRun = false, 
+            s"target/reports/features-visual",
+            None)
         }
       }
     }
   }
-  
+
 }

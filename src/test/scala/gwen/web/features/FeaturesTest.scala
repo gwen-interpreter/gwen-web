@@ -26,7 +26,8 @@ class FeaturesTest extends BaseFeatureTest {
           "gwen-workspace/samples"), 
         parallel = true, 
         dryRun = false, 
-        "target/reports/features-parallel-feature-level", None)
+        s"target/reports/features/sequential/feature-level",
+        None)
     }
   }
 
@@ -39,7 +40,19 @@ class FeaturesTest extends BaseFeatureTest {
           "gwen-workspace/samples/todo/single-scenario"), 
         parallel = true, 
         dryRun = false, 
-        "target/reports/features-parallel-state-level", None)
+        s"target/reports/features/parallel/scenario-level",
+        None)
+    }
+  }
+
+  "Implicit javascript locators" should "evaluate" in {
+    withSetting("gwen.web.implicit.js.locators", "true") {
+      evaluate(
+        List("gwen-workspace/samples/se-test"),
+        parallel = true, 
+        dryRun = false, 
+        s"target/reports/features/sequential/implicit-js-locators",
+        None)
     }
   }
   
