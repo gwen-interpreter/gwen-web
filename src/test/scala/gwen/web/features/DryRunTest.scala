@@ -64,7 +64,6 @@ class DryRunTest extends BaseFeatureTest {
             List(
               "features/flow",
               "features/multi-locators",
-              "features/csvdriven",
               "gwen-workspace/samples/todo/scenario-level",
               "gwen-workspace/samples/todo/single-scenario"), 
             parallel = false, 
@@ -84,28 +83,12 @@ class DryRunTest extends BaseFeatureTest {
             List(
               "features/flow",
               "features/multi-locators",
-              "features/csvdriven",
               "gwen-workspace/samples/todo/scenario-level",
               "gwen-workspace/samples/todo/single-scenario"), 
             parallel = true, 
             dryRun = true, 
             s"target/reports/features-dryRun/parallel/scenario-level/$rule-rules", 
             None)
-        }
-      }
-    }
-  }
-  
-  "Dry run explicit CSV data-driven scenario-level feature" should "pass" in {
-    BehaviorRules.values.foreach { rule => 
-      withSetting("gwen.behavior.rules", rule.toString) {
-        withSetting("gwen.state.level", "scenario") {
-          evaluate(
-            List("features/csvdriven/"), 
-            parallel = false, 
-            dryRun = true, 
-            s"target/reports/features-dryRun/sequential/scenario-level/explicit-csv/$rule-rules", 
-            Some("features/csvdriven/FloodIO.csv"))
         }
       }
     }
