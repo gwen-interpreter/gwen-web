@@ -1,12 +1,13 @@
 2.42.0
 ======
-March 27, 2020
+March 28, 2020
 - I18n (issue gwen-interpreter/gwen#53): Add support for writing feature specs with Gherkin's spoken languages
 - Add setting `gwen.feature.dialect`
   - Used to set the default dialect for Gherkin keywords in feature files and the REPL console 
     (so you don't have to set the # language header in every feature file). Default is `en`. 
     Dialects do not apply to meta files which must use English keywords.
-- Update Gwen core from v2.25.1 to v[2.26.0](https://github.com/gwen-interpreter/gwen/releases/tag/v2.26.0)
+- Treat universal `*` keyword as `And`
+- Update Gwen core from v2.25.1 to v[2.27.0](https://github.com/gwen-interpreter/gwen/releases/tag/v2.27.0)
 
 2.41.1
 ======
