@@ -67,7 +67,7 @@ class WebDslTest extends BaseTest with Matchers {
               .replace("<index>", "1")
               .replace("<count>", "2")
           } foreach { dsl =>
-            interpreter.evaluateStep(Step(StepKeyword.Given, dsl.replaceAll("<step>", """a is "b"""")), env).evalStatus match {
+            interpreter.evaluateStep(Step(StepKeyword.Given.toString, dsl.replaceAll("<step>", """a is "b"""")), env).evalStatus match {
               case Failed(_, error) => fail(error)
               case evalStatus => evalStatus.status should not be (StatusKeyword.Failed)
             }

@@ -97,11 +97,11 @@ class WebEngineTest extends BaseTest with WebEngine with Matchers with MockitoSu
   }
 
   private def evaluate(expression: String): Unit = {
-    evaluate(Step(StepKeyword.Given, expression), env)
+    evaluate(Step(StepKeyword.Given.toString, expression), env)
   }
 
   private def evaluatePriority(expression: String): Option[Step] = {
-    evaluatePriority(Step(StepKeyword.Given, expression), env)
+    evaluatePriority(Step(StepKeyword.Given.toString, expression), env)
   }
 
   "I am on the <page>" should "evaluate" in {

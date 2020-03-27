@@ -30,9 +30,9 @@ finding elements or running functions on web pages may be necessary.
 - [Change log](CHANGELOG)
 
 ### What's New?
+- [Dialects](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#gwenfeaturedialect) for [Gherkin's spoken languages](https://cucumber.io/docs/gherkin/reference/#spoken-languages)
 - [Behavior rules](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#gwenbehaviorrules) to help enforce good Gherkin style
 - [Associative meta](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#gwenassociativemeta)
-- [Declarative feature mode](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#gwenfeaturemode) to force all imperative steps to meta and promote cleaner features.
 
 Why Gwen?
 ---------
@@ -131,6 +131,7 @@ Learn More
 - Integrated [WebDriverManager](https://github.com/bonigarcia/webdrivermanager) manages all native webdrivers for you
 - Supports full Gherkin syntax including [example mapping](https://cucumber.io/blog/2015/12/08/example-mapping-introduction)
 - [State levels](https://github.com/gwen-interpreter/gwen/wiki/State-Levels) and [parallel execution](https://github.com/gwen-interpreter/gwen/wiki/Execution-Modes#parallel-scenario-execution) for scenarios in additon to features
+- [Declarative feature mode](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#gwenfeaturemode) to force all imperative steps to meta and promote cleaner features.
 
 User Network and Support
 ------------------------
@@ -199,7 +200,7 @@ The following users raised issues or requests that have been addressed:
 | [Rahul9844](https://github.com/Rahul9844)
 | [rkevin99](https://github.com/rkevin99)
 | [Sergio Freire](https://github.com/bitcoder)
-| [David](https://github.com/dfriquet)
+| [dfriquet](https://github.com/dfriquet)
 
 
 Credits

@@ -25,23 +25,14 @@ abstract class BaseTest extends FlatSpec {
   val levels = Table ( ("level"), ("feature"), ("scenario") )
 
   def withSetting[T](name: String, value: String)(body: => T):T = {
-    if (name.startsWith("gwen.")) {
+    Settings.exclusively {
+      val original = Settings.getOpt(name)
       try {
-        Settings.setLocal(name, value)
+        Settings.set(name, value)
         body
       } finally {
-        Settings.clearLocal()
-      }
-    } else {
-      Settings.exclusively {
-        val original = Settings.getOpt(name)
-        try {
-          Settings.set(name, value)
-          body
-        } finally {
-          original.fold(Settings.clear(name)) { v =>
-            Settings.set(name, v)
-          }
+        original.fold(Settings.clear(name)) { v =>
+          Settings.set(name, v)
         }
       }
     }

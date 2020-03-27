@@ -60,7 +60,6 @@ class WebEnvContextTest extends BaseTest with Matchers with MockitoSugar {
     env.scopes.addScope("login")
     env.scopes.set("username", "Gwen")
     env.scopes.get("username") should be ("Gwen")
-    println(env.scopes.asString)
     env.scopes.asString.replace("\r", "") should be (
       """{
         |  scopes {
