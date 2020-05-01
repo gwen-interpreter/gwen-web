@@ -1,3 +1,9 @@
+2.42.1
+======
+May 1, 2020
+- Fix loading of custom log4j configuration (issue gwen-interpreter/gwen#55)
+- Update Gwen core from v2.27.0 to v[2.27.1](https://github.com/gwen-interpreter/gwen/releases/tag/v2.27.1)
+
 2.42.0
 ======
 March 28, 2020
