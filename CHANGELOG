@@ -1,3 +1,9 @@
+2.42.2
+======
+May 8, 2020
+- Fix `empty.max` error in HTML report generator
+- Update Gwen core from v2.27.1 to v[2.27.2](https://github.com/gwen-interpreter/gwen/releases/tag/v2.27.2)
+
 2.42.1
 ======
 May 1, 2020
