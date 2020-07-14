@@ -737,13 +737,13 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
       case r"""I (enter|type)$action "(.*?)"$value in (.+?)$$$element""" =>
         checkStepRules(step, BehaviorType.Action, env)
         val elementBinding = env.getLocatorBinding(element)
-        webContext.sendValue(elementBinding, value, clearFirst = WebSettings.`gwen.web.sendKeys.clearFirst`, sendEnterKey = action == "enter")
+        webContext.sendValue(elementBinding, value, clickFirst = WebSettings.`gwen.web.sendKeys.clickFirst`, clearFirst = WebSettings.`gwen.web.sendKeys.clearFirst`, sendEnterKey = action == "enter")
 
       case r"""I (enter|type)$action (.+?)$attribute in (.+?)$$$element""" =>
         checkStepRules(step, BehaviorType.Action, env)
         val elementBinding = env.getLocatorBinding(element)
         val value = env.getBoundReferenceValue(attribute)
-        webContext.sendValue(elementBinding, value, clearFirst = WebSettings.`gwen.web.sendKeys.clearFirst`, sendEnterKey = action == "enter")
+        webContext.sendValue(elementBinding, value, clickFirst = WebSettings.`gwen.web.sendKeys.clickFirst`, clearFirst = WebSettings.`gwen.web.sendKeys.clearFirst`, sendEnterKey = action == "enter")
 
       case r"""I (select|deselect)$action the (\d+?)$position(?:st|nd|rd|th) option in (.+?)$$$element""" =>
         checkStepRules(step, BehaviorType.Action, env)
@@ -884,18 +884,18 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
       case r"""I append "(.+?)"$text to (.+?)$$$element""" =>
         checkStepRules(step, BehaviorType.Action, env)
         val elementBinding = env.getLocatorBinding(element)
-        webContext.sendValue(elementBinding, text, clearFirst = false, sendEnterKey = false)
+        webContext.sendValue(elementBinding, text, clickFirst = WebSettings.`gwen.web.sendKeys.clickFirst`, clearFirst = false, sendEnterKey = false)
 
       case r"""I append (.+?)$attribute to (.+?)$$$element""" =>
         checkStepRules(step, BehaviorType.Action, env)
         val elementBinding = env.getLocatorBinding(element)
         val text = env.getBoundReferenceValue(attribute)
-        webContext.sendValue(elementBinding, text, clearFirst = false, sendEnterKey = false)
+        webContext.sendValue(elementBinding, text, clickFirst = WebSettings.`gwen.web.sendKeys.clickFirst`, clearFirst = false, sendEnterKey = false)
 
       case r"I insert a new line in (.+?)$$$element" =>
         checkStepRules(step, BehaviorType.Action, env)
         val elementBinding = env.getLocatorBinding(element)
-        webContext.sendValue(elementBinding, StringEscapeUtils.unescapeJava("""\n"""), clearFirst = false, sendEnterKey = false)
+        webContext.sendValue(elementBinding, StringEscapeUtils.unescapeJava("""\n"""), clickFirst = WebSettings.`gwen.web.sendKeys.clickFirst`, clearFirst = false, sendEnterKey = false)
 
       case _ => super.evaluate(step, env)
 

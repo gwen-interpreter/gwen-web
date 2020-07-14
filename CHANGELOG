@@ -1,3 +1,10 @@
+2.43.0
+======
+July 14, 2020
+- Ignore screenshot capture error if session has been closed by the driver
+- Add `gwen.web.sendKeys.clickFirst=true|false` setting to enable or disable 
+  clicking into input fields before sending keys (default = false)
+
 2.42.2
 ======
 May 8, 2020

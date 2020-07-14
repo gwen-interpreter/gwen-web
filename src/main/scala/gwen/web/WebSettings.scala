@@ -227,6 +227,12 @@ object WebSettings {
   def `gwen.web.sendKeys.clearFirst`: Boolean = Settings.getOpt("gwen.web.sendKeys.clearFirst").getOrElse("false").toBoolean
 
   /**
+    * Provides access to the `gwen.web.sendKeys.clickFirst` setting used to control whether
+    * or not Gwen will click fields before sending keys to them. (default value is `false`).
+    */
+  def `gwen.web.sendKeys.clickFirst`: Boolean = Settings.getOpt("gwen.web.sendKeys.clickFirst").getOrElse("false").toBoolean
+
+  /**
    * Provides access to the chrome mobile emulation settings. This setting merges a comma separated list of values
    * set in the `gwen.web.chrome.mobile` property with all properties that start with
    * `gwen.web.chrome.mobile.`.

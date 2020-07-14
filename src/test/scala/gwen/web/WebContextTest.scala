@@ -578,7 +578,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     doReturn(mockActions).when(webContext).createActions(mockWebDriver)
     doReturn(mockActions).when(mockActions).moveToElement(mockElement)
     doReturn(mockActions).when(mockActions).sendKeys("Gwen")
-    webContext.sendValue(elemBinding, "Gwen", clearFirst = false, sendEnterKey = false)
+    webContext.sendValue(elemBinding, "Gwen", clickFirst = false, clearFirst = false, sendEnterKey = false)
     verify(mockElement, never()).clear()
     envContext.scopes.getOpt("name/clear") should be (None)
     verify(mockActions).perform()
@@ -595,9 +595,25 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     doReturn(mockActions).when(webContext).createActions(mockWebDriver)
     doReturn(mockActions).when(mockActions).moveToElement(mockElement)
     doReturn(mockActions).when(mockActions).sendKeys("Gwen")
-    webContext.sendValue(elemBinding, "Gwen", clearFirst = true, sendEnterKey = false)
+    webContext.sendValue(elemBinding, "Gwen", clickFirst = false, clearFirst = true, sendEnterKey = false)
     verify(mockElement).clear()
-    envContext.scopes.get("name/clear") should be ("true")
+    verify(mockActions).perform()
+    envContext.scopes.get("name/type") should be ("Gwen")
+    verify(mockElement, never()).sendKeys(Keys.RETURN)
+    envContext.scopes.getOpt("name/enter") should be (None)
+  }
+
+  "WebContext.sendValue with click, clear and without enter" should "clear field and send value to element" in {
+    val elemBinding = LocatorBinding("name", "id", "name", None, None)
+    val mockElement = mock[WebElement]
+    val mockActions = mock[Actions]
+    doReturn(mockElement).when(webContext).locate(elemBinding)
+    doReturn(mockActions).when(webContext).createActions(mockWebDriver)
+    doReturn(mockActions).when(mockActions).moveToElement(mockElement)
+    doReturn(mockActions).when(mockActions).sendKeys("Gwen")
+    webContext.sendValue(elemBinding, "Gwen", clickFirst = true, clearFirst = true, sendEnterKey = false)
+    verify(mockElement).click()
+    verify(mockElement).clear()
     verify(mockActions).perform()
     envContext.scopes.get("name/type") should be ("Gwen")
     verify(mockElement, never()).sendKeys(Keys.RETURN)
@@ -613,7 +629,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     doReturn(mockActions).when(mockActions).moveToElement(mockElement)
     doReturn(mockActions).when(mockActions).sendKeys("Gwen")
     doReturn(mockActions).when(mockActions).sendKeys(mockElement, Keys.RETURN)
-    webContext.sendValue(elemBinding, "Gwen", clearFirst = false, sendEnterKey = true)
+    webContext.sendValue(elemBinding, "Gwen", clickFirst = false, clearFirst = false, sendEnterKey = true)
     verify(mockElement, never()).clear()
     verify(mockActions, times(2)).perform()
     envContext.scopes.getOpt("name/clear") should be (None)
@@ -631,11 +647,28 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
       doReturn(mockActions).when(mockActions).moveToElement(mockElement)
       doReturn(mockActions).when(mockActions).sendKeys("Gwen")
       doReturn(mockActions).when(mockActions).sendKeys(mockElement, Keys.RETURN)
-      webContext.sendValue(elemBinding, "Gwen", clearFirst = true, sendEnterKey = true)
+      webContext.sendValue(elemBinding, "Gwen", clickFirst = false, clearFirst = true, sendEnterKey = true)
       verify(mockElement).clear()
       verify(mockActions, times(2)).perform()
-      envContext.scopes.get("name/clear") should be ("true")
       envContext.scopes.get("name/type") should be ("Gwen")
+      envContext.scopes.get("name/enter") should be ("true")
+    }
+  }
+
+  "WebContext.sendValue with click, clear and send enter" should "clear and send value to element" in {
+    withSetting("gwen.web.sendKeys.clearFirst", "true") {
+      val elemBinding = LocatorBinding("name", "id", "name", None, None)
+      val mockElement = mock[WebElement]
+      val mockActions = mock[Actions]
+      doReturn(mockElement).when(webContext).locate(elemBinding)
+      doReturn(mockActions).when(webContext).createActions(mockWebDriver)
+      doReturn(mockActions).when(mockActions).moveToElement(mockElement)
+      doReturn(mockActions).when(mockActions).sendKeys("Gwen")
+      doReturn(mockActions).when(mockActions).sendKeys(mockElement, Keys.RETURN)
+      webContext.sendValue(elemBinding, "Gwen", clickFirst = true, clearFirst = true, sendEnterKey = true)
+      verify(mockElement).click()
+      verify(mockElement).clear()
+      verify(mockActions, times(2)).perform()
       envContext.scopes.get("name/enter") should be ("true")
     }
   }

@@ -194,15 +194,17 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
   /** Captures and the current screenshot and adds it to the attachments list. */
   def captureScreenshot(unconditional: Boolean): Unit =
     env.perform {
-      val screenshot = driverManager.withWebDriver { driver =>
-        Thread.sleep(150) // give browser time to render
-        driver.asInstanceOf[TakesScreenshot].getScreenshotAs(OutputType.FILE)
-      }
-      val keep = unconditional || WebSettings.`gwen.web.capture.screenshots.duplicates` || lastScreenshotSize.fold(true) { _ != screenshot.length}
-      if (keep) {
-        if (!WebSettings.`gwen.web.capture.screenshots.duplicates`) lastScreenshotSize = Some(screenshot.length())
-        env.addAttachment("Screenshot", screenshot.getName.substring(screenshot.getName.lastIndexOf('.') + 1), null) tap {
-          case (_, file) => FileUtils.copyFile(screenshot, file)
+      Try {
+        val screenshot = driverManager.withWebDriver { driver =>
+          Thread.sleep(150) // give browser time to render
+          driver.asInstanceOf[TakesScreenshot].getScreenshotAs(OutputType.FILE)
+        }
+        val keep = unconditional || WebSettings.`gwen.web.capture.screenshots.duplicates` || lastScreenshotSize.fold(true) { _ != screenshot.length}
+        if (keep) {
+          if (!WebSettings.`gwen.web.capture.screenshots.duplicates`) lastScreenshotSize = Some(screenshot.length())
+          env.addAttachment("Screenshot", screenshot.getName.substring(screenshot.getName.lastIndexOf('.') + 1), null) tap {
+            case (_, file) => FileUtils.copyFile(screenshot, file)
+          }
         }
       }
     }
@@ -366,15 +368,19 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
     *
     * @param elementBinding the web element locator binding
     * @param value the value to send
+    * @param clickFirst true to click field first (if element is a text field)
     * @param clearFirst true to clear field first (if element is a text field)
     * @param sendEnterKey true to send the Enter key after sending the value
     */
-  def sendValue(elementBinding: LocatorBinding, value: String, clearFirst: Boolean, sendEnterKey: Boolean) {
+  def sendValue(elementBinding: LocatorBinding, value: String, clearFirst: Boolean, clickFirst: Boolean, sendEnterKey: Boolean) {
     val element = elementBinding.element
     withDriverAndElement("send keys", elementBinding) { (driver, webElement) =>
+      createActions(driver)
+      if (clickFirst) {
+        webElement.click()
+      }
       if (clearFirst) {
         webElement.clear()
-        env.bindAndWait(element, "clear", "true")
       }
       if ("file" == webElement.getAttribute("type")) {
         createActions(driver).moveToElement(webElement).perform()
@@ -383,8 +389,6 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
         createActions(driver).moveToElement(webElement).sendKeys(value).perform()
       }
       env.bindAndWait(element, "type", value)
-    }
-    withDriverAndElement("send enter key", elementBinding) { (driver, webElement) =>
       if (sendEnterKey) {
         createActions(driver).sendKeys(webElement, Keys.RETURN).perform()
         env.bindAndWait(element, "enter", "true")

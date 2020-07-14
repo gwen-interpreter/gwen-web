@@ -1018,9 +1018,9 @@ class WebEngineTest extends BaseTest with WebEngine with Matchers with MockitoSu
     List("enter", "type").foreach { action =>
       val mockBinding = mock[LocatorBinding]
       doReturn(mockBinding).when(env).getLocatorBinding("<element>")
-      doNothing().when(webContext).sendValue(mockBinding, "<text>", clearFirst = false, sendEnterKey = action == "enter")
+      doNothing().when(webContext).sendValue(mockBinding, "<text>", clickFirst = false, clearFirst = false, sendEnterKey = action == "enter")
       evaluate(s"""I $action "<text>" in <element>""")
-      verify(webContext).sendValue(mockBinding, "<text>", clearFirst = false, sendEnterKey = action == "enter")
+      verify(webContext).sendValue(mockBinding, "<text>", clickFirst = false, clearFirst = false, sendEnterKey = action == "enter")
     }
   }
 
@@ -1029,9 +1029,9 @@ class WebEngineTest extends BaseTest with WebEngine with Matchers with MockitoSu
     doReturn(mockBinding).when(env).getLocatorBinding("<element>")
     doReturn("<text>").when(env).getBoundReferenceValue("<reference>")
     List("enter", "type").foreach { action =>
-      doNothing().when(webContext).sendValue(mockBinding, "<text>", clearFirst = false, sendEnterKey = action == "enter")
+      doNothing().when(webContext).sendValue(mockBinding, "<text>", clickFirst = false, clearFirst = false, sendEnterKey = action == "enter")
       evaluate(s"I $action <reference> in <element>")
-      verify(webContext).sendValue(mockBinding, "<text>", clearFirst = false, sendEnterKey = action == "enter")
+      verify(webContext).sendValue(mockBinding, "<text>", clickFirst = false, clearFirst = false, sendEnterKey = action == "enter")
     }
   }
 
@@ -1621,27 +1621,27 @@ class WebEngineTest extends BaseTest with WebEngine with Matchers with MockitoSu
   """I append "<text>" to <element>""" should "evaluate" in {
     val mockBinding = mock[LocatorBinding]
     doReturn(mockBinding).when(env).getLocatorBinding("<element>")
-    doNothing().when(webContext).sendValue(mockBinding, "<text>", clearFirst = false, sendEnterKey = false)
+    doNothing().when(webContext).sendValue(mockBinding, "<text>", clickFirst = false, clearFirst = false, sendEnterKey = false)
     evaluate("""I append "<text>" to <element>""")
-    verify(webContext).sendValue(mockBinding, "<text>", clearFirst = false, sendEnterKey = false)
+    verify(webContext).sendValue(mockBinding, "<text>", clickFirst = false, clearFirst = false, sendEnterKey = false)
   }
 
   """I append <reference> to <element>""" should "evaluate" in {
     doReturn("<text>").when(env).getBoundReferenceValue("<reference>")
     val mockBinding = mock[LocatorBinding]
     doReturn(mockBinding).when(env).getLocatorBinding("<element>")
-    doNothing().when(webContext).sendValue(mockBinding, "<text>", clearFirst = false, sendEnterKey = false)
+    doNothing().when(webContext).sendValue(mockBinding, "<text>", clickFirst = false, clearFirst = false, sendEnterKey = false)
     evaluate("""I append <reference> to <element>""")
-    verify(webContext).sendValue(mockBinding, "<text>", clearFirst = false, sendEnterKey = false)
+    verify(webContext).sendValue(mockBinding, "<text>", clickFirst = false, clearFirst = false, sendEnterKey = false)
   }
 
   """I insert a new line in <element>""" should "evaluate" in {
     val mockBinding = mock[LocatorBinding]
     doReturn(mockBinding).when(env).getLocatorBinding("<element>")
     val newLine = StringEscapeUtils.unescapeJava("""\n""")
-    doNothing().when(webContext).sendValue(mockBinding, newLine, clearFirst = false, sendEnterKey = false)
+    doNothing().when(webContext).sendValue(mockBinding, newLine, clickFirst = false, clearFirst = false, sendEnterKey = false)
     evaluate("""I insert a new line in <element>""")
-    verify(webContext).sendValue(mockBinding, newLine, clearFirst = false, sendEnterKey = false)
+    verify(webContext).sendValue(mockBinding, newLine, clickFirst = false, clearFirst = false, sendEnterKey = false)
   }
   
 }
