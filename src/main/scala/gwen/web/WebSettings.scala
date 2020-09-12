@@ -242,4 +242,9 @@ object WebSettings {
   def `gwen.web.chrome.mobile`: Map[String, String] =
     Settings.findAllMulti("gwen.web.chrome.mobile", "gwen.web.chrome.mobile")
 
+  /**
+   * If set, enables the local file detector on remote webdriver if `gwen.web.remote.url` is set (default is disabled).
+   */
+  def `gwen.web.remote.localFileDetector`: Boolean = 
+    `gwen.web.remote.url`.nonEmpty && Settings.getOpt("gwen.web.remote.localFileDetector").getOrElse("false").toBoolean
 }

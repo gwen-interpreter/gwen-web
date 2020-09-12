@@ -11,3 +11,4 @@ project/project/target/
 *.log
 /bin/
 *.jar
+.vscode/

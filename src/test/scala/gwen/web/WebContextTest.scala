@@ -1067,6 +1067,18 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.sendKeys" should "" in {
+    val mockActions = mock[Actions]
+    val mockAction = mock[Action]
+    val keys = Array("Command", "C")
+    doReturn(mockActions).when(webContext).createActions(mockWebDriver)
+    when(mockActions.sendKeys(Keys.COMMAND)).thenReturn(mockActions)
+    when(mockActions.sendKeys("C")).thenReturn(mockActions)
+    when(mockActions.build()).thenReturn(mockAction)
+    webContext.sendKeys(keys)
+    verify(mockAction).perform()
+  }
+
+  "WebContext.sendKeys to element" should "" in {
     val elemBinding = LocatorBinding("element", "id", "elem", None, None)
     val mockElement = mock[WebElement]
     val mockActions = mock[Actions]

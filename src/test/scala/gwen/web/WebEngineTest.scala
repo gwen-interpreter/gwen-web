@@ -1159,6 +1159,13 @@ class WebEngineTest extends BaseTest with WebEngine with Matchers with MockitoSu
     verify(webContext).sendKeys(mockBinding, Array("CONTROL", "C"))
   }
 
+  """I send "<keys>"""" should "evaluate" in {
+    val mockBinding = mock[LocatorBinding]
+    doNothing().when(webContext).sendKeys(Array("CONTROL", "C"))
+    evaluate("""I send "CONTROL,C"""")
+    verify(webContext).sendKeys(Array("CONTROL", "C"))
+  }
+
   "I wait 1 second when <element> is <clicked|right clicked|double clicked|submitted|checked|ticked|unchecked|unticked|selected|deselected|typed|entered|tabbed|cleared|moved to>" should "evaluate" in {
     val mockBinding = mock[LocatorBinding]
     doReturn(mockBinding).when(env).getLocatorBinding("<element>")

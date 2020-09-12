@@ -729,6 +729,10 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
         webContext.sendKeys(elementBinding, Array[String](key))
         env.bindAndWait(element, key, "true")
 
+      case r"""I send "(.+?)"$keys""" =>
+        checkStepRules(step, BehaviorType.Action, env)
+        webContext.sendKeys(keys.split(","))
+
       case r"""I send "(.+?)"$keys to (.+?)$$$element""" =>
         checkStepRules(step, BehaviorType.Action, env)
         val elementBinding = env.getLocatorBinding(element)

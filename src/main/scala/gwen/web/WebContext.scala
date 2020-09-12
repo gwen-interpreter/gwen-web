@@ -556,12 +556,29 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
     env.bindAndWait(elementBinding.element, clickAction, "true")
   }
 
+  def sendKeys(keysToSend: Array[String]): Unit = {
+    sendKeys(None, keysToSend)
+  }
+
   def sendKeys(elementBinding: LocatorBinding, keysToSend: Array[String]): Unit = {
+    sendKeys(Some(elementBinding), keysToSend)
+  }
+
+  def sendKeys(elementBindingOpt: Option[LocatorBinding], keysToSend: Array[String]): Unit = {
     val keys = keysToSend.map(_.trim).map(key => Try(Keys.valueOf(key.toUpperCase)).getOrElse(key))
-    withDriverAndElement("send keys", elementBinding) { (driver, webElement) =>
-      var actions = createActions(driver)
-      keys.foreach { key => actions = actions.sendKeys(webElement, key) }
-      actions.build().perform()
+    elementBindingOpt match {
+      case Some(elementBinding) =>
+        withDriverAndElement("send keys", elementBinding) { (driver, webElement) =>
+          var actions = createActions(driver)
+          keys.foreach { key => actions = actions.sendKeys(webElement, key) }
+          actions.build().perform()
+        }
+      case None =>
+        withWebDriver { driver =>
+          var actions = createActions(driver)
+          keys.foreach { key => actions = actions.sendKeys(key) }
+          actions.build().perform()
+        }
     }
   }
 

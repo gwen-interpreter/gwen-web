@@ -29,6 +29,7 @@ import org.openqa.selenium.edge.{EdgeDriver, EdgeOptions}
 import org.openqa.selenium.remote.CapabilityType
 import org.openqa.selenium.remote.DesiredCapabilities
 import org.openqa.selenium.remote.HttpCommandExecutor
+import org.openqa.selenium.remote.LocalFileDetector
 import org.openqa.selenium.remote.RemoteWebDriver
 import org.openqa.selenium.safari.{SafariDriver, SafariOptions}
 import com.typesafe.scalalogging.LazyLogging
@@ -337,7 +338,11 @@ class DriverManager extends LazyLogging {
   }
   
   private[web] def remote(hubUrl: String, capabilities: DesiredCapabilities): WebDriver =
-    new RemoteWebDriver(new HttpCommandExecutor(new URL(hubUrl)), capabilities)
+    new RemoteWebDriver(new HttpCommandExecutor(new URL(hubUrl)), capabilities) tap { driver => 
+      if (WebSettings`gwen.web.remote.localFileDetector`) {
+        driver.setFileDetector(new LocalFileDetector())
+      }
+    }
   
   private def withGlobalSettings(driver: WebDriver): WebDriver = {
     logger.info(s"Implicit wait (default locator timeout) = ${WebSettings.`gwen.web.locator.wait.seconds`} second(s)")

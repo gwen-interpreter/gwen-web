@@ -1,3 +1,10 @@
+2.44.0
+======
+August 27, 2020
+- Add support for sending keys to web driver
+- Add support for enabling local file detector on remove webdriver through new
+  `gwen.web.remote.localFileDetector=true|false` setting (default is false)
+
 2.43.0
 ======
 July 14, 2020

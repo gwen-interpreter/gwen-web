@@ -527,6 +527,7 @@ I tick <element> of <context>
 I uncheck <element> of <context>
 I untick <element> of <context>
 I move to <element> of <context>
+I send "<keys>"
 I send "<keys>" to <element>
 I wait 1 second when <element> is clicked
 I wait 1 second when <element> is right clicked
