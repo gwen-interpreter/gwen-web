@@ -187,6 +187,7 @@ that have been merged:
 
 - [Jacob Juric](https://github.com/TheReturningVoid)
 | [Alexandru Cuciureanu](https://github.com/acuciureanu)
+| [Sorixelle](https://github.com/Sorixelle)
 
 The following users raised issues or requests that have been addressed:
 

@@ -1,12 +1,12 @@
 /*
  * Copyright 2015-2019 Brady Wood, Branko Juric
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -50,7 +50,7 @@ class DriverManager extends LazyLogging {
   if (sys.props.get("wdm.targetPath").isEmpty) {
     sys.props += (("wdm.targetPath", new File(new File(System.getProperty("user.home")), ".gwen/wdm").getAbsolutePath))
   }
-    
+
   /** Map of web driver instances (keyed by name). */
   private[web] val drivers: mutable.Map[String, WebDriver] = mutable.Map()
 
@@ -59,7 +59,7 @@ class DriverManager extends LazyLogging {
 
   /** Current stack of windows (per session). */
   private val windows = mutable.Map[String, List[String]]()
-    
+
   /** Provides private access to the web driver */
   private def webDriver: WebDriver = drivers.getOrElse(session, {
       loadWebDriver tap { driver =>
@@ -96,7 +96,7 @@ class DriverManager extends LazyLogging {
     * @param f the function to perform
     */
   def withWebDriver[T](f: WebDriver => T): T = f(webDriver)
-  
+
   /** Loads the selenium webdriver. */
   private[web] def loadWebDriver: WebDriver = withGlobalSettings {
     (WebSettings.`gwen.web.remote.url` match {
@@ -112,7 +112,7 @@ class DriverManager extends LazyLogging {
       }
     }
   }
-  
+
   private def remoteDriver(addr: String): WebDriver = {
     val capSettings = WebSettings.`gwen.web.capabilities`
     val browser = capSettings.get("browserName").orElse(capSettings.get("browser")).orElse(capSettings.get("device")).getOrElse(WebSettings.`gwen.web.browser`)
@@ -131,13 +131,13 @@ class DriverManager extends LazyLogging {
     logger.info(s"Starting remote $browser session${ if(session == "primary") "" else s": $session"}")
     remote(addr, capabilities)
   }
-  
+
   /**
     * Gets the local web driver for the given name.
-    * 
+    *
     *  @param driverName the name of the driver to get
     *  @throws gwen.web.errors.UnsupportedWebDriverException if the given
-    *          web driver name is unsupported 
+    *          web driver name is unsupported
     */
   private def localDriver(driverName: String): WebDriver = {
     logger.info(s"Starting $driverName browser session${ if(session == "primary") "" else s": $session"}")
@@ -150,7 +150,7 @@ class DriverManager extends LazyLogging {
       case _ => unsupportedWebDriverError(driverName)
     }
   }
-  
+
   private def firefoxOptions() : FirefoxOptions = {
     val firefoxProfile = new FirefoxProfile() tap { profile =>
       WebSettings.`gwen.web.firefox.prefs` foreach { case (name, value) =>
@@ -186,14 +186,18 @@ class DriverManager extends LazyLogging {
     }
     new FirefoxOptions()
       .setProfile(firefoxProfile) tap { options =>
-      if (WebSettings.`gwen.web.browser.headless`) {
-        logger.info(s"Setting firefox argument: -headless")
-        options.addArguments("-headless")
+        if (WebSettings.`gwen.web.browser.headless`) {
+          logger.info(s"Setting firefox argument: -headless")
+          options.addArguments("-headless")
+        }
+        WebSettings.`gwen.web.firefox.path` foreach { path =>
+          logger.info(s"Setting firefox path: $path")
+          options.setBinary(path)
+        }
+        setDesiredCapabilities(options)
       }
-      setDesiredCapabilities(options)
-    }
   }
-  
+
   private def chromeOptions() : ChromeOptions = new ChromeOptions() tap { options =>
     WebSettings.`gwen.web.useragent` foreach { agent =>
       logger.info(s"Setting chrome argument: --user-agent=$agent")
@@ -201,12 +205,16 @@ class DriverManager extends LazyLogging {
     }
     if (WebSettings.`gwen.web.authorize.plugins`) {
       logger.info("Setting chrome argument: --always-authorize-plugins")
-      options.addArguments("--always-authorize-plugins") 
+      options.addArguments("--always-authorize-plugins")
     }
     options.addArguments("--test-type")
     if (WebSettings.`gwen.web.accept.untrusted.certs`) {
       logger.info("Setting chrome argument: --ignore-certificate-errors")
       options.addArguments("--ignore-certificate-errors")
+    }
+    WebSettings.`gwen.web.chrome.path` foreach { path =>
+      logger.info(s"Setting chrome path: $path")
+      options.setBinary(path)
     }
     WebSettings.`gwen.web.chrome.args` foreach { arg =>
       logger.info(s"Setting chrome argument: $arg")
@@ -262,7 +270,7 @@ class DriverManager extends LazyLogging {
   private def ieOptions(): InternetExplorerOptions = new InternetExplorerOptions() tap { options =>
     def caps = setDesiredCapabilities(options)
     setDefaultCapability("requireWindowFocus", true, options)
-    setDefaultCapability("nativeEvents", false, options);    
+    setDefaultCapability("nativeEvents", false, options);
     setDefaultCapability("unexpectedAlertBehaviour", "accept", options);
     setDefaultCapability("ignoreProtectedModeSettings", true, options);
     setDefaultCapability("disable-popup-blocking", true, options);
@@ -304,21 +312,21 @@ class DriverManager extends LazyLogging {
         else capabilities.setCapability(name, strValue)
     }
   }
-  
+
   private[web] def chrome(): WebDriver = {
-    if (WebSettings.`webdriver.chrome.driver`.isEmpty) { 
+    if (WebSettings.`webdriver.chrome.driver`.isEmpty) {
       WebDriverManager.chromedriver().setup()
     }
     new ChromeDriver(chromeOptions())
   }
-  
+
   private[web] def firefox(): WebDriver = {
     if (WebSettings.`webdriver.gecko.driver`.isEmpty) {
       WebDriverManager.firefoxdriver().setup()
     }
     new FirefoxDriver(firefoxOptions())
   }
-  
+
   private[web] def ie(): WebDriver = {
     if (WebSettings.`webdriver.ie.driver`.isEmpty) {
       WebDriverManager.iedriver().setup()
@@ -332,11 +340,11 @@ class DriverManager extends LazyLogging {
     }
     new EdgeDriver(edgeOptions())
   }
-  
+
   private[web] def safari(): WebDriver = {
     new SafariDriver(safariOptions())
   }
-  
+
   private[web] def remote(hubUrl: String, capabilities: DesiredCapabilities): WebDriver =
     new RemoteWebDriver(new HttpCommandExecutor(new URL(hubUrl)), capabilities) tap { driver => 
       if (WebSettings`gwen.web.remote.localFileDetector`) {
@@ -471,5 +479,5 @@ class DriverManager extends LazyLogging {
     windows += (session -> sWindows.tail)
     sWindows.head
   }
-  
+
 }

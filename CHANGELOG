@@ -1,9 +1,12 @@
 2.44.0
 ======
-August 27, 2020
+September 20, 2020
 - Add support for sending keys to web driver
 - Add support for enabling local file detector on remove webdriver through new
   `gwen.web.remote.localFileDetector=true|false` setting (default is false)
+September 19, 2020, by @Sorixelle
+- Add settings `gwen.web.chrome.path` and `gwen.web.firefox.path` to override
+  the browser binary path
 
 2.43.0
 ======
