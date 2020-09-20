@@ -1,12 +1,14 @@
 2.44.0
 ======
 September 20, 2020
+- Add settings `gwen.web.chrome.path` and `gwen.web.firefox.path` to override
+  the browser binary path (merged PR #72 by @Sorixelle)
 - Add support for sending keys to web driver
 - Add support for enabling local file detector on remove webdriver through new
   `gwen.web.remote.localFileDetector=true|false` setting (default is false)
-September 19, 2020, by @Sorixelle
-- Add settings `gwen.web.chrome.path` and `gwen.web.firefox.path` to override
-  the browser binary path
+- Improve utilisation of processor threads for better parallel execution
+- Prevent the use of more than one web driver instance per thread
+- Update Gwen core from v2.27.2 to v[2.27.3](https://github.com/gwen-interpreter/gwen/releases/tag/v2.27.3)
 
 2.43.0
 ======

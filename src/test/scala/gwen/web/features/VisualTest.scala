@@ -27,8 +27,9 @@ class VisualTest extends BaseFeatureTest {
           evaluate(
             List("features-visual"), 
             parallel = false, 
+            parallelFeatures = false,
             dryRun = false, 
-            s"target/reports/features-visual",
+            s"features-visual",
             None)
         }
       }

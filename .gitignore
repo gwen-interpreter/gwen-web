@@ -12,3 +12,4 @@ project/project/target/
 /bin/
 *.jar
 .vscode/
+.java-version

@@ -30,8 +30,9 @@ class DryRunTest extends BaseFeatureTest {
               "features-visual",
               "gwen-workspace/samples"), 
             parallel = false, 
+            parallelFeatures = false,
             dryRun = true, 
-            s"target/reports/features-dryRun/sequential/feature-level/$rule-rules", 
+            s"feature-level/$rule-rules", 
             None)
         }
       }
@@ -48,8 +49,9 @@ class DryRunTest extends BaseFeatureTest {
               "features-visual",
               "gwen-workspace/samples"),
             parallel = true, 
+            parallelFeatures = false,
             dryRun = true, 
-           s"target/reports/features-dryRun/parallel/feature-level/$rule-rules", 
+           s"feature-level/$rule-rules", 
             None)
         }
       }
@@ -67,8 +69,9 @@ class DryRunTest extends BaseFeatureTest {
               "gwen-workspace/samples/todo/scenario-level",
               "gwen-workspace/samples/todo/single-scenario"), 
             parallel = false, 
+            parallelFeatures = false,
             dryRun = true, 
-            s"target/reports/features-dryRun/sequential/scenario-level/$rule-rules", 
+            s"scenario-level/$rule-rules", 
             None)
         }
       }
@@ -79,16 +82,19 @@ class DryRunTest extends BaseFeatureTest {
     BehaviorRules.values.foreach { rule => 
       withSetting("gwen.behavior.rules", rule.toString) {
         withSetting("gwen.state.level", "scenario") {
-          evaluate(
-            List(
-              "features/flow",
-              "features/multi-locators",
-              "gwen-workspace/samples/todo/scenario-level",
-              "gwen-workspace/samples/todo/single-scenario"), 
-            parallel = true, 
-            dryRun = true, 
-            s"target/reports/features-dryRun/parallel/scenario-level/$rule-rules", 
-            None)
+          List(false, true).foreach { parallelFeatures =>
+            evaluate(
+              List(
+                "features/flow",
+                "features/multi-locators",
+                "gwen-workspace/samples/todo/scenario-level",
+                "gwen-workspace/samples/todo/single-scenario"), 
+              parallel = true, 
+              parallelFeatures = parallelFeatures,
+              dryRun = true, 
+              s"parallel-${if (parallelFeatures) "features" else "scenarios"}/scenario-level/$rule-rules", 
+              None)
+          }
         }
       }
     }

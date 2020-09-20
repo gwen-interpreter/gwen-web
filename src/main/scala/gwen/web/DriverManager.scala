@@ -40,17 +40,25 @@ import io.github.bonigarcia.wdm.WebDriverManager
 
 import collection.JavaConverters._
 import scala.collection.mutable
+import java.util.concurrent.Semaphore
+
+/** Driver manager companion. */
+object DriverManager {
+    /** Semaphore to limit number of available web drivers based on number of CPU cores. */
+  private [web] val DriverPermit = new Semaphore(Runtime.getRuntime().availableProcessors(), true)
+}
 
 /**
   * Provides and manages access to the web drivers.
   */
 class DriverManager extends LazyLogging {
 
+  import DriverManager.DriverPermit
+
   // put drivers downloaded by WebDriverManager in ~.gwen/wdm dir by default
   if (sys.props.get("wdm.targetPath").isEmpty) {
     sys.props += (("wdm.targetPath", new File(new File(System.getProperty("user.home")), ".gwen/wdm").getAbsolutePath))
-  }
-
+  }    
   /** Map of web driver instances (keyed by name). */
   private[web] val drivers: mutable.Map[String, WebDriver] = mutable.Map()
 
@@ -86,6 +94,7 @@ class DriverManager extends LazyLogging {
       driver.quit()
       drivers.remove(name)
       windows.remove(name)
+      DriverPermit.release()
     }
     session = "primary"
   }
@@ -99,6 +108,7 @@ class DriverManager extends LazyLogging {
 
   /** Loads the selenium webdriver. */
   private[web] def loadWebDriver: WebDriver = withGlobalSettings {
+    DriverPermit.acquire();
     (WebSettings.`gwen.web.remote.url` match {
       case Some(addr) =>
         remoteDriver(addr)
