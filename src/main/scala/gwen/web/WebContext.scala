@@ -23,7 +23,7 @@ import gwen.web.errors._
 import org.apache.commons.io.FileUtils
 import org.openqa.selenium._
 import org.openqa.selenium.interactions.Actions
-import org.openqa.selenium.support.ui.{Select, WebDriverWait}
+import org.openqa.selenium.support.ui.{FluentWait, Select}
 
 import scala.collection.JavaConverters._
 import scala.concurrent.duration.Duration
@@ -256,9 +256,9 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
   def waitUntil(timeoutSecs: Long)(condition: => Boolean): Unit = {
     try {
       withWebDriver { webDriver =>
-        new WebDriverWait(webDriver, timeoutSecs).until {
-          (_: WebDriver) => condition
-        }
+        new FluentWait(webDriver)
+          .withTimeout(java.time.Duration.ofSeconds(timeoutSecs))
+          .until { driver => condition }
       }
     } catch {
       case e: TimeoutException =>

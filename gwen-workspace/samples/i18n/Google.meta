@@ -28,6 +28,6 @@ Scenario: je recherche "<query>"
 @StepDef
 @Assertion
 Scenario: je dois trouver une page concernant Gwen
-    Given link 1 can be located by css selector ".r > a"
+    Given link 1 can be located by css selector ".rc a"
      When I click link 1
      Then the current URL should match regex ".+[G|g]wen.*"

@@ -1,3 +1,13 @@
+2.45.0
+======
+Sep 25, 2020
+- Added `gwen.parallel.maxThreads` to enable users to set the maximum number 
+  number of threads used for parallel execution (default = total available CPU processors)
+- Optimised parallel execution for both features and scenarios
+- Release acquited web driver permit if driver fails to laod
+- Use FluentWait instead of WebDriverWait
+- Update Gwen core from v2.23.2 to v[2.28.0](https://github.com/gwen-interpreter/gwen/releases/tag/v2.28.0)
+
 2.44.0
 ======
 September 20, 2020

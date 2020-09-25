@@ -30,9 +30,9 @@ finding elements or running functions on web pages may be necessary.
 - [Change log](CHANGELOG)
 
 ### What's New?
+- Configurable [maximum number of threads](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#gwenparallelmaxthreads) for parallel execution
 - [Dialects](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#gwenfeaturedialect) for [Gherkin's spoken languages](https://cucumber.io/docs/gherkin/reference/#spoken-languages)
 - [Behavior rules](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#gwenbehaviorrules) to help enforce good Gherkin style
-- [Associative meta](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#gwenassociativemeta)
 
 Why Gwen?
 ---------
@@ -64,7 +64,7 @@ Scenario: I do a search for "<query>"
 
 @StepDef
 Scenario: I should find a Gwen page
-    Given link 1 can be located by css selector ".r > a"
+    Given link 1 can be located by css selector ".rc a"
      When I click link 1
      Then the current URL should match regex ".+[G|g]wen.*"
  ```
@@ -132,6 +132,7 @@ Learn More
 - Supports full Gherkin syntax including [example mapping](https://cucumber.io/blog/2015/12/08/example-mapping-introduction)
 - [State levels](https://github.com/gwen-interpreter/gwen/wiki/State-Levels) and [parallel execution](https://github.com/gwen-interpreter/gwen/wiki/Execution-Modes#parallel-scenario-execution) for scenarios in additon to features
 - [Declarative feature mode](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#gwenfeaturemode) to force all imperative steps to meta and promote cleaner features.
+- [Associative meta](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#gwenassociativemeta)
 
 User Network and Support
 ------------------------

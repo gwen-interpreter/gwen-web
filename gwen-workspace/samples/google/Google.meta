@@ -44,6 +44,6 @@ Scenario: I should find a Gwen page
           Gwen will match the name of this step def to the last
           step in the feature above and evaluate the steps that follow.
 
-    Given link 1 can be located by css selector ".r > a"
+    Given link 1 can be located by css selector ".rc a"
      When I click link 1
      Then the current URL should match regex ".+[G|g]wen.*"
