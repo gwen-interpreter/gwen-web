@@ -30,16 +30,14 @@ import org.openqa.selenium.WebDriver
 import org.openqa.selenium.WebElement
 import org.openqa.selenium.firefox.FirefoxDriver
 import org.scalatest.{BeforeAndAfterEach, Matchers}
-import org.scalatest.mockito.MockitoSugar
-import gwen.eval.ScopedDataStack
+import org.scalatestplus.mockito.MockitoSugar
 import gwen.eval.GwenOptions
 import gwen.Settings
-import gwen.web.errors._
+import gwen.web.Errors._
 import org.openqa.selenium.WebDriver.{Options, TargetLocator, Timeouts}
-import org.openqa.selenium.NoSuchElementException
 import org.mockito.Matchers.{anyVararg, same}
 
-import collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.concurrent.duration.Duration
 
 class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar with BeforeAndAfterEach {
@@ -505,7 +503,7 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
 
   }
   
-  private def shouldFindWebElement(locatorType: String, lookup: String, by: By, timeout: Option[Duration], index: Option[Int]) {
+  private def shouldFindWebElement(locatorType: String, lookup: String, by: By, timeout: Option[Duration], index: Option[Int]): Unit = {
 
     val env = newEnv
     val mockWebDriver: FirefoxDriver = mock[FirefoxDriver]
@@ -793,7 +791,7 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
 
   }
 
-  private def shouldFindAllWebElements(locatorType: String, lookup: String, by: By, timeout: Option[Duration]) {
+  private def shouldFindAllWebElements(locatorType: String, lookup: String, by: By, timeout: Option[Duration]): Unit = {
 
     val env = newEnv
     val mockWebDriver: FirefoxDriver = mock[FirefoxDriver]

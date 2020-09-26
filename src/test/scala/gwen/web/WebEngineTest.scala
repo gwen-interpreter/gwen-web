@@ -21,21 +21,21 @@ import java.io.File
 import gwen.Settings
 import org.mockito.Mockito.{verify, _}
 import org.scalatest.{BeforeAndAfterEach, Matchers}
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import gwen.dsl.{FlatTable, Step, StepKeyword}
-import gwen.eval.{TopScope, GwenOptions, ScopedDataStack, LocalDataStack}
+import gwen.eval.{TopScope, GwenOptions, ScopedDataStack}
 import gwen.Predefs.Kestrel
 import gwen.Predefs.FileIO
 import org.openqa.selenium.WebElement
 import org.mockito.Matchers.any
-import gwen.errors.UnboundAttributeException
+import gwen.Errors.UnboundAttributeException
 import org.apache.commons.text.StringEscapeUtils
 
 class WebEngineTest extends BaseTest with WebEngine with Matchers with MockitoSugar with BeforeAndAfterEach {
 
   val templateFile: File = {
     val rootDir: File = new File("target" + File.separator + "WebEngineTest") tap { _.mkdirs() }
-    val file = new File(rootDir + File.separator + "value.template")
+    val file = new File(rootDir, "value.template")
     file.getParentFile.mkdirs()
     file.createNewFile()
     file.writeText("value")
@@ -80,7 +80,6 @@ class WebEngineTest extends BaseTest with WebEngine with Matchers with MockitoSu
   private var mockScopes: ScopedDataStack = _
   private var mockTopScope: TopScope = _
   private var mockDriverManager: DriverManager = _
-  private val stepScope = new LocalDataStack()
 
   override def beforeEach(): Unit = {
     env = spy(new WebEnvContext(GwenOptions()))
@@ -1160,7 +1159,6 @@ class WebEngineTest extends BaseTest with WebEngine with Matchers with MockitoSu
   }
 
   """I send "<keys>"""" should "evaluate" in {
-    val mockBinding = mock[LocatorBinding]
     doNothing().when(webContext).sendKeys(Array("CONTROL", "C"))
     evaluate("""I send "CONTROL,C"""")
     verify(webContext).sendKeys(Array("CONTROL", "C"))

@@ -27,11 +27,10 @@ import org.openqa.selenium.WebDriver.Window
 import org.openqa.selenium.remote.DesiredCapabilities
 import org.openqa.selenium.remote.RemoteWebDriver
 import org.scalatest.{BeforeAndAfterEach, Matchers}
-import org.scalatest.mockito.MockitoSugar
-import gwen.Settings
-import gwen.web.errors.NoSuchWindowException
-import gwen.errors.AmbiguousCaseException
-import scala.collection.JavaConverters._
+import org.scalatestplus.mockito.MockitoSugar
+import gwen.web.Errors.NoSuchWindowException
+import gwen.Errors.AmbiguousCaseException
+import scala.jdk.CollectionConverters._
 
 class DriverManagerTest extends BaseTest with Matchers with MockitoSugar with BeforeAndAfterEach {
   

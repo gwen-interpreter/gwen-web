@@ -20,12 +20,12 @@ import java.util
 import java.util.concurrent.TimeUnit
 
 import org.openqa.selenium.{By, NoSuchElementException, WebElement}
-import gwen.web.errors._
+import gwen.web.Errors._
 import com.typesafe.scalalogging.LazyLogging
-import gwen.errors.ScriptException
+import gwen.Errors.ScriptException
 import org.apache.commons.text.StringEscapeUtils
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.concurrent.duration.Duration
 import scala.util.{Failure, Success, Try}
 
@@ -67,7 +67,7 @@ trait WebElementLocator extends LazyLogging {
           // return the first one that resolves
           val iter = locators.iterator.flatMap(loc => Try(findElementByLocator(elementName, loc)).getOrElse(None))
           if (iter.hasNext) {
-            result = Success(iter.next)
+            result = Success(iter.next())
           }
         } finally {
           // restore implicit waits
@@ -202,7 +202,6 @@ trait WebElementLocator extends LazyLogging {
     *
     */
   private def getElementByJavaScript(javascript: String, locator: Locator): Option[WebElement] = {
-    var element: Option[WebElement] = None
     val result = locator.container.fold(webContext.executeJS(s"return $javascript")) { containerName =>
       getContainerElement(webContext.getLocatorBinding(containerName)) match {
           case Some(containerElem) =>

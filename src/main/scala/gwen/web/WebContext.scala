@@ -18,14 +18,14 @@ package gwen.web
 import com.applitools.eyes.{MatchLevel, RectangleSize}
 import com.typesafe.scalalogging.LazyLogging
 import gwen.Predefs.Kestrel
-import gwen.errors.javaScriptError
-import gwen.web.errors._
+import gwen.Errors.javaScriptError
+import gwen.web.Errors._
 import org.apache.commons.io.FileUtils
 import org.openqa.selenium._
 import org.openqa.selenium.interactions.Actions
 import org.openqa.selenium.support.ui.{FluentWait, Select}
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.concurrent.duration.Duration
 import scala.util.{Failure, Success, Try}
 
@@ -41,7 +41,7 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
   private var eyesContext: Option[EyesContext] = None
 
   /** Resets the driver context. */
-  def reset() {
+  def reset(): Unit = {
     driverManager.reset()
     lastScreenshotSize = None
     eyesContext.foreach(_.close())
@@ -183,7 +183,7 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
       }
     }
 
-  def tryMoveTo(webElement: WebElement) {
+  def tryMoveTo(webElement: WebElement): Unit = {
     if (!webElement.isDisplayed && !isInViewport(webElement)) {
       withWebDriver { driver => 
         createActions(driver).moveToElement(webElement).perform()
@@ -301,7 +301,7 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
     */
   def checkElementState(elementBinding: LocatorBinding, state: String, negate: Boolean): Unit = {
     env.perform {
-      var result = isElementState(elementBinding, state, negate)
+      val result = isElementState(elementBinding, state, negate)
       assert(result, s"${elementBinding.element} should${if(negate) " not" else ""} be $state")
     }
   }
@@ -372,7 +372,7 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
     * @param clearFirst true to clear field first (if element is a text field)
     * @param sendEnterKey true to send the Enter key after sending the value
     */
-  def sendValue(elementBinding: LocatorBinding, value: String, clearFirst: Boolean, clickFirst: Boolean, sendEnterKey: Boolean) {
+  def sendValue(elementBinding: LocatorBinding, value: String, clearFirst: Boolean, clickFirst: Boolean, sendEnterKey: Boolean): Unit = {
     val element = elementBinding.element
     withDriverAndElement("send keys", elementBinding) { (driver, webElement) =>
       createActions(driver)
@@ -404,7 +404,7 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
     * @param elementBinding the web element locator binding
     * @param value the value to select
     */
-  def selectByVisibleText(elementBinding: LocatorBinding, value: String) {
+  def selectByVisibleText(elementBinding: LocatorBinding, value: String): Unit = {
     withWebElement(elementBinding) { webElement =>
       logger.debug(s"Selecting '$value' in ${elementBinding.element} by text")
       createSelect(webElement).selectByVisibleText(value)
@@ -418,7 +418,7 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
     * @param elementBinding the web element locator binding
     * @param value the value to select
     */
-  def selectByValue(elementBinding: LocatorBinding, value: String) {
+  def selectByValue(elementBinding: LocatorBinding, value: String): Unit = {
     withWebElement(elementBinding) { webElement =>
       logger.debug(s"Selecting '$value' in ${elementBinding.element} by value")
       createSelect(webElement).selectByValue(value)
@@ -432,7 +432,7 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
     * @param elementBinding the web element locator binding
     * @param index the index to select (first index is 0)
     */
-  def selectByIndex(elementBinding: LocatorBinding, index: Int) {
+  def selectByIndex(elementBinding: LocatorBinding, index: Int): Unit = {
     withWebElement(elementBinding) { webElement =>
       logger.debug(s"Selecting option in ${elementBinding.element} by index: $index")
       val select = createSelect(webElement)
@@ -447,7 +447,7 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
     * @param elementBinding the web element locator binding
     * @param value the value to select
     */
-  def deselectByVisibleText(elementBinding: LocatorBinding, value: String) {
+  def deselectByVisibleText(elementBinding: LocatorBinding, value: String): Unit = {
     withWebElement(elementBinding) { webElement =>
       logger.debug(s"Deselecting '$value' in ${elementBinding.element} by text")
       createSelect(webElement).deselectByVisibleText(value)
@@ -461,7 +461,7 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
     * @param elementBinding the web element locator binding
     * @param value the value to select
     */
-  def deselectByValue(elementBinding: LocatorBinding, value: String) {
+  def deselectByValue(elementBinding: LocatorBinding, value: String): Unit = {
     withWebElement(elementBinding) { webElement =>
       logger.debug(s"Deselecting '$value' in ${elementBinding.element} by value")
       createSelect(webElement).deselectByValue(value)
@@ -475,7 +475,7 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
     * @param elementBinding the web element locator binding
     * @param index the index to select (first index is 0)
     */
-  def deselectByIndex(elementBinding: LocatorBinding, index: Int) {
+  def deselectByIndex(elementBinding: LocatorBinding, index: Int): Unit = {
     withWebElement(elementBinding) { webElement =>
       logger.debug(s"Deselecting option in ${elementBinding.element} by index: $index")
       val select = createSelect(webElement)
@@ -486,7 +486,7 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
 
   private [web] def createActions(driver: WebDriver): Actions = new Actions(driver)
 
-  def performAction(action: String, elementBinding: LocatorBinding) {
+  def performAction(action: String, elementBinding: LocatorBinding): Unit = {
     val actionBinding = env.scopes.getOpt(s"${elementBinding.element}/action/$action/javascript")
     actionBinding match {
       case Some(javascript) =>
@@ -522,7 +522,7 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
     }
   }
 
-  def moveToAndCapture(driver: WebDriver, webElement: WebElement) {
+  def moveToAndCapture(driver: WebDriver, webElement: WebElement): Unit = {
     createActions(driver).moveToElement(webElement).perform()
     if (WebSettings.`gwen.web.capture.screenshots`) {
       captureScreenshot(false)
@@ -539,7 +539,7 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
     }
   }
 
-  def holdAndClick(modifierKeys: Array[String], clickAction: String, elementBinding: LocatorBinding) {
+  def holdAndClick(modifierKeys: Array[String], clickAction: String, elementBinding: LocatorBinding): Unit = {
     val keys = modifierKeys.map(_.trim).map(key => Try(Keys.valueOf(key.toUpperCase)).getOrElse(unsupportedModifierKeyError(key)))
     withDriverAndElement(clickAction, elementBinding) { (driver, webElement) =>
       moveToAndCapture(driver, webElement)
@@ -593,7 +593,7 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
     }
   }
 
-  private def performScriptAction(action: String, javascript: String, elementBinding: LocatorBinding) {
+  private def performScriptAction(action: String, javascript: String, elementBinding: LocatorBinding): Unit = {
     withDriverAndElement(action, elementBinding) { (driver, webElement) =>
       if (action != "move to") {
         moveToAndCapture(driver, webElement)
@@ -627,8 +627,8 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
       }
   }
 
-  private def performActionIn(action: String, elementBinding: LocatorBinding, contextBinding: LocatorBinding) {
-    def perform(webElement: WebElement, contextElement: WebElement)(buildAction: Actions => Actions) {
+  private def performActionIn(action: String, elementBinding: LocatorBinding, contextBinding: LocatorBinding): Unit = {
+    def perform(webElement: WebElement, contextElement: WebElement)(buildAction: Actions => Actions): Unit = {
       withWebDriver { driver =>
         val moveTo = createActions(driver).moveToElement(contextElement).moveToElement(webElement)
         buildAction(moveTo).build().perform()
@@ -673,7 +673,7 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
    * @param elementBinding the web element locator binding
    * @param scrollTo scroll element into view, options are: top or bottom
    */
-  def scrollIntoView(elementBinding: LocatorBinding, scrollTo: ScrollTo.Value) {
+  def scrollIntoView(elementBinding: LocatorBinding, scrollTo: ScrollTo.Value): Unit = {
     withWebElement(elementBinding) { scrollIntoView(_, scrollTo) }
   }
 
@@ -683,7 +683,7 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
    * @param webElement the web element to scroll to
    * @param scrollTo scroll element into view, options are: top or bottom
    */
-  def scrollIntoView(webElement: WebElement, scrollTo: ScrollTo.Value) {
+  def scrollIntoView(webElement: WebElement, scrollTo: ScrollTo.Value): Unit = {
     executeJS(s"var elem = arguments[0]; if (typeof elem !== 'undefined' && elem != null) { elem.scrollIntoView(${scrollTo == ScrollTo.top}); }", webElement)
   }
 
@@ -693,7 +693,7 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
     * @param width the width
     * @param height the height
     */
-  def resizeWindow(width: Int, height: Int) {
+  def resizeWindow(width: Int, height: Int): Unit = {
     withWebDriver { driver =>
       logger.info(s"Resizing browser window to width $width and height $height")
       driver.manage().window().setSize(new Dimension(width, height))
@@ -703,7 +703,7 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
   /**
     * Maximizes the browser window.
     */
-  def maximizeWindow() {
+  def maximizeWindow(): Unit = {
     withWebDriver { driver =>
       logger.info("Maximising browser window")
       driver.manage().window().maximize()
@@ -846,7 +846,7 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
   }
 
   /** Gets the number of open sesions. */
-  def noOfSessions(): Int = driverManager.noOfSessions
+  def noOfSessions(): Int = driverManager.noOfSessions()
 
   /**
     * Switches to the child window if one was just opened.

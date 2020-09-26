@@ -19,8 +19,6 @@ package gwen.web
 import org.scalatest.Matchers
 import gwen.dsl._
 import gwen.eval.GwenOptions
-import gwen.eval.ScopedDataStack
-import gwen.Settings
 
 class WebDslTest extends BaseTest with Matchers {
 

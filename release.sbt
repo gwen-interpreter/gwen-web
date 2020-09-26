@@ -1,5 +1,9 @@
 import sbtrelease._
 
+publishTo := sonatypePublishToBundle.value
+
+releaseCrossBuild := false
+
 releasePublishArtifactsAction := PgpKeys.publishSigned.value
 
 // we hide the existing definition for setReleaseVersion to replace it with our own
@@ -24,16 +28,18 @@ lazy val setReleaseVersion: ReleaseStep = setVersionOnly(_._1)
 releaseVersion := { ver =>
   Version(ver)
     .map(_.withoutQualifier)
-    .map(_.bump(releaseVersionBump.value).string).getOrElse(versionFormatError)
+    .map(_.bump(releaseVersionBump.value).string).getOrElse(versionFormatError(ver))
 }
 
 releaseProcess := Seq(
   checkSnapshotDependencies,
   inquireVersions,
   setReleaseVersion,
+  runClean,
   runTest,
   tagRelease,
   publishArtifacts,
-  ReleaseStep(releaseStepCommand("sonatypeRelease")),
+  releaseStepCommandAndRemaining("publishSigned"),
+  releaseStepCommand("sonatypeBundleRelease"),
   pushChanges
 )

@@ -26,12 +26,12 @@ import gwen.Predefs.Kestrel
 import gwen.Predefs.RegexContext
 import gwen.{GwenSettings, Settings}
 import gwen.dsl._
-import gwen.errors.StepFailure
-import gwen.errors.undefinedStepError
-import gwen.errors.disabledStepError
-import gwen.eval.{GwenOptions, ScopedDataStack}
+import gwen.Errors.StepFailure
+import gwen.Errors.undefinedStepError
+import gwen.Errors.disabledStepError
+import gwen.eval.GwenOptions
 import gwen.eval.support.DefaultEngineSupport
-import gwen.web.errors.LocatorBindingException
+import gwen.web.Errors.LocatorBindingException
 import org.apache.commons.text.StringEscapeUtils
 
 import scala.util.{Failure, Success, Try}
@@ -588,7 +588,7 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
                 assert(assertion = false, error.getMessage)
             }
           }
-        } getOrElse  {
+        } getOrElse {
           actual()
         }
       }
@@ -834,7 +834,7 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
       case r"""I should have (\d+?)$count open browser(?:s?)""" =>
         checkStepRules(step, BehaviorType.Assertion, env)
         env.perform {
-          env.compare("open browser sessions", count, () => webContext.noOfSessions.toString, "be", false)
+          env.compare("open browser sessions", count, () => webContext.noOfSessions().toString, "be", false)
         }
 
       case r"I have (no|an)$open open browser" =>

@@ -25,10 +25,10 @@ import gwen.dsl.BehaviorRules
 
 abstract class BaseFeatureTest extends BaseTest {
 
-  private[web] def evaluate(features: List[String], parallel: Boolean, parallelFeatures: Boolean, dryRun: Boolean, reportDir: String, dataFile: Option[String]) {
+  private[web] def evaluate(features: List[String], parallel: Boolean, parallelFeatures: Boolean, dryRun: Boolean, reportDir: String, dataFile: Option[String]): Unit = {
     Settings.synchronized {
-      var reportPath = s"${this.getClass.getSimpleName}${if (dryRun) "-dryRun" else ""}/"
-      var execModePath = if (parallel) "parallel" else "sequential"
+      val reportPath = s"${this.getClass.getSimpleName}${if (dryRun) "-dryRun" else ""}/"
+      val execModePath = if (parallel) "parallel" else "sequential"
       var args = Array("-b", "-r", s"target/reports/$reportPath/$execModePath/$reportDir", "-f", "junit,html,json")
       if (parallel) args = args ++ Array("--parallel")
       if (parallelFeatures) args = args ++ Array("--parallel-features")

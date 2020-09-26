@@ -19,9 +19,9 @@ package gwen.web
 import com.applitools.eyes.selenium.Eyes
 import com.applitools.eyes.{BatchInfo, MatchLevel, RectangleSize, TestResults}
 import com.typesafe.scalalogging.LazyLogging
-import gwen.errors.licenseError
+import gwen.Errors.licenseError
 import gwen.Predefs.Kestrel
-import gwen.web.errors.invalidVisualSessionStateError
+import gwen.web.Errors.invalidVisualSessionStateError
 import org.openqa.selenium.WebDriver
 
 /**

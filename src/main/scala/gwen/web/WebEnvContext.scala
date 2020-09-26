@@ -25,9 +25,8 @@ import gwen.Predefs.Kestrel
 import gwen.dsl.Failed
 import gwen.dsl.StateLevel
 import gwen.eval.{EnvContext, GwenOptions}
-import gwen.errors.StepFailure
-import gwen.web.errors.{WaitTimeoutException, locatorBindingError, VisualAssertionException}
-import gwen.errors.{UnboundAttributeException, unboundAttributeError}
+import gwen.web.Errors.{WaitTimeoutException, locatorBindingError, VisualAssertionException}
+import gwen.Errors.{UnboundAttributeException, unboundAttributeError}
 import org.openqa.selenium.WebElement
 
 import scala.concurrent.duration.Duration
@@ -47,14 +46,14 @@ class WebEnvContext(val options: GwenOptions) extends EnvContext(options) {
   val webContext = new WebContext(this, new DriverManager())
 
    /** Resets the current context and closes the web browser. */
-  override def reset(level: StateLevel.Value) {
+  override def reset(level: StateLevel.Value): Unit = {
     super.reset(level)
     webContext.reset()
     close()
   }
 
   /** Closes the current web context. */
-  override def close() {
+  override def close(): Unit = {
     webContext.close()
     super.close()
   }
@@ -204,7 +203,7 @@ class WebEnvContext(val options: GwenOptions) extends EnvContext(options) {
     * @param action the action to bind the value to
     * @param value the value to bind
     */
-  def bindAndWait(element: String, action: String, value: String) {
+  def bindAndWait(element: String, action: String, value: String): Unit = {
     scopes.set(s"$element/$action", value)
     
     // sleep if wait time is configured for this action

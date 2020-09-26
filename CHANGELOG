@@ -1,12 +1,25 @@
 2.45.0
 ======
-Sep 25, 2020
+Sep 26, 2020
 - Added `gwen.parallel.maxThreads` to enable users to set the maximum number 
   number of threads used for parallel execution (default = total available CPU processors)
 - Optimised parallel execution for both features and scenarios
-- Release acquited web driver permit if driver fails to laod
+- Release aquired web driver permit if driver fails to laod
 - Use FluentWait instead of WebDriverWait
-- Update Gwen core from v2.23.2 to v[2.28.0](https://github.com/gwen-interpreter/gwen/releases/tag/v2.28.0)
+- Update libarary dependencies
+  - Update scala from 2.12.8 to 2.13.3
+  - Update gherkin from 8.1.1 to 15.0.2
+  - Update slf4j-log4j12 from 1.7.25 to 1.7.30
+  - Update commons-codec from 1.12 to 1.15
+  - Update commons-text from 1.6 to 1.9
+  - Update scala-csv from 1.3.5 to 1.3.6
+  - Update joda-time from 2.10.1 to 2.10.6
+  - Update commons-io from 2.6 to 2.8.0
+  - Update webdrivermanager from v3.8.1 to v4.2.2
+  - Update eyes-selenium-java3 from v3.160.2 to v3.178.0
+- Update Gwen core from v2.27.3 to v[2.28.0](https://github.com/gwen-interpreter/gwen/releases/tag/v2.28.0)
+- Update build tooling
+  - Migrate from SBT 0.13.17 to 1.3.4
 
 2.44.0
 ======

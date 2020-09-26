@@ -6,10 +6,11 @@ project/project/target/
 .history
 .settings/
 .idea/
+.vscode/
 .metals/
 .bloop/
+.ammonite/
 *.log
 /bin/
 *.jar
-.vscode/
 .java-version

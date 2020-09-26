@@ -16,15 +16,13 @@
 
 package gwen.web
 
-import gwen.Settings
 import org.mockito.Mockito.verify
 import org.openqa.selenium.WebDriver
 import org.scalatest.Matchers
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import gwen.dsl.StateLevel
-import gwen.eval.ScopedDataStack
 import gwen.eval.GwenOptions
-import gwen.web.errors.LocatorBindingException
+import gwen.web.Errors.LocatorBindingException
 import org.openqa.selenium.WebDriver.{Options, Timeouts}
 
 class WebEnvContextTest extends BaseTest with Matchers with MockitoSugar {
@@ -230,7 +228,7 @@ class WebEnvContextTest extends BaseTest with Matchers with MockitoSugar {
    }
   }
 
-  private def shouldFailWithLocatorBindingError(element: String, env: WebEnvContext, expectedMsg: String) {
+  private def shouldFailWithLocatorBindingError(element: String, env: WebEnvContext, expectedMsg: String): Unit = {
     val e = intercept[LocatorBindingException] {
       env.getLocatorBinding(element)
     }

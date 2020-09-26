@@ -5,7 +5,6 @@ lazy val gwen = ProjectRef(file("../gwen"), "root")
 // lazy val gwen = ProjectRef(uri("git://github.com/gwen-interpreter/gwen.git"), "gwen")
 
 resolvers ++= Seq(
-  "Typesafe Repo" at "http://repo.typesafe.com/typesafe/releases/",
   "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"
 )
 
@@ -15,24 +14,31 @@ lazy val gwenWebSettings = Seq(
   organization := "org.gweninterpreter",
   organizationHomepage := Some(url("http://gweninterpreter.org")),
   startYear := Some(2014),
-  scalaVersion := "2.12.8",
+  licenses += "Apache License, Version 2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0.html"),
+  homepage := Some(url("https://github.com/gwen-interpreter/gwen")),
+  scalaVersion := "2.13.3",
   crossPaths := false,
   trapExit := false,
   scalacOptions ++= Seq(
     "-feature",
     "-language:postfixOps",
     "-deprecation",
-    "-target:jvm-1.8"
+    "-target:8",
+    "-Xlint:_,-missing-interpolator"
   ),
-  licenses += "Apache License, Version 2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0.html"),
-  homepage := Some(url("https://github.com/gwen-interpreter/gwen-web"))
+  initialize := {
+    val _ = initialize.value
+    val javaVersion = sys.props("java.specification.version")
+    if (javaVersion != "1.8")
+      sys.error(s"JDK 8 is required to build this project. Found $javaVersion instead")
+  }
 )
 
 lazy val commonDependencies = {
-  val commonsIO = "2.6"
+  val commonsIO = "2.8.0"
   val selenium = "3.141.59"
-  val appliTools = "3.160.2"
-  val driverMgr = "3.8.1"
+  val appliTools = "3.178.0"
+  val driverMgr = "4.2.2"
 
   Seq(
     "commons-io" % "commons-io" % commonsIO,
@@ -54,7 +60,7 @@ lazy val commonDependencies = {
 }
 
 lazy val testDependencies = {
-  val scalaTest = "3.0.5"
+  val scalaTest = "3.0.9"
   val mockitoAll = "1.10.19"
 
   Seq(

@@ -18,20 +18,19 @@ package gwen.web
 
 import java.io.File
 
-import gwen.Settings
-import gwen.eval.{GwenOptions, ScopedDataStack}
+import gwen.eval.GwenOptions
 import org.mockito.Mockito._
 import org.openqa.selenium._
 import org.scalatest.{BeforeAndAfterEach, Matchers}
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import org.mockito.Matchers.any
 import org.mockito.Matchers.anyVararg
 import org.mockito.Matchers.same
-import gwen.web.errors.{LocatorBindingException, UnsupportedModifierKeyException, WaitTimeoutException}
+import gwen.web.Errors.{LocatorBindingException, UnsupportedModifierKeyException, WaitTimeoutException}
 import org.openqa.selenium.interactions.{Action, Actions}
 import org.openqa.selenium.support.ui.Select
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.concurrent.duration.Duration
 
 class WebContextTest extends BaseTest with Matchers with MockitoSugar with BeforeAndAfterEach {
@@ -101,7 +100,8 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
 
   "WebContext.executeJS with arg" should "invoke javascript with arg" in {
     val script = "(function(arg){return arg;})(arg)"
-    webContext.executeJS(script, "true")
+    val param = "true"
+    webContext.executeJS(script, param)
     verify(mockWebDriver).executeScript(same(script), anyVararg())
   }
 

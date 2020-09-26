@@ -35,11 +35,11 @@ import org.openqa.selenium.safari.{SafariDriver, SafariOptions}
 import com.typesafe.scalalogging.LazyLogging
 import gwen.GwenSettings
 import gwen.Predefs.Kestrel
-import gwen.errors._
-import gwen.web.errors._
+import gwen.Errors._
+import gwen.web.Errors._
 import io.github.bonigarcia.wdm.WebDriverManager
 
-import collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.collection.mutable
 import java.util.concurrent.Semaphore
 
@@ -78,18 +78,18 @@ class DriverManager extends LazyLogging {
     })
 
   /** Resets the driver manager. */
-  def reset() {
+  def reset(): Unit = {
     session = "primary"
     windows.clear()
   }
 
   /** Quits all browsers and closes the web drivers (if any have loaded). */
-  def quit() {
+  def quit(): Unit = {
     drivers.keys.foreach(quit)
   }
 
   /** Quits a named browser and associated web driver instance. */
-  def quit(name: String) {
+  def quit(name: String): Unit = {
     drivers.get(name) foreach { driver =>
       try {
         logger.info(s"Closing browser session${ if(name == "primary") "" else s": $name"}")
@@ -156,7 +156,7 @@ class DriverManager extends LazyLogging {
     * Gets the local web driver for the given name.
     *
     *  @param driverName the name of the driver to get
-    *  @throws gwen.web.errors.UnsupportedWebDriverException if the given
+    *  @throws gwen.web.Errors.UnsupportedWebDriverException if the given
     *          web driver name is unsupported
     */
   private def localDriver(driverName: String): WebDriver = {
@@ -288,7 +288,6 @@ class DriverManager extends LazyLogging {
   }
 
   private def ieOptions(): InternetExplorerOptions = new InternetExplorerOptions() tap { options =>
-    def caps = setDesiredCapabilities(options)
     setDefaultCapability("requireWindowFocus", true, options)
     setDefaultCapability("nativeEvents", false, options);
     setDefaultCapability("unexpectedAlertBehaviour", "accept", options);
@@ -315,13 +314,13 @@ class DriverManager extends LazyLogging {
     }
   }
 
-  private def setDefaultCapability(name: String, value: Any, capabilities: MutableCapabilities) {
+  private def setDefaultCapability(name: String, value: Any, capabilities: MutableCapabilities): Unit = {
     if (capabilities.getCapability(name) == null) {
       setCapabilty(name, value, capabilities)
     }
   }
 
-  private def setCapabilty(name: String, value: Any, capabilities: MutableCapabilities) {
+  private def setCapabilty(name: String, value: Any, capabilities: MutableCapabilities): Unit = {
     def strValue = String.valueOf(value).trim
     try {
       logger.info(s"Setting web capability: $name=$strValue")
@@ -396,7 +395,7 @@ class DriverManager extends LazyLogging {
   /**
     * Switches to the child window if one was just opened.
     */
-  private[web] def switchToChild(driver: WebDriver) {
+  private[web] def switchToChild(driver: WebDriver): Unit = {
     val sWindows = sessionWindows()
     val children = driver.getWindowHandles.asScala.filter(window => !sWindows.contains(window)).toList match {
       case Nil if sWindows.size > 1 => sWindows.init
@@ -416,13 +415,13 @@ class DriverManager extends LazyLogging {
     * @param handle the handle of the window to switch to
     * @param isChild true if switching to a child window; false for parent window
     */
-  private def switchToWindow(handle: String, isChild: Boolean) {
+  private def switchToWindow(handle: String, isChild: Boolean): Unit = {
     logger.info(s"Switching to ${if (isChild) "child" else "parent"} window ($handle)")
     drivers.get(session).fold(noSuchWindowError("Cannot switch to window: no windows currently open")) { _.switchTo.window(handle) }
     pushWindow(handle)
   }
 
-  private[web] def closeChild() {
+  private[web] def closeChild(): Unit = {
     val sWindows = sessionWindows()
     if (sWindows.size > 1) {
       val child = popSessionWindow()
@@ -436,7 +435,7 @@ class DriverManager extends LazyLogging {
   }
 
   /** Switches to the parent window. */
-  private[web] def switchToParent(childClosed: Boolean) {
+  private[web] def switchToParent(childClosed: Boolean): Unit = {
     val sWindows = sessionWindows()
     if (sWindows.nonEmpty) {
       val child = popSessionWindow()
@@ -449,9 +448,11 @@ class DriverManager extends LazyLogging {
   }
 
   /** Switches to the top window / first frame */
-  private[web] def switchToDefaultContent(): Unit = webDriver.switchTo().defaultContent()
+  private[web] def switchToDefaultContent(): Unit = {
+    webDriver.switchTo().defaultContent()
+  }
 
-  private[web] def pushWindow(window: String) {
+  private[web] def pushWindow(window: String): Unit = {
     val sWindows = sessionWindows()
     if (sWindows.isEmpty || sWindows.head != window) {
       addSessionWindow(window)
@@ -463,7 +464,7 @@ class DriverManager extends LazyLogging {
     *
     * @param session the name of the session to switch to
     */
-  def switchToSession(session: String) {
+  def switchToSession(session: String): Unit = {
     logger.info(s"Switching to browser session: $session")
     this.session = session
     webDriver
@@ -476,7 +477,7 @@ class DriverManager extends LazyLogging {
     * Starts a new session if there isn't one or stays in the current one.
     */
   def newOrCurrentSession(): Unit = {
-    if (noOfSessions == 0) {
+    if (noOfSessions() == 0) {
       switchToSession("primary")
     }
   }
