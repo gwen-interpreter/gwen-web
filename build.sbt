@@ -1,4 +1,3 @@
-import sbt.Keys.{description, homepage}
 
 // Use file URI for gwen dep until sbt issue 1284 is fixed: https://github.com/sbt/sbt/issues/1284
 lazy val gwen = ProjectRef(file("../gwen"), "root")
@@ -8,7 +7,7 @@ resolvers ++= Seq(
   "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"
 )
 
-lazy val gwenWebSettings = Seq(
+lazy val projectSettings = Seq(
   name := "gwen-web",
   description := "Web automation engine for Gwen",
   organization := "org.gweninterpreter",
@@ -34,7 +33,7 @@ lazy val gwenWebSettings = Seq(
   }
 )
 
-lazy val commonDependencies = {
+lazy val mainDependencies = {
   val commonsIO = "2.8.0"
   val selenium = "3.141.59"
   val appliTools = "3.178.0"
@@ -70,8 +69,8 @@ lazy val testDependencies = {
 }
 
 val gwenWeb = (project in file(".")).settings(
-  gwenWebSettings,
-  libraryDependencies ++= commonDependencies ++ testDependencies
+  projectSettings,
+  libraryDependencies ++= mainDependencies ++ testDependencies
 ) dependsOn gwen
 
 mappings in(Compile, packageBin) ++= Seq(
@@ -81,4 +80,3 @@ mappings in(Compile, packageBin) ++= Seq(
   file("LICENSE-THIRDPARTY") -> "LICENSE-THIRDPARTY.txt",
   file("CHANGELOG") -> "CHANGELOG.txt"
 )
-

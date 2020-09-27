@@ -1,11 +1,5 @@
 import sbtrelease._
 
-publishTo := sonatypePublishToBundle.value
-
-releaseCrossBuild := false
-
-releasePublishArtifactsAction := PgpKeys.publishSigned.value
-
 // we hide the existing definition for setReleaseVersion to replace it with our own
 import sbtrelease.ReleaseStateTransformations.{setReleaseVersion=>_,_}
 
@@ -30,6 +24,10 @@ releaseVersion := { ver =>
     .map(_.withoutQualifier)
     .map(_.bump(releaseVersionBump.value).string).getOrElse(versionFormatError(ver))
 }
+
+publishTo := sonatypePublishToBundle.value
+releaseCrossBuild := false
+releasePublishArtifactsAction := PgpKeys.publishSigned.value
 
 releaseProcess := Seq(
   checkSnapshotDependencies,

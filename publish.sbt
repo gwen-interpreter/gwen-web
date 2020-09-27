@@ -1,7 +1,5 @@
 publishMavenStyle := true
-
 pomIncludeRepository := { _ => false }
-
 publishArtifact in Test := false
 
 pomExtra := (
@@ -17,3 +15,4 @@ pomExtra := (
       <url>https://github.com/bradywood</url>
     </developer>
   </developers>)
+  
