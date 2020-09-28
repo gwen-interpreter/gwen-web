@@ -26,9 +26,7 @@ import gwen.Predefs.Kestrel
 import gwen.Predefs.RegexContext
 import gwen.{GwenSettings, Settings}
 import gwen.dsl._
-import gwen.Errors.StepFailure
-import gwen.Errors.undefinedStepError
-import gwen.Errors.disabledStepError
+import gwen.Errors._
 import gwen.eval.GwenOptions
 import gwen.eval.support.DefaultEngineSupport
 import gwen.web.Errors.LocatorBindingException
@@ -50,6 +48,14 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
     * @param options command line options
     */
   override def init(options: GwenOptions) = {
+    if (options.parallel) {
+      val commonParallelism = "java.util.concurrent.ForkJoinPool.common.parallelism"
+      if (sys.props.get(commonParallelism).filter(_ == "0").isEmpty) {
+        missingPropertyError(
+          s"""|You must launch Gwen with the following JVM option to enable parallel execution:
+              |  -D$commonParallelism=0""".stripMargin)
+      }
+    }
     if (WebSettings.`gwen.web.capture.screenshots.highlighting`) {
       val fps = GwenSettings.`gwen.report.slideshow.framespersecond`
       Settings.setLocal("gwen.report.slideshow.framespersecond", (fps.toDouble * 1.8d).toInt.toString)
