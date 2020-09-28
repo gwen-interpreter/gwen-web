@@ -142,6 +142,14 @@ object WebSettings {
   def `gwen.web.chrome.extensions`: List[File] = Settings.getOpt("gwen.web.chrome.extensions").map(_.split(",").toList.map(_.trim)).getOrElse(Nil).map(new File(_))
 
   /**
+   * Provides access to the `gwen.web.edge.extensions` settings use to set
+   * the list of Edge web browser extensions to load (default is empty list).
+   * The settings accepts a comma separated list of paths to extensions (.crx files
+   * or location paths). Each extension provided is loaded into the Edge web driver.
+   */
+  def `gwen.web.edge.extensions`: List[File] = Settings.getOpt("gwen.web.edge.extensions").map(_.split(",").toList.map(_.trim)).getOrElse(Nil).map(new File(_))
+
+  /**
     * Provides access to the `gwen.web.capture.screenshots.duplicates` setting used to control whether
     * or not the web driver should capture or discard contiguously duplicate screenshots
     * (default value is `false` ~ to discard). If set to `false`, then a screenshot will be discarded
@@ -158,6 +166,13 @@ object WebSettings {
   def `gwen.web.chrome.path`: Option[String] = Settings.getOpt("gwen.web.chrome.path")
 
   /**
+    * Provides access to the `gwen.web.edge.path` setting used to specify the
+    * path to the Edge browser binary. If not set, edgedriver will use the
+    * default system Edge install.
+    */
+  def `gwen.web.edge.path`: Option[String] = Settings.getOpt("gwen.web.edge.path")
+
+  /**
    * Provides access to the `gwen.web.chrome.args` setting used to set
    * the list of Chrome web driver arguments to load (default is empty list).
    * This setting merges a comma separated list of arguments set in the `gwen.web.chrome.args` property with all
@@ -167,11 +182,27 @@ object WebSettings {
   def `gwen.web.chrome.args`: List[String] = Settings.findAllMulti("gwen.web.chrome.args")
 
   /**
+   * Provides access to the `gwen.web.edge.args` setting used to set
+   * the list of Edge web driver arguments to load (default is empty list).
+   * This setting merges a comma separated list of arguments set in the `gwen.web.edge.args` property with all
+   * the value of all properties that start with `gwen.web.edge.args.`.
+   * List of edge arguments: https://peter.sh/experiments/chromium-command-line-switches
+   */
+  def `gwen.web.edge.args`: List[String] = Settings.findAllMulti("gwen.web.edge.args")
+
+  /**
    * Provides access to the chrome preference settings. This setting merges a comma separated list of preferences
    * set in the `gwen.web.chrome.prefs` property with all properties that start with `gwen.web.chrome.pref.`.
    * List of chrome prefs: https://chromium.googlesource.com/chromium/src/+/master/chrome/common/pref_names.cc
    */
   def `gwen.web.chrome.prefs`: Map[String, String] = Settings.findAllMulti("gwen.web.chrome.prefs", "gwen.web.chrome.pref")
+
+  /**
+   * Provides access to the edge preference settings. This setting merges a comma separated list of preferences
+   * set in the `gwen.web.edge.prefs` property with all properties that start with `gwen.web.edge.pref.`.
+   * List of edge prefs: https://chromium.googlesource.com/chromium/src/+/master/chrome/common/pref_names.cc
+   */
+  def `gwen.web.edge.prefs`: Map[String, String] = Settings.findAllMulti("gwen.web.edge.prefs", "gwen.web.edge.pref")
 
   /**
     * Provides access to the `gwen.web.firefox.path` setting used to specify the
@@ -257,6 +288,16 @@ object WebSettings {
    */
   def `gwen.web.chrome.mobile`: Map[String, String] =
     Settings.findAllMulti("gwen.web.chrome.mobile", "gwen.web.chrome.mobile")
+
+  /**
+   * Provides access to the edge mobile emulation settings. This setting merges a comma separated list of values
+   * set in the `gwen.web.edge.mobile` property with all properties that start with
+   * `gwen.web.edge.mobile.`.
+   * See: https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#mobile-emulation-by-device-name
+   * See: https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#mobile-emulation-by-device-metrics
+   */
+  def `gwen.web.edge.mobile`: Map[String, String] =
+    Settings.findAllMulti("gwen.web.edge.mobile", "gwen.web.edge.mobile")
 
   /**
    * If set, enables the local file detector on remote webdriver if `gwen.web.remote.url` is set (default is disabled).
