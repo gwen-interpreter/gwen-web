@@ -1,3 +1,28 @@
+2.46.0-se4-alpha-6
+==================
+Oct 17, 2020
+- Rebase with master to pickup 2.46.0
+
+2.45.2-se4-alpha-6
+==================
+Oct 9, 2020
+- Fix parallel execution check in windows bat script
+
+2.45.1-se4-alpha-6
+==================
+Sep 28, 2020
+- Force all CompletableFutures in Selenium 4 to run on the caller thread to support concurrent
+  web driver sessions. This is done by impliclity setting the following JVM option when Gwen is 
+  invoked in parallel mode:
+  - `-Djava.util.concurrent.ForkJoinPool.common.parallelism=0`
+- Add support for configuring Edge driver (chromium) options (arguments, preferences, etc) 
+  through the following settings:
+  - `gwen.web.edge.path`
+  - `gwen.web.edge.args`
+  - `gwen.web.edge.prefs`
+  - `gwen.web.edge.extensions`
+  - `gwen.web.edge.mobile`
+
 2.46.0
 ======
 Oct 17, 2020
