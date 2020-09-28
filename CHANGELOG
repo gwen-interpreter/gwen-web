@@ -1,3 +1,9 @@
+2.45.1-se4-alpha
+- Force all CompletableFutures in Selenium 4 to run on the caller thread to support concurrent
+  web driver sessions. This is done by impliclity setting the following JVM option when Gwen is 
+  invoked in parallel mode:
+  - `-Djava.util.concurrent.ForkJoinPool.common.parallelism=0`
+
 2.45.1
 ======
 Sep 27, 2020
