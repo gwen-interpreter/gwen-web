@@ -186,9 +186,8 @@ We thank the following contributors and active users for helping to make Gwen be
 The following [contributors](https://github.com/gwen-interpreter/gwen/graphs/contributors) submitted pull requests
 that have been merged:
 
-- [Jacob Juric](https://github.com/TheReturningVoid)
+- [Jacob Juric](https://github.com/Sorixelle)
 | [Alexandru Cuciureanu](https://github.com/acuciureanu)
-| [Sorixelle](https://github.com/Sorixelle)
 
 The following users raised issues or requests that have been addressed:
 
@@ -210,13 +209,5 @@ Credits
 - [Selenium](https://www.seleniumhq.org/)
 - [Cucumber/Gherkin](https://docs.cucumber.io/gherkin/reference/)
 - [WebDriverManager](https://github.com/bonigarcia/webdrivermanager)
-
-Known Users
------------
-<a href="https://www.matrak.com.au" target="_blank"><img src="https://gwen-interpreter.github.io/assets/img/users/matrak-logo.png" height="40"/></a> &nbsp; &nbsp; &nbsp; <a href="https://www.smartstream-stp.com/" target="_blank"><img src="https://gwen-interpreter.github.io/assets/img/users/smartstream-logo.png" height="40"/></a> &nbsp; &nbsp; &nbsp; <a href="https://crystaldelta.com/" target="_blank"><img src="https://gwen-interpreter.github.io/assets/img/users/crystaldelta-logo.png" height="70"/></a> &nbsp; &nbsp; &nbsp; <a href="https://sdet-digital.business.site/" target="_blank"><img src="https://gwen-interpreter.github.io/assets/img/users/sdetdigital-logo.png" height="40"/></a>
-
-Integrates With
----------------
-<a href="https://applitools.com/" target="_blank"><img src="https://gwen-interpreter.github.io/assets/img/integration/applitools-logo.png" height="40"/></a>
 
 ---
