@@ -1,3 +1,8 @@
+2.45.2-se4-alpha-6
+==================
+Oct 9, 2020
+- Fix parallel execution check in windows bat script
+
 2.45.1-se4-alpha-6
 ==================
 Sep 28, 2020

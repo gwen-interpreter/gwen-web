@@ -20,7 +20,12 @@ batScriptExtraDefines += """set "APP_CLASSPATH=%GWEN_CLASSPATH%;%SELENIUM_HOME%\
 bashScriptExtraDefines += """[[ "$*" == *--parallel* ]] && addJava "-Djava.util.concurrent.ForkJoinPool.common.parallelism=0""""
 batScriptExtraDefines += """
   |set args="%*"
-  |if not x%args:--parallel=%==x%args% (call :add_java "-Djava.util.concurrent.ForkJoinPool.common.parallelism=0")
+  |set args=%args:"=%
+  |set args=%args:&=%
+  |set args=%args:<=%
+  |set args=%args:>=%
+  |set args=%args:|=%
+  |if not "x%args:--parallel=%" == "x%args%" (call :add_java "-Djava.util.concurrent.ForkJoinPool.common.parallelism=0")
   |""".stripMargin
 
 // add universal zip to published artifacts
