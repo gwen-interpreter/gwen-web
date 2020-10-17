@@ -73,41 +73,41 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
 
       step.expression match {
 
-        case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)$locator "(.+?)"$expression in (.+?)$container with no (?:timeout|wait)""" =>
+        case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$locator "(.+?)"$expression in (.+?)$container with no (?:timeout|wait)""" => 
           env.getLocatorBinding(container)
-          val binding = LocatorBinding(s"${element}/list", locator, expression, Some(container), Some(Duration.Zero), None)
+          val binding = LocatorBinding(s"${element}/list", Locator.parse(locator), expression, Some(container), Some(Duration.Zero), None)
           env.evaluate(foreach(() => List("$[dryRun:webElements]"), element, step, doStep, env)) {
             foreach(() => webContext.locateAll(binding), element, step, doStep, env)
           }
 
-        case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)$locator "(.+?)"$expression in (.+?)$container with (\d+)$timeout second (?:timeout|wait)""" =>
+        case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$locator "(.+?)"$expression in (.+?)$container with (\d+)$timeout second (?:timeout|wait)""" =>
           env.getLocatorBinding(container)
-          val binding = LocatorBinding(s"${element}/list", locator, expression, Some(container), Some(Duration.create(timeout.toLong, TimeUnit.SECONDS)), None)
+          val binding = LocatorBinding(s"${element}/list", Locator.parse(locator), expression, Some(container), Some(Duration.create(timeout.toLong, TimeUnit.SECONDS)), None)
           env.evaluate(foreach(() => List("$[dryRun:webElements]"), element, step, doStep, env)) {
             foreach(() => webContext.locateAll(binding), element, step, doStep, env)
           }
 
-        case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)$locator "(.+?)"$expression in (.+?)$container""" =>
+        case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$locator "(.+?)"$expression in (.+?)$container""" =>
           env.getLocatorBinding(container)
-          val binding = LocatorBinding(s"${element}/list", locator, expression, Some(container), None, None)
+          val binding = LocatorBinding(s"${element}/list", Locator.parse(locator), expression, Some(container), None, None)
           env.evaluate(foreach(() => List("$[dryRun:webElements]"), element, step, doStep, env)) {
             foreach(() => webContext.locateAll(binding), element, step, doStep, env)
           }
 
-        case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)$locator "(.+?)"$expression with no (?:timeout|wait)""" =>
-          val binding = LocatorBinding(s"${element}/list", locator, expression, None, Some(Duration.Zero), None)
+        case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$locator "(.+?)"$expression with no (?:timeout|wait)""" =>
+          val binding = LocatorBinding(s"${element}/list", Locator.parse(locator), expression, None, Some(Duration.Zero), None)
           env.evaluate(foreach(() => List("$[dryRun:webElements]"), element, step, doStep, env)) {
             foreach(() => webContext.locateAll(binding), element, step, doStep, env)
           }
 
-        case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)$locator "(.+?)"$expression with (\d+)$timeout second (?:timeout|wait)""" =>
-          val binding = LocatorBinding(s"${element}/list", locator, step.orDocString(expression), None, Some(Duration.create(timeout.toLong, TimeUnit.SECONDS)), None)
+        case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$locator "(.+?)"$expression with (\d+)$timeout second (?:timeout|wait)""" =>
+          val binding = LocatorBinding(s"${element}/list", Locator.parse(locator), step.orDocString(expression), None, Some(Duration.create(timeout.toLong, TimeUnit.SECONDS)), None)
           env.evaluate(foreach(() => List("$[dryRun:webElements]"), element, step, doStep, env)) {
             foreach(() => webContext.locateAll(binding), element, step, doStep, env)
           }
 
-        case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)$locator "(.+?)"$expression""" =>
-          val binding = LocatorBinding(s"${element}/list", locator, step.orDocString(expression), None, None, None)
+        case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$locator "(.+?)"$expression""" =>
+          val binding = LocatorBinding(s"${element}/list", Locator.parse(locator), step.orDocString(expression), None, None, None)
           env.evaluate(foreach(() => List("$[dryRun:webElements]"), element, step, doStep, env)) {
             foreach(() => webContext.locateAll(binding), element, step, doStep, env)
           }
@@ -253,151 +253,164 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
         env.scopes.set("url", url)
       }
 
-      case r"""(.+?)$element can be located by (id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)$locator "(.+?)"$expression at index (\d+)$index in (.+?)$container with no (?:timeout|wait)""" =>
+      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$locator "(.+?)"$expression at index (\d+)$index in (.+?)$container with no (?:timeout|wait)""" =>
+        val loc = Locator.parse(locator)
         checkStepRules(step, BehaviorType.Context, env)
         env.getLocatorBinding(container)
-        env.scopes.set(s"$element/locator", locator)
-        env.scopes.set(s"$element/locator/$locator", expression)
-        env.scopes.set(s"$element/locator/$locator/container", container)
-        env.scopes.set(s"$element/locator/$locator/timeoutSecs", "0")
-        env.scopes.set(s"$element/locator/$locator/index", index)
+        env.scopes.set(s"$element/locator", loc)
+        env.scopes.set(s"$element/locator/$loc", expression)
+        env.scopes.set(s"$element/locator/$loc/container", container)
+        env.scopes.set(s"$element/locator/$loc/timeoutSecs", "0")
+        env.scopes.set(s"$element/locator/$loc/index", index)
 
-      case r"""(.+?)$element can be located by (id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)$locator "(.+?)"$expression in (.+?)$container with no (?:timeout|wait)""" =>
+      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$locator "(.+?)"$expression in (.+?)$container with no (?:timeout|wait)""" =>
+        val loc = Locator.parse(locator)
         checkStepRules(step, BehaviorType.Context, env)
         env.getLocatorBinding(container)
-        env.scopes.set(s"$element/locator", locator)
-        env.scopes.set(s"$element/locator/$locator", expression)
-        env.scopes.set(s"$element/locator/$locator/container", container)
-        env.scopes.set(s"$element/locator/$locator/timeoutSecs", "0")
-        env.scopes.getOpt(s"$element/locator/$locator/index") foreach { _ =>
-          env.scopes.set(s"$element/locator/$locator/index", null)
+        env.scopes.set(s"$element/locator", loc)
+        env.scopes.set(s"$element/locator/$loc", expression)
+        env.scopes.set(s"$element/locator/$loc/container", container)
+        env.scopes.set(s"$element/locator/$loc/timeoutSecs", "0")
+        env.scopes.getOpt(s"$element/locator/$loc/index") foreach { _ =>
+          env.scopes.set(s"$element/locator/$loc/index", null)
         }
 
-      case r"""(.+?)$element can be located by (id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)$locator "(.+?)"$expression at index (\d+)$index in (.+?)$container with (\d+)$timeout second (?:timeout|wait)""" =>
+      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$locator "(.+?)"$expression at index (\d+)$index in (.+?)$container with (\d+)$timeout second (?:timeout|wait)""" =>
+        val loc = Locator.parse(locator)
         checkStepRules(step, BehaviorType.Context, env)
         env.getLocatorBinding(container)
-        env.scopes.set(s"$element/locator", locator)
-        env.scopes.set(s"$element/locator/$locator", expression)
-        env.scopes.set(s"$element/locator/$locator/container", container)
-        env.scopes.set(s"$element/locator/$locator/timeoutSecs", timeout)
-        env.scopes.set(s"$element/locator/$locator/index", index)
+        env.scopes.set(s"$element/locator", loc)
+        env.scopes.set(s"$element/locator/$loc", expression)
+        env.scopes.set(s"$element/locator/$loc/container", container)
+        env.scopes.set(s"$element/locator/$loc/timeoutSecs", timeout)
+        env.scopes.set(s"$element/locator/$loc/index", index)
 
-      case r"""(.+?)$element can be located by (id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)$locator "(.+?)"$expression in (.+?)$container with (\d+)$timeout second (?:timeout|wait)""" =>
+      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$locator "(.+?)"$expression in (.+?)$container with (\d+)$timeout second (?:timeout|wait)""" =>
+        val loc = Locator.parse(locator)
         checkStepRules(step, BehaviorType.Context, env)
         env.getLocatorBinding(container)
-        env.scopes.set(s"$element/locator", locator)
-        env.scopes.set(s"$element/locator/$locator", expression)
-        env.scopes.set(s"$element/locator/$locator/container", container)
-        env.scopes.set(s"$element/locator/$locator/timeoutSecs", timeout)
-        env.scopes.getOpt(s"$element/locator/$locator/index") foreach { _ =>
-          env.scopes.set(s"$element/locator/$locator/index", null)
+        env.scopes.set(s"$element/locator", loc)
+        env.scopes.set(s"$element/locator/$loc", expression)
+        env.scopes.set(s"$element/locator/$loc/container", container)
+        env.scopes.set(s"$element/locator/$loc/timeoutSecs", timeout)
+        env.scopes.getOpt(s"$element/locator/$loc/index") foreach { _ =>
+          env.scopes.set(s"$element/locator/$loc/index", null)
         }
 
-      case r"""(.+?)$element can be located by (id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)$locator "(.+?)"$expression at index (\d+)$index in (.+?)$container""" =>
+      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$locator "(.+?)"$expression at index (\d+)$index in (.+?)$container""" =>
+        val loc = Locator.parse(locator)
         checkStepRules(step, BehaviorType.Context, env)
         env.getLocatorBinding(container)
-        env.scopes.set(s"$element/locator", locator)
-        env.scopes.set(s"$element/locator/$locator", expression)
-        env.scopes.set(s"$element/locator/$locator/container", container)
-        env.scopes.getOpt(s"$element/locator/$locator/timeoutSecs") foreach { _ =>
-          env.scopes.set(s"$element/locator/$locator/timeoutSecs", null)
+        env.scopes.set(s"$element/locator", loc)
+        env.scopes.set(s"$element/locator/$loc", expression)
+        env.scopes.set(s"$element/locator/$loc/container", container)
+        env.scopes.getOpt(s"$element/locator/$loc/timeoutSecs") foreach { _ =>
+          env.scopes.set(s"$element/locator/$loc/timeoutSecs", null)
         }
-        env.scopes.set(s"$element/locator/$locator/index", index)
+        env.scopes.set(s"$element/locator/$loc/index", index)
 
-      case r"""(.+?)$element can be located by (id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)$locator "(.+?)"$expression in (.+?)$container""" =>
+      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$locator "(.+?)"$expression in (.+?)$container""" =>
+        val loc = Locator.parse(locator)
         checkStepRules(step, BehaviorType.Context, env)
         env.getLocatorBinding(container)
-        env.scopes.set(s"$element/locator", locator)
-        env.scopes.set(s"$element/locator/$locator", expression)
-        env.scopes.set(s"$element/locator/$locator/container", container)
-        env.scopes.getOpt(s"$element/locator/$locator/timeoutSecs") foreach { _ =>
-          env.scopes.set(s"$element/locator/$locator/timeoutSecs", null)
+        env.scopes.set(s"$element/locator", loc)
+        env.scopes.set(s"$element/locator/$loc", expression)
+        env.scopes.set(s"$element/locator/$loc/container", container)
+        env.scopes.getOpt(s"$element/locator/$loc/timeoutSecs") foreach { _ =>
+          env.scopes.set(s"$element/locator/$loc/timeoutSecs", null)
         }
-        env.scopes.getOpt(s"$element/locator/$locator/index") foreach { _ =>
-          env.scopes.set(s"$element/locator/$locator/index", null)
-        }
-
-      case r"""(.+?)$element can be located by (id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)$locator "(.+?)"$expression at index (\d+)$index with no (?:timeout|wait)""" =>
-        checkStepRules(step, BehaviorType.Context, env)
-        env.scopes.set(s"$element/locator", locator)
-        env.scopes.set(s"$element/locator/$locator", expression)
-        env.scopes.getOpt(s"$element/locator/$locator/container") foreach { _ =>
-          env.scopes.set(s"$element/locator/$locator/container", null)
-        }
-        env.scopes.set(s"$element/locator/$locator/timeoutSecs", "0")
-        env.scopes.set(s"$element/locator/$locator/index", index)
-
-      case r"""(.+?)$element can be located by (id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)$locator "(.+?)"$expression with no (?:timeout|wait)""" =>
-        checkStepRules(step, BehaviorType.Context, env)
-        env.scopes.set(s"$element/locator", locator)
-        env.scopes.set(s"$element/locator/$locator", expression)
-        env.scopes.getOpt(s"$element/locator/$locator/container") foreach { _ =>
-          env.scopes.set(s"$element/locator/$locator/container", null)
-        }
-        env.scopes.set(s"$element/locator/$locator/timeoutSecs", "0")
-        env.scopes.getOpt(s"$element/locator/$locator/index") foreach { _ =>
-          env.scopes.set(s"$element/locator/$locator/index", null)
+        env.scopes.getOpt(s"$element/locator/$loc/index") foreach { _ =>
+          env.scopes.set(s"$element/locator/$loc/index", null)
         }
 
-      case r"""(.+?)$element can be located by (id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)$locator "(.+?)"$expression at index (\d+)$index with (\d+)$timeout second (?:timeout|wait)""" =>
+      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$locator "(.+?)"$expression at index (\d+)$index with no (?:timeout|wait)""" =>
+        val loc = Locator.parse(locator)
         checkStepRules(step, BehaviorType.Context, env)
-        env.scopes.set(s"$element/locator", locator)
-        env.scopes.set(s"$element/locator/$locator", expression)
-        env.scopes.getOpt(s"$element/locator/$locator/container") foreach { _ =>
-          env.scopes.set(s"$element/locator/$locator/container", null)
+        env.scopes.set(s"$element/locator", loc)
+        env.scopes.set(s"$element/locator/$loc", expression)
+        env.scopes.getOpt(s"$element/locator/$loc/container") foreach { _ =>
+          env.scopes.set(s"$element/locator/$loc/container", null)
         }
-        env.scopes.set(s"$element/locator/$locator/timeoutSecs", timeout)
-        env.scopes.set(s"$element/locator/$locator/index", index)
+        env.scopes.set(s"$element/locator/$loc/timeoutSecs", "0")
+        env.scopes.set(s"$element/locator/$loc/index", index)
 
-      case r"""(.+?)$element can be located by (id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)$locator "(.+?)"$expression with (\d+)$timeout second (?:timeout|wait)""" =>
+      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$locator "(.+?)"$expression with no (?:timeout|wait)""" =>
+        val loc = Locator.parse(locator)
         checkStepRules(step, BehaviorType.Context, env)
-        env.scopes.set(s"$element/locator", locator)
-        env.scopes.set(s"$element/locator/$locator", expression)
-        env.scopes.getOpt(s"$element/locator/$locator/container") foreach { _ =>
-          env.scopes.set(s"$element/locator/$locator/container", null)
+        env.scopes.set(s"$element/locator", loc)
+        env.scopes.set(s"$element/locator/$loc", expression)
+        env.scopes.getOpt(s"$element/locator/$loc/container") foreach { _ =>
+          env.scopes.set(s"$element/locator/$loc/container", null)
         }
-        env.scopes.set(s"$element/locator/$locator/timeoutSecs", timeout)
-        env.scopes.getOpt(s"$element/locator/$locator/index") foreach { _ =>
-          env.scopes.set(s"$element/locator/$locator/index", null)
+        env.scopes.set(s"$element/locator/$loc/timeoutSecs", "0")
+        env.scopes.getOpt(s"$element/locator/$loc/index") foreach { _ =>
+          env.scopes.set(s"$element/locator/$loc/index", null)
         }
 
-      case r"""(.+?)$element can be located by (id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)$locator "(.+?)"$expression at index (\d+)$index""" =>
+      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$locator "(.+?)"$expression at index (\d+)$index with (\d+)$timeout second (?:timeout|wait)""" =>
+        val loc = Locator.parse(locator)
         checkStepRules(step, BehaviorType.Context, env)
-        env.scopes.set(s"$element/locator", locator)
-        env.scopes.set(s"$element/locator/$locator", expression)
-        env.scopes.getOpt(s"$element/locator/$locator/container") foreach { _ =>
-          env.scopes.set(s"$element/locator/$locator/container", null)
+        env.scopes.set(s"$element/locator", loc)
+        env.scopes.set(s"$element/locator/$loc", expression)
+        env.scopes.getOpt(s"$element/locator/$loc/container") foreach { _ =>
+          env.scopes.set(s"$element/locator/$loc/container", null)
         }
-        env.scopes.getOpt(s"$element/locator/$locator/timeoutSecs") foreach { _ =>
-          env.scopes.set(s"$element/locator/$locator/timeoutSecs", null)
-        }
-        env.scopes.set(s"$element/locator/$locator/index", index)
+        env.scopes.set(s"$element/locator/$loc/timeoutSecs", timeout)
+        env.scopes.set(s"$element/locator/$loc/index", index)
 
-      case r"""(.+?)$element can be located at index (\d+)$index by (id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)$locator "(.+?)"$expression""" => step.orDocString(expression) tap { expression =>
+      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$locator "(.+?)"$expression with (\d+)$timeout second (?:timeout|wait)""" =>
+        val loc = Locator.parse(locator)
         checkStepRules(step, BehaviorType.Context, env)
-        env.scopes.set(s"$element/locator", locator)
-        env.scopes.set(s"$element/locator/$locator", expression)
-        env.scopes.getOpt(s"$element/locator/$locator/container") foreach { _ =>
-          env.scopes.set(s"$element/locator/$locator/container", null)
+        env.scopes.set(s"$element/locator", loc)
+        env.scopes.set(s"$element/locator/$loc", expression)
+        env.scopes.getOpt(s"$element/locator/$loc/container") foreach { _ =>
+          env.scopes.set(s"$element/locator/$loc/container", null)
         }
-        env.scopes.getOpt(s"$element/locator/$locator/timeoutSecs") foreach { _ =>
-          env.scopes.set(s"$element/locator/$locator/timeoutSecs", null)
+        env.scopes.set(s"$element/locator/$loc/timeoutSecs", timeout)
+        env.scopes.getOpt(s"$element/locator/$loc/index") foreach { _ =>
+          env.scopes.set(s"$element/locator/$loc/index", null)
         }
-        env.scopes.set(s"$element/locator/$locator/index", index)
+
+      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$locator "(.+?)"$expression at index (\d+)$index""" =>
+        val loc = Locator.parse(locator)
+        checkStepRules(step, BehaviorType.Context, env)
+        env.scopes.set(s"$element/locator", loc)
+        env.scopes.set(s"$element/locator/$loc", expression)
+        env.scopes.getOpt(s"$element/locator/$loc/container") foreach { _ =>
+          env.scopes.set(s"$element/locator/$loc/container", null)
+        }
+        env.scopes.getOpt(s"$element/locator/$loc/timeoutSecs") foreach { _ =>
+          env.scopes.set(s"$element/locator/$loc/timeoutSecs", null)
+        }
+        env.scopes.set(s"$element/locator/$loc/index", index)
+
+      case r"""(.+?)$element can be located at index (\d+)$index by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$locator "(.+?)"$expression""" => step.orDocString(expression) tap { expression =>
+        val loc = Locator.parse(locator)
+        checkStepRules(step, BehaviorType.Context, env)
+        env.scopes.set(s"$element/locator", loc)
+        env.scopes.set(s"$element/locator/$loc", expression)
+        env.scopes.getOpt(s"$element/locator/$loc/container") foreach { _ =>
+          env.scopes.set(s"$element/locator/$loc/container", null)
+        }
+        env.scopes.getOpt(s"$element/locator/$loc/timeoutSecs") foreach { _ =>
+          env.scopes.set(s"$element/locator/$loc/timeoutSecs", null)
+        }
+        env.scopes.set(s"$element/locator/$loc/index", index)
       }
 
-      case r"""(.+?)$element can be located by (id|name|tag name|css selector|xpath|class name|link text|partial link text|javascript)$locator "(.+?)"$expression""" => step.orDocString(expression) tap { expression =>
+      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$locator "(.+?)"$expression""" => step.orDocString(expression) tap { expression =>
+        val loc = Locator.parse(locator)
         checkStepRules(step, BehaviorType.Context, env)
-        env.scopes.set(s"$element/locator", locator)
-        env.scopes.set(s"$element/locator/$locator", expression)
-        env.scopes.getOpt(s"$element/locator/$locator/container") foreach { _ =>
-          env.scopes.set(s"$element/locator/$locator/container", null)
+        env.scopes.set(s"$element/locator", loc)
+        env.scopes.set(s"$element/locator/$loc", expression)
+        env.scopes.getOpt(s"$element/locator/$loc/container") foreach { _ =>
+          env.scopes.set(s"$element/locator/$loc/container", null)
         }
-        env.scopes.getOpt(s"$element/locator/$locator/timeoutSecs") foreach { _ =>
-          env.scopes.set(s"$element/locator/$locator/timeoutSecs", null)
+        env.scopes.getOpt(s"$element/locator/$loc/timeoutSecs") foreach { _ =>
+          env.scopes.set(s"$element/locator/$loc/timeoutSecs", null)
         }
-        env.scopes.getOpt(s"$element/locator/$locator/index") foreach { _ =>
-          env.scopes.set(s"$element/locator/$locator/index", null)
+        env.scopes.getOpt(s"$element/locator/$loc/index") foreach { _ =>
+          env.scopes.set(s"$element/locator/$loc/index", null)
         }
       }
 
@@ -406,7 +419,7 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
         env.getLocatorBinding(container)
         env.scopes.set(s"$element/locator", step.table.map(_._2.head).mkString(","))
         step.table foreach { case (_, row ) =>
-          val locator = row.head
+          val locator = Locator.parse(row.head)
           val expression = row(1)
           env.scopes.set(s"$element/locator/$locator", expression)
           env.scopes.set(s"$element/locator/$locator/container", container)
@@ -418,7 +431,7 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
         env.getLocatorBinding(container)
         env.scopes.set(s"$element/locator", step.table.map(_._2.head).mkString(","))
         step.table foreach { case (_, row ) =>
-          val locator = row.head
+          val locator = Locator.parse(row.head)
           val expression = row(1)
           env.scopes.set(s"$element/locator/$locator", expression)
           env.scopes.set(s"$element/locator/$locator/container", container)
@@ -431,7 +444,7 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
         checkStepRules(step, BehaviorType.Context, env)
         env.scopes.set(s"$element/locator", step.table.map(_._2.head).mkString(","))
         step.table foreach { case (_, row ) =>
-          val locator = row.head
+          val locator = Locator.parse(row.head)
           val expression = row(1)
           env.scopes.set(s"$element/locator/$locator", expression)
           env.scopes.getOpt(s"$element/locator/$locator/container") foreach { _ =>
@@ -446,7 +459,7 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
         checkStepRules(step, BehaviorType.Context, env)
         env.scopes.set(s"$element/locator", step.table.map(_._2.head).mkString(","))
         step.table foreach { case (_, row ) =>
-          val locator = row.head
+          val locator = Locator.parse(row.head)
           val expression = row(1)
           env.scopes.set(s"$element/locator/$locator", expression)
           env.scopes.getOpt(s"$element/locator/$locator/container") foreach { _ =>
@@ -463,7 +476,7 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
         checkStepRules(step, BehaviorType.Context, env)
         env.scopes.set(s"$element/locator", step.table.map(_._2.head).mkString(","))
         step.table foreach { case (_, row ) =>
-          val locator = row.head
+          val locator = Locator.parse(row.head)
           val expression = row(1)
           env.scopes.set(s"$element/locator/$locator", expression)
           env.scopes.getOpt(s"$element/locator/$locator/container") foreach { _ =>
@@ -478,7 +491,7 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
         checkStepRules(step, BehaviorType.Context, env)
         env.scopes.set(s"$element/locator", step.table.map(_._2.head).mkString(","))
         step.table foreach { case (_, row ) =>
-          val locator = row.head
+          val locator = Locator.parse(row.head)
           val expression = row(1)
           env.scopes.set(s"$element/locator/$locator", expression)
           env.scopes.getOpt(s"$element/locator/$locator/container") foreach { _ =>
@@ -495,7 +508,7 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
         checkStepRules(step, BehaviorType.Context, env)
         env.scopes.set(s"$element/locator", step.table.map(_._2.head).mkString(","))
         step.table foreach { case (_, row ) =>
-          val locator = row.head
+          val locator = Locator.parse(row.head)
           val expression = row(1)
           env.scopes.set(s"$element/locator/$locator", expression)
           env.scopes.getOpt(s"$element/locator/$locator/container") foreach { _ =>
@@ -512,7 +525,7 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
         checkStepRules(step, BehaviorType.Context, env)
         env.scopes.set(s"$element/locator", step.table.map(_._2.head).mkString(","))
         step.table foreach { case (_, row ) =>
-          val locator = row.head
+          val locator = Locator.parse(row.head)
           val expression = row(1)
           env.scopes.set(s"$element/locator/$locator", expression)
           env.scopes.getOpt(s"$element/locator/$locator/container") foreach { _ =>
@@ -527,7 +540,7 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
         }
       }
 
-      case r"""(.+?)$element can be (clicked|right clicked|double clicked|submitted|checked|ticked|unchecked|unticked|selected|deselected|typed|entered|tabbed|cleared|moved to)$event by javascript "(.+?)"$$$expression""" => step.orDocString(expression) tap { expression =>
+      case r"""(.+?)$element can be (clicked|right clicked|double clicked|submitted|checked|ticked|unchecked|unticked|selected|deselected|typed|entered|tabbed|cleared|moved to)$event by (?:javascript|js) "(.+?)"$$$expression""" => step.orDocString(expression) tap { expression =>
         checkStepRules(step, BehaviorType.Context, env)
         env.getLocatorBinding(element)
         env.scopes.set(s"$element/action/${WebEvents.EventToAction(event)}/javascript", expression)
@@ -605,7 +618,7 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
           actual()
         }
 
-      case r"""I capture (.+?)$attribute (?:of|on|in) (.+?)$element by javascript "(.+?)"$$$expression""" => step.orDocString(expression) tap { expression =>
+      case r"""I capture (.+?)$attribute (?:of|on|in) (.+?)$element by (?:javascript|js) "(.+?)"$$$expression""" => step.orDocString(expression) tap { expression =>
         checkStepRules(step, BehaviorType.Action, env)
         val elementBinding = env.getLocatorBinding(element)
         env.scopes.set(s"$attribute/javascript", expression)

@@ -1,3 +1,12 @@
+2.46.0
+======
+Oct 17, 2020
+- Introduce shorter DSL literals for convenience
+  - Tag locator DSLs accept `tag name` or `tag` for short
+  - Class locator DSLs accept `class name` or `class` for short
+  - CSS locator DSLs accept `css selector` or `css` for short
+  - JavaScript DSLs accept `javascript` or `js` for short
+
 2.45.1
 ======
 Sep 27, 2020

@@ -10,192 +10,276 @@ I scroll to the bottom of <element>
 <element> can be located by id "<value>"
 <element> can be located by name "<value>"
 <element> can be located by tag name "<value>"
+<element> can be located by tag "<value>"
 <element> can be located by css selector "<value>"
+<element> can be located by css "<value>"
 <element> can be located by xpath "<value>"
 <element> can be located by class name "<value>"
+<element> can be located by class "<value>"
 <element> can be located by link text "<value>"
 <element> can be located by partial link text "<value>"
 <element> can be located by javascript "<expression>"
+<element> can be located by js "<expression>"
 <element> can be located by id "<value>" with no timeout
 <element> can be located by name "<value>" with no timeout
 <element> can be located by tag name "<value>" with no timeout
+<element> can be located by tag "<value>" with no timeout
 <element> can be located by css selector "<value>" with no timeout
+<element> can be located by css "<value>" with no timeout
 <element> can be located by xpath "<value>" with no timeout
 <element> can be located by class name "<value>" with no timeout
+<element> can be located by class "<value>" with no timeout
 <element> can be located by link text "<value>" with no timeout
 <element> can be located by partial link text "<value>" with no timeout
 <element> can be located by javascript "<expression>" with no timeout
+<element> can be located by js "<expression>" with no timeout
 <element> can be located by id "<value>" with no wait
 <element> can be located by name "<value>" with no wait
 <element> can be located by tag name "<value>" with no wait
+<element> can be located by tag "<value>" with no wait
 <element> can be located by css selector "<value>" with no wait
+<element> can be located by css "<value>" with no wait
 <element> can be located by xpath "<value>" with no wait
 <element> can be located by class name "<value>" with no wait
+<element> can be located by class "<value>" with no wait
 <element> can be located by link text "<value>" with no wait
 <element> can be located by partial link text "<value>" with no wait
 <element> can be located by javascript "<expression>" with no wait
+<element> can be located by js "<expression>" with no wait
 <element> can be located by id "<value>" with <timeoutPeriod> second timeout
 <element> can be located by name "<value>" with <timeoutPeriod> second timeout
 <element> can be located by tag name "<value>" with <timeoutPeriod> second timeout
+<element> can be located by tag "<value>" with <timeoutPeriod> second timeout
 <element> can be located by css selector "<value>" with <timeoutPeriod> second timeout
+<element> can be located by css "<value>" with <timeoutPeriod> second timeout
 <element> can be located by xpath "<value>" with <timeoutPeriod> second timeout
 <element> can be located by class name "<value>" with <timeoutPeriod> second timeout
+<element> can be located by class "<value>" with <timeoutPeriod> second timeout
 <element> can be located by link text "<value>" with <timeoutPeriod> second timeout
 <element> can be located by partial link text "<value>" with <timeoutPeriod> second timeout
 <element> can be located by javascript "<expression>" with <timeoutPeriod> second timeout
+<element> can be located by js "<expression>" with <timeoutPeriod> second timeout
 <element> can be located by id "<value>" with <timeoutPeriod> second wait
 <element> can be located by name "<value>" with <timeoutPeriod> second wait
 <element> can be located by tag name "<value>" with <timeoutPeriod> second wait
+<element> can be located by tag "<value>" with <timeoutPeriod> second wait
 <element> can be located by css selector "<value>" with <timeoutPeriod> second wait
+<element> can be located by css "<value>" with <timeoutPeriod> second wait
 <element> can be located by xpath "<value>" with <timeoutPeriod> second wait
 <element> can be located by class name "<value>" with <timeoutPeriod> second wait
+<element> can be located by class "<value>" with <timeoutPeriod> second wait
 <element> can be located by link text "<value>" with <timeoutPeriod> second wait
 <element> can be located by partial link text "<value>" with <timeoutPeriod> second wait
 <element> can be located by javascript "<expression>" with <timeoutPeriod> second wait
+<element> can be located by js "<expression>" with <timeoutPeriod> second wait
 <element> can be located by id "<value>" in <container>
 <element> can be located by name "<value>" in <container>
 <element> can be located by tag name "<value>" in <container>
+<element> can be located by tag "<value>" in <container>
 <element> can be located by css selector "<value>" in <container>
+<element> can be located by css "<value>" in <container>
 <element> can be located by xpath "<value>" in <container>
 <element> can be located by class name "<value>" in <container>
+<element> can be located by class "<value>" in <container>
 <element> can be located by link text "<value>" in <container>
 <element> can be located by partial link text "<value>" in <container>
 <element> can be located by javascript "<expression>" in <container>
+<element> can be located by js "<expression>" in <container>
 <element> can be located by id "<value>" in <container> with no timeout
 <element> can be located by name "<value>" in <container> with no timeout
 <element> can be located by tag name "<value>" in <container> with no timeout
+<element> can be located by tag "<value>" in <container> with no timeout
 <element> can be located by css selector "<value>" in <container> with no timeout
+<element> can be located by css "<value>" in <container> with no timeout
 <element> can be located by xpath "<value>" in <container> with no timeout
 <element> can be located by class name "<value>" in <container> with no timeout
+<element> can be located by class "<value>" in <container> with no timeout
 <element> can be located by link text "<value>" in <container> with no timeout
 <element> can be located by partial link text "<value>" in <container> with no timeout
 <element> can be located by javascript "<expression>" in <container> with no timeout
+<element> can be located by js "<expression>" in <container> with no timeout
 <element> can be located by id "<value>" in <container> with no wait
 <element> can be located by name "<value>" in <container> with no wait
 <element> can be located by tag name "<value>" in <container> with no wait
+<element> can be located by tag "<value>" in <container> with no wait
 <element> can be located by css selector "<value>" in <container> with no wait
+<element> can be located by css "<value>" in <container> with no wait
 <element> can be located by xpath "<value>" in <container> with no wait
 <element> can be located by class name "<value>" in <container> with no wait
+<element> can be located by class "<value>" in <container> with no wait
 <element> can be located by link text "<value>" in <container> with no wait
 <element> can be located by partial link text "<value>" in <container> with no wait
 <element> can be located by javascript "<expression>" in <container> with no wait
+<element> can be located by js "<expression>" in <container> with no wait
 <element> can be located by id "<value>" in <container> with <timeoutPeriod> second timeout
 <element> can be located by name "<value>" in <container> with <timeoutPeriod> second timeout
 <element> can be located by tag name "<value>" in <container> with <timeoutPeriod> second timeout
+<element> can be located by tag "<value>" in <container> with <timeoutPeriod> second timeout
 <element> can be located by css selector "<value>" in <container> with <timeoutPeriod> second timeout
+<element> can be located by css "<value>" in <container> with <timeoutPeriod> second timeout
 <element> can be located by xpath "<value>" in <container> with <timeoutPeriod> second timeout
 <element> can be located by class name "<value>" in <container> with <timeoutPeriod> second timeout
+<element> can be located by class "<value>" in <container> with <timeoutPeriod> second timeout
 <element> can be located by link text "<value>" in <container> with <timeoutPeriod> second timeout
 <element> can be located by partial link text "<value>" in <container> with <timeoutPeriod> second timeout
 <element> can be located by javascript "<expression>" in <container> with <timeoutPeriod> second timeout
+<element> can be located by js "<expression>" in <container> with <timeoutPeriod> second timeout
 <element> can be located by id "<value>" in <container> with <timeoutPeriod> second wait
 <element> can be located by name "<value>" in <container> with <timeoutPeriod> second wait
 <element> can be located by tag name "<value>" in <container> with <timeoutPeriod> second wait
+<element> can be located by tag "<value>" in <container> with <timeoutPeriod> second wait
 <element> can be located by css selector "<value>" in <container> with <timeoutPeriod> second wait
+<element> can be located by css "<value>" in <container> with <timeoutPeriod> second wait
 <element> can be located by xpath "<value>" in <container> with <timeoutPeriod> second wait
 <element> can be located by class name "<value>" in <container> with <timeoutPeriod> second wait
+<element> can be located by class "<value>" in <container> with <timeoutPeriod> second wait
 <element> can be located by link text "<value>" in <container> with <timeoutPeriod> second wait
 <element> can be located by partial link text "<value>" in <container> with <timeoutPeriod> second wait
 <element> can be located by javascript "<expression>" in <container> with <timeoutPeriod> second wait
+<element> can be located by js "<expression>" in <container> with <timeoutPeriod> second wait
 <element> can be located by id "<value>" at index <index>
 <element> can be located by name "<value>" at index <index>
 <element> can be located by tag name "<value>" at index <index>
+<element> can be located by tag "<value>" at index <index>
 <element> can be located by css selector "<value>" at index <index>
+<element> can be located by css "<value>" at index <index>
 <element> can be located by xpath "<value>" at index <index>
 <element> can be located by class name "<value>" at index <index>
+<element> can be located by class "<value>" at index <index>
 <element> can be located by link text "<value>" at index <index>
 <element> can be located by partial link text "<value>" at index <index>
 <element> can be located by javascript "<expression>" at index <index>
+<element> can be located by js "<expression>" at index <index>
 <element> can be located by id "<value>" at index <index> with no timeout
 <element> can be located by name "<value>" at index <index> with no timeout
 <element> can be located by tag name "<value>" at index <index> with no timeout
+<element> can be located by tag "<value>" at index <index> with no timeout
 <element> can be located by css selector "<value>" at index <index> with no timeout
+<element> can be located by css "<value>" at index <index> with no timeout
 <element> can be located by xpath "<value>" at index <index> with no timeout
 <element> can be located by class name "<value>" at index <index> with no timeout
+<element> can be located by class "<value>" at index <index> with no timeout
 <element> can be located by link text "<value>" at index <index> with no timeout
 <element> can be located by partial link text "<value>" at index <index> with no timeout
 <element> can be located by javascript "<expression>" at index <index> with no timeout
+<element> can be located by js "<expression>" at index <index> with no timeout
 <element> can be located by id "<value>" at index <index> with no wait
 <element> can be located by name "<value>" at index <index> with no wait
 <element> can be located by tag name "<value>" at index <index> with no wait
+<element> can be located by tag "<value>" at index <index> with no wait
 <element> can be located by css selector "<value>" at index <index> with no wait
+<element> can be located by css "<value>" at index <index> with no wait
 <element> can be located by xpath "<value>" at index <index> with no wait
 <element> can be located by class name "<value>" at index <index> with no wait
+<element> can be located by class "<value>" at index <index> with no wait
 <element> can be located by link text "<value>" at index <index> with no wait
 <element> can be located by partial link text "<value>" at index <index> with no wait
 <element> can be located by javascript "<expression>" at index <index> with no wait
+<element> can be located by js "<expression>" at index <index> with no wait
 <element> can be located by id "<value>" at index <index> with <timeoutPeriod> second timeout
 <element> can be located by name "<value>" at index <index> with <timeoutPeriod> second timeout
 <element> can be located by tag name "<value>" at index <index> with <timeoutPeriod> second timeout
+<element> can be located by tag "<value>" at index <index> with <timeoutPeriod> second timeout
 <element> can be located by css selector "<value>" at index <index> with <timeoutPeriod> second timeout
+<element> can be located by css "<value>" at index <index> with <timeoutPeriod> second timeout
 <element> can be located by xpath "<value>" at index <index> with <timeoutPeriod> second timeout
 <element> can be located by class name "<value>" at index <index> with <timeoutPeriod> second timeout
+<element> can be located by class "<value>" at index <index> with <timeoutPeriod> second timeout
 <element> can be located by link text "<value>" at index <index> with <timeoutPeriod> second timeout
 <element> can be located by partial link text "<value>" at index <index> with <timeoutPeriod> second timeout
 <element> can be located by javascript "<expression>" at index <index> with <timeoutPeriod> second timeout
+<element> can be located by js "<expression>" at index <index> with <timeoutPeriod> second timeout
 <element> can be located by id "<value>" at index <index> with <timeoutPeriod> second wait
 <element> can be located by name "<value>" at index <index> with <timeoutPeriod> second wait
 <element> can be located by tag name "<value>" at index <index> with <timeoutPeriod> second wait
+<element> can be located by tag "<value>" at index <index> with <timeoutPeriod> second wait
 <element> can be located by css selector "<value>" at index <index> with <timeoutPeriod> second wait
+<element> can be located by css "<value>" at index <index> with <timeoutPeriod> second wait
 <element> can be located by xpath "<value>" at index <index> with <timeoutPeriod> second wait
 <element> can be located by class name "<value>" at index <index> with <timeoutPeriod> second wait
+<element> can be located by class "<value>" at index <index> with <timeoutPeriod> second wait
 <element> can be located by link text "<value>" at index <index> with <timeoutPeriod> second wait
 <element> can be located by partial link text "<value>" at index <index> with <timeoutPeriod> second wait
 <element> can be located by javascript "<expression>" at index <index> with <timeoutPeriod> second wait
+<element> can be located by js "<expression>" at index <index> with <timeoutPeriod> second wait
 <element> can be located by id "<value>" at index <index> in <container>
 <element> can be located by name "<value>" at index <index> in <container>
 <element> can be located by tag name "<value>" at index <index> in <container>
+<element> can be located by tag "<value>" at index <index> in <container>
 <element> can be located by css selector "<value>" at index <index> in <container>
+<element> can be located by css "<value>" at index <index> in <container>
 <element> can be located by xpath "<value>" at index <index> in <container>
 <element> can be located by class name "<value>" at index <index> in <container>
+<element> can be located by class "<value>" at index <index> in <container>
 <element> can be located by link text "<value>" at index <index> in <container>
 <element> can be located by partial link text "<value>" at index <index> in <container>
 <element> can be located by javascript "<expression>" at index <index> in <container>
+<element> can be located by js "<expression>" at index <index> in <container>
 <element> can be located by id "<value>" at index <index> in <container> with no timeout
 <element> can be located by name "<value>" at index <index> in <container> with no timeout
 <element> can be located by tag name "<value>" at index <index> in <container> with no timeout
+<element> can be located by tag "<value>" at index <index> in <container> with no timeout
 <element> can be located by css selector "<value>" at index <index> in <container> with no timeout
+<element> can be located by css "<value>" at index <index> in <container> with no timeout
 <element> can be located by xpath "<value>" at index <index> in <container> with no timeout
 <element> can be located by class name "<value>" at index <index> in <container> with no timeout
+<element> can be located by class "<value>" at index <index> in <container> with no timeout
 <element> can be located by link text "<value>" at index <index> in <container> with no timeout
 <element> can be located by partial link text "<value>" at index <index> in <container> with no timeout
 <element> can be located by javascript "<expression>" at index <index> in <container> with no timeout
+<element> can be located by js "<expression>" at index <index> in <container> with no timeout
 <element> can be located by id "<value>" at index <index> in <container> with no wait
 <element> can be located by name "<value>" at index <index> in <container> with no wait
 <element> can be located by tag name "<value>" at index <index> in <container> with no wait
+<element> can be located by tag "<value>" at index <index> in <container> with no wait
 <element> can be located by css selector "<value>" at index <index> in <container> with no wait
+<element> can be located by css "<value>" at index <index> in <container> with no wait
 <element> can be located by xpath "<value>" at index <index> in <container> with no wait
 <element> can be located by class name "<value>" at index <index> in <container> with no wait
+<element> can be located by class "<value>" at index <index> in <container> with no wait
 <element> can be located by link text "<value>" at index <index> in <container> with no wait
 <element> can be located by partial link text "<value>" at index <index> in <container> with no wait
 <element> can be located by javascript "<expression>" at index <index> in <container> with no wait
+<element> can be located by js "<expression>" at index <index> in <container> with no wait
 <element> can be located by id "<value>" at index <index> in <container> with <timeoutPeriod> second timeout
 <element> can be located by name "<value>" at index <index> in <container> with <timeoutPeriod> second timeout
 <element> can be located by tag name "<value>" at index <index> in <container> with <timeoutPeriod> second timeout
+<element> can be located by tag "<value>" at index <index> in <container> with <timeoutPeriod> second timeout
 <element> can be located by css selector "<value>" at index <index> in <container> with <timeoutPeriod> second timeout
+<element> can be located by css "<value>" at index <index> in <container> with <timeoutPeriod> second timeout
 <element> can be located by xpath "<value>" at index <index> in <container> with <timeoutPeriod> second timeout
 <element> can be located by class name "<value>" at index <index> in <container> with <timeoutPeriod> second timeout
+<element> can be located by class "<value>" at index <index> in <container> with <timeoutPeriod> second timeout
 <element> can be located by link text "<value>" at index <index> in <container> with <timeoutPeriod> second timeout
 <element> can be located by partial link text "<value>" at index <index> in <container> with <timeoutPeriod> second timeout
 <element> can be located by javascript "<expression>" at index <index> in <container> with <timeoutPeriod> second timeout
+<element> can be located by js "<expression>" at index <index> in <container> with <timeoutPeriod> second timeout
 <element> can be located by id "<value>" at index <index> in <container> with <timeoutPeriod> second wait
 <element> can be located by name "<value>" at index <index> in <container> with <timeoutPeriod> second wait
 <element> can be located by tag name "<value>" at index <index> in <container> with <timeoutPeriod> second wait
+<element> can be located by tag "<value>" at index <index> in <container> with <timeoutPeriod> second wait
 <element> can be located by css selector "<value>" at index <index> in <container> with <timeoutPeriod> second wait
+<element> can be located by css "<value>" at index <index> in <container> with <timeoutPeriod> second wait
 <element> can be located by xpath "<value>" at index <index> in <container> with <timeoutPeriod> second wait
 <element> can be located by class name "<value>" at index <index> in <container> with <timeoutPeriod> second wait
+<element> can be located by class "<value>" at index <index> in <container> with <timeoutPeriod> second wait
 <element> can be located by link text "<value>" at index <index> in <container> with <timeoutPeriod> second wait
 <element> can be located by partial link text "<value>" at index <index> in <container> with <timeoutPeriod> second wait
 <element> can be located by javascript "<expression>" at index <index> in <container> with <timeoutPeriod> second wait
+<element> can be located by js "<expression>" at index <index> in <container> with <timeoutPeriod> second wait
 <element> can be located at index <index> by id "<value>"
 <element> can be located at index <index> by name "<value>"
 <element> can be located at index <index> by tag name "<value>"
+<element> can be located at index <index> by tag "<value>"
 <element> can be located at index <index> by css selector "<value>"
+<element> can be located at index <index> by css "<value>"
 <element> can be located at index <index> by xpath "<value>"
 <element> can be located at index <index> by class name "<value>"
+<element> can be located at index <index> by class "<value>"
 <element> can be located at index <index> by link text "<value>"
 <element> can be located at index <index> by partial link text "<value>"
 <element> can be located at index <index> by javascript "<expression>"
+<element> can be located at index <index> by js "<expression>"
 the page title should be "<value>"
 the page title should contain "<value>"
 the page title should start with "<value>"
@@ -446,6 +530,10 @@ I capture <attribute> by javascript "<expression>"
 I capture <attribute> of <element> by javascript "<expression>"
 I capture <attribute> on <element> by javascript "<expression>"
 I capture <attribute> in <element> by javascript "<expression>"
+I capture <attribute> by js "<expression>"
+I capture <attribute> of <element> by js "<expression>"
+I capture <attribute> on <element> by js "<expression>"
+I capture <attribute> in <element> by js "<expression>"
 I capture the alert popup message
 I capture the confirmation popup message
 I capture the alert popup message as <attribute>
@@ -457,11 +545,13 @@ my <name> setting will be "<value>"
 I reset my <name> property
 I reset my <name> setting
 <attribute> is defined by javascript "<expression>"
+<attribute> is defined by js "<expression>"
 <attribute> is defined by system process "<process>"
 <attribute> is defined by property "<name>"
 <attribute> is defined by setting "<name>"
 <attribute> is defined by file "<filepath>"
 <attribute> will be defined by javascript "<expression>"
+<attribute> will be defined by js "<expression>"
 <attribute> will be defined by system process "<process>"
 <attribute> will be defined by property "<name>"
 <attribute> will be defined by setting "<name>"
@@ -597,6 +687,7 @@ I wait <duration> seconds
 I highlight <element>
 I locate <element>
 I execute javascript "<javascript>"
+I execute js "<javascript>"
 I execute system process "<command>"
 I execute a unix system process "<command>"
 I refresh the current page
@@ -693,6 +784,20 @@ I capture the current screenshot
 <element> can be typed by javascript "<javascript>"
 <element> can be entered by javascript "<javascript>"
 <element> can be tabbed by javascript "<javascript>"
+<element> can be clicked by javascript "<javascript>"
+<element> can be right clicked by js "<javascript>"
+<element> can be double clicked by js "<javascript>"
+<element> can be moved to by js "<javascript>"
+<element> can be submitted by js "<javascript>"
+<element> can be checked by js "<javascript>"
+<element> can be ticked by js "<javascript>"
+<element> can be unchecked by js "<javascript>"
+<element> can be unticked by js "<javascript>"
+<element> can be selected by js "<javascript>"
+<element> can be deselected by js "<javascript>"
+<element> can be typed by js "<javascript>"
+<element> can be entered by js "<javascript>"
+<element> can be tabbed by js "<javascript>"
 <reference> is defined by sql "<selectStmt>" in the <dbName> database
 <reference> will be defined by sql "<selectStmt>" in the <dbName> database
 <reference> is defined in the <dbName> database by sql "<selectStmt>"
@@ -704,93 +809,133 @@ I maximise the window
 <step> for each <element> located by id "<expression>"
 <step> for each <element> located by name "<expression>"
 <step> for each <element> located by tag name "<expression>"
+<step> for each <element> located by tag "<expression>"
 <step> for each <element> located by css selector "<expression>"
+<step> for each <element> located by css "<expression>"
 <step> for each <element> located by xpath "<expression>"
 <step> for each <element> located by class name "<expression>"
+<step> for each <element> located by class "<expression>"
 <step> for each <element> located by link text "<expression>"
 <step> for each <element> located by partial link text "<expression>"
 <step> for each <element> located by javascript "<expression>"
+<step> for each <element> located by js "<expression>"
 <step> for each <element> located by id "<expression>" with no timeout
 <step> for each <element> located by name "<expression>" with no timeout
 <step> for each <element> located by tag name "<expression>" with no timeout
+<step> for each <element> located by tag "<expression>" with no timeout
 <step> for each <element> located by css selector "<expression>" with no timeout
+<step> for each <element> located by css "<expression>" with no timeout
 <step> for each <element> located by xpath "<expression>" with no timeout
 <step> for each <element> located by class name "<expression>" with no timeout
+<step> for each <element> located by class "<expression>" with no timeout
 <step> for each <element> located by link text "<expression>" with no timeout
 <step> for each <element> located by partial link text "<expression>" with no timeout
 <step> for each <element> located by javascript "<expression>" with no timeout
+<step> for each <element> located by js "<expression>" with no timeout
 <step> for each <element> located by id "<expression>" with no wait
 <step> for each <element> located by name "<expression>" with no wait
 <step> for each <element> located by tag name "<expression>" with no wait
+<step> for each <element> located by tag "<expression>" with no wait
 <step> for each <element> located by css selector "<expression>" with no wait
+<step> for each <element> located by css "<expression>" with no wait
 <step> for each <element> located by xpath "<expression>" with no wait
 <step> for each <element> located by class name "<expression>" with no wait
+<step> for each <element> located by class "<expression>" with no wait
 <step> for each <element> located by link text "<expression>" with no wait
 <step> for each <element> located by partial link text "<expression>" with no wait
 <step> for each <element> located by javascript "<expression>" with no wait
+<step> for each <element> located by js "<expression>" with no wait
 <step> for each <element> located by id "<expression>" with <timeoutPeriod> second timeout
 <step> for each <element> located by name "<expression>" with <timeoutPeriod> second timeout
 <step> for each <element> located by tag name "<expression>" with <timeoutPeriod> second timeout
+<step> for each <element> located by tag "<expression>" with <timeoutPeriod> second timeout
 <step> for each <element> located by css selector "<expression>" with <timeoutPeriod> second timeout
+<step> for each <element> located by css "<expression>" with <timeoutPeriod> second timeout
 <step> for each <element> located by xpath "<expression>" with <timeoutPeriod> second timeout
 <step> for each <element> located by class name "<expression>" with <timeoutPeriod> second timeout
+<step> for each <element> located by class "<expression>" with <timeoutPeriod> second timeout
 <step> for each <element> located by link text "<expression>" with <timeoutPeriod> second timeout
 <step> for each <element> located by partial link text "<expression>" with <timeoutPeriod> second timeout
 <step> for each <element> located by javascript "<expression>" with <timeoutPeriod> second timeout
+<step> for each <element> located by js "<expression>" with <timeoutPeriod> second timeout
 <step> for each <element> located by id "<expression>" with <timeoutPeriod> second wait
 <step> for each <element> located by name "<expression>" with <timeoutPeriod> second wait
 <step> for each <element> located by tag name "<expression>" with <timeoutPeriod> second wait
+<step> for each <element> located by tag "<expression>" with <timeoutPeriod> second wait
 <step> for each <element> located by css selector "<expression>" with <timeoutPeriod> second wait
+<step> for each <element> located by css "<expression>" with <timeoutPeriod> second wait
 <step> for each <element> located by xpath "<expression>" with <timeoutPeriod> second wait
 <step> for each <element> located by class name "<expression>" with <timeoutPeriod> second wait
+<step> for each <element> located by class "<expression>" with <timeoutPeriod> second wait
 <step> for each <element> located by link text "<expression>" with <timeoutPeriod> second wait
 <step> for each <element> located by partial link text "<expression>" with <timeoutPeriod> second wait
 <step> for each <element> located by javascript "<expression>" with <timeoutPeriod> second wait
+<step> for each <element> located by js "<expression>" with <timeoutPeriod> second wait
 <step> for each <element> located by id "<expression>" in <container>
 <step> for each <element> located by name "<expression>" in <container>
 <step> for each <element> located by tag name "<expression>" in <container>
+<step> for each <element> located by tag "<expression>" in <container>
 <step> for each <element> located by css selector "<expression>" in <container>
+<step> for each <element> located by css "<expression>" in <container>
 <step> for each <element> located by xpath "<expression>" in <container>
 <step> for each <element> located by class name "<expression>" in <container>
+<step> for each <element> located by class "<expression>" in <container>
 <step> for each <element> located by link text "<expression>" in <container>
 <step> for each <element> located by partial link text "<expression>" in <container>
 <step> for each <element> located by javascript "<expression>" in <container>
+<step> for each <element> located by js "<expression>" in <container>
 <step> for each <element> located by id "<expression>" in <container> with no timeout
 <step> for each <element> located by name "<expression>" in <container> with no timeout
 <step> for each <element> located by tag name "<expression>" in <container> with no timeout
+<step> for each <element> located by tag "<expression>" in <container> with no timeout
 <step> for each <element> located by css selector "<expression>" in <container> with no timeout
+<step> for each <element> located by css "<expression>" in <container> with no timeout
 <step> for each <element> located by xpath "<expression>" in <container> with no timeout
 <step> for each <element> located by class name "<expression>" in <container> with no timeout
+<step> for each <element> located by class "<expression>" in <container> with no timeout
 <step> for each <element> located by link text "<expression>" in <container> with no timeout
 <step> for each <element> located by partial link text "<expression>" in <container> with no timeout
 <step> for each <element> located by javascript "<expression>" in <container> with no timeout
+<step> for each <element> located by js "<expression>" in <container> with no timeout
 <step> for each <element> located by id "<expression>" in <container> with no wait
 <step> for each <element> located by name "<expression>" in <container> with no wait
 <step> for each <element> located by tag name "<expression>" in <container> with no wait
+<step> for each <element> located by tag "<expression>" in <container> with no wait
 <step> for each <element> located by css selector "<expression>" in <container> with no wait
+<step> for each <element> located by css "<expression>" in <container> with no wait
 <step> for each <element> located by xpath "<expression>" in <container> with no wait
 <step> for each <element> located by class name "<expression>" in <container> with no wait
+<step> for each <element> located by class "<expression>" in <container> with no wait
 <step> for each <element> located by link text "<expression>" in <container> with no wait
 <step> for each <element> located by partial link text "<expression>" in <container> with no wait
 <step> for each <element> located by javascript "<expression>" in <container> with no wait
+<step> for each <element> located by js "<expression>" in <container> with no wait
 <step> for each <element> located by id "<expression>" in <container> with <timeoutPeriod> second timeout
 <step> for each <element> located by name "<expression>" in <container> with <timeoutPeriod> second timeout
 <step> for each <element> located by tag name "<expression>" in <container> with <timeoutPeriod> second timeout
+<step> for each <element> located by tag "<expression>" in <container> with <timeoutPeriod> second timeout
 <step> for each <element> located by css selector "<expression>" in <container> with <timeoutPeriod> second timeout
+<step> for each <element> located by css "<expression>" in <container> with <timeoutPeriod> second timeout
 <step> for each <element> located by xpath "<expression>" in <container> with <timeoutPeriod> second timeout
 <step> for each <element> located by class name "<expression>" in <container> with <timeoutPeriod> second timeout
+<step> for each <element> located by class "<expression>" in <container> with <timeoutPeriod> second timeout
 <step> for each <element> located by link text "<expression>" in <container> with <timeoutPeriod> second timeout
 <step> for each <element> located by partial link text "<expression>" in <container> with <timeoutPeriod> second timeout
 <step> for each <element> located by javascript "<expression>" in <container> with <timeoutPeriod> second timeout
+<step> for each <element> located by js "<expression>" in <container> with <timeoutPeriod> second timeout
 <step> for each <element> located by id "<expression>" in <container> with <timeoutPeriod> second wait
 <step> for each <element> located by name "<expression>" in <container> with <timeoutPeriod> second wait
 <step> for each <element> located by tag name "<expression>" in <container> with <timeoutPeriod> second wait
+<step> for each <element> located by tag "<expression>" in <container> with <timeoutPeriod> second wait
 <step> for each <element> located by css selector "<expression>" in <container> with <timeoutPeriod> second wait
+<step> for each <element> located by css "<expression>" in <container> with <timeoutPeriod> second wait
 <step> for each <element> located by xpath "<expression>" in <container> with <timeoutPeriod> second wait
 <step> for each <element> located by class name "<expression>" in <container> with <timeoutPeriod> second wait
+<step> for each <element> located by class "<expression>" in <container> with <timeoutPeriod> second wait
 <step> for each <element> located by link text "<expression>" in <container> with <timeoutPeriod> second wait
 <step> for each <element> located by partial link text "<expression>" in <container> with <timeoutPeriod> second wait
 <step> for each <element> located by javascript "<expression>" in <container> with <timeoutPeriod> second wait
+<step> for each <element> located by js "<expression>" in <container> with <timeoutPeriod> second wait
 <step> for each <element> in <elements>
 <step> for each data record
 <attribute> should be absent

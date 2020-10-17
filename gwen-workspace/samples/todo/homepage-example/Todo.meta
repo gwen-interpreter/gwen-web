@@ -1,0 +1,27 @@
+
+  Feature: Todo Meta (automation glue)
+                        
+ @Context
+ @StepDef
+ Scenario: a new todo list
+     Given count can be located by css ".todo-count strong"
+      When I navigate to "http://todomvc.com/examples/react"
+      Then count should not be displayed
+
+ @Action
+ @StepDef
+ @DataTable(horizontal="item")
+ Scenario: the following items are added
+      When I add a todo item for each data record
+                                      
+ @StepDef
+ Scenario: I add a todo item
+     Given the todo field can be located by class "new-todo"
+      When I enter "${data[item]}" in the todo field
+      Then count should be "${record.number}"
+
+ @Assertion
+ @StepDef
+ Scenario: the list will contain <expected> items
+      Then count should be "$<expected>"
+      

@@ -43,7 +43,7 @@ class WebEngineTest extends BaseTest with WebEngine with Matchers with MockitoSu
     file
   }
 
-  private val locators = List("id", "name", "tag name", "css selector", "xpath", "class name", "link text", "partial link text", "javascript")
+  private val locators = List("id", "name", "tag name", "tag", "css selector", "css", "xpath", "class name", "class", "link text", "partial link text", "javascript", "js")
   private val matchers =
     List(
       ("be", "value", "value"),
@@ -165,12 +165,13 @@ class WebEngineTest extends BaseTest with WebEngine with Matchers with MockitoSu
     val mockBinding = mock[LocatorBinding]
     doReturn(mockBinding).when(env).getLocatorBinding("<container>")
     locators.foreach { locator =>
-      when(mockScopes.getOpt(s"<element>/locator/$locator/timeoutSecs")).thenReturn(None)
-      when(mockScopes.getOpt(s"<element>/locator/$locator/index")).thenReturn(None)
+      val loc = Locator.parse(locator)
+      when(mockScopes.getOpt(s"<element>/locator/$loc/timeoutSecs")).thenReturn(None)
+      when(mockScopes.getOpt(s"<element>/locator/$loc/index")).thenReturn(None)
       evaluate(s"""<element> can be located by $locator "<value>" in <container>""")
-      verify(mockScopes).set("<element>/locator", locator)
-      verify(mockScopes).set(s"<element>/locator/$locator", "<value>")
-      verify(mockScopes).set(s"<element>/locator/$locator/container", "<container>")
+      verify(mockScopes, atLeastOnce()).set("<element>/locator", loc)
+      verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$loc", "<value>")
+      verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$loc/container", "<container>")
     }
   }
 
@@ -178,13 +179,14 @@ class WebEngineTest extends BaseTest with WebEngine with Matchers with MockitoSu
     val mockBinding = mock[LocatorBinding]
     doReturn(mockBinding).when(env).getLocatorBinding("<container>")
     locators.foreach { locator =>
-      when(mockScopes.getOpt(s"<element>/locator/$locator/timeoutSecs")).thenReturn(None)
-      when(mockScopes.getOpt(s"<element>/locator/$locator/index")).thenReturn(Some("2"))
+      val loc = Locator.parse(locator)
+      when(mockScopes.getOpt(s"<element>/locator/$loc/timeoutSecs")).thenReturn(None)
+      when(mockScopes.getOpt(s"<element>/locator/$loc/index")).thenReturn(Some("2"))
       evaluate(s"""<element> can be located by $locator "<value>" at index 2 in <container>""")
-      verify(mockScopes).set("<element>/locator", locator)
-      verify(mockScopes).set(s"<element>/locator/$locator", "<value>")
-      verify(mockScopes).set(s"<element>/locator/$locator/index", "2")
-      verify(mockScopes).set(s"<element>/locator/$locator/container", "<container>")
+      verify(mockScopes, atLeastOnce()).set("<element>/locator", loc)
+      verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$loc", "<value>")
+      verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$loc/index", "2")
+      verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$loc/container", "<container>")
     }
   }
 
@@ -192,13 +194,14 @@ class WebEngineTest extends BaseTest with WebEngine with Matchers with MockitoSu
     val mockBinding = mock[LocatorBinding]
     doReturn(mockBinding).when(env).getLocatorBinding("<container>")
     locators.foreach { locator =>
+      val loc = Locator.parse(locator)
       waits.foreach { wait =>
-        when(mockScopes.getOpt(s"<element>/locator/$locator/index")).thenReturn(None)
+        when(mockScopes.getOpt(s"<element>/locator/$loc/index")).thenReturn(None)
         evaluate(s"""<element> can be located by $locator "<value>" in <container> with no $wait""")
-        verify(mockScopes).set("<element>/locator", locator)
-        verify(mockScopes).set(s"<element>/locator/$locator", "<value>")
-        verify(mockScopes).set(s"<element>/locator/$locator/container", "<container>")
-        verify(mockScopes).set(s"<element>/locator/$locator/timeoutSecs", "0")
+        verify(mockScopes, atLeastOnce()).set("<element>/locator", loc)
+        verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$loc", "<value>")
+        verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$loc/container", "<container>")
+        verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$loc/timeoutSecs", "0")
         reset(mockScopes)
       }
     }
@@ -208,14 +211,15 @@ class WebEngineTest extends BaseTest with WebEngine with Matchers with MockitoSu
     val mockBinding = mock[LocatorBinding]
     doReturn(mockBinding).when(env).getLocatorBinding("<container>")
     locators.foreach { locator =>
-      when(mockScopes.getOpt(s"<element>/locator/$locator/index")).thenReturn(None)
+      val loc = Locator.parse(locator)
+      when(mockScopes.getOpt(s"<element>/locator/$loc/index")).thenReturn(None)
       waits.foreach { wait =>
         evaluate(s"""<element> can be located by $locator "<value>" at index 2 in <container> with no $wait""")
-        verify(mockScopes).set("<element>/locator", locator)
-        verify(mockScopes).set(s"<element>/locator/$locator", "<value>")
-        verify(mockScopes).set(s"<element>/locator/$locator/container", "<container>")
-        verify(mockScopes).set(s"<element>/locator/$locator/timeoutSecs", "0")
-        verify(mockScopes).set(s"<element>/locator/$locator/index", "2")
+        verify(mockScopes, atLeastOnce()).set("<element>/locator", loc)
+        verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$loc", "<value>")
+        verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$loc/container", "<container>")
+        verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$loc/timeoutSecs", "0")
+        verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$loc/index", "2")
         reset(mockScopes)
       }
     }
@@ -225,12 +229,13 @@ class WebEngineTest extends BaseTest with WebEngine with Matchers with MockitoSu
     val mockBinding = mock[LocatorBinding]
     doReturn(mockBinding).when(env).getLocatorBinding("<container>")
     locators.foreach { locator =>
+      val loc = Locator.parse(locator)
       waits.foreach { wait =>
-        when(mockScopes.getOpt(s"<element>/locator/$locator/index")).thenReturn(None)
+        when(mockScopes.getOpt(s"<element>/locator/$loc/index")).thenReturn(None)
         evaluate(s"""<element> can be located by $locator "<value>" in <container> with 2 second $wait""")
-        verify(mockScopes).set("<element>/locator", locator)
-        verify(mockScopes).set(s"<element>/locator/$locator", "<value>")
-        verify(mockScopes).set(s"<element>/locator/$locator/container", "<container>")
+        verify(mockScopes, atLeastOnce()).set("<element>/locator", loc)
+        verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$loc", "<value>")
+        verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$loc/container", "<container>")
         reset(mockScopes)
       }
     }
@@ -240,13 +245,14 @@ class WebEngineTest extends BaseTest with WebEngine with Matchers with MockitoSu
     val mockBinding = mock[LocatorBinding]
     doReturn(mockBinding).when(env).getLocatorBinding("<container>")
     locators.foreach { locator =>
+      val loc = Locator.parse(locator)
       waits.foreach { wait =>
-        when(mockScopes.getOpt(s"<element>/locator/$locator/index")).thenReturn(Some("2"))
+        when(mockScopes.getOpt(s"<element>/locator/$loc/index")).thenReturn(Some("2"))
         evaluate(s"""<element> can be located by $locator "<value>" at index 2 in <container> with 2 second $wait""")
-        verify(mockScopes).set("<element>/locator", locator)
-        verify(mockScopes).set(s"<element>/locator/$locator", "<value>")
-        verify(mockScopes).set(s"<element>/locator/$locator/container", "<container>")
-        verify(mockScopes).set(s"<element>/locator/$locator/timeoutSecs", "2")
+        verify(mockScopes, atLeastOnce()).set("<element>/locator", loc)
+        verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$loc", "<value>")
+        verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$loc/container", "<container>")
+        verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$loc/timeoutSecs", "2")
         reset(mockScopes)
       }
     }
@@ -254,44 +260,47 @@ class WebEngineTest extends BaseTest with WebEngine with Matchers with MockitoSu
 
   """<element> can be located by <locator> "<value>"""" should "evaluate" in {
     locators.foreach { locator =>
-      when(mockScopes.getOpt(s"<element>/locator/$locator/container")).thenReturn(Some("container"))
-      when(mockScopes.getOpt(s"<element>/locator/$locator/timeoutSecs")).thenReturn(Some("2"))
-      when(mockScopes.getOpt(s"<element>/locator/$locator/index")).thenReturn(Some("2"))
+      val loc = Locator.parse(locator)
+      when(mockScopes.getOpt(s"<element>/locator/$loc/container")).thenReturn(Some("container"))
+      when(mockScopes.getOpt(s"<element>/locator/$loc/timeoutSecs")).thenReturn(Some("2"))
+      when(mockScopes.getOpt(s"<element>/locator/$loc/index")).thenReturn(Some("2"))
       evaluate(s"""<element> can be located by $locator "<value>"""")
-      verify(mockScopes).set("<element>/locator", locator)
-      verify(mockScopes).set(s"<element>/locator/$locator", "<value>")
-      verify(mockScopes).set(s"<element>/locator/$locator/container", null)
-      verify(mockScopes).set(s"<element>/locator/$locator/timeoutSecs", null)
-      verify(mockScopes).set(s"<element>/locator/$locator/index", null)
+      verify(mockScopes, atLeastOnce()).set("<element>/locator", loc)
+      verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$loc", "<value>")
+      verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$loc/container", null)
+      verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$loc/timeoutSecs", null)
+      verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$loc/index", null)
     }
   }
 
   """<element> can be located by <locator> "<value>" at index 2""" should "evaluate" in {
     locators.foreach { locator =>
-      when(mockScopes.getOpt(s"<element>/locator/$locator/container")).thenReturn(Some("container"))
-      when(mockScopes.getOpt(s"<element>/locator/$locator/timeoutSecs")).thenReturn(Some("2"))
-      when(mockScopes.getOpt(s"<element>/locator/$locator/index")).thenReturn(Some("2"))
+      val loc = Locator.parse(locator)
+      when(mockScopes.getOpt(s"<element>/locator/$loc/container")).thenReturn(Some("container"))
+      when(mockScopes.getOpt(s"<element>/locator/$loc/timeoutSecs")).thenReturn(Some("2"))
+      when(mockScopes.getOpt(s"<element>/locator/$loc/index")).thenReturn(Some("2"))
       evaluate(s"""<element> can be located by $locator "<value>" at index 2""")
-      verify(mockScopes).set("<element>/locator", locator)
-      verify(mockScopes).set(s"<element>/locator/$locator", "<value>")
-      verify(mockScopes).set(s"<element>/locator/$locator/container", null)
-      verify(mockScopes).set(s"<element>/locator/$locator/timeoutSecs", null)
-      verify(mockScopes).set(s"<element>/locator/$locator/index", "2")
+      verify(mockScopes, atLeastOnce()).set("<element>/locator", loc)
+      verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$loc", "<value>")
+      verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$loc/container", null)
+      verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$loc/timeoutSecs", null)
+      verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$loc/index", "2")
     }
   }
 
    """<element> can be located by <locator> "<value>" with no <wait|timeout>""" should "evaluate" in {
     locators.foreach { locator =>
+      val loc = Locator.parse(locator)
       waits.foreach { wait =>
-        when(mockScopes.getOpt(s"<element>/locator/$locator/container")).thenReturn(Some("container"))
-        when(mockScopes.getOpt(s"<element>/locator/$locator/timeoutSecs")).thenReturn(Some("2"))
-        when(mockScopes.getOpt(s"<element>/locator/$locator/index")).thenReturn(Some("2"))
+        when(mockScopes.getOpt(s"<element>/locator/$loc/container")).thenReturn(Some("container"))
+        when(mockScopes.getOpt(s"<element>/locator/$loc/timeoutSecs")).thenReturn(Some("2"))
+        when(mockScopes.getOpt(s"<element>/locator/$loc/index")).thenReturn(Some("2"))
         evaluate(s"""<element> can be located by $locator "<value>" with no $wait""")
-        verify(mockScopes).set("<element>/locator", locator)
-        verify(mockScopes).set(s"<element>/locator/$locator", "<value>")
-        verify(mockScopes).set(s"<element>/locator/$locator/container", null)
-        verify(mockScopes).set(s"<element>/locator/$locator/timeoutSecs", "0")
-        verify(mockScopes).set(s"<element>/locator/$locator/index", null)
+        verify(mockScopes, atLeastOnce()).set("<element>/locator", loc)
+        verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$loc", "<value>")
+        verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$loc/container", null)
+        verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$loc/timeoutSecs", "0")
+        verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$loc/index", null)
         reset(mockScopes)
       }
     }
@@ -299,16 +308,17 @@ class WebEngineTest extends BaseTest with WebEngine with Matchers with MockitoSu
 
    """<element> can be located by <locator> "<value>" at index 2 with no <wait|timeout>""" should "evaluate" in {
     locators.foreach { locator =>
+      val loc = Locator.parse(locator)
       waits.foreach { wait =>
-        when(mockScopes.getOpt(s"<element>/locator/$locator/container")).thenReturn(Some("container"))
-        when(mockScopes.getOpt(s"<element>/locator/$locator/timeoutSecs")).thenReturn(Some("2"))
-        when(mockScopes.getOpt(s"<element>/locator/$locator/index")).thenReturn(Some("2"))
+        when(mockScopes.getOpt(s"<element>/locator/$loc/container")).thenReturn(Some("container"))
+        when(mockScopes.getOpt(s"<element>/locator/$loc/timeoutSecs")).thenReturn(Some("2"))
+        when(mockScopes.getOpt(s"<element>/locator/$loc/index")).thenReturn(Some("2"))
         evaluate(s"""<element> can be located by $locator "<value>" at index 2 with no $wait""")
-        verify(mockScopes).set("<element>/locator", locator)
-        verify(mockScopes).set(s"<element>/locator/$locator", "<value>")
-        verify(mockScopes).set(s"<element>/locator/$locator/container", null)
-        verify(mockScopes).set(s"<element>/locator/$locator/timeoutSecs", "0")
-        verify(mockScopes).set(s"<element>/locator/$locator/index", "2")
+        verify(mockScopes, atLeastOnce()).set("<element>/locator", loc)
+        verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$loc", "<value>")
+        verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$loc/container", null)
+        verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$loc/timeoutSecs", "0")
+        verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$loc/index", "2")
         reset(mockScopes)
       }
     }
@@ -316,16 +326,17 @@ class WebEngineTest extends BaseTest with WebEngine with Matchers with MockitoSu
 
   """<element> can be located by <locator> "<value>" with <timeoutPeriod> second <wait|timeout>""" should "evaluate" in {
     locators.foreach { locator =>
+      val loc = Locator.parse(locator)
       waits.foreach { wait =>
-        when(mockScopes.getOpt(s"<element>/locator/$locator/container")).thenReturn(Some("container"))
-        when(mockScopes.getOpt(s"<element>/locator/$locator/timeoutSecs")).thenReturn(Some("2"))
-        when(mockScopes.getOpt(s"<element>/locator/$locator/index")).thenReturn(Some("2"))
+        when(mockScopes.getOpt(s"<element>/locator/$loc/container")).thenReturn(Some("container"))
+        when(mockScopes.getOpt(s"<element>/locator/$loc/timeoutSecs")).thenReturn(Some("2"))
+        when(mockScopes.getOpt(s"<element>/locator/$loc/index")).thenReturn(Some("2"))
         evaluate(s"""<element> can be located by $locator "<value>" with 2 second $wait""")
-        verify(mockScopes).set("<element>/locator", locator)
-        verify(mockScopes).set(s"<element>/locator/$locator", "<value>")
-        verify(mockScopes).set(s"<element>/locator/$locator/container", null)
-        verify(mockScopes).set(s"<element>/locator/$locator/timeoutSecs", "2")
-        verify(mockScopes).set(s"<element>/locator/$locator/index", null)
+        verify(mockScopes, atLeastOnce()).set("<element>/locator", loc)
+        verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$loc", "<value>")
+        verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$loc/container", null)
+        verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$loc/timeoutSecs", "2")
+        verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$loc/index", null)
         reset(mockScopes)
       }
     }
@@ -333,16 +344,17 @@ class WebEngineTest extends BaseTest with WebEngine with Matchers with MockitoSu
 
   """<element> can be located by <locator> "<value>" at index 2 with <timeoutPeriod> second <wait|timeout>""" should "evaluate" in {
     locators.foreach { locator =>
+      val loc = Locator.parse(locator)
       waits.foreach { wait =>
-        when(mockScopes.getOpt(s"<element>/locator/$locator/container")).thenReturn(Some("container"))
-        when(mockScopes.getOpt(s"<element>/locator/$locator/timeoutSecs")).thenReturn(Some("2"))
-        when(mockScopes.getOpt(s"<element>/locator/$locator/index")).thenReturn(Some("2"))
+        when(mockScopes.getOpt(s"<element>/locator/$loc/container")).thenReturn(Some("container"))
+        when(mockScopes.getOpt(s"<element>/locator/$loc/timeoutSecs")).thenReturn(Some("2"))
+        when(mockScopes.getOpt(s"<element>/locator/$loc/index")).thenReturn(Some("2"))
         evaluate(s"""<element> can be located by $locator "<value>" at index 2 with 2 second $wait""")
-        verify(mockScopes).set("<element>/locator", locator)
-        verify(mockScopes).set(s"<element>/locator/$locator", "<value>")
-        verify(mockScopes).set(s"<element>/locator/$locator/container", null)
-        verify(mockScopes).set(s"<element>/locator/$locator/timeoutSecs", "2")
-        verify(mockScopes).set(s"<element>/locator/$locator/index", "2")
+        verify(mockScopes, atLeastOnce()).set("<element>/locator", loc)
+        verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$loc", "<value>")
+        verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$loc/container", null)
+        verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$loc/timeoutSecs", "2")
+        verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$loc/index", "2")
         reset(mockScopes)
       }
     }

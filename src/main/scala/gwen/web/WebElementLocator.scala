@@ -375,9 +375,16 @@ case class Locator(locatorType: String, expression: String, container: Option[St
 /** Locator factory companion. */
 object Locator {
   def apply(locatorType: String, expression: String, container: Option[String], timeout: Option[Duration], index: Option[Int]): Locator =
-    Locator(locatorType, expression, container, isContainer = false, timeout, index)
+    Locator(parse(locatorType), expression, container, isContainer = false, timeout, index)
   def apply(locatorType: String, expression: String): Locator =
-    Locator(locatorType, expression, None, isContainer = false, None, None)
+    Locator(parse(locatorType), expression, None, isContainer = false, None, None)
   def apply(locator: Locator, timeout: Option[Duration], index: Option[Int]): Locator =
     Locator(locator.locatorType, locator.expression, locator.container, timeout, index)
+  def parse(locator: String): String = locator match {
+    case "tag" => "tag name"
+    case "class" => "class name"
+    case "css" => "css selector"
+    case "js" => "javascript"
+    case _ => locator
+  }
 }
