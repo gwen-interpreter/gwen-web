@@ -1,3 +1,9 @@
+2.47.0
+======
+Oct 20, 2020
+- Introduce @ForEach annotation to simplify looping over records in data tables
+- Update Gwen core from v2.29.0 to v[2.30.0](https://github.com/gwen-interpreter/gwen/releases/tag/v2.30.0)
+
 2.46.0
 ======
 Oct 17, 2020
@@ -6,6 +12,7 @@ Oct 17, 2020
   - Class locator DSLs accept `class name` or `class` for short
   - CSS locator DSLs accept `css selector` or `css` for short
   - JavaScript DSLs accept `javascript` or `js` for short
+- Update Gwen core from v2.28.0 to v[2.29.0](https://github.com/gwen-interpreter/gwen/releases/tag/v2.29.0)
 
 2.45.1
 ======

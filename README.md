@@ -30,46 +30,46 @@ finding elements or running functions on web pages may be necessary.
 - [Change log](CHANGELOG)
 
 ### What's New?
+- Simplified [data table iteration with @ForEach](https://github.com/gwen-interpreter/gwen/wiki/Data-Tables#simplified-foreach)
 - Configurable [maximum number of threads](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#gwenparallelmaxthreads) for parallel execution
 - [Dialects](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#gwenfeaturedialect) for [Gherkin's spoken languages](https://cucumber.io/docs/gherkin/reference/#spoken-languages)
-- [Behavior rules](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#gwenbehaviorrules) to help enforce good Gherkin style
 
 Why Gwen?
 ---------
 So you can drive web based tests and online processes with declarative Gherkin [feature](https://docs.cucumber.io/gherkin/reference/) specs that describe behavior ..
 ```gherkin
- Feature: Google search
+  Feature: Todo
 
-Scenario: Lucky Google search
-    Given I have Google in my browser
-     When I do a search for "Gwen automation"
-     Then I should find a Gwen page
+ Scenario: Create todo list
+     Given a new todo list
+      When the following items are added
+           | Get the milk  |
+           | Walk the dog  |
+      Then the list will contain 2 items
 ```
 
 .. by defining locators and step definitions in separate and imperative Gherkin [meta](https://github.com/gwen-interpreter/gwen/wiki/Meta-Features) specs that describe automation ..
 ```gherkin
- Feature: Google search meta (automation glue)
+  Feature: Todo Meta (automation glue)
+                        
+ @StepDef
+ Scenario: a new todo list
+      When I navigate to "http://todomvc.com/examples/react"
+      Then the todo field can be located by class "new-todo"
+       And count can be located by css ".todo-count strong"
 
-@StepDef
-Scenario: I have Google in my browser
-    Given I start a new browser
-     When I navigate to "http://www.google.com"
-     Then the page title should be "Google"
+ @StepDef
+ @ForEach
+ @DataTable(horizontal="item")
+ Scenario: the following items are added
+      When I enter data[item] in the todo field
+      Then count should be record.number
 
-@StepDef
-Scenario: I do a search for "<query>"
-    Given the search field can be located by name "q"
-     When I enter "$<query>" in the search field
-     Then the page title should contain "$<query>"
-
-@StepDef
-Scenario: I should find a Gwen page
-    Given link 1 can be located by css selector ".rc a"
-     When I click link 1
-     Then the current URL should match regex ".+[G|g]wen.*"
+ @StepDef
+ Scenario: the list will contain <expected> items
+      Then count should be "$<expected>"
  ```
 .. without having to develop any framework, page objects or Selenium code.
-
 
 How it Works
 ------------
@@ -133,6 +133,7 @@ Learn More
 - [State levels](https://github.com/gwen-interpreter/gwen/wiki/State-Levels) and [parallel execution](https://github.com/gwen-interpreter/gwen/wiki/Execution-Modes#parallel-scenario-execution) for scenarios in additon to features
 - [Declarative feature mode](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#gwenfeaturemode) to force all imperative steps to meta and promote cleaner features.
 - [Associative meta](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#gwenassociativemeta)
+- [Behavior rules](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#gwenbehaviorrules) to help enforce good Gherkin style
 
 User Network and Support
 ------------------------
@@ -209,5 +210,3 @@ Credits
 - [Selenium](https://www.seleniumhq.org/)
 - [Cucumber/Gherkin](https://docs.cucumber.io/gherkin/reference/)
 - [WebDriverManager](https://github.com/bonigarcia/webdrivermanager)
-
----
