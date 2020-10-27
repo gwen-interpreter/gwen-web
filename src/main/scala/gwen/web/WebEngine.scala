@@ -69,22 +69,22 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
       step.expression match {
 
         case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$locator "(.+?)"$expression in (.+?)$container with no (?:timeout|wait)""" => 
-          env.getLocatorBinding(container)
-          val binding = LocatorBinding(s"${element}/list", Locator.parse(locator), expression, Some(container), Some(Duration.Zero), None)
+          val containerBinding = env.getLocatorBinding(container)
+          val binding = LocatorBinding(s"${element}/list", Locator.parse(locator), expression, Some(containerBinding), Some(Duration.Zero), None)
           env.evaluate(foreach(() => List("$[dryRun:webElements]"), element, parent, step, doStep, env)) {
             foreach(() => webContext.locateAll(binding), element, parent, step, doStep, env)
           }
 
         case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$locator "(.+?)"$expression in (.+?)$container with (\d+)$timeout second (?:timeout|wait)""" =>
-          env.getLocatorBinding(container)
-          val binding = LocatorBinding(s"${element}/list", Locator.parse(locator), expression, Some(container), Some(Duration.create(timeout.toLong, TimeUnit.SECONDS)), None)
+          val containerBinding = env.getLocatorBinding(container)
+          val binding = LocatorBinding(s"${element}/list", Locator.parse(locator), expression, Some(containerBinding), Some(Duration.create(timeout.toLong, TimeUnit.SECONDS)), None)
           env.evaluate(foreach(() => List("$[dryRun:webElements]"), element, parent, step, doStep, env)) {
             foreach(() => webContext.locateAll(binding), element, parent, step, doStep, env)
           }
 
         case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$locator "(.+?)"$expression in (.+?)$container""" =>
-          env.getLocatorBinding(container)
-          val binding = LocatorBinding(s"${element}/list", Locator.parse(locator), expression, Some(container), None, None)
+          val containerBinding = env.getLocatorBinding(container)
+          val binding = LocatorBinding(s"${element}/list", Locator.parse(locator), expression, Some(containerBinding), None, None)
           env.evaluate(foreach(() => List("$[dryRun:webElements]"), element, parent, step, doStep, env)) {
             foreach(() => webContext.locateAll(binding), element, parent, step, doStep, env)
           }
@@ -156,28 +156,28 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
       case r"""I wait for (.+?)$element text for (.+?)$seconds second(?:s?)""" =>
         checkStepRules(step, BehaviorType.Action, env)
         val elementBinding = env.getLocatorBinding(element)
-        webContext.waitUntil(seconds.toInt) {
+        webContext.waitUntil(seconds.toInt, s"waiting for text of $elementBinding") {
           webContext.waitForText(elementBinding)
         }
 
       case r"""I wait for (.+?)$element text""" =>
         checkStepRules(step, BehaviorType.Action, env)
         val elementBinding = env.getLocatorBinding(element)
-        webContext.waitUntil {
+        webContext.waitUntil(s"waiting for text of $elementBinding") {
           webContext.waitForText(elementBinding)
         }
 
       case r"""I wait for (.+?)$element for (.+?)$seconds second(?:s?)""" =>
         checkStepRules(step, BehaviorType.Action, env)
         val elementBinding = env.getLocatorBinding(element)
-        webContext.waitUntil(seconds.toInt) {
+        webContext.waitUntil(seconds.toInt, s"waiting for $elementBinding to be displayed") {
           Try(webContext.locateAndHighlight(elementBinding)).isSuccess
         }
 
       case r"""I wait for (.+?)$$$element""" =>
         checkStepRules(step, BehaviorType.Action, env)
         val elementBinding = env.getLocatorBinding(element)
-        webContext.waitUntil {
+        webContext.waitUntil(s"waiting for $elementBinding to be displayed") {
           Try(webContext.locateAndHighlight(elementBinding)).isSuccess
         }
 
@@ -194,7 +194,7 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
 
       case r"""I wait until "(.+?)$javascript"""" => step.orDocString(javascript) tap { javascript =>
         checkStepRules(step, BehaviorType.Action, env)
-        webContext.waitUntil {
+        webContext.waitUntil(s"waiting for true return from javascript: $javascript") {
           env.evaluateJSPredicate(javascript)
         }
       }
@@ -208,7 +208,7 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
       case r"""I wait until (.+?)$$$condition""" =>
         checkStepRules(step, BehaviorType.Action, env)
         val javascript = env.scopes.get(s"$condition/javascript")
-        webContext.waitUntil {
+        webContext.waitUntil(s"waiting for true return from javascript: $javascript") {
           env.evaluateJSPredicate(javascript)
         }
 
@@ -573,7 +573,7 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
 
       case r"""(.+?)$element should( not)?$negation be (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$$$state""" =>
         checkStepRules(step, BehaviorType.Assertion, env)
-        val elementBinding = env.getLocatorBinding(element).jsEquivalent
+        val elementBinding = env.getLocatorBinding(element)
         webContext.checkElementState(elementBinding, state, Option(negation).nonEmpty)
 
       case r"""(.+?)$element( text| value)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file)$operator "(.*?)"$$$expression""" if !element.matches(".+at (json path|xpath).+") => step.orDocString(expression) tap { expression =>
@@ -585,13 +585,15 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
         val actual = env.boundAttributeOrSelection(element, Option(selection))
         env.perform {
           if (env.scopes.findEntry { case (n, _) => n.startsWith(element) } forall { case (n, _) => n != element }) {
-            env.compare(element + Option(selection).getOrElse(""), expected, actual, operator, negate)
+            val nameSuffix = Option(selection)
+            env.compare(element + nameSuffix.getOrElse(""), expected, actual, operator, negate, nameSuffix)
           } else {
             val actualValue = env.scopes.getOpt(element).getOrElse(actual())
             val result = env.compare(element, expected, actualValue, operator, negate)
             result match {
               case Success(assertion) =>
-                assert(assertion, s"Expected $element to ${if(negate) "not " else ""}$operator '$expected' but got '$actualValue'")
+                val binding = env.getLocatorBinding(element, optional = true)
+                assert(assertion, s"Expected ${binding.map(_.toString).getOrElse(element)} to ${if(negate) "not " else ""}$operator '$expected' but got '$actualValue'")
               case Failure(error) =>
                 assert(assertion = false, error.getMessage)
             }
@@ -608,7 +610,8 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
         val expected = env.getBoundReferenceValue(attribute)
         val actual = env.boundAttributeOrSelection(element, Option(selection))
         env.perform {
-          env.compare(element + Option(selection).getOrElse(""), expected, actual, operator, Option(negation).isDefined)
+          val nameSuffix = Option(selection)
+          env.compare(element + nameSuffix.getOrElse(""), expected, actual, operator, Option(negation).isDefined, nameSuffix)
         } getOrElse  {
           actual()
         }
@@ -949,13 +952,13 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
     assert(delay.gteq(Duration.Zero), "delay cannot be less than zero")
     assert(timeout.gt(Duration.Zero), "timeout must be greater than zero")
     assert(timeout.gteq(delay), "timeout cannot be less than or equal to delay")
-    lifecycle.beforeStep(parent, step)
+    lifecycle.beforeStep(parent, step, env.scopes)
     var evaluatedStep = step
     env.perform {
       var iteration = 0L
       val start = System.nanoTime
       try {
-        env.webContext.waitUntil(timeout.toSeconds) {
+        env.webContext.waitUntil(timeout.toSeconds, s"trying to repeat $operation $condition") {
           iteration = iteration + 1
           env.topScope.set("iteration number", iteration.toString)
           operation match {

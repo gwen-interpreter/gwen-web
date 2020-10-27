@@ -547,9 +547,9 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
     env.scopes.set("frame/locator/id", "frame")
 
     locator.locate(LocatorBinding("username", locatorType, lookup, None, timeout, index)) should be (mockWebElement)
-    locator.locate(LocatorBinding("username", locatorType, lookup, Some("container"), timeout, index)) should be (mockWebElement)
-    locator.locate(LocatorBinding("username", locatorType, lookup, Some("iframe"), timeout, index)) should be (mockWebElement)
-    locator.locate(LocatorBinding("username", locatorType, lookup, Some("frame"), timeout, index)) should be (mockWebElement)
+    locator.locate(LocatorBinding("username", locatorType, lookup, Some(LocatorBinding("container", List(Locator("id", "container")))), timeout, index)) should be (mockWebElement)
+    locator.locate(LocatorBinding("username", locatorType, lookup, Some(LocatorBinding("iframe", List(Locator("id", "iframe")))), timeout, index)) should be (mockWebElement)
+    locator.locate(LocatorBinding("username", locatorType, lookup, Some(LocatorBinding("frame", List(Locator("id", "frame")))), timeout, index)) should be (mockWebElement)
 
     index match {
       case Some(idx) if idx > 0 =>
@@ -579,7 +579,7 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
     val e = intercept[LocatorBindingException] {
       locator.locate(LocatorBinding("username", "unknown", "funkiness", None, None))
     }
-    e.getMessage should be ("Unsupported locator defined for username: (unknown: funkiness)")
+    e.getMessage should be ("Unsupported locator defined for username: unknown=funkiness")
   }
 
   "Attempt to locate all non existent elements" should "return an empty list when empty array is returned" in {
@@ -828,9 +828,9 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
     env.scopes.set("frame/locator/id", "frame")
 
     locator.locateAll(LocatorBinding("username", locatorType, lookup, None, timeout, None)) should be (mockWebElements)
-    locator.locateAll(LocatorBinding("username", locatorType, lookup, Some("container"), timeout, None)) should be (mockWebElements)
-    locator.locateAll(LocatorBinding("username", locatorType, lookup, Some("iframe"), timeout, None)) should be (mockWebElements)
-    locator.locateAll(LocatorBinding("username", locatorType, lookup, Some("frame"), timeout, None)) should be (mockWebElements)
+    locator.locateAll(LocatorBinding("username", locatorType, lookup, Some(LocatorBinding("container", List(Locator("id", "container")))), timeout, None)) should be (mockWebElements)
+    locator.locateAll(LocatorBinding("username", locatorType, lookup, Some(LocatorBinding("iframe", List(Locator("id", "iframe")))), timeout, None)) should be (mockWebElements)
+    locator.locateAll(LocatorBinding("username", locatorType, lookup, Some(LocatorBinding("frame", List(Locator("id", "frame")))), timeout, None)) should be (mockWebElements)
 
     verify(mockWebDriver, times(3)).findElements(by)
 
@@ -928,7 +928,7 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
 
   "Single element locator bindings with JS equivalents" should "resolve" in {
 
-    val container = Some("container")
+    val container = Some(LocatorBinding("container", List(Locator("id", "container"))))
 
     LocatorBinding("user name", "id", "username", None, None).jsEquivalent should be {
      LocatorBinding("user name", "javascript", "document.getElementById('username')", None, None)
@@ -986,7 +986,7 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
 
   "Multi element locator bindings with JS equivalents" should "resolve" in {
 
-    val container = Some("container")
+    val container = Some(LocatorBinding("container", List(Locator("id", "container"))))
 
     LocatorBinding("user name/list", "id", "username", None, None).jsEquivalent should be {
      LocatorBinding("user name/list", "javascript", "document.querySelectorAll('#username')", None, None)

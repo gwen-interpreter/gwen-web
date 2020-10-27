@@ -113,12 +113,12 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.waitUntil" should "return when predicate returns true" in {
-    webContext.waitUntil(10) { true }
+    webContext.waitUntil(10, "waiting for predicate") { true }
   }
 
   "WebContext.waitUntil" should "timeout when predicate returns false" in {
     intercept[WaitTimeoutException] {
-      webContext.waitUntil(1) { false }
+      webContext.waitUntil(1, "waiting for predicate") { false }
     }
   }
 
@@ -144,6 +144,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
+    doReturn(mockElement).when(webContext).locate(elemBinding.jsEquivalent)
     doReturn(true).when(webContext).isDisplayed(mockElement)
     webContext.checkElementState(elemBinding, "displayed", negate = false)
     webContext.waitForElementState(elemBinding, "displayed", negate = false)
@@ -162,6 +163,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
+    doReturn(mockElement).when(webContext).locate(elemBinding.jsEquivalent)
     when(mockElement.isSelected).thenReturn(true)
     webContext.checkElementState(elemBinding, "checked", negate = false)
     webContext.waitForElementState(elemBinding, "checked", negate = false)
@@ -171,6 +173,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
+    doReturn(mockElement).when(webContext).locate(elemBinding.jsEquivalent)
     when(mockElement.isSelected).thenReturn(true)
     webContext.checkElementState(elemBinding, "ticked", negate = false)
     webContext.waitForElementState(elemBinding, "ticked", negate = false)
@@ -180,6 +183,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
+    doReturn(mockElement).when(webContext).locate(elemBinding.jsEquivalent)
     when(mockElement.isSelected).thenReturn(false)
     webContext.checkElementState(elemBinding, "unchecked", negate = false)
     webContext.waitForElementState(elemBinding, "unchecked", negate = false)
@@ -189,6 +193,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
+    doReturn(mockElement).when(webContext).locate(elemBinding.jsEquivalent)
     when(mockElement.isSelected).thenReturn(false)
     webContext.checkElementState(elemBinding, "unticked", negate = false)
     webContext.waitForElementState(elemBinding, "unticked", negate = false)
@@ -198,6 +203,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
+    doReturn(mockElement).when(webContext).locate(elemBinding.jsEquivalent)
     when(mockElement.isEnabled).thenReturn(true)
     webContext.checkElementState(elemBinding, "enabled", negate = false)
     webContext.waitForElementState(elemBinding, "enabled", negate = false)
@@ -207,6 +213,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
+    doReturn(mockElement).when(webContext).locate(elemBinding.jsEquivalent)
     when(mockElement.isEnabled).thenReturn(false)
     webContext.checkElementState(elemBinding, "disabled", negate = false)
     webContext.waitForElementState(elemBinding, "disabled", negate = false)
@@ -216,6 +223,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
+    doReturn(mockElement).when(webContext).locate(elemBinding.jsEquivalent)
     doReturn(false).when(webContext).isDisplayed(mockElement)
     webContext.checkElementState(elemBinding, "displayed", negate = true)
     webContext.waitForElementState(elemBinding, "displayed", negate = true)
@@ -225,6 +233,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
+    doReturn(mockElement).when(webContext).locate(elemBinding.jsEquivalent)
     doReturn(true).when(webContext).isDisplayed(mockElement)
     webContext.checkElementState(elemBinding, "hidden", negate = true)
     webContext.waitForElementState(elemBinding, "hidden", negate = true)
@@ -234,6 +243,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
+    doReturn(mockElement).when(webContext).locate(elemBinding.jsEquivalent)
     when(mockElement.isSelected).thenReturn(false)
     webContext.checkElementState(elemBinding, "checked", negate = true)
     webContext.waitForElementState(elemBinding, "checked", negate = true)
@@ -242,6 +252,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
   "WebContext.checkElementState" should "return when the state should not match 'ticked'" in {
     val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     val mockElement = mock[WebElement]
+    doReturn(mockElement).when(webContext).locate(elemBinding.jsEquivalent)
     doReturn(mockElement).when(webContext).locate(elemBinding)
     when(mockElement.isSelected).thenReturn(false)
     webContext.checkElementState(elemBinding, "ticked", negate = true)
@@ -252,6 +263,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
+    doReturn(mockElement).when(webContext).locate(elemBinding.jsEquivalent)
     when(mockElement.isSelected).thenReturn(true)
     webContext.checkElementState(elemBinding, "unchecked", negate = true)
     webContext.waitForElementState(elemBinding, "unchecked", negate = true)
@@ -261,6 +273,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
+    doReturn(mockElement).when(webContext).locate(elemBinding.jsEquivalent)
     when(mockElement.isSelected).thenReturn(true)
     webContext.checkElementState(elemBinding, "unticked", negate = true)
     envContext.scopes.allEntries.isEmpty should be (true)
@@ -271,6 +284,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
+    doReturn(mockElement).when(webContext).locate(elemBinding.jsEquivalent)
     when(mockElement.isEnabled).thenReturn(false)
     webContext.checkElementState(elemBinding, "enabled", negate = true)
     webContext.waitForElementState(elemBinding, "enabled", negate = true)
@@ -280,6 +294,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
+    doReturn(mockElement).when(webContext).locate(elemBinding.jsEquivalent)
     when(mockElement.isEnabled).thenReturn(true)
     webContext.checkElementState(elemBinding, "disabled", negate = true)
     webContext.waitForElementState(elemBinding, "disabled", negate = true)
@@ -289,6 +304,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
+    doReturn(mockElement).when(webContext).locate(elemBinding.jsEquivalent)
     doReturn(false).when(webContext).isDisplayed(mockElement)
     withSetting("gwen.web.wait.seconds", "1") {
       intercept[AssertionError] {
@@ -304,6 +320,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
+    doReturn(mockElement).when(webContext).locate(elemBinding.jsEquivalent)
     doReturn(true).when(webContext).isDisplayed(mockElement)
     withSetting("gwen.web.wait.seconds", "1") {
       intercept[AssertionError] {
@@ -319,6 +336,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
+    doReturn(mockElement).when(webContext).locate(elemBinding.jsEquivalent)
     when(mockElement.isSelected).thenReturn(false)
     withSetting("gwen.web.wait.seconds", "1") {
       intercept[AssertionError] {
@@ -334,6 +352,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
+    doReturn(mockElement).when(webContext).locate(elemBinding.jsEquivalent)
     when(mockElement.isSelected).thenReturn(false)
     withSetting("gwen.web.wait.seconds", "1") {
       intercept[AssertionError] {
@@ -349,6 +368,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
+    doReturn(mockElement).when(webContext).locate(elemBinding.jsEquivalent)
     when(mockElement.isSelected).thenReturn(true)
     withSetting("gwen.web.wait.seconds", "1") {
       intercept[AssertionError] {
@@ -364,6 +384,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
+    doReturn(mockElement).when(webContext).locate(elemBinding.jsEquivalent)
     when(mockElement.isSelected).thenReturn(true)
     withSetting("gwen.web.wait.seconds", "1") {
       intercept[AssertionError] {
@@ -379,6 +400,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
+    doReturn(mockElement).when(webContext).locate(elemBinding.jsEquivalent)
     when(mockElement.isEnabled).thenReturn(false)
     withSetting("gwen.web.wait.seconds", "1") {
       intercept[AssertionError] {
@@ -394,6 +416,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
+    doReturn(mockElement).when(webContext).locate(elemBinding.jsEquivalent)
     when(mockElement.isEnabled).thenReturn(true)
     withSetting("gwen.web.wait.seconds", "1") {
       intercept[AssertionError] {
@@ -409,6 +432,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
+    doReturn(mockElement).when(webContext).locate(elemBinding.jsEquivalent)
     doReturn(true).when(webContext).isDisplayed(mockElement)
     withSetting("gwen.web.wait.seconds", "1") {
       intercept[AssertionError] {
@@ -424,6 +448,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
+    doReturn(mockElement).when(webContext).locate(elemBinding.jsEquivalent)
     doReturn(false).when(webContext).isDisplayed(mockElement)
     withSetting("gwen.web.wait.seconds", "1") {
       intercept[AssertionError] {
@@ -439,6 +464,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
+    doReturn(mockElement).when(webContext).locate(elemBinding.jsEquivalent)
     when(mockElement.isSelected).thenReturn(true)
     withSetting("gwen.web.wait.seconds", "1") {
       intercept[AssertionError] {
@@ -454,6 +480,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
+    doReturn(mockElement).when(webContext).locate(elemBinding.jsEquivalent)
     when(mockElement.isSelected).thenReturn(true)
     withSetting("gwen.web.wait.seconds", "1") {
       intercept[AssertionError] {
@@ -469,6 +496,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
+    doReturn(mockElement).when(webContext).locate(elemBinding.jsEquivalent)
     when(mockElement.isSelected).thenReturn(false)
     withSetting("gwen.web.wait.seconds", "1") {
       intercept[AssertionError] {
@@ -484,6 +512,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
+    doReturn(mockElement).when(webContext).locate(elemBinding.jsEquivalent)
     when(mockElement.isSelected).thenReturn(false)
     withSetting("gwen.web.wait.seconds", "1") {
       intercept[AssertionError] {
@@ -499,6 +528,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
+    doReturn(mockElement).when(webContext).locate(elemBinding.jsEquivalent)
     when(mockElement.isEnabled).thenReturn(true)
     withSetting("gwen.web.wait.seconds", "1") {
       intercept[AssertionError] {
@@ -514,6 +544,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(webContext).locate(elemBinding)
+    doReturn(mockElement).when(webContext).locate(elemBinding.jsEquivalent)
     when(mockElement.isEnabled).thenReturn(false)
     withSetting("gwen.web.wait.seconds", "1") {
       intercept[AssertionError] {
@@ -528,6 +559,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
   "WebContext.checkElementState" should "return when the state should not match 'displayed' and there is no such element" in {
     val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     doThrow(new NoSuchElementException("no id")).when(webContext).locate(elemBinding)
+    doThrow(new NoSuchElementException("no id")).when(webContext).locate(elemBinding.jsEquivalent)
     webContext.checkElementState(elemBinding, "displayed", negate = true)
     webContext.waitForElementState(elemBinding, "displayed", negate = true)
   }
@@ -535,6 +567,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
   "WebContext.checkElementState" should "return when the state should match 'hidden' and there is no such element" in {
     val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     doThrow(new NoSuchElementException("no id")).when(webContext).locate(elemBinding)
+    doThrow(new NoSuchElementException("no id")).when(webContext).locate(elemBinding.jsEquivalent)
     webContext.checkElementState(elemBinding, "hidden", negate = false)
     webContext.waitForElementState(elemBinding, "hidden", negate = false)
   }
@@ -542,6 +575,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
   "WebContext.checkElementState" should "fail when the state should match 'displayed' and there is no such element" in {
     val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     doThrow(new NoSuchElementException("no id")).when(webContext).locate(elemBinding)
+    doThrow(new NoSuchElementException("no id")).when(webContext).locate(elemBinding.jsEquivalent)
     withSetting("gwen.web.wait.seconds", "1") {
       intercept[AssertionError] {
         webContext.checkElementState(elemBinding, "displayed", negate = false)
@@ -555,6 +589,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
   "WebContext.checkElementState" should "fail when the state should not match 'hidden' and there is no such element" in {
     val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     doThrow(new NoSuchElementException("no id")).when(webContext).locate(elemBinding)
+    doThrow(new NoSuchElementException("no id")).when(webContext).locate(elemBinding.jsEquivalent)
     withSetting("gwen.web.wait.seconds", "1") {
       intercept[AssertionError] {
         webContext.checkElementState(elemBinding, "hidden", negate = true)

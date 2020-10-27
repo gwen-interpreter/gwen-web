@@ -22,7 +22,6 @@ package gwen.web
 import gwen.Errors.GwenException
 
 import org.openqa.selenium.Keys
-import org.openqa.selenium.NoSuchElementException
 
 object Errors {
   
@@ -30,11 +29,11 @@ object Errors {
     def unsupportedWebDriverError(driverName: String) = throw new UnsupportedWebDriverException(driverName)
     def noSuchWindowError(msg: String) = throw new NoSuchWindowException(msg)
     def unsupportedModifierKeyError(key: String) = throw new UnsupportedModifierKeyException(key)
-    def waitTimeoutError(timeoutSecs: Long, cause: Throwable) = throw new WaitTimeoutException(timeoutSecs, cause)
+    def waitTimeoutError(timeoutSecs: Long, reason: String, cause: Throwable) = throw new WaitTimeoutException(timeoutSecs, reason, cause)
     def elementNotInteractableError(elementBinding: LocatorBinding, cause: Throwable) =
       throw new WebElementNotInteractableException(elementBinding, cause)
-    def elementNotFoundError(element: String, cause: Throwable = null) =
-      throw new WebElementNotFoundException(element, cause)
+    def elementNotFoundError(elementBinding: LocatorBinding, cause: Throwable = null) =
+      throw new WebElementNotFoundException(elementBinding, cause)
     def invalidVisualSessionStateError(msg: String) = throw new InvalidVisualSessionStateException(msg)
     def visualAssertionError(msg: String) = throw new VisualAssertionException(msg)
 
@@ -53,17 +52,21 @@ object Errors {
       extends GwenException(s"Unsupported modifier key '$key'. Supported modifiers include: ${Keys.values().map(_.name()).mkString(",")}")
 
     /** Thrown when a timeout error occurs. */
-    class WaitTimeoutException(timeoutSecs: Long, cause: Throwable)
-      extends GwenException(s"Operation timed out after $timeoutSecs second(s)", cause)
+    class WaitTimeoutException(timeoutSecs: Long, reason: String, cause: Throwable)
+      extends GwenException(s"Timed out after $timeoutSecs second(s) $reason", cause)
+
+    /** Thrown when a web element is not found or interactable. */
+    class NotFoundOrInteractableException(msg: String, cause: Throwable)
+      extends GwenException(msg, cause)
 
     /** Thrown when a web element cannot be interacted with. */
     class WebElementNotInteractableException(elementBinding: LocatorBinding, cause: Throwable)
-      extends NoSuchElementException(s"Could not interact with element: ${elementBinding.element}", cause)
+      extends NotFoundOrInteractableException(s"Could not interact with element: ${elementBinding.element}", cause)
 
     /** Thrown when a web element cannot be located. */
-    class WebElementNotFoundException(element: String, cause: Throwable)
-      extends NoSuchElementException(s"Could not locate element: $element", cause)
-
+    class WebElementNotFoundException(elementBinding: LocatorBinding, cause: Throwable)
+      extends NotFoundOrInteractableException(s"Could not locate element: $elementBinding", cause)
+    
     /** Thrown when a visual checking session is in an invalid state. */
     class InvalidVisualSessionStateException(msg: String) extends AssertionError(msg)
 

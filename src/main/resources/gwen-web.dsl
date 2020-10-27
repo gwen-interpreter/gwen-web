@@ -1001,3 +1001,4 @@ I check full page visual as "checkpoint name" using STRICT match
 I check full page visual as "checkpoint name" using EXACT match
 I check full page visual as "checkpoint name" using NONE match
 the visual test should pass
+I attach "<filepath>" as "name"
