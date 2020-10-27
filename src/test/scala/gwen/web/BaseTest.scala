@@ -16,9 +16,10 @@
 
 package gwen.web
 
+import gwen.Settings
+
 import org.scalatest.FlatSpec
 import org.scalatest.prop.TableDrivenPropertyChecks.Table
-import gwen.Settings
 
 abstract class BaseTest extends FlatSpec {
 

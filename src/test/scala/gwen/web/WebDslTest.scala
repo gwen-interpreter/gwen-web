@@ -16,11 +16,15 @@
 
 package gwen.web
 
-import org.scalatest.Matchers
 import gwen.dsl._
 import gwen.eval.GwenOptions
 
-class WebDslTest extends BaseTest with Matchers {
+import org.scalatest.Matchers
+import org.scalatestplus.mockito.MockitoSugar
+
+class WebDslTest extends BaseTest with Matchers with MockitoSugar {
+
+  val parent = mock[Identifiable]
 
   "gwen-web.dsl" should "pass --dry-run test" in {
     
@@ -65,7 +69,8 @@ class WebDslTest extends BaseTest with Matchers {
               .replace("<index>", "1")
               .replace("<count>", "2")
           } foreach { dsl =>
-            interpreter.evaluateStep(Step(StepKeyword.Given.toString, dsl.replaceAll("<step>", """a is "b"""")), env).evalStatus match {
+            val iStep = Step(None, StepKeyword.Given.toString, dsl.replaceAll("<step>", """a is "b""""), Nil, None, Nil, None, Pending)
+            interpreter.evaluateStep(parent, iStep, env).evalStatus match {
               case Failed(_, error) => fail(error)
               case evalStatus => evalStatus.status should not be (StatusKeyword.Failed)
             }

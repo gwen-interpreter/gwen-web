@@ -15,19 +15,20 @@
  */
 package gwen.web
 
-import com.applitools.eyes.{MatchLevel, RectangleSize}
-import com.typesafe.scalalogging.LazyLogging
-import gwen.Predefs.Kestrel
+import gwen._
 import gwen.Errors.javaScriptError
 import gwen.web.Errors._
-import org.apache.commons.io.FileUtils
-import org.openqa.selenium._
-import org.openqa.selenium.interactions.Actions
-import org.openqa.selenium.support.ui.{FluentWait, Select}
 
 import scala.jdk.CollectionConverters._
 import scala.concurrent.duration.Duration
 import scala.util.{Failure, Success, Try}
+
+import com.applitools.eyes.{MatchLevel, RectangleSize}
+import com.typesafe.scalalogging.LazyLogging
+import org.apache.commons.io.FileUtils
+import org.openqa.selenium._
+import org.openqa.selenium.interactions.Actions
+import org.openqa.selenium.support.ui.{FluentWait, Select}
 
 /**
   * The web context. All web driver interactions happen here (and will do nothing when --dry-run is enabled).

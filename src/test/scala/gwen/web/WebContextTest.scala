@@ -16,9 +16,9 @@
 
 package gwen.web
 
-import java.io.File
-
 import gwen.eval.GwenOptions
+import gwen.web.Errors.{LocatorBindingException, UnsupportedModifierKeyException, WaitTimeoutException}
+
 import org.mockito.Mockito._
 import org.openqa.selenium._
 import org.scalatest.{BeforeAndAfterEach, Matchers}
@@ -26,12 +26,13 @@ import org.scalatestplus.mockito.MockitoSugar
 import org.mockito.Matchers.any
 import org.mockito.Matchers.anyVararg
 import org.mockito.Matchers.same
-import gwen.web.Errors.{LocatorBindingException, UnsupportedModifierKeyException, WaitTimeoutException}
 import org.openqa.selenium.interactions.{Action, Actions}
 import org.openqa.selenium.support.ui.Select
 
 import scala.jdk.CollectionConverters._
 import scala.concurrent.duration.Duration
+
+import java.io.File
 
 class WebContextTest extends BaseTest with Matchers with MockitoSugar with BeforeAndAfterEach {
 

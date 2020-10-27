@@ -16,8 +16,8 @@
 
 package gwen.web
 
-import gwen.eval.GwenInterpreter
 import gwen.eval.GwenApp
+import gwen.eval.GwenInterpreter
 
 /**
   * The gwen-web interpreter.

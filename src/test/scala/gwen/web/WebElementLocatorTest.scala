@@ -16,8 +16,9 @@
 
 package gwen.web
 
-import java.util
-import java.util.concurrent.TimeUnit
+import gwen.eval.GwenOptions
+import gwen.Settings
+import gwen.web.Errors._
 
 import org.mockito.Mockito.atLeastOnce
 import org.mockito.Mockito.doReturn
@@ -31,14 +32,14 @@ import org.openqa.selenium.WebElement
 import org.openqa.selenium.firefox.FirefoxDriver
 import org.scalatest.{BeforeAndAfterEach, Matchers}
 import org.scalatestplus.mockito.MockitoSugar
-import gwen.eval.GwenOptions
-import gwen.Settings
-import gwen.web.Errors._
 import org.openqa.selenium.WebDriver.{Options, TargetLocator, Timeouts}
 import org.mockito.Matchers.{anyVararg, same}
 
 import scala.jdk.CollectionConverters._
 import scala.concurrent.duration.Duration
+
+import java.util
+import java.util.concurrent.TimeUnit
 
 class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar with BeforeAndAfterEach {
 

@@ -16,21 +16,22 @@
 
 package gwen.web
 
-import java.util.concurrent.TimeUnit
-
-import scala.util.Failure
-import scala.util.Success
-import scala.util.Try
-import gwen.Predefs.Kestrel
+import gwen._
 import gwen.dsl.Failed
 import gwen.dsl.StateLevel
 import gwen.eval.{EnvContext, GwenOptions}
 import gwen.web.Errors.{WaitTimeoutException, locatorBindingError, VisualAssertionException}
 import gwen.Errors.{UnboundAttributeException, unboundAttributeError}
-import org.openqa.selenium.WebElement
 
 import scala.concurrent.duration.Duration
 import scala.io.Source
+import scala.util.Failure
+import scala.util.Success
+import scala.util.Try
+
+import org.openqa.selenium.WebElement
+
+import java.util.concurrent.TimeUnit
 
 /**
   * Manages the web context and environment bindings.

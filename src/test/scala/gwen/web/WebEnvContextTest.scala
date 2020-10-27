@@ -16,14 +16,15 @@
 
 package gwen.web
 
-import org.mockito.Mockito.verify
-import org.openqa.selenium.WebDriver
-import org.scalatest.Matchers
-import org.scalatestplus.mockito.MockitoSugar
 import gwen.dsl.StateLevel
 import gwen.eval.GwenOptions
 import gwen.web.Errors.LocatorBindingException
+
+import org.mockito.Mockito.verify
+import org.openqa.selenium.WebDriver
 import org.openqa.selenium.WebDriver.{Options, Timeouts}
+import org.scalatest.Matchers
+import org.scalatestplus.mockito.MockitoSugar
 
 class WebEnvContextTest extends BaseTest with Matchers with MockitoSugar {
   

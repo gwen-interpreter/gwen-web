@@ -16,20 +16,20 @@
 
 package gwen.web.features
 
-import gwen.Settings
-import gwen.web.BaseTest
+import gwen.dsl.BehaviorRules
 import gwen.dsl.{Failed, Passed}
 import gwen.eval.{GwenLauncher, GwenOptions}
+import gwen.Settings
+import gwen.web.BaseTest
 import gwen.web.WebInterpreter
-import gwen.dsl.BehaviorRules
 
 abstract class BaseFeatureTest extends BaseTest {
 
   private[web] def evaluate(features: List[String], parallel: Boolean, parallelFeatures: Boolean, dryRun: Boolean, reportDir: String, dataFile: Option[String]): Unit = {
     Settings.synchronized {
-      val reportPath = s"${this.getClass.getSimpleName}${if (dryRun) "-dryRun" else ""}/"
+      val reportPath = s"${this.getClass.getSimpleName}${if (dryRun) "-dryRun" else ""}"
       val execModePath = if (parallel) "parallel" else "sequential"
-      var args = Array("-b", "-r", s"target/reports/$reportPath/$execModePath/$reportDir", "-f", "junit,html,json")
+      var args = Array("-b", "-r", s"target/reports/$reportPath/$execModePath/$reportDir", "-f", s"junit,html,json")
       if (parallel) args = args ++ Array("--parallel")
       if (parallelFeatures) args = args ++ Array("--parallel-features")
       if (dryRun) args = args ++ Array("-n")

@@ -16,18 +16,19 @@
 
 package gwen.web
 
-import java.util
-import java.util.concurrent.TimeUnit
-
-import org.openqa.selenium.{By, NoSuchElementException, WebElement}
-import gwen.web.Errors._
-import com.typesafe.scalalogging.LazyLogging
 import gwen.Errors.ScriptException
+import gwen.web.Errors._
+
+import com.typesafe.scalalogging.LazyLogging
+import org.openqa.selenium.{By, NoSuchElementException, WebElement}
 import org.apache.commons.text.StringEscapeUtils
 
 import scala.jdk.CollectionConverters._
 import scala.concurrent.duration.Duration
 import scala.util.{Failure, Success, Try}
+
+import java.util
+import java.util.concurrent.TimeUnit
 
 /**
   * Locates web elements using the selenium web driver.
@@ -270,12 +271,16 @@ trait WebElementLocator extends LazyLogging {
     webContext.withWebDriver { driver =>
       val handle = driver.getWindowHandle
       try {
-        Option(locator.container.fold(driver.findElements(by)) { containerName =>
-          getContainerElement(webContext.getLocatorBinding(containerName)) match {
-            case Some(containerElem) => containerElem.findElements(by)
-            case _ => driver.findElements(by)
-          }
-        }).map(_.asScala.toList).getOrElse(Nil)
+        val elems = locator.container match {
+          case None => 
+            driver.findElements(by)
+          case Some(containerName) => 
+            getContainerElement(webContext.getLocatorBinding(containerName)) match {
+              case Some(containerElem) => containerElem.findElements(by)
+              case _ => driver.findElements(by)
+            }
+        }
+        Option(elems).map(_.asScala.toList).getOrElse(Nil)
       } catch {
         case e: Throwable =>
           driver.switchTo().window(handle)

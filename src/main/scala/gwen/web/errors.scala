@@ -19,9 +19,10 @@
  */
 package gwen.web
 
+import gwen.Errors.GwenException
+
 import org.openqa.selenium.Keys
 import org.openqa.selenium.NoSuchElementException
-import gwen.Errors.GwenException
 
 object Errors {
   

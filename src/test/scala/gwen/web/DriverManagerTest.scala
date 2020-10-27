@@ -16,6 +16,9 @@
 
 package gwen.web
 
+import gwen.Errors.AmbiguousCaseException
+import gwen.web.Errors.NoSuchWindowException
+
 import org.mockito.Mockito.never
 import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
@@ -28,8 +31,7 @@ import org.openqa.selenium.remote.DesiredCapabilities
 import org.openqa.selenium.remote.RemoteWebDriver
 import org.scalatest.{BeforeAndAfterEach, Matchers}
 import org.scalatestplus.mockito.MockitoSugar
-import gwen.web.Errors.NoSuchWindowException
-import gwen.Errors.AmbiguousCaseException
+
 import scala.jdk.CollectionConverters._
 
 class DriverManagerTest extends BaseTest with Matchers with MockitoSugar with BeforeAndAfterEach {

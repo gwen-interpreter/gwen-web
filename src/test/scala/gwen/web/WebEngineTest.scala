@@ -18,18 +18,18 @@ package gwen.web
 
 import java.io.File
 
+import gwen._
+import gwen.dsl._
+import gwen.Errors.UnboundAttributeException
+import gwen.eval.{TopScope, GwenOptions, ScopedDataStack}
 import gwen.Settings
-import org.mockito.Mockito.{verify, _}
+
+import org.apache.commons.text.StringEscapeUtils
+import org.mockito.Matchers.any
+import org.mockito.Mockito._
 import org.scalatest.{BeforeAndAfterEach, Matchers}
 import org.scalatestplus.mockito.MockitoSugar
-import gwen.dsl.{FlatTable, Step, StepKeyword}
-import gwen.eval.{TopScope, GwenOptions, ScopedDataStack}
-import gwen.Predefs.Kestrel
-import gwen.Predefs.FileIO
 import org.openqa.selenium.WebElement
-import org.mockito.Matchers.any
-import gwen.Errors.UnboundAttributeException
-import org.apache.commons.text.StringEscapeUtils
 
 class WebEngineTest extends BaseTest with WebEngine with Matchers with MockitoSugar with BeforeAndAfterEach {
 
@@ -91,16 +91,19 @@ class WebEngineTest extends BaseTest with WebEngine with Matchers with MockitoSu
     doReturn(mockScopes).when(env).scopes
     doReturn(mockTopScope).when(env).topScope
     doReturn(false).when(env).isEvaluatingTopLevelStep
-    doReturn(false).when(env).isEvaluatingFeatureFile
+    doReturn(SpecType.Meta).when(env).specType
     when(mockTopScope.getOpt("gwen.feature.file.path")).thenReturn(Some("file.feature"))
   }
 
-  private def evaluate(expression: String): Unit = {
-    evaluate(Step(StepKeyword.Given.toString, expression), env)
+  private def evaluate(name: String): Unit = {
+    val step = Step(None, StepKeyword.Given.toString, name, Nil, None, Nil, None, Pending)
+    evaluate(step, env)
   }
 
-  private def evaluatePriority(expression: String): Option[Step] = {
-    evaluatePriority(Step(StepKeyword.Given.toString, expression), env)
+  private def evaluatePriority(name: String): Option[Step] = {
+    val parent = mock[Identifiable]
+    val step = Step(None, StepKeyword.Given.toString, name, Nil, None, Nil, None, Pending)
+    evaluatePriority(parent, step, env)
   }
 
   "I am on the <page>" should "evaluate" in {

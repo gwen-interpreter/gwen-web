@@ -16,12 +16,13 @@
 
 package gwen.web
 
+import gwen._
+import gwen.Errors.licenseError
+import gwen.web.Errors.invalidVisualSessionStateError
+
 import com.applitools.eyes.selenium.Eyes
 import com.applitools.eyes.{BatchInfo, MatchLevel, RectangleSize, TestResults}
 import com.typesafe.scalalogging.LazyLogging
-import gwen.Errors.licenseError
-import gwen.Predefs.Kestrel
-import gwen.web.Errors.invalidVisualSessionStateError
 import org.openqa.selenium.WebDriver
 
 /**

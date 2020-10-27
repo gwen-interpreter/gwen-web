@@ -1,7 +1,12 @@
+lazy val gwenSrc = ProjectRef(file("../gwen"), "gwen")
+lazy val gwenLib = "org.gweninterpreter" % "gwen" % "2.30.0-SNAPSHOT"
 
-// Use file URI for gwen dep until sbt issue 1284 is fixed: https://github.com/sbt/sbt/issues/1284
-lazy val gwen = ProjectRef(file("../gwen"), "root")
-// lazy val gwen = ProjectRef(uri("git://github.com/gwen-interpreter/gwen.git"), "gwen")
+val gwenWeb = (project in file("."))
+  .sourceDependency(gwenSrc, gwenLib)
+  .settings(
+    projectSettings,
+    libraryDependencies ++= mainDependencies ++ testDependencies
+  )
 
 resolvers ++= Seq(
   "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"
@@ -67,11 +72,6 @@ lazy val testDependencies = {
     "org.mockito" % "mockito-all" % mockitoAll
   ).map(_ % Test)
 }
-
-val gwenWeb = (project in file(".")).settings(
-  projectSettings,
-  libraryDependencies ++= mainDependencies ++ testDependencies
-) dependsOn gwen
 
 mappings in(Compile, packageBin) ++= Seq(
   file("README.md") -> "README.txt",

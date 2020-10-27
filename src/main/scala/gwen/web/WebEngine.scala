@@ -16,25 +16,23 @@
 
 package gwen.web
 
-import java.util.concurrent.TimeUnit
-
-import com.applitools.eyes.{MatchLevel, RectangleSize}
-
-import scala.concurrent.duration.Duration
-import gwen.Predefs.Formatting.DurationFormatter
-import gwen.Predefs.Kestrel
-import gwen.Predefs.RegexContext
-import gwen.{GwenSettings, Settings}
+import gwen._
 import gwen.dsl._
 import gwen.Errors.StepFailure
 import gwen.Errors.undefinedStepError
 import gwen.Errors.disabledStepError
+import gwen.Formatting.DurationFormatter
 import gwen.eval.GwenOptions
 import gwen.eval.support.DefaultEngineSupport
 import gwen.web.Errors.LocatorBindingException
+
+import com.applitools.eyes.{MatchLevel, RectangleSize}
 import org.apache.commons.text.StringEscapeUtils
 
+import scala.concurrent.duration.Duration
 import scala.util.{Failure, Success, Try}
+
+import java.util.concurrent.TimeUnit
 
 /**
   * A web engine that uses the Selenium web driver
@@ -61,11 +59,8 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
     * Evaluates priority steps supported by this engine. For example, a step that calls another step needs to execute
     * with priority to ensure that there is no match conflict between the two (which can occur if the step being
     * called by a step is a StepDef or another step that matches the entire calling step)
-    *
-    * @param step the step to evaluate
-    * @param env the environment context
     */
-  override def evaluatePriority(step: Step, env: WebEnvContext): Option[Step] = {
+  override def evaluatePriority(parent: Identifiable, step: Step, env: WebEnvContext): Option[Step] = {
 
     val webContext = env.webContext
 
@@ -76,69 +71,69 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
         case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$locator "(.+?)"$expression in (.+?)$container with no (?:timeout|wait)""" => 
           env.getLocatorBinding(container)
           val binding = LocatorBinding(s"${element}/list", Locator.parse(locator), expression, Some(container), Some(Duration.Zero), None)
-          env.evaluate(foreach(() => List("$[dryRun:webElements]"), element, step, doStep, env)) {
-            foreach(() => webContext.locateAll(binding), element, step, doStep, env)
+          env.evaluate(foreach(() => List("$[dryRun:webElements]"), element, parent, step, doStep, env)) {
+            foreach(() => webContext.locateAll(binding), element, parent, step, doStep, env)
           }
 
         case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$locator "(.+?)"$expression in (.+?)$container with (\d+)$timeout second (?:timeout|wait)""" =>
           env.getLocatorBinding(container)
           val binding = LocatorBinding(s"${element}/list", Locator.parse(locator), expression, Some(container), Some(Duration.create(timeout.toLong, TimeUnit.SECONDS)), None)
-          env.evaluate(foreach(() => List("$[dryRun:webElements]"), element, step, doStep, env)) {
-            foreach(() => webContext.locateAll(binding), element, step, doStep, env)
+          env.evaluate(foreach(() => List("$[dryRun:webElements]"), element, parent, step, doStep, env)) {
+            foreach(() => webContext.locateAll(binding), element, parent, step, doStep, env)
           }
 
         case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$locator "(.+?)"$expression in (.+?)$container""" =>
           env.getLocatorBinding(container)
           val binding = LocatorBinding(s"${element}/list", Locator.parse(locator), expression, Some(container), None, None)
-          env.evaluate(foreach(() => List("$[dryRun:webElements]"), element, step, doStep, env)) {
-            foreach(() => webContext.locateAll(binding), element, step, doStep, env)
+          env.evaluate(foreach(() => List("$[dryRun:webElements]"), element, parent, step, doStep, env)) {
+            foreach(() => webContext.locateAll(binding), element, parent, step, doStep, env)
           }
 
         case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$locator "(.+?)"$expression with no (?:timeout|wait)""" =>
           val binding = LocatorBinding(s"${element}/list", Locator.parse(locator), expression, None, Some(Duration.Zero), None)
-          env.evaluate(foreach(() => List("$[dryRun:webElements]"), element, step, doStep, env)) {
-            foreach(() => webContext.locateAll(binding), element, step, doStep, env)
+          env.evaluate(foreach(() => List("$[dryRun:webElements]"), element, parent, step, doStep, env)) {
+            foreach(() => webContext.locateAll(binding), element, parent, step, doStep, env)
           }
 
         case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$locator "(.+?)"$expression with (\d+)$timeout second (?:timeout|wait)""" =>
           val binding = LocatorBinding(s"${element}/list", Locator.parse(locator), step.orDocString(expression), None, Some(Duration.create(timeout.toLong, TimeUnit.SECONDS)), None)
-          env.evaluate(foreach(() => List("$[dryRun:webElements]"), element, step, doStep, env)) {
-            foreach(() => webContext.locateAll(binding), element, step, doStep, env)
+          env.evaluate(foreach(() => List("$[dryRun:webElements]"), element, parent, step, doStep, env)) {
+            foreach(() => webContext.locateAll(binding), element, parent, step, doStep, env)
           }
 
         case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$locator "(.+?)"$expression""" =>
           val binding = LocatorBinding(s"${element}/list", Locator.parse(locator), step.orDocString(expression), None, None, None)
-          env.evaluate(foreach(() => List("$[dryRun:webElements]"), element, step, doStep, env)) {
-            foreach(() => webContext.locateAll(binding), element, step, doStep, env)
+          env.evaluate(foreach(() => List("$[dryRun:webElements]"), element, parent, step, doStep, env)) {
+            foreach(() => webContext.locateAll(binding), element, parent, step, doStep, env)
           }
 
         case r"""(.+?)$doStep for each (.+?)$element in (.+?)$$$iteration""" if !iteration.contains("delimited by") =>
           val binding = env.getLocatorBinding(iteration)
-          env.evaluate(foreach(() => List("$[dryRun:webElements]"), element, step, doStep, env)) {
-            foreach(() => webContext.locateAll(binding), element, step, doStep, env)
+          env.evaluate(foreach(() => List("$[dryRun:webElements]"), element, parent, step, doStep, env)) {
+            foreach(() => webContext.locateAll(binding), element, parent, step, doStep, env)
           }
 
         case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using no delay and (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit (?:timeout|wait)""" =>
-          repeat(operation, step, doStep, condition, Duration.Zero, Duration(timeoutPeriod.toLong, timeoutUnit), env)
+          repeat(operation, parent, step, doStep, condition, Duration.Zero, Duration(timeoutPeriod.toLong, timeoutUnit), env)
 
         case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using no delay""" =>
-          repeat(operation, step, doStep, condition, Duration.Zero, defaultRepeatTimeout(DefaultRepeatDelay), env)
+          repeat(operation, parent, step, doStep, condition, Duration.Zero, defaultRepeatTimeout(DefaultRepeatDelay), env)
 
         case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using (.+?)$delayPeriod (second|millisecond)$delayUnit delay and (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit (?:timeout|wait)""" =>
-          repeat(operation, step, doStep, condition, Duration(delayPeriod.toLong, delayUnit), Duration(timeoutPeriod.toLong, timeoutUnit), env)
+          repeat(operation, parent, step, doStep, condition, Duration(delayPeriod.toLong, delayUnit), Duration(timeoutPeriod.toLong, timeoutUnit), env)
 
         case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using (.+?)$delayPeriod (second|millisecond)$delayUnit delay""" =>
           val delayDuration = Duration(delayPeriod.toLong, delayUnit)
-          repeat(operation, step, doStep, condition, delayDuration, defaultRepeatTimeout(delayDuration), env)
+          repeat(operation, parent, step, doStep, condition, delayDuration, defaultRepeatTimeout(delayDuration), env)
 
         case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit (?:timeout|wait)""" =>
-          repeat(operation, step, doStep, condition, DefaultRepeatDelay, Duration(timeoutPeriod.toLong, timeoutUnit), env)
+          repeat(operation, parent, step, doStep, condition, DefaultRepeatDelay, Duration(timeoutPeriod.toLong, timeoutUnit), env)
 
         case r"""(.+?)$doStep (until|while)$operation (.+?)$$$condition""" if doStep != "I wait" =>
-          repeat(operation, step, doStep, condition, DefaultRepeatDelay, defaultRepeatTimeout(DefaultRepeatDelay), env)
+          repeat(operation, parent, step, doStep, condition, DefaultRepeatDelay, defaultRepeatTimeout(DefaultRepeatDelay), env)
 
         case _ =>
-          super.evaluatePriority(step, env).orNull
+          super.evaluatePriority(parent, step, env).orNull
 
       }
     }
@@ -922,10 +917,11 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
   /**
     * Performs a repeat until or while operation 
     */
-  private def repeat(operation: String, step: Step, doStep: String, condition: String, delay: Duration, timeout: Duration, env: WebEnvContext): Step = {
+  private def repeat(operation: String, parent: Identifiable, step: Step, doStep: String, condition: String, delay: Duration, timeout: Duration, env: WebEnvContext): Step = {
     assert(delay.gteq(Duration.Zero), "delay cannot be less than zero")
     assert(timeout.gt(Duration.Zero), "timeout must be greater than zero")
     assert(timeout.gteq(delay), "timeout cannot be less than or equal to delay")
+    lifecycle.beforeStep(parent, step)
     var evaluatedStep = step
     env.perform {
       var iteration = 0L
@@ -937,7 +933,7 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
           operation match {
             case "until" =>
               logger.info(s"repeat-until $condition: iteration $iteration")
-              evaluateStep(Step(step.keyword, doStep), env).evalStatus match {
+              evaluateStep(step, step.copy(withName = doStep), env).evalStatus match {
                 case Failed(_, e) => throw e
                 case _ =>
                   val javascript = env.interpolate(env.scopes.get(s"$condition/javascript"))(env.getBoundReferenceValue)
@@ -955,7 +951,7 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
               val result = env.evaluateJSPredicate(javascript)
               if (result) {
                 logger.info(s"repeat-while $condition: iteration $iteration")
-                evaluateStep(Step(step.keyword, doStep), env).evalStatus match {
+                evaluateStep(step, step.copy(withName = doStep), env).evalStatus match {
                   case Failed(_, e) => throw e
                   case _ =>
                     logger.info(s"repeat-while $condition: not complete, will repeat ${if (delay.gt(Duration.Zero)) s"in ${DurationFormatter.format(delay)}" else "now"}")
@@ -969,7 +965,7 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
         }
       } catch {
         case e: Throwable =>
-          evaluatedStep = Step(step, Failed(System.nanoTime - start, new StepFailure(step, e)))
+          evaluatedStep = step.copy(withEvalStatus = Failed(System.nanoTime - start, new StepFailure(step, e)))
       } finally {
         env.topScope.set("iteration number", null)
       }
@@ -977,11 +973,11 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
       try {
         operation match {
           case "until" =>
-            evaluatedStep = this.evaluateStep(Step(step.pos, step.keyword, doStep), env)
+            evaluatedStep = this.evaluateStep(step, step.copy(withName = doStep), env)
             env.scopes.get(s"$condition/javascript")
           case _ =>
             env.scopes.get(s"$condition/javascript")
-            evaluatedStep = this.evaluateStep(Step(step.pos, step.keyword, doStep), env)
+            evaluatedStep = this.evaluateStep(step, step.copy(withName = doStep), env)
         }
       } catch {
         case _: Throwable => 

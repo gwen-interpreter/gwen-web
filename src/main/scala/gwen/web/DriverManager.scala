@@ -16,10 +16,15 @@
 
 package gwen.web
 
-import java.io.File
-import java.net.URL
-import java.util.concurrent.TimeUnit
+import gwen._
+import gwen.Errors._
+import gwen.web.Errors._
 
+import scala.jdk.CollectionConverters._
+import scala.collection.mutable
+
+import com.typesafe.scalalogging.LazyLogging
+import io.github.bonigarcia.wdm.WebDriverManager
 import org.openqa.selenium.{Dimension, MutableCapabilities, WebDriver}
 import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.chrome.ChromeOptions
@@ -32,15 +37,10 @@ import org.openqa.selenium.remote.HttpCommandExecutor
 import org.openqa.selenium.remote.LocalFileDetector
 import org.openqa.selenium.remote.RemoteWebDriver
 import org.openqa.selenium.safari.{SafariDriver, SafariOptions}
-import com.typesafe.scalalogging.LazyLogging
-import gwen.GwenSettings
-import gwen.Predefs.Kestrel
-import gwen.Errors._
-import gwen.web.Errors._
-import io.github.bonigarcia.wdm.WebDriverManager
 
-import scala.jdk.CollectionConverters._
-import scala.collection.mutable
+import java.io.File
+import java.net.URL
+import java.util.concurrent.TimeUnit
 import java.util.concurrent.Semaphore
 
 /** Driver manager companion. */

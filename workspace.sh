@@ -5,9 +5,9 @@ rm -rf target/workspace
 mkdir target
 mkdir target/workspace
 cd ../gwen-gpm
-git checkout tags/v3.0.4
+git checkout tags/v3.0.5
 sbt assembly
-cp target/gwen-gpm-assembly-3.0.4.jar ../gwen-web/gwen-workspace/gwen-gpm.jar
+cp target/gwen-gpm-assembly-3.0.5.jar ../gwen-web/gwen-workspace/gwen-gpm.jar
 git switch -
 git checkout master
 cd ../gwen-web

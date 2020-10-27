@@ -16,13 +16,11 @@
 
 package gwen.web
 
-import gwen.Settings
-import java.io.File
-
-import gwen.Predefs.Kestrel
-import gwen.Errors.invalidSettingError
+import gwen._
 
 import scala.util.Try
+
+import java.io.File
 
 /**
   * Provides access to gwen web settings defined through system properties loaded
@@ -225,10 +223,10 @@ object WebSettings {
         val values = value.split('x')
         if (values != null && values.size == 2) {
           Try((values(0).trim.toInt, values(1).trim.toInt)) getOrElse {
-            invalidSettingError("gwen.web.browser.size", value, "width and height must be integers")
+            Errors.invalidSettingError("gwen.web.browser.size", value, "width and height must be integers")
           }
         } else {
-          invalidSettingError("gwen.web.browser.size", value, "width x height expected")
+          Errors.invalidSettingError("gwen.web.browser.size", value, "width x height expected")
         }
       }
     } else {
