@@ -1,3 +1,9 @@
+2.47.1
+======
+Oct 27, 2020
+- Fix chrome javascript and JQuery selector issues
+  - Replaced `--test-type` arg to chrome driver with `--enable-automation`
+
 2.47.0
 ======
 Oct 20, 2020

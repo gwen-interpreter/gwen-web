@@ -227,7 +227,7 @@ class DriverManager extends LazyLogging {
       logger.info("Setting chrome argument: --always-authorize-plugins")
       options.addArguments("--always-authorize-plugins")
     }
-    options.addArguments("--test-type")
+    options.addArguments("--enable-automation")
     if (WebSettings.`gwen.web.accept.untrusted.certs`) {
       logger.info("Setting chrome argument: --ignore-certificate-errors")
       options.addArguments("--ignore-certificate-errors")
