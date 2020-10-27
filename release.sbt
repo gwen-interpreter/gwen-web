@@ -31,13 +31,9 @@ releasePublishArtifactsAction := PgpKeys.publishSigned.value
 
 releaseProcess := Seq(
   checkSnapshotDependencies,
-  inquireVersions,
-  setReleaseVersion,
   runClean,
   runTest,
-  tagRelease,
   publishArtifacts,
   releaseStepCommandAndRemaining("publishSigned"),
-  releaseStepCommand("sonatypeBundleRelease"),
-  pushChanges
+  releaseStepCommand("sonatypeBundleRelease")
 )
