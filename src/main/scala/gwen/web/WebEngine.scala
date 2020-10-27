@@ -19,8 +19,6 @@ package gwen.web
 import gwen._
 import gwen.dsl._
 import gwen.Errors.StepFailure
-import gwen.Errors.undefinedStepError
-import gwen.Errors.disabledStepError
 import gwen.Formatting.DurationFormatter
 import gwen.eval.GwenOptions
 import gwen.eval.support.DefaultEngineSupport
@@ -48,6 +46,14 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
     * @param options command line options
     */
   override def init(options: GwenOptions) = {
+    if (options.parallel) {
+      val commonParallelism = "java.util.concurrent.ForkJoinPool.common.parallelism"
+      if (sys.props.get(commonParallelism).filter(_ == "0").isEmpty) {
+        Errors.missingPropertyError(
+          s"""|You must launch Gwen with the following JVM option to enable parallel execution:
+              |  -D$commonParallelism=0""".stripMargin)
+      }
+    }
     if (WebSettings.`gwen.web.capture.screenshots.highlighting`) {
       val fps = GwenSettings.`gwen.report.slideshow.framespersecond`
       Settings.setLocal("gwen.report.slideshow.framespersecond", (fps.toDouble * 1.8d).toInt.toString)
@@ -578,7 +584,7 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
 
       case r"""(.+?)$element( text| value)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file)$operator "(.*?)"$$$expression""" if !element.matches(".+at (json path|xpath).+") => step.orDocString(expression) tap { expression =>
         checkStepRules(step, BehaviorType.Assertion, env)
-        if (element == "I") undefinedStepError(step)
+        if (element == "I") Errors.undefinedStepError(step)
         if (element == "the current URL") webContext.captureCurrentUrl(None)
         val negate = Option(negation).isDefined
         val expected = env.parseExpression(operator, expression)
@@ -603,7 +609,7 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
 
       case r"""(.+?)$element( value| text)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$$$attribute""" if attribute != "absent" && !element.matches(".+at (json path|xpath).+") =>
         checkStepRules(step, BehaviorType.Assertion, env)
-        if (element == "I") undefinedStepError(step)
+        if (element == "I") Errors.undefinedStepError(step)
         if (element == "the current URL") webContext.captureCurrentUrl(None)
         val expected = env.getBoundReferenceValue(attribute)
         val actual = env.boundAttributeOrSelection(element, Option(selection))
@@ -685,7 +691,7 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
         if (EyesSettings.`gwen.applitools.eyes.enabled`) {
           webContext.startVisualTest(testName, Some(new RectangleSize(width.toInt, height.toInt)))
         } else {
-          disabledStepError(step)
+          Errors.disabledStepError(step)
         }
 
       case r"""I start visual test as "(.+?)"$testName""" =>
@@ -693,7 +699,7 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
         if (EyesSettings.`gwen.applitools.eyes.enabled`) {
           webContext.startVisualTest(testName, None)
         } else {
-          disabledStepError(step)
+          Errors.disabledStepError(step)
         }
 
       case r"""I check (viewport|full page)?$mode visual as "(.+?)"$name using (.+?)$matchLevel match""" =>
@@ -701,7 +707,7 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
         if (EyesSettings.`gwen.applitools.eyes.enabled`) {
           webContext.checkVisual(name, mode == "full page", Some(MatchLevel.valueOf(matchLevel)))
         } else {
-          disabledStepError(step)
+          Errors.disabledStepError(step)
         }
 
       case r"""I check (viewport|full page)?$mode visual as "(.+?)"$name""" =>
@@ -709,7 +715,7 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
         if (EyesSettings.`gwen.applitools.eyes.enabled`) {
           webContext.checkVisual(name, mode == "full page", None)
         } else {
-          disabledStepError(step)
+          Errors.disabledStepError(step)
         }
 
       case "the visual test should pass" =>
@@ -717,7 +723,7 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
         if (EyesSettings.`gwen.applitools.eyes.enabled`) {
           webContext.asertVisuals()
         } else {
-          disabledStepError(step)
+          Errors.disabledStepError(step)
         }
 
       case r"""I drag and drop (.+?)$source to (.+?)$$$target""" =>
