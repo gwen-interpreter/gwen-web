@@ -30,9 +30,10 @@ finding elements or running functions on web pages may be necessary.
 - [Change log](CHANGELOG)
 
 ### What's New?
+
+- [Masked Settings](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#masked-settings) to hide private and sensitive property values from view and prevent them from being logged and reported.
 - Simplified [data table iteration with @ForEach](https://github.com/gwen-interpreter/gwen/wiki/Data-Tables#simplified-foreach)
 - Configurable [maximum number of threads](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#gwenparallelmaxthreads) for parallel execution
-- [Dialects](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#gwenfeaturedialect) for [Gherkin's spoken languages](https://cucumber.io/docs/gherkin/reference/#spoken-languages)
 
 Why Gwen?
 ---------
@@ -134,6 +135,7 @@ Learn More
 - [Declarative feature mode](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#gwenfeaturemode) to force all imperative steps to meta and promote cleaner features.
 - [Associative meta](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#gwenassociativemeta)
 - [Behavior rules](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#gwenbehaviorrules) to help enforce good Gherkin style
+- [Dialects](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#gwenfeaturedialect) for [Gherkin's spoken languages](https://cucumber.io/docs/gherkin/reference/#spoken-languages)
 
 User Network and Support
 ------------------------

@@ -1,3 +1,15 @@
+2.48.0
+======
+Dec 1, 2020
+- Update Gwen core from v2.30.0 to v[2.31.0](https://github.com/gwen-interpreter/gwen/releases/tag/v2.31.0)
+- Introduce masked settings to make all your private and sensitive settings appear 
+  as `●●●●●` in all Gwen logs, reports, errors and console outputs
+- Internal cleanup and Refactor
+  - Improved Gwen Gherkin model
+  - Add UUID to each node
+  - Add uri and source reference to each node
+  - Introduce lifecycle events and listeners
+
 2.47.1
 ======
 Oct 27, 2020

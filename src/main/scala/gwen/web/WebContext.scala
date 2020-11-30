@@ -17,6 +17,7 @@ package gwen.web
 
 import gwen._
 import gwen.Errors.javaScriptError
+import gwen.Sensitive
 import gwen.web.Errors._
 
 import scala.jdk.CollectionConverters._
@@ -365,7 +366,7 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
     }.getOrElse("$[dryRun:title]")
 
   /**
-    * Sends a value to a web element (one character at a time).
+    * Sends a value to a web element.
     *
     * @param elementBinding the web element locator binding
     * @param value the value to send
@@ -383,11 +384,13 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
       if (clearFirst) {
         webElement.clear()
       }
-      if ("file" == webElement.getAttribute("type")) {
-        createActions(driver).moveToElement(webElement).perform()
-        webElement.sendKeys(value)
-      } else {
-        createActions(driver).moveToElement(webElement).sendKeys(value).perform()
+      Sensitive.withValue(value) { plainValue =>
+        if ("file" == webElement.getAttribute("type")) {
+          createActions(driver).moveToElement(webElement).perform()
+          webElement.sendKeys(plainValue)
+        } else {
+        createActions(driver).moveToElement(webElement).sendKeys(plainValue).perform()
+        }
       }
       env.bindAndWait(element, "type", value)
       if (sendEnterKey) {

@@ -1,5 +1,5 @@
 lazy val gwenSrc = ProjectRef(file("../gwen"), "gwen")
-lazy val gwenLib = "org.gweninterpreter" % "gwen" % "2.30.0-SNAPSHOT"
+lazy val gwenLib = "org.gweninterpreter" % "gwen" % "2.31.0"
 
 val gwenWeb = (project in file("."))
   .sourceDependency(gwenSrc, gwenLib)
