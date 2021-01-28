@@ -16,8 +16,6 @@
 
 package gwen.web
 
-import java.io.File
-
 import gwen._
 import gwen.dsl._
 import gwen.Errors.UnboundAttributeException
@@ -30,6 +28,8 @@ import org.mockito.Mockito._
 import org.scalatest.{BeforeAndAfterEach, Matchers}
 import org.scalatestplus.mockito.MockitoSugar
 import org.openqa.selenium.WebElement
+
+import java.io.File
 
 class WebEngineTest extends BaseTest with WebEngine with Matchers with MockitoSugar with BeforeAndAfterEach {
 
@@ -1416,10 +1416,10 @@ class WebEngineTest extends BaseTest with WebEngine with Matchers with MockitoSu
 
   "I switch to the parent <window|tab>" should "evaluate" in {
     List("window", "tab").foreach { x =>
-      doNothing().when(webContext).switchToParent(false)
+      doNothing().when(webContext).switchToParent()
       evaluate(s"I switch to the parent $x")
     }
-    verify(webContext, times(2)).switchToParent(false)
+    verify(webContext, times(2)).switchToParent()
   }
 
   "I switch to the default content" should "evaluate" in {
@@ -1429,9 +1429,17 @@ class WebEngineTest extends BaseTest with WebEngine with Matchers with MockitoSu
   }
 
   "I capture the current screenshot" should "evaluate" in {
-    doNothing().when(webContext).captureScreenshot(true)
+    doReturn(Option(new File("screenshot"))).when(webContext).captureScreenshot(any[Boolean], any[String])
     evaluate("I capture the current screenshot")
     verify(webContext).captureScreenshot(true)
+  }
+
+  "I capture the current screenshot as name" should "evaluate" in {
+    val file = new File("screenshot")
+    doReturn(Option(file)).when(webContext).captureScreenshot(any[Boolean], any[String])
+    evaluate("I capture the current screenshot as name")
+    verify(webContext).captureScreenshot(true, "name")
+    verify(mockScopes).set("name", file.getAbsolutePath)
   }
 
   """<element> can be <clicked|right clicked|double clicked|submitted|checked|ticked|unchecked|unticked|selected|deselected|typed|entered|tabbed|cleared|moved to> by javascript "<javascript>"""" should "evaluate" in {

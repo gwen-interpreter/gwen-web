@@ -1001,7 +1001,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     verify(mockActions).perform()
   }
 
-  "WebContext.holdAndClick" should "should command-shift click element" in {
+  "WebContext.holdAndClick" should "command-shift click element" in {
     val elemBinding = LocatorBinding("element", "id", "elem", None, None)
     val mockElement = mock[WebElement]
     val modifierKeys = Array("COMMAND", "SHIFT")
@@ -1021,7 +1021,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     envContext.scopes.get("element/click") should be ("true")
   }
 
-  "WebContext.holdAndClick" should "should command double click element" in {
+  "WebContext.holdAndClick" should "command double click element" in {
     val elemBinding = LocatorBinding("element", "id", "elem", None, None)
     val mockElement = mock[WebElement]
     val modifierKeys = Array("command")
@@ -1039,7 +1039,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     envContext.scopes.get("element/double click") should be ("true")
   }
 
-  "WebContext.holdAndClick" should "should command-shift right click element" in {
+  "WebContext.holdAndClick" should "command-shift right click element" in {
     val elemBinding = LocatorBinding("element", "id", "elem", None, None)
     val mockElement = mock[WebElement]
     val modifierKeys = Array("Command", "Shift")
@@ -1059,7 +1059,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     envContext.scopes.get("element/right click") should be ("true")
   }
 
-  "WebContext.holdAndClick" should "should error when given unknown modifier key" in {
+  "WebContext.holdAndClick" should "error when given unknown modifier key" in {
     val elemBinding = LocatorBinding("element", "id", "elem", None, None)
     val modifierKeys = Array("Unknown")
     intercept[UnsupportedModifierKeyException] {
@@ -1470,19 +1470,19 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     }
   }
 
-  "WebContext.waitForText" should "should return true when text is present" in {
+  "WebContext.waitForText" should "return true when text is present" in {
     val elemBinding = LocatorBinding("element", "id", "elem", None, None)
     doReturn(Some("text")).when(webContext).getElementText(elemBinding)
     webContext.waitForText(elemBinding) should be (true)
   }
 
-  "WebContext.waitForText" should "should return false when text is absent" in {
+  "WebContext.waitForText" should "return false when text is absent" in {
     val elemBinding = LocatorBinding("element", "id", "elem", None, None)
     doReturn(None).when(webContext).getElementText(elemBinding)
     webContext.waitForText(elemBinding) should be (false)
   }
 
-  "WebContext.waitForText" should "should return false when text is blank" in {
+  "WebContext.waitForText" should "return false when text is blank" in {
     val elemBinding = LocatorBinding("element", "id", "elem", None, None)
     doReturn(Some("")).when(webContext).getElementText(elemBinding)
     webContext.waitForText(elemBinding) should be (false)
@@ -1506,7 +1506,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     webContext.scrollIntoView(elemBinding, ScrollTo.bottom)
   }
 
-  "WebContext.resizeWindow" should "should resize the window" in {
+  "WebContext.resizeWindow" should "resize the window" in {
     val mockDriverOptions = mock[WebDriver.Options]
     val mockWindow = mock[WebDriver.Window]
     when(mockWebDriver.manage).thenReturn(mockDriverOptions)
@@ -1687,9 +1687,10 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.switchToChild" should "switch to child window" in {
-    doNothing().when(driverManager).switchToChild(mockWebDriver)
+    doReturn(Set("parent", "child").asJava).when(mockWebDriver).getWindowHandles()
+    doNothing().when(driverManager).switchToChild(1)
     webContext.switchToChild()
-    verify(driverManager).switchToChild(mockWebDriver)
+    verify(driverManager).switchToChild(1)
   }
 
   "WebContext.closeChild" should "close the child window" in {
@@ -1698,16 +1699,10 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     verify(driverManager).closeChild()
   }
 
-  "WebContext.switchToParent" should "should stay on parent when child is closed" in {
-    doNothing().when(driverManager).switchToParent(true)
-    webContext.switchToParent(true)
-    verify(driverManager).switchToParent(true)
-  }
-
-  "WebContext.switchToParent" should "switch to parent when child is open" in {
-    doNothing().when(driverManager).switchToParent(false)
-    webContext.switchToParent(false)
-    verify(driverManager).switchToParent(false)
+  "WebContext.switchToParent" should "switch to parent" in {
+    doNothing().when(driverManager).switchToParent()
+    webContext.switchToParent()
+    verify(driverManager).switchToParent()
   }
 
   "WebContext.switchToDefaultContent" should "switch to default content" in {

@@ -31,6 +31,8 @@ import org.openqa.selenium._
 import org.openqa.selenium.interactions.Actions
 import org.openqa.selenium.support.ui.{FluentWait, Select}
 
+import java.io.File
+
 /**
   * The web context. All web driver interactions happen here (and will do nothing when --dry-run is enabled).
   */
@@ -194,22 +196,23 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
   }
 
   /** Captures and the current screenshot and adds it to the attachments list. */
-  def captureScreenshot(unconditional: Boolean): Unit =
-    env.perform {
-      Try {
-        val screenshot = driverManager.withWebDriver { driver =>
-          Thread.sleep(150) // give browser time to render
-          driver.asInstanceOf[TakesScreenshot].getScreenshotAs(OutputType.FILE)
-        }
-        val keep = unconditional || WebSettings.`gwen.web.capture.screenshots.duplicates` || lastScreenshotSize.fold(true) { _ != screenshot.length}
-        if (keep) {
-          if (!WebSettings.`gwen.web.capture.screenshots.duplicates`) lastScreenshotSize = Some(screenshot.length())
-          env.addAttachment("Screenshot", screenshot.getName.substring(screenshot.getName.lastIndexOf('.') + 1), null) tap {
-            case (_, file) => FileUtils.copyFile(screenshot, file)
-          }
-        }
+  def captureScreenshot(unconditional: Boolean, name: String = "Screenshot"): Option[File] = {
+    env.evaluate(Option(new File("$[dryRun:screenshotFile]"))) {
+      val screenshot = driverManager.withWebDriver { driver =>
+        Thread.sleep(150) // give browser time to render
+        driver.asInstanceOf[TakesScreenshot].getScreenshotAs(OutputType.FILE)
+      }
+      val keep = unconditional || WebSettings.`gwen.web.capture.screenshots.duplicates` || lastScreenshotSize.fold(true) { _ != screenshot.length}
+      if (keep) {
+        if (!WebSettings.`gwen.web.capture.screenshots.duplicates`) lastScreenshotSize = Some(screenshot.length())
+        val (n, file) = env.addAttachment(name, screenshot.getName.substring(screenshot.getName.lastIndexOf('.') + 1), null)
+        FileUtils.copyFile(screenshot, file)
+        Some(file)
+      } else {
+        None
       }
     }
+  }
 
   /**
     * Injects and executes a javascript on the current page through web driver.
@@ -852,17 +855,30 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
   /** Gets the number of open sesions. */
   def noOfSessions(): Int = driverManager.noOfSessions()
 
+  /** Gets the number of open windows. */
+  def noOfWindows(): Int = driverManager.noOfWindows()
+
   /**
     * Switches to the child window if one was just opened.
     */
   def switchToChild(): Unit = {
-    withWebDriver { driver =>
-      driverManager.switchToChild(driver)
-    }
+    switchToChild(1)
   }
 
   /**
-    * Closes the child window.
+    * Switches to a tab or child window ocurrance.
+    * 
+    * @param occurrence the tag or window occurrence to switch to (first opened is occurrence 1, 2nd is 2, ..)
+    */
+  def switchToChild(occurrence: Int): Unit = {
+    waitUntil { 
+      driverManager.windows().lift(occurrence).nonEmpty
+    }
+    driverManager.switchToChild(occurrence)
+  }
+
+  /**
+    * Closes the last child window.
     */
   def closeChild(): Unit = {
     env.perform {
@@ -870,10 +886,21 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
     }
   }
 
-  /** Switches to the parent window. */
-  def switchToParent(childClosed: Boolean): Unit = {
+  /**
+    * Closes the tab or child window occurrence.
+    * 
+    * @param occurrence the tag or window occurrence to close (first opened is occurrence 1, 2nd is 2, ..)
+    */
+  def closeChild(occurrence: Int): Unit = {
     env.perform {
-      driverManager.switchToParent(childClosed)
+      driverManager.closeChild(occurrence)
+    }
+  }
+
+  /** Switches to the parent window. */
+  def switchToParent(): Unit = {
+    env.perform {
+      driverManager.switchToParent()
     }
   }
 

@@ -644,6 +644,12 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
         checkStepRules(step, BehaviorType.Action, env)
         webContext.captureScreenshot(true)
 
+      case r"""I capture the current screenshot as (.+?)$attribute""" =>
+        checkStepRules(step, BehaviorType.Action, env)
+        webContext.captureScreenshot(true, attribute) foreach { file =>
+          env.scopes.set(attribute, file.getAbsolutePath)
+        }
+
       case r"""I capture (.+?)$element( value| text)$selection as (.+?)$attribute""" =>
         checkStepRules(step, BehaviorType.Action, env)
         try {
@@ -845,6 +851,12 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
           env.compare("open browser sessions", count, () => webContext.noOfSessions().toString, "be", false)
         }
 
+      case r"""I should have (\d+?)$count open (?:window|tab)(?:s?)""" =>
+        checkStepRules(step, BehaviorType.Assertion, env)
+        env.perform {
+          env.compare("open windows/tabs", count, () => webContext.noOfWindows().toString, "be", false)
+        }
+
       case r"I have (no|an)$open open browser" =>
         checkStepRules(step, BehaviorType.Context, env)
         if (open == "no") {
@@ -863,15 +875,31 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
 
       case r"""I switch to the child (?:window|tab)""" =>
         checkStepRules(step, BehaviorType.Action, env)
-        webContext.switchToChild()
+        env.perform {
+          webContext.switchToChild()
+        }
+
+      case r"""I switch to child (?:window|tab) (\d+?)$occurrence""" =>
+        checkStepRules(step, BehaviorType.Action, env)
+        env.perform {
+          webContext.switchToChild(occurrence.toInt)
+        }
 
       case r"""I close the child (?:window|tab)""" =>
         checkStepRules(step, BehaviorType.Action, env)
-        webContext.closeChild()
+        env.perform {
+          webContext.closeChild()
+        }
 
-      case r"""I switch to the parent (?:window|tab)""" =>
+      case r"""I close child (?:window|tab) (\d+?)$occurrence""" =>
         checkStepRules(step, BehaviorType.Action, env)
-        webContext.switchToParent(false)
+        env.perform {
+          webContext.closeChild(occurrence.toInt)
+        }
+
+      case r"""I switch to the (?:root|parent) (?:window|tab)""" =>
+        checkStepRules(step, BehaviorType.Action, env)
+        webContext.switchToParent()
 
       case """I switch to the default content""" =>
         checkStepRules(step, BehaviorType.Action, env)

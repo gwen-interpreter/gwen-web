@@ -1,3 +1,13 @@
+2.49.0
+======
+Jan 16, 2021
+- Add DSLs to support dealing with multiple tabs and child windows
+  - `I switch to child <window|tab> <occurrence>`
+  - `I close child <window|tab> <occurrence>`
+- Add DSL to support binding file paths of screenshots to named attributes
+  - `I capture the current screenshot as <name>`
+- Update webdrivermanager from v4.2.2 to v4.3.0
+
 2.48.1
 ======
 Dec 4, 2020

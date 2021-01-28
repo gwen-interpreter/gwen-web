@@ -55,6 +55,7 @@ class WebDslTest extends BaseTest with Matchers with MockitoSugar {
           env.dsl map { dsl =>
             dsl
               .replace("<position>", "1")
+              .replace("<occurrence>", "1")
               .replace("<duration>", "2")
               .replace("<delayPeriod>", "20")
               .replace("<timeoutPeriod>", "3000000")

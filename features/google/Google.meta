@@ -34,7 +34,7 @@
   @StepDef
   @Assertion
   Scenario: the first result should open a Gwen page
-      Given the first match can be located by css selector ".rc a"
+      Given the first match can be located by css selector ".g a"
        When I click the first match
        Then the current URL should match regex ".+[G|g]wen.*"
 

@@ -764,12 +764,23 @@ I accept the confirmation popup
 I dismiss the confirmation popup
 I switch to the child window
 I switch to the child tab
+I switch to child window <occurrence>
+I switch to child tab <occurrence>
 I close the child window
 I close the child tab
+I close child window <occurrence>
+I close child tab <occurrence>
 I switch to the parent window
 I switch to the parent tab
+I switch to the root window
+I switch to the root tab
 I switch to the default content
+I should have 1 open window
+I should have <count> open windows
+I should have 1 open tab
+I should have <count> open tabs
 I capture the current screenshot
+I capture the current screenshot as my screenshot
 <element> can be clicked by javascript "<javascript>"
 <element> can be right clicked by javascript "<javascript>"
 <element> can be double clicked by javascript "<javascript>"

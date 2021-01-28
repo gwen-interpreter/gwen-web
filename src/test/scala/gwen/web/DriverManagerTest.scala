@@ -16,7 +16,6 @@
 
 package gwen.web
 
-import gwen.Errors.AmbiguousCaseException
 import gwen.web.Errors.NoSuchWindowException
 
 import org.mockito.Mockito.never
@@ -126,29 +125,41 @@ class DriverManagerTest extends BaseTest with Matchers with MockitoSugar with Be
     val mockWebDriver = mock[WebDriver]
     val manager = newManager(mockWebDriver)
     intercept[NoSuchWindowException] {
-      manager.switchToChild(mockWebDriver)
+      manager.switchToChild(1)
     }
   }
 
-  "DriverManager.switchToChild" should "should switch to child window" in {
+  "DriverManager.switchToChild" should "switch to child window" in {
     val mockWebDriver = mock[WebDriver]
     val manager = newManager(mockWebDriver)
     val mockTargetLocator = mock[WebDriver.TargetLocator]
     manager.drivers.put("primary", mockWebDriver)
-    when(mockWebDriver.getWindowHandles).thenReturn(Set("child").asJava)
+    when(mockWebDriver.getWindowHandles).thenReturn(Set("parent", "child").asJava)
     when(mockWebDriver.switchTo()).thenReturn(mockTargetLocator)
-    manager.switchToChild(mockWebDriver)
+    manager.switchToChild(1)
     verify(mockTargetLocator).window("child")
   }
 
-  "DriverManager.switchToChild" should "should error when there is more than one child window" in {
+  "DriverManager.switchToChild 1" should "return first child when there is more than one child window" in {
     val mockWebDriver = mock[WebDriver]
     val manager = newManager(mockWebDriver)
+    val mockTargetLocator = mock[WebDriver.TargetLocator]
     manager.drivers.put("primary", mockWebDriver)
-    when(mockWebDriver.getWindowHandles).thenReturn(Set("child1", "child2").asJava)
-    intercept[AmbiguousCaseException] {
-      manager.switchToChild(mockWebDriver)
-    }
+    when(mockWebDriver.getWindowHandles).thenReturn(Set("parent", "child1", "child2").asJava)
+    when(mockWebDriver.switchTo()).thenReturn(mockTargetLocator)
+    manager.switchToChild(1)
+    verify(mockTargetLocator).window("child1")
+  }
+
+  "DriverManager.switchToChild 2" should "return second child when there is more than one child window" in {
+    val mockWebDriver = mock[WebDriver]
+    val manager = newManager(mockWebDriver)
+    val mockTargetLocator = mock[WebDriver.TargetLocator]
+    manager.drivers.put("primary", mockWebDriver)
+    when(mockWebDriver.getWindowHandles).thenReturn(Set("parent", "child1", "child2").asJava)
+    when(mockWebDriver.switchTo()).thenReturn(mockTargetLocator)
+    manager.switchToChild(2)
+    verify(mockTargetLocator).window("child2")
   }
 
   "DriverManager.closeChild" should "error when there is no root or child window" in {
@@ -162,7 +173,6 @@ class DriverManagerTest extends BaseTest with Matchers with MockitoSugar with Be
   "DriverManager.closeChild" should "error when there is a root window but no child window" in {
     val mockWebDriver = mock[WebDriver]
     val manager = newManager(mockWebDriver)
-    manager.pushWindow("root")
     intercept[NoSuchWindowException] {
       manager.closeChild()
     }
@@ -173,8 +183,7 @@ class DriverManagerTest extends BaseTest with Matchers with MockitoSugar with Be
     val manager = newManager(mockWebDriver)
     val mockTargetLocator = mock[WebDriver.TargetLocator]
     when(mockWebDriver.switchTo()).thenReturn(mockTargetLocator)
-    manager.pushWindow("root")
-    manager.pushWindow("child")
+    when(mockWebDriver.getWindowHandles).thenReturn(Set("root", "child").asJava)
     manager.closeChild()
     verify(mockTargetLocator).window("child")
     verify(mockTargetLocator).window("root")
