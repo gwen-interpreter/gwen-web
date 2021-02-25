@@ -102,8 +102,8 @@ object WebSettings {
     * Provides access to the `gwen.web.capture.screenshots` setting used to control whether
     * or not the web driver should capture screenshots for all steps (default value is `false`).
     * Note that setting this to `true` degrades performance significantly. If the setting is true,
-    * then the `gwen.report.slideshow.create` setting is also implicitly set to true so that the
-    * report generator in core web component knows to generate the slideshow.
+    * then the `gwen.report.slideshow.create` setting is also implicitly set to true if it is not 
+    * set so that the report generator in core web component knows to generate the slideshow.
     */
   def `gwen.web.capture.screenshots`: Boolean = Settings.getOpt("gwen.web.capture.screenshots").getOrElse("false").toBoolean tap { isSet =>
     if (isSet) Settings.set("gwen.report.slideshow.create", "true")
@@ -112,10 +112,14 @@ object WebSettings {
   /**
     * Provides access to the `gwen.web.capture.screenshots.highlighting` setting used to control whether
     * or not the web driver should capture screenshots for all steps that highlight elements on a page
-    * (default value is `false`).
+    * (default value is `false`). If the setting is true, then the `gwen.report.slideshow.create` setting is 
+    * also implicitly set to true if it is not set so that the report generator in core web component knows 
+    * to generate the slideshow.
     * Note that setting this to `true` degrades performance significantly.
     */
-  def `gwen.web.capture.screenshots.highlighting`: Boolean = Settings.getOpt("gwen.web.capture.screenshots.highlighting").getOrElse("false").toBoolean
+  def `gwen.web.capture.screenshots.highlighting`: Boolean = Settings.getOpt("gwen.web.capture.screenshots.highlighting").getOrElse("false").toBoolean  tap { isSet =>
+    if (isSet) Settings.set("gwen.report.slideshow.create", "true")
+  }
 
   /**
     * Provides access to the `gwen.web.accept.untrusted.certs` setting used to control whether
