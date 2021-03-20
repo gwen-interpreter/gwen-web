@@ -1,3 +1,9 @@
+2.50.0-beta-rp.2
+================
+Mar 20, 2021
+- Fix report portal data table issues
+- Setting for optionally sending tags to report portal
+
 2.50.0-beta-rp.1
 ================
 Feb 25, 2021
