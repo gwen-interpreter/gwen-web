@@ -1,0 +1,8 @@
+<result>
+    <id>@{pet id 2}</id>
+    <category>
+        <name>@{category name 2}</name>
+    </category>
+    <name>!{}</name>
+    <status>${my pet status}</status>
+</result>

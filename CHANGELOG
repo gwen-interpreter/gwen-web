@@ -1,3 +1,10 @@
+2.50.0-beta-rp.3
+================
+Mar 25, 2021
+- Fix interrupted steps in report portal
+- Fix screenshot attachemnts in HTML report
+- Fix undefined step issue in report portal
+
 2.50.0-beta-rp.2
 ================
 Mar 20, 2021

@@ -129,7 +129,7 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
         case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit (?:timeout|wait)""" =>
           repeat(operation, parent, step, doStep, condition, DefaultRepeatDelay, Duration(timeoutPeriod.toLong, timeoutUnit), env)
 
-        case r"""(.+?)$doStep (until|while)$operation (.+?)$$$condition""" if doStep != "I wait" =>
+        case r"""(.+?)$doStep (until|while)$operation (.+?)$$$condition""" if (doStep != "I wait" && !step.expression.matches(""".*".*(until|while).*".*""")) =>
           repeat(operation, parent, step, doStep, condition, DefaultRepeatDelay, defaultRepeatTimeout(DefaultRepeatDelay), env)
 
         case _ =>
@@ -952,7 +952,6 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
     assert(delay.gteq(Duration.Zero), "delay cannot be less than zero")
     assert(timeout.gt(Duration.Zero), "timeout must be greater than zero")
     assert(timeout.gteq(delay), "timeout cannot be less than or equal to delay")
-    lifecycle.beforeStep(parent, step, env.scopes)
     var evaluatedStep = step
     env.perform {
       var iteration = 0L

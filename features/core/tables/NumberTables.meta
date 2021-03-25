@@ -1,0 +1,212 @@
+#
+# Copyright 2017 Branko Juric, Brady Wood
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+#     http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+ Feature: Number tables meta
+
+   @StepDef
+   @DataTable(horizontal="decimal,binary")
+   @Context
+   Scenario: single row without header contains a number in decimal and binary form
+       Given name[1] should be "decimal"
+         And name[2] should be "binary"
+         And data[1][decimal] should be "3"
+         And data[1][binary] should be "11"
+         And the decimal data[decimal] should be data[binary] in binary for each data record
+
+   @StepDef
+   @DataTable(header="top")
+   @Context
+   Scenario: single row with header contains a number in decimal and binary form
+       Given name[1] should be "decimal"
+         And name[2] should be "binary"
+         And data[1][decimal] should be "3"
+         And data[1][binary] should be "11"
+         And the decimal data[decimal] should be data[binary] in binary for each data record
+
+   @StepDef
+   @DataTable(vertical="decimal,binary")
+   @Context
+   Scenario: single column without header contains a number in decimal and binary form
+       Given name[1] should be "decimal"
+         And name[2] should be "binary"
+         And data[1][decimal] should be "3"
+         And data[1][binary] should be "11"
+         And the decimal data[decimal] should be data[binary] in binary for each data record
+
+   @StepDef
+   @DataTable(header="left")
+   @Context
+   Scenario: single column with header contains a number in decimal and binary form
+       Given name[1] should be "decimal"
+         And name[2] should be "binary"
+         And data[1][decimal] should be "3"
+         And data[1][binary] should be "11"
+         And the decimal data[decimal] should be data[binary] in binary for each data record
+
+  @StepDef
+  @DataTable(horizontal="decimal,binary")
+  @Context
+  Scenario: each row contains a number in decimal and binary form
+      Given name[1] should be "decimal"
+        And name[2] should be "binary"
+        And data[1][decimal] should be "1"
+        And data[2][decimal] should be "2"
+        And data[3][decimal] should be "3"
+        And data[1][binary] should be "1"
+        And data[2][binary] should be "10"
+        And data[3][binary] should be "11"
+        And the decimal data[decimal] should be data[binary] in binary for each data record
+
+  @StepDef
+  @DataTable(vertical="decimal,binary")
+  @Context
+  Scenario: each column contains a number in decimal and binary form
+      Given name[1] should be "decimal"
+        And name[2] should be "binary"
+        And data[1][decimal] should be "4"
+        And data[2][decimal] should be "5"
+        And data[3][decimal] should be "6"
+        And data[1][binary] should be "100"
+        And data[2][binary] should be "101"
+        And data[3][binary] should be "110"
+        And the decimal data[decimal] should be data[binary] in binary for each data record
+
+  @StepDef
+  Scenario: the decimal <decimal> should be <binary> in binary
+     Given the result is defined by javascript "Number(${$<decimal>}).toString(2)"
+      Then the result should be "${$<binary>}"
+       And name[1] should be "decimal"
+       And name[2] should be "binary"
+       And record.number should match regex "\d+"
+
+  @StepDef
+  @DataTable(header="top")
+  @Context
+  Scenario: each row contains a number and its square and cube
+      Given name[1] should be "number"
+        And name[2] should be "square"
+        And name[3] should be "cube"
+        And data[1][number] should be "1"
+        And data[2][number] should be "2"
+        And data[3][number] should be "3"
+        And data[1][square] should be "1"
+        And data[2][square] should be "4"
+        And data[3][square] should be "9"
+        And data[1][cube] should be "1"
+        And data[2][cube] should be "8"
+        And data[3][cube] should be "27"
+        And number ^ 2 = square of number for each data record
+        And number ^ 3 = cube of number for each data record
+
+  @StepDef
+  @DataTable(header="left")
+  @Context
+  Scenario: each column contains a number and its square and cube
+      Given name[1] should be "number"
+        And name[2] should be "square"
+        And name[3] should be "cube"
+        And data[1][number] should be "1"
+        And data[2][number] should be "2"
+        And data[3][number] should be "3"
+        And data[1][square] should be "1"
+        And data[2][square] should be "4"
+        And data[3][square] should be "9"
+        And data[1][cube] should be "1"
+        And data[2][cube] should be "8"
+        And data[3][cube] should be "27"
+        And number ^ 2 = square of number for each data record
+        And number ^ 3 = cube of number for each data record
+
+  @StepDef
+  Scenario: number ^ <power> = <function> of number
+      Given the result is defined by javascript "Math.pow(${data[number]}, $<power>)"
+       Then the result should start with "${data[$<function>]}"
+        And name[1] should be "number"
+        And name[2] should be "square"
+        And name[3] should be "cube"
+        And record.number should match regex "\d+"
+
+  @StepDef
+  @DataTable(type="matrix")
+  @Context
+  Scenario: the top and left numbers yield the product in the matrix
+      Given vertex.name should be "x"
+        And top.name[1] should be "1"
+        And top.name[2] should be "2"
+        And top.name[3] should be "3"
+        And left.name[1] should be "1"
+        And left.name[2] should be "2"
+        And left.name[3] should be "3"
+        And data[1][1] should be "1"
+        And data[1][2] should be "2"
+        And data[1][3] should be "3"
+        And data[2][1] should be "2"
+        And data[2][2] should be "4"
+        And data[2][3] should be "6"
+        And data[3][1] should be "3"
+        And data[3][2] should be "6"
+        And data[3][3] should be "9"
+        And top.name[1] x left.name[1] = data[1][1]
+        And top.name[2] x left.name[1] = data[2][1]
+        And top.name[3] x left.name[1] = data[3][1]
+        And top.name[1] x left.name[2] = data[1][2]
+        And top.name[2] x left.name[2] = data[2][2]
+        And top.name[3] x left.name[2] = data[3][2]
+        And top.name[1] x left.name[3] = data[1][3]
+        And top.name[2] x left.name[3] = data[2][3]
+        And top.name[3] x left.name[3] = data[3][3]
+
+  @StepDef
+  Scenario: <a> x <b> = <c>
+      Given the product is defined by javascript "${$<a>} * ${$<b>}"
+       Then the product should be "${$<c>}"
+
+  @StepDef
+  @DataTable(horizontal="a,b,c")
+  @Context
+  Scenario: each row contains two numbers that sum to a Fibonacci number in the third
+      Given a + b = c for each data record
+       Then name[1] should be "a"
+        And name[2] should be "b"
+        And name[3] should be "c"
+        And data[1][a] should be "0"
+        And data[1][b] should be "1"
+        And data[1][c] should be "1"
+        And data[2][c] should be "2"
+        And data[3][c] should be "3"
+        And data[4][c] should be "5"
+        And data[5][c] should be "8"
+
+  @StepDef
+  Scenario: a + b = c
+      Given the sum is defined by javascript "${data[a]} + ${data[b]}"
+       Then the sum should be "${data[c]}"
+
+  @StepDef
+  @Action
+  Scenario: tables are nested in stepdefs
+      Given each row contains a number in decimal and binary form
+             | 1 | 1  |
+             | 2 | 10 |
+             | 3 | 11 |
+        And the nested table should match against its table
+
+  @StepDef
+  Scenario: the nested table should match against its table
+      Given each column contains a number in decimal and binary form
+             | 4   | 5    | 6   |
+             | 100 | 101  | 110 |
+       Then everything is "ok"
