@@ -11,7 +11,7 @@ com.applitools                           eyes-sdk-core-java3                | 3.
 com.applitools                           eyes-selenium-common-java3         | 3.178.0   | [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 com.applitools                           eyes-selenium-java3                | 3.178.0   | [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 com.applitools                           eyes-ufg-java3                     | 3.176.1   | [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
-com.epam.reportportal                    client-java                        | 5.0.15    | [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+com.epam.reportportal                    client-java                        | 5.0.21    | [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 com.epam.reportportal                    commons-model                      | 5.3.3     | [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 com.fasterxml.jackson.core               jackson-annotations                | 2.11.0    | [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 com.fasterxml.jackson.core               jackson-core                       | 2.11.0    | [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)

@@ -1,3 +1,9 @@
+2.50.0-beta-rp.4
+================
+Mar 26, 2021
+- Fix logging of steps with "if" conditions to report portal
+- Update report portal library from v5.0.18 to v5.0.21
+
 2.50.0-beta-rp.3
 ================
 Mar 25, 2021
