@@ -952,18 +952,27 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
     assert(delay.gteq(Duration.Zero), "delay cannot be less than zero")
     assert(timeout.gt(Duration.Zero), "timeout must be greater than zero")
     assert(timeout.gteq(delay), "timeout cannot be less than or equal to delay")
+    val tags = List(Tag(ReservedTags.Synthetic), Tag(ReservedTags.Repeat), Tag(ReservedTags.StepDef))
+    val preCondStepDef = Scenario(None, tags, ReservedTags.Repeat.toString, s"$operation $condition", Nil, None, Nil, Nil)
+    var condSteps: List[Step] = Nil
     var evaluatedStep = step
+    val start = System.nanoTime()
     env.perform {
       var iteration = 0L
-      val start = System.nanoTime
       try {
-        env.webContext.waitUntil(timeout.toSeconds, s"trying to repeat $operation $condition") {
+        env.webContext.waitUntil(timeout.toSeconds, s"trying to repeat: ${step.name}") {
           iteration = iteration + 1
           env.topScope.set("iteration number", iteration.toString)
+          val preStep = step.copy(withKeyword = if(iteration == 1) step.keyword else StepKeyword.And.toString, withName = doStep)
           operation match {
             case "until" =>
               logger.info(s"repeat-until $condition: iteration $iteration")
-              evaluateStep(step, step.copy(withName = doStep), env).evalStatus match {
+              if (condSteps.isEmpty) {
+                lifecycle.beforeStepDef(step, preCondStepDef, env.scopes)
+              }
+              val iterationStep = evaluateStep(preCondStepDef, preStep, env)
+              condSteps = iterationStep :: condSteps
+              iterationStep.evalStatus match {
                 case Failed(_, e) => throw e
                 case _ =>
                   val javascript = env.interpolate(env.scopes.get(s"$condition/javascript"))(env.getBoundReferenceValue)
@@ -981,7 +990,12 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
               val result = env.evaluateJSPredicate(javascript)
               if (result) {
                 logger.info(s"repeat-while $condition: iteration $iteration")
-                evaluateStep(step, step.copy(withName = doStep), env).evalStatus match {
+                if (condSteps.isEmpty) {
+                  lifecycle.beforeStepDef(step, preCondStepDef, env.scopes)
+                }
+                val iterationStep = evaluateStep(preCondStepDef, preStep, env)
+                condSteps = iterationStep :: condSteps
+                iterationStep.evalStatus match {
                   case Failed(_, e) => throw e
                   case _ =>
                     logger.info(s"repeat-while $condition: not complete, will repeat ${if (delay.gt(Duration.Zero)) s"in ${DurationFormatter.format(delay)}" else "now"}")
@@ -995,7 +1009,13 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
         }
       } catch {
         case e: Throwable =>
-          evaluatedStep = step.copy(withEvalStatus = Failed(System.nanoTime - start, new StepFailure(step, e)))
+          logger.error(e.getMessage)
+          val nanos = System.nanoTime() - start
+          val durationNanos = {
+            if (nanos > timeout.toNanos) timeout.toNanos
+            else nanos
+          }
+          evaluatedStep = step.copy(withEvalStatus = Failed(durationNanos, new StepFailure(step, e)))
       } finally {
         env.topScope.set("iteration number", null)
       }
@@ -1014,7 +1034,30 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
           // ignore in dry run mode
       }
     }
-    evaluatedStep
+    if (condSteps.nonEmpty) {
+      val steps = evaluatedStep.evalStatus match {
+        case Failed(nanos, error) if (EvalStatus(condSteps.map(_.evalStatus)).status == StatusKeyword.Passed) => 
+          val preStep = condSteps.head.copy(withKeyword = StepKeyword.And.toString, withName = doStep)
+          lifecycle.beforeStep(preCondStepDef, preStep, env.scopes)
+          val fStep = preStep.copy(
+            withEvalStatus = Failed(nanos - condSteps.map(_.evalStatus.nanos).sum, error),
+            withStepDef = None
+          )
+          lifecycle.afterStep(fStep, env.scopes)
+          fStep :: condSteps
+        case _ => 
+          condSteps
+          
+      }
+      val condStepDef = preCondStepDef.copy(withSteps = steps.reverse)
+      lifecycle.afterStepDef(condStepDef, env.scopes)
+      evaluatedStep.copy(
+        withEvalStatus = condStepDef.evalStatus,
+        withStepDef = Some((condStepDef, Nil))
+      )
+    } else {
+      evaluatedStep
+    }
   }
   
   lazy val DefaultRepeatDelay: Duration = {
@@ -1025,4 +1068,3 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
   private def defaultRepeatTimeout(delay: Duration): Duration = delay * 30
   
 }
-

@@ -30,6 +30,7 @@ object Errors {
     def noSuchWindowError(msg: String) = throw new NoSuchWindowException(msg)
     def unsupportedModifierKeyError(key: String) = throw new UnsupportedModifierKeyException(key)
     def waitTimeoutError(timeoutSecs: Long, reason: String, cause: Throwable) = throw new WaitTimeoutException(timeoutSecs, reason, cause)
+    def waitTimeoutError(timeoutSecs: Long, reason: String) = throw new WaitTimeoutException(timeoutSecs, reason, null)
     def elementNotInteractableError(elementBinding: LocatorBinding, cause: Throwable) =
       throw new WebElementNotInteractableException(elementBinding, cause)
     def elementNotFoundError(elementBinding: LocatorBinding, cause: Throwable = null) =
@@ -61,7 +62,7 @@ object Errors {
 
     /** Thrown when a web element cannot be interacted with. */
     class WebElementNotInteractableException(elementBinding: LocatorBinding, cause: Throwable)
-      extends NotFoundOrInteractableException(s"Could not interact with element: ${elementBinding.element}", cause)
+      extends NotFoundOrInteractableException(s"Could not interact with element: $elementBinding", cause)
 
     /** Thrown when a web element cannot be located. */
     class WebElementNotFoundException(elementBinding: LocatorBinding, cause: Throwable)

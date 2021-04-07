@@ -1,3 +1,11 @@
+2.50.0-beta-rp.5
+================
+Arp 7, 2021
+- Add locator info to non interactable error
+- Fix report portal markdown escaping to encode `<>*` characters only
+- Fix sequence of skipped steps in report portal
+- Introduce synthetic stepdefs for `if` and `repeat` steps for consistent structure
+
 2.50.0-beta-rp.4
 ================
 Mar 26, 2021
