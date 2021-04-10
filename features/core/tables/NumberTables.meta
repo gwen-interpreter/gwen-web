@@ -110,6 +110,8 @@
         And data[3][cube] should be "27"
         And number ^ 2 = square of number for each data record
         And number ^ 3 = cube of number for each data record
+        And condition is defined by javascript "true"
+        And number is "${data[number]}" for each data record if condition
 
   @StepDef
   @DataTable(header="left")

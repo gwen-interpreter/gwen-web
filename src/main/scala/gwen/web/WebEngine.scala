@@ -62,79 +62,80 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
     */
   override def evaluatePriority(parent: Identifiable, step: Step, env: WebEnvContext): Option[Step] = {
 
-    val webContext = env.webContext
+    super.evaluatePriority(parent, step, env) orElse {
 
-    Option {
+      Option {
+      
+        val webContext = env.webContext
 
-      step.expression match {
+        step.expression match {
 
-        case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$locator "(.+?)"$expression in (.+?)$container with no (?:timeout|wait)""" => 
-          val containerBinding = env.getLocatorBinding(container)
-          val binding = LocatorBinding(s"${element}/list", Locator.parse(locator), expression, Some(containerBinding), Some(Duration.Zero), None)
-          env.evaluate(foreach(() => List("$[dryRun:webElements]"), element, parent, step, doStep, env)) {
-            foreach(() => webContext.locateAll(binding), element, parent, step, doStep, env)
-          }
+          case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$locator "(.+?)"$expression in (.+?)$container with no (?:timeout|wait)""" => 
+            val containerBinding = env.getLocatorBinding(container)
+            val binding = LocatorBinding(s"${element}/list", Locator.parse(locator), expression, Some(containerBinding), Some(Duration.Zero), None)
+            env.evaluate(foreach(() => List("$[dryRun:webElements]"), element, parent, step, doStep, env)) {
+              foreach(() => webContext.locateAll(binding), element, parent, step, doStep, env)
+            }
 
-        case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$locator "(.+?)"$expression in (.+?)$container with (\d+)$timeout second (?:timeout|wait)""" =>
-          val containerBinding = env.getLocatorBinding(container)
-          val binding = LocatorBinding(s"${element}/list", Locator.parse(locator), expression, Some(containerBinding), Some(Duration.create(timeout.toLong, TimeUnit.SECONDS)), None)
-          env.evaluate(foreach(() => List("$[dryRun:webElements]"), element, parent, step, doStep, env)) {
-            foreach(() => webContext.locateAll(binding), element, parent, step, doStep, env)
-          }
+          case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$locator "(.+?)"$expression in (.+?)$container with (\d+)$timeout second (?:timeout|wait)""" =>
+            val containerBinding = env.getLocatorBinding(container)
+            val binding = LocatorBinding(s"${element}/list", Locator.parse(locator), expression, Some(containerBinding), Some(Duration.create(timeout.toLong, TimeUnit.SECONDS)), None)
+            env.evaluate(foreach(() => List("$[dryRun:webElements]"), element, parent, step, doStep, env)) {
+              foreach(() => webContext.locateAll(binding), element, parent, step, doStep, env)
+            }
 
-        case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$locator "(.+?)"$expression in (.+?)$container""" =>
-          val containerBinding = env.getLocatorBinding(container)
-          val binding = LocatorBinding(s"${element}/list", Locator.parse(locator), expression, Some(containerBinding), None, None)
-          env.evaluate(foreach(() => List("$[dryRun:webElements]"), element, parent, step, doStep, env)) {
-            foreach(() => webContext.locateAll(binding), element, parent, step, doStep, env)
-          }
+          case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$locator "(.+?)"$expression in (.+?)$container""" =>
+            val containerBinding = env.getLocatorBinding(container)
+            val binding = LocatorBinding(s"${element}/list", Locator.parse(locator), expression, Some(containerBinding), None, None)
+            env.evaluate(foreach(() => List("$[dryRun:webElements]"), element, parent, step, doStep, env)) {
+              foreach(() => webContext.locateAll(binding), element, parent, step, doStep, env)
+            }
 
-        case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$locator "(.+?)"$expression with no (?:timeout|wait)""" =>
-          val binding = LocatorBinding(s"${element}/list", Locator.parse(locator), expression, None, Some(Duration.Zero), None)
-          env.evaluate(foreach(() => List("$[dryRun:webElements]"), element, parent, step, doStep, env)) {
-            foreach(() => webContext.locateAll(binding), element, parent, step, doStep, env)
-          }
+          case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$locator "(.+?)"$expression with no (?:timeout|wait)""" =>
+            val binding = LocatorBinding(s"${element}/list", Locator.parse(locator), expression, None, Some(Duration.Zero), None)
+            env.evaluate(foreach(() => List("$[dryRun:webElements]"), element, parent, step, doStep, env)) {
+              foreach(() => webContext.locateAll(binding), element, parent, step, doStep, env)
+            }
 
-        case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$locator "(.+?)"$expression with (\d+)$timeout second (?:timeout|wait)""" =>
-          val binding = LocatorBinding(s"${element}/list", Locator.parse(locator), step.orDocString(expression), None, Some(Duration.create(timeout.toLong, TimeUnit.SECONDS)), None)
-          env.evaluate(foreach(() => List("$[dryRun:webElements]"), element, parent, step, doStep, env)) {
-            foreach(() => webContext.locateAll(binding), element, parent, step, doStep, env)
-          }
+          case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$locator "(.+?)"$expression with (\d+)$timeout second (?:timeout|wait)""" =>
+            val binding = LocatorBinding(s"${element}/list", Locator.parse(locator), step.orDocString(expression), None, Some(Duration.create(timeout.toLong, TimeUnit.SECONDS)), None)
+            env.evaluate(foreach(() => List("$[dryRun:webElements]"), element, parent, step, doStep, env)) {
+              foreach(() => webContext.locateAll(binding), element, parent, step, doStep, env)
+            }
 
-        case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$locator "(.+?)"$expression""" =>
-          val binding = LocatorBinding(s"${element}/list", Locator.parse(locator), step.orDocString(expression), None, None, None)
-          env.evaluate(foreach(() => List("$[dryRun:webElements]"), element, parent, step, doStep, env)) {
-            foreach(() => webContext.locateAll(binding), element, parent, step, doStep, env)
-          }
+          case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$locator "(.+?)"$expression""" =>
+            val binding = LocatorBinding(s"${element}/list", Locator.parse(locator), step.orDocString(expression), None, None, None)
+            env.evaluate(foreach(() => List("$[dryRun:webElements]"), element, parent, step, doStep, env)) {
+              foreach(() => webContext.locateAll(binding), element, parent, step, doStep, env)
+            }
 
-        case r"""(.+?)$doStep for each (.+?)$element in (.+?)$$$iteration""" if !iteration.contains("delimited by") =>
-          val binding = env.getLocatorBinding(iteration)
-          env.evaluate(foreach(() => List("$[dryRun:webElements]"), element, parent, step, doStep, env)) {
-            foreach(() => webContext.locateAll(binding), element, parent, step, doStep, env)
-          }
+          case r"""(.+?)$doStep for each (.+?)$element in (.+?)$$$iteration""" if !iteration.contains("delimited by") =>
+            val binding = env.getLocatorBinding(iteration)
+            env.evaluate(foreach(() => List("$[dryRun:webElements]"), element, parent, step, doStep, env)) {
+              foreach(() => webContext.locateAll(binding), element, parent, step, doStep, env)
+            }
 
-        case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using no delay and (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit (?:timeout|wait)""" =>
-          repeat(operation, parent, step, doStep, condition, Duration.Zero, Duration(timeoutPeriod.toLong, timeoutUnit), env)
+          case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using no delay and (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit (?:timeout|wait)""" =>
+            repeat(operation, parent, step, doStep, condition, Duration.Zero, Duration(timeoutPeriod.toLong, timeoutUnit), env)
 
-        case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using no delay""" =>
-          repeat(operation, parent, step, doStep, condition, Duration.Zero, defaultRepeatTimeout(DefaultRepeatDelay), env)
+          case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using no delay""" =>
+            repeat(operation, parent, step, doStep, condition, Duration.Zero, defaultRepeatTimeout(DefaultRepeatDelay), env)
 
-        case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using (.+?)$delayPeriod (second|millisecond)$delayUnit delay and (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit (?:timeout|wait)""" =>
-          repeat(operation, parent, step, doStep, condition, Duration(delayPeriod.toLong, delayUnit), Duration(timeoutPeriod.toLong, timeoutUnit), env)
+          case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using (.+?)$delayPeriod (second|millisecond)$delayUnit delay and (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit (?:timeout|wait)""" =>
+            repeat(operation, parent, step, doStep, condition, Duration(delayPeriod.toLong, delayUnit), Duration(timeoutPeriod.toLong, timeoutUnit), env)
 
-        case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using (.+?)$delayPeriod (second|millisecond)$delayUnit delay""" =>
-          val delayDuration = Duration(delayPeriod.toLong, delayUnit)
-          repeat(operation, parent, step, doStep, condition, delayDuration, defaultRepeatTimeout(delayDuration), env)
+          case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using (.+?)$delayPeriod (second|millisecond)$delayUnit delay""" =>
+            val delayDuration = Duration(delayPeriod.toLong, delayUnit)
+            repeat(operation, parent, step, doStep, condition, delayDuration, defaultRepeatTimeout(delayDuration), env)
 
-        case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit (?:timeout|wait)""" =>
-          repeat(operation, parent, step, doStep, condition, DefaultRepeatDelay, Duration(timeoutPeriod.toLong, timeoutUnit), env)
+          case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit (?:timeout|wait)""" =>
+            repeat(operation, parent, step, doStep, condition, DefaultRepeatDelay, Duration(timeoutPeriod.toLong, timeoutUnit), env)
 
-        case r"""(.+?)$doStep (until|while)$operation (.+?)$$$condition""" if (doStep != "I wait" && !step.expression.matches(""".*".*(until|while).*".*""")) =>
-          repeat(operation, parent, step, doStep, condition, DefaultRepeatDelay, defaultRepeatTimeout(DefaultRepeatDelay), env)
+          case r"""(.+?)$doStep (until|while)$operation (.+?)$$$condition""" if (doStep != "I wait" && !step.expression.matches(""".*".*(until|while).*".*""")) =>
+            repeat(operation, parent, step, doStep, condition, DefaultRepeatDelay, defaultRepeatTimeout(DefaultRepeatDelay), env)
 
-        case _ =>
-          super.evaluatePriority(parent, step, env).orNull
-
+          case _ => null
+        }
       }
     }
   }
@@ -952,8 +953,9 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
     assert(delay.gteq(Duration.Zero), "delay cannot be less than zero")
     assert(timeout.gt(Duration.Zero), "timeout must be greater than zero")
     assert(timeout.gteq(delay), "timeout cannot be less than or equal to delay")
-    val tags = List(Tag(ReservedTags.Synthetic), Tag(ReservedTags.Repeat), Tag(ReservedTags.StepDef))
-    val preCondStepDef = Scenario(None, tags, ReservedTags.Repeat.toString, s"$operation $condition", Nil, None, Nil, Nil)
+    val operationTag = Tag(if (operation == "until") ReservedTags.RepeatUntil else ReservedTags.RepeatWhile)
+    val tags = List(Tag(ReservedTags.Synthetic), operationTag, Tag(ReservedTags.StepDef))
+    val preCondStepDef = Scenario(None, tags, operationTag.name, condition, Nil, None, Nil, Nil)
     var condSteps: List[Step] = Nil
     var evaluatedStep = step
     val start = System.nanoTime()

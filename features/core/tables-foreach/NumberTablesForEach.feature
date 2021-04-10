@@ -28,7 +28,8 @@
          And single column with header contains a number in decimal and binary form
              | decimal | 3  |
              | binary  | 11 |
-         And each row contains a number and its square and cube
+         And condition is defined by javascript "true"
+         And each row contains a number and its square and cube if condition
              | number | square | cube |
              | 1      | 1      | 1    |
              | 2      | 4      | 8    |
