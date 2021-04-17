@@ -381,7 +381,7 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
     * @param sendEnterKey true to send the Enter key after sending the value
     */
   def sendValue(elementBinding: LocatorBinding, value: String, clearFirst: Boolean, clickFirst: Boolean, sendEnterKey: Boolean): Unit = {
-    val element = elementBinding.element
+    val element = elementBinding.name
     withDriverAndElement(elementBinding, s"trying to send value to $element") { (driver, webElement) =>
       createActions(driver)
       if (clickFirst) {
@@ -416,9 +416,9 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
     */
   def selectByVisibleText(elementBinding: LocatorBinding, value: String): Unit = {
     withWebElement(elementBinding, s"trying to select option in $elementBinding by visible text") { webElement =>
-      logger.debug(s"Selecting '$value' in ${elementBinding.element} by text")
+      logger.debug(s"Selecting '$value' in ${elementBinding.name} by text")
       createSelect(webElement).selectByVisibleText(value)
-      env.bindAndWait(elementBinding.element, "select", value)
+      env.bindAndWait(elementBinding.name, "select", value)
     }
   }
 
@@ -430,9 +430,9 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
     */
   def selectByValue(elementBinding: LocatorBinding, value: String): Unit = {
     withWebElement(elementBinding, s"trying to select option in $elementBinding by value") { webElement =>
-      logger.debug(s"Selecting '$value' in ${elementBinding.element} by value")
+      logger.debug(s"Selecting '$value' in ${elementBinding.name} by value")
       createSelect(webElement).selectByValue(value)
-      env.bindAndWait(elementBinding.element, "select", value)
+      env.bindAndWait(elementBinding.name, "select", value)
     }
   }
 
@@ -444,10 +444,10 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
     */
   def selectByIndex(elementBinding: LocatorBinding, index: Int): Unit = {
     withWebElement(elementBinding, s"trying to select option in $elementBinding at index $index") { webElement =>
-      logger.debug(s"Selecting option in ${elementBinding.element} by index: $index")
+      logger.debug(s"Selecting option in ${elementBinding.name} by index: $index")
       val select = createSelect(webElement)
       select.selectByIndex(index)
-      env.bindAndWait(elementBinding.element, "select", select.getOptions.get(index).getText)
+      env.bindAndWait(elementBinding.name, "select", select.getOptions.get(index).getText)
     }
   }
 
@@ -459,9 +459,9 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
     */
   def deselectByVisibleText(elementBinding: LocatorBinding, value: String): Unit = {
     withWebElement(elementBinding, s"trying to deselect option in $elementBinding by visible text") { webElement =>
-      logger.debug(s"Deselecting '$value' in ${elementBinding.element} by text")
+      logger.debug(s"Deselecting '$value' in ${elementBinding.name} by text")
       createSelect(webElement).deselectByVisibleText(value)
-      env.bindAndWait(elementBinding.element, "deselect", value)
+      env.bindAndWait(elementBinding.name, "deselect", value)
     }
   }
 
@@ -473,9 +473,9 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
     */
   def deselectByValue(elementBinding: LocatorBinding, value: String): Unit = {
     withWebElement(elementBinding, s"trying to deselect option in $elementBinding by value") { webElement =>
-      logger.debug(s"Deselecting '$value' in ${elementBinding.element} by value")
+      logger.debug(s"Deselecting '$value' in ${elementBinding.name} by value")
       createSelect(webElement).deselectByValue(value)
-      env.bindAndWait(elementBinding.element, "deselect", value)
+      env.bindAndWait(elementBinding.name, "deselect", value)
     }
   }
 
@@ -487,17 +487,17 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
     */
   def deselectByIndex(elementBinding: LocatorBinding, index: Int): Unit = {
     withWebElement(elementBinding, s"trying to deselect option in $elementBinding at index $index") { webElement =>
-      logger.debug(s"Deselecting option in ${elementBinding.element} by index: $index")
+      logger.debug(s"Deselecting option in ${elementBinding.name} by index: $index")
       val select = createSelect(webElement)
       select.deselectByIndex(index)
-      env.bindAndWait(elementBinding.element, "deselect", select.getOptions.get(index).getText)
+      env.bindAndWait(elementBinding.name, "deselect", select.getOptions.get(index).getText)
     }
   }
 
   private [web] def createActions(driver: WebDriver): Actions = new Actions(driver)
 
   def performAction(action: String, elementBinding: LocatorBinding): Unit = {
-    val actionBinding = env.scopes.getOpt(s"${elementBinding.element}/action/$action/javascript")
+    val actionBinding = env.scopes.getOpt(s"${elementBinding.name}/action/$action/javascript")
     actionBinding match {
       case Some(javascript) =>
         performScriptAction(action, javascript, elementBinding, s"trying to $action $elementBinding")
@@ -528,7 +528,7 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
               webElement.clear()
           }
         }
-        env.bindAndWait(elementBinding.element, action, "true")
+        env.bindAndWait(elementBinding.name, action, "true")
     }
   }
 
@@ -563,7 +563,7 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
       keys.reverse.foreach { key => actions = actions.keyUp(key) }
       actions.build().perform()
     }
-    env.bindAndWait(elementBinding.element, clickAction, "true")
+    env.bindAndWait(elementBinding.name, clickAction, "true")
   }
 
   def sendKeys(keysToSend: Array[String]): Unit = {
@@ -609,7 +609,7 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
         moveToAndCapture(driver, webElement)
       }
       executeJS(s"(function(element) { $javascript })(arguments[0])", webElement)
-      env.bindAndWait(elementBinding.element, action, "true")
+      env.bindAndWait(elementBinding.name, action, "true")
     }
   }
 
@@ -662,7 +662,7 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
             if (webElement.isSelected) perform(webElement, contextElement) { _.sendKeys(Keys.SPACE) }
           case "move to" => perform(webElement, contextElement) { action => action }
         }
-        env.bindAndWait(elementBinding.element, action, "true")
+        env.bindAndWait(elementBinding.name, action, "true")
       }
     }
   }
@@ -674,7 +674,7 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
     */
   def waitForText(elementBinding: LocatorBinding): Boolean =
     getElementText(elementBinding).map(_.length()).getOrElse {
-      env.scopes.set(s"${elementBinding.element}/text", "text")
+      env.scopes.set(s"${elementBinding.name}/text", "text")
       0
     } > 0
 
@@ -758,10 +758,10 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
           }
         case Some(value) => value
       }) tap { text =>
-        env.bindAndWait(elementBinding.element, "text", text)
+        env.bindAndWait(elementBinding.name, "text", text)
       }
     } tap { value =>
-      logger.debug(s"getElementText(${elementBinding.element})='$value'")
+      logger.debug(s"getElementText(${elementBinding.name})='$value'")
     }
 
   /**
@@ -785,10 +785,10 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
           } getOrElse null
         case Some(value) => value
       }) tap { text =>
-        env.bindAndWait(elementBinding.element, "selectedText", text)
+        env.bindAndWait(elementBinding.name, "selectedText", text)
       }
     } tap { value =>
-      logger.debug(s"getSelectedElementText(${elementBinding.element})='$value'")
+      logger.debug(s"getSelectedElementText(${elementBinding.name})='$value'")
     }
   }
 
@@ -806,13 +806,13 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
         case None =>
           Try(createSelect(webElement)) map { select =>
             select.getAllSelectedOptions.asScala.map(_.getAttribute("value")).mkString(",") tap { value =>
-              env.bindAndWait(elementBinding.element, "selectedValue", value)
+              env.bindAndWait(elementBinding.name, "selectedValue", value)
             }
           } getOrElse null
         case Some(value) => value
       }
     } tap { value =>
-      logger.debug(s"getSelectedElementValue(${elementBinding.element})='$value'")
+      logger.debug(s"getSelectedElementValue(${elementBinding.name})='$value'")
     }
   }
 

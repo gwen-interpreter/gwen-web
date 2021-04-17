@@ -265,8 +265,12 @@ class WebEnvContext(val options: GwenOptions) extends EnvContext(options) {
         if (!polled) {
           result = super.compare(name, expected, actualValue, operator, negate).getOrElse(result)
         }
-        val binding = getLocatorBinding(name.substring(0, name.length - nameSuffix.map(_.length).getOrElse(0)), optional = true)
-        assert(result, s"Expected ${binding.map(_.toString).getOrElse(name)} to ${if(negate) "not " else ""}$operator '$expected' but got '$actualValue'")
+        val binding = Try(
+          getLocatorBinding(name.substring(0, name.length - nameSuffix.map(_.length).getOrElse(0)), optional = true) getOrElse {
+            getBinding(name)
+          }
+        ).map(_.toString).getOrElse(name)
+        assert(result, s"Expected $binding to ${if(negate) "not " else ""}$operator '$expected' but got '$actualValue'")
     }
 
   }

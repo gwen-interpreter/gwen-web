@@ -17,6 +17,7 @@
 package gwen.web
 
 import gwen.Errors.ScriptException
+import gwen.eval.Binding
 import gwen.web.Errors._
 
 import com.typesafe.scalalogging.LazyLogging
@@ -45,7 +46,7 @@ trait WebElementLocator extends LazyLogging {
     *  @return the found element (or an error if not found)
     */
   private[web] def locate(elementBinding: LocatorBinding): WebElement = {
-    val elementName = elementBinding.element
+    val elementName = elementBinding.name
     val locators = elementBinding.locators
     var result: Try[WebElement] = Try(elementNotFoundError(elementBinding))
     if (locators.size == 1) {
@@ -89,7 +90,7 @@ trait WebElementLocator extends LazyLogging {
     * @return a list of elements or an empty list if none found
     */
   private[web] def locateAll(elementBinding: LocatorBinding): List[WebElement] = {
-    val elementName = elementBinding.element
+    val elementName = elementBinding.name
     logger.debug(s"Locating all $elementName")
     findAllElementsByLocator(elementName, elementBinding.locators.head)
   }
@@ -308,15 +309,15 @@ trait WebElementLocator extends LazyLogging {
 /**
   *  Captures a web element locator binding. A binding can have one or more locators.
   *
-  *  @param element the web element name
+  *  @param name the web element name
   *  @param locators the locators
   */
-case class LocatorBinding(element: String, locators: List[Locator]) {
+case class LocatorBinding(name: String, locators: List[Locator]) extends Binding {
   lazy val timeoutSeconds: Long = locators.map(_.timeoutSeconds).sum
   /** Gets the javascript equivalent of this locator binding (used as fallback on stale element reference). */
   def jsEquivalent: LocatorBinding = {
     val jsLocators = locators.map { loc =>
-      val isListLocator = element.endsWith("/list")
+      val isListLocator = name.endsWith("/list")
       val jsExpression = loc.locatorType match {
         case "id" =>
           if (!isListLocator) s"document.getElementById('${loc.expression}')"
@@ -339,20 +340,20 @@ case class LocatorBinding(element: String, locators: List[Locator]) {
       }
       Locator("javascript", jsExpression, loc.container, loc.timeout, loc.index)
     }
-    LocatorBinding(element, jsLocators)
+    LocatorBinding(name, jsLocators)
   }
-  def withJSEquivalent = LocatorBinding(element, locators ++ List(jsEquivalent.locators.head))
-  override def toString = s"$element [locator${if (locators.size > 1) "s" else ""}: ${locators.mkString(", ")}]"
+  def withJSEquivalent = LocatorBinding(name, locators ++ List(jsEquivalent.locators.head))
+  override def toString = s"$name [locator${if (locators.size > 1) "s" else ""}: ${locators.mkString(", ")}]"
 }
 
 /** Locator binding factory companion. */
 object LocatorBinding {
-  def apply(element: String, locatorType: String, expression: String, container: Option[LocatorBinding], timeout: Option[Duration], index: Option[Int]): LocatorBinding =
-    LocatorBinding(element, List(Locator(locatorType, expression, container, timeout, index)))
-  def apply(element: String, locatorType: String, expression: String, container: Option[LocatorBinding], index: Option[Int]): LocatorBinding =
-    LocatorBinding(element, List(Locator(locatorType, expression, container, None, index)))
+  def apply(name: String, locatorType: String, expression: String, container: Option[LocatorBinding], timeout: Option[Duration], index: Option[Int]): LocatorBinding =
+    LocatorBinding(name, List(Locator(locatorType, expression, container, timeout, index)))
+  def apply(name: String, locatorType: String, expression: String, container: Option[LocatorBinding], index: Option[Int]): LocatorBinding =
+    LocatorBinding(name, List(Locator(locatorType, expression, container, None, index)))
   def apply(binding: LocatorBinding, locator: Locator): LocatorBinding =
-    LocatorBinding(binding.element, List(locator))
+    LocatorBinding(binding.name, List(locator))
 }
 
 /**
