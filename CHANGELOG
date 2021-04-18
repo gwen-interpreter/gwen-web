@@ -1,3 +1,8 @@
+2.50.0-beta-rp.9
+================
+Apr 17, 2021
+- Replace double space with ` &nbsp;` when escaping for HTML
+
 2.50.0-beta-rp.8
 ================
 Apr 17, 2021
