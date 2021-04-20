@@ -1,7 +1,12 @@
 2.50.0-beta-rp.9
 ================
-Apr 17, 2021
+Apr 20, 2021
 - Replace double space with ` &nbsp;` when escaping for HTML
+- Skip RP reporting for skipped features
+- Add heartbeat to monitor RP connection during execution through setting:
+  - `gwen.rp.hearbeat = true | false` default is `true`
+    - If enabled, Gwen will check the report portal connection before the first step in each 
+      scenario is executed and fail fast if it's gone offline
 
 2.50.0-beta-rp.8
 ================
@@ -19,7 +24,7 @@ Apr 12, 2021
 ================
 Apr 11, 2021
 - Fix composite steps involving if conditions
-- Add 1 ms delay to all lifecyce events to ensure millisecond timestamp accuracy
+- Add 1 ms delay to all lifecyce events to ensure millisecond timestamp accuracy for RP
 
 2.50.0-beta-rp.5
 ================

@@ -960,9 +960,10 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
     var evaluatedStep = step
     val start = System.nanoTime()
     env.perform {
-      var iteration = 0L
+      var iteration = 0
       try {
         env.webContext.waitUntil(timeout.toSeconds, s"trying to repeat: ${step.name}") {
+          val index = iteration
           iteration = iteration + 1
           env.topScope.set("iteration number", iteration.toString)
           val preStep = step.copy(withKeyword = if(iteration == 1) step.keyword else StepKeyword.And.toString, withName = doStep)
@@ -972,7 +973,7 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
               if (condSteps.isEmpty) {
                 lifecycle.beforeStepDef(step, preCondStepDef, env.scopes)
               }
-              val iterationStep = evaluateStep(preCondStepDef, preStep, env)
+              val iterationStep = evaluateStep(preCondStepDef, preStep, index, env)
               condSteps = iterationStep :: condSteps
               iterationStep.evalStatus match {
                 case Failed(_, e) => throw e
@@ -995,7 +996,7 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
                 if (condSteps.isEmpty) {
                   lifecycle.beforeStepDef(step, preCondStepDef, env.scopes)
                 }
-                val iterationStep = evaluateStep(preCondStepDef, preStep, env)
+                val iterationStep = evaluateStep(preCondStepDef, preStep, index, env)
                 condSteps = iterationStep :: condSteps
                 iterationStep.evalStatus match {
                   case Failed(_, e) => throw e
@@ -1025,11 +1026,11 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
       try {
         operation match {
           case "until" =>
-            evaluatedStep = this.evaluateStep(step, step.copy(withName = doStep), env)
+            evaluatedStep = this.evaluateStep(step, step.copy(withName = doStep), 0, env)
             env.scopes.get(s"$condition/javascript")
           case _ =>
             env.scopes.get(s"$condition/javascript")
-            evaluatedStep = this.evaluateStep(step, step.copy(withName = doStep), env)
+            evaluatedStep = this.evaluateStep(step, step.copy(withName = doStep), 0, env)
         }
       } catch {
         case _: Throwable => 
