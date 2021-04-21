@@ -173,7 +173,7 @@ class WebEnvContext(val options: GwenOptions) extends EnvContext(options) {
                     Duration.create(timeoutSecs.toLong, TimeUnit.SECONDS)
                   }
                   val index = scopes.getOpt(interpolate(s"$element/locator/$locatorType/index")(getBoundReferenceValue)).map(_.toInt)
-                  Some(Locator(locatorType, expr, container, timeout, index))
+                  Some(Locator(locatorType, expr, container.flatMap(c => getLocatorBinding(c, optional)), timeout, index))
                 case None =>
                   if (optional) None else locatorBindingError(s"Undefined locator lookup binding for $element: $lookupBinding")
               }
@@ -218,7 +218,7 @@ class WebEnvContext(val options: GwenOptions) extends EnvContext(options) {
       val javascript = scopes.get(s"$condition/javascript")
       logger.info(s"waiting until $condition (post-$action condition)")
       logger.debug(s"Waiting for script to return true: $javascript")
-      webContext.waitUntil {
+      webContext.waitUntil(s"waiting for true return from javascript: $javascript") {
         evaluateJSPredicate(javascript)
       }
     }
@@ -234,13 +234,13 @@ class WebEnvContext(val options: GwenOptions) extends EnvContext(options) {
     * @param negate true to negate the result
     * @return true if the actual value matches the expected value
     */
-  def compare(name: String, expected: String, actual: () => String, operator: String, negate: Boolean): Unit = {
+  def compare(name: String, expected: String, actual: () => String, operator: String, negate: Boolean, nameSuffix: Option[String] = None): Unit = {
     var result = false
     var error: Option[String] = None
     var actualValue = actual()
     var polled = false
     try {
-      webContext.waitUntil {
+      webContext.waitUntil(s"waiting for $name to ${if(negate) "not " else ""}$operator '$expected'") {
         if (polled) {
           actualValue = actual()
         }
@@ -265,7 +265,12 @@ class WebEnvContext(val options: GwenOptions) extends EnvContext(options) {
         if (!polled) {
           result = super.compare(name, expected, actualValue, operator, negate).getOrElse(result)
         }
-        assert(result, s"Expected $name to ${if(negate) "not " else ""}$operator '$expected' but got '$actualValue'")
+        val binding = Try(
+          getLocatorBinding(name.substring(0, name.length - nameSuffix.map(_.length).getOrElse(0)), optional = true) getOrElse {
+            getBinding(name)
+          }
+        ).map(_.toString).getOrElse(name)
+        assert(result, s"Expected $binding to ${if(negate) "not " else ""}$operator '$expected' but got '$actualValue'")
     }
 
   }

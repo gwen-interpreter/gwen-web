@@ -1,0 +1,8 @@
+{
+  "id": @{pet id 2},
+  "category": {
+    "name": "@{category name 2}"
+  },
+  "name": "!{}",
+  "status": "${my pet status}"
+}

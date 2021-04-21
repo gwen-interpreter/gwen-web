@@ -1,5 +1,5 @@
 #
-# Copyright 2017 Brady Wood, Branko Juric
+# Copyright 2018 Branko Juric, Brady Wood
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,12 +14,22 @@
 # limitations under the License.
 #
 
-@Todo
-Feature: Add Todo items
+ Feature: XML meta
 
-  @Todo
-  Scenario: Add items in my Todo list
-      Given I launch the Todo app
-       When I add a "Walk the dog" item
-        And I add a "Get the milk" item
-       Then the number of active items should be "2"
+@StepDef
+@Action
+Scenario: I process unquoted XML <xml>
+    Given xml1 is "$<xml>"
+      And xml1 should match xpath "/Test"
+
+@StepDef
+@Action
+Scenario: I process quoted XML "<xml>"
+    Given xml2 is "$<xml>"
+      And xml2 should match xpath "/Test"
+
+@StepDef
+@Action
+Scenario: I process XML in <xml>
+    Given xml3 is "${$<xml>}"
+     And $<xml> should match xpath "/Test"

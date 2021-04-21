@@ -17,6 +17,7 @@
 package gwen.web
 
 import gwen.Errors.ScriptException
+import gwen.eval.Binding
 import gwen.web.Errors._
 
 import com.typesafe.scalalogging.LazyLogging
@@ -45,9 +46,9 @@ trait WebElementLocator extends LazyLogging {
     *  @return the found element (or an error if not found)
     */
   private[web] def locate(elementBinding: LocatorBinding): WebElement = {
-    val elementName = elementBinding.element
+    val elementName = elementBinding.name
     val locators = elementBinding.locators
-    var result: Try[WebElement] = Try(elementNotFoundError(elementName))
+    var result: Try[WebElement] = Try(elementNotFoundError(elementBinding))
     if (locators.size == 1) {
       val locator = locators.head
       try {
@@ -55,8 +56,8 @@ trait WebElementLocator extends LazyLogging {
           result = Success(webElement)
         }
       } catch {
-        case e: NoSuchElementException =>
-          result = Try(elementNotFoundError(elementName, e))
+        case e @ (_ :  NoSuchElementException | _ : NotFoundOrInteractableException) =>
+          result = Try(elementNotFoundError(elementBinding, e))
       }
     } else {
       // multiple locators: return first one that resolves to an element
@@ -89,7 +90,7 @@ trait WebElementLocator extends LazyLogging {
     * @return a list of elements or an empty list if none found
     */
   private[web] def locateAll(elementBinding: LocatorBinding): List[WebElement] = {
-    val elementName = elementBinding.element
+    val elementName = elementBinding.name
     logger.debug(s"Locating all $elementName")
     findAllElementsByLocator(elementName, elementBinding.locators.head)
   }
@@ -102,7 +103,7 @@ trait WebElementLocator extends LazyLogging {
         if (index < elements.size) {
           Option(elements(index))
         } else {
-          elementNotFoundError(elementName, null)
+          elementNotFoundError(LocatorBinding(elementName, List(locator)))
         }
       case _ =>
         val locatorType = locator.locatorType
@@ -130,7 +131,7 @@ trait WebElementLocator extends LazyLogging {
                 getElementByJavaScript(s"$expression", locator)
               } catch {
                 case e: ScriptException =>
-                  elementNotFoundError(elementName, e)
+                  elementNotFoundError(LocatorBinding(elementName, List(locator)))
               }
             case "cache" => webContext.getCachedWebElement(elementName)
             case _ => locatorBindingError(s"Unsupported locator defined for $elementName: $locator")
@@ -156,14 +157,7 @@ trait WebElementLocator extends LazyLogging {
     webContext.withWebDriver { driver =>
       val handle = driver.getWindowHandle
       try {
-        locator.container.fold(driver.findElement(by)) { containerName =>
-          val binding = webContext.getLocatorBinding(containerName)
-          val containerBinding =
-            LocatorBinding(
-              binding.element,
-              binding.locators.map(loc =>
-                Locator(loc.locatorType, loc.expression, loc.container, isContainer = true, loc.timeout, loc.index))
-              )
+        locator.container.fold(driver.findElement(by)) { containerBinding =>
           getContainerElement(containerBinding) match {
             case Some(containerElem) =>
               containerElem.findElement(by)
@@ -203,8 +197,8 @@ trait WebElementLocator extends LazyLogging {
     *
     */
   private def getElementByJavaScript(javascript: String, locator: Locator): Option[WebElement] = {
-    val result = locator.container.fold(webContext.executeJS(s"return $javascript")) { containerName =>
-      getContainerElement(webContext.getLocatorBinding(containerName)) match {
+    val result = locator.container.fold(webContext.executeJS(s"return $javascript")) { containerBinding =>
+      getContainerElement(containerBinding) match {
           case Some(containerElem) =>
             webContext.executeJS(s"return (function(containerElem) { return $javascript })(arguments[0])", containerElem)
           case _ =>
@@ -248,7 +242,7 @@ trait WebElementLocator extends LazyLogging {
             getAllElementsByJavaScript(s"$expression", locator)
           } catch {
             case e: ScriptException =>
-              elementNotFoundError(elementName, e)
+              elementNotFoundError(LocatorBinding(elementName, List(locator)), e)
           }
         case _ => locatorBindingError(s"Unsupported locator defined for $elementName: $locator")
       }
@@ -274,8 +268,8 @@ trait WebElementLocator extends LazyLogging {
         val elems = locator.container match {
           case None => 
             driver.findElements(by)
-          case Some(containerName) => 
-            getContainerElement(webContext.getLocatorBinding(containerName)) match {
+          case Some(containerBinding) => 
+            getContainerElement(containerBinding) match {
               case Some(containerElem) => containerElem.findElements(by)
               case _ => driver.findElements(by)
             }
@@ -296,7 +290,7 @@ trait WebElementLocator extends LazyLogging {
     */
   private def getAllElementsByJavaScript(javascript: String, locator: Locator): List[WebElement] = {
     var elements: List[WebElement] = Nil
-    webContext.waitUntil(locator.timeoutSeconds) {
+    webContext.waitUntil(locator.timeoutSeconds, s"trying to locate elements by javascript: $javascript") {
       elements = webContext.executeJS(s"return $javascript") match {
         case elems: util.ArrayList[_] =>
           elems.asScala.toList.map(_.asInstanceOf[WebElement])
@@ -315,15 +309,15 @@ trait WebElementLocator extends LazyLogging {
 /**
   *  Captures a web element locator binding. A binding can have one or more locators.
   *
-  *  @param element the web element name
+  *  @param name the web element name
   *  @param locators the locators
   */
-case class LocatorBinding(element: String, locators: List[Locator]) {
+case class LocatorBinding(name: String, locators: List[Locator]) extends Binding {
   lazy val timeoutSeconds: Long = locators.map(_.timeoutSeconds).sum
   /** Gets the javascript equivalent of this locator binding (used as fallback on stale element reference). */
   def jsEquivalent: LocatorBinding = {
     val jsLocators = locators.map { loc =>
-      val isListLocator = element.endsWith("/list")
+      val isListLocator = name.endsWith("/list")
       val jsExpression = loc.locatorType match {
         case "id" =>
           if (!isListLocator) s"document.getElementById('${loc.expression}')"
@@ -346,40 +340,41 @@ case class LocatorBinding(element: String, locators: List[Locator]) {
       }
       Locator("javascript", jsExpression, loc.container, loc.timeout, loc.index)
     }
-    LocatorBinding(element, jsLocators)
+    LocatorBinding(name, jsLocators)
   }
-  def withJSEquivalent = LocatorBinding(element, locators ++ List(jsEquivalent.locators.head))
+  def withJSEquivalent = LocatorBinding(name, locators ++ List(jsEquivalent.locators.head))
+  override def toString = s"$name [locator${if (locators.size > 1) "s" else ""}: ${locators.mkString(", ")}]"
 }
 
 /** Locator binding factory companion. */
 object LocatorBinding {
-  def apply(element: String, locatorType: String, expression: String, container: Option[String], timeout: Option[Duration], index: Option[Int]): LocatorBinding =
-    LocatorBinding(element, List(Locator(locatorType, expression, container, timeout, index)))
-  def apply(element: String, locatorType: String, expression: String, container: Option[String], index: Option[Int]): LocatorBinding =
-    LocatorBinding(element, List(Locator(locatorType, expression, container, None, index)))
+  def apply(name: String, locatorType: String, expression: String, container: Option[LocatorBinding], timeout: Option[Duration], index: Option[Int]): LocatorBinding =
+    LocatorBinding(name, List(Locator(locatorType, expression, container, timeout, index)))
+  def apply(name: String, locatorType: String, expression: String, container: Option[LocatorBinding], index: Option[Int]): LocatorBinding =
+    LocatorBinding(name, List(Locator(locatorType, expression, container, None, index)))
   def apply(binding: LocatorBinding, locator: Locator): LocatorBinding =
-    LocatorBinding(binding.element, List(locator))
+    LocatorBinding(binding.name, List(locator))
 }
 
 /**
   * Captures a web locator.
   * @param locatorType the locator type
   * @param expression the locator expression
-  * @param container optional parent container name
+  * @param container optional parent container binding
   * @param isContainer true if this is a locaotr for a container element, false otherwise
   * @param timeout optional timeout (defaults to `gwen.web.locator.wait.seconds` if not provided)
   * @param index optional index (if locator returns more than one element then index is required)
   */
-case class Locator(locatorType: String, expression: String, container: Option[String], isContainer: Boolean, timeout: Option[Duration], index: Option[Int]) {
+case class Locator(locatorType: String, expression: String, container: Option[LocatorBinding], isContainer: Boolean, timeout: Option[Duration], index: Option[Int]) {
   override def toString: String =
-    s"($locatorType: $expression)${container.map(c => s" in $c").getOrElse("")}${index.map(i => s" at index $i").getOrElse("")}"
+    s"$locatorType=$expression${container.map(c => s" in $c").getOrElse("")}${index.map(i => s" at index $i").getOrElse("")}"
   lazy val timeoutSeconds = timeout.map(_.toSeconds).getOrElse(WebSettings.`gwen.web.locator.wait.seconds`)
   lazy val timeoutMilliseconds = timeoutSeconds * 1000
 }
 
 /** Locator factory companion. */
 object Locator {
-  def apply(locatorType: String, expression: String, container: Option[String], timeout: Option[Duration], index: Option[Int]): Locator =
+  def apply(locatorType: String, expression: String, container: Option[LocatorBinding], timeout: Option[Duration], index: Option[Int]): Locator =
     Locator(parse(locatorType), expression, container, isContainer = false, timeout, index)
   def apply(locatorType: String, expression: String): Locator =
     Locator(parse(locatorType), expression, None, isContainer = false, None, None)

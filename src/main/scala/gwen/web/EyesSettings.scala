@@ -30,7 +30,7 @@ object EyesSettings {
     * (default is enabled). Valid values include: true or false.
     */
   def `gwen.applitools.eyes.enabled`: Boolean =
-    Settings.getOpt("gwen.applitools.eyes.enabled").getOrElse("true").toBoolean
+    Settings.getOpt("gwen.applitools.eyes.enabled").map(_.toBoolean).getOrElse(true)
 
   /**
     * Provides access to the `gwen.applitools.eyes.batchName` setting used to set the AppliTools batch name (default

@@ -1,5 +1,5 @@
 #
-# Copyright 2017 Brady Wood, Branko Juric
+# Copyright 2018 Branko Juric, Brady Wood
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,12 +14,13 @@
 # limitations under the License.
 #
 
-@Todo
-Feature: Add Todo items
+ Feature: XML feature
 
-  @Todo
-  Scenario: Add items in my Todo list
-      Given I launch the Todo app
-       When I add a "Walk the dog" item
-        And I add a "Get the milk" item
-       Then the number of active items should be "2"
+Scenario: Pass XML to StepDef
+    Given content is "<?xml version="1.0" encoding="UTF-8"?><Test>test</Test>"
+     When I process unquoted XML ${content}
+      And I process quoted XML "${content}"
+      And I process XML in content
+     Then xml1 should not be ""
+      And xml2 should not be ""
+      And xml3 should not be ""

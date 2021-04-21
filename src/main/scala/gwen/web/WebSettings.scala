@@ -64,7 +64,7 @@ object WebSettings {
     * Provides access to the `gwen.authorize.plugins` setting used to control whether
     * or not the browser should authorize browser plugins. (default value is `false`).
     */
-  def `gwen.web.authorize.plugins`: Boolean = Settings.getOpt("gwen.web.authorize.plugins").getOrElse("false").toBoolean
+  def `gwen.web.authorize.plugins`: Boolean = Settings.getOpt("gwen.web.authorize.plugins").map(_.toBoolean).getOrElse(false)
 
   /**
     * Provides access to the `gwen.web.wait.seconds` setting used to set the implicit
@@ -83,7 +83,7 @@ object WebSettings {
     * Provides access to the `gwen.web.maximize` setting used to control whether
     * or not the web driver should maximize the browser window (default value is `false`).
     */
-  def `gwen.web.maximize`: Boolean = Settings.getOpt("gwen.web.maximize").getOrElse("false").toBoolean
+  def `gwen.web.maximize`: Boolean = Settings.getOpt("gwen.web.maximize").map(_.toBoolean).getOrElse(false)
 
   /**
     * Provides access to the `gwen.web.throttle.msecs` setting used to control the wait
@@ -105,7 +105,7 @@ object WebSettings {
     * then the `gwen.report.slideshow.create` setting is also implicitly set to true if it is not 
     * set so that the report generator in core web component knows to generate the slideshow.
     */
-  def `gwen.web.capture.screenshots`: Boolean = Settings.getOpt("gwen.web.capture.screenshots").getOrElse("false").toBoolean tap { isSet =>
+  def `gwen.web.capture.screenshots`: Boolean = Settings.getOpt("gwen.web.capture.screenshots").map(_.toBoolean).getOrElse(false) tap { isSet =>
     if (isSet) Settings.set("gwen.report.slideshow.create", "true")
   }
 
@@ -126,14 +126,14 @@ object WebSettings {
     * or not the web driver should accept untrusted (self signed) SSL certificates (default value
     * is `true`).
     */
-  def `gwen.web.accept.untrusted.certs`: Boolean = Settings.getOpt("gwen.web.accept.untrusted.certs").getOrElse("true").toBoolean
+  def `gwen.web.accept.untrusted.certs`: Boolean = Settings.getOpt("gwen.web.accept.untrusted.certs").map(_.toBoolean).getOrElse(true)
 
   /**
     * Provides access to the `gwen.web.suppress.images` setting used to control whether
     * or not image rendering will be suppressed in the browser (default value
     * is `false`). Currently this capability is only supported in firefox driver.
     */
-  def `gwen.web.suppress.images`: Boolean = Settings.getOpt("gwen.web.suppress.images").getOrElse("false").toBoolean
+  def `gwen.web.suppress.images`: Boolean = Settings.getOpt("gwen.web.suppress.images").map(_.toBoolean).getOrElse(false)
 
   /**
    * Provides access to the `gwen.web.chrome.extensions` settings use to set
@@ -149,7 +149,7 @@ object WebSettings {
     * (default value is `false` ~ to discard). If set to `false`, then a screenshot will be discarded
     * if its size in bytes matches that of the last captured screenshot.
     */
-  def `gwen.web.capture.screenshots.duplicates`: Boolean = Settings.getOpt("gwen.web.capture.screenshots.duplicates").getOrElse("false").toBoolean
+  def `gwen.web.capture.screenshots.duplicates`: Boolean = Settings.getOpt("gwen.web.capture.screenshots.duplicates").map(_.toBoolean).getOrElse(false)
 
   /**
     * Provides access to the `gwen.web.chrome.path` setting used to specify the
@@ -194,7 +194,7 @@ object WebSettings {
     * Provides access to the `gwen.web.browser.headless` setting used to control whether
     * or not the browser should run headless. (default value is `false`).
     */
-  def `gwen.web.browser.headless`: Boolean = Settings.getOpt("gwen.web.browser.headless").getOrElse("false").toBoolean
+  def `gwen.web.browser.headless`: Boolean = Settings.getOpt("gwen.web.browser.headless").map(_.toBoolean).getOrElse(false)
 
   /**
    * Provides access to the web capabilities settings. This setting merges a comma separated list of capabilities
@@ -208,13 +208,13 @@ object WebSettings {
     * implicitly convert all locator bindings to JavaScript equivalents to force all elements to be located by
     * executing javascript on the page. Default value is false.
     */
-  def `gwen.web.implicit.js.locators`: Boolean = Settings.getOpt("gwen.web.implicit.js.locators").getOrElse("false").toBoolean
+  def `gwen.web.implicit.js.locators`: Boolean = Settings.getOpt("gwen.web.implicit.js.locators").map(_.toBoolean).getOrElse(false)
 
   /**
     * Provides access to the `gwen.web.implicit.element.focus` setting used to determine whether or not Gwen should
     * implicitly put the focus on all located web elements. Default value is true.
     */
-  def `gwen.web.implicit.element.focus`: Boolean = Settings.getOpt("gwen.web.implicit.element.focus").getOrElse("true").toBoolean
+  def `gwen.web.implicit.element.focus`: Boolean = Settings.getOpt("gwen.web.implicit.element.focus").map(_.toBoolean).getOrElse(true)
 
   /**
     * Provides access to the `gwen.web.browser.size` setting used to set the browser window size.
@@ -242,13 +242,13 @@ object WebSettings {
     * Provides access to the `gwen.web.sendKeys.clearFirst` setting used to control whether
     * or not Gwen will clear fields before sending keys to them. (default value is `false`).
     */
-  def `gwen.web.sendKeys.clearFirst`: Boolean = Settings.getOpt("gwen.web.sendKeys.clearFirst").getOrElse("false").toBoolean
+  def `gwen.web.sendKeys.clearFirst`: Boolean = Settings.getOpt("gwen.web.sendKeys.clearFirst").map(_.toBoolean).getOrElse(false)
 
   /**
     * Provides access to the `gwen.web.sendKeys.clickFirst` setting used to control whether
     * or not Gwen will click fields before sending keys to them. (default value is `false`).
     */
-  def `gwen.web.sendKeys.clickFirst`: Boolean = Settings.getOpt("gwen.web.sendKeys.clickFirst").getOrElse("false").toBoolean
+  def `gwen.web.sendKeys.clickFirst`: Boolean = Settings.getOpt("gwen.web.sendKeys.clickFirst").map(_.toBoolean).getOrElse(false)
 
   /**
    * Provides access to the chrome mobile emulation settings. This setting merges a comma separated list of values
@@ -264,5 +264,5 @@ object WebSettings {
    * If set, enables the local file detector on remote webdriver if `gwen.web.remote.url` is set (default is disabled).
    */
   def `gwen.web.remote.localFileDetector`: Boolean = 
-    `gwen.web.remote.url`.nonEmpty && Settings.getOpt("gwen.web.remote.localFileDetector").getOrElse("false").toBoolean
+    `gwen.web.remote.url`.nonEmpty && Settings.getOpt("gwen.web.remote.localFileDetector").map(_.toBoolean).getOrElse(false)
 }
