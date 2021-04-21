@@ -1,3 +1,17 @@
+2.51.0-beta-rp.9
+================
+Apr 21, 2021
+- Merge consolidated 2.51.0 master
+
+2.51.0
+======
+Apr 21, 2021
+- Replace double space with ` &nbsp;` when escaping for HTML
+- Add heath check hook into lifecycle events
+- Enrich assertion errors to include binding information
+- Introduce synthetic stepdefs for `if` and `repeat` steps for consistent structure
+- Fix screenshot attachemnts in HTML report
+
 2.50.0-beta-rp.9
 ================
 Apr 20, 2021
