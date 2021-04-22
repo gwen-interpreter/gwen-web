@@ -1,7 +1,17 @@
-2.51.0-beta-rp.9
-================
-Apr 21, 2021
-- Merge consolidated 2.51.0 master
+2.51.0-beta-rp.10
+=================
+Apr 22, 2021
+- Add RP hearteat timeout setting (default is 3 seconds):
+  - `gwen.rp.heartbeat.timeoutSecs`
+- Truncate RP item names greater than 1024 chars and add `... ` to end and log INFO message
+- Log DocStrings and data tables as INFO messages in RP
+- Changed RP heartbeat to use /health URL and check payload
+- Added new setting `gwen.rp.send.markdownBlocks = true | false` (default is true)
+  - When enabled, surrounds all markdown content with triple back ticks to force block style render
+    and preserve original text as much as possible in report portal markdown view
+  - When disabled, sends all content to report portal as is (unmodified for markdown)
+- Removed setting `gwen.rp.escapeForMarkdown` (character level markdown escapes no longer supported)
+
 
 2.51.0
 ======

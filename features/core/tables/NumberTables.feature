@@ -34,9 +34,10 @@
              | 2      | 4      | 8    |
              | 3      | 9      | 27   |
          And each row contains a number in decimal and binary form
-             | 1 | 1  |
-             | 2 | 10 |
-             | 3 | 11 |
+             | decimal | binary |
+             | 1       | 1      |
+             | 2       | 10     |
+             | 3       | 11     |
          And each column contains a number and its square and cube
              | number | 1 | 2 | 3  |
              | square | 1 | 4 | 9  |
