@@ -20,10 +20,11 @@
 package gwen.web
 
 import gwen.Errors.GwenException
+import gwen.web.eval.binding.LocatorBinding
 
 import org.openqa.selenium.Keys
 
-object Errors {
+object WebErrors {
   
     def locatorBindingError(msg: String) = throw new LocatorBindingException(msg)
     def unsupportedWebDriverError(driverName: String) = throw new UnsupportedWebDriverException(driverName)
@@ -31,10 +32,10 @@ object Errors {
     def unsupportedModifierKeyError(key: String) = throw new UnsupportedModifierKeyException(key)
     def waitTimeoutError(timeoutSecs: Long, reason: String, cause: Throwable) = throw new WaitTimeoutException(timeoutSecs, reason, cause)
     def waitTimeoutError(timeoutSecs: Long, reason: String) = throw new WaitTimeoutException(timeoutSecs, reason, null)
-    def elementNotInteractableError(elementBinding: LocatorBinding, cause: Throwable) =
-      throw new WebElementNotInteractableException(elementBinding, cause)
-    def elementNotFoundError(elementBinding: LocatorBinding, cause: Throwable = null) =
-      throw new WebElementNotFoundException(elementBinding, cause)
+    def elementNotInteractableError(binding: LocatorBinding, cause: Throwable) =
+      throw new WebElementNotInteractableException(binding, cause)
+    def elementNotFoundError(binding: LocatorBinding, cause: Throwable = null) =
+      throw new WebElementNotFoundException(binding, cause)
     def invalidVisualSessionStateError(msg: String) = throw new InvalidVisualSessionStateException(msg)
     def visualAssertionError(msg: String) = throw new VisualAssertionException(msg)
 
@@ -61,12 +62,12 @@ object Errors {
       extends GwenException(msg, cause)
 
     /** Thrown when a web element cannot be interacted with. */
-    class WebElementNotInteractableException(elementBinding: LocatorBinding, cause: Throwable)
-      extends NotFoundOrInteractableException(s"Could not interact with element: $elementBinding", cause)
+    class WebElementNotInteractableException(binding: LocatorBinding, cause: Throwable)
+      extends NotFoundOrInteractableException(s"Could not interact with element: $binding", cause)
 
     /** Thrown when a web element cannot be located. */
-    class WebElementNotFoundException(elementBinding: LocatorBinding, cause: Throwable)
-      extends NotFoundOrInteractableException(s"Could not locate element: $elementBinding", cause)
+    class WebElementNotFoundException(binding: LocatorBinding, cause: Throwable)
+      extends NotFoundOrInteractableException(s"Could not locate element: $binding", cause)
     
     /** Thrown when a visual checking session is in an invalid state. */
     class InvalidVisualSessionStateException(msg: String) extends AssertionError(msg)

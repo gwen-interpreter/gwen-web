@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package gwen.web
+package gwen.web.eval
 
-import gwen.web.Errors.NoSuchWindowException
+import gwen._
+import gwen.web._
+import gwen.web.WebErrors.NoSuchWindowException
 
-import org.mockito.Mockito.never
 import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.when
@@ -31,63 +32,76 @@ import org.openqa.selenium.remote.RemoteWebDriver
 import org.scalatest.{BeforeAndAfterEach, Matchers}
 import org.scalatestplus.mockito.MockitoSugar
 
+import scala.collection.mutable
 import scala.jdk.CollectionConverters._
 
 class DriverManagerTest extends BaseTest with Matchers with MockitoSugar with BeforeAndAfterEach {
   
-  val mockChromeDriver: WebDriver = createMockLocalDriver
-  val mockFirefoxDriver: WebDriver = createMockLocalDriver
-  val mockIeDriver: WebDriver = createMockLocalDriver
-  val mockEdgeDriver: WebDriver = createMockLocalDriver
-  val mockSafariDriver: WebDriver = createMockLocalDriver
-  val mockRemoteDriver: RemoteWebDriver = createMockRemoteDriver
+  var mockChromeDriver: WebDriver = _
+  var mockFirefoxDriver: WebDriver = _
+  var mockIeDriver: WebDriver = _
+  var mockEdgeDriver: WebDriver = _
+  var mockSafariDriver: WebDriver = _
+  var mockRemoteDriver: RemoteWebDriver = _
   
   override def afterEach(): Unit = {
     DriverManager.DriverPermit.release();
   }
   
   "Firefox setting" should "load firefox driver" in {
-    val manager = newManager("firefox")
-    manager.withWebDriver { _ should be (mockFirefoxDriver) }
+    withSetting("gwen.web.browser", "firefox") {
+      val manager = newDriverManager()
+      manager.withWebDriver { _ should be (mockFirefoxDriver) }
+    }
   }
 
   "Chrome setting" should "load chrome driver" in {
-    val manager = newManager("chrome")
-    manager.withWebDriver { _ should be (mockChromeDriver) }
+    withSetting("gwen.web.browser", "chrome") {
+      val manager = newDriverManager()
+      manager.withWebDriver { _ should be (mockChromeDriver) }
+    }
   }
 
   "IE setting" should "load IE driver" in {
-    val manager = newManager("ie")
-    manager.withWebDriver { _ should be (mockIeDriver) }
+    withSetting("gwen.web.browser", "ie") {
+      val manager = newDriverManager()
+      manager.withWebDriver { _ should be (mockIeDriver) }
+    }
   }
 
   "Edge setting" should "load Edge driver" in {
-    val manager = newManager("edge")
-    manager.withWebDriver { _ should be (mockEdgeDriver) }
+    withSetting("gwen.web.browser", "edge") {
+      val manager = newDriverManager()
+      manager.withWebDriver { _ should be (mockEdgeDriver) }
+    }
   }
 
   "Safari setting" should "load safari driver" in {
-    val manager = newManager("safari")
-    manager.withWebDriver { _ should be (mockSafariDriver) }
+    withSetting("gwen.web.browser", "safari") {
+      val manager = newDriverManager()
+      manager.withWebDriver { _ should be (mockSafariDriver) }
+    }
   }
 
   "Hub URL setting" should "load remote web driver" in {
     withSetting("gwen.web.remote.url", "http://localhost:44466/wd/hub") {
-      val manager = newManager("chrome")
-      val driver = manager.withWebDriver { _.asInstanceOf[RemoteWebDriver] }
-      driver should be (mockRemoteDriver)
+      withSetting("gwen.web.browser", "chrome") {
+        val manager = newDriverManager()
+        val driver = manager.withWebDriver { _.asInstanceOf[RemoteWebDriver] }
+        driver should be (mockRemoteDriver)
+      }
     }
   }
 
   "Web driver" should "quit on manager quit" in {
-    val manager = newManager()
+    val manager = newDriverManager()
     val mockWebDriver = manager.withWebDriver { webDriver => webDriver }
     manager.quit()
     verify(mockWebDriver).quit()
   }
 
   "Quitting manager" should "create new webdriver on subsequent access" in {
-    val manager = newManager()
+    val manager = newDriverManager()
     val webDriver1 = manager.withWebDriver { webDriver => webDriver }
     manager.quit()
     verify(webDriver1).quit()
@@ -97,7 +111,7 @@ class DriverManagerTest extends BaseTest with Matchers with MockitoSugar with Be
 
   "Accessing web driver without closing manager" should "return the same web driver instance" in {
 
-    val manager = newManager()
+    val manager = newDriverManager()
     val webDriver1 = manager.withWebDriver { webDriver => webDriver }
     val webDriver2 = manager.withWebDriver { webDriver => webDriver }
     webDriver1 should be (webDriver2)
@@ -105,7 +119,7 @@ class DriverManagerTest extends BaseTest with Matchers with MockitoSugar with Be
 
   "Quitting the manager multiple times" should "quit the web driver only once" in {
 
-    val manager = newManager()
+    val manager = newDriverManager()
     val mockWebDriver = manager.withWebDriver { webDriver => webDriver }
 
     // calling quit multiple times on manager should call quit on web driver just once
@@ -114,26 +128,18 @@ class DriverManagerTest extends BaseTest with Matchers with MockitoSugar with Be
     verify(mockWebDriver, times(1)).quit()
   }
 
-  "Quitting new manager without referencing webdriver" should "not quit the web driver" in {
-    val mockWebDriver = mock[WebDriver]
-    val manager = newManager(mockWebDriver)
-    manager.quit()
-    verify(mockWebDriver, never()).quit()
-  }
-
   "DriverManager.switchToChild" should "error when there is no child window" in {
-    val mockWebDriver = mock[WebDriver]
-    val manager = newManager(mockWebDriver)
+    val mockWebDriver = stubDriverMock( mock[WebDriver])
+    val manager = newDriverManager(mockWebDriver)
     intercept[NoSuchWindowException] {
       manager.switchToChild(1)
     }
   }
 
   "DriverManager.switchToChild" should "switch to child window" in {
-    val mockWebDriver = mock[WebDriver]
-    val manager = newManager(mockWebDriver)
+    val mockWebDriver = stubDriverMock( mock[WebDriver])
+    val manager = newDriverManager(mockWebDriver)
     val mockTargetLocator = mock[WebDriver.TargetLocator]
-    manager.drivers.put("primary", mockWebDriver)
     when(mockWebDriver.getWindowHandles).thenReturn(Set("parent", "child").asJava)
     when(mockWebDriver.switchTo()).thenReturn(mockTargetLocator)
     manager.switchToChild(1)
@@ -141,10 +147,9 @@ class DriverManagerTest extends BaseTest with Matchers with MockitoSugar with Be
   }
 
   "DriverManager.switchToChild 1" should "return first child when there is more than one child window" in {
-    val mockWebDriver = mock[WebDriver]
-    val manager = newManager(mockWebDriver)
+    val mockWebDriver = stubDriverMock( mock[WebDriver])
+    val manager = newDriverManager(mockWebDriver)
     val mockTargetLocator = mock[WebDriver.TargetLocator]
-    manager.drivers.put("primary", mockWebDriver)
     when(mockWebDriver.getWindowHandles).thenReturn(Set("parent", "child1", "child2").asJava)
     when(mockWebDriver.switchTo()).thenReturn(mockTargetLocator)
     manager.switchToChild(1)
@@ -152,10 +157,9 @@ class DriverManagerTest extends BaseTest with Matchers with MockitoSugar with Be
   }
 
   "DriverManager.switchToChild 2" should "return second child when there is more than one child window" in {
-    val mockWebDriver = mock[WebDriver]
-    val manager = newManager(mockWebDriver)
+    val mockWebDriver = stubDriverMock( mock[WebDriver])
+    val manager = newDriverManager(mockWebDriver)
     val mockTargetLocator = mock[WebDriver.TargetLocator]
-    manager.drivers.put("primary", mockWebDriver)
     when(mockWebDriver.getWindowHandles).thenReturn(Set("parent", "child1", "child2").asJava)
     when(mockWebDriver.switchTo()).thenReturn(mockTargetLocator)
     manager.switchToChild(2)
@@ -163,24 +167,24 @@ class DriverManagerTest extends BaseTest with Matchers with MockitoSugar with Be
   }
 
   "DriverManager.closeChild" should "error when there is no root or child window" in {
-    val mockWebDriver = mock[WebDriver]
-    val manager = newManager(mockWebDriver)
+    val mockWebDriver = stubDriverMock( mock[WebDriver])
+    val manager = newDriverManager(mockWebDriver)
     intercept[NoSuchWindowException] {
       manager.closeChild()
     }
   }
 
   "DriverManager.closeChild" should "error when there is a root window but no child window" in {
-    val mockWebDriver = mock[WebDriver]
-    val manager = newManager(mockWebDriver)
+    val mockWebDriver = stubDriverMock( mock[WebDriver])
+    val manager = newDriverManager(mockWebDriver)
     intercept[NoSuchWindowException] {
       manager.closeChild()
     }
   }
 
   "DriverManager.closeChild" should "close child window" in {
-    val mockWebDriver = mock[WebDriver]
-    val manager = newManager(mockWebDriver)
+    val mockWebDriver = stubDriverMock( mock[WebDriver])
+    val manager = newDriverManager(mockWebDriver)
     val mockTargetLocator = mock[WebDriver.TargetLocator]
     when(mockWebDriver.switchTo()).thenReturn(mockTargetLocator)
     when(mockWebDriver.getWindowHandles).thenReturn(Set("root", "child").asJava)
@@ -191,42 +195,47 @@ class DriverManagerTest extends BaseTest with Matchers with MockitoSugar with Be
   }
 
   "DriverManager.switchToDefaultContent" should "" in {
-    val mockWebDriver = mock[WebDriver]
-    val manager = newManager(mockWebDriver)
+    val mockWebDriver = stubDriverMock( mock[WebDriver])
+    val manager = newDriverManager(mockWebDriver)
     val mockTargetLocator = mock[WebDriver.TargetLocator]
     when(mockWebDriver.switchTo()).thenReturn(mockTargetLocator)
     manager.switchToDefaultContent()
     verify(mockTargetLocator).defaultContent()
   }
   
-  private def newManager(driverName: String): DriverManager = new DriverManager {
-    override private[web] def chrome(): WebDriver = mockChromeDriver
-    override private[web] def firefox(): WebDriver = mockFirefoxDriver
-    override private[web] def ie(): WebDriver = mockIeDriver
-    override private[web] def edge(): WebDriver = mockEdgeDriver
-    override private[web] def safari(): WebDriver = mockSafariDriver
-    override private[web] def remote(hubUrl: String, capabilities: DesiredCapabilities): WebDriver = {
-      val mockDriver = mockRemoteDriver
-      when(mockDriver.getCapabilities).thenReturn(capabilities)
-      mockDriver
+  private def newDriverManager(): DriverManager ={
+    new DriverManager {
+      override private [eval] def chrome(): WebDriver = createMockLocalDriver() tap { driver =>
+        mockChromeDriver = driver
+      }
+      override private [eval] def firefox(): WebDriver = createMockLocalDriver() tap { driver =>
+        mockFirefoxDriver = driver
+      }
+      override private [eval] def ie(): WebDriver = createMockLocalDriver() tap { driver =>
+        mockIeDriver = driver
+      }
+      override private [eval] def edge(): WebDriver = createMockLocalDriver() tap { driver => 
+        mockEdgeDriver = driver
+      }
+      override private [eval] def safari(): WebDriver = createMockLocalDriver() tap { driver =>
+        mockSafariDriver = driver
+      }
+      override private [eval] def remote(hubUrl: String, capabilities: DesiredCapabilities): WebDriver = {
+        val mockDriver = createMockRemoteDriver()
+        when(mockDriver.getCapabilities).thenReturn(capabilities)
+        mockRemoteDriver = mockDriver
+        mockDriver
+      }
     }
-    override private[web] def loadWebDriver: WebDriver = withSetting("gwen.web.browser", driverName) {
-      super.loadWebDriver
-    }
   }
   
-  private def newManager(mockDriver: WebDriver): DriverManager = new  DriverManager {
-    override private[web] def loadWebDriver: WebDriver = mockDriver
+  private def newDriverManager(mockDriver: WebDriver): DriverManager = new DriverManager() { 
+    override private [eval] val drivers = mutable.Map() += ("primary" -> mockDriver)
   }
+  private def createMockLocalDriver(): WebDriver = stubDriverMock(mock[WebDriver])
+  private def createMockRemoteDriver(): RemoteWebDriver = stubDriverMock(mock[RemoteWebDriver])
   
-  private def newManager(): DriverManager = new DriverManager {
-    override private[web] def loadWebDriver: WebDriver = mock[WebDriver]
-  }
-  
-  private def createMockLocalDriver: WebDriver = createMockDriver(mock[WebDriver])
-  private def createMockRemoteDriver: RemoteWebDriver = createMockDriver(mock[RemoteWebDriver])
-  
-  private def createMockDriver[T <: WebDriver](mockDriver: T): T = {
+  private def stubDriverMock[T <: WebDriver](mockDriver: T): T = {
     val mockOptions = mock[Options]
     val mockTimeouts = mock[Timeouts]
     val mockWindow = mock[Window]

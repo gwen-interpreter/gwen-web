@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Brady Wood, Branko Juric
+ * Copyright 2019-2021 Brady Wood, Branko Juric
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package gwen.web
+package gwen.web.eval.eyes
 
 import gwen._
 import gwen.Errors.licenseError
-import gwen.web.Errors.invalidVisualSessionStateError
+import gwen.eval.EvalEnvironment
+import gwen.web.WebErrors.invalidVisualSessionStateError
 
 import com.applitools.eyes.selenium.Eyes
 import com.applitools.eyes.{BatchInfo, MatchLevel, RectangleSize, TestResults}
@@ -36,7 +37,7 @@ object EyesContext {
 /**
   * AppliTools Eyes context for performing visual checks.
   */
-class EyesContext(env: WebEnvContext) extends LazyLogging {
+class EyesContext(env: EvalEnvironment) extends LazyLogging {
 
   private var eyesSession: Option[Eyes] = None
 

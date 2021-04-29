@@ -14,13 +14,17 @@
  * limitations under the License.
  */
 
-package gwen.web
+package gwen.web.eval
 
-import gwen.dsl._
-import gwen.eval.GwenOptions
+import gwen.GwenOptions
+import gwen.model._
+import gwen.model.gherkin.Step
+import gwen.web._
+import gwen.web.eval.WebInterpreter
 
 import org.scalatest.Matchers
 import org.scalatestplus.mockito.MockitoSugar
+import gwen.eval.EvalEnvironment
 
 class WebDslTest extends BaseTest with Matchers with MockitoSugar {
 
@@ -30,7 +34,7 @@ class WebDslTest extends BaseTest with Matchers with MockitoSugar {
     
     val options = new GwenOptions(dryRun = true)
     
-    val env = new WebEnvContext(options)
+    val env = new EvalEnvironment()
     env.scopes.set("<element>/locator", "id")
     env.scopes.set("<element>/locator/id", "id")
     env.scopes.set("<reference>", "reference")
@@ -48,7 +52,8 @@ class WebDslTest extends BaseTest with Matchers with MockitoSugar {
     env.scopes.set("<source>", "source")
     env.topScope.pushObject("table", new FlatTable(List(List("1", "2")), List("a", "b")))
 
-    val interpreter = new WebInterpreter
+    val interpreter = new WebInterpreter()
+    val ctx = new WebContext(options, env, mock[DriverManager])
     withSetting("<name>", "name") {
       withSetting("gwen.db.<dbName>.driver", "jdbcDriver") {
         withSetting("gwen.db.<dbName>.url", "jdbcUrl") {
@@ -71,7 +76,7 @@ class WebDslTest extends BaseTest with Matchers with MockitoSugar {
               .replace("<count>", "2")
           } foreach { dsl =>
             val iStep = Step(None, StepKeyword.Given.toString, dsl.replaceAll("<step>", """a is "b""""), Nil, None, Nil, None, Pending)
-            interpreter.evaluateStep(parent, iStep, 0, env).evalStatus match {
+            interpreter.evaluateStep(parent, iStep, 0, ctx).evalStatus match {
               case Failed(_, error) => fail(error)
               case evalStatus => evalStatus.status should not be (StatusKeyword.Failed)
             }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 Brady Wood, Branko Juric
+ * Copyright 2015-2021 Brady Wood, Branko Juric
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,15 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package gwen.web
+package gwen.web.eval
 
 import gwen._
-import gwen.Errors.javaScriptError
+import gwen.Errors._
 import gwen.Sensitive
-import gwen.web.Errors._
+import gwen.eval.EvalEnvironment
+import gwen.eval.EvalContext
+import gwen.model.Failed
+import gwen.model.StateLevel
+import gwen.eval.binding.BindingType
+import gwen.eval.binding.JavaScriptBinding
+import gwen.web.WebErrors._
+import gwen.web.WebSettings
+import gwen.web.eval.binding._
+import gwen.web.eval.eyes.EyesContext
 
-import scala.jdk.CollectionConverters._
 import scala.concurrent.duration.Duration
+import scala.io.Source
+import scala.jdk.CollectionConverters._
 import scala.util.{Failure, Success, Try}
 
 import com.applitools.eyes.{MatchLevel, RectangleSize}
@@ -32,17 +42,21 @@ import org.openqa.selenium.interactions.Actions
 import org.openqa.selenium.support.ui.{FluentWait, Select}
 
 import java.io.File
+import gwen.eval.binding.TextBinding
 
 /**
-  * The web context. All web driver interactions happen here (and will do nothing when --dry-run is enabled).
+  * The web evaluatioin context.
   */
-class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebElementLocator with LazyLogging {
+class WebContext(options: GwenOptions, env: EvalEnvironment, driverManager: DriverManager) extends EvalContext(options, env) with LazyLogging {
 
-  /** Last captured screenshot file size. */
+  Try(logger.info(s"GWEN_CLASSPATH = ${sys.env("GWEN_CLASSPATH")}"))
+  Try(logger.info(s"SELENIUM_HOME = ${sys.env("SELENIUM_HOME")}"))
+
+  private val locatorBindingResolver = new LocatorBindingResolver(this)
   private var lastScreenshotSize: Option[Long] = None
-
-  /** Applitools Eyes context. */
   private var eyesContext: Option[EyesContext] = None
+
+  def locator = new WebElementLocator(this)
 
   /** Resets the driver context. */
   def reset(): Unit = {
@@ -52,19 +66,227 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
     eyesContext = None
   }
 
-  /** Closes all browsers and associated web drivers (if any have loaded). */
-  def close(): Unit = {
-    env.perform {
+  /** Resets the context for the given state level. */
+  override def reset(level: StateLevel.Value): Unit = {
+    super.reset(level)
+    reset()
+    close()
+  }
+  
+
+  /** Closes the context and all browsers and associated web drivers (if any have loaded). */
+  override def close(): Unit = {
+    perform {
       eyesContext.foreach(_.close())
       driverManager.quit()
     }
+    super.close()
   }
 
   /** Closes a named browser and associated web driver. */
   def close(name: String): Unit = {
-    env.perform {
+    perform {
       driverManager.quit(name)
     }
+  }
+
+  /**
+   * Adds web engine dsl steps to super implementation. The entries 
+   * returned by this method are used for tab completion in the REPL.
+   */
+  override def dsl: List[String] = 
+    Source.fromInputStream(getClass.getResourceAsStream("/gwen-web.dsl")).getLines().toList ++ super.dsl
+
+  /**
+    * Appends a return keyword in front of the given javascript expression in preparation for execute-with-return
+    * (since web driver requires return prefix).
+    *
+    * @param javascript the javascript function
+    */
+  override def formatJSReturn(javascript: String) = s"return $javascript"
+
+  /**
+    * Executes a javascript expression on the current page through the web driver.
+    *
+    * @param javascript the script expression to execute
+    * @param params optional parameters to the script
+    */
+  override def evaluateJS(javascript: String, params: Any*): Any =
+    executeJS(javascript, params.map(_.asInstanceOf[AnyRef]) : _*)
+
+  /**
+    * Gets a bound value from memory. A search for the value is made in 
+    * the following order and the first value found is returned:
+    *  - Web element text on the current page
+    *  - Currently active page scope
+    *  - The top scope
+    *  - Settings
+    *  
+    * @param name the name of the bound value to find
+    */
+  override def getBoundReferenceValue(name: String): String = {
+    if (name == "the current URL") captureCurrentUrl(Some(name))
+    (getLocatorBinding(name, optional = true) match {
+      case Some(binding) =>
+        Try(getElementText(binding)) match {
+          case Success(text) => text.getOrElse(getAttribute(name))
+          case Failure(e) => throw e
+        }
+      case _ => getAttribute(name)
+    }) tap { value =>
+      logger.debug(s"getBoundReferenceValue($name)='$value'")
+    }
+  }
+
+  /**
+    * Resolves a bound attribute value from the visible scope.
+    *  
+    * @param name the name of the bound attribute to find
+    */
+  def getAttribute(name: String): String = {
+    getCachedWebElement(s"${JavaScriptBinding.key(name)}/param/webElement") map { webElement =>
+      val javascript = interpolate(env.scopes.get(JavaScriptBinding.key(name)))
+      val jsFunction = s"return (function(element) { return $javascript })(arguments[0])"
+      Option(executeJS(jsFunction, webElement)).map(_.toString).getOrElse("")
+    } getOrElse {
+      Try(super.getBoundReferenceValue(name)) match {
+        case Success(value) => value
+        case Failure(e) => e match {
+          case _: UnboundAttributeException =>
+            Try(getLocatorBinding(name).selectors.map(_.expression).mkString(",")).getOrElse(unboundAttributeError(name))
+          case _ => throw e
+        }
+      }
+    }
+  }
+  
+  def boundAttributeOrSelection(element: String, selection: Option[String]): () => String = () => {
+    selection match {
+      case None => getBoundReferenceValue(element)
+      case Some(sel) =>
+        try {
+          getBoundReferenceValue(element + sel)
+        } catch {
+          case _: UnboundAttributeException =>
+            getElementSelection(element, sel).getOrElse(getBoundReferenceValue(element))
+          case e: Throwable => throw e
+        }
+    }
+  }
+
+  /**
+    * Gets a named locator binding.
+    *
+    * @param name the name of the web element
+    */
+  def getLocatorBinding(name: String): LocatorBinding = {
+    locatorBindingResolver.getBinding(name, optional = false).get
+  }
+
+  /**
+   * Gets a named locator binding.
+   * 
+   * @param name the name of the web element
+   * @param optional true to return None if not found; false to throw error
+   */
+  def getLocatorBinding(name: String, optional: Boolean): Option[LocatorBinding] = {
+    locatorBindingResolver.getBinding(name, optional)
+  }
+
+  /**
+    * Add a list of error attachments which includes the current
+    * screenshot and all current error attachments.
+    *
+    * @param failure the failed status
+    */
+  override def addErrorAttachments(failure: Failed): Unit = {
+    if (failure.isTechError) {
+      super.addErrorAttachments(failure)
+    }
+    val isVisualAssertionError = 
+      failure.cause.map(_.isInstanceOf[VisualAssertionException]).getOrElse(false)
+    if (!failure.isLicenseError && !isVisualAssertionError) {
+      captureScreenshot(true)
+    }
+  }  
+
+    /**
+    * Binds the given element and value to a given action (element/action=value)
+    * and then waits for any bound post conditions to be satisfied.
+    * 
+    * @param element the element to bind the value to
+    * @param action the action to bind the value to
+    * @param value the value to bind
+    */
+  def bindAndWait(element: String, action: String, value: String): Unit = {
+    env.scopes.set(s"$element/$action", value)
+    
+    // sleep if wait time is configured for this action
+    env.scopes.getOpt(s"$element/$action/wait") foreach { secs => 
+      logger.info(s"Waiting for $secs second(s) (post-$action wait)")
+      Thread.sleep(secs.toLong * 1000)
+    }
+    
+    // wait for javascript post condition if one is configured for this action
+    env.scopes.getOpt(s"$element/$action/condition") foreach { condition =>
+      val javascript = env.scopes.get(JavaScriptBinding.key(condition))
+      logger.info(s"waiting until $condition (post-$action condition)")
+      logger.debug(s"Waiting for script to return true: $javascript")
+      waitUntil(s"waiting for true return from javascript: $javascript") {
+        evaluateJSPredicate(javascript)
+      }
+    }
+  }
+
+  /**
+    * Gets the actual value of an attribute and compares it with an expected value or condition.
+    * 
+    * @param name the name of the attribute being compared
+    * @param expected the expected value, regex, xpath, or json path
+    * @param actual the actual value of the element
+    * @param operator the comparison operator
+    * @param negate true to negate the result
+    * @return true if the actual value matches the expected value
+    */
+  def compare(name: String, expected: String, actual: () => String, operator: String, negate: Boolean, nameSuffix: Option[String] = None): Unit = {
+    var result = false
+    var error: Option[String] = None
+    var actualValue = actual()
+    var polled = false
+    try {
+      waitUntil(s"waiting for $name to ${if(negate) "not " else ""}$operator '$expected'") {
+        if (polled) {
+          actualValue = actual()
+        }
+        polled = true
+        result = if (actualValue != null) {
+          super.compare(name, expected, actualValue, operator, negate) match {
+            case Success(condition) => condition
+            case Failure(e) =>
+              error = Some(e.getMessage)
+              false
+          }
+        } else false
+        result
+      }
+    } catch {
+      case _: WaitTimeoutException => result = false
+    }
+    error match {
+      case Some(msg) =>
+        assert(assertion = false, msg)
+      case None =>
+        if (!polled) {
+          result = super.compare(name, expected, actualValue, operator, negate).getOrElse(result)
+        }
+        val binding = Try(
+          getLocatorBinding(name.substring(0, name.length - nameSuffix.map(_.length).getOrElse(0)), optional = true) getOrElse {
+            getBinding(name)
+          }
+        ).map(_.toString).getOrElse(name)
+        assert(result, s"Expected $binding to ${if(negate) "not " else ""}$operator '$expected' but got '$actualValue'")
+    }
+
   }
 
   /**
@@ -76,7 +298,7 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
     * @param takeScreenShot true to take screenshot after performing the function
     */
   def withWebDriver[T](function: WebDriver => T)(implicit takeScreenShot: Boolean = false): Option[T] = {
-    env.evaluate(None.asInstanceOf[Option[T]]) {
+    evaluate(None.asInstanceOf[Option[T]]) {
       driverManager.withWebDriver { driver =>
         Option(function(driver)) tap { _ =>
           if (takeScreenShot) {
@@ -86,13 +308,6 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
       }
     }
   }
-
-  /**
-    * Gets a web element binding.
-    *
-    * @param element the name of the web element
-    */
-  def getLocatorBinding(element: String): LocatorBinding = env.getLocatorBinding(element)
 
   /**
     * Gets a cached web element.
@@ -110,10 +325,10 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
   /**
     * Locates a web element and highlights it.
     *
-    * @param elementBinding the web element locator binding
+    * @param binding the locator binding
     */
-  def locateAndHighlight(elementBinding: LocatorBinding): Unit = {
-    withDriverAndElement(elementBinding, s"trying to locate $elementBinding") { (driver, webElement) =>
+  def locateAndHighlight(binding: LocatorBinding): Unit = {
+    withDriverAndElement(binding, s"trying to locate $binding") { (driver, webElement) =>
       createActions(driver).moveToElement(webElement).perform() 
     }
   }
@@ -121,14 +336,14 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
   /**
     * Locates a web element and performs an operation on it.
     *
-    * @param elementBinding the web element locator binding
+    * @param binding the locator binding
     * @param reason a description of what action is being performed
     * @param operation the operation to perform on the element
     */
-  private def withWebElement[T](elementBinding: LocatorBinding, reason: String)(operation: WebElement => T): Option[T] =
-    env.evaluate(None.asInstanceOf[Option[T]]) {
-      val locator = elementBinding.locators.head
-      val wHandle = locator.container.flatMap(_ => withWebDriver(_.getWindowHandle))
+  private def withWebElement[T](binding: LocatorBinding, reason: String)(operation: WebElement => T): Option[T] =
+    evaluate(None.asInstanceOf[Option[T]]) {
+      val selector = binding.selectors.head
+      val wHandle = selector.container.flatMap(_ => withWebDriver(_.getWindowHandle))
       try {
         var result: Option[Try[T]] = None
         val start = System.nanoTime()
@@ -136,9 +351,9 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
           var lapsed = 0L
           waitUntil(reason) {
             try {
-              val webElement = locate(elementBinding)
+              val webElement = binding.resolve()
               tryMoveTo(webElement)
-              if (!locator.isContainer) {
+              if (!selector.isContainer) {
                 highlightElement(webElement)
               }
               val res = operation(webElement)
@@ -148,11 +363,11 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
               case e: Throwable =>
                 lapsed = Duration.fromNanos(System.nanoTime() - start).toSeconds
                 if (e.isInstanceOf[InvalidElementStateException] || e.isInstanceOf[NoSuchElementException] || e.isInstanceOf[NotFoundOrInteractableException]) {
-                  if (lapsed >= elementBinding.timeoutSeconds) {
+                  if (lapsed >= binding.timeoutSeconds) {
                     result =  if (e.isInstanceOf[WebElementNotFoundException]) {
                       Some(Failure(e))
                     } else {
-                      Some(Try(elementNotInteractableError(elementBinding, e)))
+                      Some(Try(elementNotInteractableError(binding, e)))
                     }
                     true
                   } else {
@@ -198,7 +413,7 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
 
   /** Captures and the current screenshot and adds it to the attachments list. */
   def captureScreenshot(unconditional: Boolean, name: String = "Screenshot"): Option[File] = {
-    env.evaluate(Option(new File("$[dryRun:screenshotFile]"))) {
+    evaluate(Option(new File("$[dryRun:screenshotFile]"))) {
       val screenshot = driverManager.withWebDriver { driver =>
         Thread.sleep(150) // give browser time to render
         driver.asInstanceOf[TakesScreenshot].getScreenshotAs(OutputType.FILE)
@@ -238,7 +453,7 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
         case e: Throwable => javaScriptError(javascript, e)
       }
     } getOrElse {
-      if (env.isDryRun) s"$$[javascript:$javascript]"
+      if (options.dryRun) s"$$[${BindingType.javascript}:$javascript]"
       else null  //js returned null
     }
 
@@ -284,7 +499,7 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
     * @param element the element to highlight
     */
   def highlightElement(element: WebElement): Unit = {
-    env.perform {
+    perform {
       val msecs = WebSettings`gwen.web.throttle.msecs`; // need semi-colon (compiler bug?)
       if (msecs > 0) {
         val style = WebSettings.`gwen.web.highlight.style`
@@ -303,29 +518,29 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
   /**
     * Checks the current state of an element.
     *
-    * @param elementBinding the locator binding of the element
+    * @param binding the locator binding of the element
     * @param state the state to check
     * @param negate whether or not to negate the check
     */
-  def checkElementState(elementBinding: LocatorBinding, state: String, negate: Boolean): Unit = {
-    env.perform {
-      val result = isElementState(elementBinding.jsEquivalent, state, negate)
-      assert(result, s"$elementBinding should${if(negate) " not" else ""} be $state")
+  def checkElementState(binding: LocatorBinding, state: String, negate: Boolean): Unit = {
+    perform {
+      val result = isElementState(binding.jsEquivalent, state, negate)
+      assert(result, s"$binding should${if(negate) " not" else ""} be $state")
     }
   }
 
   /**
     * Checks the current state of an element.
     *
-    * @param elementBinding the locator binding of the element
+    * @param binding the locator binding of the element
     * @param state the state to check
     * @param negate whether or not to negate the check
     */
-  private def isElementState(elementBinding: LocatorBinding, state: String, negate: Boolean): Boolean = {
+  private def isElementState(binding: LocatorBinding, state: String, negate: Boolean): Boolean = {
     var result = false
-    env.perform {
+    perform {
       try {
-        withWebElement(elementBinding, s"waiting for $elementBinding to${if (negate) " not" else ""} be $state") { webElement =>
+        withWebElement(binding, s"waiting for $binding to${if (negate) " not" else ""} be $state") { webElement =>
           result = state match {
             case "displayed" if !negate => isDisplayed(webElement)
             case "displayed" if negate => !isDisplayed(webElement)
@@ -354,35 +569,35 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
   /**
     * Waits the state of an element.
     *
-    * @param elementBinding the locator binding of the element
+    * @param binding the locator binding of the element
     * @param state the state to wait for
     * @param negate whether or not to negate the check
     */
-  def waitForElementState(elementBinding: LocatorBinding, state: String, negate: Boolean): Unit =
-    waitUntil(s"waiting for $elementBinding to${if (negate) " not" else""} be $state") {
-      isElementState(elementBinding, state, negate)
+  def waitForElementState(binding: LocatorBinding, state: String, negate: Boolean): Unit =
+    waitUntil(s"waiting for $binding to${if (negate) " not" else""} be $state") {
+      isElementState(binding, state, negate)
     }
 
   /** Gets the title of the current page in the browser.*/
   def getTitle: String =
     withWebDriver { driver =>
       driver.getTitle tap { title =>
-        env.bindAndWait("page", "title", title)
+        bindAndWait("page", "title", title)
       }
     }.getOrElse("$[dryRun:title]")
 
   /**
     * Sends a value to a web element.
     *
-    * @param elementBinding the web element locator binding
+    * @param binding the locator binding
     * @param value the value to send
     * @param clickFirst true to click field first (if element is a text field)
     * @param clearFirst true to clear field first (if element is a text field)
     * @param sendEnterKey true to send the Enter key after sending the value
     */
-  def sendValue(elementBinding: LocatorBinding, value: String, clearFirst: Boolean, clickFirst: Boolean, sendEnterKey: Boolean): Unit = {
-    val element = elementBinding.name
-    withDriverAndElement(elementBinding, s"trying to send value to $element") { (driver, webElement) =>
+  def sendValue(binding: LocatorBinding, value: String, clearFirst: Boolean, clickFirst: Boolean, sendEnterKey: Boolean): Unit = {
+    val element = binding.name
+    withDriverAndElement(binding, s"trying to send value to $element") { (driver, webElement) =>
       createActions(driver)
       if (clickFirst) {
         webElement.click()
@@ -398,111 +613,111 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
         createActions(driver).moveToElement(webElement).sendKeys(plainValue).perform()
         }
       }
-      env.bindAndWait(element, "type", value)
+      bindAndWait(element, "type", value)
       if (sendEnterKey) {
         createActions(driver).sendKeys(webElement, Keys.RETURN).perform()
-        env.bindAndWait(element, "enter", "true")
+        bindAndWait(element, "enter", "true")
       }
     }
   }
 
-  private[web] def createSelect(webElement: WebElement): Select = new Select(webElement)
+  private[eval] def createSelect(webElement: WebElement): Select = new Select(webElement)
 
   /**
     * Selects a value in a dropdown (select control) by visible text.
     *
-    * @param elementBinding the web element locator binding
+    * @param binding the locator binding
     * @param value the value to select
     */
-  def selectByVisibleText(elementBinding: LocatorBinding, value: String): Unit = {
-    withWebElement(elementBinding, s"trying to select option in $elementBinding by visible text") { webElement =>
-      logger.debug(s"Selecting '$value' in ${elementBinding.name} by text")
+  def selectByVisibleText(binding: LocatorBinding, value: String): Unit = {
+    withWebElement(binding, s"trying to select option in $binding by visible text") { webElement =>
+      logger.debug(s"Selecting '$value' in ${binding.name} by text")
       createSelect(webElement).selectByVisibleText(value)
-      env.bindAndWait(elementBinding.name, "select", value)
+      bindAndWait(binding.name, "select", value)
     }
   }
 
   /**
     * Selects a value in a dropdown (select control) by value.
     *
-    * @param elementBinding the web element locator binding
+    * @param binding the locator binding
     * @param value the value to select
     */
-  def selectByValue(elementBinding: LocatorBinding, value: String): Unit = {
-    withWebElement(elementBinding, s"trying to select option in $elementBinding by value") { webElement =>
-      logger.debug(s"Selecting '$value' in ${elementBinding.name} by value")
+  def selectByValue(binding: LocatorBinding, value: String): Unit = {
+    withWebElement(binding, s"trying to select option in $binding by value") { webElement =>
+      logger.debug(s"Selecting '$value' in ${binding.name} by value")
       createSelect(webElement).selectByValue(value)
-      env.bindAndWait(elementBinding.name, "select", value)
+      bindAndWait(binding.name, "select", value)
     }
   }
 
   /**
     * Selects a value in a dropdown (select control) by index.
     *
-    * @param elementBinding the web element locator binding
+    * @param binding the locator binding
     * @param index the index to select (first index is 0)
     */
-  def selectByIndex(elementBinding: LocatorBinding, index: Int): Unit = {
-    withWebElement(elementBinding, s"trying to select option in $elementBinding at index $index") { webElement =>
-      logger.debug(s"Selecting option in ${elementBinding.name} by index: $index")
+  def selectByIndex(binding: LocatorBinding, index: Int): Unit = {
+    withWebElement(binding, s"trying to select option in $binding at index $index") { webElement =>
+      logger.debug(s"Selecting option in ${binding.name} by index: $index")
       val select = createSelect(webElement)
       select.selectByIndex(index)
-      env.bindAndWait(elementBinding.name, "select", select.getOptions.get(index).getText)
+      bindAndWait(binding.name, "select", select.getOptions.get(index).getText)
     }
   }
 
   /**
     * Deselects a value in a dropdown (select control) by visible text.
     *
-    * @param elementBinding the web element locator binding
+    * @param binding the locator binding
     * @param value the value to select
     */
-  def deselectByVisibleText(elementBinding: LocatorBinding, value: String): Unit = {
-    withWebElement(elementBinding, s"trying to deselect option in $elementBinding by visible text") { webElement =>
-      logger.debug(s"Deselecting '$value' in ${elementBinding.name} by text")
+  def deselectByVisibleText(binding: LocatorBinding, value: String): Unit = {
+    withWebElement(binding, s"trying to deselect option in $binding by visible text") { webElement =>
+      logger.debug(s"Deselecting '$value' in ${binding.name} by text")
       createSelect(webElement).deselectByVisibleText(value)
-      env.bindAndWait(elementBinding.name, "deselect", value)
+      bindAndWait(binding.name, "deselect", value)
     }
   }
 
   /**
     * Deselects a value in a dropdown (select control) by value.
     *
-    * @param elementBinding the web element locator binding
+    * @param binding the locator binding
     * @param value the value to select
     */
-  def deselectByValue(elementBinding: LocatorBinding, value: String): Unit = {
-    withWebElement(elementBinding, s"trying to deselect option in $elementBinding by value") { webElement =>
-      logger.debug(s"Deselecting '$value' in ${elementBinding.name} by value")
+  def deselectByValue(binding: LocatorBinding, value: String): Unit = {
+    withWebElement(binding, s"trying to deselect option in $binding by value") { webElement =>
+      logger.debug(s"Deselecting '$value' in ${binding.name} by value")
       createSelect(webElement).deselectByValue(value)
-      env.bindAndWait(elementBinding.name, "deselect", value)
+      bindAndWait(binding.name, "deselect", value)
     }
   }
 
   /**
     * Deselects a value in a dropdown (select control) by index.
     *
-    * @param elementBinding the web element locator binding
+    * @param binding the locator binding
     * @param index the index to select (first index is 0)
     */
-  def deselectByIndex(elementBinding: LocatorBinding, index: Int): Unit = {
-    withWebElement(elementBinding, s"trying to deselect option in $elementBinding at index $index") { webElement =>
-      logger.debug(s"Deselecting option in ${elementBinding.name} by index: $index")
+  def deselectByIndex(binding: LocatorBinding, index: Int): Unit = {
+    withWebElement(binding, s"trying to deselect option in $binding at index $index") { webElement =>
+      logger.debug(s"Deselecting option in ${binding.name} by index: $index")
       val select = createSelect(webElement)
       select.deselectByIndex(index)
-      env.bindAndWait(elementBinding.name, "deselect", select.getOptions.get(index).getText)
+      bindAndWait(binding.name, "deselect", select.getOptions.get(index).getText)
     }
   }
 
   private [web] def createActions(driver: WebDriver): Actions = new Actions(driver)
 
-  def performAction(action: String, elementBinding: LocatorBinding): Unit = {
-    val actionBinding = env.scopes.getOpt(s"${elementBinding.name}/action/$action/javascript")
+  def performAction(action: String, binding: LocatorBinding): Unit = {
+    val actionBinding = env.scopes.getOpt(JavaScriptBinding.key(s"${binding.name}/action/$action"))
     actionBinding match {
       case Some(javascript) =>
-        performScriptAction(action, javascript, elementBinding, s"trying to $action $elementBinding")
+        performScriptAction(action, javascript, binding, s"trying to $action $binding")
       case None =>
-        withDriverAndElement(elementBinding, s"trying to $action $elementBinding") { (driver, webElement) =>
+        withDriverAndElement(binding, s"trying to $action $binding") { (driver, webElement) =>
           if (action != "move to") {
             moveToAndCapture(driver, webElement)
           }
@@ -528,7 +743,7 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
               webElement.clear()
           }
         }
-        env.bindAndWait(elementBinding.name, action, "true")
+        bindAndWait(binding.name, action, "true")
     }
   }
 
@@ -549,9 +764,9 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
     }
   }
 
-  def holdAndClick(modifierKeys: Array[String], clickAction: String, elementBinding: LocatorBinding): Unit = {
+  def holdAndClick(modifierKeys: Array[String], clickAction: String, binding: LocatorBinding): Unit = {
     val keys = modifierKeys.map(_.trim).map(key => Try(Keys.valueOf(key.toUpperCase)).getOrElse(unsupportedModifierKeyError(key)))
-    withDriverAndElement(elementBinding, s"trying to $clickAction $elementBinding") { (driver, webElement) =>
+    withDriverAndElement(binding, s"trying to $clickAction $binding") { (driver, webElement) =>
       moveToAndCapture(driver, webElement)
       var actions = createActions(driver)
       keys.foreach { key => actions = actions.keyDown(key) }
@@ -563,22 +778,22 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
       keys.reverse.foreach { key => actions = actions.keyUp(key) }
       actions.build().perform()
     }
-    env.bindAndWait(elementBinding.name, clickAction, "true")
+    bindAndWait(binding.name, clickAction, "true")
   }
 
   def sendKeys(keysToSend: Array[String]): Unit = {
     sendKeys(None, keysToSend)
   }
 
-  def sendKeys(elementBinding: LocatorBinding, keysToSend: Array[String]): Unit = {
-    sendKeys(Some(elementBinding), keysToSend)
+  def sendKeys(binding: LocatorBinding, keysToSend: Array[String]): Unit = {
+    sendKeys(Some(binding), keysToSend)
   }
 
   def sendKeys(elementBindingOpt: Option[LocatorBinding], keysToSend: Array[String]): Unit = {
     val keys = keysToSend.map(_.trim).map(key => Try(Keys.valueOf(key.toUpperCase)).getOrElse(key))
     elementBindingOpt match {
-      case Some(elementBinding) =>
-        withDriverAndElement(elementBinding, s"trying to send keys to $elementBinding") { (driver, webElement) =>
+      case Some(binding) =>
+        withDriverAndElement(binding, s"trying to send keys to $binding") { (driver, webElement) =>
           var actions = createActions(driver)
           keys.foreach { key => actions = actions.sendKeys(webElement, key) }
           actions.build().perform()
@@ -592,9 +807,9 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
     }
   }
 
-  private def withDriverAndElement(elementBinding: LocatorBinding, reason: String)(doActions: (WebDriver, WebElement) => Unit): Unit = {
+  private def withDriverAndElement(binding: LocatorBinding, reason: String)(doActions: (WebDriver, WebElement) => Unit): Unit = {
     withWebDriver { driver =>
-      withWebElement(elementBinding, reason) { webElement =>
+      withWebElement(binding, reason) { webElement =>
         if (WebSettings.`gwen.web.implicit.element.focus`) {
           executeJS("(function(element){element.focus();})(arguments[0]);", webElement)
         }
@@ -603,13 +818,13 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
     }
   }
 
-  private def performScriptAction(action: String, javascript: String, elementBinding: LocatorBinding, reason: String): Unit = {
-    withDriverAndElement(elementBinding, reason) { (driver, webElement) =>
+  private def performScriptAction(action: String, javascript: String, binding: LocatorBinding, reason: String): Unit = {
+    withDriverAndElement(binding, reason) { (driver, webElement) =>
       if (action != "move to") {
         moveToAndCapture(driver, webElement)
       }
       executeJS(s"(function(element) { $javascript })(arguments[0])", webElement)
-      env.bindAndWait(elementBinding.name, action, "true")
+      bindAndWait(binding.name, action, "true")
     }
   }
 
@@ -622,14 +837,14 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
     */
   def performActionInContext(action: String, element: String, context: String): Unit = {
     try {
-        val contextBinding = env.getLocatorBinding(context)
-        val elementBinding = env.getLocatorBinding(element)
-        performActionIn(action, elementBinding, contextBinding)
+        val contextBinding = getLocatorBinding(context)
+        val binding = getLocatorBinding(element)
+        performActionIn(action, binding, contextBinding)
       } catch {
         case e1: LocatorBindingException =>
           try {
-            val elementBinding = env.getLocatorBinding(s"$element of $context")
-            performAction(action, elementBinding)
+            val binding = getLocatorBinding(s"$element of $context")
+            performAction(action, binding)
           } catch {
             case e2: LocatorBindingException =>
               throw new LocatorBindingException(s"${e1.getMessage}. ${e2.getMessage}.")
@@ -637,7 +852,7 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
       }
   }
 
-  private def performActionIn(action: String, elementBinding: LocatorBinding, contextBinding: LocatorBinding): Unit = {
+  private def performActionIn(action: String, binding: LocatorBinding, contextBinding: LocatorBinding): Unit = {
     def perform(webElement: WebElement, contextElement: WebElement)(buildAction: Actions => Actions): Unit = {
       withWebDriver { driver =>
         val moveTo = createActions(driver).moveToElement(contextElement).moveToElement(webElement)
@@ -647,9 +862,9 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
         }
       }
     }
-    val reason = s"trying to $action $elementBinding"
+    val reason = s"trying to $action $binding"
     withWebElement(contextBinding, reason) { contextElement =>
-      withWebElement(elementBinding, reason) { webElement =>
+      withWebElement(binding, reason) { webElement =>
         action match {
           case "click" => perform(webElement, contextElement) { _.click() }
           case "right click" => perform(webElement, contextElement) { _.contextClick() }
@@ -662,7 +877,7 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
             if (webElement.isSelected) perform(webElement, contextElement) { _.sendKeys(Keys.SPACE) }
           case "move to" => perform(webElement, contextElement) { action => action }
         }
-        env.bindAndWait(elementBinding.name, action, "true")
+        bindAndWait(binding.name, action, "true")
       }
     }
   }
@@ -670,22 +885,22 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
   /**
     * Waits for text to appear in the given web element.
     *
-    * @param elementBinding the web element locator binding
+    * @param binding the locator binding
     */
-  def waitForText(elementBinding: LocatorBinding): Boolean =
-    getElementText(elementBinding).map(_.length()).getOrElse {
-      env.scopes.set(s"${elementBinding.name}/text", "text")
+  def waitForText(binding: LocatorBinding): Boolean =
+    getElementText(binding).map(_.length()).getOrElse {
+      env.scopes.set(TextBinding.key(binding.name), BindingType.text.toString)
       0
     } > 0
 
   /**
    * Scrolls an element into view.
    *
-   * @param elementBinding the web element locator binding
+   * @param binding the locator binding
    * @param scrollTo scroll element into view, options are: top or bottom
    */
-  def scrollIntoView(elementBinding: LocatorBinding, scrollTo: ScrollTo.Value): Unit = {
-    withWebElement(elementBinding, s"trying to scroll to $scrollTo of $elementBinding") { scrollIntoView(_, scrollTo) }
+  def scrollIntoView(binding: LocatorBinding, scrollTo: ScrollTo.Value): Unit = {
+    withWebElement(binding, s"trying to scroll to $scrollTo of $binding") { scrollIntoView(_, scrollTo) }
   }
 
   /**
@@ -740,10 +955,10 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
     * If a value is found, its value is bound to the current page
     * scope as `name/text`.
     *
-    * @param elementBinding the web element locator binding
+    * @param binding the locator binding
     */
-  def getElementText(elementBinding: LocatorBinding): Option[String] =
-    withWebElement(elementBinding, s"trying to get text of $elementBinding") { webElement =>
+  def getElementText(binding: LocatorBinding): Option[String] =
+    withWebElement(binding, s"trying to get text of $binding") { webElement =>
       (Option(webElement.getText) match {
         case None | Some("") =>
           Option(webElement.getAttribute("text")) match {
@@ -758,10 +973,10 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
           }
         case Some(value) => value
       }) tap { text =>
-        env.bindAndWait(elementBinding.name, "text", text)
+        bindAndWait(binding.name, BindingType.text.toString, text)
       }
     } tap { value =>
-      logger.debug(s"getElementText(${elementBinding.name})='$value'")
+      logger.debug(s"getElementText(${binding.name})='$value'")
     }
 
   /**
@@ -772,8 +987,8 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
     * @param name the web element name
     */
   private def getSelectedElementText(name: String): Option[String] = {
-    val elementBinding = env.getLocatorBinding(name)
-    withWebElement(elementBinding, s"trying to get selected text of $elementBinding") { webElement =>
+    val binding = getLocatorBinding(name)
+    withWebElement(binding, s"trying to get selected text of $binding") { webElement =>
       (getElementSelectionByJS(webElement, byText = true) match {
         case None =>
           Try(createSelect(webElement)) map { select =>
@@ -785,10 +1000,10 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
           } getOrElse null
         case Some(value) => value
       }) tap { text =>
-        env.bindAndWait(elementBinding.name, "selectedText", text)
+        bindAndWait(binding.name, "selectedText", text)
       }
     } tap { value =>
-      logger.debug(s"getSelectedElementText(${elementBinding.name})='$value'")
+      logger.debug(s"getSelectedElementText(${binding.name})='$value'")
     }
   }
 
@@ -800,19 +1015,19 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
     * @param name the web element name
     */
   private def getSelectedElementValue(name: String): Option[String] = {
-    val elementBinding = env.getLocatorBinding(name)
-    withWebElement(elementBinding, s"trying to get selected value of $elementBinding") { webElement =>
+    val binding = getLocatorBinding(name)
+    withWebElement(binding, s"trying to get selected value of $binding") { webElement =>
       getElementSelectionByJS(webElement, byText = false) match {
         case None =>
           Try(createSelect(webElement)) map { select =>
             select.getAllSelectedOptions.asScala.map(_.getAttribute("value")).mkString(",") tap { value =>
-              env.bindAndWait(elementBinding.name, "selectedValue", value)
+              bindAndWait(binding.name, "selectedValue", value)
             }
           } getOrElse null
         case Some(value) => value
       }
     } tap { value =>
-      logger.debug(s"getSelectedElementValue(${elementBinding.name})='$value'")
+      logger.debug(s"getSelectedElementValue(${binding.name})='$value'")
     }
   }
 
@@ -830,9 +1045,10 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
    * the selected values if multiple values are selected.
    */
   def getElementSelection(name: String, selection: String): Option[String] = {
-    selection.trim match {
-      case "text" => getSelectedElementText(name)
-      case _ => getSelectedElementValue(name)
+    if (selection.trim == BindingType.text.toString) {
+      getSelectedElementText(name)
+    } else {
+      getSelectedElementValue(name)
     }
   }
 
@@ -842,7 +1058,7 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
     * @param session the name of the session to switch to
     */
   def switchToSession(session: String): Unit = {
-    env.perform {
+    perform {
       driverManager.switchToSession(session)
     }
   }
@@ -851,7 +1067,7 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
     * Starts a new session if there isn't one or stays in the current one.
     */
   def newOrCurrentSession(): Unit = {
-    env.perform {
+    perform {
       driverManager.newOrCurrentSession()
     }
   }
@@ -885,7 +1101,7 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
     * Closes the last child window.
     */
   def closeChild(): Unit = {
-    env.perform {
+    perform {
       driverManager.closeChild()
     }
   }
@@ -896,21 +1112,21 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
     * @param occurrence the tag or window occurrence to close (first opened is occurrence 1, 2nd is 2, ..)
     */
   def closeChild(occurrence: Int): Unit = {
-    env.perform {
+    perform {
       driverManager.closeChild(occurrence)
     }
   }
 
   /** Switches to the parent window. */
   def switchToParent(): Unit = {
-    env.perform {
+    perform {
       driverManager.switchToParent()
     }
   }
 
   /** Switches to the top window / first frame */
   def switchToDefaultContent(): Unit = {
-    env.perform {
+    perform {
       driverManager.switchToDefaultContent()
     }
   }
@@ -976,7 +1192,7 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
     * @return the result of the function
     */
   private def withEyesContext[T](f: EyesContext => T): Option[T] = {
-    env.evaluate(None.asInstanceOf[Option[T]]) {
+    evaluate(None.asInstanceOf[Option[T]]) {
       if (eyesContext.isEmpty) {
         eyesContext = Some(new EyesContext(env))
       }

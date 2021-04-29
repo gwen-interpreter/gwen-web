@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Brady Wood, Branko Juric
+ * Copyright 2021 Branko Juric, Brady Wood
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package gwen.web
 
- /**
-  * Enumeration of supported scroll to positions.
+import gwen.Gwen
+import gwen.web.eval.WebInterpreter
+
+/**
+  * The main gwen-web application.
   * 
-  * @author Branko Juric
+  * @author Branko Juric, Brady Wood
   */
-object ScrollTo extends Enumeration {
-
-  val top, bottom = Value
-
-}
-
+object GwenWeb extends Gwen(new WebInterpreter())

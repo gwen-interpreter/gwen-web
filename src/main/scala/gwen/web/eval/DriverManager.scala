@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 Brady Wood, Branko Juric
+ * Copyright 2015-2021 Brady Wood, Branko Juric
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package gwen.web
+package gwen.web.eval
 
 import gwen._
-import gwen.web.Errors._
+import gwen.web.WebErrors._
+import gwen.web.WebSettings
 
 import scala.jdk.CollectionConverters._
 import scala.collection.mutable
@@ -44,26 +45,27 @@ import java.util.concurrent.Semaphore
 
 /** Driver manager companion. */
 object DriverManager {
-    /** Semaphore to limit number of permitted web drivers to max threads setting. */
-  private [web] lazy val DriverPermit = new Semaphore(GwenSettings.`gwen.parallel.maxThreads`, true)
+
+  /** Semaphore to limit number of permitted web drivers to max threads setting. */
+  lazy val DriverPermit = new Semaphore(GwenSettings.`gwen.parallel.maxThreads`, true)
+
 }
 
 /**
   * Provides and manages access to the web drivers.
   */
-class DriverManager extends LazyLogging {
-
-  import DriverManager.DriverPermit
+class DriverManager() extends LazyLogging {
 
   // put drivers downloaded by WebDriverManager in ~.gwen/wdm dir by default
   if (sys.props.get("wdm.targetPath").isEmpty) {
     sys.props += (("wdm.targetPath", new File(new File(System.getProperty("user.home")), ".gwen/wdm").getAbsolutePath))
   }    
-  /** Map of web driver instances (keyed by name). */
-  private[web] val drivers: mutable.Map[String, WebDriver] = mutable.Map()
-
+  
   /** The current web browser session. */
   private var session = "primary"
+  
+  /** Map of web driver instances (keyed by name). */
+  private [eval] val drivers: mutable.Map[String, WebDriver] = mutable.Map()
 
   /** Provides private access to the web driver */
   private def webDriver: WebDriver = drivers.getOrElse(session, {
@@ -90,7 +92,7 @@ class DriverManager extends LazyLogging {
         driver.quit()
         drivers.remove(name)
       } finally {
-        DriverPermit.release()
+        DriverManager.DriverPermit.release()
       }
     }
     session = "primary"
@@ -104,8 +106,8 @@ class DriverManager extends LazyLogging {
   def withWebDriver[T](f: WebDriver => T): T = f(webDriver)
 
   /** Loads the selenium webdriver. */
-  private[web] def loadWebDriver: WebDriver = withGlobalSettings {
-    DriverPermit.acquire()
+  private [eval] def loadWebDriver: WebDriver = withGlobalSettings {
+    DriverManager.DriverPermit.acquire()
     try {
       (WebSettings.`gwen.web.remote.url` match {
         case Some(addr) =>
@@ -121,7 +123,7 @@ class DriverManager extends LazyLogging {
       }
     } catch {
       case e: Throwable => 
-        DriverPermit.release()
+        DriverManager.DriverPermit.release()
         throw e
     }
   }
@@ -149,7 +151,7 @@ class DriverManager extends LazyLogging {
     * Gets the local web driver for the given name.
     *
     *  @param driverName the name of the driver to get
-    *  @throws gwen.web.Errors.UnsupportedWebDriverException if the given
+    *  @throws gwen.web.WebErrors.UnsupportedWebDriverException if the given
     *          web driver name is unsupported
     */
   private def localDriver(driverName: String): WebDriver = {
@@ -325,39 +327,39 @@ class DriverManager extends LazyLogging {
     }
   }
 
-  private[web] def chrome(): WebDriver = {
+  private [eval] def chrome(): WebDriver = {
     if (WebSettings.`webdriver.chrome.driver`.isEmpty) {
       WebDriverManager.chromedriver().setup()
     }
     new ChromeDriver(chromeOptions())
   }
 
-  private[web] def firefox(): WebDriver = {
+  private [eval] def firefox(): WebDriver = {
     if (WebSettings.`webdriver.gecko.driver`.isEmpty) {
       WebDriverManager.firefoxdriver().setup()
     }
     new FirefoxDriver(firefoxOptions())
   }
 
-  private[web] def ie(): WebDriver = {
+  private [eval] def ie(): WebDriver = {
     if (WebSettings.`webdriver.ie.driver`.isEmpty) {
       WebDriverManager.iedriver().setup()
     }
     new InternetExplorerDriver(ieOptions())
   }
 
-  private[web] def edge(): WebDriver = {
+  private [eval] def edge(): WebDriver = {
     if (WebSettings.`webdriver.edge.driver`.isEmpty) {
       WebDriverManager.edgedriver().setup()
     }
     new EdgeDriver(edgeOptions())
   }
 
-  private[web] def safari(): WebDriver = {
+  private [eval] def safari(): WebDriver = {
     new SafariDriver(safariOptions())
   }
 
-  private[web] def remote(hubUrl: String, capabilities: DesiredCapabilities): WebDriver =
+  private [eval] def remote(hubUrl: String, capabilities: DesiredCapabilities): WebDriver =
     new RemoteWebDriver(new HttpCommandExecutor(new URL(hubUrl)), capabilities) tap { driver => 
       if (WebSettings`gwen.web.remote.localFileDetector`) {
         driver.setFileDetector(new LocalFileDetector())
@@ -390,7 +392,7 @@ class DriverManager extends LazyLogging {
     * 
     * @param occurrence the tag or window occurrence to switch to (first opened is occurrence 1, 2nd is 2, ..)
     */
-  private[web] def switchToChild(occurrence: Int): Unit = {
+  def switchToChild(occurrence: Int): Unit = {
     windows().lift(occurrence) map { child =>
       switchToWindow(child, isChild = true)
     } getOrElse {
@@ -408,7 +410,7 @@ class DriverManager extends LazyLogging {
     drivers.get(session).fold(noSuchWindowError("Cannot switch to window: no windows currently open")) { _.switchTo.window(handle) }
   }
 
-  private[web] def closeChild(): Unit = {
+  def closeChild(): Unit = {
     windows() match {
       case parent::children => 
         val child = children.last
@@ -421,7 +423,7 @@ class DriverManager extends LazyLogging {
     }
   }
 
-  private[web] def closeChild(occurrence: Int): Unit = {
+  def closeChild(occurrence: Int): Unit = {
     windows().lift(occurrence) map { child =>
       switchToWindow(child, isChild = true)
       logger.info(s"Closing child window at occurrence $occurrence ($child)")
@@ -433,7 +435,7 @@ class DriverManager extends LazyLogging {
   }
 
   /** Switches to the parent window. */
-  private[web] def switchToParent(): Unit = {
+  def switchToParent(): Unit = {
     windows() match {
       case parent::_ => 
         switchToWindow(parent, isChild = false)
@@ -443,7 +445,7 @@ class DriverManager extends LazyLogging {
   }
 
   /** Switches to the top window / first frame */
-  private[web] def switchToDefaultContent(): Unit = {
+  def switchToDefaultContent(): Unit = {
     webDriver.switchTo().defaultContent()
   }
 
@@ -473,6 +475,6 @@ class DriverManager extends LazyLogging {
     }
   }
 
-  private[web] def windows(): List[String] = withWebDriver(_.getWindowHandles.asScala.toList)
+  def windows(): List[String] = withWebDriver(_.getWindowHandles.asScala.toList)
 
 }

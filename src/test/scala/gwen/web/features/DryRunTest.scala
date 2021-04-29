@@ -16,7 +16,7 @@
 
 package gwen.web.features
 
-import gwen.dsl.BehaviorRules
+import gwen.model.BehaviorRules
 
 class DryRunTest extends BaseFeatureTest {
 

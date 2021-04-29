@@ -16,16 +16,16 @@
 
 package gwen.web.features
 
-import gwen.dsl.BehaviorRules
-import gwen.dsl.{Failed, Passed}
-import gwen.eval.{GwenLauncher, GwenOptions}
+import gwen.GwenOptions
 import gwen.Settings
+import gwen.eval._
+import gwen.model._
 import gwen.web.BaseTest
-import gwen.web.WebInterpreter
+import gwen.web.eval.WebInterpreter
 
 abstract class BaseFeatureTest extends BaseTest {
 
-  private[web] def evaluate(features: List[String], parallel: Boolean, parallelFeatures: Boolean, dryRun: Boolean, reportDir: String, dataFile: Option[String]): Unit = {
+  private[features] def evaluate(features: List[String], parallel: Boolean, parallelFeatures: Boolean, dryRun: Boolean, reportDir: String, dataFile: Option[String]): Unit = {
     Settings.synchronized {
       val reportPath = s"${this.getClass.getSimpleName}${if (dryRun) "-dryRun" else ""}"
       val execModePath = if (parallel) "parallel" else "sequential"
@@ -37,7 +37,7 @@ abstract class BaseFeatureTest extends BaseTest {
       if (BehaviorRules.isStrict) args = args ++ Array("-t", "~@Lenient")
       args = args ++ features.toArray.asInstanceOf[Array[String]]
       val options = GwenOptions(args)
-      val launcher = new GwenLauncher(new WebInterpreter)
+      val launcher = new GwenLauncher(new WebInterpreter())
       launcher.run(options, None) match {
         case Passed(_) => // woo hoo
         case Failed(_, error) => error.printStackTrace(); fail(error.getMessage)

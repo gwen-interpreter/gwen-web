@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2015 Branko Juric, Brady Wood
+ * Copyright 2014-2021 Branko Juric, Brady Wood
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package gwen.web
+package gwen.web.eval
 
-import gwen.eval.GwenApp
 import gwen.eval.GwenInterpreter
 
 /**
@@ -24,13 +23,8 @@ import gwen.eval.GwenInterpreter
   * 
   * @author Branko Juric, Brady Wood
   */
-class WebInterpreter extends GwenInterpreter[WebEnvContext] with WebEngine {
-  override lazy val implName: String = Option(this.getClass.getPackage.getImplementationTitle).getOrElse("gwen-web")
+class WebInterpreter extends GwenInterpreter[WebContext] with WebEngine {
+  override lazy val implName: String = { 
+    Option(this.getClass.getPackage.getImplementationTitle).getOrElse("gwen-web")
+  }
 }
-
-/**
-  * The gwen-web standalone application.
-  * 
-  * @author Branko Juric, Brady Wood
-  */
-object WebInterpreter extends GwenApp(new WebInterpreter)
