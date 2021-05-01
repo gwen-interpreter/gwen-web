@@ -818,7 +818,6 @@ trait WebEngine extends DefaultEngine[WebContext] {
       var iteration = 0
       try {
         ctx.waitUntil(timeout.toSeconds, s"trying to repeat: ${step.name}") {
-          val index = iteration
           iteration = iteration + 1
           env.topScope.set("iteration number", iteration.toString)
           val preStep = step.copy(withKeyword = if(iteration == 1) step.keyword else StepKeyword.And.toString, withName = doStep)
@@ -826,9 +825,9 @@ trait WebEngine extends DefaultEngine[WebContext] {
             case "until" =>
               logger.info(s"repeat-until $condition: iteration $iteration")
               if (condSteps.isEmpty) {
-                lifecycle.beforeStepDef(step, preCondStepDef, env.scopes)
+                ctx.lifecycle.beforeStepDef(step, preCondStepDef, env.scopes)
               }
-              val iterationStep = evaluateStep(preCondStepDef, preStep, index, ctx)
+              val iterationStep = evaluateStep(preCondStepDef, preStep, ctx)
               condSteps = iterationStep :: condSteps
               iterationStep.evalStatus match {
                 case Failed(_, e) => throw e
@@ -849,9 +848,9 @@ trait WebEngine extends DefaultEngine[WebContext] {
               if (result) {
                 logger.info(s"repeat-while $condition: iteration $iteration")
                 if (condSteps.isEmpty) {
-                  lifecycle.beforeStepDef(step, preCondStepDef, env.scopes)
+                  ctx.lifecycle.beforeStepDef(step, preCondStepDef, env.scopes)
                 }
-                val iterationStep = evaluateStep(preCondStepDef, preStep, index, ctx)
+                val iterationStep = evaluateStep(preCondStepDef, preStep, ctx)
                 condSteps = iterationStep :: condSteps
                 iterationStep.evalStatus match {
                   case Failed(_, e) => throw e
@@ -881,11 +880,11 @@ trait WebEngine extends DefaultEngine[WebContext] {
       try {
         operation match {
           case "until" =>
-            evaluatedStep = this.evaluateStep(step, step.copy(withName = doStep), 0, ctx)
+            evaluatedStep = this.evaluateStep(step, step.copy(withName = doStep), ctx)
             env.scopes.get(JavaScriptBinding.key(condition))
           case _ =>
             env.scopes.get(JavaScriptBinding.key(condition))
-            evaluatedStep = this.evaluateStep(step, step.copy(withName = doStep), 0, ctx)
+            evaluatedStep = this.evaluateStep(step, step.copy(withName = doStep), ctx)
         }
       } catch {
         case _: Throwable => 
@@ -896,19 +895,19 @@ trait WebEngine extends DefaultEngine[WebContext] {
       val steps = evaluatedStep.evalStatus match {
         case Failed(nanos, error) if (EvalStatus(condSteps.map(_.evalStatus)).status == StatusKeyword.Passed) => 
           val preStep = condSteps.head.copy(withKeyword = StepKeyword.And.toString, withName = doStep)
-          lifecycle.beforeStep(preCondStepDef, preStep, env.scopes)
+          ctx.lifecycle.beforeStep(preCondStepDef, preStep, env.scopes)
           val fStep = preStep.copy(
             withEvalStatus = Failed(nanos - condSteps.map(_.evalStatus.nanos).sum, error),
             withStepDef = None
           )
-          lifecycle.afterStep(fStep, env.scopes)
+          ctx.lifecycle.afterStep(fStep, env.scopes)
           fStep :: condSteps
         case _ => 
           condSteps
           
       }
       val condStepDef = preCondStepDef.copy(withSteps = steps.reverse)
-      lifecycle.afterStepDef(condStepDef, env.scopes)
+      ctx.lifecycle.afterStepDef(condStepDef, env.scopes)
       evaluatedStep.copy(
         withEvalStatus = condStepDef.evalStatus,
         withStepDef = Some((condStepDef, Nil))
