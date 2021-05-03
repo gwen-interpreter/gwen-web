@@ -35,7 +35,9 @@ import org.openqa.selenium.WebElement
 
 import java.io.File
 
-class WebEngineTest extends BaseTest with WebEngine with Matchers with MockitoSugar with BeforeAndAfterEach {
+class WebEngineTest extends BaseTest with Matchers with MockitoSugar with BeforeAndAfterEach {
+
+  val engine = new WebEngine()
 
   val templateFile: File = {
     val rootDir: File = new File("target" + File.separator + "WebEngineTest") tap { _.mkdirs() }
@@ -104,13 +106,13 @@ class WebEngineTest extends BaseTest with WebEngine with Matchers with MockitoSu
 
   private def evaluate(name: String): Unit = {
     val step = Step(None, StepKeyword.Given.toString, name, Nil, None, Nil, None, Pending)
-    evaluate(step, ctx)
+    engine.evaluate(step, ctx)
   }
 
   private def evaluateComposite(name: String): Option[Step] = {
     val parent = mock[Identifiable]
     val step = Step(None, StepKeyword.Given.toString, name, Nil, None, Nil, None, Pending)
-    evaluateComposite(parent, step, ctx)
+    engine.evaluateComposite(parent, step, ctx)
   }
 
   "I am on the <page>" should "evaluate" in {

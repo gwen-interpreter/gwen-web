@@ -21,7 +21,7 @@ import gwen.Errors.StepFailure
 import gwen.Errors.undefinedStepError
 import gwen.Errors.disabledStepError
 import gwen.Formatting.DurationFormatter
-import gwen.eval.DefaultEngine
+import gwen.eval.EvalEngine
 import gwen.eval.EvalEnvironment
 import gwen.eval.binding.JavaScriptBinding
 import gwen.model._
@@ -46,7 +46,7 @@ import java.util.concurrent.TimeUnit
   * 
   * @author Branko Juric, Brady Wood
   */
-trait WebEngine extends DefaultEngine[WebContext] {
+class WebEngine extends EvalEngine[WebContext] {
   
   /**
     * Initialises and returns a new evaluation context.

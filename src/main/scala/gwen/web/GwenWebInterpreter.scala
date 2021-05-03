@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2021 Branko Juric, Brady Wood
+ * Copyright 2021 Branko Juric, Brady Wood
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,12 @@
  * limitations under the License.
  */
 
-package gwen.web.eval
+package gwen.web
 
-import gwen.eval.GwenInterpreter
+import gwen.GwenInterpreter
+import gwen.web.eval.WebEngine
 
 /**
-  * The gwen-web interpreter.
-  * 
-  * @author Branko Juric, Brady Wood
+  * The main gwen-web interpreter.
   */
-class WebInterpreter extends GwenInterpreter[WebContext] with WebEngine {
-  override lazy val implName: String = { 
-    Option(this.getClass.getPackage.getImplementationTitle).getOrElse("gwen-web")
-  }
-}
+object GwenWebInterpreter extends GwenInterpreter(new WebEngine())

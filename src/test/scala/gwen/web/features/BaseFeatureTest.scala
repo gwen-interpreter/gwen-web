@@ -21,7 +21,7 @@ import gwen.Settings
 import gwen.eval._
 import gwen.model._
 import gwen.web.BaseTest
-import gwen.web.eval.WebInterpreter
+import gwen.web.GwenWebInterpreter
 
 abstract class BaseFeatureTest extends BaseTest {
 
@@ -37,7 +37,7 @@ abstract class BaseFeatureTest extends BaseTest {
       if (BehaviorRules.isStrict) args = args ++ Array("-t", "~@Lenient")
       args = args ++ features.toArray.asInstanceOf[Array[String]]
       val options = GwenOptions(args)
-      val launcher = new GwenLauncher(new WebInterpreter())
+      val launcher = new GwenLauncher(GwenWebInterpreter)
       launcher.run(options, None) match {
         case Passed(_) => // woo hoo
         case Failed(_, error) => error.printStackTrace(); fail(error.getMessage)
