@@ -953,7 +953,7 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
     assert(delay.gteq(Duration.Zero), "delay cannot be less than zero")
     assert(timeout.gt(Duration.Zero), "timeout must be greater than zero")
     assert(timeout.gteq(delay), "timeout cannot be less than or equal to delay")
-    val operationTag = Tag(if (operation == "until") ReservedTags.RepeatUntil else ReservedTags.RepeatWhile)
+    val operationTag = Tag(if (operation == "until") ReservedTags.Until else ReservedTags.While)
     val tags = List(Tag(ReservedTags.Synthetic), operationTag, Tag(ReservedTags.StepDef))
     val preCondStepDef = Scenario(None, tags, operationTag.name, condition, Nil, None, Nil, Nil)
     var condSteps: List[Step] = Nil
@@ -1042,9 +1042,11 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
         case Failed(nanos, error) if (EvalStatus(condSteps.map(_.evalStatus)).status == StatusKeyword.Passed) => 
           val preStep = condSteps.head.copy(withKeyword = StepKeyword.And.toString, withName = doStep)
           lifecycle.beforeStep(preCondStepDef, preStep, env.scopes)
-          val fStep = preStep.copy(
-            withEvalStatus = Failed(nanos - condSteps.map(_.evalStatus.nanos).sum, error),
-            withStepDef = None
+          val fStep = env.finaliseStep(
+            preStep.copy(
+              withEvalStatus = Failed(nanos - condSteps.map(_.evalStatus.nanos).sum, error),
+              withStepDef = None
+            )
           )
           lifecycle.afterStep(fStep, env.scopes)
           fStep :: condSteps
@@ -1056,7 +1058,8 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
       lifecycle.afterStepDef(condStepDef, env.scopes)
       evaluatedStep.copy(
         withEvalStatus = condStepDef.evalStatus,
-        withStepDef = Some((condStepDef, Nil))
+        withStepDef = Some((condStepDef, Nil)),
+        withAttachments = condStepDef.attachments
       )
     } else {
       evaluatedStep
