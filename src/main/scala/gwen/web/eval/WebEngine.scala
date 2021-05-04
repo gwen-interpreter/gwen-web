@@ -896,9 +896,11 @@ class WebEngine extends EvalEngine[WebContext] {
         case Failed(nanos, error) if (EvalStatus(condSteps.map(_.evalStatus)).status == StatusKeyword.Passed) => 
           val preStep = condSteps.head.copy(withKeyword = StepKeyword.And.toString, withName = doStep)
           ctx.lifecycle.beforeStep(preCondStepDef, preStep, env.scopes)
-          val fStep = preStep.copy(
-            withEvalStatus = Failed(nanos - condSteps.map(_.evalStatus.nanos).sum, error),
-            withStepDef = None
+          val fStep = ctx.finaliseStep(
+            preStep.copy(
+              withEvalStatus = Failed(nanos - condSteps.map(_.evalStatus.nanos).sum, error),
+              withStepDef = None
+            )
           )
           ctx.lifecycle.afterStep(fStep, env.scopes)
           fStep :: condSteps
@@ -910,7 +912,8 @@ class WebEngine extends EvalEngine[WebContext] {
       ctx.lifecycle.afterStepDef(condStepDef, env.scopes)
       evaluatedStep.copy(
         withEvalStatus = condStepDef.evalStatus,
-        withStepDef = Some((condStepDef, Nil))
+        withStepDef = Some((condStepDef, Nil)),
+        withAttachments = condStepDef.attachments
       )
     } else {
       evaluatedStep
