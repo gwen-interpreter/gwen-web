@@ -808,7 +808,7 @@ class WebEngine extends EvalEngine[WebContext] {
     assert(delay.gteq(Duration.Zero), "delay cannot be less than zero")
     assert(timeout.gt(Duration.Zero), "timeout must be greater than zero")
     assert(timeout.gteq(delay), "timeout cannot be less than or equal to delay")
-    val operationTag = Tag(if (operation == "until") ReservedTags.RepeatUntil else ReservedTags.RepeatWhile)
+    val operationTag = Tag(if (operation == "until") ReservedTags.Until else ReservedTags.While)
     val tags = List(Tag(ReservedTags.Synthetic), operationTag, Tag(ReservedTags.StepDef))
     val preCondStepDef = Scenario(None, tags, operationTag.name, condition, Nil, None, Nil, Nil)
     var condSteps: List[Step] = Nil

@@ -1,3 +1,9 @@
+2.51.1
+======
+May 4, 2021
+- Do not allow nested if-conditions in composite steps (only trailing posiion permitted)
+- Add screenshot and error details when while/until errors or times out
+
 2.51.0
 ======
 Apr 21, 2021
