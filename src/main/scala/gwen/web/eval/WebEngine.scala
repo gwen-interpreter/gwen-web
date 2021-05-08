@@ -64,254 +64,271 @@ class WebEngine extends EvalEngine[WebContext] {
   }
 
   /**
-    * Evaluates composite steps supported by this engine.
+    * Translates composite web engine steps.
     */
-  override def evaluateComposite(parent: Identifiable, step: Step, ctx: WebContext): Option[Step] = ctx.withEnv { env =>
+  override def translateComposite(parent: Identifiable, step: Step, env: EvalEnvironment, ctx: WebContext): Option[Step => Step] = {
 
-    super.evaluateComposite(parent, step, ctx) orElse {
+    super.translateComposite(parent, step, env, ctx) orElse {
 
-      Option {
+      step.expression match {
 
-        step.expression match {
-
-          case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression in (.+?)$container with no (?:timeout|wait)""" => 
-            val containerBinding = ctx.getLocatorBinding(container)
-            val binding = LocatorBinding(s"$element/list", SelectorType.parse(selectorType), expression, Some(containerBinding), Some(Duration.Zero), None, ctx)
-            ctx.evaluate(foreach(() => List("$[dryRun:webElements]"), element, parent, step, doStep, ctx)) {
-              foreach(() => binding.resolveAll(), element, parent, step, doStep, ctx)
-            }
-
-          case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression in (.+?)$container with (\d+)$timeout second (?:timeout|wait)""" =>
-            val containerBinding = ctx.getLocatorBinding(container)
-            val binding = LocatorBinding(s"$element/list", SelectorType.parse(selectorType), expression, Some(containerBinding), Some(Duration.create(timeout.toLong, TimeUnit.SECONDS)), None, ctx)
-            ctx.evaluate(foreach(() => List("$[dryRun:webElements]"), element, parent, step, doStep, ctx)) {
-              foreach(() => binding.resolveAll(), element, parent, step, doStep, ctx)
-            }
-
-          case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression in (.+?)$container""" =>
-            val containerBinding = ctx.getLocatorBinding(container)
-            val binding = LocatorBinding(s"$element/list", SelectorType.parse(selectorType), expression, Some(containerBinding), None, None, ctx)
-            ctx.evaluate(foreach(() => List("$[dryRun:webElements]"), element, parent, step, doStep, ctx)) {
-              foreach(() => binding.resolveAll(), element, parent, step, doStep, ctx)
-            }
-
-          case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression with no (?:timeout|wait)""" =>
-            val binding = LocatorBinding(s"$element/list", SelectorType.parse(selectorType), expression, None, Some(Duration.Zero), None, ctx)
-            ctx.evaluate(foreach(() => List("$[dryRun:webElements]"), element, parent, step, doStep, ctx)) {
-              foreach(() => binding.resolveAll(), element, parent, step, doStep, ctx)
-            }
-
-          case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression with (\d+)$timeout second (?:timeout|wait)""" =>
-            val binding = LocatorBinding(s"$element/list", SelectorType.parse(selectorType), step.orDocString(expression), None, Some(Duration.create(timeout.toLong, TimeUnit.SECONDS)), None, ctx)
-            ctx.evaluate(foreach(() => List("$[dryRun:webElements]"), element, parent, step, doStep, ctx)) {
-              foreach(() => binding.resolveAll(), element, parent, step, doStep, ctx)
-            }
-
-          case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression""" =>
-            val binding = LocatorBinding(s"$element/list", SelectorType.parse(selectorType), step.orDocString(expression), None, None, None, ctx)
-            ctx.evaluate(foreach(() => List("$[dryRun:webElements]"), element, parent, step, doStep, ctx)) {
-              foreach(() => binding.resolveAll(), element, parent, step, doStep, ctx)
-            }
-
-          case r"""(.+?)$doStep for each (.+?)$element in (.+?)$$$iteration""" if !iteration.contains("delimited by") =>
-            val binding = ctx.getLocatorBinding(iteration)
-            ctx.evaluate(foreach(() => List("$[dryRun:webElements]"), element, parent, step, doStep, ctx)) {
-              foreach(() => binding.resolveAll(), element, parent, step, doStep, ctx)
-            }
-
-          case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using no delay and (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit (?:timeout|wait)""" =>
-            repeat(operation, parent, step, doStep, condition, Duration.Zero, Duration(timeoutPeriod.toLong, timeoutUnit), ctx)
-
-          case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using no delay""" =>
-            repeat(operation, parent, step, doStep, condition, Duration.Zero, defaultRepeatTimeout(DefaultRepeatDelay), ctx)
-
-          case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using (.+?)$delayPeriod (second|millisecond)$delayUnit delay and (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit (?:timeout|wait)""" =>
-            repeat(operation, parent, step, doStep, condition, Duration(delayPeriod.toLong, delayUnit), Duration(timeoutPeriod.toLong, timeoutUnit), ctx)
-
-          case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using (.+?)$delayPeriod (second|millisecond)$delayUnit delay""" =>
-            val delayDuration = Duration(delayPeriod.toLong, delayUnit)
-            repeat(operation, parent, step, doStep, condition, delayDuration, defaultRepeatTimeout(delayDuration), ctx)
-
-          case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit (?:timeout|wait)""" =>
-            repeat(operation, parent, step, doStep, condition, DefaultRepeatDelay, Duration(timeoutPeriod.toLong, timeoutUnit), ctx)
-
-          case r"""(.+?)$doStep (until|while)$operation (.+?)$$$condition""" if (doStep != "I wait" && !step.expression.matches(""".*".*(until|while).*".*""")) =>
-            repeat(operation, parent, step, doStep, condition, DefaultRepeatDelay, defaultRepeatTimeout(DefaultRepeatDelay), ctx)
-
-          case _ => null
+        case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression in (.+?)$container with no (?:timeout|wait)""" => Some { step =>
+          val containerBinding = ctx.getLocatorBinding(container)
+          val binding = LocatorBinding(s"$element/list", SelectorType.parse(selectorType), expression, Some(containerBinding), Some(Duration.Zero), None, ctx)
+          ctx.evaluate(evaluateForEach(() => List("$[dryRun:webElements]"), element, parent, step, doStep, ctx)) {
+            evaluateForEach(() => binding.resolveAll(), element, parent, step, doStep, ctx)
+          }
         }
+
+        case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression in (.+?)$container with (\d+)$timeout second (?:timeout|wait)""" => Some { step =>
+          val containerBinding = ctx.getLocatorBinding(container)
+          val binding = LocatorBinding(s"$element/list", SelectorType.parse(selectorType), expression, Some(containerBinding), Some(Duration.create(timeout.toLong, TimeUnit.SECONDS)), None, ctx)
+          ctx.evaluate(evaluateForEach(() => List("$[dryRun:webElements]"), element, parent, step, doStep, ctx)) {
+            evaluateForEach(() => binding.resolveAll(), element, parent, step, doStep, ctx)
+          }
+        }
+
+        case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression in (.+?)$container""" => Some { step =>
+          val containerBinding = ctx.getLocatorBinding(container)
+          val binding = LocatorBinding(s"$element/list", SelectorType.parse(selectorType), expression, Some(containerBinding), None, None, ctx)
+          ctx.evaluate(evaluateForEach(() => List("$[dryRun:webElements]"), element, parent, step, doStep, ctx)) {
+            evaluateForEach(() => binding.resolveAll(), element, parent, step, doStep, ctx)
+          }
+        }
+
+        case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression with no (?:timeout|wait)""" => Some { step =>
+          val binding = LocatorBinding(s"$element/list", SelectorType.parse(selectorType), expression, None, Some(Duration.Zero), None, ctx)
+          ctx.evaluate(evaluateForEach(() => List("$[dryRun:webElements]"), element, parent, step, doStep, ctx)) {
+            evaluateForEach(() => binding.resolveAll(), element, parent, step, doStep, ctx)
+          }
+        }
+
+        case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression with (\d+)$timeout second (?:timeout|wait)""" => Some { step =>
+          val binding = LocatorBinding(s"$element/list", SelectorType.parse(selectorType), step.orDocString(expression), None, Some(Duration.create(timeout.toLong, TimeUnit.SECONDS)), None, ctx)
+          ctx.evaluate(evaluateForEach(() => List("$[dryRun:webElements]"), element, parent, step, doStep, ctx)) {
+            evaluateForEach(() => binding.resolveAll(), element, parent, step, doStep, ctx)
+          }
+        }
+
+        case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression""" => Some { step =>
+          val binding = LocatorBinding(s"$element/list", SelectorType.parse(selectorType), step.orDocString(expression), None, None, None, ctx)
+          ctx.evaluate(evaluateForEach(() => List("$[dryRun:webElements]"), element, parent, step, doStep, ctx)) {
+            evaluateForEach(() => binding.resolveAll(), element, parent, step, doStep, ctx)
+          }
+        }
+
+        case r"""(.+?)$doStep for each (.+?)$element in (.+?)$$$iteration""" if !iteration.contains("delimited by") => Some { step =>
+          val binding = ctx.getLocatorBinding(iteration)
+          ctx.evaluate(evaluateForEach(() => List("$[dryRun:webElements]"), element, parent, step, doStep, ctx)) {
+            evaluateForEach(() => binding.resolveAll(), element, parent, step, doStep, ctx)
+          }
+        }
+
+        case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using no delay and (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit (?:timeout|wait)""" => Some { step =>
+          repeat(operation, parent, step, doStep, condition, Duration.Zero, Duration(timeoutPeriod.toLong, timeoutUnit), ctx)
+        }
+
+        case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using no delay""" => Some { step =>
+          repeat(operation, parent, step, doStep, condition, Duration.Zero, defaultRepeatTimeout(DefaultRepeatDelay), ctx)
+        }
+
+        case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using (.+?)$delayPeriod (second|millisecond)$delayUnit delay and (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit (?:timeout|wait)""" => Some { step =>
+          repeat(operation, parent, step, doStep, condition, Duration(delayPeriod.toLong, delayUnit), Duration(timeoutPeriod.toLong, timeoutUnit), ctx)
+        }
+
+        case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using (.+?)$delayPeriod (second|millisecond)$delayUnit delay""" => Some { step =>
+          val delayDuration = Duration(delayPeriod.toLong, delayUnit)
+          repeat(operation, parent, step, doStep, condition, delayDuration, defaultRepeatTimeout(delayDuration), ctx)
+        }
+
+        case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit (?:timeout|wait)""" => Some { step =>
+          repeat(operation, parent, step, doStep, condition, DefaultRepeatDelay, Duration(timeoutPeriod.toLong, timeoutUnit), ctx)
+        }
+
+        case r"""(.+?)$doStep (until|while)$operation (.+?)$$$condition""" if (doStep != "I wait" && !step.expression.matches(""".*".*(until|while).*".*""")) => Some { step =>
+          repeat(operation, parent, step, doStep, condition, DefaultRepeatDelay, defaultRepeatTimeout(DefaultRepeatDelay), ctx)
+        }
+
+        case _ => None
       }
     }
   }
 
   /**
-    * Evaluates a given step.  This method matches the incoming step against a
-    * set of supported steps and evaluates only those that are successfully
-    * matched.
+    * Translates a web engine step.  This method matches the incoming step against a
+    * set of supported steps and returns an operation that will evaluate those that are 
+    * successfully matched.
     *
     * @param step the step to evaluate
     * @param ctx the web evaluation context
     */
-  override def evaluate(step: Step, ctx: WebContext): Unit = ctx.withEnv { env =>
+  override def translate(parent: Identifiable, step: Step, env: EvalEnvironment, ctx: WebContext): Step => Unit = {
 
     step.expression match {
 
-      case r"""I wait for (.+?)$element text for (.+?)$seconds second(?:s?)""" =>
+      case r"""I wait for (.+?)$element text for (.+?)$seconds second(?:s?)""" => step =>
         checkStepRules(step, BehaviorType.Action, env)
         val binding = ctx.getLocatorBinding(element)
         ctx.waitUntil(seconds.toInt, s"waiting for text of $binding") {
           ctx.waitForText(binding)
         }
 
-      case r"""I wait for (.+?)$element text""" =>
+      case r"""I wait for (.+?)$element text""" => step =>
         checkStepRules(step, BehaviorType.Action, env)
         val binding = ctx.getLocatorBinding(element)
         ctx.waitUntil(s"waiting for text of $binding") {
           ctx.waitForText(binding)
         }
 
-      case r"""I wait for (.+?)$element for (.+?)$seconds second(?:s?)""" =>
+      case r"""I wait for (.+?)$element for (.+?)$seconds second(?:s?)""" => step =>
         checkStepRules(step, BehaviorType.Action, env)
         val binding = ctx.getLocatorBinding(element)
         ctx.waitUntil(seconds.toInt, s"waiting for $binding to be displayed") {
           Try(ctx.locateAndHighlight(binding)).isSuccess
         }
 
-      case r"""I wait for (.+?)$$$element""" =>
+      case r"""I wait for (.+?)$$$element""" => step =>
         checkStepRules(step, BehaviorType.Action, env)
         val binding = ctx.getLocatorBinding(element)
         ctx.waitUntil(s"waiting for $binding to be displayed") {
           Try(ctx.locateAndHighlight(binding)).isSuccess
         }
 
-      case r"""I wait ([0-9]+?)$duration second(?:s?) when (.+?)$element is (clicked|right clicked|double clicked|submitted|checked|ticked|unchecked|unticked|selected|deselected|typed|entered|tabbed|cleared|moved to)$$$event""" =>
+      case r"""I wait ([0-9]+?)$duration second(?:s?) when (.+?)$element is (clicked|right clicked|double clicked|submitted|checked|ticked|unchecked|unticked|selected|deselected|typed|entered|tabbed|cleared|moved to)$$$event""" => step =>
         checkStepRules(step, BehaviorType.Action, env)
         ctx.getLocatorBinding(element)
         env.scopes.set(s"$element/${WebEvents.EventToAction(event)}/wait", duration)
 
-      case r"""I wait until (.+?)$condition when (.+?)$element is (clicked|right clicked|double clicked||submitted|checked|ticked|unchecked|unticked|selected|deselected|typed|entered|tabbed|cleared|moved to)$$$event""" =>
+      case r"""I wait until (.+?)$condition when (.+?)$element is (clicked|right clicked|double clicked||submitted|checked|ticked|unchecked|unticked|selected|deselected|typed|entered|tabbed|cleared|moved to)$$$event""" => step =>
         checkStepRules(step, BehaviorType.Action, env)
         env.scopes.get(JavaScriptBinding.key(condition))
         ctx.getLocatorBinding(element)
         env.scopes.set(s"$element/${WebEvents.EventToAction(event)}/condition", condition)
 
-      case r"""I wait until "(.+?)$javascript"""" => step.orDocString(javascript) tap { javascript =>
-        checkStepRules(step, BehaviorType.Action, env)
-        ctx.waitUntil(s"waiting for true return from javascript: $javascript") {
-          ctx.evaluateJSPredicate(javascript)
+      case r"""I wait until "(.+?)$javascript"""" => step =>
+        step.orDocString(javascript) tap { javascript =>
+          checkStepRules(step, BehaviorType.Action, env)
+          ctx.waitUntil(s"waiting for true return from javascript: $javascript") {
+            ctx.evaluateJSPredicate(javascript)
+          }
         }
-      }
 
-      case r"""I wait until (.+?)$element is( not)?$negation (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$$$state""" if env.scopes.getOpt(s"$element is${if(Option(negation).isDefined) " not" else ""} $state/javascript").isEmpty =>
+      case r"""I wait until (.+?)$element is( not)?$negation (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$$$state""" if env.scopes.getOpt(s"$element is${if(Option(negation).isDefined) " not" else ""} $state/javascript").isEmpty => step =>
         checkStepRules(step, BehaviorType.Action, env)
         val binding = ctx.getLocatorBinding(element).jsEquivalent
         val negate = Option(negation).isDefined
         ctx.waitForElementState(binding, state, negate)
 
-      case r"""I wait until (.+?)$$$condition""" =>
+      case r"""I wait until (.+?)$$$condition""" => step =>
         checkStepRules(step, BehaviorType.Action, env)
         val javascript = env.scopes.get(JavaScriptBinding.key(condition))
         ctx.waitUntil(s"waiting for true return from javascript: $javascript") {
           ctx.evaluateJSPredicate(javascript)
         }
 
-      case r"""I am on the (.+?)$$$page""" =>
+      case r"""I am on the (.+?)$$$page""" => step =>
         checkStepRules(step, BehaviorType.Context, env)
         env.scopes.addScope(page)
 
-      case r"""I navigate to the (.+?)$$$page""" =>
+      case r"""I navigate to the (.+?)$$$page""" => step =>
         checkStepRules(step, BehaviorType.Action, env)
         env.scopes.addScope(page)
         val url = ctx.getAttribute("url")
         ctx.navigateTo(url)
 
-      case r"""I navigate to "(.+?)"$$$url""" => step.orDocString(url) tap { url =>
-        checkStepRules(step, BehaviorType.Action, env)
-        ctx.navigateTo(url)
-      }
+      case r"""I navigate to "(.+?)"$$$url""" => step =>
+        step.orDocString(url) tap { url =>
+          checkStepRules(step, BehaviorType.Action, env)
+          ctx.navigateTo(url)
+        }
 
-      case r"""I scroll to the (top|bottom)$position of (.+?)$$$element""" =>
+      case r"""I scroll to the (top|bottom)$position of (.+?)$$$element""" => step =>
         checkStepRules(step, BehaviorType.Action, env)
         val binding = ctx.getLocatorBinding(element)
         ctx.scrollIntoView(binding, ScrollTo.withName(position))
 
-      case r"""the url will be defined by (?:property|setting) "(.+?)"$$$name""" => step.orDocString(name) tap { name =>
-        checkStepRules(step, BehaviorType.Context, env)
-        env.scopes.set("url", Settings.get(name))
-      }
+      case r"""the url will be defined by (?:property|setting) "(.+?)"$$$name""" => step =>
+        step.orDocString(name) tap { name =>
+          checkStepRules(step, BehaviorType.Context, env)
+          env.scopes.set("url", Settings.get(name))
+        }
 
-      case r"""the url will be "(.+?)"$$$url""" => step.orDocString(url) tap { url =>
-        checkStepRules(step, BehaviorType.Context, env)
-        env.scopes.set("url", url)
-      }
+      case r"""the url will be "(.+?)"$$$url""" => step =>
+        step.orDocString(url) tap { url =>
+          checkStepRules(step, BehaviorType.Context, env)
+          env.scopes.set("url", url)
+        }
 
-      case r"""the (.+?)$page url is "(.+?)"$$$url""" => step.orDocString(url) tap { url =>
-        checkStepRules(step, BehaviorType.Context, env)
-        env.scopes.addScope(page)
-        env.scopes.set("url", url)
-      }
+      case r"""the (.+?)$page url is "(.+?)"$$$url""" => step =>
+        step.orDocString(url) tap { url =>
+          checkStepRules(step, BehaviorType.Context, env)
+          env.scopes.addScope(page)
+          env.scopes.set("url", url)
+        }
 
-      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression at index (\d+)$index in (.+?)$container with no (?:timeout|wait)""" =>
+      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression at index (\d+)$index in (.+?)$container with no (?:timeout|wait)""" => step =>
         checkStepRules(step, BehaviorType.Context, env)
         ctx.getLocatorBinding(container)
         LocatorBinding.bind(env, element, SelectorType.parse(selectorType), expression, Some(container), Some(0), Some(index.toInt))
 
-      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression in (.+?)$container with no (?:timeout|wait)""" =>
+      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression in (.+?)$container with no (?:timeout|wait)""" => step =>
         checkStepRules(step, BehaviorType.Context, env)
         ctx.getLocatorBinding(container)
         LocatorBinding.bind(env, element, SelectorType.parse(selectorType), expression, Some(container), Some(0), None)
 
-      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression at index (\d+)$index in (.+?)$container with (\d+)$timeout second (?:timeout|wait)""" =>
+      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression at index (\d+)$index in (.+?)$container with (\d+)$timeout second (?:timeout|wait)""" => step =>
         checkStepRules(step, BehaviorType.Context, env)
         ctx.getLocatorBinding(container)
         LocatorBinding.bind(env, element, SelectorType.parse(selectorType), expression, Some(container), Some(timeout.toInt), Some(index.toInt))
 
-      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression in (.+?)$container with (\d+)$timeout second (?:timeout|wait)""" =>
+      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression in (.+?)$container with (\d+)$timeout second (?:timeout|wait)""" => step =>
         checkStepRules(step, BehaviorType.Context, env)
         ctx.getLocatorBinding(container)
         LocatorBinding.bind(env, element, SelectorType.parse(selectorType), expression, Some(container), Some(timeout.toInt), None)
 
-      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression at index (\d+)$index in (.+?)$container""" =>
+      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression at index (\d+)$index in (.+?)$container""" => step =>
         checkStepRules(step, BehaviorType.Context, env)
         ctx.getLocatorBinding(container)
         LocatorBinding.bind(env, element, SelectorType.parse(selectorType), expression, Some(container), None, Some(index.toInt))
 
-      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression in (.+?)$container""" =>
+      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression in (.+?)$container""" => step =>
         checkStepRules(step, BehaviorType.Context, env)
         ctx.getLocatorBinding(container)
         LocatorBinding.bind(env, element, SelectorType.parse(selectorType), expression, Some(container), None, None)
 
-      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression at index (\d+)$index with no (?:timeout|wait)""" =>
+      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression at index (\d+)$index with no (?:timeout|wait)""" => step =>
         checkStepRules(step, BehaviorType.Context, env)
         LocatorBinding.bind(env, element, SelectorType.parse(selectorType), expression, None, Some(0), Some(index.toInt))
 
-      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression with no (?:timeout|wait)""" =>
+      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression with no (?:timeout|wait)""" => step =>
         checkStepRules(step, BehaviorType.Context, env)
         LocatorBinding.bind(env, element, SelectorType.parse(selectorType), expression, None, Some(0), None)
 
-      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression at index (\d+)$index with (\d+)$timeout second (?:timeout|wait)""" =>
+      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression at index (\d+)$index with (\d+)$timeout second (?:timeout|wait)""" => step =>
         checkStepRules(step, BehaviorType.Context, env)
         LocatorBinding.bind(env, element, SelectorType.parse(selectorType), expression, None, Some(timeout.toInt), Some(index.toInt))
 
-      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression with (\d+)$timeout second (?:timeout|wait)""" =>
+      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression with (\d+)$timeout second (?:timeout|wait)""" => step =>
         checkStepRules(step, BehaviorType.Context, env)
         LocatorBinding.bind(env, element, SelectorType.parse(selectorType), expression, None, Some(timeout.toInt), None)
 
-      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression at index (\d+)$index""" =>
+      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression at index (\d+)$index""" => step =>
         checkStepRules(step, BehaviorType.Context, env)
         LocatorBinding.bind(env, element, SelectorType.parse(selectorType), expression, None, None, Some(index.toInt))
         
-      case r"""(.+?)$element can be located at index (\d+)$index by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression""" => step.orDocString(expression) tap { expression =>
-        checkStepRules(step, BehaviorType.Context, env)
-        LocatorBinding.bind(env, element, SelectorType.parse(selectorType), expression, None, None, Some(index.toInt))
-      }
+      case r"""(.+?)$element can be located at index (\d+)$index by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression""" => step =>
+        step.orDocString(expression) tap { expression =>
+          checkStepRules(step, BehaviorType.Context, env)
+          LocatorBinding.bind(env, element, SelectorType.parse(selectorType), expression, None, None, Some(index.toInt))
+        }
 
-      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression""" => step.orDocString(expression) tap { expression =>
-        checkStepRules(step, BehaviorType.Context, env)
-        LocatorBinding.bind(env, element, SelectorType.parse(selectorType), expression, None, None, None)
-      }
+      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression""" => step =>
+        step.orDocString(expression) tap { expression =>
+          checkStepRules(step, BehaviorType.Context, env)
+          LocatorBinding.bind(env, element, SelectorType.parse(selectorType), expression, None, None, None)
+        }
 
-      case r"""(.+?)$element can be located at index (\d+)$index in (.+?)$container by""" if step.table.nonEmpty && step.table.head._2.size == 2 =>
+      case r"""(.+?)$element can be located at index (\d+)$index in (.+?)$container by""" if step.table.nonEmpty && step.table.head._2.size == 2 => step =>
         checkStepRules(step, BehaviorType.Context, env)
         ctx.getLocatorBinding(container)
         env.scopes.set(s"$element/locator", step.table.map(_._2.head).mkString(","))
@@ -321,7 +338,7 @@ class WebEngine extends EvalEngine[WebContext] {
           LocatorBinding.bind(env, element, SelectorType.parse(selectorType), expression, Some(container), None, Some(index.toInt))
         }
 
-      case r"""(.+?)$element can be located in (.+?)$container by""" if step.table.nonEmpty && step.table.head._2.size == 2 =>
+      case r"""(.+?)$element can be located in (.+?)$container by""" if step.table.nonEmpty && step.table.head._2.size == 2 => step =>
         checkStepRules(step, BehaviorType.Context, env)
         ctx.getLocatorBinding(container)
         env.scopes.set(s"$element/locator", step.table.map(_._2.head).mkString(","))
@@ -331,7 +348,7 @@ class WebEngine extends EvalEngine[WebContext] {
           LocatorBinding.bind(env, element, SelectorType.parse(selectorType), expression, Some(container), None, None)
         }
 
-      case r"""(.+?)$element can be located at index (\d+)$index with no (?:timeout|wait) by""" if step.table.nonEmpty && step.table.head._2.size == 2 => {
+      case r"""(.+?)$element can be located at index (\d+)$index with no (?:timeout|wait) by""" if step.table.nonEmpty && step.table.head._2.size == 2 => step =>
         checkStepRules(step, BehaviorType.Context, env)
         env.scopes.set(s"$element/locator", step.table.map(_._2.head).mkString(","))
         step.table foreach { case (_, row ) =>
@@ -339,9 +356,8 @@ class WebEngine extends EvalEngine[WebContext] {
           val expression = row(1)
           LocatorBinding.bind(env, element, SelectorType.parse(selectorType), expression, None, Some(0), Some(index.toInt))
         }
-      }
 
-      case r"""(.+?)$element can be located with no (?:timeout|wait) by""" if step.table.nonEmpty && step.table.head._2.size == 2 => {
+      case r"""(.+?)$element can be located with no (?:timeout|wait) by""" if step.table.nonEmpty && step.table.head._2.size == 2 => step =>
         checkStepRules(step, BehaviorType.Context, env)
         env.scopes.set(s"$element/locator", step.table.map(_._2.head).mkString(","))
         step.table foreach { case (_, row ) =>
@@ -349,9 +365,8 @@ class WebEngine extends EvalEngine[WebContext] {
           val expression = row(1)
           LocatorBinding.bind(env, element, SelectorType.parse(selectorType), expression, None, Some(0), None)
         }
-      }
 
-      case r"""(.+?)$element can be located at index (\d+)$index with (\d+)$timeout second (?:timeout|wait) by""" if step.table.nonEmpty && step.table.head._2.size == 2 => {
+      case r"""(.+?)$element can be located at index (\d+)$index with (\d+)$timeout second (?:timeout|wait) by""" if step.table.nonEmpty && step.table.head._2.size == 2 => step =>
         checkStepRules(step, BehaviorType.Context, env)
         env.scopes.set(s"$element/locator", step.table.map(_._2.head).mkString(","))
         step.table foreach { case (_, row ) =>
@@ -359,9 +374,8 @@ class WebEngine extends EvalEngine[WebContext] {
           val expression = row(1)
           LocatorBinding.bind(env, element, SelectorType.parse(selectorType), expression, None, Some(timeout.toInt), Some(index.toInt))
         }
-      }
 
-      case r"""(.+?)$element can be located with (\d+)$timeout second (?:timeout|wait) by""" if step.table.nonEmpty && step.table.head._2.size == 2 => {
+      case r"""(.+?)$element can be located with (\d+)$timeout second (?:timeout|wait) by""" if step.table.nonEmpty && step.table.head._2.size == 2 => step =>
         checkStepRules(step, BehaviorType.Context, env)
         env.scopes.set(s"$element/locator", step.table.map(_._2.head).mkString(","))
         step.table foreach { case (_, row ) =>
@@ -369,9 +383,8 @@ class WebEngine extends EvalEngine[WebContext] {
           val expression = row(1)
           LocatorBinding.bind(env, element, SelectorType.parse(selectorType), expression, None, Some(timeout.toInt), None)
         }
-      }
 
-      case r"""(.+?)$element can be located at index (\d+)$index by""" if step.table.nonEmpty && step.table.head._2.size == 2 => {
+      case r"""(.+?)$element can be located at index (\d+)$index by""" if step.table.nonEmpty && step.table.head._2.size == 2 => step =>
         checkStepRules(step, BehaviorType.Context, env)
         env.scopes.set(s"$element/locator", step.table.map(_._2.head).mkString(","))
         step.table foreach { case (_, row ) =>
@@ -379,9 +392,8 @@ class WebEngine extends EvalEngine[WebContext] {
           val expression = row(1)
           LocatorBinding.bind(env, element, SelectorType.parse(selectorType), expression, None, None, Some(index.toInt))
         }
-      }
 
-      case r"""(.+?)$element can be located by""" if step.table.nonEmpty && step.table.head._2.size == 2 => {
+      case r"""(.+?)$element can be located by""" if step.table.nonEmpty && step.table.head._2.size == 2 => step =>
         checkStepRules(step, BehaviorType.Context, env)
         env.scopes.set(s"$element/locator", step.table.map(_._2.head).mkString(","))
         step.table foreach { case (_, row ) =>
@@ -389,77 +401,80 @@ class WebEngine extends EvalEngine[WebContext] {
           val expression = row(1)
           LocatorBinding.bind(env, element, SelectorType.parse(selectorType), expression, None, None, None)
         }
-      }
 
-      case r"""(.+?)$element can be (clicked|right clicked|double clicked|submitted|checked|ticked|unchecked|unticked|selected|deselected|typed|entered|tabbed|cleared|moved to)$event by (?:javascript|js) "(.+?)"$$$expression""" => step.orDocString(expression) tap { expression =>
-        checkStepRules(step, BehaviorType.Context, env)
-        ctx.getLocatorBinding(element)
-        env.scopes.set(JavaScriptBinding.key(s"$element/action/${WebEvents.EventToAction(event)}"), expression)
-      }
-
-      case r"""the page title should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file)$operator "(.*?)"$$$expression""" => step.orDocString(expression) tap { expression =>
-        checkStepRules(step, BehaviorType.Assertion, env)
-        val expected = ctx.parseExpression(operator, expression)
-        ctx.perform {
-          ctx.compare("title", expected, () => ctx.getTitle, operator, Option(negation).isDefined)
-        }
-      }
-
-      case r"""the page title should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$$$attribute""" =>
-      checkStepRules(step, BehaviorType.Assertion, env)
-        val expected = ctx.getBoundReferenceValue(attribute)
-        ctx.perform {
-          ctx.compare("title", expected, () => ctx.getTitle, operator, Option(negation).isDefined)
+      case r"""(.+?)$element can be (clicked|right clicked|double clicked|submitted|checked|ticked|unchecked|unticked|selected|deselected|typed|entered|tabbed|cleared|moved to)$event by (?:javascript|js) "(.+?)"$$$expression""" => step =>
+        step.orDocString(expression) tap { expression =>
+          checkStepRules(step, BehaviorType.Context, env)
+          ctx.getLocatorBinding(element)
+          env.scopes.set(JavaScriptBinding.key(s"$element/action/${WebEvents.EventToAction(event)}"), expression)
         }
 
-      case r"""the (alert|confirmation)$name popup message should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file)$operator "(.*?)"$$$expression""" => step.orDocString(expression) tap { expression =>
-        checkStepRules(step, BehaviorType.Assertion, env)
-        val expected = ctx.parseExpression(operator, expression)
-        ctx.perform {
-          ctx.compare(name, expected, () => ctx.getPopupMessage, operator, Option(negation).isDefined)
+      case r"""the page title should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file)$operator "(.*?)"$$$expression""" => step =>
+        step.orDocString(expression) tap { expression =>
+          checkStepRules(step, BehaviorType.Assertion, env)
+          val expected = ctx.parseExpression(operator, expression)
+          ctx.perform {
+            ctx.compare("title", expected, () => ctx.getTitle, operator, Option(negation).isDefined)
+          }
         }
-      }
 
-      case r"""the (alert|confirmation)$name popup message should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$$$attribute""" =>
+      case r"""the page title should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$$$attribute""" => step =>
         checkStepRules(step, BehaviorType.Assertion, env)
         val expected = ctx.getBoundReferenceValue(attribute)
         ctx.perform {
+          ctx.compare("title", expected, () => ctx.getTitle, operator, Option(negation).isDefined)
+        }
+
+      case r"""the (alert|confirmation)$name popup message should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file)$operator "(.*?)"$$$expression""" => step =>
+        step.orDocString(expression) tap { expression =>
+          checkStepRules(step, BehaviorType.Assertion, env)
+          val expected = ctx.parseExpression(operator, expression)
+          ctx.perform {
+            ctx.compare(name, expected, () => ctx.getPopupMessage, operator, Option(negation).isDefined)
+          }
+        }
+
+      case r"""the (alert|confirmation)$name popup message should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$$$attribute""" => step =>
+        checkStepRules(step, BehaviorType.Assertion, env)
+        val expected = ctx.getBoundReferenceValue(attribute)
+        ctx.perform {
           ctx.compare(name, expected, () => ctx.getPopupMessage, operator, Option(negation).isDefined)
         }
 
-      case r"""(.+?)$element should( not)?$negation be (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$$$state""" =>
+      case r"""(.+?)$element should( not)?$negation be (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$$$state""" => step =>
         checkStepRules(step, BehaviorType.Assertion, env)
         val binding = ctx.getLocatorBinding(element)
         ctx.checkElementState(binding, state, Option(negation).nonEmpty)
 
-      case r"""(.+?)$element( text| value)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file)$operator "(.*?)"$$$expression""" if !element.matches(".+at (json path|xpath).+") => step.orDocString(expression) tap { expression =>
-        checkStepRules(step, BehaviorType.Assertion, env)
-        if (element == "I") undefinedStepError(step)
-        if (element == "the current URL") ctx.captureCurrentUrl(None)
-        val negate = Option(negation).isDefined
-        val expected = ctx.parseExpression(operator, expression)
-        val actual = ctx.boundAttributeOrSelection(element, Option(selection))
-        ctx.perform {
-          if (env.scopes.findEntry { case (n, _) => n.startsWith(element) } forall { case (n, _) => n != element }) {
-            val nameSuffix = Option(selection)
-            ctx.compare(element + nameSuffix.getOrElse(""), expected, actual, operator, negate, nameSuffix)
-          } else {
-            val actualValue = env.scopes.getOpt(element).getOrElse(actual())
-            val result = ctx.compare(element, expected, actualValue, operator, negate)
-            result match {
-              case Success(assertion) =>
-                val binding = ctx.getLocatorBinding(element, optional = true)
-                assert(assertion, s"Expected ${binding.map(_.toString).getOrElse(element)} to ${if(negate) "not " else ""}$operator '$expected' but got '$actualValue'")
-              case Failure(error) =>
-                assert(assertion = false, error.getMessage)
+      case r"""(.+?)$element( text| value)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file)$operator "(.*?)"$$$expression""" if !element.matches(".+at (json path|xpath).+") => step =>
+        step.orDocString(expression) tap { expression =>
+          checkStepRules(step, BehaviorType.Assertion, env)
+          if (element == "I") undefinedStepError(step)
+          if (element == "the current URL") ctx.captureCurrentUrl(None)
+          val negate = Option(negation).isDefined
+          val expected = ctx.parseExpression(operator, expression)
+          val actual = ctx.boundAttributeOrSelection(element, Option(selection))
+          ctx.perform {
+            if (env.scopes.findEntry { case (n, _) => n.startsWith(element) } forall { case (n, _) => n != element }) {
+              val nameSuffix = Option(selection)
+              ctx.compare(element + nameSuffix.getOrElse(""), expected, actual, operator, negate, nameSuffix)
+            } else {
+              val actualValue = env.scopes.getOpt(element).getOrElse(actual())
+              val result = ctx.compare(element, expected, actualValue, operator, negate)
+              result match {
+                case Success(assertion) =>
+                  val binding = ctx.getLocatorBinding(element, optional = true)
+                  assert(assertion, s"Expected ${binding.map(_.toString).getOrElse(element)} to ${if(negate) "not " else ""}$operator '$expected' but got '$actualValue'")
+                case Failure(error) =>
+                  assert(assertion = false, error.getMessage)
+              }
             }
+          } getOrElse {
+            actual()
           }
-        } getOrElse {
-          actual()
         }
-      }
 
-      case r"""(.+?)$element( value| text)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$$$attribute""" if attribute != "absent" && !element.matches(".+at (json path|xpath).+") =>
+      case r"""(.+?)$element( value| text)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$$$attribute""" if attribute != "absent" && !element.matches(".+at (json path|xpath).+") => step =>
         checkStepRules(step, BehaviorType.Assertion, env)
         if (element == "I") undefinedStepError(step)
         if (element == "the current URL") ctx.captureCurrentUrl(None)
@@ -472,44 +487,45 @@ class WebEngine extends EvalEngine[WebContext] {
           actual()
         }
 
-      case r"""I capture (.+?)$attribute (?:of|on|in) (.+?)$element by (?:javascript|js) "(.+?)"$$$expression""" => step.orDocString(expression) tap { expression =>
-        checkStepRules(step, BehaviorType.Action, env)
-        val binding = ctx.getLocatorBinding(element)
-        env.scopes.set(JavaScriptBinding.key(attribute), expression)
-        try {
-          ctx.perform {
-            env.topScope.pushObject(s"${JavaScriptBinding.key(attribute)}/param/webElement", binding.resolve())
-          }
-          val value = ctx.getBoundReferenceValue(attribute)
-          env.topScope.set(attribute, value tap { content =>
-            env.addAttachment(attribute, "txt", content)
-          })
-        } finally {
-          ctx.perform {
-            env.topScope.popObject(s"${JavaScriptBinding.key(attribute)}/param/webElement")
+      case r"""I capture (.+?)$attribute (?:of|on|in) (.+?)$element by (?:javascript|js) "(.+?)"$$$expression""" => step => 
+        step.orDocString(expression) tap { expression =>
+          checkStepRules(step, BehaviorType.Action, env)
+          val binding = ctx.getLocatorBinding(element)
+          env.scopes.set(JavaScriptBinding.key(attribute), expression)
+          try {
+            ctx.perform {
+              env.topScope.pushObject(s"${JavaScriptBinding.key(attribute)}/param/webElement", binding.resolve())
+            }
+            val value = ctx.getBoundReferenceValue(attribute)
+            env.topScope.set(attribute, value tap { content =>
+              env.addAttachment(attribute, "txt", content)
+            })
+          } finally {
+            ctx.perform {
+              env.topScope.popObject(s"${JavaScriptBinding.key(attribute)}/param/webElement")
+            }
           }
         }
-      }
 
-      case r"""I capture the current URL""" =>
+      case r"""I capture the current URL""" => step =>
         checkStepRules(step, BehaviorType.Action, env)
         ctx.captureCurrentUrl(None)
 
-      case r"""I capture the current URL as (.+?)$name""" =>
+      case r"""I capture the current URL as (.+?)$name""" => step =>
         checkStepRules(step, BehaviorType.Action, env)
         ctx.captureCurrentUrl(Some(name))
 
-      case r"""I capture the current screenshot""" =>
+      case r"""I capture the current screenshot""" => step =>
         checkStepRules(step, BehaviorType.Action, env)
         ctx.captureScreenshot(true)
 
-      case r"""I capture the current screenshot as (.+?)$attribute""" =>
+      case r"""I capture the current screenshot as (.+?)$attribute""" => step =>
         checkStepRules(step, BehaviorType.Action, env)
         ctx.captureScreenshot(true, attribute) foreach { file =>
           env.scopes.set(attribute, file.getAbsolutePath)
         }
 
-      case r"""I capture (.+?)$element( value| text)$selection as (.+?)$attribute""" =>
+      case r"""I capture (.+?)$element( value| text)$selection as (.+?)$attribute""" => step =>
         checkStepRules(step, BehaviorType.Action, env)
         try {
           val value = ctx.boundAttributeOrSelection(element, Option(selection))
@@ -518,10 +534,10 @@ class WebEngine extends EvalEngine[WebContext] {
           })
         } catch {
           case _: LocatorBindingException =>
-            super.evaluate(step, ctx)
+            super.translate(parent, step, env, ctx)
         }
 
-      case r"""I capture (.+?)$element( value| text)$$$selection""" =>
+      case r"""I capture (.+?)$element( value| text)$$$selection""" => step =>
         checkStepRules(step, BehaviorType.Action, env)
         try {
           val value = ctx.boundAttributeOrSelection(element, Option(selection))
@@ -530,22 +546,22 @@ class WebEngine extends EvalEngine[WebContext] {
           })
         } catch {
           case _: LocatorBindingException =>
-            super.evaluate(step, ctx)
+            super.translate(parent, step, env, ctx)
         }
 
-      case r"I capture the (alert|confirmation)$name popup message" =>
+      case r"I capture the (alert|confirmation)$name popup message" => step =>
         checkStepRules(step, BehaviorType.Action, env)
         env.topScope.set(s"the $name popup message", ctx.getPopupMessage tap { content =>
           env.addAttachment(s"the $name popup message", "txt", content)
         })
 
-      case r"I capture the (?:alert|confirmation) popup message as (.+?)$attribute" =>
+      case r"I capture the (?:alert|confirmation) popup message as (.+?)$attribute" => step =>
         checkStepRules(step, BehaviorType.Action, env)
         env.topScope.set(attribute, ctx.getPopupMessage tap { content =>
           env.addAttachment(attribute, "txt", content)
         })
 
-      case r"""I start visual test as "(.+?)"$testName in (\d+?)$width x (\d+?)$height viewport""" =>
+      case r"""I start visual test as "(.+?)"$testName in (\d+?)$width x (\d+?)$height viewport""" => step =>
         checkStepRules(step, BehaviorType.Action, env)
         if (EyesSettings.`gwen.applitools.eyes.enabled`) {
           ctx.startVisualTest(testName, Some(new RectangleSize(width.toInt, height.toInt)))
@@ -553,7 +569,7 @@ class WebEngine extends EvalEngine[WebContext] {
           disabledStepError(step)
         }
 
-      case r"""I start visual test as "(.+?)"$testName""" =>
+      case r"""I start visual test as "(.+?)"$testName""" => step =>
         checkStepRules(step, BehaviorType.Action, env)
         if (EyesSettings.`gwen.applitools.eyes.enabled`) {
           ctx.startVisualTest(testName, None)
@@ -561,7 +577,7 @@ class WebEngine extends EvalEngine[WebContext] {
           disabledStepError(step)
         }
 
-      case r"""I check (viewport|full page)?$mode visual as "(.+?)"$name using (.+?)$matchLevel match""" =>
+      case r"""I check (viewport|full page)?$mode visual as "(.+?)"$name using (.+?)$matchLevel match""" => step =>
         checkStepRules(step, BehaviorType.Action, env)
         if (EyesSettings.`gwen.applitools.eyes.enabled`) {
           ctx.checkVisual(name, mode == "full page", Some(MatchLevel.valueOf(matchLevel)))
@@ -569,7 +585,7 @@ class WebEngine extends EvalEngine[WebContext] {
           disabledStepError(step)
         }
 
-      case r"""I check (viewport|full page)?$mode visual as "(.+?)"$name""" =>
+      case r"""I check (viewport|full page)?$mode visual as "(.+?)"$name""" => step =>
         checkStepRules(step, BehaviorType.Action, env)
         if (EyesSettings.`gwen.applitools.eyes.enabled`) {
           ctx.checkVisual(name, mode == "full page", None)
@@ -577,7 +593,7 @@ class WebEngine extends EvalEngine[WebContext] {
           disabledStepError(step)
         }
 
-      case "the visual test should pass" =>
+      case "the visual test should pass" => step =>
         checkStepRules(step, BehaviorType.Assertion, env)
         if (EyesSettings.`gwen.applitools.eyes.enabled`) {
           ctx.asertVisuals()
@@ -585,44 +601,44 @@ class WebEngine extends EvalEngine[WebContext] {
           disabledStepError(step)
         }
 
-      case r"""I drag and drop (.+?)$source to (.+?)$$$target""" =>
+      case r"""I drag and drop (.+?)$source to (.+?)$$$target""" => step =>
         checkStepRules(step, BehaviorType.Action, env)
         val sourceBinding = ctx.getLocatorBinding(source)
         val targetBinding = ctx.getLocatorBinding(target)
         ctx.dragAndDrop(sourceBinding, targetBinding)
 
-      case r"""I clear (.+?)$$$element""" =>
+      case r"""I clear (.+?)$$$element""" => step =>
         checkStepRules(step, BehaviorType.Action, env)
         val binding = ctx.getLocatorBinding(element)
         ctx.performAction("clear", binding)
 
-      case r"""I press (enter|tab)$key in (.+?)$$$element""" =>
+      case r"""I press (enter|tab)$key in (.+?)$$$element""" => step =>
         checkStepRules(step, BehaviorType.Action, env)
         val binding = ctx.getLocatorBinding(element)
         ctx.sendKeys(binding, Array[String](key))
         ctx.bindAndWait(element, key, "true")
 
-      case r"""I send "(.+?)"$keys""" =>
+      case r"""I send "(.+?)"$keys""" => step =>
         checkStepRules(step, BehaviorType.Action, env)
         ctx.sendKeys(keys.split(","))
 
-      case r"""I send "(.+?)"$keys to (.+?)$$$element""" =>
+      case r"""I send "(.+?)"$keys to (.+?)$$$element""" => step =>
         checkStepRules(step, BehaviorType.Action, env)
         val binding = ctx.getLocatorBinding(element)
         ctx.sendKeys(binding, keys.split(","))
 
-      case r"""I (enter|type)$action "(.*?)"$value in (.+?)$$$element""" =>
+      case r"""I (enter|type)$action "(.*?)"$value in (.+?)$$$element""" => step =>
         checkStepRules(step, BehaviorType.Action, env)
         val binding = ctx.getLocatorBinding(element)
         ctx.sendValue(binding, value, clickFirst = WebSettings.`gwen.web.sendKeys.clickFirst`, clearFirst = WebSettings.`gwen.web.sendKeys.clearFirst`, sendEnterKey = action == "enter")
 
-      case r"""I (enter|type)$action (.+?)$attribute in (.+?)$$$element""" =>
+      case r"""I (enter|type)$action (.+?)$attribute in (.+?)$$$element""" => step =>
         checkStepRules(step, BehaviorType.Action, env)
         val binding = ctx.getLocatorBinding(element)
         val value = ctx.getBoundReferenceValue(attribute)
         ctx.sendValue(binding, value, clickFirst = WebSettings.`gwen.web.sendKeys.clickFirst`, clearFirst = WebSettings.`gwen.web.sendKeys.clearFirst`, sendEnterKey = action == "enter")
 
-      case r"""I (select|deselect)$action the (\d+?)$position(?:st|nd|rd|th) option in (.+?)$$$element""" =>
+      case r"""I (select|deselect)$action the (\d+?)$position(?:st|nd|rd|th) option in (.+?)$$$element""" => step =>
         checkStepRules(step, BehaviorType.Action, env)
         val binding = ctx.getLocatorBinding(element)
         if (action == "select") {
@@ -631,7 +647,7 @@ class WebEngine extends EvalEngine[WebContext] {
           ctx.deselectByIndex(binding, position.toInt - 1)
         }
 
-      case r"""I (select|deselect)$action "(.*?)"$value in (.+?)$element by value""" =>
+      case r"""I (select|deselect)$action "(.*?)"$value in (.+?)$element by value""" => step =>
         checkStepRules(step, BehaviorType.Action, env)
         val binding = ctx.getLocatorBinding(element)
         if (action == "select") {
@@ -640,7 +656,7 @@ class WebEngine extends EvalEngine[WebContext] {
           ctx.deselectByValue(binding, value)
         }
 
-      case r"""I (select|deselect)$action "(.*?)"$value in (.+?)$$$element""" =>
+      case r"""I (select|deselect)$action "(.*?)"$value in (.+?)$$$element""" => step =>
         checkStepRules(step, BehaviorType.Action, env)
         val binding = ctx.getLocatorBinding(element)
         if (action == "select") {
@@ -649,7 +665,7 @@ class WebEngine extends EvalEngine[WebContext] {
           ctx.deselectByVisibleText(binding, value)
         }
 
-      case r"""I (select|deselect)$action (.+?)$attribute in (.+?)$element by value""" =>
+      case r"""I (select|deselect)$action (.+?)$attribute in (.+?)$element by value""" => step =>
         checkStepRules(step, BehaviorType.Action, env)
         val value = ctx.getBoundReferenceValue(attribute)
         val binding = ctx.getLocatorBinding(element)
@@ -659,7 +675,7 @@ class WebEngine extends EvalEngine[WebContext] {
           ctx.deselectByValue(binding, value)
         }
 
-      case r"""I (select|deselect)$action (.+?)$attribute in (.+?)$$$element""" =>
+      case r"""I (select|deselect)$action (.+?)$attribute in (.+?)$$$element""" => step =>
         checkStepRules(step, BehaviorType.Action, env)
         val value = ctx.getBoundReferenceValue(attribute)
         val binding = ctx.getLocatorBinding(element)
@@ -669,54 +685,54 @@ class WebEngine extends EvalEngine[WebContext] {
           ctx.deselectByVisibleText(binding, value)
         }
 
-      case r"""I (click|right click|double click|check|tick|uncheck|untick|move to)$action (.+?)$element of (.+?)$$$context""" =>
+      case r"""I (click|right click|double click|check|tick|uncheck|untick|move to)$action (.+?)$element of (.+?)$$$context""" => step =>
         checkStepRules(step, BehaviorType.Action, env)
         ctx.performActionInContext(action, element, context)
 
-      case r"""I (click|right click|double click|submit|check|tick|uncheck|untick|move to)$action (.+?)$$$element""" =>
+      case r"""I (click|right click|double click|submit|check|tick|uncheck|untick|move to)$action (.+?)$$$element""" => step =>
         checkStepRules(step, BehaviorType.Action, env)
         val binding = ctx.getLocatorBinding(element)
         ctx.performAction(action, binding)
 
-      case r"""I (.+?)$modifiers (click|right click|double click)$clickAction (.+?)$$$element""" =>
+      case r"""I (.+?)$modifiers (click|right click|double click)$clickAction (.+?)$$$element""" => step =>
         checkStepRules(step, BehaviorType.Action, env)
         val binding = ctx.getLocatorBinding(element)
         ctx.holdAndClick(modifiers.split("\\+"), clickAction, binding)
 
-      case r"""I (?:highlight|locate) (.+?)$$$element""" =>
+      case r"""I (?:highlight|locate) (.+?)$$$element""" => step =>
         checkStepRules(step, BehaviorType.Action, env)
         val binding = ctx.getLocatorBinding(element)
         ctx.perform {
           ctx.locateAndHighlight(binding)
         }
 
-      case "I refresh the current page" =>
+      case "I refresh the current page" => step =>
         checkStepRules(step, BehaviorType.Action, env)
         ctx.refreshPage()
 
-      case r"I start a new browser" =>
+      case r"I start a new browser" => step =>
         checkStepRules(step, BehaviorType.Action, env)
         ctx.close("primary")
         ctx.switchToSession("primary")
 
-      case r"""I start a browser for (.+?)$$$session""" =>
+      case r"""I start a browser for (.+?)$$$session""" => step =>
         checkStepRules(step, BehaviorType.Action, env)
         ctx.close(session)
         ctx.switchToSession(session)
 
-      case r"""I should have (\d+?)$count open browser(?:s?)""" =>
+      case r"""I should have (\d+?)$count open browser(?:s?)""" => step =>
         checkStepRules(step, BehaviorType.Assertion, env)
         ctx.perform {
           ctx.compare("open browser sessions", count, () => ctx.noOfSessions().toString, "be", false)
         }
 
-      case r"""I should have (\d+?)$count open (?:window|tab)(?:s?)""" =>
+      case r"""I should have (\d+?)$count open (?:window|tab)(?:s?)""" => step =>
         checkStepRules(step, BehaviorType.Assertion, env)
         ctx.perform {
           ctx.compare("open windows/tabs", count, () => ctx.noOfWindows().toString, "be", false)
         }
 
-      case r"I have (no|an)$open open browser" =>
+      case r"I have (no|an)$open open browser" => step =>
         checkStepRules(step, BehaviorType.Context, env)
         if (open == "no") {
           ctx.close()
@@ -724,79 +740,79 @@ class WebEngine extends EvalEngine[WebContext] {
           ctx.newOrCurrentSession()
         }
 
-      case r"I close the(?: current)? browser" =>
+      case r"I close the(?: current)? browser" => step =>
         checkStepRules(step, BehaviorType.Action, env)
         ctx.close()
 
-      case r"""I close the browser for (.+?)$session""" =>
+      case r"""I close the browser for (.+?)$session""" => step =>
         checkStepRules(step, BehaviorType.Action, env)
         ctx.close(session)
 
-      case r"""I switch to the child (?:window|tab)""" =>
+      case r"""I switch to the child (?:window|tab)""" => step =>
         checkStepRules(step, BehaviorType.Action, env)
         ctx.perform {
           ctx.switchToChild()
         }
 
-      case r"""I switch to child (?:window|tab) (\d+?)$occurrence""" =>
+      case r"""I switch to child (?:window|tab) (\d+?)$occurrence""" => step =>
         checkStepRules(step, BehaviorType.Action, env)
         ctx.perform {
           ctx.switchToChild(occurrence.toInt)
         }
 
-      case r"""I close the child (?:window|tab)""" =>
+      case r"""I close the child (?:window|tab)""" => step =>
         checkStepRules(step, BehaviorType.Action, env)
         ctx.perform {
           ctx.closeChild()
         }
 
-      case r"""I close child (?:window|tab) (\d+?)$occurrence""" =>
+      case r"""I close child (?:window|tab) (\d+?)$occurrence""" => step =>
         checkStepRules(step, BehaviorType.Action, env)
         ctx.perform {
           ctx.closeChild(occurrence.toInt)
         }
 
-      case r"""I switch to the (?:root|parent) (?:window|tab)""" =>
+      case r"""I switch to the (?:root|parent) (?:window|tab)""" => step =>
         checkStepRules(step, BehaviorType.Action, env)
         ctx.switchToParent()
 
-      case """I switch to the default content""" =>
+      case """I switch to the default content""" => step =>
         checkStepRules(step, BehaviorType.Action, env)
         ctx.switchToDefaultContent()
 
-      case r"""I switch to (.+?)$session""" =>
+      case r"""I switch to (.+?)$session""" => step =>
         checkStepRules(step, BehaviorType.Action, env)
         ctx.switchToSession(session)
 
-      case r"I (accept|dismiss)$action the (?:alert|confirmation) popup" =>
+      case r"I (accept|dismiss)$action the (?:alert|confirmation) popup" => step =>
         checkStepRules(step, BehaviorType.Action, env)
         ctx.handleAlert(action == "accept")
 
-      case r"""I resize the window to width (\d+?)$width and height (\d+?)$$$height""" =>
+      case r"""I resize the window to width (\d+?)$width and height (\d+?)$$$height""" => step =>
         checkStepRules(step, BehaviorType.Action, env)
         ctx.resizeWindow(width.toInt, height.toInt)
 
-      case r"""I maximi(?:z|s)e the window""" =>
+      case r"""I maximi(?:z|s)e the window""" => step =>
         checkStepRules(step, BehaviorType.Action, env)
         ctx.maximizeWindow()
 
-      case r"""I append "(.+?)"$text to (.+?)$$$element""" =>
+      case r"""I append "(.+?)"$text to (.+?)$$$element""" => step =>
         checkStepRules(step, BehaviorType.Action, env)
         val binding = ctx.getLocatorBinding(element)
         ctx.sendValue(binding, text, clickFirst = WebSettings.`gwen.web.sendKeys.clickFirst`, clearFirst = false, sendEnterKey = false)
 
-      case r"""I append (.+?)$attribute to (.+?)$$$element""" =>
+      case r"""I append (.+?)$attribute to (.+?)$$$element""" => step =>
         checkStepRules(step, BehaviorType.Action, env)
         val binding = ctx.getLocatorBinding(element)
         val text = ctx.getBoundReferenceValue(attribute)
         ctx.sendValue(binding, text, clickFirst = WebSettings.`gwen.web.sendKeys.clickFirst`, clearFirst = false, sendEnterKey = false)
 
-      case r"I insert a new line in (.+?)$$$element" =>
+      case r"I insert a new line in (.+?)$$$element" => step =>
         checkStepRules(step, BehaviorType.Action, env)
         val binding = ctx.getLocatorBinding(element)
         ctx.sendValue(binding, StringEscapeUtils.unescapeJava("""\n"""), clickFirst = WebSettings.`gwen.web.sendKeys.clickFirst`, clearFirst = false, sendEnterKey = false)
 
-      case _ => super.evaluate(step, ctx)
+      case _ => super.translate(parent, step, env, ctx)
 
     }
   }

@@ -97,6 +97,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     mockTopScope = mock[TopScope]
     mockLocator = mock[WebElementLocator]
     doReturn(mockScopes).when(env).scopes
+    doReturn(mockScopes).when(env).scopes
     doReturn(mockTopScope).when(env).topScope
     doReturn(mockLocator).when(ctx).locator
     doReturn(false).when(env).isEvaluatingTopLevelStep
@@ -104,15 +105,9 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     when(mockTopScope.getOpt("gwen.feature.file.path")).thenReturn(Some("file.feature"))
   }
 
-  private def evaluate(name: String): Unit = {
+  private def evaluate(name: String): Step = {
     val step = Step(None, StepKeyword.Given.toString, name, Nil, None, Nil, None, Pending)
-    engine.evaluate(step, ctx)
-  }
-
-  private def evaluateComposite(name: String): Option[Step] = {
-    val parent = mock[Identifiable]
-    val step = Step(None, StepKeyword.Given.toString, name, Nil, None, Nil, None, Pending)
-    engine.evaluateComposite(parent, step, ctx)
+    engine.evaluateStep(Root, step, ctx)
   }
 
   "I am on the <page>" should "evaluate" in {
@@ -1267,9 +1262,8 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
       timeUnits2.foreach { unit2 =>
         waits.foreach { wait =>
           List("until", "while").foreach { repeat =>
-            val step = evaluateComposite(s"""x is "1" $repeat <condition> using 1 $unit1 delay and 2000 $unit2 $wait""")
-            step should not be (None)
-            step.get.toString should be (s"""Given x is "1" $repeat <condition> using 1 $unit1 delay and 2000 $unit2 $wait""")
+            val step = evaluate(s"""x is "1" $repeat <condition> using 1 $unit1 delay and 2000 $unit2 $wait""")
+            step.toString should be (s"""Given x is "1" $repeat <condition> using 1 $unit1 delay and 2000 $unit2 $wait""")
           }
         }
       }
@@ -1279,9 +1273,8 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
   "<step> <until|while> <condition> using <delayPeriod> <second|millisecond> delay" should "evaluate" in {
     timeUnits1.foreach { unit =>
       List("until", "while").foreach { repeat =>
-        val step = evaluateComposite(s"""x is "1" $repeat <condition> using 1 $unit delay""")
-        step should not be (None)
-        step.get.toString should be (s"""Given x is "1" $repeat <condition> using 1 $unit delay""")
+        val step = evaluate(s"""x is "1" $repeat <condition> using 1 $unit delay""")
+        step.toString should be (s"""Given x is "1" $repeat <condition> using 1 $unit delay""")
       }
     }
   }
@@ -1290,9 +1283,8 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     timeUnits2.foreach { unit =>
       List("until", "while").foreach { repeat =>
         waits.foreach { wait =>
-          val step = evaluateComposite(s"""x is "1" $repeat <condition> using no delay and 2000 $unit $wait""")
-          step should not be (None)
-          step.get.toString should be (s"""Given x is "1" $repeat <condition> using no delay and 2000 $unit $wait""")
+          val step = evaluate(s"""x is "1" $repeat <condition> using no delay and 2000 $unit $wait""")
+          step.toString should be (s"""Given x is "1" $repeat <condition> using no delay and 2000 $unit $wait""")
         }
       }
     }
@@ -1300,17 +1292,15 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
 
   "<step> <until|while> <condition> using no delay" should "evaluate" in {
     List("until", "while").foreach { repeat =>
-      val step = evaluateComposite(s"""x is "1" $repeat <condition> using no delay""")
-      step should not be (None)
-      step.get.toString should be (s"""Given x is "1" $repeat <condition> using no delay""")
+      val step = evaluate(s"""x is "1" $repeat <condition> using no delay""")
+      step.toString should be (s"""Given x is "1" $repeat <condition> using no delay""")
     }
   }
 
   "<step> <until|while> <condition>" should "evaluate" in {
     List("until", "while").foreach { repeat =>
-      val step = evaluateComposite(s"""x is "1" $repeat <condition>""")
-      step should not be (None)
-      step.get.toString should be (s"""Given x is "1" $repeat <condition>""")
+      val step = evaluate(s"""x is "1" $repeat <condition>""")
+      step.toString should be (s"""Given x is "1" $repeat <condition>""")
     }
   }
 
@@ -1497,26 +1487,23 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
 
   """<step> for each <element> located by id "<expression>"""" should "evaluate" in {
     doReturn(Nil).when(mockLocator).locateAll(any[LocatorBinding])
-    val step = evaluateComposite(s"""x is "1" for each <element> located by id "<expression>"""")
-    step should not be (None)
-    step.get.toString should be (s"""Given x is "1" for each <element> located by id "<expression>"""")
+    val step = evaluate(s"""x is "1" for each <element> located by id "<expression>"""")
+    step.toString should be (s"""Given x is "1" for each <element> located by id "<expression>"""")
   }
 
   """<step> for each <element> located by id "<expression>" with no <wait|timeout>""" should "evaluate" in {
     waits.foreach { wait =>
       doReturn(Nil).when(mockLocator).locateAll(any[LocatorBinding])
-      val step = evaluateComposite(s"""x is "1" for each <element> located by id "<expression>" with no $wait""")
-      step should not be (None)
-      step.get.toString should be (s"""Given x is "1" for each <element> located by id "<expression>" with no $wait""")
+      val step = evaluate(s"""x is "1" for each <element> located by id "<expression>" with no $wait""")
+      step.toString should be (s"""Given x is "1" for each <element> located by id "<expression>" with no $wait""")
     }
   }
 
    """<step> for each <element> located by id "<expression>" with <timeoutPeriod> second <wait|timeout>""" should "evaluate" in {
      waits.foreach { wait =>
        doReturn(Nil).when(mockLocator).locateAll(any[LocatorBinding])
-       val step = evaluateComposite(s"""x is "1" for each <element> located by id "<expression>" with 2 second $wait""")
-       step should not be (None)
-       step.get.toString should be (s"""Given x is "1" for each <element> located by id "<expression>" with 2 second $wait""")
+       val step = evaluate(s"""x is "1" for each <element> located by id "<expression>" with 2 second $wait""")
+       step.toString should be (s"""Given x is "1" for each <element> located by id "<expression>" with 2 second $wait""")
      }
    }
 
@@ -1524,9 +1511,8 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     val mockBinding = mock[LocatorBinding]
     doReturn(mockBinding).when(ctx).getLocatorBinding("<container>")
     doReturn(Nil).when(mockLocator).locateAll(any[LocatorBinding])
-    val step = evaluateComposite(s"""x is "1" for each <element> located by id "<expression>" in <container>""")
-    step should not be (None)
-    step.get.toString should be (s"""Given x is "1" for each <element> located by id "<expression>" in <container>""")
+    val step = evaluate(s"""x is "1" for each <element> located by id "<expression>" in <container>""")
+    step.toString should be (s"""Given x is "1" for each <element> located by id "<expression>" in <container>""")
   }
 
   """<step> for each <element> located by id "<expression>" in <container> with no <wait|timeout>""" should "evaluate" in {
@@ -1534,9 +1520,8 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
       val mockBinding = mock[LocatorBinding]
       doReturn(mockBinding).when(ctx).getLocatorBinding("<container>")
       doReturn(Nil).when(mockLocator).locateAll(any[LocatorBinding])
-      val step = evaluateComposite(s"""x is "1" for each <element> located by id "<expression>" in <container> with no $wait""")
-      step should not be (None)
-      step.get.toString should be (s"""Given x is "1" for each <element> located by id "<expression>" in <container> with no $wait""")
+      val step = evaluate(s"""x is "1" for each <element> located by id "<expression>" in <container> with no $wait""")
+      step.toString should be (s"""Given x is "1" for each <element> located by id "<expression>" in <container> with no $wait""")
     }
   }
 
@@ -1545,9 +1530,8 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
       val mockBinding = mock[LocatorBinding]
       doReturn(mockBinding).when(ctx).getLocatorBinding("<container>")
       doReturn(Nil).when(mockLocator).locateAll(any[LocatorBinding])
-      val step = evaluateComposite(s"""x is "1" for each <element> located by id "<expression>" in <container> with 2 second $wait""")
-      step should not be (None)
-      step.get.toString should be (s"""Given x is "1" for each <element> located by id "<expression>" in <container> with 2 second $wait""")
+      val step = evaluate(s"""x is "1" for each <element> located by id "<expression>" in <container> with 2 second $wait""")
+      step.toString should be (s"""Given x is "1" for each <element> located by id "<expression>" in <container> with 2 second $wait""")
     }
   }
 
@@ -1555,18 +1539,16 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     val binding = new LocatorBinding("", Nil, ctx)
     doReturn(binding).when(ctx).getLocatorBinding("<elements>")
     doReturn(Nil).when(mockLocator).locateAll(binding)
-    val step = evaluateComposite("""x is "1" for each <element> in <elements>""")
-    step should not be (None)
-    step.get.toString should be (s"""Given x is "1" for each <element> in <elements>""")
+    val step = evaluate("""x is "1" for each <element> in <elements>""")
+    step.toString should be (s"""Given x is "1" for each <element> in <elements>""")
   }
 
   "<step> for each data record" should "evaluate" in {
     val mockTable = mock[FlatTable]
     doReturn(Some(mockTable)).when(mockTopScope).getObject("table")
     doReturn(Nil).when(mockTable).records
-    val step = evaluateComposite("""x is "1" for each data record""")
-    step should not be (None)
-    step.get.toString should be (s"""Given x is "1" for each data record""")
+    val step = evaluate("""x is "1" for each data record""")
+    step.toString should be (s"""Given x is "1" for each data record""")
   }
 
   "<attribute> should be absent" should "evaluate" in {
@@ -1615,16 +1597,17 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
   }
 
   "<step> if <condition>" should "evaluate" in {
-    val step = evaluateComposite("""x is "1" if <condition>""")
-    step should not be (None)
-    step.get.toString should be (s"""Given x is "1" if <condition>""")
+    doReturn(Some("false")).when(mockScopes).getOpt("<condition>/javascript")
+    doReturn("false").when(ctx).interpolate("false")
+    doReturn(false).when(ctx).evaluateJS("return false")
+    val step = evaluate("""x is "1" if <condition>""")
+    step.toString should be (s"""Given x is "1" if <condition>""")
   }
 
   """<step> for each <entry> in <source> delimited by "<delimiter>"""" should "evaluate" in {
     doReturn("").when(ctx).getBoundReferenceValue("<source>")
-    val step = evaluateComposite("""x is "1" for each <entry> in <source> delimited by ","""")
-    step should not be (None)
-    step.get.toString should be (s"""Given x is "1" for each <entry> in <source> delimited by ","""")
+    val step = evaluate("""x is "1" for each <entry> in <source> delimited by ","""")
+    step.toString should be (s"""Given x is "1" for each <entry> in <source> delimited by ","""")
   }
 
   "I drag and drop <element A> to <element B>" should "evaluate" in {
