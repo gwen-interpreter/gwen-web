@@ -16,8 +16,8 @@
 
 package gwen.web.eval.binding
 
-import gwen.eval.EvalEnvironment
-import gwen.eval.binding.Binding
+import gwen.core.eval.EvalEnvironment
+import gwen.core.eval.binding.Binding
 import gwen.web.eval.WebContext
 
 import org.apache.commons.text.StringEscapeUtils

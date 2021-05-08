@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2015 Brady Wood, Branko Juric
+ * Copyright 2014-2021 Brady Wood, Branko Juric
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,16 +16,16 @@
 
 package gwen.web.features
 
-import gwen.GwenOptions
-import gwen.Settings
-import gwen.eval._
-import gwen.model._
+import gwen.GwenLauncher
+import gwen.core.GwenOptions
+import gwen.core.Settings
+import gwen.core.model._
 import gwen.web.BaseTest
 import gwen.web.GwenWebInterpreter
 
 abstract class BaseFeatureTest extends BaseTest {
 
-  private[features] def evaluate(features: List[String], parallel: Boolean, parallelFeatures: Boolean, dryRun: Boolean, reportDir: String, dataFile: Option[String]): Unit = {
+  private [features] def evaluate(features: List[String], parallel: Boolean, parallelFeatures: Boolean, dryRun: Boolean, reportDir: String, dataFile: Option[String]): Unit = {
     Settings.synchronized {
       val reportPath = s"${this.getClass.getSimpleName}${if (dryRun) "-dryRun" else ""}"
       val execModePath = if (parallel) "parallel" else "sequential"

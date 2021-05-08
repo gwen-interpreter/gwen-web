@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Brady Wood, Branko Juric
+ * Copyright 2014-2021 Brady Wood, Branko Juric
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,9 @@
 
 package gwen.web.eval
 
-import gwen.GwenOptions
-import gwen.eval.EvalEnvironment
-import gwen.model.StateLevel
+import gwen.core.GwenOptions
+import gwen.core.eval.EvalEnvironment
+import gwen.core.model.StateLevel
 import gwen.web._
 import gwen.web.WebErrors.LocatorBindingException
 

@@ -15,15 +15,15 @@
  */
 package gwen.web.eval
 
-import gwen._
-import gwen.Errors._
-import gwen.Sensitive
-import gwen.eval.EvalEnvironment
-import gwen.eval.EvalContext
-import gwen.model.Failed
-import gwen.model.StateLevel
-import gwen.eval.binding.BindingType
-import gwen.eval.binding.JavaScriptBinding
+import gwen.core._
+import gwen.core.Errors._
+import gwen.core.Sensitive
+import gwen.core.eval.EvalEnvironment
+import gwen.core.eval.EvalContext
+import gwen.core.model.Failed
+import gwen.core.model.StateLevel
+import gwen.core.eval.binding.BindingType
+import gwen.core.eval.binding.JavaScriptBinding
 import gwen.web.WebErrors._
 import gwen.web.WebSettings
 import gwen.web.eval.binding._
@@ -42,7 +42,7 @@ import org.openqa.selenium.interactions.Actions
 import org.openqa.selenium.support.ui.{FluentWait, Select}
 
 import java.io.File
-import gwen.eval.binding.TextBinding
+import gwen.core.eval.binding.TextBinding
 
 /**
   * The web evaluatioin context.
@@ -621,7 +621,7 @@ class WebContext(options: GwenOptions, env: EvalEnvironment, driverManager: Driv
     }
   }
 
-  private[eval] def createSelect(webElement: WebElement): Select = new Select(webElement)
+  private [eval] def createSelect(webElement: WebElement): Select = new Select(webElement)
 
   /**
     * Selects a value in a dropdown (select control) by visible text.

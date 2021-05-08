@@ -1,5 +1,5 @@
 @REM
-@REM  Copyright 2019 Brady Wood, Branko Juric
+@REM  Copyright 2019-2021 Brady Wood, Branko Juric
 @REM  
 @REM  Licensed under the Apache License, Version 2.0 (the "License");
 @REM  you may not use this file except in compliance with the License.

@@ -16,14 +16,14 @@
 
 package gwen.web.eval
 
-import gwen._
-import gwen.Errors.undefinedStepError
-import gwen.Errors.disabledStepError
-import gwen.eval.EvalEngine
-import gwen.eval.EvalEnvironment
-import gwen.eval.binding.JavaScriptBinding
-import gwen.model._
-import gwen.model.gherkin.Step
+import gwen.core._
+import gwen.core.Errors.undefinedStepError
+import gwen.core.Errors.disabledStepError
+import gwen.core.eval.EvalEngine
+import gwen.core.eval.EvalEnvironment
+import gwen.core.eval.binding.JavaScriptBinding
+import gwen.core.model._
+import gwen.core.model.gherkin.Step
 import gwen.web.WebErrors.LocatorBindingException
 import gwen.web.WebSettings
 import gwen.web.eval.binding._

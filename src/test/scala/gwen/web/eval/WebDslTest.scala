@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Brady Wood, Branko Juric
+ * Copyright 2014-2021 Brady Wood, Branko Juric
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,14 @@
 
 package gwen.web.eval
 
-import gwen.GwenOptions
-import gwen.model._
-import gwen.model.gherkin.Step
+import gwen.core.GwenOptions
+import gwen.core.model._
+import gwen.core.model.gherkin.Step
 import gwen.web._
 
 import org.scalatest.Matchers
 import org.scalatestplus.mockito.MockitoSugar
-import gwen.eval.EvalEnvironment
+import gwen.core.eval.EvalEnvironment
 
 class WebDslTest extends BaseTest with Matchers with MockitoSugar {
 

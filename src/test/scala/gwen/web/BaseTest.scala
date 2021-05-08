@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2020 Brady Wood, Branko Juric
+ * Copyright 2019-2021 Brady Wood, Branko Juric
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 package gwen.web
 
-import gwen.Settings
+import gwen.core.Settings
 
 import org.scalatest.FlatSpec
 import org.scalatest.prop.TableDrivenPropertyChecks.Table

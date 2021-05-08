@@ -16,7 +16,7 @@
 
 package gwen.web.eval
 
-import gwen.Errors.ScriptException
+import gwen.core.Errors.ScriptException
 import gwen.web.WebErrors._
 import gwen.web.WebSettings
 import gwen.web.eval.binding._

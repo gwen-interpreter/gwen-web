@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Brady Wood, Branko Juric
+ * Copyright 2014-2021 Brady Wood, Branko Juric
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,10 @@
 
 package gwen.web.eval
 
-import gwen.Errors
-import gwen.GwenOptions
-import gwen.eval.EvalEnvironment
-import gwen.eval.binding.JavaScriptBinding
+import gwen.core.Errors
+import gwen.core.GwenOptions
+import gwen.core.eval.EvalEnvironment
+import gwen.core.eval.binding.JavaScriptBinding
 import gwen.web._
 import gwen.web.WebErrors._
 import gwen.web.eval.binding._
@@ -1761,7 +1761,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
 }
 
 class MockDriverManager(mockWebDriver: WebDriver) extends DriverManager {
-  override private[eval] def loadWebDriver: WebDriver = mockWebDriver
+  override private [eval] def loadWebDriver: WebDriver = mockWebDriver
 }
 
 abstract class MockWebDriver extends WebDriver with TakesScreenshot with JavascriptExecutor

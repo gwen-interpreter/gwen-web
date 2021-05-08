@@ -16,9 +16,9 @@
 
 package gwen.web.eval.eyes
 
-import gwen._
-import gwen.Errors.licenseError
-import gwen.eval.EvalEnvironment
+import gwen.core._
+import gwen.core.Errors.licenseError
+import gwen.core.eval.EvalEnvironment
 import gwen.web.WebErrors.invalidVisualSessionStateError
 
 import com.applitools.eyes.selenium.Eyes

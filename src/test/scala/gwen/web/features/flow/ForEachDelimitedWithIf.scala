@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Branko Juric, Brady Wood
+ * Copyright 2017-2021 Branko Juric, Brady Wood
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,11 +15,11 @@
  */
 package gwen.web.features.flow
 
-import gwen.GwenOptions
-import gwen.eval.GwenLauncher
-import gwen.model.Failed
-import gwen.model.Passed
-import gwen.report.ReportFormat
+import gwen.GwenLauncher
+import gwen.core.GwenOptions
+import gwen.core.model.Failed
+import gwen.core.model.Passed
+import gwen.core.report.ReportFormat
 import gwen.web.GwenWebInterpreter
 
 import org.scalatest.FlatSpec

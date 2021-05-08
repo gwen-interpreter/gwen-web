@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 Brady Wood, Branko Juric
+ * Copyright 2015-2021 Brady Wood, Branko Juric
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 package gwen.web.eval
 
-import gwen._
+import gwen.core._
 import gwen.web._
 import gwen.web.WebErrors.NoSuchWindowException
 

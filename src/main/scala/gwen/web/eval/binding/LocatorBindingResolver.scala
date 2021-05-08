@@ -16,7 +16,7 @@
 
 package gwen.web.eval.binding
 
-import gwen._
+import gwen.core._
 import gwen.web.WebErrors._
 import gwen.web.WebSettings
 import gwen.web.eval.WebContext

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Branko Juric, Brady Wood
+ * Copyright 2014-2021 Branko Juric, Brady Wood
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@
  */
 package gwen.web
 
-import gwen.Errors.GwenException
+import gwen.core.Errors.GwenException
 import gwen.web.eval.binding.LocatorBinding
 
 import org.openqa.selenium.Keys

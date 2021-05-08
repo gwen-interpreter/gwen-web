@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2020 Brady Wood, Branko Juric
+ * Copyright 2016-2021 Brady Wood, Branko Juric
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,12 @@
 
 package gwen.web.eval
 
-import gwen._
-import gwen.Errors.UnboundAttributeException
-import gwen.eval.EvalEnvironment
-import gwen.model._
-import gwen.model.gherkin._
-import gwen.model.state._
+import gwen.core._
+import gwen.core.Errors.UnboundAttributeException
+import gwen.core.eval.EvalEnvironment
+import gwen.core.model._
+import gwen.core.model.gherkin._
+import gwen.core.model.state._
 import gwen.web._
 import gwen.web.eval.binding._
 

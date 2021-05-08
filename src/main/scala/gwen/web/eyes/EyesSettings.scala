@@ -16,7 +16,7 @@
 
 package gwen.web.eval.eyes
 
-import gwen.Settings
+import gwen.core.Settings
 
 /**
   * Provides access to gwen Eyes settings used to configure AppliTools.

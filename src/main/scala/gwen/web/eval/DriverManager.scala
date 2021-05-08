@@ -16,7 +16,7 @@
 
 package gwen.web.eval
 
-import gwen._
+import gwen.core._
 import gwen.web.WebErrors._
 import gwen.web.WebSettings
 
