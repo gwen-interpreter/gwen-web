@@ -476,7 +476,7 @@ class WebContext(options: GwenOptions, env: EvalEnvironment, driverManager: Driv
     * @param reason a description of what is being waited on
     * @param condition the boolean condition to wait for (until true)
     */
-  def waitUntil(timeoutSecs: Long, reason: String)(condition: => Boolean): Unit = {
+  override def waitUntil(timeoutSecs: Long, reason: String)(condition: => Boolean): Unit = {
     try {
       withWebDriver { webDriver =>
         new FluentWait(webDriver)

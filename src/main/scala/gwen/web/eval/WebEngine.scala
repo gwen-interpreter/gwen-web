@@ -17,15 +17,12 @@
 package gwen.web.eval
 
 import gwen._
-import gwen.Errors.StepFailure
 import gwen.Errors.undefinedStepError
 import gwen.Errors.disabledStepError
-import gwen.Formatting.DurationFormatter
 import gwen.eval.EvalEngine
 import gwen.eval.EvalEnvironment
 import gwen.eval.binding.JavaScriptBinding
 import gwen.model._
-import gwen.model.gherkin.Scenario
 import gwen.model.gherkin.Step
 import gwen.web.WebErrors.LocatorBindingException
 import gwen.web.WebSettings
@@ -35,7 +32,7 @@ import gwen.web.eval.eyes.EyesSettings
 import com.applitools.eyes.{MatchLevel, RectangleSize}
 import org.apache.commons.text.StringEscapeUtils
 
-import scala.concurrent.duration.Duration
+import scala.concurrent.duration._
 import scala.util.{Failure, Success, Try}
 
 import java.util.concurrent.TimeUnit
@@ -122,31 +119,6 @@ class WebEngine extends EvalEngine[WebContext] {
           ctx.evaluate(evaluateForEach(() => List("$[dryRun:webElements]"), element, parent, step, doStep, ctx)) {
             evaluateForEach(() => binding.resolveAll(), element, parent, step, doStep, ctx)
           }
-        }
-
-        case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using no delay and (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit (?:timeout|wait)""" => Some { step =>
-          repeat(operation, parent, step, doStep, condition, Duration.Zero, Duration(timeoutPeriod.toLong, timeoutUnit), ctx)
-        }
-
-        case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using no delay""" => Some { step =>
-          repeat(operation, parent, step, doStep, condition, Duration.Zero, defaultRepeatTimeout(DefaultRepeatDelay), ctx)
-        }
-
-        case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using (.+?)$delayPeriod (second|millisecond)$delayUnit delay and (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit (?:timeout|wait)""" => Some { step =>
-          repeat(operation, parent, step, doStep, condition, Duration(delayPeriod.toLong, delayUnit), Duration(timeoutPeriod.toLong, timeoutUnit), ctx)
-        }
-
-        case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using (.+?)$delayPeriod (second|millisecond)$delayUnit delay""" => Some { step =>
-          val delayDuration = Duration(delayPeriod.toLong, delayUnit)
-          repeat(operation, parent, step, doStep, condition, delayDuration, defaultRepeatTimeout(delayDuration), ctx)
-        }
-
-        case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit (?:timeout|wait)""" => Some { step =>
-          repeat(operation, parent, step, doStep, condition, DefaultRepeatDelay, Duration(timeoutPeriod.toLong, timeoutUnit), ctx)
-        }
-
-        case r"""(.+?)$doStep (until|while)$operation (.+?)$$$condition""" if (doStep != "I wait" && !step.expression.matches(""".*".*(until|while).*".*""")) => Some { step =>
-          repeat(operation, parent, step, doStep, condition, DefaultRepeatDelay, defaultRepeatTimeout(DefaultRepeatDelay), ctx)
         }
 
         case _ => None
@@ -817,130 +789,9 @@ class WebEngine extends EvalEngine[WebContext] {
     }
   }
   
-  /**
-    * Performs a repeat until or while operation 
-    */
-  private def repeat(operation: String, parent: Identifiable, step: Step, doStep: String, condition: String, delay: Duration, timeout: Duration, ctx: WebContext): Step = ctx.withEnv { env =>
-    assert(delay.gteq(Duration.Zero), "delay cannot be less than zero")
-    assert(timeout.gt(Duration.Zero), "timeout must be greater than zero")
-    assert(timeout.gteq(delay), "timeout cannot be less than or equal to delay")
-    val operationTag = Tag(if (operation == "until") ReservedTags.Until else ReservedTags.While)
-    val tags = List(Tag(ReservedTags.Synthetic), operationTag, Tag(ReservedTags.StepDef))
-    val preCondStepDef = Scenario(None, tags, operationTag.name, condition, Nil, None, Nil, Nil)
-    var condSteps: List[Step] = Nil
-    var evaluatedStep = step
-    val start = System.nanoTime()
-    ctx.perform {
-      var iteration = 0
-      try {
-        ctx.waitUntil(timeout.toSeconds, s"trying to repeat: ${step.name}") {
-          iteration = iteration + 1
-          env.topScope.set("iteration number", iteration.toString)
-          val preStep = step.copy(withKeyword = if(iteration == 1) step.keyword else StepKeyword.And.toString, withName = doStep)
-          operation match {
-            case "until" =>
-              logger.info(s"repeat-until $condition: iteration $iteration")
-              if (condSteps.isEmpty) {
-                ctx.lifecycle.beforeStepDef(step, preCondStepDef, env.scopes)
-              }
-              val iterationStep = evaluateStep(preCondStepDef, preStep, ctx)
-              condSteps = iterationStep :: condSteps
-              iterationStep.evalStatus match {
-                case Failed(_, e) => throw e
-                case _ =>
-                  val javascript = ctx.interpolate(env.scopes.get(JavaScriptBinding.key(condition)))
-                  ctx.evaluateJSPredicate(javascript) tap { result =>
-                    if (!result) {
-                      logger.info(s"repeat-until $condition: not complete, will repeat ${if (delay.gt(Duration.Zero)) s"in ${DurationFormatter.format(delay)}" else "now"}")
-                      if (delay.gt(Duration.Zero)) Thread.sleep(delay.toMillis)
-                    } else {
-                      logger.info(s"repeat-until $condition: completed")
-                    }
-                  }
-              }
-            case "while" =>
-              val javascript = ctx.interpolate(env.scopes.get(JavaScriptBinding.key(condition)))
-              val result = ctx.evaluateJSPredicate(javascript)
-              if (result) {
-                logger.info(s"repeat-while $condition: iteration $iteration")
-                if (condSteps.isEmpty) {
-                  ctx.lifecycle.beforeStepDef(step, preCondStepDef, env.scopes)
-                }
-                val iterationStep = evaluateStep(preCondStepDef, preStep, ctx)
-                condSteps = iterationStep :: condSteps
-                iterationStep.evalStatus match {
-                  case Failed(_, e) => throw e
-                  case _ =>
-                    logger.info(s"repeat-while $condition: not complete, will repeat ${if (delay.gt(Duration.Zero)) s"in ${DurationFormatter.format(delay)}" else "now"}")
-                    if (delay.gt(Duration.Zero)) Thread.sleep(delay.toMillis)
-                }
-              } else {
-                logger.info(s"repeat-while $condition: completed")
-              }
-              !result
-          }
-        }
-      } catch {
-        case e: Throwable =>
-          logger.error(e.getMessage)
-          val nanos = System.nanoTime() - start
-          val durationNanos = {
-            if (nanos > timeout.toNanos) timeout.toNanos
-            else nanos
-          }
-          evaluatedStep = step.copy(withEvalStatus = Failed(durationNanos, new StepFailure(step, e)))
-      } finally {
-        env.topScope.set("iteration number", null)
-      }
-    } getOrElse {
-      try {
-        operation match {
-          case "until" =>
-            evaluatedStep = this.evaluateStep(step, step.copy(withName = doStep), ctx)
-            env.scopes.get(JavaScriptBinding.key(condition))
-          case _ =>
-            env.scopes.get(JavaScriptBinding.key(condition))
-            evaluatedStep = this.evaluateStep(step, step.copy(withName = doStep), ctx)
-        }
-      } catch {
-        case _: Throwable => 
-          // ignore in dry run mode
-      }
-    }
-    if (condSteps.nonEmpty) {
-      val steps = evaluatedStep.evalStatus match {
-        case Failed(nanos, error) if (EvalStatus(condSteps.map(_.evalStatus)).status == StatusKeyword.Passed) => 
-          val preStep = condSteps.head.copy(withKeyword = StepKeyword.And.toString, withName = doStep)
-          ctx.lifecycle.beforeStep(preCondStepDef, preStep, env.scopes)
-          val fStep = ctx.finaliseStep(
-            preStep.copy(
-              withEvalStatus = Failed(nanos - condSteps.map(_.evalStatus.nanos).sum, error),
-              withStepDef = None
-            )
-          )
-          ctx.lifecycle.afterStep(fStep, env.scopes)
-          fStep :: condSteps
-        case _ => 
-          condSteps
-          
-      }
-      val condStepDef = preCondStepDef.copy(withSteps = steps.reverse)
-      ctx.lifecycle.afterStepDef(condStepDef, env.scopes)
-      evaluatedStep.copy(
-        withEvalStatus = condStepDef.evalStatus,
-        withStepDef = Some((condStepDef, Nil)),
-        withAttachments = condStepDef.attachments
-      )
-    } else {
-      evaluatedStep
-    }
-  }
-  
-  lazy val DefaultRepeatDelay: Duration = {
+  override val DefaultRepeatDelay: Duration = {
     val waitSecs = WebSettings.`gwen.web.wait.seconds` 
-    if (waitSecs > 9 && waitSecs % 10 == 0) Duration(waitSecs / 10, "second") else Duration(waitSecs * 100, "millisecond")
+    if (waitSecs > 9 && waitSecs % 10 == 0) Duration(waitSecs / 10, SECONDS) else Duration(waitSecs * 100, MILLISECONDS)
   }
-  
-  private def defaultRepeatTimeout(delay: Duration): Duration = delay * 30
   
 }

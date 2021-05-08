@@ -16,6 +16,7 @@
 
 package gwen.web.eval
 
+import gwen.Errors
 import gwen.GwenOptions
 import gwen.Settings
 import gwen.eval.EvalEnvironment
@@ -509,7 +510,7 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
     when(mockWebDriverOptions.timeouts()).thenReturn(mockWebDriverTimeouts)
     doReturn(null).when(mockWebDriver).executeScript(same(s"return $lookup"), anyVararg())
 
-    intercept[WaitTimeoutException] {
+    intercept[Errors.WaitTimeoutException] {
       locator.locate(LocatorBinding("username", selectorType, lookup, None, Some(1), ctx))
     }
 

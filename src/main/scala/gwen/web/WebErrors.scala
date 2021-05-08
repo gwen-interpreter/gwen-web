@@ -30,8 +30,6 @@ object WebErrors {
     def unsupportedWebDriverError(driverName: String) = throw new UnsupportedWebDriverException(driverName)
     def noSuchWindowError(msg: String) = throw new NoSuchWindowException(msg)
     def unsupportedModifierKeyError(key: String) = throw new UnsupportedModifierKeyException(key)
-    def waitTimeoutError(timeoutSecs: Long, reason: String, cause: Throwable) = throw new WaitTimeoutException(timeoutSecs, reason, cause)
-    def waitTimeoutError(timeoutSecs: Long, reason: String) = throw new WaitTimeoutException(timeoutSecs, reason, null)
     def elementNotInteractableError(binding: LocatorBinding, cause: Throwable) =
       throw new WebElementNotInteractableException(binding, cause)
     def elementNotFoundError(binding: LocatorBinding, cause: Throwable = null) =
@@ -52,10 +50,6 @@ object WebErrors {
     /** Thrown when an attempt is made to send an unsupported key to a field. */
     class UnsupportedModifierKeyException(key: String)
       extends GwenException(s"Unsupported modifier key '$key'. Supported modifiers include: ${Keys.values().map(_.name()).mkString(",")}")
-
-    /** Thrown when a timeout error occurs. */
-    class WaitTimeoutException(timeoutSecs: Long, reason: String, cause: Throwable)
-      extends GwenException(s"Timed out after $timeoutSecs second(s) $reason", cause)
 
     /** Thrown when a web element is not found or interactable. */
     class NotFoundOrInteractableException(msg: String, cause: Throwable)

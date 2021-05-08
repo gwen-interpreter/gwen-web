@@ -16,6 +16,7 @@
 
 package gwen.web.eval
 
+import gwen.Errors
 import gwen.GwenOptions
 import gwen.eval.EvalEnvironment
 import gwen.eval.binding.JavaScriptBinding
@@ -124,7 +125,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.waitUntil" should "timeout when predicate returns false" in {
-    intercept[WaitTimeoutException] {
+    intercept[Errors.WaitTimeoutException] {
       ctx.waitUntil(1, "waiting for predicate") { false }
     }
   }
@@ -301,7 +302,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
       intercept[AssertionError] {
         ctx.checkElementState(elemBinding, "displayed", negate = false)
       }
-      intercept[WaitTimeoutException] {
+      intercept[Errors.WaitTimeoutException] {
         ctx.waitForElementState(elemBinding, "displayed", negate = false)
       }
     }
@@ -316,7 +317,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
       intercept[AssertionError] {
         ctx.checkElementState(elemBinding, "hidden", negate = false)
       }
-      intercept[WaitTimeoutException] {
+      intercept[Errors.WaitTimeoutException] {
         ctx.waitForElementState(elemBinding, "hidden", negate = false)
       }
     }
@@ -331,7 +332,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
       intercept[AssertionError] {
         ctx.checkElementState(elemBinding, "checked", negate = false)
       }
-      intercept[WaitTimeoutException] {
+      intercept[Errors.WaitTimeoutException] {
         ctx.waitForElementState(elemBinding, "checked", negate = false)
       }
     }
@@ -346,7 +347,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
       intercept[AssertionError] {
         ctx.checkElementState(elemBinding, "ticked", negate = false)
       }
-      intercept[WaitTimeoutException] {
+      intercept[Errors.WaitTimeoutException] {
         ctx.waitForElementState(elemBinding, "ticked", negate = false)
       }
     }
@@ -361,7 +362,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
       intercept[AssertionError] {
         ctx.checkElementState(elemBinding, "unchecked", negate = false)
       }
-      intercept[WaitTimeoutException] {
+      intercept[Errors.WaitTimeoutException] {
         ctx.waitForElementState(elemBinding, "unchecked", negate = false)
       }
     }
@@ -376,7 +377,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
       intercept[AssertionError] {
         ctx.checkElementState(elemBinding, "unticked", negate = false)
       }
-      intercept[WaitTimeoutException] {
+      intercept[Errors.WaitTimeoutException] {
         ctx.waitForElementState(elemBinding, "unticked", negate = false)
       }
     }
@@ -391,7 +392,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
       intercept[AssertionError] {
         ctx.checkElementState(elemBinding, "enabled", negate = false)
       }
-      intercept[WaitTimeoutException] {
+      intercept[Errors.WaitTimeoutException] {
         ctx.waitForElementState(elemBinding, "enabled", negate = false)
       }
     }
@@ -406,7 +407,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
       intercept[AssertionError] {
         ctx.checkElementState(elemBinding, "disabled", negate = false)
       }
-      intercept[WaitTimeoutException] {
+      intercept[Errors.WaitTimeoutException] {
         ctx.waitForElementState(elemBinding, "disabled", negate = false)
       }
     }
@@ -421,7 +422,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
       intercept[AssertionError] {
         ctx.checkElementState(elemBinding, "displayed", negate = true)
       }
-      intercept[WaitTimeoutException] {
+      intercept[Errors.WaitTimeoutException] {
         ctx.waitForElementState(elemBinding, "displayed", negate = true)
       }
     }
@@ -436,7 +437,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
       intercept[AssertionError] {
         ctx.checkElementState(elemBinding, "hidden", negate = true)
       }
-      intercept[WaitTimeoutException] {
+      intercept[Errors.WaitTimeoutException] {
         ctx.waitForElementState(elemBinding, "hidden", negate = true)
       }
     }
@@ -451,7 +452,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
       intercept[AssertionError] {
        ctx.checkElementState(elemBinding, "checked", negate = true)
       }
-      intercept[WaitTimeoutException] {
+      intercept[Errors.WaitTimeoutException] {
         ctx.waitForElementState(elemBinding, "checked", negate = true)
       }
     }
@@ -466,7 +467,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
       intercept[AssertionError] {
         ctx.checkElementState(elemBinding, "ticked", negate = true)
       }
-      intercept[WaitTimeoutException] {
+      intercept[Errors.WaitTimeoutException] {
         ctx.waitForElementState(elemBinding, "ticked", negate = true)
       }
     }
@@ -481,7 +482,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
       intercept[AssertionError] {
         ctx.checkElementState(elemBinding, "unchecked", negate = true)
       }
-      intercept[WaitTimeoutException] {
+      intercept[Errors.WaitTimeoutException] {
         ctx.waitForElementState(elemBinding, "unchecked", negate = true)
       }
     }
@@ -496,7 +497,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
       intercept[AssertionError] {
         ctx.checkElementState(elemBinding, "unticked", negate = true)
       }
-      intercept[WaitTimeoutException] {
+      intercept[Errors.WaitTimeoutException] {
         ctx.waitForElementState(elemBinding, "unticked", negate = true)
       }
     }
@@ -511,7 +512,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
       intercept[AssertionError] {
         ctx.checkElementState(elemBinding, "enabled", negate = true)
       }
-      intercept[WaitTimeoutException] {
+      intercept[Errors.WaitTimeoutException] {
         ctx.waitForElementState(elemBinding, "enabled", negate = true)
       }
     }
@@ -526,7 +527,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
       intercept[AssertionError] {
         ctx.checkElementState(elemBinding, "disabled", negate = true)
       }
-      intercept[WaitTimeoutException] {
+      intercept[Errors.WaitTimeoutException] {
         ctx.waitForElementState(elemBinding, "disabled", negate = true)
       }
     }
@@ -553,7 +554,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
       intercept[AssertionError] {
         ctx.checkElementState(elemBinding, "displayed", negate = false)
       }
-      intercept[WaitTimeoutException] {
+      intercept[Errors.WaitTimeoutException] {
         ctx.waitForElementState(elemBinding, "displayed", negate = false)
       }
     }
@@ -566,7 +567,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
       intercept[AssertionError] {
         ctx.checkElementState(elemBinding, "hidden", negate = true)
       }
-      intercept[WaitTimeoutException] {
+      intercept[Errors.WaitTimeoutException] {
         ctx.waitForElementState(elemBinding, "hidden", negate = true)
       }
     }
