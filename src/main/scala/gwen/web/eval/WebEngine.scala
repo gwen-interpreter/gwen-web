@@ -22,11 +22,14 @@ import gwen.core.Errors.disabledStepError
 import gwen.core.eval.EvalEngine
 import gwen.core.eval.EvalEnvironment
 import gwen.core.eval.binding.JavaScriptBinding
+import gwen.core.eval.step.UnitStep
+import gwen.core.eval.step.composite._
 import gwen.core.model._
 import gwen.core.model.gherkin.Step
 import gwen.web.WebErrors.LocatorBindingException
 import gwen.web.WebSettings
 import gwen.web.eval.binding._
+import gwen.web.eval.step.composite._
 import gwen.web.eval.eyes.EyesSettings
 
 import com.applitools.eyes.{MatchLevel, RectangleSize}
@@ -63,64 +66,30 @@ class WebEngine extends EvalEngine[WebContext] {
   /**
     * Translates composite web engine steps.
     */
-  override def translateComposite(parent: Identifiable, step: Step, env: EvalEnvironment, ctx: WebContext): Option[Step => Step] = {
-
+  override def translateComposite(parent: Identifiable, step: Step, env: EvalEnvironment, ctx: WebContext): Option[CompositeStep[WebContext]] = {
     super.translateComposite(parent, step, env, ctx) orElse {
-
       step.expression match {
-
-        case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression in (.+?)$container with no (?:timeout|wait)""" => Some { step =>
-          val containerBinding = ctx.getLocatorBinding(container)
-          val binding = LocatorBinding(s"$element/list", SelectorType.parse(selectorType), expression, Some(containerBinding), Some(Duration.Zero), None, ctx)
-          ctx.evaluate(evaluateForEach(() => List("$[dryRun:webElements]"), element, parent, step, doStep, ctx)) {
-            evaluateForEach(() => binding.resolveAll(), element, parent, step, doStep, ctx)
-          }
+        case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression in (.+?)$container with no (?:timeout|wait)""" => Some { 
+          new ForEachWebElement(doStep, element, SelectorType.parse(selectorType), expression, Some(container), Some(Duration.Zero), this, ctx)
         }
-
-        case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression in (.+?)$container with (\d+)$timeout second (?:timeout|wait)""" => Some { step =>
-          val containerBinding = ctx.getLocatorBinding(container)
-          val binding = LocatorBinding(s"$element/list", SelectorType.parse(selectorType), expression, Some(containerBinding), Some(Duration.create(timeout.toLong, TimeUnit.SECONDS)), None, ctx)
-          ctx.evaluate(evaluateForEach(() => List("$[dryRun:webElements]"), element, parent, step, doStep, ctx)) {
-            evaluateForEach(() => binding.resolveAll(), element, parent, step, doStep, ctx)
-          }
+        case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression in (.+?)$container with (\d+)$timeout second (?:timeout|wait)""" => Some {
+          new ForEachWebElement(doStep, element, SelectorType.parse(selectorType), expression, Some(container), Some(Duration.create(timeout.toLong, TimeUnit.SECONDS)), this, ctx)
         }
-
-        case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression in (.+?)$container""" => Some { step =>
-          val containerBinding = ctx.getLocatorBinding(container)
-          val binding = LocatorBinding(s"$element/list", SelectorType.parse(selectorType), expression, Some(containerBinding), None, None, ctx)
-          ctx.evaluate(evaluateForEach(() => List("$[dryRun:webElements]"), element, parent, step, doStep, ctx)) {
-            evaluateForEach(() => binding.resolveAll(), element, parent, step, doStep, ctx)
-          }
+        case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression in (.+?)$container""" => Some {
+          new ForEachWebElement(doStep, element, SelectorType.parse(selectorType), expression, Some(container), None, this, ctx)
         }
-
-        case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression with no (?:timeout|wait)""" => Some { step =>
-          val binding = LocatorBinding(s"$element/list", SelectorType.parse(selectorType), expression, None, Some(Duration.Zero), None, ctx)
-          ctx.evaluate(evaluateForEach(() => List("$[dryRun:webElements]"), element, parent, step, doStep, ctx)) {
-            evaluateForEach(() => binding.resolveAll(), element, parent, step, doStep, ctx)
-          }
+        case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression with no (?:timeout|wait)""" => Some { 
+          new ForEachWebElement(doStep, element, SelectorType.parse(selectorType), expression, None, Some(Duration.Zero), this, ctx)
         }
-
-        case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression with (\d+)$timeout second (?:timeout|wait)""" => Some { step =>
-          val binding = LocatorBinding(s"$element/list", SelectorType.parse(selectorType), step.orDocString(expression), None, Some(Duration.create(timeout.toLong, TimeUnit.SECONDS)), None, ctx)
-          ctx.evaluate(evaluateForEach(() => List("$[dryRun:webElements]"), element, parent, step, doStep, ctx)) {
-            evaluateForEach(() => binding.resolveAll(), element, parent, step, doStep, ctx)
-          }
+        case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression with (\d+)$timeout second (?:timeout|wait)""" => Some {
+          new ForEachWebElement(doStep, element, SelectorType.parse(selectorType), expression, None, Some(Duration.create(timeout.toLong, TimeUnit.SECONDS)), this, ctx)
         }
-
-        case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression""" => Some { step =>
-          val binding = LocatorBinding(s"$element/list", SelectorType.parse(selectorType), step.orDocString(expression), None, None, None, ctx)
-          ctx.evaluate(evaluateForEach(() => List("$[dryRun:webElements]"), element, parent, step, doStep, ctx)) {
-            evaluateForEach(() => binding.resolveAll(), element, parent, step, doStep, ctx)
-          }
+        case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression""" => Some {
+          new ForEachWebElement(doStep, element, SelectorType.parse(selectorType), expression, None, None, this, ctx)
         }
-
-        case r"""(.+?)$doStep for each (.+?)$element in (.+?)$$$iteration""" if !iteration.contains("delimited by") => Some { step =>
-          val binding = ctx.getLocatorBinding(iteration)
-          ctx.evaluate(evaluateForEach(() => List("$[dryRun:webElements]"), element, parent, step, doStep, ctx)) {
-            evaluateForEach(() => binding.resolveAll(), element, parent, step, doStep, ctx)
-          }
+        case r"""(.+?)$doStep for each (.+?)$element in (.+?)$$$iteration""" if !iteration.contains("delimited by") => Some {
+          new ForEachWebElementInIteration(doStep, element, iteration, this, ctx)
         }
-
         case _ => None
       }
     }
@@ -134,7 +103,7 @@ class WebEngine extends EvalEngine[WebContext] {
     * @param step the step to evaluate
     * @param ctx the web evaluation context
     */
-  override def translate(parent: Identifiable, step: Step, env: EvalEnvironment, ctx: WebContext): Step => Unit = {
+  override def translate(parent: Identifiable, step: Step, env: EvalEnvironment, ctx: WebContext): UnitStep[WebContext] = {
 
     step.expression match {
 
