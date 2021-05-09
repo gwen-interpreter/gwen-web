@@ -17,7 +17,7 @@ package gwen.web.eval
 
 import gwen.core._
 import gwen.core.Errors._
-import gwen.core.Sensitive
+import gwen.core.SensitiveData
 import gwen.core.eval.EvalEnvironment
 import gwen.core.eval.EvalContext
 import gwen.core.model.Failed
@@ -605,7 +605,7 @@ class WebContext(options: GwenOptions, env: EvalEnvironment, driverManager: Driv
       if (clearFirst) {
         webElement.clear()
       }
-      Sensitive.withValue(value) { plainValue =>
+      SensitiveData.withValue(value) { plainValue =>
         if ("file" == webElement.getAttribute("type")) {
           createActions(driver).moveToElement(webElement).perform()
           webElement.sendKeys(plainValue)

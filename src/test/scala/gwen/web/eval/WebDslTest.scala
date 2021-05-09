@@ -56,7 +56,7 @@ class WebDslTest extends BaseTest with Matchers with MockitoSugar {
     withSetting("<name>", "name") {
       withSetting("gwen.db.<dbName>.driver", "jdbcDriver") {
         withSetting("gwen.db.<dbName>.url", "jdbcUrl") {
-          env.dsl map { dsl =>
+          ctx.dsl map { dsl =>
             dsl
               .replace("<position>", "1")
               .replace("<occurrence>", "1")
