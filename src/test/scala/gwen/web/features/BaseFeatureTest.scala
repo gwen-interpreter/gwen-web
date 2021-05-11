@@ -16,12 +16,13 @@
 
 package gwen.web.features
 
+import gwen.web.BaseTest
+import gwen.web.GwenWebInterpreter
+
 import gwen.GwenLauncher
 import gwen.core.GwenOptions
 import gwen.core.Settings
 import gwen.core.model._
-import gwen.web.BaseTest
-import gwen.web.GwenWebInterpreter
 
 abstract class BaseFeatureTest extends BaseTest {
 

@@ -15,12 +15,13 @@
  */
 package gwen.web.features.flow
 
+import gwen.web.GwenWebInterpreter
+
 import gwen.GwenLauncher
 import gwen.core.GwenOptions
 import gwen.core.model.Failed
 import gwen.core.model.Passed
 import gwen.core.report.ReportFormat
-import gwen.web.GwenWebInterpreter
 
 import org.scalatest.FlatSpec
 
