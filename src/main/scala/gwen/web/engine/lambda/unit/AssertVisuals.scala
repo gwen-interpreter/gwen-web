@@ -20,16 +20,16 @@ import gwen.web.engine.WebContext
 import gwen.web.engine.eyes.EyesSettings
 
 import gwen.core.Errors
-import gwen.core.engine.EvalContext
-import gwen.core.engine.EvalEngine
 import gwen.core.engine.lambda.UnitStep
 import gwen.core.model._
 import gwen.core.model.gherkin.Step
 
-class AssertVisuals[T <: EvalContext](engine: EvalEngine[WebContext], ctx: WebContext) extends UnitStep[WebContext](engine, ctx) {
+class AssertVisuals() extends UnitStep[WebContext] {
 
-  override def apply(parent: Identifiable, step: Step): Unit = {
-    engine.checkStepRules(step, BehaviorType.Assertion, env)
+  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Unit = {
+    ctx.withEnv { env =>
+      ctx.checkStepRules(step, BehaviorType.Assertion, env)
+    }
     if (EyesSettings.`gwen.applitools.eyes.enabled`) {
       ctx.asertVisuals()
     } else {

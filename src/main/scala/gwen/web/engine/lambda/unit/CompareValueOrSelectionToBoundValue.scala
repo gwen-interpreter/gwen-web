@@ -21,16 +21,16 @@ import gwen.web.engine.WebContext
 
 import gwen.core.Errors
 import gwen.core.engine.ComparisonOperator
-import gwen.core.engine.EvalContext
-import gwen.core.engine.EvalEngine
 import gwen.core.engine.lambda.UnitStep
 import gwen.core.model._
 import gwen.core.model.gherkin.Step
 
-class CompareValueOrSelectionToBoundValue[T <: EvalContext](element: String, selection: Option[DropdownSelection.Value], source: String, operator: ComparisonOperator.Value, negate: Boolean, engine: EvalEngine[WebContext], ctx: WebContext) extends UnitStep[WebContext](engine, ctx) {
+class CompareValueOrSelectionToBoundValue(element: String, selection: Option[DropdownSelection.Value], source: String, operator: ComparisonOperator.Value, negate: Boolean) extends UnitStep[WebContext] {
 
-  override def apply(parent: Identifiable, step: Step): Unit = {
-    engine.checkStepRules(step, BehaviorType.Assertion, env)
+  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Unit = {
+    ctx.withEnv { env =>
+      ctx.checkStepRules(step, BehaviorType.Assertion, env)
+    }
     if (element == "I") Errors.undefinedStepError(step)
     if (element == "the current URL") ctx.captureCurrentUrl(None)
     val expected = ctx.getBoundReferenceValue(source)

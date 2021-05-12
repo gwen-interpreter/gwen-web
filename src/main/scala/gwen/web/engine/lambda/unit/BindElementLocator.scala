@@ -21,56 +21,59 @@ import gwen.web.engine.WebContext
 import gwen.web.engine.binding.SelectorType
 import gwen.web.engine.binding.LocatorKey
 
-import gwen.core.engine.EvalContext
-import gwen.core.engine.EvalEngine
 import gwen.core.engine.lambda.UnitStep
 import gwen.core.model._
 import gwen.core.model.gherkin.Step
 
-class BindElementLocator[T <: EvalContext](name: String, selectorType: SelectorType.Value, expression: String, container: Option[String], timeoutSecs: Option[Long], index: Option[Int], engine: EvalEngine[WebContext], ctx: WebContext) extends UnitStep[WebContext](engine, ctx) {
+class BindElementLocator(name: String, selectorType: SelectorType.Value, expression: String, container: Option[String], timeoutSecs: Option[Long], index: Option[Int]) extends UnitStep[WebContext] {
 
-  override def apply(parent: Identifiable, step: Step): Unit = {
+  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Unit = {
 
-    engine.checkStepRules(step, BehaviorType.Context, env)
-    container foreach { cont =>
-      ctx.getLocatorBinding(cont)
-    }
+    ctx.withEnv { env =>
 
-    env.scopes.set(LocatorKey.baseKey(name), selectorType.toString)
-    env.scopes.set(LocatorKey.selectorKey(name, selectorType), expression)
-
-    val cKey = LocatorKey.containerKey(name, selectorType)
-    if (container.isEmpty) {
-      env.scopes.getOpt(cKey) foreach { _ =>
-        env.scopes.set(cKey, null)
-      }
-    } else {
+      ctx.checkStepRules(step, BehaviorType.Context, env)
       container foreach { cont =>
-        env.scopes.set(cKey, cont)
+        ctx.getLocatorBinding(cont)
       }
+
+      env.scopes.set(LocatorKey.baseKey(name), selectorType.toString)
+      env.scopes.set(LocatorKey.selectorKey(name, selectorType), expression)
+
+      val cKey = LocatorKey.containerKey(name, selectorType)
+      if (container.isEmpty) {
+        env.scopes.getOpt(cKey) foreach { _ =>
+          env.scopes.set(cKey, null)
+        }
+      } else {
+        container foreach { cont =>
+          env.scopes.set(cKey, cont)
+        }
+      }
+      
+      val iKey = LocatorKey.indexKey(name, selectorType)
+      if (index.isEmpty) {
+        env.scopes.getOpt(iKey) foreach { _ =>
+          env.scopes.set(iKey, null)
+        }
+      } else {
+        index foreach { idx =>
+          env.scopes.set(iKey, idx.toString)
+        }
+      }
+
+      val tKey = LocatorKey.timeoutSecsKey(name, selectorType)
+      if (timeoutSecs.isEmpty) {
+        env.scopes.getOpt(tKey) foreach { _ =>
+          env.scopes.set(tKey, null)
+        }
+      } else {
+        timeoutSecs foreach { secs =>
+          env.scopes.set(tKey, secs.toString)
+        }
+      }
+
     }
     
-    val iKey = LocatorKey.indexKey(name, selectorType)
-    if (index.isEmpty) {
-      env.scopes.getOpt(iKey) foreach { _ =>
-        env.scopes.set(iKey, null)
-      }
-    } else {
-      index foreach { idx =>
-        env.scopes.set(iKey, idx.toString)
-      }
-    }
-
-    val tKey = LocatorKey.timeoutSecsKey(name, selectorType)
-    if (timeoutSecs.isEmpty) {
-      env.scopes.getOpt(tKey) foreach { _ =>
-        env.scopes.set(tKey, null)
-      }
-    } else {
-      timeoutSecs foreach { secs =>
-        env.scopes.set(tKey, secs.toString)
-      }
-    }
   }
 
 }

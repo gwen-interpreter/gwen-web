@@ -18,23 +18,23 @@ package gwen.web.engine.lambda.unit
 
 import gwen.web.engine.WebContext
 
-import gwen.core.engine.EvalContext
-import gwen.core.engine.EvalEngine
 import gwen.core.engine.lambda.UnitStep
 import gwen.core.model._
 import gwen.core.model.gherkin.Step
 
-class CaptureScreenshot[T <: EvalContext](target: Option[String], engine: EvalEngine[WebContext], ctx: WebContext) extends UnitStep[WebContext](engine, ctx) {
+class CaptureScreenshot(target: Option[String]) extends UnitStep[WebContext] {
 
-  override def apply(parent: Identifiable, step: Step): Unit = {
-    engine.checkStepRules(step, BehaviorType.Action, env)
-    target match {
-      case Some(name) =>
-        ctx.captureScreenshot(true, name) foreach { file =>
-          env.scopes.set(name, file.getAbsolutePath)
-        }
-      case None =>
-        ctx.captureScreenshot(true)
+  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Unit = {
+    ctx.withEnv { env =>
+      ctx.checkStepRules(step, BehaviorType.Action, env)
+      target match {
+        case Some(name) =>
+          ctx.captureScreenshot(true, name) foreach { file =>
+            env.scopes.set(name, file.getAbsolutePath)
+          }
+        case None =>
+          ctx.captureScreenshot(true)
+      }
     }
   }
 

@@ -19,16 +19,16 @@ package gwen.web.engine.lambda.unit
 import gwen.web.engine.WebContext
 import gwen.web.engine.WebSettings
 
-import gwen.core.engine.EvalContext
-import gwen.core.engine.EvalEngine
 import gwen.core.engine.lambda.UnitStep
 import gwen.core.model._
 import gwen.core.model.gherkin.Step
 
-class SendValueToElement[T <: EvalContext](element: String, value: String, sendEnterKey: Boolean, engine: EvalEngine[WebContext], ctx: WebContext) extends UnitStep[WebContext](engine, ctx) {
+class SendValueToElement(element: String, value: String, sendEnterKey: Boolean) extends UnitStep[WebContext] {
 
-  override def apply(parent: Identifiable, step: Step): Unit = {
-    engine.checkStepRules(step, BehaviorType.Action, env)
+  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Unit = {
+    ctx.withEnv { env =>
+      ctx.checkStepRules(step, BehaviorType.Action, env)
+    }
     val binding = ctx.getLocatorBinding(element)
     val clickFirst = WebSettings.`gwen.web.sendKeys.clickFirst`
     val clearFirst = WebSettings.`gwen.web.sendKeys.clearFirst`

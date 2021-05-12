@@ -20,18 +20,18 @@ import gwen.web.engine.WebContext
 import gwen.web.engine.eyes.EyesSettings
 
 import gwen.core.Errors
-import gwen.core.engine.EvalContext
-import gwen.core.engine.EvalEngine
 import gwen.core.engine.lambda.UnitStep
 import gwen.core.model._
 import gwen.core.model.gherkin.Step
 
 import com.applitools.eyes.RectangleSize
 
-class StartVisualTest[T <: EvalContext](name: String, width: Option[Int], height: Option[Int], engine: EvalEngine[WebContext], ctx: WebContext) extends UnitStep[WebContext](engine, ctx) {
+class StartVisualTest(name: String, width: Option[Int], height: Option[Int]) extends UnitStep[WebContext] {
 
-  override def apply(parent: Identifiable, step: Step): Unit = {
-    engine.checkStepRules(step, BehaviorType.Action, env)
+  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Unit = {
+    ctx.withEnv { env =>
+      ctx.checkStepRules(step, BehaviorType.Action, env)
+    }
     if (EyesSettings.`gwen.applitools.eyes.enabled`) {
       val viewportSize = width flatMap { width => 
         height map { height => 

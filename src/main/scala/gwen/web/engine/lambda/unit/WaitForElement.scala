@@ -18,18 +18,18 @@ package gwen.web.engine.lambda.unit
 
 import gwen.web.engine.WebContext
 
-import gwen.core.engine.EvalContext
-import gwen.core.engine.EvalEngine
 import gwen.core.engine.lambda.UnitStep
 import gwen.core.model._
 import gwen.core.model.gherkin.Step
 
 import scala.util.Try
 
-class WaitForElement[T <: EvalContext](element: String, waitSecs: Option[Long], engine: EvalEngine[WebContext], ctx: WebContext) extends UnitStep[WebContext](engine, ctx) {
+class WaitForElement(element: String, waitSecs: Option[Long]) extends UnitStep[WebContext] {
 
-  override def apply(parent: Identifiable, step: Step): Unit = {
-    engine.checkStepRules(step, BehaviorType.Action, env)
+  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Unit = {
+    ctx.withEnv { env =>
+      ctx.checkStepRules(step, BehaviorType.Action, env)
+    }
     val binding = ctx.getLocatorBinding(element)
     ctx.waitUntil(waitSecs, s"waiting for $binding to be displayed") {
       Try(ctx.locateAndHighlight(binding)).isSuccess

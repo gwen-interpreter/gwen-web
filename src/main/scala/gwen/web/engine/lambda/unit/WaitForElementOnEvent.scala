@@ -19,18 +19,18 @@ package gwen.web.engine.lambda.unit
 import gwen.web.engine.ElementEvent
 import gwen.web.engine.WebContext
 
-import gwen.core.engine.EvalContext
-import gwen.core.engine.EvalEngine
 import gwen.core.engine.lambda.UnitStep
 import gwen.core.model._
 import gwen.core.model.gherkin.Step
 
-class WaitForElementOnEvent[T <: EvalContext](element: String, event: ElementEvent.Value, waitSecs: Long, engine: EvalEngine[WebContext], ctx: WebContext) extends UnitStep[WebContext](engine, ctx) {
+class WaitForElementOnEvent(element: String, event: ElementEvent.Value, waitSecs: Long) extends UnitStep[WebContext] {
 
-  override def apply(parent: Identifiable, step: Step): Unit = {
-    engine.checkStepRules(step, BehaviorType.Context, env)
-    ctx.getLocatorBinding(element)
-    env.scopes.set(s"$element/${ElementEvent.actionOf(event)}/wait", waitSecs.toString)
+  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Unit = {
+    ctx.withEnv { env =>
+      ctx.checkStepRules(step, BehaviorType.Context, env)
+      ctx.getLocatorBinding(element)
+      env.scopes.set(s"$element/${ElementEvent.actionOf(event)}/wait", waitSecs.toString)
+    }
   }
 
 }

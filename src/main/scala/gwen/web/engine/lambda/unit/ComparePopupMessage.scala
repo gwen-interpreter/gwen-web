@@ -19,19 +19,23 @@ package gwen.web.engine.lambda.unit
 import gwen.web.engine.WebContext
 
 import gwen.core.engine.ComparisonOperator
-import gwen.core.engine.EvalContext
-import gwen.core.engine.EvalEngine
 import gwen.core.engine.lambda.UnitStep
 import gwen.core.model._
 import gwen.core.model.gherkin.Step
 
-class CompareToValue[T <: EvalContext](name: String, expression: String, actual: () => String, operator: ComparisonOperator.Value, negate: Boolean, engine: EvalEngine[WebContext], ctx: WebContext) extends UnitStep[WebContext](engine, ctx) {
+class ComparePopupMessage(name: String, value: String, bound: Boolean, operator: ComparisonOperator.Value, negate: Boolean) extends UnitStep[WebContext] {
 
-  override def apply(parent: Identifiable, step: Step): Unit = {
-    engine.checkStepRules(step, BehaviorType.Assertion, env)
-    val expected = ctx.parseExpression(operator, expression)
+  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Unit = {
+    ctx.withEnv { env =>
+      ctx.checkStepRules(step, BehaviorType.Assertion, env)
+    }
+    val expected = if (bound) { 
+      ctx.getBoundReferenceValue(value)
+    } else {
+      ctx.parseExpression(operator, value)
+    }
     ctx.perform {
-      ctx.compare(name, expected, actual, operator, negate)
+      ctx.compare(name, expected, () => ctx.getPopupMessage, operator, negate)
     }
   }
 

@@ -19,16 +19,16 @@ package gwen.web.engine.lambda.unit
 import gwen.web.engine.ElementAction
 import gwen.web.engine.WebContext
 
-import gwen.core.engine.EvalContext
-import gwen.core.engine.EvalEngine
 import gwen.core.engine.lambda.UnitStep
 import gwen.core.model._
 import gwen.core.model.gherkin.Step
 
-class HoldAndClick[T <: EvalContext](element: String, modifiers: Array[String], clickAction: ElementAction.Value, engine: EvalEngine[WebContext], ctx: WebContext) extends UnitStep[WebContext](engine, ctx) {
+class HoldAndClick(element: String, modifiers: Array[String], clickAction: ElementAction.Value) extends UnitStep[WebContext] {
 
-  override def apply(parent: Identifiable, step: Step): Unit = {
-    engine.checkStepRules(step, BehaviorType.Action, env)
+  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Unit = {
+    ctx.withEnv { env =>
+      ctx.checkStepRules(step, BehaviorType.Action, env)
+    }
     val binding = ctx.getLocatorBinding(element)
     ctx.holdAndClick(modifiers, clickAction, binding)
   }

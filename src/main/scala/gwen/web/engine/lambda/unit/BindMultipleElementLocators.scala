@@ -21,24 +21,24 @@ import gwen.web.engine.WebContext
 import gwen.web.engine.binding.SelectorType
 import gwen.web.engine.binding.LocatorKey
 
-import gwen.core.engine.EvalContext
-import gwen.core.engine.EvalEngine
 import gwen.core.engine.lambda.UnitStep
 import gwen.core.model._
 import gwen.core.model.gherkin.Step
 
-class BindMultipleElementLocators[T <: EvalContext](name: String, container: Option[String], timeoutSecs: Option[Long], index: Option[Int], engine: EvalEngine[WebContext], ctx: WebContext) extends UnitStep[WebContext](engine, ctx) {
+class BindMultipleElementLocators(name: String, container: Option[String], timeoutSecs: Option[Long], index: Option[Int]) extends UnitStep[WebContext] {
 
-  override def apply(parent: Identifiable, step: Step): Unit = {
-    engine.checkStepRules(step, BehaviorType.Context, env)
-    container foreach { cont =>
-      ctx.getLocatorBinding(cont)
-    }
-    env.scopes.set(LocatorKey.baseKey(name), step.table.map(_._2.head).mkString(","))
-    step.table foreach { case (_, row ) =>
-      val selectorType = SelectorType.parse(row.head)
-      val expression = row(1)
-      new BindElementLocator(name, selectorType, expression, container, timeoutSecs, index, engine, ctx).apply(parent, step)
+  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Unit = {
+    ctx.withEnv { env =>
+      ctx.checkStepRules(step, BehaviorType.Context, env)
+      container foreach { cont =>
+        ctx.getLocatorBinding(cont)
+      }
+      env.scopes.set(LocatorKey.baseKey(name), step.table.map(_._2.head).mkString(","))
+      step.table foreach { case (_, row ) =>
+        val selectorType = SelectorType.parse(row.head)
+        val expression = row(1)
+        new BindElementLocator(name, selectorType, expression, container, timeoutSecs, index).apply(parent, step, ctx)
+      }
     }
   }
 

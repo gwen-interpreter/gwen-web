@@ -19,16 +19,16 @@ package gwen.web.engine.lambda.unit
 import gwen.web.engine.WebContext
 
 import gwen.core.engine.ComparisonOperator
-import gwen.core.engine.EvalContext
-import gwen.core.engine.EvalEngine
 import gwen.core.engine.lambda.UnitStep
 import gwen.core.model._
 import gwen.core.model.gherkin.Step
 
-class AssertBrowserCount[T <: EvalContext](expectedCount: Int, engine: EvalEngine[WebContext], ctx: WebContext) extends UnitStep[WebContext](engine, ctx) {
+class AssertBrowserCount(expectedCount: Int) extends UnitStep[WebContext] {
 
-  override def apply(parent: Identifiable, step: Step): Unit = {
-    engine.checkStepRules(step, BehaviorType.Assertion, env)
+  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Unit = {
+    ctx.withEnv { env =>
+      ctx.checkStepRules(step, BehaviorType.Assertion, env)
+    }
     ctx.perform {
       ctx.compare("open browser sessions", expectedCount.toString, () => ctx.noOfSessions().toString, ComparisonOperator.be, false)
     }

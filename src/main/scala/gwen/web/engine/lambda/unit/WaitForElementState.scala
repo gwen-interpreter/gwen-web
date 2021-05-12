@@ -18,19 +18,26 @@ package gwen.web.engine.lambda.unit
 
 import gwen.web.engine.ElementState
 import gwen.web.engine.WebContext
+import gwen.core.engine.binding.JavaScriptBinding
 
-import gwen.core.engine.EvalContext
-import gwen.core.engine.EvalEngine
 import gwen.core.engine.lambda.UnitStep
 import gwen.core.model._
 import gwen.core.model.gherkin.Step
 
-class WaitForElementState[T <: EvalContext](element: String, state: ElementState.Value, negate: Boolean, engine: EvalEngine[WebContext], ctx: WebContext) extends UnitStep[WebContext](engine, ctx) {
+class WaitForElementState(element: String, state: ElementState.Value, negate: Boolean) extends UnitStep[WebContext] {
 
-  override def apply(parent: Identifiable, step: Step): Unit = {
-    engine.checkStepRules(step, BehaviorType.Action, env)
-    val binding = ctx.getLocatorBinding(element).jsEquivalent
-    ctx.waitForElementState(binding, state, negate)
+  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Unit = {
+    ctx.withEnv { env =>
+      val jsCondition = s"$element is${if (negate) " not" else ""} $state"
+      env.scopes.getOpt(JavaScriptBinding.key(jsCondition)) match {
+        case None => 
+          ctx.checkStepRules(step, BehaviorType.Action, env)
+          val binding = ctx.getLocatorBinding(element).jsEquivalent
+          ctx.waitForElementState(binding, state, negate)
+        case Some(javascript) =>
+          new WaitForCondition(javascript).apply(parent, step, ctx)
+      }
+    }
   }
 
 }

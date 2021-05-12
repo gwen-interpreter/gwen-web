@@ -18,18 +18,19 @@ package gwen.web.engine.lambda.composite
 
 import gwen.web.engine.WebContext
 
-import gwen.core.engine.EvalContext
 import gwen.core.engine.EvalEngine
 import gwen.core.engine.lambda.composite.ForEach
 import gwen.core.model._
 import gwen.core.model.gherkin.Step
 
-class ForEachWebElementInIteration[T <: EvalContext](doStep: String, element: String, iteration: String, engine: EvalEngine[WebContext], ctx: WebContext) extends ForEach[WebContext](engine, ctx) {
+class ForEachWebElementInIteration(doStep: String, element: String, iteration: String, engine: EvalEngine[WebContext]) extends ForEach[WebContext](engine) {
 
-  override def apply(parent: Identifiable, step: Step): Step = {
+  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Step = {
     val binding = ctx.getLocatorBinding(iteration)
-    ctx.evaluate(evaluateForEach(() => List("$[dryRun:webElements]"), element, parent, step, doStep)) {
-      evaluateForEach(() => binding.resolveAll(), element, parent, step, doStep)
+    ctx.withEnv { env =>
+      ctx.evaluate(evaluateForEach(() => List("$[dryRun:webElements]"), element, parent, step, doStep, env, ctx)) {
+        evaluateForEach(() => binding.resolveAll(), element, parent, step, doStep, env, ctx)
+      }
     }
     
   }

@@ -18,17 +18,17 @@ package gwen.web.engine.lambda.unit
 
 import gwen.web.engine.WebContext
 
-import gwen.core.engine.EvalContext
-import gwen.core.engine.EvalEngine
 import gwen.core.engine.lambda.UnitStep
 import gwen.core.model._
 import gwen.core.model.gherkin.Step
 
-class CreatePageScope[T <: EvalContext](name: String, engine: EvalEngine[WebContext], ctx: WebContext) extends UnitStep[WebContext](engine, ctx) {
+class CreatePageScope(name: String) extends UnitStep[WebContext] {
 
-  override def apply(parent: Identifiable, step: Step): Unit = {
-    engine.checkStepRules(step, BehaviorType.Context, env)
-    env.scopes.addScope(name)
+  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Unit = {
+    ctx.withEnv { env =>
+      ctx.checkStepRules(step, BehaviorType.Context, env)
+      env.scopes.addScope(name)
+    }
   }
 
 }

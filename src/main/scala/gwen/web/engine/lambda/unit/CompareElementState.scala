@@ -19,16 +19,16 @@ package gwen.web.engine.lambda.unit
 import gwen.web.engine.ElementState
 import gwen.web.engine.WebContext
 
-import gwen.core.engine.EvalContext
-import gwen.core.engine.EvalEngine
 import gwen.core.engine.lambda.UnitStep
 import gwen.core.model._
 import gwen.core.model.gherkin.Step
 
-class CompareElementState[T <: EvalContext](element: String, state: ElementState.Value, negate: Boolean, engine: EvalEngine[WebContext], ctx: WebContext) extends UnitStep[WebContext](engine, ctx) {
+class CompareElementState(element: String, state: ElementState.Value, negate: Boolean) extends UnitStep[WebContext] {
 
-  override def apply(parent: Identifiable, step: Step): Unit = {
-    engine.checkStepRules(step, BehaviorType.Assertion, env)
+  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Unit = {
+    ctx.withEnv { env =>
+      ctx.checkStepRules(step, BehaviorType.Assertion, env)
+    }
     val binding = ctx.getLocatorBinding(element)
     ctx.checkElementState(binding, state, negate)
   }
