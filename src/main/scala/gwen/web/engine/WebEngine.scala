@@ -47,44 +47,36 @@ class WebEngine extends EvalEngine[WebContext] {
     * Initialises and returns a new evaluation context.
     * 
     * @param options command line options
-    * @param envState optional environment state to use
+    * @param envState the initial environment state
     */
-  override def init(options: GwenOptions, envState: Option[EnvState] = None): WebContext = {
+  override def init(options: GwenOptions, envState: EnvState): WebContext = {
     if (WebSettings.`gwen.web.capture.screenshots.highlighting`) {
       val fps = GwenSettings.`gwen.report.slideshow.framespersecond`
       Settings.setLocal("gwen.report.slideshow.framespersecond", (fps.toDouble * 1.8d).toInt.toString)
     }
-    val state = envState.getOrElse(EnvState())
-    new WebContext(options, state, new DriverManager())
+    new WebContext(options, envState, new DriverManager())
   }
 
   /**
     * Translates composite web engine steps.
     */
-  override def translateCompositeStep(parent: Identifiable, step: Step): Option[CompositeStep[WebContext]] = {
-    super.translateCompositeStep(parent, step) orElse {
+  override def translateCompositeStep(step: Step): Option[CompositeStep[WebContext]] = {
+    super.translateCompositeStep(step) orElse {
       step.expression match {
-        case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression in (.+?)$container with no (?:timeout|wait)""" => Some { 
-          new ForEachWebElement(doStep, element, SelectorType.parse(selectorType), expression, Some(container), Some(Duration.Zero), this)
-        }
-        case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression in (.+?)$container with (\d+)$timeout second (?:timeout|wait)""" => Some {
-          new ForEachWebElement(doStep, element, SelectorType.parse(selectorType), expression, Some(container), Some(Duration.create(timeout.toLong, TimeUnit.SECONDS)), this)
-        }
-        case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression in (.+?)$container""" => Some {
-          new ForEachWebElement(doStep, element, SelectorType.parse(selectorType), expression, Some(container), None, this)
-        }
-        case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression with no (?:timeout|wait)""" => Some { 
-          new ForEachWebElement(doStep, element, SelectorType.parse(selectorType), expression, None, Some(Duration.Zero), this)
-        }
-        case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression with (\d+)$timeout second (?:timeout|wait)""" => Some {
-          new ForEachWebElement(doStep, element, SelectorType.parse(selectorType), expression, None, Some(Duration.create(timeout.toLong, TimeUnit.SECONDS)), this)
-        }
-        case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression""" => Some {
-          new ForEachWebElement(doStep, element, SelectorType.parse(selectorType), expression, None, None, this)
-        }
-        case r"""(.+?)$doStep for each (.+?)$element in (.+?)$$$iteration""" if !iteration.contains("delimited by") => Some {
-          new ForEachWebElementInIteration(doStep, element, iteration, this)
-        }
+        case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression in (.+?)$container with no (?:timeout|wait)""" =>
+          Some(new ForEachWebElement(doStep, element, SelectorType.parse(selectorType), expression, Some(container), Some(Duration.Zero), this))
+        case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression in (.+?)$container with (\d+)$timeout second (?:timeout|wait)""" =>
+          Some(new ForEachWebElement(doStep, element, SelectorType.parse(selectorType), expression, Some(container), Some(Duration.create(timeout.toLong, TimeUnit.SECONDS)), this))
+        case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression in (.+?)$container""" =>
+          Some(new ForEachWebElement(doStep, element, SelectorType.parse(selectorType), expression, Some(container), None, this))
+        case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression with no (?:timeout|wait)""" =>
+          Some(new ForEachWebElement(doStep, element, SelectorType.parse(selectorType), expression, None, Some(Duration.Zero), this))
+        case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression with (\d+)$timeout second (?:timeout|wait)""" =>
+          Some(new ForEachWebElement(doStep, element, SelectorType.parse(selectorType), expression, None, Some(Duration.create(timeout.toLong, TimeUnit.SECONDS)), this))
+        case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression""" =>
+          Some(new ForEachWebElement(doStep, element, SelectorType.parse(selectorType), expression, None, None, this))
+        case r"""(.+?)$doStep for each (.+?)$element in (.+?)$$$iteration""" =>
+          Some(new ForEachWebElementInIteration(doStep, element, iteration, this))
         case _ => 
           None
       }
@@ -99,7 +91,7 @@ class WebEngine extends EvalEngine[WebContext] {
     * @param step the step to evaluate
     * @param ctx the web evaluation context
     */
-  override def translateStep(parent: Identifiable, step: Step): UnitStep[WebContext] = {
+  override def translateStep(step: Step): UnitStep[WebContext] = {
     step.expression match {
       case r"""I wait for (.+?)$element text for (\d+)$seconds second(?:s?)""" =>
         new WaitForText(element, Some(seconds.toInt))
@@ -159,21 +151,21 @@ class WebEngine extends EvalEngine[WebContext] {
         new BindElementLocator(element, SelectorType.parse(selectorType), step.orDocString(expression), None, None, Some(index.toInt))
       case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression""" =>
         new BindElementLocator(element, SelectorType.parse(selectorType), step.orDocString(expression), None, None, None)
-      case r"""(.+?)$element can be located at index (\d+)$index in (.+?)$container by""" if step.table.nonEmpty && step.table.head._2.size == 2 =>
+      case r"""(.+?)$element can be located at index (\d+)$index in (.+?)$container by""" if step.hasDualColumnTable =>
         new BindMultipleElementLocators(element, Some(container), None, Some(index.toInt))
-      case r"""(.+?)$element can be located in (.+?)$container by""" if step.table.nonEmpty && step.table.head._2.size == 2 =>
+      case r"""(.+?)$element can be located in (.+?)$container by""" if step.hasDualColumnTable =>
         new BindMultipleElementLocators(element, Some(container), None, None)
-      case r"""(.+?)$element can be located at index (\d+)$index with no (?:timeout|wait) by""" if step.table.nonEmpty && step.table.head._2.size == 2 =>
+      case r"""(.+?)$element can be located at index (\d+)$index with no (?:timeout|wait) by""" if step.hasDualColumnTable =>
         new BindMultipleElementLocators(element, None, Some(0), Some(index.toInt))
-      case r"""(.+?)$element can be located with no (?:timeout|wait) by""" if step.table.nonEmpty && step.table.head._2.size == 2 =>
+      case r"""(.+?)$element can be located with no (?:timeout|wait) by""" if step.hasDualColumnTable =>
         new BindMultipleElementLocators(element, None, Some(0), None)
-      case r"""(.+?)$element can be located at index (\d+)$index with (\d+)$timeout second (?:timeout|wait) by""" if step.table.nonEmpty && step.table.head._2.size == 2 =>
+      case r"""(.+?)$element can be located at index (\d+)$index with (\d+)$timeout second (?:timeout|wait) by""" if step.hasDualColumnTable =>
         new BindMultipleElementLocators(element, None, Some(timeout.toInt), Some(index.toInt))
-      case r"""(.+?)$element can be located with (\d+)$timeout second (?:timeout|wait) by""" if step.table.nonEmpty && step.table.head._2.size == 2 =>
+      case r"""(.+?)$element can be located with (\d+)$timeout second (?:timeout|wait) by""" if step.hasDualColumnTable =>
         new BindMultipleElementLocators(element, None, Some(timeout.toInt), None)
-      case r"""(.+?)$element can be located at index (\d+)$index by""" if step.table.nonEmpty && step.table.head._2.size == 2 =>
+      case r"""(.+?)$element can be located at index (\d+)$index by""" if step.hasDualColumnTable =>
         new BindMultipleElementLocators(element, None, None, Some(index.toInt))
-      case r"""(.+?)$element can be located by""" if step.table.nonEmpty && step.table.head._2.size == 2 =>
+      case r"""(.+?)$element can be located by""" if step.hasDualColumnTable =>
         new BindMultipleElementLocators(element, None, None, None)
       case r"""(.+?)$element can be (clicked|right clicked|double clicked|submitted|checked|ticked|unchecked|unticked|selected|deselected|typed|entered|tabbed|cleared|moved to)$event by (?:javascript|js) "(.+?)"$$$expression""" =>
         new BindActionHandler(element, ElementEvent.withName(event), step.orDocString(expression))
@@ -294,7 +286,7 @@ class WebEngine extends EvalEngine[WebContext] {
       case r"I insert a new line in (.+?)$$$element" =>
         new AppendNewLineToElement(element)
       case _ => 
-        super.translateStep(parent, step)
+        super.translateStep(step)
     }
   }
   
