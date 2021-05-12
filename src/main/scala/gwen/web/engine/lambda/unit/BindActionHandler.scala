@@ -27,11 +27,9 @@ import gwen.core.model.gherkin.Step
 class BindActionHandler(element: String, event: ElementEvent.Value, javascript: String) extends UnitStep[WebContext] {
 
   override def apply(parent: Identifiable, step: Step, ctx: WebContext): Unit = {
-    ctx.withEnv { env =>
-      ctx.checkStepRules(step, BehaviorType.Context, env)
-      ctx.getLocatorBinding(element)
-      env.scopes.set(JavaScriptBinding.key(s"$element/action/${ElementEvent.actionOf(event)}"), javascript)
-    }
+    checkStepRules(step, BehaviorType.Context, ctx)
+    ctx.getLocatorBinding(element)
+    ctx.scopes.set(JavaScriptBinding.key(s"$element/action/${ElementEvent.actionOf(event)}"), javascript)
   }
 
 }

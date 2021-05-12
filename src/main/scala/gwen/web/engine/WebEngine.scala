@@ -23,11 +23,11 @@ import gwen.web.engine.lambda.unit._
 import gwen.core._
 import gwen.core.engine.ComparisonOperator
 import gwen.core.engine.EvalEngine
-import gwen.core.engine.EvalEnvironment
 import gwen.core.engine.lambda.CompositeStep
 import gwen.core.engine.lambda.UnitStep
 import gwen.core.model._
 import gwen.core.model.gherkin.Step
+import gwen.core.model.state.EnvState
 
 import scala.concurrent.duration._
 
@@ -47,15 +47,15 @@ class WebEngine extends EvalEngine[WebContext] {
     * Initialises and returns a new evaluation context.
     * 
     * @param options command line options
-    * @param envOpt optional environment context to use
+    * @param envState optional environment state to use
     */
-  override def init(options: GwenOptions, envOpt: Option[EvalEnvironment] = None): WebContext = {
+  override def init(options: GwenOptions, envState: Option[EnvState] = None): WebContext = {
     if (WebSettings.`gwen.web.capture.screenshots.highlighting`) {
       val fps = GwenSettings.`gwen.report.slideshow.framespersecond`
       Settings.setLocal("gwen.report.slideshow.framespersecond", (fps.toDouble * 1.8d).toInt.toString)
     }
-    val env = envOpt.getOrElse(new EvalEnvironment())
-    new WebContext(options, env, new DriverManager())
+    val state = envState.getOrElse(EnvState())
+    new WebContext(options, state, new DriverManager())
   }
 
   /**

@@ -26,9 +26,7 @@ import gwen.core.model.gherkin.Step
 class ClearElement(element: String) extends UnitStep[WebContext] {
 
   override def apply(parent: Identifiable, step: Step, ctx: WebContext): Unit = {
-    ctx.withEnv { env =>
-      ctx.checkStepRules(step, BehaviorType.Action, env)
-    }
+    checkStepRules(step, BehaviorType.Action, ctx)
     val binding = ctx.getLocatorBinding(element)
     ctx.performAction(ElementAction.clear, binding)
   }

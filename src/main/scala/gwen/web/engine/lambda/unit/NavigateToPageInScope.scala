@@ -25,10 +25,8 @@ import gwen.core.model.gherkin.Step
 class NavigateToPageInScope(name: String) extends UnitStep[WebContext] {
 
   override def apply(parent: Identifiable, step: Step, ctx: WebContext): Unit = {
-    ctx.withEnv { env =>
-      ctx.checkStepRules(step, BehaviorType.Action, env)
-      env.scopes.addScope(name)
-    }
+    checkStepRules(step, BehaviorType.Action, ctx)
+    ctx.scopes.addScope(name)
     val url = ctx.getAttribute("url")
     ctx.navigateTo(url)
   }

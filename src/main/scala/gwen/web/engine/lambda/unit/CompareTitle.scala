@@ -26,9 +26,7 @@ import gwen.core.model.gherkin.Step
 class CompareTitle(name: String, value: String, bound: Boolean, operator: ComparisonOperator.Value, negate: Boolean) extends UnitStep[WebContext] {
 
   override def apply(parent: Identifiable, step: Step, ctx: WebContext): Unit = {
-    ctx.withEnv { env =>
-      ctx.checkStepRules(step, BehaviorType.Assertion, env)
-    }
+    checkStepRules(step, BehaviorType.Assertion, ctx)
     val expected = if (bound) { 
       ctx.getBoundReferenceValue(value)
     } else {

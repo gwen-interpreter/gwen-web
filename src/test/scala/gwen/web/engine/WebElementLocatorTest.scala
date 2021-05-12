@@ -23,7 +23,7 @@ import gwen.web.engine.binding._
 import gwen.core.Errors
 import gwen.core.GwenOptions
 import gwen.core.Settings
-import gwen.core.engine.EvalEnvironment
+import gwen.core.model.state.EnvState
 
 import org.mockito.Mockito.atLeastOnce
 import org.mockito.Mockito.doReturn
@@ -521,7 +521,7 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
   
   private def shouldFindWebElement(selectorType: SelectorType.Value, lookup: String, by: By, timeout: Option[Duration], index: Option[Int]): Unit = {
 
-    val env = newEnv
+    val envState = newEnvState
     val mockWebDriver: FirefoxDriver = mock[FirefoxDriver]
     val ctx = newCtx(None, mockWebDriver)
     val locator = newLocator(ctx)
@@ -545,22 +545,22 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
       case _ =>
         when(mockContainerElement.findElement(by)).thenReturn(mockWebElement)
     }
-    env.scopes.set("container/locator", SelectorType.id.toString)
-    env.scopes.set("container/locator/id", "container")
+    envState.scopes.set("container/locator", SelectorType.id.toString)
+    envState.scopes.set("container/locator/id", "container")
     
     when(mockWebDriver.findElement(By.id("iframe"))).thenReturn(mockIFrameElement)
     when(mockIFrameElement.getTagName).thenReturn("iframe")
     when(mockWebDriver.switchTo()).thenReturn(mockTargetLocator)
     when(mockTargetLocator.frame(mockIFrameElement)).thenReturn(mockWebDriver)
-    env.scopes.set("iframe/locator", SelectorType.id.toString)
-    env.scopes.set("iframe/locator/id", "iframe")
+    envState.scopes.set("iframe/locator", SelectorType.id.toString)
+    envState.scopes.set("iframe/locator/id", "iframe")
     
     when(mockWebDriver.findElement(By.id("frame"))).thenReturn(mockFrameElement)
     when(mockFrameElement.getTagName).thenReturn("frame")
     when(mockWebDriver.switchTo()).thenReturn(mockTargetLocator)
     when(mockTargetLocator.frame(mockFrameElement)).thenReturn(mockWebDriver)
-    env.scopes.set("frame/locator", SelectorType.id.toString)
-    env.scopes.set("frame/locator/id", "frame")
+    envState.scopes.set("frame/locator", SelectorType.id.toString)
+    envState.scopes.set("frame/locator/id", "frame")
 
     locator.locate(LocatorBinding("username", selectorType, lookup, None, timeout, index, ctx)) should be (mockWebElement)
     locator.locate(LocatorBinding("username", selectorType, lookup, Some(new LocatorBinding("container", List(Selector(SelectorType.id, "container")), ctx)), timeout, index, ctx)) should be (mockWebElement)
@@ -803,7 +803,7 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
 
   private def shouldFindAllWebElements(selectorType: SelectorType.Value, lookup: String, by: By, timeout: Option[Duration]): Unit = {
 
-    val env = newEnv
+    val envState = newEnvState
     val mockWebDriver: FirefoxDriver = mock[FirefoxDriver]
     val ctx = newCtx(None, mockWebDriver)
     val locator = newLocator(ctx)
@@ -820,22 +820,22 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
     when(mockWebDriver.findElement(By.id("container"))).thenReturn(mockContainerElement)
     when(mockContainerElement.getTagName).thenReturn("div")
     when(mockContainerElement.findElements(by)).thenReturn(mockWebElementsJava)
-    env.scopes.set("container/locator", SelectorType.id.toString)
-    env.scopes.set("container/locator/id", "container")
+    envState.scopes.set("container/locator", SelectorType.id.toString)
+    envState.scopes.set("container/locator/id", "container")
 
     when(mockWebDriver.findElement(By.id("iframe"))).thenReturn(mockIFrameElement)
     when(mockIFrameElement.getTagName).thenReturn("iframe")
     when(mockWebDriver.switchTo()).thenReturn(mockTargetLocator)
     when(mockTargetLocator.frame(mockIFrameElement)).thenReturn(mockWebDriver)
-    env.scopes.set("iframe/locator", SelectorType.id.toString)
-    env.scopes.set("iframe/locator/id", "iframe")
+    envState.scopes.set("iframe/locator", SelectorType.id.toString)
+    envState.scopes.set("iframe/locator/id", "iframe")
 
     when(mockWebDriver.findElement(By.id("frame"))).thenReturn(mockFrameElement)
     when(mockFrameElement.getTagName).thenReturn("frame")
     when(mockWebDriver.switchTo()).thenReturn(mockTargetLocator)
     when(mockTargetLocator.frame(mockFrameElement)).thenReturn(mockWebDriver)
-    env.scopes.set("frame/locator", SelectorType.id.toString)
-    env.scopes.set("frame/locator/id", "frame")
+    envState.scopes.set("frame/locator", SelectorType.id.toString)
+    envState.scopes.set("frame/locator/id", "frame")
 
     locator.locateAll(LocatorBinding("username", selectorType, lookup, None, timeout, None, ctx)) should be (mockWebElements)
     locator.locateAll(LocatorBinding("username", selectorType, lookup, Some(new LocatorBinding("container", List(Selector(SelectorType.id, "container")), ctx)), timeout, None, ctx)) should be (mockWebElements)
@@ -1096,13 +1096,13 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
     new WebElementLocator(ctx)
   }
 
-  private def newCtx(envOpt: Option[EvalEnvironment], mockWebDriver: WebDriver): WebContext = {
+  private def newCtx(envState: Option[EnvState], mockWebDriver: WebDriver): WebContext = {
     val driverManager = new DriverManager() {
       override private [engine] def loadWebDriver: WebDriver = mockWebDriver
     }
-    new WebContext(GwenOptions(), envOpt.getOrElse(newEnv), driverManager)
+    new WebContext(GwenOptions(), envState.getOrElse(newEnvState), driverManager)
   }
 
-  private def newEnv: EvalEnvironment = new EvalEnvironment()
+  private def newEnvState: EnvState = EnvState()
   
 }

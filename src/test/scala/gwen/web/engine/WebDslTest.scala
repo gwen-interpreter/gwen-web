@@ -21,7 +21,7 @@ import gwen.web._
 import gwen.core.GwenOptions
 import gwen.core.model._
 import gwen.core.model.gherkin.Step
-import gwen.core.engine.EvalEnvironment
+import gwen.core.model.state.EnvState
 
 import org.scalatest.Matchers
 import org.scalatestplus.mockito.MockitoSugar
@@ -34,26 +34,26 @@ class WebDslTest extends BaseTest with Matchers with MockitoSugar {
     
     val options = new GwenOptions(dryRun = true)
     
-    val env = new EvalEnvironment()
-    env.scopes.set("<element>/locator", "id")
-    env.scopes.set("<element>/locator/id", "id")
-    env.scopes.set("<reference>", "reference")
-    env.scopes.set("<dropdown>/locator", "id")
-    env.scopes.set("<dropdown>/locator/id", "id")
-    env.scopes.set("<url>", "url")
-    env.scopes.set("<condition>/javascript", "condition")
-    env.scopes.set("<container>/locator", "id")
-    env.scopes.set("<container>/locator/id", "id")
-    env.scopes.set("<context>/locator", "id")
-    env.scopes.set("<context>/locator/id", "id")
-    env.scopes.set("<filepath>/file", "file.txt")
-    env.scopes.set("<elements>/locator", "css selector")
-    env.scopes.set("<elements>/locator/css selector", "expression")
-    env.scopes.set("<source>", "source")
-    env.topScope.pushObject("table", new FlatTable(List(List("1", "2")), List("a", "b")))
+    val envState = EnvState()
+    envState.scopes.set("<element>/locator", "id")
+    envState.scopes.set("<element>/locator/id", "id")
+    envState.scopes.set("<reference>", "reference")
+    envState.scopes.set("<dropdown>/locator", "id")
+    envState.scopes.set("<dropdown>/locator/id", "id")
+    envState.scopes.set("<url>", "url")
+    envState.scopes.set("<condition>/javascript", "condition")
+    envState.scopes.set("<container>/locator", "id")
+    envState.scopes.set("<container>/locator/id", "id")
+    envState.scopes.set("<context>/locator", "id")
+    envState.scopes.set("<context>/locator/id", "id")
+    envState.scopes.set("<filepath>/file", "file.txt")
+    envState.scopes.set("<elements>/locator", "css selector")
+    envState.scopes.set("<elements>/locator/css selector", "expression")
+    envState.scopes.set("<source>", "source")
+    envState.scopes.topScope.pushObject("table", new FlatTable(List(List("1", "2")), List("a", "b")))
 
     val engine = new WebEngine()
-    val ctx = new WebContext(options, env, mock[DriverManager])
+    val ctx = new WebContext(options, envState, mock[DriverManager])
     withSetting("<name>", "name") {
       withSetting("gwen.db.<dbName>.driver", "jdbcDriver") {
         withSetting("gwen.db.<dbName>.url", "jdbcUrl") {

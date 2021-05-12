@@ -26,9 +26,7 @@ import gwen.core.model.gherkin.Step
 class PerformElementAction(element: String, action: ElementAction.Value, inContext: Option[String]) extends UnitStep[WebContext] {
 
   override def apply(parent: Identifiable, step: Step, ctx: WebContext): Unit = {
-    ctx.withEnv { env =>
-      ctx.checkStepRules(step, BehaviorType.Action, env)
-    }
+    checkStepRules(step, BehaviorType.Action, ctx)
     inContext match {
       case Some(context) =>
         ctx.performActionInContext(action, element, context)

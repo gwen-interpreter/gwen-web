@@ -26,9 +26,7 @@ import gwen.core.model.gherkin.Step
 class SendBoundValueToElement(element: String, source: String, sendEnterKey: Boolean) extends UnitStep[WebContext] {
 
   override def apply(parent: Identifiable, step: Step, ctx: WebContext): Unit = {
-    ctx.withEnv { env =>
-      ctx.checkStepRules(step, BehaviorType.Action, env)
-    }
+    checkStepRules(step, BehaviorType.Action, ctx)
     val binding = ctx.getLocatorBinding(element)
     val value = ctx.getBoundReferenceValue(source)
     val clickFirst = WebSettings.`gwen.web.sendKeys.clickFirst`

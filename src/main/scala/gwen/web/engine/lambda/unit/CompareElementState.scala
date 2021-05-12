@@ -26,9 +26,7 @@ import gwen.core.model.gherkin.Step
 class CompareElementState(element: String, state: ElementState.Value, negate: Boolean) extends UnitStep[WebContext] {
 
   override def apply(parent: Identifiable, step: Step, ctx: WebContext): Unit = {
-    ctx.withEnv { env =>
-      ctx.checkStepRules(step, BehaviorType.Assertion, env)
-    }
+    checkStepRules(step, BehaviorType.Assertion, ctx)
     val binding = ctx.getLocatorBinding(element)
     ctx.checkElementState(binding, state, negate)
   }

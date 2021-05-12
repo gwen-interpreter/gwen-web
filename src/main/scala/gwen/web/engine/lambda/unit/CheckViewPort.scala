@@ -29,9 +29,7 @@ import com.applitools.eyes.MatchLevel
 class CheckViewPort(name: String, fullPage: Boolean, matchLevel: Option[MatchLevel]) extends UnitStep[WebContext] {
 
   override def apply(parent: Identifiable, step: Step, ctx: WebContext): Unit = {
-    ctx.withEnv { env =>
-      ctx.checkStepRules(step, BehaviorType.Action, env)
-    }
+    checkStepRules(step, BehaviorType.Action, ctx)
     if (EyesSettings.`gwen.applitools.eyes.enabled`) {
       ctx.checkVisual(name, fullPage, matchLevel)
     } else {

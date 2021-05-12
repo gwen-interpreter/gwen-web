@@ -27,14 +27,12 @@ import gwen.core.model.gherkin.Step
 class CaptureDropdownSelection(target: Option[String], element: String, selection: DropdownSelection.Value) extends UnitStep[WebContext] {
 
   override def apply(parent: Identifiable, step: Step, ctx: WebContext): Unit = {
-    ctx.withEnv { env =>
-      ctx.checkStepRules(step, BehaviorType.Action, env)
-      val name = target.getOrElse(element)
-      val value = ctx.boundAttributeOrSelection(element, Option(selection))
-      env.topScope.set(name, value() tap { content =>
-        env.addAttachment(name, "txt", content)
-      })
-    }
+    checkStepRules(step, BehaviorType.Action, ctx)
+    val name = target.getOrElse(element)
+    val value = ctx.boundAttributeOrSelection(element, Option(selection))
+    ctx.topScope.set(name, value() tap { content =>
+      ctx.addAttachment(name, "txt", content)
+    })
   }
 
 }

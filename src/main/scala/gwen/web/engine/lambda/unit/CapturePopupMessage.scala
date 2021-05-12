@@ -26,12 +26,10 @@ import gwen.core.model.gherkin.Step
 class CapturePopupMessage(target: String) extends UnitStep[WebContext] {
 
   override def apply(parent: Identifiable, step: Step, ctx: WebContext): Unit = {
-    ctx.withEnv { env =>
-      ctx.checkStepRules(step, BehaviorType.Action, env)
-      env.topScope.set(target, ctx.getPopupMessage tap { content =>
-        env.addAttachment(target, "txt", content)
-      })
-    }
+    checkStepRules(step, BehaviorType.Action, ctx)
+    ctx.topScope.set(target, ctx.getPopupMessage tap { content =>
+      ctx.addAttachment(target, "txt", content)
+    })
   }
 
 }

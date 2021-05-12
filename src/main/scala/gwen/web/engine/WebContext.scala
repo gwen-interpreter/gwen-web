@@ -22,12 +22,12 @@ import gwen.web.engine.eyes.EyesContext
 import gwen.core._
 import gwen.core.Errors._
 import gwen.core.SensitiveData
-import gwen.core.engine.EvalEnvironment
 import gwen.core.engine.EvalContext
 import gwen.core.engine.binding.BindingType
 import gwen.core.engine.binding.JavaScriptBinding
 import gwen.core.model.Failed
 import gwen.core.model.StateLevel
+import gwen.core.model.state.EnvState
 
 import scala.concurrent.duration.Duration
 import scala.io.Source
@@ -48,7 +48,7 @@ import gwen.core.engine.ComparisonOperator
 /**
   * The web evaluatioin context.
   */
-class WebContext(options: GwenOptions, env: EvalEnvironment, driverManager: DriverManager) extends EvalContext(options, env) with LazyLogging {
+class WebContext(options: GwenOptions, envState: EnvState, driverManager: DriverManager) extends EvalContext(options, envState) with LazyLogging {
 
   Try(logger.info(s"GWEN_CLASSPATH = ${sys.env("GWEN_CLASSPATH")}"))
   Try(logger.info(s"SELENIUM_HOME = ${sys.env("SELENIUM_HOME")}"))
@@ -146,7 +146,7 @@ class WebContext(options: GwenOptions, env: EvalEnvironment, driverManager: Driv
     */
   def getAttribute(name: String): String = {
     getCachedWebElement(s"${JavaScriptBinding.key(name)}/param/webElement") map { webElement =>
-      val javascript = interpolate(env.scopes.get(JavaScriptBinding.key(name)))
+      val javascript = interpolate(scopes.get(JavaScriptBinding.key(name)))
       val jsFunction = s"return (function(element) { return $javascript })(arguments[0])"
       Option(executeJS(jsFunction, webElement)).map(_.toString).getOrElse("")
     } getOrElse {
@@ -220,17 +220,17 @@ class WebContext(options: GwenOptions, env: EvalEnvironment, driverManager: Driv
     * @param value the value to bind
     */
   def bindAndWait(element: String, action: String, value: String): Unit = {
-    env.scopes.set(s"$element/$action", value)
+    scopes.set(s"$element/$action", value)
     
     // sleep if wait time is configured for this action
-    env.scopes.getOpt(s"$element/$action/wait") foreach { secs => 
+    scopes.getOpt(s"$element/$action/wait") foreach { secs => 
       logger.info(s"Waiting for $secs second(s) (post-$action wait)")
       Thread.sleep(secs.toLong * 1000)
     }
     
     // wait for javascript post condition if one is configured for this action
-    env.scopes.getOpt(s"$element/$action/condition") foreach { condition =>
-      val javascript = env.scopes.get(JavaScriptBinding.key(condition))
+    scopes.getOpt(s"$element/$action/condition") foreach { condition =>
+      val javascript = scopes.get(JavaScriptBinding.key(condition))
       logger.info(s"waiting until $condition (post-$action condition)")
       logger.debug(s"Waiting for script to return true: $javascript")
       waitUntil(s"waiting for true return from javascript: $javascript") {
@@ -316,7 +316,7 @@ class WebContext(options: GwenOptions, env: EvalEnvironment, driverManager: Driv
     * @param element the name of the web element
     * @return the cached web element
     */
-  def getCachedWebElement(element: String): Option[WebElement] = env.topScope.getObject(element) match {
+  def getCachedWebElement(element: String): Option[WebElement] = topScope.getObject(element) match {
     case Some(we: WebElement) =>
       highlightElement(we)
       Some(we)
@@ -422,7 +422,7 @@ class WebContext(options: GwenOptions, env: EvalEnvironment, driverManager: Driv
       val keep = unconditional || WebSettings.`gwen.web.capture.screenshots.duplicates` || lastScreenshotSize.fold(true) { _ != screenshot.length}
       if (keep) {
         if (!WebSettings.`gwen.web.capture.screenshots.duplicates`) lastScreenshotSize = Some(screenshot.length())
-        val (n, file) = env.addAttachment(name, screenshot.getName.substring(screenshot.getName.lastIndexOf('.') + 1), null)
+        val (n, file) = addAttachment(name, screenshot.getName.substring(screenshot.getName.lastIndexOf('.') + 1), null)
         FileUtils.copyFile(screenshot, file)
         Some(file)
       } else {
@@ -728,7 +728,7 @@ class WebContext(options: GwenOptions, env: EvalEnvironment, driverManager: Driv
   private [web] def createActions(driver: WebDriver): Actions = new Actions(driver)
 
   def performAction(action: ElementAction.Value, binding: LocatorBinding): Unit = {
-    val actionBinding = env.scopes.getOpt(JavaScriptBinding.key(s"${binding.name}/action/$action"))
+    val actionBinding = scopes.getOpt(JavaScriptBinding.key(s"${binding.name}/action/$action"))
     actionBinding match {
       case Some(javascript) =>
         performScriptAction(action, javascript, binding, s"trying to $action $binding")
@@ -905,7 +905,7 @@ class WebContext(options: GwenOptions, env: EvalEnvironment, driverManager: Driv
     */
   def waitForText(binding: LocatorBinding): Boolean =
     getElementText(binding).map(_.length()).getOrElse {
-      env.scopes.set(TextBinding.key(binding.name), BindingType.text.toString)
+      scopes.set(TextBinding.key(binding.name), BindingType.text.toString)
       0
     } > 0
 
@@ -954,9 +954,9 @@ class WebContext(options: GwenOptions, env: EvalEnvironment, driverManager: Driv
 
   def captureCurrentUrl(asName: Option[String]): Unit = {
     val name = asName.getOrElse("the current URL")
-    env.topScope.set(name, withWebDriver { driver =>
+    topScope.set(name, withWebDriver { driver =>
       driver.getCurrentUrl tap { content =>
-        env.addAttachment(name, "txt", content)
+        addAttachment(name, "txt", content)
       }
     }.getOrElse("$[currentUrl]"))
   }
@@ -1210,7 +1210,7 @@ class WebContext(options: GwenOptions, env: EvalEnvironment, driverManager: Driv
   private def withEyesContext[T](f: EyesContext => T): Option[T] = {
     evaluate(None.asInstanceOf[Option[T]]) {
       if (eyesContext.isEmpty) {
-        eyesContext = Some(new EyesContext(env))
+        eyesContext = Some(new EyesContext(this))
       }
       eyesContext.map(f)
     }
@@ -1248,7 +1248,7 @@ class WebContext(options: GwenOptions, env: EvalEnvironment, driverManager: Driv
   def asertVisuals(): Unit = {
     withEyesContext { context =>
       context.results() tap { results =>
-        env.addAttachment("AppliTools dashboard", "url", results.getUrl)
+        addAttachment("AppliTools dashboard", "url", results.getUrl)
         try {
           assert(results.isNew || results.isPassed, s"Expected visual check to pass but status was: ${results.getStatus}")
         } catch {

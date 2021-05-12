@@ -26,13 +26,11 @@ import gwen.core.model.gherkin.Step
 class AppendTextToElement(element: String, value: String, bound: Boolean) extends UnitStep[WebContext] {
 
   override def apply(parent: Identifiable, step: Step, ctx: WebContext): Unit = {
-    ctx.withEnv { env =>
-      ctx.checkStepRules(step, BehaviorType.Action, env)
-      val binding = ctx.getLocatorBinding(element)
-      val clickFirst = WebSettings.`gwen.web.sendKeys.clickFirst`
-      val text = if (bound) ctx.getBoundReferenceValue(value) else value
-      ctx.sendValue(binding, text, clickFirst, false, sendEnterKey = false)
-    }
+    checkStepRules(step, BehaviorType.Action, ctx)
+    val binding = ctx.getLocatorBinding(element)
+    val clickFirst = WebSettings.`gwen.web.sendKeys.clickFirst`
+    val text = if (bound) ctx.getBoundReferenceValue(value) else value
+    ctx.sendValue(binding, text, clickFirst, false, sendEnterKey = false)
   }
 
 }

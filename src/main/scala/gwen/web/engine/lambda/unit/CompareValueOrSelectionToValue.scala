@@ -31,30 +31,28 @@ import scala.util.Success
 class CompareValueOrSelectionToValue(element: String, selection: Option[DropdownSelection.Value], expression: String, operator: ComparisonOperator.Value, negate: Boolean) extends UnitStep[WebContext] {
 
   override def apply(parent: Identifiable, step: Step, ctx: WebContext): Unit = {
-    ctx.withEnv { env =>
-      ctx.checkStepRules(step, BehaviorType.Assertion, env)
-      if (element == "I") Errors.undefinedStepError(step)
-      if (element == "the current URL") ctx.captureCurrentUrl(None)
-      val expected = ctx.parseExpression(operator, expression)
-      val actual = ctx.boundAttributeOrSelection(element, selection)
-      ctx.perform {
-        if (env.scopes.findEntry { case (n, _) => n.startsWith(element) } forall { case (n, _) => n != element }) {
-          val nameSuffix = selection.map(sel => s" $sel")
-          ctx.compare(s"$element${nameSuffix.getOrElse("")}", expected, actual, operator, negate, nameSuffix)
-        } else {
-          val actualValue = env.scopes.getOpt(element).getOrElse(actual())
-          val result = ctx.compare(element, expected, actualValue, operator, negate)
-          result match {
-            case Success(assertion) =>
-              val binding = ctx.getLocatorBinding(element, optional = true)
-              assert(assertion, s"Expected ${binding.map(_.toString).getOrElse(element)} to ${if(negate) "not " else ""}$operator '$expected' but got '$actualValue'")
-            case Failure(error) =>
-              assert(assertion = false, error.getMessage)
-          }
+    checkStepRules(step, BehaviorType.Assertion, ctx)
+    if (element == "I") Errors.undefinedStepError(step)
+    if (element == "the current URL") ctx.captureCurrentUrl(None)
+    val expected = ctx.parseExpression(operator, expression)
+    val actual = ctx.boundAttributeOrSelection(element, selection)
+    ctx.perform {
+      if (ctx.scopes.findEntry { case (n, _) => n.startsWith(element) } forall { case (n, _) => n != element }) {
+        val nameSuffix = selection.map(sel => s" $sel")
+        ctx.compare(s"$element${nameSuffix.getOrElse("")}", expected, actual, operator, negate, nameSuffix)
+      } else {
+        val actualValue = ctx.scopes.getOpt(element).getOrElse(actual())
+        val result = ctx.compare(element, expected, actualValue, operator, negate)
+        result match {
+          case Success(assertion) =>
+            val binding = ctx.getLocatorBinding(element, optional = true)
+            assert(assertion, s"Expected ${binding.map(_.toString).getOrElse(element)} to ${if(negate) "not " else ""}$operator '$expected' but got '$actualValue'")
+          case Failure(error) =>
+            assert(assertion = false, error.getMessage)
         }
-      } getOrElse {
-        actual()
       }
+    } getOrElse {
+      actual()
     }
   }
 

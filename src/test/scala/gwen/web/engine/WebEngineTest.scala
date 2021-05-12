@@ -22,7 +22,6 @@ import gwen.web.engine.binding._
 import gwen.core._
 import gwen.core.Errors
 import gwen.core.engine.ComparisonOperator
-import gwen.core.engine.EvalEnvironment
 import gwen.core.model._
 import gwen.core.model.gherkin._
 import gwen.core.model.state._
@@ -86,24 +85,24 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
   private val timeUnits2= List("minute", "second", "millisecond")
   private val waits = List("wait", "timeout")
 
-  private var env: EvalEnvironment = _
+  private var envState: EnvState = _
   private var ctx: WebContext = _
   private var mockScopes: ScopedDataStack = _
   private var mockTopScope: TopScope = _
   private var mockLocator: WebElementLocator = _
 
   override def beforeEach(): Unit = {
-    env = spy(new EvalEnvironment())
-    ctx = spy(new WebContext(GwenOptions(), env, mock[DriverManager]))
+    envState = spy(EnvState())
+    ctx = spy(new WebContext(GwenOptions(), envState, mock[DriverManager]))
     mockScopes = mock[ScopedDataStack]
     mockTopScope = mock[TopScope]
     mockLocator = mock[WebElementLocator]
-    doReturn(mockScopes).when(env).scopes
-    doReturn(mockScopes).when(env).scopes
-    doReturn(mockTopScope).when(env).topScope
+    doReturn(mockScopes).when(envState).scopes
+    doReturn(mockScopes).when(envState).scopes
+    doReturn(mockTopScope).when(mockScopes).topScope
     doReturn(mockLocator).when(ctx).locator
-    doReturn(false).when(env).isEvaluatingTopLevelStep
-    doReturn(SpecType.Meta).when(env).specType
+    doReturn(false).when(ctx).isEvaluatingTopLevelStep
+    doReturn(SpecType.Meta).when(ctx).specType
     when(mockTopScope.getOpt("gwen.feature.file.path")).thenReturn(Some("file.feature"))
   }
 
@@ -806,35 +805,35 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     doReturn(() => "value").when(ctx).boundAttributeOrSelection("<dropdown>", Option(DropdownSelection.text))
     evaluate("I capture <dropdown> text as <attribute>")
     verify(mockTopScope).set("<attribute>", "value")
-    verify(env).addAttachment("<attribute>", "txt", "value")
+    verify(envState).addAttachment("<attribute>", "txt", "value")
   }
 
   "I capture <dropdown> value as <attribute>" should "evaluate" in {
     doReturn(() => "value").when(ctx).boundAttributeOrSelection("<dropdown>", Option(DropdownSelection.value))
     evaluate("I capture <dropdown> value as <attribute>")
     verify(mockTopScope).set("<attribute>", "value")
-    verify(env).addAttachment("<attribute>", "txt", "value")
+    verify(envState).addAttachment("<attribute>", "txt", "value")
   }
 
   "I capture <dropdown> text" should "evaluate" in {
     doReturn(() => "value").when(ctx).boundAttributeOrSelection("<dropdown>", Option(DropdownSelection.text))
     evaluate("I capture <dropdown> text")
     verify(mockTopScope).set("<dropdown>", "value")
-    verify(env).addAttachment("<dropdown>", "txt", "value")
+    verify(envState).addAttachment("<dropdown>", "txt", "value")
   }
 
   "I capture <dropdown> value" should "evaluate" in {
     doReturn(() => "value").when(ctx).boundAttributeOrSelection("<dropdown>", Option(DropdownSelection.value))
     evaluate("I capture <dropdown> value")
     verify(mockTopScope).set("<dropdown>", "value")
-    verify(env).addAttachment("<dropdown>", "txt", "value")
+    verify(envState).addAttachment("<dropdown>", "txt", "value")
   }
 
   """I capture <attribute> by javascript "<expression>"""" should "evaluate" in {
     doReturn("value").when(ctx).evaluateJS("""return (function(){return "value"})()""")
     evaluate("""I capture <attribute> by javascript "(function(){return "value"})()"""")
     verify(mockTopScope).set("<attribute>", "value")
-    verify(env).addAttachment("<attribute>", "txt", "value")
+    verify(envState).addAttachment("<attribute>", "txt", "value")
   }
 
   """I capture <attribute> <of|on|in> <element> by javascript "<expression>"""" should "evaluate" in {
@@ -847,7 +846,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
       evaluate(s"""I capture <attribute> $x <element> by javascript "<expression>"""")
     }
     verify(mockTopScope, times(3)).set("<attribute>", "value")
-    verify(env, times(3)).addAttachment("<attribute>", "txt", "value")
+    verify(envState, times(3)).addAttachment("<attribute>", "txt", "value")
   }
 
   """my <name> property <is|will be> "<value>"""" should "evaluate" in {
@@ -876,7 +875,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
 
   """<attribute> <is|will> be defined by javascript "<expression>"""" should "evaluate" in {
     val mockScopes = mock[ScopedDataStack]
-    doReturn(mockScopes).when(env).scopes
+    doReturn(mockScopes).when(envState).scopes
     List("is", "will be").zipWithIndex.foreach { case (x, i) =>
       evaluate(s"""attribute-$i $x defined by javascript "expression-$i"""")
       verify(mockScopes).set(s"attribute-$i/javascript", s"expression-$i")
@@ -901,7 +900,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
 
    """<attribute> <is|will> be defined by system process "<process>"""" should "evaluate" in {
       val mockScopes = mock[ScopedDataStack]
-      doReturn(mockScopes).when(env).scopes
+      doReturn(mockScopes).when(envState).scopes
       List("is", "will be").zipWithIndex.foreach { case (x, i) =>
         evaluate(s"""attribute-$i $x defined by system process "process-$i"""")
         verify(mockScopes).set(s"attribute-$i/sysproc", s"process-$i")
@@ -910,7 +909,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
 
   """<attribute> <is|will> be defined by file "<filepath>"""" should "evaluate" in {
     val mockScopes = mock[ScopedDataStack]
-    doReturn(mockScopes).when(env).scopes
+    doReturn(mockScopes).when(envState).scopes
     List("is", "will be").zipWithIndex.foreach { case (x, i) =>
       evaluate(s"""attribute-$i $x defined by file "filepath-$i"""")
       verify(mockScopes).set(s"attribute-$i/file", s"filepath-$i")
@@ -919,7 +918,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
 
   """<attribute> is defined by the <text|node|nodeset> in <reference> by xpath "<expression>"""" should "evaluate" in {
     val mockScopes = mock[ScopedDataStack]
-    doReturn(mockScopes).when(env).scopes
+    doReturn(mockScopes).when(envState).scopes
     List("text", "node", "nodeset").zipWithIndex.foreach { case (x, i) =>
       evaluate(s"""<attribute> is defined by the $x in <reference-$i> by xpath "<expression-$i>"""")
       verify(mockScopes).set("<attribute>/xpath/source", s"<reference-$i>")
@@ -930,7 +929,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
 
   """<attribute> will be defined by the <text|node|nodeset> in <reference> by xpath "<expression>"""" should "evaluate" in {
     val mockScopes = mock[ScopedDataStack]
-    doReturn(mockScopes).when(env).scopes
+    doReturn(mockScopes).when(envState).scopes
     List("text", "node", "nodeset").zipWithIndex.foreach { case (x, i) =>
       evaluate(s"""<attribute> will be defined by the $x in <reference-$i> by xpath "<expression-$i>"""")
       verify(mockScopes).set("<attribute>/xpath/source", s"<reference-$i>")
@@ -941,7 +940,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
 
   """<attribute> <is|will be> defined in <reference> by regex "<expression>"""" should "evaluate" in {
     val mockScopes = mock[ScopedDataStack]
-    doReturn(mockScopes).when(env).scopes
+    doReturn(mockScopes).when(envState).scopes
     List("is", "will be").zipWithIndex.foreach { case (x, i) =>
       evaluate(s"""<attribute> $x defined in <reference-$i> by regex "<expression-$i>"""")
       verify(mockScopes).set(s"<attribute>/regex/source", s"<reference-$i>")
@@ -951,7 +950,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
 
   """<attribute> <is|will be> defined in <reference> by json path "<expression>"""" should "evaluate" in {
     val mockScopes = mock[ScopedDataStack]
-    doReturn(mockScopes).when(env).scopes
+    doReturn(mockScopes).when(envState).scopes
     List("is", "will be").zipWithIndex.foreach { case (x, i) =>
       evaluate(s"""<attribute> $x defined in <reference-$i> by json path "<expression-$i>"""")
       verify(mockScopes).set(s"<attribute>/json path/source", s"<reference-$i>")
@@ -1247,7 +1246,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     doReturn("value").when(ctx).getBoundReferenceValue("<reference>")
     doReturn("decoded").when(ctx).decodeBase64("value")
     evaluate("I base64 decode <reference> as <attribute>")
-    verify(env).addAttachment("<attribute>", "txt", "decoded")
+    verify(envState).addAttachment("<attribute>", "txt", "decoded")
     verify(mockTopScope).set("<attribute>", "decoded")
   }
 
@@ -1255,7 +1254,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     doReturn("value").when(ctx).getBoundReferenceValue("<reference>")
     doReturn("decoded").when(ctx).decodeBase64("value")
     evaluate("I base64 decode <reference>")
-    verify(env).addAttachment("<reference>", "txt", "decoded")
+    verify(envState).addAttachment("<reference>", "txt", "decoded")
     verify(mockTopScope).set("<reference>", "decoded")
   }
 
@@ -1435,7 +1434,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
 
   """<reference> <is|will be> defined by sql "<selectStmt>" in the <dbName> database""" should "evaluate" in {
     val mockScopes = mock[ScopedDataStack]
-    doReturn(mockScopes).when(env).scopes
+    doReturn(mockScopes).when(envState).scopes
     withSetting("gwen.db.<dbName>.driver", "driver") {
       withSetting("gwen.db.<dbName>.url", "url") {
         List("is", "will be").foreach { x =>
@@ -1449,7 +1448,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
 
   """<reference> <is|will be> defined in the <dbName> database by sql "<selectStmt>"""" should "evaluate" in {
     val mockScopes = mock[ScopedDataStack]
-    doReturn(mockScopes).when(env).scopes
+    doReturn(mockScopes).when(envState).scopes
     withSetting("gwen.db.<dbName>.driver", "driver") {
       withSetting("gwen.db.<dbName>.url", "url") {
         List("is", "will be").foreach { x =>
@@ -1463,7 +1462,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
 
   """I update the <dbName> database by sql "<updateStmt>"""" should "evaluate" in {
     val mockScopes = mock[ScopedDataStack]
-    doReturn(mockScopes).when(env).scopes
+    doReturn(mockScopes).when(envState).scopes
     doReturn(1).when(ctx).executeSQLUpdate("<updateStmt>", "<dbName>")
     withSetting("gwen.db.<dbName>.driver", "driver") {
       withSetting("gwen.db.<dbName>.url", "url") {
@@ -1560,7 +1559,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
 
   """<source> at json path "<path>" should be "<expression>"""" should "evaluate" in {
     val mockScopes = mock[ScopedDataStack]
-    doReturn(mockScopes).when(env).scopes
+    doReturn(mockScopes).when(envState).scopes
     matchers3.foreach { case (operator, _, expression) =>
       doReturn("""{x:"value"}""").when(mockScopes).get("<source>")
       doReturn(None).when(mockScopes).getOpt("<source>")
@@ -1570,7 +1569,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
 
   """<source> at json path "<path>" should not be "<expression>"""" should "evaluate" in {
     val mockScopes = mock[ScopedDataStack]
-    doReturn(mockScopes).when(env).scopes
+    doReturn(mockScopes).when(envState).scopes
     matchers3.foreach { case (operator, _, expression) =>
       doReturn("""{x:"other"}""").when(mockScopes).get("<source>")
       doReturn(None).when(mockScopes).getOpt("<source>")
@@ -1580,7 +1579,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
 
   """<source> at xpath "<path>" should be "<expression>"""" should "evaluate" in {
     val mockScopes = mock[ScopedDataStack]
-    doReturn(mockScopes).when(env).scopes
+    doReturn(mockScopes).when(envState).scopes
     matchers3.foreach { case (operator, _, expression) =>
       doReturn("""<x>value</x>""").when(mockScopes).get("<source>")
       doReturn(None).when(mockScopes).getOpt("<source>")
@@ -1590,7 +1589,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
 
   """<source> at xpath "<path>" should not be "<expression>"""" should "evaluate" in {
     val mockScopes = mock[ScopedDataStack]
-    doReturn(mockScopes).when(env).scopes
+    doReturn(mockScopes).when(envState).scopes
     matchers3.foreach { case (operator, _, expression) =>
       doReturn("""<x>other</x>""").when(mockScopes).get("<source>")
       doReturn(None).when(mockScopes).getOpt("<source>")

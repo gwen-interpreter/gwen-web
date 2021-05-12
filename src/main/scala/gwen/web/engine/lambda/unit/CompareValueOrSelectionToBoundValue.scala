@@ -28,9 +28,7 @@ import gwen.core.model.gherkin.Step
 class CompareValueOrSelectionToBoundValue(element: String, selection: Option[DropdownSelection.Value], source: String, operator: ComparisonOperator.Value, negate: Boolean) extends UnitStep[WebContext] {
 
   override def apply(parent: Identifiable, step: Step, ctx: WebContext): Unit = {
-    ctx.withEnv { env =>
-      ctx.checkStepRules(step, BehaviorType.Assertion, env)
-    }
+    checkStepRules(step, BehaviorType.Assertion, ctx)
     if (element == "I") Errors.undefinedStepError(step)
     if (element == "the current URL") ctx.captureCurrentUrl(None)
     val expected = ctx.getBoundReferenceValue(source)

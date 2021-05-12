@@ -27,34 +27,32 @@ import gwen.core.model.gherkin.Step
 class ChangeDropdownSelection(element: String, by: DropdownSelection.Value, value: String, bound: Boolean, action: ElementAction.Value) extends UnitStep[WebContext] {
 
   override def apply(parent: Identifiable, step: Step, ctx: WebContext): Unit = {
-    ctx.withEnv { env =>
-      ctx.checkStepRules(step, BehaviorType.Action, env)
-      val binding = ctx.getLocatorBinding(element)
-      action match {
-        case ElementAction.select =>
-          by match {
-            case DropdownSelection.index =>
-              ctx.selectByIndex(binding, value.toInt - 1)
-            case DropdownSelection.text =>
-              val optionText = if (bound) ctx.getBoundReferenceValue(value) else value
-              ctx.selectByVisibleText(binding, optionText)
-            case DropdownSelection.value =>
-              val optionValue = if (bound) ctx.getBoundReferenceValue(value) else value
-              ctx.selectByValue(binding, optionValue)
-          }
-        case ElementAction.deselect =>
-          by match {
-            case DropdownSelection.index =>
-              ctx.deselectByIndex(binding, value.toInt - 1)
-            case DropdownSelection.text =>
-              val optionText = if (bound) ctx.getBoundReferenceValue(value) else value
-              ctx.deselectByVisibleText(binding, optionText)
-            case DropdownSelection.value =>
-              val optionValue = if (bound) ctx.getBoundReferenceValue(value) else value
-              ctx.deselectByValue(binding, optionValue)
-          }
-        case _ => // noop
-      }
+    checkStepRules(step, BehaviorType.Action, ctx)
+    val binding = ctx.getLocatorBinding(element)
+    action match {
+      case ElementAction.select =>
+        by match {
+          case DropdownSelection.index =>
+            ctx.selectByIndex(binding, value.toInt - 1)
+          case DropdownSelection.text =>
+            val optionText = if (bound) ctx.getBoundReferenceValue(value) else value
+            ctx.selectByVisibleText(binding, optionText)
+          case DropdownSelection.value =>
+            val optionValue = if (bound) ctx.getBoundReferenceValue(value) else value
+            ctx.selectByValue(binding, optionValue)
+        }
+      case ElementAction.deselect =>
+        by match {
+          case DropdownSelection.index =>
+            ctx.deselectByIndex(binding, value.toInt - 1)
+          case DropdownSelection.text =>
+            val optionText = if (bound) ctx.getBoundReferenceValue(value) else value
+            ctx.deselectByVisibleText(binding, optionText)
+          case DropdownSelection.value =>
+            val optionValue = if (bound) ctx.getBoundReferenceValue(value) else value
+            ctx.deselectByValue(binding, optionValue)
+        }
+      case _ => // noop
     }
   }
 

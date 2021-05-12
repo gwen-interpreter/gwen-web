@@ -25,10 +25,8 @@ import gwen.core.model.gherkin.Step
 class CreatePageScope(name: String) extends UnitStep[WebContext] {
 
   override def apply(parent: Identifiable, step: Step, ctx: WebContext): Unit = {
-    ctx.withEnv { env =>
-      ctx.checkStepRules(step, BehaviorType.Context, env)
-      env.scopes.addScope(name)
-    }
+    checkStepRules(step, BehaviorType.Context, ctx)
+    ctx.scopes.addScope(name)
   }
 
 }

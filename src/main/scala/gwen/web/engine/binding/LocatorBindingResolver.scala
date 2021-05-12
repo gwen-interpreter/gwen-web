@@ -57,11 +57,11 @@ class LocatorBindingResolver(ctx: WebContext) extends LazyLogging {
    * @param name the name of the web element
    * @param optional true to return None if not found; false to throw error
    */
-  def getBinding(name: String, optional: Boolean = false): Option[LocatorBinding] = ctx.withEnv { env =>
-    env.topScope.getObject(name) match {
+  def getBinding(name: String, optional: Boolean = false): Option[LocatorBinding] = {
+    ctx.topScope.getObject(name) match {
       case None =>
         val locatorKey = LocatorKey.baseKey(name)
-        env.scopes.getOpt(locatorKey) match {
+        ctx.scopes.getOpt(locatorKey) match {
           case Some(boundValue) =>
             val selectors = boundValue.split(",") flatMap { boundValue =>
               val selectorType = Try(SelectorType.parse(boundValue)) getOrElse {
@@ -71,17 +71,17 @@ class LocatorBindingResolver(ctx: WebContext) extends LazyLogging {
                 locatorBindingError("Cannot locate element by XPath because IE does not support it")
               }
               val selectorKey = ctx.interpolate(LocatorKey.selectorKey(name, selectorType))
-              env.scopes.getOpt(selectorKey) match {
+              ctx.scopes.getOpt(selectorKey) match {
                 case Some(expression) =>
                   val selector = ctx.interpolate(expression)
-                  val container: Option[String] = env.scopes.getOpt(ctx.interpolate(LocatorKey.containerKey(name, selectorType)))
+                  val container: Option[String] = ctx.scopes.getOpt(ctx.interpolate(LocatorKey.containerKey(name, selectorType)))
                   if (ctx.options.dryRun) {
                     container.foreach(c => getBinding(c, optional))
                   }
-                  val timeout = env.scopes.getOpt(ctx.interpolate(LocatorKey.timeoutSecsKey(name, selectorType))).map { timeoutSecs =>
+                  val timeout = ctx.scopes.getOpt(ctx.interpolate(LocatorKey.timeoutSecsKey(name, selectorType))).map { timeoutSecs =>
                     Duration.create(timeoutSecs.toLong, TimeUnit.SECONDS)
                   }
-                  val index = env.scopes.getOpt(ctx.interpolate(LocatorKey.indexKey(name, selectorType))).map(_.toInt)
+                  val index = ctx.scopes.getOpt(ctx.interpolate(LocatorKey.indexKey(name, selectorType))).map(_.toInt)
                   Some(Selector(selectorType, selector, container.flatMap(c => getBinding(c, optional)), timeout, index))
                 case None =>
                   if (optional) None else locatorBindingError(s"Undefined locator lookup binding for $name: $selectorKey")

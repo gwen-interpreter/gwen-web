@@ -25,13 +25,11 @@ import gwen.core.model.gherkin.Step
 class BindUrl(url: String, targetScope: Option[String]) extends UnitStep[WebContext] {
 
   override def apply(parent: Identifiable, step: Step, ctx: WebContext): Unit = {
-    ctx.withEnv { env =>
-      ctx.checkStepRules(step, BehaviorType.Context, env)
-      targetScope.foreach { scope => 
-        env.scopes.addScope(scope)
-      }
-      env.scopes.set("url", url)
+    checkStepRules(step, BehaviorType.Context, ctx)
+    targetScope.foreach { scope => 
+      ctx.scopes.addScope(scope)
     }
+    ctx.scopes.set("url", url)
   }
 
 }

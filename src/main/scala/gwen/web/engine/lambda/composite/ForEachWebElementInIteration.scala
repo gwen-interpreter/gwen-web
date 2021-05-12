@@ -27,10 +27,8 @@ class ForEachWebElementInIteration(doStep: String, element: String, iteration: S
 
   override def apply(parent: Identifiable, step: Step, ctx: WebContext): Step = {
     val binding = ctx.getLocatorBinding(iteration)
-    ctx.withEnv { env =>
-      ctx.evaluate(evaluateForEach(() => List("$[dryRun:webElements]"), element, parent, step, doStep, env, ctx)) {
-        evaluateForEach(() => binding.resolveAll(), element, parent, step, doStep, env, ctx)
-      }
+    ctx.evaluate(evaluateForEach(() => List("$[dryRun:webElements]"), element, parent, step, doStep, ctx)) {
+      evaluateForEach(() => binding.resolveAll(), element, parent, step, doStep, ctx)
     }
     
   }

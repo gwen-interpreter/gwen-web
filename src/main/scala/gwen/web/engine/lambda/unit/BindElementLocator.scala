@@ -29,49 +29,45 @@ class BindElementLocator(name: String, selectorType: SelectorType.Value, express
 
   override def apply(parent: Identifiable, step: Step, ctx: WebContext): Unit = {
 
-    ctx.withEnv { env =>
+    checkStepRules(step, BehaviorType.Context, ctx)
+    container foreach { cont =>
+      ctx.getLocatorBinding(cont)
+    }
 
-      ctx.checkStepRules(step, BehaviorType.Context, env)
+    ctx.scopes.set(LocatorKey.baseKey(name), selectorType.toString)
+    ctx.scopes.set(LocatorKey.selectorKey(name, selectorType), expression)
+
+    val cKey = LocatorKey.containerKey(name, selectorType)
+    if (container.isEmpty) {
+      ctx.scopes.getOpt(cKey) foreach { _ =>
+        ctx.scopes.set(cKey, null)
+      }
+    } else {
       container foreach { cont =>
-        ctx.getLocatorBinding(cont)
+        ctx.scopes.set(cKey, cont)
       }
-
-      env.scopes.set(LocatorKey.baseKey(name), selectorType.toString)
-      env.scopes.set(LocatorKey.selectorKey(name, selectorType), expression)
-
-      val cKey = LocatorKey.containerKey(name, selectorType)
-      if (container.isEmpty) {
-        env.scopes.getOpt(cKey) foreach { _ =>
-          env.scopes.set(cKey, null)
-        }
-      } else {
-        container foreach { cont =>
-          env.scopes.set(cKey, cont)
-        }
+    }
+    
+    val iKey = LocatorKey.indexKey(name, selectorType)
+    if (index.isEmpty) {
+      ctx.scopes.getOpt(iKey) foreach { _ =>
+        ctx.scopes.set(iKey, null)
       }
-      
-      val iKey = LocatorKey.indexKey(name, selectorType)
-      if (index.isEmpty) {
-        env.scopes.getOpt(iKey) foreach { _ =>
-          env.scopes.set(iKey, null)
-        }
-      } else {
-        index foreach { idx =>
-          env.scopes.set(iKey, idx.toString)
-        }
+    } else {
+      index foreach { idx =>
+        ctx.scopes.set(iKey, idx.toString)
       }
+    }
 
-      val tKey = LocatorKey.timeoutSecsKey(name, selectorType)
-      if (timeoutSecs.isEmpty) {
-        env.scopes.getOpt(tKey) foreach { _ =>
-          env.scopes.set(tKey, null)
-        }
-      } else {
-        timeoutSecs foreach { secs =>
-          env.scopes.set(tKey, secs.toString)
-        }
+    val tKey = LocatorKey.timeoutSecsKey(name, selectorType)
+    if (timeoutSecs.isEmpty) {
+      ctx.scopes.getOpt(tKey) foreach { _ =>
+        ctx.scopes.set(tKey, null)
       }
-
+    } else {
+      timeoutSecs foreach { secs =>
+        ctx.scopes.set(tKey, secs.toString)
+      }
     }
     
   }
