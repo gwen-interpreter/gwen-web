@@ -1,11 +1,15 @@
-2.52.0
-======
+2.51.0-beta-rp.11
+=================
 
-May
-- Report portal integration release
-May 14, 2021
-- Propogate attachments to top level steps when step def reporting is disabled
-  to ensure that nested attachments are logged in report portal
+May 27, 2021 - 2.51.0-beta-rp.11
+- Drop column number from sourceRef string representation and codeRef sent to report portal 
+  to minimise impact on timeline history when column numbers change due to horizontal changes 
+  in features.
+- Fix duplicate launch histories in RP for scenario outlines:
+  - Send table row data associated with expanded scenarios to report portal as parameters 
+    to ensure unique combination of codeRef + parameters for auto generated test case ID.
+  - For completeness, send all parameters passed to stepdefs to report portal also.
+- Ensure attachments are still logged in report portal when step def reporting is disabled
 Apr 22, 2021 - 2.51.0-beta-rp.10
 - Add RP hearteat timeout setting (default is 3 seconds):
   - `gwen.rp.heartbeat.timeoutSecs`

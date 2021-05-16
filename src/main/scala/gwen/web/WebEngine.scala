@@ -955,7 +955,7 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
     assert(timeout.gteq(delay), "timeout cannot be less than or equal to delay")
     val operationTag = Tag(if (operation == "until") ReservedTags.RepeatUntil else ReservedTags.RepeatWhile)
     val tags = List(Tag(ReservedTags.Synthetic), operationTag, Tag(ReservedTags.StepDef))
-    val preCondStepDef = Scenario(None, tags, operationTag.name, condition, Nil, None, Nil, Nil)
+    val preCondStepDef = Scenario(step.sourceRef, tags, operationTag.name, condition, Nil, None, Nil, Nil, Nil)
     var condSteps: List[Step] = Nil
     var evaluatedStep = step
     val start = System.nanoTime()
@@ -1056,7 +1056,7 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
       lifecycle.afterStepDef(condStepDef, env.scopes)
       evaluatedStep.copy(
         withEvalStatus = condStepDef.evalStatus,
-        withStepDef = Some((condStepDef, Nil))
+        withStepDef = Some(condStepDef)
       )
     } else {
       evaluatedStep
