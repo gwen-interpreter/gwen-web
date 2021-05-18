@@ -26,15 +26,17 @@ import gwen.core.model.gherkin.Step
 
 class WaitForElementState(element: String, state: ElementState.Value, negate: Boolean) extends UnitStep[WebContext] {
 
-  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Unit = {
-    val jsCondition = s"$element is${if (negate) " not" else ""} $state"
-    ctx.scopes.getOpt(JavaScriptBinding.key(jsCondition)) match {
-      case None => 
-        checkStepRules(step, BehaviorType.Action, ctx)
-        val binding = ctx.getLocatorBinding(element).jsEquivalent
-        ctx.waitForElementState(binding, state, negate)
-      case Some(javascript) =>
-        new WaitForCondition(javascript).apply(parent, step, ctx)
+  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Step = {
+    step tap { _ =>
+      val jsCondition = s"$element is${if (negate) " not" else ""} $state"
+      ctx.scopes.getOpt(JavaScriptBinding.key(jsCondition)) match {
+        case None => 
+          checkStepRules(step, BehaviorType.Action, ctx)
+          val binding = ctx.getLocatorBinding(element).jsEquivalent
+          ctx.waitForElementState(binding, state, negate)
+        case Some(javascript) =>
+          new WaitForCondition(javascript).apply(parent, step, ctx)
+      }
     }
   }
 

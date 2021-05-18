@@ -24,9 +24,11 @@ import gwen.core.model.gherkin.Step
 
 class MaximiseWindow extends UnitStep[WebContext] {
 
-  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Unit = {
-    checkStepRules(step, BehaviorType.Action, ctx)
-    ctx.maximizeWindow()
+  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Step = {
+    step tap { _ =>
+      checkStepRules(step, BehaviorType.Action, ctx)
+      ctx.maximizeWindow()
+    }
   }
 
 }

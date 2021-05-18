@@ -27,47 +27,51 @@ import gwen.core.model.gherkin.Step
 
 class BindElementLocator(name: String, selectorType: SelectorType.Value, expression: String, container: Option[String], timeoutSecs: Option[Long], index: Option[Int]) extends UnitStep[WebContext] {
 
-  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Unit = {
+  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Step = {
 
-    checkStepRules(step, BehaviorType.Context, ctx)
-    container foreach { cont =>
-      ctx.getLocatorBinding(cont)
-    }
+    step tap { _ =>
 
-    ctx.scopes.set(LocatorKey.baseKey(name), selectorType.toString)
-    ctx.scopes.set(LocatorKey.selectorKey(name, selectorType), expression)
-
-    val cKey = LocatorKey.containerKey(name, selectorType)
-    if (container.isEmpty) {
-      ctx.scopes.getOpt(cKey) foreach { _ =>
-        ctx.scopes.set(cKey, null)
-      }
-    } else {
+      checkStepRules(step, BehaviorType.Context, ctx)
       container foreach { cont =>
-        ctx.scopes.set(cKey, cont)
+        ctx.getLocatorBinding(cont)
       }
-    }
-    
-    val iKey = LocatorKey.indexKey(name, selectorType)
-    if (index.isEmpty) {
-      ctx.scopes.getOpt(iKey) foreach { _ =>
-        ctx.scopes.set(iKey, null)
-      }
-    } else {
-      index foreach { idx =>
-        ctx.scopes.set(iKey, idx.toString)
-      }
-    }
 
-    val tKey = LocatorKey.timeoutSecsKey(name, selectorType)
-    if (timeoutSecs.isEmpty) {
-      ctx.scopes.getOpt(tKey) foreach { _ =>
-        ctx.scopes.set(tKey, null)
+      ctx.scopes.set(LocatorKey.baseKey(name), selectorType.toString)
+      ctx.scopes.set(LocatorKey.selectorKey(name, selectorType), expression)
+
+      val cKey = LocatorKey.containerKey(name, selectorType)
+      if (container.isEmpty) {
+        ctx.scopes.getOpt(cKey) foreach { _ =>
+          ctx.scopes.set(cKey, null)
+        }
+      } else {
+        container foreach { cont =>
+          ctx.scopes.set(cKey, cont)
+        }
       }
-    } else {
-      timeoutSecs foreach { secs =>
-        ctx.scopes.set(tKey, secs.toString)
+      
+      val iKey = LocatorKey.indexKey(name, selectorType)
+      if (index.isEmpty) {
+        ctx.scopes.getOpt(iKey) foreach { _ =>
+          ctx.scopes.set(iKey, null)
+        }
+      } else {
+        index foreach { idx =>
+          ctx.scopes.set(iKey, idx.toString)
+        }
       }
+
+      val tKey = LocatorKey.timeoutSecsKey(name, selectorType)
+      if (timeoutSecs.isEmpty) {
+        ctx.scopes.getOpt(tKey) foreach { _ =>
+          ctx.scopes.set(tKey, null)
+        }
+      } else {
+        timeoutSecs foreach { secs =>
+          ctx.scopes.set(tKey, secs.toString)
+        }
+      }
+      
     }
     
   }

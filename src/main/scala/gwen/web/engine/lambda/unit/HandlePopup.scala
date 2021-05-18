@@ -25,9 +25,11 @@ import gwen.core.model.gherkin.Step
 
 class HandlePopup(action: PopupAction.Value) extends UnitStep[WebContext] {
 
-  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Unit = {
-    checkStepRules(step, BehaviorType.Action, ctx)
-    ctx.handleAlert(action == PopupAction.accept)
+  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Step = {
+    step tap { _ =>
+      checkStepRules(step, BehaviorType.Action, ctx)
+      ctx.handleAlert(action == PopupAction.accept)
+    }
   }
 
 }

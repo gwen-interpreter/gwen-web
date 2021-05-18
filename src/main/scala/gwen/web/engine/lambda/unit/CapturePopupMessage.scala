@@ -18,18 +18,17 @@ package gwen.web.engine.lambda.unit
 
 import gwen.web.engine.WebContext
 
-import gwen.core._
 import gwen.core.engine.lambda.UnitStep
 import gwen.core.model._
 import gwen.core.model.gherkin.Step
 
 class CapturePopupMessage(target: String) extends UnitStep[WebContext] {
 
-  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Unit = {
+  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Step = {
     checkStepRules(step, BehaviorType.Action, ctx)
-    ctx.topScope.set(target, ctx.getPopupMessage tap { content =>
-      ctx.addAttachment(target, "txt", content)
-    })
+    val content = ctx.getPopupMessage
+    ctx.topScope.set(target, content)
+    step.addAttachment(target, "txt", content)
   }
 
 }

@@ -25,10 +25,12 @@ import gwen.core.model.gherkin.Step
 
 class ScrollToElement(element: String, position: ScrollTo.Value) extends UnitStep[WebContext] {
 
-  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Unit = {
-    checkStepRules(step, BehaviorType.Action, ctx)
-    val binding = ctx.getLocatorBinding(element)
-    ctx.scrollIntoView(binding, position)
+  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Step = {
+    step tap { _ =>
+      checkStepRules(step, BehaviorType.Action, ctx)
+      val binding = ctx.getLocatorBinding(element)
+      ctx.scrollIntoView(binding, position)
+    }
   }
 
 }

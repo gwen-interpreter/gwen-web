@@ -27,16 +27,18 @@ import gwen.core.model.gherkin.Step
 
 class BindMultipleElementLocators(name: String, container: Option[String], timeoutSecs: Option[Long], index: Option[Int]) extends UnitStep[WebContext] {
 
-  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Unit = {
-    checkStepRules(step, BehaviorType.Context, ctx)
-    container foreach { cont =>
-      ctx.getLocatorBinding(cont)
-    }
-    ctx.scopes.set(LocatorKey.baseKey(name), step.table.map(_._2.head).mkString(","))
-    step.table foreach { case (_, row ) =>
-      val selectorType = SelectorType.parse(row.head)
-      val expression = row(1)
-      new BindElementLocator(name, selectorType, expression, container, timeoutSecs, index).apply(parent, step, ctx)
+  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Step = {
+    step tap { _ =>
+      checkStepRules(step, BehaviorType.Context, ctx)
+      container foreach { cont =>
+        ctx.getLocatorBinding(cont)
+      }
+      ctx.scopes.set(LocatorKey.baseKey(name), step.table.map(_._2.head).mkString(","))
+      step.table foreach { case (_, row ) =>
+        val selectorType = SelectorType.parse(row.head)
+        val expression = row(1)
+        new BindElementLocator(name, selectorType, expression, container, timeoutSecs, index).apply(parent, step, ctx)
+      }
     }
   }
 

@@ -669,7 +669,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
 
   """the current URL should <operator> "<value>"""" should "evaluate" in {
     matchers.foreach { case (operator, source, expression) =>
-      doNothing().when(ctx).captureCurrentUrl(None)
+      doReturn("http://site.com").when(ctx).captureCurrentUrl
       doReturn(None).when(mockScopes).findEntry(any())
       doReturn(() => source).when(ctx).boundAttributeOrSelection("the current URL", None)
       doReturn(None).when(mockScopes).getOpt("the current URL")
@@ -681,7 +681,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
   """the current URL should not <operator> "<value>"""" should "evaluate" in {
     matchers.foreach { case (operator, src, expression) =>
       val source = src.replaceAll("value", "other")
-      doNothing().when(ctx).captureCurrentUrl(None)
+      doReturn("http://site.com").when(ctx).captureCurrentUrl
       doReturn(None).when(mockScopes).findEntry(any())
       doReturn(() => source).when(ctx).boundAttributeOrSelection("the current URL", None)
       doReturn(None).when(mockScopes).getOpt("the current URL")
@@ -692,7 +692,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
 
   "the current URL should <operator> <reference>" should "evaluate" in {
     matchers2.foreach { case (operator, source, expression) =>
-      doNothing().when(ctx).captureCurrentUrl(None)
+      doReturn("http://site.com").when(ctx).captureCurrentUrl
       doReturn(None).when(mockScopes).findEntry(any())
       doReturn(() => source).when(ctx).boundAttributeOrSelection("the current URL", None)
       doReturn(None).when(mockScopes).getOpt("the current URL")
@@ -705,7 +705,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
   "the current URL should not <operator> <reference>" should "evaluate" in {
     matchers2.foreach { case (operator, src, expression) =>
       val source = src.replaceAll("value", "other")
-      doNothing().when(ctx).captureCurrentUrl(None)
+      doReturn("http://site.com").when(ctx).captureCurrentUrl
       doReturn(None).when(mockScopes).findEntry(any())
       doReturn(() => source).when(ctx).boundAttributeOrSelection("the current URL", None)
       doReturn(None).when(mockScopes).getOpt("the current URL")
@@ -754,15 +754,9 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
   }
 
   "I capture the current URL" should "evaluate" in {
-    doNothing().when(ctx).captureCurrentUrl(None)
+    doReturn("http://site.com").when(ctx).captureCurrentUrl
     evaluate("I capture the current URL")
-    verify(ctx).captureCurrentUrl(None)
-  }
-
-  "I capture the current URL as <attribute>" should "evaluate" in {
-    doNothing().when(ctx).captureCurrentUrl(Some("<attribute>"))
-    evaluate("I capture the current URL as <attribute>")
-    verify(ctx).captureCurrentUrl(Some("<attribute>"))
+    verify(ctx).captureCurrentUrl
   }
 
   "I capture <reference> as <attribute>" should "evaluate" in {
@@ -805,35 +799,30 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     doReturn(() => "value").when(ctx).boundAttributeOrSelection("<dropdown>", Option(DropdownSelection.text))
     evaluate("I capture <dropdown> text as <attribute>")
     verify(mockTopScope).set("<attribute>", "value")
-    verify(envState).addAttachment("<attribute>", "txt", "value")
   }
 
   "I capture <dropdown> value as <attribute>" should "evaluate" in {
     doReturn(() => "value").when(ctx).boundAttributeOrSelection("<dropdown>", Option(DropdownSelection.value))
     evaluate("I capture <dropdown> value as <attribute>")
     verify(mockTopScope).set("<attribute>", "value")
-    verify(envState).addAttachment("<attribute>", "txt", "value")
   }
 
   "I capture <dropdown> text" should "evaluate" in {
     doReturn(() => "value").when(ctx).boundAttributeOrSelection("<dropdown>", Option(DropdownSelection.text))
     evaluate("I capture <dropdown> text")
     verify(mockTopScope).set("<dropdown>", "value")
-    verify(envState).addAttachment("<dropdown>", "txt", "value")
   }
 
   "I capture <dropdown> value" should "evaluate" in {
     doReturn(() => "value").when(ctx).boundAttributeOrSelection("<dropdown>", Option(DropdownSelection.value))
     evaluate("I capture <dropdown> value")
     verify(mockTopScope).set("<dropdown>", "value")
-    verify(envState).addAttachment("<dropdown>", "txt", "value")
   }
 
   """I capture <attribute> by javascript "<expression>"""" should "evaluate" in {
     doReturn("value").when(ctx).evaluateJS("""return (function(){return "value"})()""")
     evaluate("""I capture <attribute> by javascript "(function(){return "value"})()"""")
     verify(mockTopScope).set("<attribute>", "value")
-    verify(envState).addAttachment("<attribute>", "txt", "value")
   }
 
   """I capture <attribute> <of|on|in> <element> by javascript "<expression>"""" should "evaluate" in {
@@ -846,7 +835,6 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
       evaluate(s"""I capture <attribute> $x <element> by javascript "<expression>"""")
     }
     verify(mockTopScope, times(3)).set("<attribute>", "value")
-    verify(envState, times(3)).addAttachment("<attribute>", "txt", "value")
   }
 
   """my <name> property <is|will be> "<value>"""" should "evaluate" in {
@@ -1246,7 +1234,6 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     doReturn("value").when(ctx).getBoundReferenceValue("<reference>")
     doReturn("decoded").when(ctx).decodeBase64("value")
     evaluate("I base64 decode <reference> as <attribute>")
-    verify(envState).addAttachment("<attribute>", "txt", "decoded")
     verify(mockTopScope).set("<attribute>", "decoded")
   }
 
@@ -1254,7 +1241,6 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     doReturn("value").when(ctx).getBoundReferenceValue("<reference>")
     doReturn("decoded").when(ctx).decodeBase64("value")
     evaluate("I base64 decode <reference>")
-    verify(envState).addAttachment("<reference>", "txt", "decoded")
     verify(mockTopScope).set("<reference>", "decoded")
   }
 
@@ -1422,7 +1408,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     verify(ctx).captureScreenshot(true, "name")
     verify(mockScopes).set("name", file.getAbsolutePath)
   }
-
+  
   """<element> can be <clicked|right clicked|double clicked|submitted|checked|ticked|unchecked|unticked|selected|deselected|typed|entered|tabbed|cleared|moved to> by javascript "<javascript>"""" should "evaluate" in {
     val mockBinding = mock[LocatorBinding]
     doReturn(mockBinding).when(ctx).getLocatorBinding("<element>")

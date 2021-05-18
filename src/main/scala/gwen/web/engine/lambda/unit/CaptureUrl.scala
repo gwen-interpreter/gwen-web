@@ -24,9 +24,12 @@ import gwen.core.model.gherkin.Step
 
 class CaptureUrl(target: Option[String]) extends UnitStep[WebContext] {
 
-  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Unit = {
+  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Step = {
     checkStepRules(step, BehaviorType.Action, ctx)
-    ctx.captureCurrentUrl(target)
+    val name = "the current URL"
+    val url = ctx.captureCurrentUrl
+    ctx.topScope.set(name, url)
+    step.addAttachment(name, "txt", url)
   }
 
 }

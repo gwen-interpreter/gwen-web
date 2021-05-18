@@ -27,11 +27,13 @@ import org.apache.commons.text.StringEscapeUtils
 
 class AppendNewLineToElement(element: String) extends UnitStep[WebContext] {
 
-  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Unit = {
-    checkStepRules(step, BehaviorType.Action, ctx)
-    val binding = ctx.getLocatorBinding(element)
-    val clickFirst = WebSettings.`gwen.web.sendKeys.clickFirst`
-    ctx.sendValue(binding, StringEscapeUtils.unescapeJava("""\n"""), clickFirst, false, sendEnterKey = false)
+  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Step = {
+    step tap { _ =>
+      checkStepRules(step, BehaviorType.Action, ctx)
+      val binding = ctx.getLocatorBinding(element)
+      val clickFirst = WebSettings.`gwen.web.sendKeys.clickFirst`
+      ctx.sendValue(binding, StringEscapeUtils.unescapeJava("""\n"""), clickFirst, false, sendEnterKey = false)
+    }
   }
 
 }

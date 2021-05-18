@@ -28,12 +28,14 @@ import com.applitools.eyes.MatchLevel
 
 class CheckViewPort(name: String, fullPage: Boolean, matchLevel: Option[MatchLevel]) extends UnitStep[WebContext] {
 
-  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Unit = {
-    checkStepRules(step, BehaviorType.Action, ctx)
-    if (EyesSettings.`gwen.applitools.eyes.enabled`) {
-      ctx.checkVisual(name, fullPage, matchLevel)
-    } else {
-      Errors.disabledStepError(step)
+  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Step = {
+    step tap { _ =>
+      checkStepRules(step, BehaviorType.Action, ctx)
+      if (EyesSettings.`gwen.applitools.eyes.enabled`) {
+        ctx.checkVisual(name, fullPage, matchLevel)
+      } else {
+        Errors.disabledStepError(step)
+      }
     }
   }
 

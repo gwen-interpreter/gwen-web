@@ -28,17 +28,19 @@ import com.applitools.eyes.RectangleSize
 
 class StartVisualTest(name: String, width: Option[Int], height: Option[Int]) extends UnitStep[WebContext] {
 
-  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Unit = {
-    checkStepRules(step, BehaviorType.Action, ctx)
-    if (EyesSettings.`gwen.applitools.eyes.enabled`) {
-      val viewportSize = width flatMap { width => 
-        height map { height => 
-          new RectangleSize(width, height)
+  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Step = {
+    step tap { _ =>
+      checkStepRules(step, BehaviorType.Action, ctx)
+      if (EyesSettings.`gwen.applitools.eyes.enabled`) {
+        val viewportSize = width flatMap { width => 
+          height map { height => 
+            new RectangleSize(width, height)
+          }
         }
+        ctx.startVisualTest(name, viewportSize)
+      } else {
+        Errors.disabledStepError(step)
       }
-      ctx.startVisualTest(name, viewportSize)
-    } else {
-      Errors.disabledStepError(step)
     }
   }
 

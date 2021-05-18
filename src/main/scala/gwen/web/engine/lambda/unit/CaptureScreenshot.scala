@@ -24,15 +24,17 @@ import gwen.core.model.gherkin.Step
 
 class CaptureScreenshot(target: Option[String]) extends UnitStep[WebContext] {
 
-  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Unit = {
-    checkStepRules(step, BehaviorType.Action, ctx)
-    target match {
-      case Some(name) =>
-        ctx.captureScreenshot(true, name) foreach { file =>
-          ctx.scopes.set(name, file.getAbsolutePath)
-        }
-      case None =>
-        ctx.captureScreenshot(true)
+  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Step = {
+    step tap { _ =>
+      checkStepRules(step, BehaviorType.Action, ctx)
+      target match {
+        case Some(name) =>
+          ctx.captureScreenshot(true, name) foreach { file =>
+            ctx.scopes.set(name, file.getAbsolutePath)
+          }
+        case None =>
+          ctx.captureScreenshot(true)
+      }
     }
   }
 

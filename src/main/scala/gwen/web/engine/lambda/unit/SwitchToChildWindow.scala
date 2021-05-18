@@ -24,14 +24,16 @@ import gwen.core.model.gherkin.Step
 
 class SwitchToChildWindow(occurrence: Option[Int]) extends UnitStep[WebContext] {
 
-  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Unit = {
-    checkStepRules(step, BehaviorType.Action, ctx)
-    ctx.perform {
-      occurrence match {
-        case Some(occurNo) =>
-          ctx.switchToChild(occurNo)
-        case None =>
-          ctx.switchToChild()
+  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Step = {
+    step tap { _ =>
+      checkStepRules(step, BehaviorType.Action, ctx)
+      ctx.perform {
+        occurrence match {
+          case Some(occurNo) =>
+            ctx.switchToChild(occurNo)
+          case None =>
+            ctx.switchToChild()
+        }
       }
     }
   }

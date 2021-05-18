@@ -26,11 +26,13 @@ import gwen.core.model.gherkin.Step
 
 class WaitForConditionOnEvent(element: String, event: ElementEvent.Value, condition: String) extends UnitStep[WebContext] {
 
-  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Unit = {
-    checkStepRules(step, BehaviorType.Context, ctx)
-    ctx.scopes.get(JavaScriptBinding.key(condition))
-    ctx.getLocatorBinding(element)
-    ctx.scopes.set(s"$element/${ElementEvent.actionOf(event)}/condition", condition)
+  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Step = {
+    step tap { _ =>
+      checkStepRules(step, BehaviorType.Context, ctx)
+      ctx.scopes.get(JavaScriptBinding.key(condition))
+      ctx.getLocatorBinding(element)
+      ctx.scopes.set(s"$element/${ElementEvent.actionOf(event)}/condition", condition)
+    }
   }
 
 }

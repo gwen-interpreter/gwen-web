@@ -24,11 +24,13 @@ import gwen.core.model.gherkin.Step
 
 class NavigateToPageInScope(name: String) extends UnitStep[WebContext] {
 
-  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Unit = {
-    checkStepRules(step, BehaviorType.Action, ctx)
-    ctx.scopes.addScope(name)
-    val url = ctx.getAttribute("url")
-    ctx.navigateTo(url)
+  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Step = {
+    step tap { _ =>
+      checkStepRules(step, BehaviorType.Action, ctx)
+      ctx.scopes.addScope(name)
+      val url = ctx.getAttribute("url")
+      ctx.navigateTo(url)
+    }
   }
 
 }

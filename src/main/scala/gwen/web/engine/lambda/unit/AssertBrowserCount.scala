@@ -25,10 +25,12 @@ import gwen.core.model.gherkin.Step
 
 class AssertBrowserCount(expectedCount: Int) extends UnitStep[WebContext] {
 
-  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Unit = {
-    checkStepRules(step, BehaviorType.Assertion, ctx)
-    ctx.perform {
-      ctx.compare("open browser sessions", expectedCount.toString, () => ctx.noOfSessions().toString, ComparisonOperator.be, false)
+  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Step = {
+    step tap { _ =>
+      checkStepRules(step, BehaviorType.Assertion, ctx)
+      ctx.perform {
+        ctx.compare("open browser sessions", expectedCount.toString, () => ctx.noOfSessions().toString, ComparisonOperator.be, false)
+      }
     }
   }
 

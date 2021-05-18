@@ -26,11 +26,13 @@ import scala.util.Try
 
 class WaitForElement(element: String, waitSecs: Option[Long]) extends UnitStep[WebContext] {
 
-  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Unit = {
-    checkStepRules(step, BehaviorType.Action, ctx)
-    val binding = ctx.getLocatorBinding(element)
-    ctx.waitUntil(waitSecs, s"waiting for $binding to be displayed") {
-      Try(ctx.locateAndHighlight(binding)).isSuccess
+  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Step = {
+    step tap { _ =>
+      checkStepRules(step, BehaviorType.Action, ctx)
+      val binding = ctx.getLocatorBinding(element)
+      ctx.waitUntil(waitSecs, s"waiting for $binding to be displayed") {
+        Try(ctx.locateAndHighlight(binding)).isSuccess
+      }
     }
   }
 

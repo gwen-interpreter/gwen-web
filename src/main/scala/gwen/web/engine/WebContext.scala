@@ -22,9 +22,12 @@ import gwen.web.engine.eyes.EyesContext
 import gwen.core._
 import gwen.core.Errors._
 import gwen.core.SensitiveData
+import gwen.core.engine.ComparisonOperator
 import gwen.core.engine.EvalContext
 import gwen.core.engine.binding.BindingType
 import gwen.core.engine.binding.JavaScriptBinding
+import gwen.core.engine.binding.TextBinding
+import gwen.core.model.gherkin.Step
 import gwen.core.model.Failed
 import gwen.core.model.StateLevel
 import gwen.core.model.state.EnvState
@@ -36,14 +39,12 @@ import scala.util.{Failure, Success, Try}
 
 import com.applitools.eyes.{MatchLevel, RectangleSize}
 import com.typesafe.scalalogging.LazyLogging
-import org.apache.commons.io.FileUtils
 import org.openqa.selenium._
 import org.openqa.selenium.interactions.Actions
 import org.openqa.selenium.support.ui.{FluentWait, Select}
 
 import java.io.File
-import gwen.core.engine.binding.TextBinding
-import gwen.core.engine.ComparisonOperator
+import com.applitools.eyes.TestResults
 
 /**
   * The web evaluatioin context.
@@ -126,7 +127,10 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     * @param name the name of the bound value to find
     */
   override def getBoundReferenceValue(name: String): String = {
-    if (name == "the current URL") captureCurrentUrl(Some(name))
+    if (name == "the current URL") {
+      val url = captureCurrentUrl
+      topScope.set(name, url)
+    }
     (getLocatorBinding(name, optional = true) match {
       case Some(binding) =>
         Try(getElementText(binding)) match {
@@ -195,19 +199,22 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
   }
 
   /**
-    * Add a list of error attachments which includes the current
+    * Add a list of error attachments to the given step including the current
     * screenshot and all current error attachments.
     *
     * @param failure the failed status
     */
-  override def addErrorAttachments(failure: Failed): Unit = {
-    if (failure.isTechError) {
-      super.addErrorAttachments(failure)
-    }
-    val isVisualAssertionError = 
-      failure.cause.map(_.isInstanceOf[VisualAssertionException]).getOrElse(false)
-    if (!failure.isLicenseError && !isVisualAssertionError) {
-      captureScreenshot(true)
+  override def addErrorAttachments(step: Step, failure: Failed): Step = {
+    (if (failure.isTechError) {
+      super.addErrorAttachments(step, failure)
+    } else {
+      step
+    }) tap { _ =>
+      val isVisualAssertionError = 
+        failure.cause.map(_.isInstanceOf[VisualAssertionException]).getOrElse(false)
+      if (!failure.isLicenseError && !isVisualAssertionError) {
+        captureScreenshot(true)
+      }
     }
   }  
 
@@ -422,9 +429,8 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
       val keep = unconditional || WebSettings.`gwen.web.capture.screenshots.duplicates` || lastScreenshotSize.fold(true) { _ != screenshot.length}
       if (keep) {
         if (!WebSettings.`gwen.web.capture.screenshots.duplicates`) lastScreenshotSize = Some(screenshot.length())
-        val (n, file) = addAttachment(name, screenshot.getName.substring(screenshot.getName.lastIndexOf('.') + 1), null)
-        FileUtils.copyFile(screenshot, file)
-        Some(file)
+        addAttachment(name, screenshot)
+        Some(screenshot)
       } else {
         None
       }
@@ -952,13 +958,12 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     }
   }
 
-  def captureCurrentUrl(asName: Option[String]): Unit = {
-    val name = asName.getOrElse("the current URL")
-    topScope.set(name, withWebDriver { driver =>
-      driver.getCurrentUrl tap { content =>
-        addAttachment(name, "txt", content)
-      }
-    }.getOrElse("$[currentUrl]"))
+  def captureCurrentUrl: String = {
+    withWebDriver { driver =>
+      driver.getCurrentUrl
+    } getOrElse {
+      "$[dryRun:currentUrl]"
+    }
   }
 
   /**
@@ -1245,16 +1250,9 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
   /**
     * Performs a visual check of all checkpoints in current eyes session.
     */
-  def asertVisuals(): Unit = {
+  def asertVisuals(): Option[TestResults] = {
     withEyesContext { context =>
-      context.results() tap { results =>
-        addAttachment("AppliTools dashboard", "url", results.getUrl)
-        try {
-          assert(results.isNew || results.isPassed, s"Expected visual check to pass but status was: ${results.getStatus}")
-        } catch {
-          case e: AssertionError => visualAssertionError(e.getMessage)
-        }
-      }
+      context.results()
     }
   }
 

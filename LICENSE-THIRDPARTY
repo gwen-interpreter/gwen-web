@@ -34,7 +34,6 @@ commons-beanutils                        commons-beanutils                  | 1.
 commons-codec                            commons-codec                      | 1.15      | [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 commons-collections                      commons-collections                | 3.2.2     | [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 commons-digester                         commons-digester                   | 1.8.1     | [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
-commons-io                               commons-io                         | 2.8.0     | [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 commons-logging                          commons-logging                    | 1.2       | [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 commons-validator                        commons-validator                  | 1.6       | [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 io.appium                                java-client                        | 7.0.0     | [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)

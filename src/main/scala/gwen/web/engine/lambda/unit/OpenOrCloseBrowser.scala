@@ -24,17 +24,19 @@ import gwen.core.model.gherkin.Step
 
 class OpenOrCloseBrowser(open: Boolean, name: Option[String], behaviorType: BehaviorType.Value) extends UnitStep[WebContext] {
 
-  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Unit = {
-    checkStepRules(step, behaviorType, ctx)
-    if (open) {
-      ctx.newOrCurrentSession()
-    } else {
-      name match {
-        case Some(n) =>
-          ctx.close(n)
-        case None => 
-           ctx.close()
-      }      
+  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Step = {
+    step tap { _ =>
+      checkStepRules(step, behaviorType, ctx)
+      if (open) {
+        ctx.newOrCurrentSession()
+      } else {
+        name match {
+          case Some(n) =>
+            ctx.close(n)
+          case None => 
+            ctx.close()
+        }      
+      }
     }
   }
 

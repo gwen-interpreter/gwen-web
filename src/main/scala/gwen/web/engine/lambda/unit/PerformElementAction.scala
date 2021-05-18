@@ -25,14 +25,16 @@ import gwen.core.model.gherkin.Step
 
 class PerformElementAction(element: String, action: ElementAction.Value, inContext: Option[String]) extends UnitStep[WebContext] {
 
-  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Unit = {
-    checkStepRules(step, BehaviorType.Action, ctx)
-    inContext match {
-      case Some(context) =>
-        ctx.performActionInContext(action, element, context)
-      case None =>   
-        val binding = ctx.getLocatorBinding(element)
-        ctx.performAction(action, binding)
+  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Step = {
+    step tap { _ =>
+      checkStepRules(step, BehaviorType.Action, ctx)
+      inContext match {
+        case Some(context) =>
+          ctx.performActionInContext(action, element, context)
+        case None =>   
+          val binding = ctx.getLocatorBinding(element)
+          ctx.performAction(action, binding)
+      }
     }
   }
 

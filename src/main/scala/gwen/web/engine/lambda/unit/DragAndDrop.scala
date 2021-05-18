@@ -24,11 +24,13 @@ import gwen.core.model.gherkin.Step
 
 class DragAndDrop(source: String, target: String) extends UnitStep[WebContext] {
 
-  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Unit = {
-    checkStepRules(step, BehaviorType.Action, ctx)
-    val sourceBinding = ctx.getLocatorBinding(source)
-    val targetBinding = ctx.getLocatorBinding(target)
-    ctx.dragAndDrop(sourceBinding, targetBinding)
+  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Step = {
+    step tap { _ =>
+      checkStepRules(step, BehaviorType.Action, ctx)
+      val sourceBinding = ctx.getLocatorBinding(source)
+      val targetBinding = ctx.getLocatorBinding(target)
+      ctx.dragAndDrop(sourceBinding, targetBinding)
+    }
   }
 
 }

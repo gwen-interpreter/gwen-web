@@ -25,10 +25,12 @@ import gwen.core.model.gherkin.Step
 
 class HoldAndClick(element: String, modifiers: Array[String], clickAction: ElementAction.Value) extends UnitStep[WebContext] {
 
-  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Unit = {
-    checkStepRules(step, BehaviorType.Action, ctx)
-    val binding = ctx.getLocatorBinding(element)
-    ctx.holdAndClick(modifiers, clickAction, binding)
+  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Step = {
+    step tap { _ =>
+      checkStepRules(step, BehaviorType.Action, ctx)
+      val binding = ctx.getLocatorBinding(element)
+      ctx.holdAndClick(modifiers, clickAction, binding)
+    }
   }
 
 }

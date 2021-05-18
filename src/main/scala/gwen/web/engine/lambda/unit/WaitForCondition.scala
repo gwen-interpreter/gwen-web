@@ -24,10 +24,12 @@ import gwen.core.model.gherkin.Step
 
 class WaitForCondition(javascript: String) extends UnitStep[WebContext] {
 
-  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Unit = {
-    checkStepRules(step, BehaviorType.Action, ctx)
-    ctx.waitUntil(s"waiting for true return from javascript: $javascript") {
-      ctx.evaluateJSPredicate(javascript)
+  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Step = {
+    step tap { _ =>
+      checkStepRules(step, BehaviorType.Action, ctx)
+      ctx.waitUntil(s"waiting for true return from javascript: $javascript") {
+        ctx.evaluateJSPredicate(javascript)
+      }
     }
   }
 

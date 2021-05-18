@@ -24,11 +24,13 @@ import gwen.core.model.gherkin.Step
 
 class SendKeyToElement(element: String, key: String) extends UnitStep[WebContext] {
 
-  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Unit = {
-    checkStepRules(step, BehaviorType.Action, ctx)
-    val binding = ctx.getLocatorBinding(element)
-    ctx.sendKeys(binding, Array[String](key))
-    ctx.bindAndWait(element, key, "true")
+  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Step = {
+    step tap { _ =>
+      checkStepRules(step, BehaviorType.Action, ctx)
+      val binding = ctx.getLocatorBinding(element)
+      ctx.sendKeys(binding, Array[String](key))
+      ctx.bindAndWait(element, key, "true")
+    }
   }
 
 }

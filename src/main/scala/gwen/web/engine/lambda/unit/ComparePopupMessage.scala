@@ -25,15 +25,17 @@ import gwen.core.model.gherkin.Step
 
 class ComparePopupMessage(name: String, value: String, bound: Boolean, operator: ComparisonOperator.Value, negate: Boolean) extends UnitStep[WebContext] {
 
-  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Unit = {
-    checkStepRules(step, BehaviorType.Assertion, ctx)
-    val expected = if (bound) { 
-      ctx.getBoundReferenceValue(value)
-    } else {
-      ctx.parseExpression(operator, value)
-    }
-    ctx.perform {
-      ctx.compare(name, expected, () => ctx.getPopupMessage, operator, negate)
+  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Step = {
+    step tap { _ =>
+      checkStepRules(step, BehaviorType.Assertion, ctx)
+      val expected = if (bound) { 
+        ctx.getBoundReferenceValue(value)
+      } else {
+        ctx.parseExpression(operator, value)
+      }
+      ctx.perform {
+        ctx.compare(name, expected, () => ctx.getPopupMessage, operator, negate)
+      }
     }
   }
 

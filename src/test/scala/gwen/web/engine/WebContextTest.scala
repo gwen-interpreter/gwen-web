@@ -106,7 +106,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     mockScreenshot.deleteOnExit()
     when(mockWebDriver.getScreenshotAs(OutputType.FILE)).thenReturn(mockScreenshot)
     ctx.captureScreenshot(true)
-    verify(ctx).addAttachment(same("Screenshot"), any[String], same(null))
+    verify(ctx).addAttachment(same("Screenshot"), any[File])
   }
 
   "WebContext.executeJS with arg" should "invoke javascript with arg" in {
@@ -1534,16 +1534,10 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     verify(mockWindow).maximize()
   }
 
-  "ctx.captureCurrentUrl" should "capture url in default attribute" in {
+  "ctx.captureCurrentUrl" should "capture url" in {
     when(mockWebDriver.getCurrentUrl).thenReturn("http://site.com")
-    ctx.captureCurrentUrl(None)
-    ctx.topScope.get("the current URL") should be ("http://site.com")
-  }
-
-  "ctx.captureCurrentUrl" should "capture url in provided attribute" in {
-    when(mockWebDriver.getCurrentUrl).thenReturn("http://site.com")
-    ctx.captureCurrentUrl(Some("my URL"))
-    ctx.topScope.get("my URL") should be ("http://site.com")
+    val url = ctx.captureCurrentUrl
+    url should not be ("")
   }
 
   "WebContext.getElementText" should "return blank on element with null text value, null text attribute, null value attribute, and null JS value" in {

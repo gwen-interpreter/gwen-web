@@ -25,10 +25,12 @@ import gwen.core.model.gherkin.Step
 
 class WaitForElementOnEvent(element: String, event: ElementEvent.Value, waitSecs: Long) extends UnitStep[WebContext] {
 
-  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Unit = {
-    checkStepRules(step, BehaviorType.Context, ctx)
-    ctx.getLocatorBinding(element)
-    ctx.scopes.set(s"$element/${ElementEvent.actionOf(event)}/wait", waitSecs.toString)
+  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Step = {
+    step tap { _ =>
+      checkStepRules(step, BehaviorType.Context, ctx)
+      ctx.getLocatorBinding(element)
+      ctx.scopes.set(s"$element/${ElementEvent.actionOf(event)}/wait", waitSecs.toString)
+    }
   }
 
 }

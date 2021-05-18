@@ -17,6 +17,7 @@
 package gwen.web.engine.lambda.unit
 
 import gwen.web.engine.WebContext
+import gwen.web.engine.WebErrors
 import gwen.web.engine.eyes.EyesSettings
 
 import gwen.core.Errors
@@ -26,13 +27,27 @@ import gwen.core.model.gherkin.Step
 
 class AssertVisuals() extends UnitStep[WebContext] {
 
-  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Unit = {
+  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Step = {
     checkStepRules(step, BehaviorType.Assertion, ctx)
     if (EyesSettings.`gwen.applitools.eyes.enabled`) {
-      ctx.asertVisuals()
+      ctx.asertVisuals() match {
+        case Some(results) =>
+          val aStep = step.addAttachment("AppliTools dashboard", "url", results.getUrl)
+          ctx.withStep(aStep) { s =>
+            try {
+              s tap { _ =>
+                assert(results.isNew || results.isPassed, s"Expected visual check to pass but status was: ${results.getStatus}")
+              }
+            } catch {
+              case e: AssertionError => WebErrors.visualAssertionError(e.getMessage)
+            }
+          }
+        case _ => step
+      }
     } else {
       Errors.disabledStepError(step)
     }
+
   }
 
 }

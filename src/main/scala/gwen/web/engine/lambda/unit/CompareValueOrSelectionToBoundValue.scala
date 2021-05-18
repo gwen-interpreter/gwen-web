@@ -27,17 +27,22 @@ import gwen.core.model.gherkin.Step
 
 class CompareValueOrSelectionToBoundValue(element: String, selection: Option[DropdownSelection.Value], source: String, operator: ComparisonOperator.Value, negate: Boolean) extends UnitStep[WebContext] {
 
-  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Unit = {
+  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Step = {
     checkStepRules(step, BehaviorType.Assertion, ctx)
     if (element == "I") Errors.undefinedStepError(step)
-    if (element == "the current URL") ctx.captureCurrentUrl(None)
+    if (element == "the current URL") {
+      val url = ctx.captureCurrentUrl
+      ctx.topScope.set(element, url)
+    }
     val expected = ctx.getBoundReferenceValue(source)
     val actual = ctx.boundAttributeOrSelection(element, selection)
-    ctx.perform {
-      val nameSuffix = selection.map(sel => s" $sel")
-      ctx.compare(s"$element${nameSuffix.getOrElse("")}", expected, actual, operator, negate, nameSuffix)
-    } getOrElse  {
-      actual()
+    step tap { _ =>
+      ctx.perform {
+        val nameSuffix = selection.map(sel => s" $sel")
+        ctx.compare(s"$element${nameSuffix.getOrElse("")}", expected, actual, operator, negate, nameSuffix)
+      } getOrElse  {
+        actual()
+      }
     }
   }
 

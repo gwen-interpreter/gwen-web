@@ -24,17 +24,19 @@ import gwen.core.model.gherkin.Step
 
 class OpenOrCloseChildWindow(open: Boolean, occurence: Option[Int]) extends UnitStep[WebContext] {
 
-  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Unit = {
-    checkStepRules(step, BehaviorType.Action, ctx)
-    if (open) {
-      ctx.newOrCurrentSession()
-    } else {
-      occurence match {
-        case Some(occurNo) =>
-          ctx.closeChild(occurNo)
-        case None => 
-           ctx.closeChild()
-      }      
+  override def apply(parent: Identifiable, step: Step, ctx: WebContext): Step = {
+    step tap { _ =>
+      checkStepRules(step, BehaviorType.Action, ctx)
+      if (open) {
+        ctx.newOrCurrentSession()
+      } else {
+        occurence match {
+          case Some(occurNo) =>
+            ctx.closeChild(occurNo)
+          case None => 
+            ctx.closeChild()
+        }      
+      }
     }
   }
 
