@@ -89,6 +89,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
   private var ctx: WebContext = _
   private var mockScopes: ScopedDataStack = _
   private var mockTopScope: TopScope = _
+  private var mockParamScope: ParameterStack = _
   private var mockLocator: WebElementLocator = _
 
   override def beforeEach(): Unit = {
@@ -96,10 +97,11 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     ctx = spy(new WebContext(GwenOptions(), envState, mock[DriverManager]))
     mockScopes = mock[ScopedDataStack]
     mockTopScope = mock[TopScope]
+    mockParamScope = mock[ParameterStack]
     mockLocator = mock[WebElementLocator]
     doReturn(mockScopes).when(envState).scopes
-    doReturn(mockScopes).when(envState).scopes
     doReturn(mockTopScope).when(mockScopes).topScope
+    doReturn(mockParamScope).when(mockScopes).paramScope
     doReturn(mockLocator).when(ctx).locator
     doReturn(false).when(ctx).isEvaluatingTopLevelStep
     doReturn(SpecType.Meta).when(ctx).specType
