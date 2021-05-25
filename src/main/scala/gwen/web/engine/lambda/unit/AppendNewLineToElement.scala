@@ -21,7 +21,7 @@ import gwen.web.engine.WebSettings
 
 import gwen.core.engine.lambda.UnitStep
 import gwen.core.model._
-import gwen.core.model.gherkin.Step
+import gwen.core.model.node.Step
 
 import org.apache.commons.text.StringEscapeUtils
 

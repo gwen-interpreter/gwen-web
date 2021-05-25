@@ -20,7 +20,7 @@ import gwen.web._
 
 import gwen.core.GwenOptions
 import gwen.core.model._
-import gwen.core.model.gherkin.Step
+import gwen.core.model.node.Step
 import gwen.core.model.state.EnvState
 
 import org.scalatest.Matchers

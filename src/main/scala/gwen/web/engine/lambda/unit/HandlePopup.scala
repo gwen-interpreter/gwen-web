@@ -21,7 +21,7 @@ import gwen.web.engine.PopupAction
 
 import gwen.core.engine.lambda.UnitStep
 import gwen.core.model._
-import gwen.core.model.gherkin.Step
+import gwen.core.model.node.Step
 
 class HandlePopup(action: PopupAction.Value) extends UnitStep[WebContext] {
 

@@ -21,7 +21,7 @@ import gwen.web.engine.WebContext
 import gwen.core.engine.ComparisonOperator
 import gwen.core.engine.lambda.UnitStep
 import gwen.core.model._
-import gwen.core.model.gherkin.Step
+import gwen.core.model.node.Step
 
 class AssertBrowserWindowCount(expectedCount: Int) extends UnitStep[WebContext] {
 

@@ -27,7 +27,7 @@ import gwen.core.engine.EvalContext
 import gwen.core.engine.binding.BindingType
 import gwen.core.engine.binding.JavaScriptBinding
 import gwen.core.engine.binding.TextBinding
-import gwen.core.model.gherkin.Step
+import gwen.core.model.node.Step
 import gwen.core.model.Failed
 import gwen.core.model.StateLevel
 import gwen.core.model.state.EnvState

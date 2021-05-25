@@ -23,7 +23,7 @@ import gwen.core.Errors
 import gwen.core.engine.ComparisonOperator
 import gwen.core.engine.lambda.UnitStep
 import gwen.core.model._
-import gwen.core.model.gherkin.Step
+import gwen.core.model.node.Step
 
 class CompareValueOrSelectionToBoundValue(element: String, selection: Option[DropdownSelection.Value], source: String, operator: ComparisonOperator.Value, negate: Boolean) extends UnitStep[WebContext] {
 

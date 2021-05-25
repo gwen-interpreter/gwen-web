@@ -26,7 +26,7 @@ import gwen.core.engine.EvalEngine
 import gwen.core.engine.lambda.CompositeStep
 import gwen.core.engine.lambda.UnitStep
 import gwen.core.model._
-import gwen.core.model.gherkin.Step
+import gwen.core.model.node.Step
 import gwen.core.model.state.EnvState
 
 import scala.concurrent.duration._

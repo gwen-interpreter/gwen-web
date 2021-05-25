@@ -22,7 +22,7 @@ import gwen.core.engine.binding.JavaScriptBinding
 
 import gwen.core.engine.lambda.UnitStep
 import gwen.core.model._
-import gwen.core.model.gherkin.Step
+import gwen.core.model.node.Step
 
 class WaitForElementState(element: String, state: ElementState.Value, negate: Boolean) extends UnitStep[WebContext] {
 

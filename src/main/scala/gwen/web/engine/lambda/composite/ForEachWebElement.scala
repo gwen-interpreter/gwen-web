@@ -23,7 +23,7 @@ import gwen.web.engine.binding.SelectorType
 import gwen.core.engine.EvalEngine
 import gwen.core.engine.lambda.composite.ForEach
 import gwen.core.model._
-import gwen.core.model.gherkin.Step
+import gwen.core.model.node.Step
 
 import scala.concurrent.duration.Duration
 

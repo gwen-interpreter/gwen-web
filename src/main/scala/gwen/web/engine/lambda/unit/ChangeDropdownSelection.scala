@@ -22,7 +22,7 @@ import gwen.web.engine.WebContext
 
 import gwen.core.engine.lambda.UnitStep
 import gwen.core.model._
-import gwen.core.model.gherkin.Step
+import gwen.core.model.node.Step
 
 class ChangeDropdownSelection(element: String, by: DropdownSelection.Value, value: String, bound: Boolean, action: ElementAction.Value) extends UnitStep[WebContext] {
 

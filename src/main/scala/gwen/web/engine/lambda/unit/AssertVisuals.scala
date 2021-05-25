@@ -23,7 +23,7 @@ import gwen.web.engine.eyes.EyesSettings
 import gwen.core.Errors
 import gwen.core.engine.lambda.UnitStep
 import gwen.core.model._
-import gwen.core.model.gherkin.Step
+import gwen.core.model.node.Step
 
 class AssertVisuals() extends UnitStep[WebContext] {
 

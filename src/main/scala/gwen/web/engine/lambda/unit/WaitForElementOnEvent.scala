@@ -21,7 +21,7 @@ import gwen.web.engine.WebContext
 
 import gwen.core.engine.lambda.UnitStep
 import gwen.core.model._
-import gwen.core.model.gherkin.Step
+import gwen.core.model.node.Step
 
 class WaitForElementOnEvent(element: String, event: ElementEvent.Value, waitSecs: Long) extends UnitStep[WebContext] {
 
