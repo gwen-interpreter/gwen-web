@@ -18,7 +18,7 @@
  Feature: Complete the floodio challenge
      As a gwen user
      I want to automate the floodio challenge
-     So that I can verify that it works
+     So that I can be on the hall of fame
       
   Scenario: Launch the challenge
       Given the start page url is "https://challengers.flood.io/start"  
