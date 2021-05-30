@@ -1,6 +1,6 @@
 2.52.0-rc-rp.1
 ==============
-May 29, 2021
+May 31, 2021
 - Fix duplicate launch histories in RP for scenario outlines
 - Send table row data associated with expanded scenarios of outlines to report portal as parameters
 - Send all parameters passed to stepdefs to report portal as parameters
@@ -21,6 +21,7 @@ May 29, 2021
 - Drop Repeat prefix from While/Until keywords in reports
 - Change `gwen.rp.send.tags` setting to accept `markers | annotations | all | none`
   - Default is `markers` 
+- Add parameters passed to StepDef's, expanded outlines and for-each records to HTML report
 
 2.51.0-beta-rp.10
 =================
