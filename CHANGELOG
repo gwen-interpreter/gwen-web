@@ -19,8 +19,8 @@ May 31, 2021
 - Drop column number from sourceRef string representation and codeRef sent to report portal
 - Ensure attachments are still logged in report portal when step def reporting is disabled
 - Drop Repeat prefix from While/Until keywords in reports
-- Change `gwen.rp.send.tags` setting to accept `markers | annotations | all | none`
-  - Default is `markers` 
+- Change `gwen.rp.send.tags` setting to only send marker tags if enabled (default is true: enabled)
+- Add `gwen.rp.send.annotations` setting to send annotations if enabled (default is false: disabled)
 - Add parameters passed to StepDef's, expanded outlines and for-each records to HTML report
 
 2.51.0-beta-rp.10
