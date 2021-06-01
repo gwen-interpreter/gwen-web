@@ -1,6 +1,14 @@
-2.52.0-rc-rp.1
+2.52.0-rc-rp.2
 ==============
-May 31, 2021
+June 4, 2021 - 2.52.0-rc-rp.2
+- Fix name clash between parameters and attributes in interpolator
+- Convert back slashes in sourceRef and nodePath to forward slashes on Windows
+- Send sourceRef as item attribute in report portal if it is less than or equal to 128 
+  characeters in length, otherwise append it to the item description instead.
+- Introduce new setting `gwen.rp.send.nodePath=true|false` to control whether or not
+  to send the nodePath to the description of all leaf nodes. Default is false.
+- Enforce case sensitivity on all report portal setting names.
+May 31, 2021 - 2.52.0-rc-rp.1
 - Fix duplicate launch histories in RP for scenario outlines
 - Send table row data associated with expanded scenarios of outlines to report portal as parameters
 - Send all parameters passed to stepdefs to report portal as parameters
