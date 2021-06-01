@@ -16,7 +16,7 @@
 
 package gwen.web.features
 
-import gwen.web.engine.eyes.EyesSettings
+import gwen.web.eval.eyes.EyesSettings
 
 class VisualTest extends BaseFeatureTest {
 

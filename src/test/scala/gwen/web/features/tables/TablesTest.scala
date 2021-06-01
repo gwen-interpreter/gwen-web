@@ -17,11 +17,11 @@ package gwen.web.features.tables
 
 import gwen.web.GwenWebInterpreter
 
-import gwen.GwenLauncher
 import gwen.core.GwenOptions
-import gwen.core.model.Failed
-import gwen.core.model.Passed
 import gwen.core.report.ReportFormat
+import gwen.core.status.Failed
+import gwen.core.status.Passed
+
 
 import org.scalatest.FlatSpec
 
@@ -29,7 +29,7 @@ import java.io.File
 
 class TablesTest extends FlatSpec {
 
-  val launcher = new GwenLauncher(GwenWebInterpreter)
+  val interpreter = GwenWebInterpreter
   
   "Data tables" should "evaluate without error" in {
     
@@ -40,7 +40,7 @@ class TablesTest extends FlatSpec {
       features = List(new File("features/core/tables"))
     )
       
-    launcher.run(options) match {
+    interpreter.run(options, None) match {
       case Passed(_) => // excellent :)
       case Failed(_, error) => error.printStackTrace(); fail(error.getMessage)
       case _ => fail("evaluation expected but got noop")
@@ -57,7 +57,7 @@ class TablesTest extends FlatSpec {
       dryRun = true
     )
       
-    launcher.run(options) match {
+    interpreter.run(options, None) match {
       case Passed(_) => // excellent :)
       case Failed(_, error) => error.printStackTrace(); fail(error.getMessage)
       case _ => fail("evaluation expected but got noop")

@@ -19,10 +19,11 @@ package gwen.web.features
 import gwen.web.BaseTest
 import gwen.web.GwenWebInterpreter
 
-import gwen.GwenLauncher
 import gwen.core.GwenOptions
 import gwen.core.Settings
-import gwen.core.model._
+import gwen.core.behavior.BehaviorMode
+import gwen.core.status.Passed
+import gwen.core.status.Failed
 
 abstract class BaseFeatureTest extends BaseTest {
 
@@ -35,11 +36,11 @@ abstract class BaseFeatureTest extends BaseTest {
       if (parallelFeatures) args = args ++ Array("--parallel-features")
       if (dryRun) args = args ++ Array("-n")
       if (dataFile.nonEmpty) args = args ++ Array("-i", dataFile.get)
-      if (BehaviorRules.isStrict) args = args ++ Array("-t", "~@Lenient")
+      if (BehaviorMode.isStrict) args = args ++ Array("-t", "~@Lenient")
       args = args ++ features.toArray.asInstanceOf[Array[String]]
       val options = GwenOptions(args)
-      val launcher = new GwenLauncher(GwenWebInterpreter)
-      launcher.run(options, None) match {
+      val interpreter = GwenWebInterpreter
+      interpreter.run(options, None) match {
         case Passed(_) => // woo hoo
         case Failed(_, error) => error.printStackTrace(); fail(error.getMessage)
         case _ => fail("evaluation expected but got noop")

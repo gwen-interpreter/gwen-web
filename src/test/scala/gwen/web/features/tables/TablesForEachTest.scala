@@ -17,11 +17,10 @@ package gwen.web.features.tables
 
 import gwen.web.GwenWebInterpreter
 
-import gwen.GwenLauncher
 import gwen.core.GwenOptions
-import gwen.core.model.Failed
-import gwen.core.model.Passed
 import gwen.core.report.ReportFormat
+import gwen.core.status.Failed
+import gwen.core.status.Passed
 
 import org.scalatest.FlatSpec
 
@@ -29,7 +28,7 @@ import java.io.File
 
 class TablesForEachTest extends FlatSpec {
 
-  val launcher = new GwenLauncher(GwenWebInterpreter)
+  val interpreter = GwenWebInterpreter
   
   "Data tables with for-each" should "evaluate without error" in {
     
@@ -40,7 +39,7 @@ class TablesForEachTest extends FlatSpec {
       features = List(new File("features/core/tables-foreach"))
     )
       
-    launcher.run(options) match {
+    interpreter.run(options, None) match {
       case Passed(_) => // excellent :)
       case Failed(_, error) => error.printStackTrace(); fail(error.getMessage)
       case _ => fail("evaluation expected but got noop")
@@ -57,7 +56,7 @@ class TablesForEachTest extends FlatSpec {
       dryRun = true
     )
       
-    launcher.run(options) match {
+    interpreter.run(options, None) match {
       case Passed(_) => // excellent :)
       case Failed(_, error) => error.printStackTrace(); fail(error.getMessage)
       case _ => fail("evaluation expected but got noop")

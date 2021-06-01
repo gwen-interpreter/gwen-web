@@ -14,12 +14,23 @@
  * limitations under the License.
  */
 
-package gwen.web
+package gwen.web.eval.lambda.unit
 
-import gwen.GwenInterpreter
-import gwen.web.eval.WebEngine
+import gwen.web.eval.WebContext
 
-/**
-  * The main gwen-web interpreter.
-  */
-object GwenWebInterpreter extends GwenInterpreter(new WebEngine())
+import gwen.core.behavior.BehaviorType
+import gwen.core.eval.lambda.UnitStep
+import gwen.core.node.GwenNode
+import gwen.core.node.gherkin.Step
+
+class CaptureUrl(target: Option[String]) extends UnitStep[WebContext] {
+
+  override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
+    checkStepRules(step, BehaviorType.Action, ctx)
+    val name = "the current URL"
+    val url = ctx.captureCurrentUrl
+    ctx.topScope.set(name, url)
+    step.addAttachment(name, "txt", url)
+  }
+
+}

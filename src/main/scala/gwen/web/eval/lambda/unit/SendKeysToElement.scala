@@ -14,12 +14,23 @@
  * limitations under the License.
  */
 
-package gwen.web
+package gwen.web.eval.lambda.unit
 
-import gwen.GwenInterpreter
-import gwen.web.eval.WebEngine
+import gwen.web.eval.WebContext
 
-/**
-  * The main gwen-web interpreter.
-  */
-object GwenWebInterpreter extends GwenInterpreter(new WebEngine())
+import gwen.core.behavior.BehaviorType
+import gwen.core.eval.lambda.UnitStep
+import gwen.core.node.GwenNode
+import gwen.core.node.gherkin.Step
+
+class SendKeysToElement(element: String, keys: Array[String]) extends UnitStep[WebContext] {
+
+  override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
+    step tap { _ =>
+      checkStepRules(step, BehaviorType.Action, ctx)
+      val binding = ctx.getLocatorBinding(element)
+      ctx.sendKeys(binding, keys)
+    }
+  }
+
+}
