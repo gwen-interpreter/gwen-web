@@ -1,5 +1,5 @@
 # 
-# Copyright 2014-2021 Brady Wood, Branko Juric
+# Copyright 2014-2015 Brady Wood, Branko Juric
 # 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
  Feature: Complete the floodio challenge
      As a gwen user
      I want to automate the floodio challenge
-     So that I can verify that it works
+     So that I can be on the hall of fame
       
   Scenario: Launch the challenge
       Given the start page url is "https://challengers.flood.io/start"  
