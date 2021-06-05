@@ -5,8 +5,8 @@ June 4, 2021 - 2.52.0-rc-rp.2
 - Convert back slashes in sourceRef and nodePath to forward slashes on Windows
 - Send sourceRef as item attribute in report portal if it is less than or equal to 128 
   characeters in length, otherwise append it to the item description instead.
-- Introduce new setting `gwen.rp.send.nodePath=true|false` to control whether or not
-  to send the nodePath to the description of all leaf nodes. Default is false.
+- Introduce new setting `gwen.rp.debug.nodePath=true|false` to control whether or not
+  to log the nodePaths of all nodes as debug messages in report portal. Default is false.
 - Enforce case sensitivity on all report portal setting names.
 May 31, 2021 - 2.52.0-rc-rp.1
 - Fix duplicate launch histories in RP for scenario outlines
