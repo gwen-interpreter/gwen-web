@@ -955,9 +955,9 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
     assert(timeout.gteq(delay), "timeout cannot be less than or equal to delay")
     val operationTag = Tag(if (operation == "until") ReservedTags.Until else ReservedTags.While)
     val tags = List(Tag(ReservedTags.Synthetic), operationTag, Tag(ReservedTags.StepDef))
-    val parentNodePath = SourceRef.nodePath(s"${step.sourceRef.flatMap(_.nodePath).getOrElse("/")}/${operationTag.name} $condition", 1)
+    val parentNodePath = SourceRef.nodePath(s"${step.sourceRef.flatMap(_.nodePath).getOrElse("/")}/$condition", 1)
     val preCondSourceRef = step.sourceRef.map(_.withNodePath(parentNodePath))
-    val preCondStepDef = Scenario(preCondSourceRef, tags, operationTag.name, condition, Nil, None, Nil, Nil, Nil)
+    val preCondStepDef = Scenario(preCondSourceRef, tags, operationTag.name, condition, Nil, None, Nil, Nil, step.params, step.cumulativeParams)
     var condSteps: List[Step] = Nil
     var evaluatedStep = step
     val start = System.nanoTime()
@@ -967,12 +967,13 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
         env.webContext.waitUntil(timeout.toSeconds, s"trying to repeat: ${step.name}") {
           val index = iteration
           iteration = iteration + 1
-          env.topScope.set("iteration number", iteration.toString)
-          env.topScope.set("gwen.parent.nodePath.override", parentNodePath)
+          env.topScope.set("iteration.number", iteration.toString)
+          env.topScope.set("gwen.override.parent.nodePath", parentNodePath)
           env.topScope.set("gwen.override.node.occurrence", iteration.toString)
           val preStep = step.copy(
             withKeyword = if(iteration == 1) step.keyword else StepKeyword.And.toString, 
-            withName = doStep
+            withName = doStep,
+            withParams = List(("iteration.number", iteration.toString)) ++ step.params
           )
           operation match {
             case "until" =>
@@ -1025,11 +1026,13 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
             if (nanos > timeout.toNanos) timeout.toNanos
             else nanos
           }
-          evaluatedStep = step.copy(withEvalStatus = Failed(durationNanos, new StepFailure(step, e)))
+          evaluatedStep = step.copy(
+            withEvalStatus = Failed(durationNanos, new StepFailure(step, e))
+          )
       } finally {
         env.topScope.set("gwen.override.node.occurrence", null)
         env.topScope.set("gwen.override.parent.nodePath", null)
-        env.topScope.set("iteration number", null)
+        env.topScope.set("iteration.number", null)
       }
     } getOrElse {
       try {
@@ -1053,7 +1056,8 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
             withSourceRef = condSteps.head.sourceRef map { sref =>
               sref.withNodePath(SourceRef.nodePath(s"$parentNodePath/${condSteps.head.name}", iteration + 1))
             },
-            withKeyword = StepKeyword.And.toString, withName = doStep
+            withKeyword = StepKeyword.And.toString, withName = doStep,
+            withParams = List(("iteration.number", (iteration + 1).toString)) ++ step.params
           )
           lifecycle.beforeStep(preCondStepDef, preStep, env.scopes)
           val fStep = preStep.copy(

@@ -137,7 +137,8 @@
       Given the result is defined by javascript "Math.pow(${data[number]}, $<power>)"
        Then the result should start with "${data[$<function>]}"
         And name[1] should be "number"
-        And name[2] should be "square"
+        And condition is defined by javascript "true"
+        And name[2] should be "square" if condition
         And name[3] should be "cube"
         And record.number should match regex "\d+"
 
