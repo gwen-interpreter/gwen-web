@@ -22,11 +22,11 @@ import gwen.core.report.ReportFormat
 import gwen.core.status.Failed
 import gwen.core.status.Passed
 
-import org.scalatest.FlatSpec
 
 import java.io.File
+import org.scalatest.flatspec.AnyFlatSpec
 
-class TablesForEachTest extends FlatSpec {
+class TablesForEachTest extends AnyFlatSpec {
 
   val interpreter = GwenWebInterpreter
   

@@ -1,12 +1,12 @@
 /*
  * Copyright 2016-2021 Brady Wood, Branko Juric
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -31,14 +31,15 @@ import gwen.core.state._
 import gwen.core.status.Pending
 
 import org.apache.commons.text.StringEscapeUtils
-import org.mockito.Matchers.any
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
-import org.scalatest.{BeforeAndAfterEach, Matchers}
+import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
 
 import org.openqa.selenium.WebElement
 
 import java.io.File
+import org.scalatest.matchers.should.Matchers
 
 class WebEngineTest extends BaseTest with Matchers with MockitoSugar with BeforeAndAfterEach {
 
@@ -1414,7 +1415,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     verify(ctx).captureScreenshot(true, "name")
     verify(mockScopes).set("name", file.getAbsolutePath)
   }
-  
+
   """<element> can be <clicked|right clicked|double clicked|submitted|checked|ticked|unchecked|unticked|selected|deselected|typed|entered|tabbed|cleared|moved to> by javascript "<javascript>"""" should "evaluate" in {
     val mockBinding = mock[LocatorBinding]
     doReturn(mockBinding).when(ctx).getLocatorBinding("<element>")
@@ -1637,5 +1638,5 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     evaluate("""I insert a new line in <element>""")
     verify(ctx).sendValue(mockBinding, newLine, clickFirst = false, clearFirst = false, sendEnterKey = false)
   }
-  
+
 }

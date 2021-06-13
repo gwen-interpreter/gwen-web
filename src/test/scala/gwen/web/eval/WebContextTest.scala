@@ -30,11 +30,10 @@ import gwen.core.state.EnvState
 
 import org.mockito.Mockito._
 import org.openqa.selenium._
-import org.scalatest.{BeforeAndAfterEach, Matchers}
+import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
-import org.mockito.Matchers.any
-import org.mockito.Matchers.anyVararg
-import org.mockito.Matchers.same
+import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchers.same
 import org.openqa.selenium.interactions.{Action, Actions}
 import org.openqa.selenium.support.ui.Select
 
@@ -42,6 +41,7 @@ import scala.jdk.CollectionConverters._
 import scala.concurrent.duration.Duration
 
 import java.io.File
+import org.scalatest.matchers.should.Matchers
 
 class WebContextTest extends BaseTest with Matchers with MockitoSugar with BeforeAndAfterEach {
 
@@ -113,7 +113,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val script = "(function(arg){return arg;})(arg)"
     val param = "true"
     ctx.executeJS(script, param)
-    verify(mockWebDriver).executeScript(same(script), anyVararg())
+    verify(mockWebDriver).executeScript(same(script), any())
   }
 
   "WebContext.executeJS without args" should "invoke javascript without args" in {
@@ -414,7 +414,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
       }
     }
   }
-  
+
   "WebContext.checkElementState" should "fail when the state should not but does match 'displayed'" in {
     val elemBinding = LocatorBinding("name", SelectorType.id, "name", None, Some(Duration.Zero), None, ctx)
     val mockElement = mock[WebElement]

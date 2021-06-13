@@ -23,11 +23,11 @@ import gwen.core.status.Failed
 import gwen.core.status.Passed
 
 
-import org.scalatest.FlatSpec
 
 import java.io.File
+import org.scalatest.flatspec.AnyFlatSpec
 
-class TablesTest extends FlatSpec {
+class TablesTest extends AnyFlatSpec {
 
   val interpreter = GwenWebInterpreter
   

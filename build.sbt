@@ -62,12 +62,14 @@ lazy val mainDependencies = {
 }
 
 lazy val testDependencies = {
-  val scalaTest = "3.0.9"
-  val mockitoAll = "1.10.19"
+  val scalaTest = "3.2.9"
+  val scalaTestPlusMockito = "3.2.9.0"
+  val mockitoCore = "3.11.1"
 
   Seq(
     "org.scalatest" %% "scalatest" % scalaTest,
-    "org.mockito" % "mockito-all" % mockitoAll
+    "org.scalatestplus" %% "mockito-3-4" % scalaTestPlusMockito,
+    "org.mockito" % "mockito-core" % mockitoCore
   ).map(_ % Test)
 }
 

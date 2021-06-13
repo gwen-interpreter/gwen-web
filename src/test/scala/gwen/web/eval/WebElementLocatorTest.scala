@@ -1,12 +1,12 @@
 /*
  * Copyright 2014-2021 Brady Wood, Branko Juric
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,21 +30,22 @@ import org.mockito.Mockito.doReturn
 import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.when
-import org.mockito.Mockito.verifyZeroInteractions
+import org.mockito.Mockito.verifyNoInteractions
 import org.openqa.selenium.By
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.WebElement
 import org.openqa.selenium.firefox.FirefoxDriver
-import org.scalatest.{BeforeAndAfterEach, Matchers}
+import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
 import org.openqa.selenium.WebDriver.{Options, TargetLocator, Timeouts}
-import org.mockito.Matchers.{anyVararg, same}
+import org.mockito.ArgumentMatchers.{any, same}
 
 import scala.jdk.CollectionConverters._
 import scala.concurrent.duration.Duration
 
 import java.util
 import java.util.concurrent.TimeUnit
+import org.scalatest.matchers.should.Matchers
 
 class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar with BeforeAndAfterEach {
 
@@ -76,11 +77,11 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
     val mockWebDriver: FirefoxDriver = mock[FirefoxDriver]
     val ctx = newCtx(None, mockWebDriver)
     val locator = newLocator(ctx)
-    
+
     when(mockWebDriver.manage()).thenReturn(mockWebDriverOptions)
     when(mockWebDriverOptions.timeouts()).thenReturn(mockWebDriverTimeouts)
     when(mockWebDriver.findElement(By.id("mname"))).thenReturn(null)
-    
+
     val e = intercept[WebElementNotFoundException] {
       try {
         locator.locate(LocatorBinding("middleName", SelectorType.id, "mname", None, None, ctx))
@@ -92,7 +93,7 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
     }
     e.getMessage should startWith ("Could not locate element: middleName")
   }
-  
+
   "Attempt to locate existing element by id" should "return the element" in {
     shouldFindWebElement(SelectorType.id, "uname", By.id("uname"), None, None)
   }
@@ -116,7 +117,7 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
   "Attempt to locate existing element by id at index 2 with 2 second timeout" should "return the element" in {
     shouldFindWebElement(SelectorType.id, "uname", By.id("uname"), Some(Duration.create(2, TimeUnit.SECONDS)), Some(2))
   }
-  
+
   "Attempt to locate existing element by name" should "return the element" in {
     shouldFindWebElement(SelectorType.name, "uname", By.name("uname"), None, None)
   }
@@ -140,7 +141,7 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
   "Attempt to locate existing element by name at index 2 with 2 second timeout" should "return the element" in {
     shouldFindWebElement(SelectorType.name, "uname", By.name("uname"), Some(Duration.create(2, TimeUnit.SECONDS)), Some(2))
   }
-  
+
   "Attempt to locate existing element by tag name" should "return the element" in {
     shouldFindWebElement(SelectorType.`tag name`, "input", By.tagName("input"), None, None)
   }
@@ -164,7 +165,7 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
   "Attempt to locate existing element by tag name at index 2 with 2 second timeout" should "return the element" in {
     shouldFindWebElement(SelectorType.`tag name`, "input", By.tagName("input"), Some(Duration.create(2, TimeUnit.SECONDS)), Some(2))
   }
-  
+
   "Attempt to locate existing element by css selector" should "return the element" in {
     shouldFindWebElement(SelectorType.`css selector`, ":focus", By.cssSelector(":focus"), None, None)
   }
@@ -188,7 +189,7 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
   "Attempt to locate existing element by css selector at index 2 with 2 second timeout" should "return the element" in {
     shouldFindWebElement(SelectorType.`css selector`, ":focus", By.cssSelector(":focus"), Some(Duration.create(2, TimeUnit.SECONDS)), Some(2))
   }
-  
+
   "Attempt to locate existing element by xpath" should "return the element" in {
     shouldFindWebElement(SelectorType.`xpath`, "//input[name='uname']", By.xpath("//input[name='uname']"), None, None)
   }
@@ -212,7 +213,7 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
   "Attempt to locate existing element by xpath at index 2 with 2 second timeout" should "return the element" in {
     shouldFindWebElement(SelectorType.`xpath`, "//input[name='uname']", By.xpath("//input[name='uname']"), Some(Duration.create(2, TimeUnit.SECONDS)), Some(2))
   }
-  
+
   "Attempt to locate existing element by class name" should "return the element" in {
     shouldFindWebElement(SelectorType.`class name`, ".userinput", By.className(".userinput"), None, None)
   }
@@ -228,7 +229,7 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
   "Attempt to locate existing element by class name at index 1 with no wait" should "return the element" in {
     shouldFindWebElement(SelectorType.`class name`, ".userinput", By.className(".userinput"), Some(Duration.Zero), Some(1))
   }
-  
+
   "Attempt to locate existing element by link text with 2 second timeout" should "return the element" in {
     shouldFindWebElement(SelectorType.`link text`, "User name", By.linkText("User name"), Some(Duration.create(2, TimeUnit.SECONDS)), None)
   }
@@ -236,7 +237,7 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
   "Attempt to locate existing element by link text at index 2 with 2 second timeout" should "return the element" in {
     shouldFindWebElement(SelectorType.`link text`, "User name", By.linkText("User name"), Some(Duration.create(2, TimeUnit.SECONDS)), Some(2))
   }
-  
+
   "Attempt to locate existing element by partial link text" should "return the element" in {
     shouldFindWebElement(SelectorType.`partial link text`, "User", By.partialLinkText("User"), None, None)
   }
@@ -260,9 +261,9 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
   "Attempt to locate existing element by partial link text at index 2 with 2 second timeout" should "return the element" in {
     shouldFindWebElement(SelectorType.`partial link text`, "User", By.partialLinkText("User"), Some(Duration.create(2, TimeUnit.SECONDS)), Some(2))
   }
-  
+
   "Attempt to locate existing element by javascript" should "return the element" in {
-    
+
     val selectorType = SelectorType.javascript
     val lookup = "document.getElementById('username')"
     val mockWebDriver: FirefoxDriver = mock[FirefoxDriver]
@@ -272,11 +273,11 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
     when(mockWebDriverOptions.timeouts()).thenReturn(mockWebDriverTimeouts)
     doReturn(mockWebElement).when(mockWebDriver).executeScript(s"return $lookup")
     when(mockWebElement.isDisplayed).thenReturn(true)
-    
+
     locator.locate(LocatorBinding("username", selectorType, lookup, None, None, ctx)) should be (mockWebElement)
-    
+
     verify(mockWebDriver, times(1)).executeScript(s"return $lookup")
-    verifyZeroInteractions(mockWebDriverTimeouts)
+    verifyNoInteractions(mockWebDriverTimeouts)
 
   }
 
@@ -296,7 +297,7 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
     locator.locate(LocatorBinding("username", selectorType, lookup, None, Some(0), ctx)) should be (mockWebElement)
 
     verify(mockWebDriver, times(1)).executeScript(s"return $lookup")
-    verifyZeroInteractions(mockWebDriverTimeouts)
+    verifyNoInteractions(mockWebDriverTimeouts)
 
   }
 
@@ -321,7 +322,7 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
     locator.locate(LocatorBinding("username", selectorType, lookup, None, Some(1), ctx)) should be (mockWebElement)
 
     verify(mockWebDriver, times(1)).executeScript(s"return $lookup")
-    verifyZeroInteractions(mockWebDriverTimeouts)
+    verifyNoInteractions(mockWebDriverTimeouts)
 
   }
 
@@ -458,9 +459,9 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
     verify(mockWebDriverTimeouts, times(1)).implicitlyWait(WebSettings.`gwen.web.locator.wait.seconds`, TimeUnit.SECONDS)
 
   }
-  
+
   "Timeout on locating element by javascript" should "throw not found error" in {
-    
+
     val selectorType = SelectorType.javascript
     val lookup = "document.getElementById('username')"
     val mockWebDriver: FirefoxDriver = mock[FirefoxDriver]
@@ -469,12 +470,12 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
 
     when(mockWebDriver.manage()).thenReturn(mockWebDriverOptions)
     when(mockWebDriverOptions.timeouts()).thenReturn(mockWebDriverTimeouts)
-    doReturn(null).when(mockWebDriver).executeScript(same(s"return $lookup"), anyVararg())
-    
+    doReturn(null).when(mockWebDriver).executeScript(same(s"return $lookup"), any())
+
     intercept[WebElementNotFoundException] {
       locator.locate(LocatorBinding("username", selectorType, lookup, None, None, ctx))
     }
-    
+
     verify(mockWebDriver, atLeastOnce()).executeScript(s"return $lookup")
 
   }
@@ -489,7 +490,7 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
 
     when(mockWebDriver.manage()).thenReturn(mockWebDriverOptions)
     when(mockWebDriverOptions.timeouts()).thenReturn(mockWebDriverTimeouts)
-    doReturn(null).when(mockWebDriver).executeScript(same(s"return $lookup"), anyVararg())
+    doReturn(null).when(mockWebDriver).executeScript(same(s"return $lookup"), any())
 
     intercept[WebElementNotFoundException] {
       locator.locate(LocatorBinding("username", selectorType, lookup, None, Some(0), ctx))
@@ -509,7 +510,7 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
 
     when(mockWebDriver.manage()).thenReturn(mockWebDriverOptions)
     when(mockWebDriverOptions.timeouts()).thenReturn(mockWebDriverTimeouts)
-    doReturn(null).when(mockWebDriver).executeScript(same(s"return $lookup"), anyVararg())
+    doReturn(null).when(mockWebDriver).executeScript(same(s"return $lookup"), any())
 
     intercept[Errors.WaitTimeoutException] {
       locator.locate(LocatorBinding("username", selectorType, lookup, None, Some(1), ctx))
@@ -518,14 +519,14 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
     verify(mockWebDriver, atLeastOnce()).executeScript(s"return $lookup")
 
   }
-  
+
   private def shouldFindWebElement(selectorType: SelectorType.Value, lookup: String, by: By, timeout: Option[Duration], index: Option[Int]): Unit = {
 
     val envState = newEnvState
     val mockWebDriver: FirefoxDriver = mock[FirefoxDriver]
     val ctx = newCtx(None, mockWebDriver)
     val locator = newLocator(ctx)
-    
+
     when(mockWebDriver.manage()).thenReturn(mockWebDriverOptions)
     when(mockWebDriverOptions.timeouts()).thenReturn(mockWebDriverTimeouts)
     index match {
@@ -547,14 +548,14 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
     }
     envState.scopes.set("container/locator", SelectorType.id.toString)
     envState.scopes.set("container/locator/id", "container")
-    
+
     when(mockWebDriver.findElement(By.id("iframe"))).thenReturn(mockIFrameElement)
     when(mockIFrameElement.getTagName).thenReturn("iframe")
     when(mockWebDriver.switchTo()).thenReturn(mockTargetLocator)
     when(mockTargetLocator.frame(mockIFrameElement)).thenReturn(mockWebDriver)
     envState.scopes.set("iframe/locator", SelectorType.id.toString)
     envState.scopes.set("iframe/locator/id", "iframe")
-    
+
     when(mockWebDriver.findElement(By.id("frame"))).thenReturn(mockFrameElement)
     when(mockFrameElement.getTagName).thenReturn("frame")
     when(mockWebDriver.switchTo()).thenReturn(mockTargetLocator)
@@ -580,9 +581,9 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
       verify(mockWebDriverTimeouts, times(4)).implicitlyWait(WebSettings.`gwen.web.locator.wait.seconds`, TimeUnit.SECONDS)
     }
     if (timeout.isEmpty) {
-      verifyZeroInteractions(mockWebDriverTimeouts)
+      verifyNoInteractions(mockWebDriverTimeouts)
     }
-    
+
   }
 
   "Attempt to locate all non existent elements" should "return an empty list when empty array is returned" in {
@@ -727,7 +728,7 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
     locator.locateAll(LocatorBinding("username", selectorType, lookup, None, None, ctx)) should be (mockWebElements)
 
     verify(mockWebDriver, times(1)).executeScript(s"return $lookup")
-    verifyZeroInteractions(mockWebDriverTimeouts)
+    verifyNoInteractions(mockWebDriverTimeouts)
 
   }
 
@@ -791,7 +792,7 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
 
     when(mockWebDriver.manage()).thenReturn(mockWebDriverOptions)
     when(mockWebDriverOptions.timeouts()).thenReturn(mockWebDriverTimeouts)
-    doReturn(null).when(mockWebDriver).executeScript(same(s"return $lookup"), anyVararg())
+    doReturn(null).when(mockWebDriver).executeScript(same(s"return $lookup"), any())
 
     intercept[WebElementNotFoundException] {
       locator.locate(LocatorBinding("username", selectorType, lookup, None, None, ctx))
@@ -850,7 +851,7 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
       verify(mockWebDriverTimeouts, times(4)).implicitlyWait(WebSettings.`gwen.web.locator.wait.seconds`, TimeUnit.SECONDS)
     }
     if (timeout.isEmpty) {
-      verifyZeroInteractions(mockWebDriverTimeouts)
+      verifyNoInteractions(mockWebDriverTimeouts)
     }
 
   }
@@ -862,7 +863,7 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
       Selector(SelectorType.name, "username"),
       Selector(SelectorType.`class name`, ".usrname")
     )
-    
+
     val mockWebDriver: FirefoxDriver = mock[FirefoxDriver]
     val ctx = newCtx(None, mockWebDriver)
     val locator = newLocator(ctx)
@@ -952,63 +953,63 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
     LocatorBinding("user name", SelectorType.id, "username", container, None, ctx).jsEquivalent.toString should be (
       """user name [locator: javascript=document.getElementById('username') in container [locator: id=container]]"""
     )
-    
+
     LocatorBinding("user name", SelectorType.name, "username", None, None, ctx).jsEquivalent.toString should be (
       """user name [locator: javascript=document.getElementsByName('username')[0]]"""
     )
-    
+
     LocatorBinding("user name", SelectorType.name, "username", container, None, ctx).jsEquivalent.toString should be (
      """user name [locator: javascript=document.getElementsByName('username')[0] in container [locator: id=container]]"""
     )
-    
+
     LocatorBinding("user name", SelectorType.`class name`, "username", None, None, ctx).jsEquivalent.toString should be (
      """user name [locator: javascript=document.getElementsByClassName('username')[0]]"""
     )
-    
+
     LocatorBinding("user name", SelectorType.`class name`, "username", container, None, ctx).jsEquivalent.toString should be (
      """user name [locator: javascript=document.getElementsByClassName('username')[0] in container [locator: id=container]]"""
     )
-    
+
     LocatorBinding("user name", SelectorType.`css selector`, ".username", None, None, ctx).jsEquivalent.toString should be (
      "user name [locator: javascript=document.querySelector('.username')]"
     )
-    
+
     LocatorBinding("user name", SelectorType.`css selector`, ".username", container, None, ctx).jsEquivalent.toString should be (
      """user name [locator: javascript=document.querySelector('.username') in container [locator: id=container]]"""
     )
-    
+
     LocatorBinding("user name", SelectorType.`tag name`, "input", None, None, ctx).jsEquivalent.toString should be (
      """user name [locator: javascript=document.getElementsByTagName('input')[0]]"""
     )
-    
+
     LocatorBinding("user name", SelectorType.`tag name`, "input", container, None, ctx).jsEquivalent.toString should be (
      """user name [locator: javascript=document.getElementsByTagName('input')[0] in container [locator: id=container]]"""
     )
-    
+
     LocatorBinding("user name", SelectorType.`xpath`, "//html/body/div/input", None, None, ctx).jsEquivalent.toString should be (
      """user name [locator: javascript=document.evaluate('\/\/html\/body\/div\/input', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue]"""
     )
-    
+
     LocatorBinding("user link", SelectorType.`link text`, "user", None, None, ctx).jsEquivalent.toString should be (
      """user link [locator: javascript=document.evaluate('//a[text()="user"]', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue]"""
     )
-    
+
     LocatorBinding("user link", SelectorType.`link text`, "user", container, None, ctx).jsEquivalent.toString should be (
      """user link [locator: javascript=document.evaluate('//a[text()="user"]', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue in container [locator: id=container]]"""
     )
-    
+
     LocatorBinding("user link", SelectorType.`partial link text`, "user", None, None, ctx).jsEquivalent.toString should be (
      """user link [locator: javascript=document.evaluate('//a[contains(text(), "user")]', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue]"""
     )
-    
+
     LocatorBinding("user link", SelectorType.`partial link text`, "user", container, None, ctx).jsEquivalent.toString should be (
      """user link [locator: javascript=document.evaluate('//a[contains(text(), "user")]', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue in container [locator: id=container]]"""
     )
-    
+
     LocatorBinding("user name", SelectorType.javascript, "document.getElementById('user')", None, None, ctx).jsEquivalent.toString should be (
      """user name [locator: javascript=document.getElementById('user')]"""
     )
-    
+
     LocatorBinding("user name", SelectorType.javascript, "document.getElementById('user')", container, None, ctx).jsEquivalent.toString should be (
      """user name [locator: javascript=document.getElementById('user') in container [locator: id=container]]"""
     )
@@ -1025,67 +1026,67 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
     LocatorBinding("user name/list", SelectorType.id, "username", None, None, ctx).jsEquivalent.toString should be (
      """user name/list [locator: javascript=document.querySelectorAll('#username')]"""
     )
-    
+
     LocatorBinding("user name/list", SelectorType.id, "username", container, None, ctx).jsEquivalent.toString should be (
      """user name/list [locator: javascript=document.querySelectorAll('#username') in container [locator: id=container]]"""
     )
-    
+
     LocatorBinding("user name/list", SelectorType.name, "username", None, None, ctx).jsEquivalent.toString should be (
      """user name/list [locator: javascript=document.getElementsByName('username')]"""
     )
-    
+
     LocatorBinding("user name/list", SelectorType.name, "username", container, None, ctx).jsEquivalent.toString should be (
      """user name/list [locator: javascript=document.getElementsByName('username') in container [locator: id=container]]"""
     )
-    
+
     LocatorBinding("user name/list", SelectorType.`class name`, "username", None, None, ctx).jsEquivalent.toString should be (
      """user name/list [locator: javascript=document.getElementsByClassName('username')]"""
     )
-    
+
     LocatorBinding("user name/list", SelectorType.`class name`, "username", container, None, ctx).jsEquivalent.toString should be (
      """user name/list [locator: javascript=document.getElementsByClassName('username') in container [locator: id=container]]"""
     )
-    
+
     LocatorBinding("user name/list", SelectorType.`css selector`, ".username", None, None, ctx).jsEquivalent.toString should be (
      """user name/list [locator: javascript=document.querySelectorAll('.username')]"""
     )
-    
+
     LocatorBinding("user name/list", SelectorType.`css selector`, ".username", container, None, ctx).jsEquivalent.toString should be (
      """user name/list [locator: javascript=document.querySelectorAll('.username') in container [locator: id=container]]"""
     )
-    
+
     LocatorBinding("user name/list", SelectorType.`tag name`, "input", None, None, ctx).jsEquivalent.toString should be (
      """user name/list [locator: javascript=document.getElementsByTagName('input')]"""
     )
-    
+
     LocatorBinding("user name/list", SelectorType.`tag name`, "input", container, None, ctx).jsEquivalent.toString should be (
      """user name/list [locator: javascript=document.getElementsByTagName('input') in container [locator: id=container]]"""
     )
-    
+
     LocatorBinding("user name/list", SelectorType.`xpath`, "//html/body/div/input", None, None, ctx).jsEquivalent.toString should be (
      """user name/list [locator: javascript=document.evaluate('\/\/html\/body\/div\/input', document, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null)]"""
     )
-    
+
     LocatorBinding("user link/list", SelectorType.`link text`, "user", None, None, ctx).jsEquivalent.toString should be (
      """user link/list [locator: javascript=document.evaluate('//a[text()="user"]', document, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null)]"""
     )
-    
+
     LocatorBinding("user link/list", SelectorType.`link text`, "user", container, None, ctx).jsEquivalent.toString should be (
      """user link/list [locator: javascript=document.evaluate('//a[text()="user"]', document, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null) in container [locator: id=container]]"""
     )
-    
+
     LocatorBinding("user link/list", SelectorType.`partial link text`, "user", None, None, ctx).jsEquivalent.toString should be (
      """user link/list [locator: javascript=document.evaluate('//a[contains(text(), "user")]', document, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null)]"""
     )
-    
+
     LocatorBinding("user link/list", SelectorType.`partial link text`, "user", container, None, ctx).jsEquivalent.toString should be (
      """user link/list [locator: javascript=document.evaluate('//a[contains(text(), "user")]', document, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null) in container [locator: id=container]]"""
     )
-    
+
     LocatorBinding("user name/list", SelectorType.javascript, "document.getElementsByName('user')", None, None, ctx).jsEquivalent.toString should be (
      """user name/list [locator: javascript=document.getElementsByName('user')]"""
     )
-    
+
     LocatorBinding("user name/list", SelectorType.javascript, "document.getElementsByName('user')", container, None, ctx).jsEquivalent.toString should be (
      """user name/list [locator: javascript=document.getElementsByName('user') in container [locator: id=container]]"""
     )
@@ -1104,5 +1105,5 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
   }
 
   private def newEnvState: EnvState = EnvState()
-  
+
 }
