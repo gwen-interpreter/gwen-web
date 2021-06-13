@@ -71,7 +71,7 @@ lazy val testDependencies = {
   ).map(_ % Test)
 }
 
-mappings in(Compile, packageBin) ++= Seq(
+Compile / packageBin / mappings ++= Seq(
   file("README.md") -> "README.txt",
   file("LICENSE") -> "LICENSE.txt",
   file("NOTICE") -> "NOTICE.txt",
