@@ -19,7 +19,7 @@ package gwen.web.eval
 import gwen.web._
 import gwen.web.eval.WebErrors.NoSuchWindowException
 
-import gwen.core._
+import scala.util.chaining._
 
 import org.mockito.Mockito.times
 import org.mockito.Mockito.verify

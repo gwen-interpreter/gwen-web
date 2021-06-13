@@ -30,6 +30,8 @@ import gwen.core.node.gherkin.table.FlatTable
 import gwen.core.state._
 import gwen.core.status.Pending
 
+import scala.util.chaining._
+
 import org.apache.commons.text.StringEscapeUtils
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._

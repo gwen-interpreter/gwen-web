@@ -22,7 +22,7 @@ import scala.concurrent.duration.Duration
 
 /**
   * Captures a selector.
-  * 
+  *
   * @param selectorType the seletor type
   * @param expression the selector expression
   * @param container optional parent container binding
@@ -31,13 +31,13 @@ import scala.concurrent.duration.Duration
   * @param index optional index (if selector returns more than one element then index is required)
   */
 case class Selector(selectorType: SelectorType.Value, expression: String, container: Option[LocatorBinding], isContainer: Boolean, timeout: Option[Duration], index: Option[Int]) {
-  
+
   override def toString: String =
     s"$selectorType=$expression${container.map(c => s" in $c").getOrElse("")}${index.map(i => s" at index $i").getOrElse("")}"
-  
-    lazy val timeoutSeconds = timeout.map(_.toSeconds).getOrElse(WebSettings.`gwen.web.locator.wait.seconds`)
-  
-    lazy val timeoutMilliseconds = timeoutSeconds * 1000
+
+  lazy val timeoutSeconds = timeout.map(_.toSeconds).getOrElse(WebSettings.`gwen.web.locator.wait.seconds`)
+
+  lazy val timeoutMilliseconds = timeoutSeconds * 1000
 }
 
 /** Locator factory companion. */

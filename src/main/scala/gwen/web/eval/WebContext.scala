@@ -36,6 +36,7 @@ import scala.concurrent.duration.Duration
 import scala.io.Source
 import scala.jdk.CollectionConverters._
 import scala.util.{Failure, Success, Try}
+import scala.util.chaining._
 
 import com.applitools.eyes.{MatchLevel, RectangleSize}
 import com.typesafe.scalalogging.LazyLogging
@@ -74,7 +75,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     reset()
     close()
   }
-  
+
 
   /** Closes the context and all browsers and associated web drivers (if any have loaded). */
   override def close(): Unit = {
@@ -93,10 +94,10 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
   }
 
   /**
-   * Adds web engine dsl steps to super implementation. The entries 
+   * Adds web engine dsl steps to super implementation. The entries
    * returned by this method are used for tab completion in the REPL.
    */
-  override def dsl: List[String] = 
+  override def dsl: List[String] =
     Source.fromInputStream(getClass.getResourceAsStream("/gwen-web.dsl")).getLines().toList ++ super.dsl
 
   /**
@@ -117,13 +118,13 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     executeJS(javascript, params.map(_.asInstanceOf[AnyRef]) : _*)
 
   /**
-    * Gets a bound value from memory. A search for the value is made in 
+    * Gets a bound value from memory. A search for the value is made in
     * the following order and the first value found is returned:
     *  - Web element text on the current page
     *  - Currently active page scope
     *  - The top scope
     *  - Settings
-    *  
+    *
     * @param name the name of the bound value to find
     */
   override def getBoundReferenceValue(name: String): String = {
@@ -145,7 +146,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
 
   /**
     * Resolves a bound attribute value from the visible scope.
-    *  
+    *
     * @param name the name of the bound attribute to find
     */
   def getAttribute(name: String): String = {
@@ -164,7 +165,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
       }
     }
   }
-  
+
   def boundAttributeOrSelection(element: String, selection: Option[DropdownSelection.Value]): () => String = () => {
     selection match {
       case None => getBoundReferenceValue(element)
@@ -190,7 +191,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
 
   /**
    * Gets a named locator binding.
-   * 
+   *
    * @param name the name of the web element
    * @param optional true to return None if not found; false to throw error
    */
@@ -210,31 +211,31 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     } else {
       step
     }) tap { _ =>
-      val isVisualAssertionError = 
+      val isVisualAssertionError =
         failure.cause.map(_.isInstanceOf[VisualAssertionException]).getOrElse(false)
       if (!failure.isLicenseError && !isVisualAssertionError) {
         captureScreenshot(true)
       }
     }
-  }  
+  }
 
     /**
     * Binds the given element and value to a given action (element/action=value)
     * and then waits for any bound post conditions to be satisfied.
-    * 
+    *
     * @param element the element to bind the value to
     * @param action the action to bind the value to
     * @param value the value to bind
     */
   def bindAndWait(element: String, action: String, value: String): Unit = {
     scopes.set(s"$element/$action", value)
-    
+
     // sleep if wait time is configured for this action
-    scopes.getOpt(s"$element/$action/wait") foreach { secs => 
+    scopes.getOpt(s"$element/$action/wait") foreach { secs =>
       logger.info(s"Waiting for $secs second(s) (post-$action wait)")
       Thread.sleep(secs.toLong * 1000)
     }
-    
+
     // wait for javascript post condition if one is configured for this action
     scopes.getOpt(s"$element/$action/condition") foreach { condition =>
       val javascript = scopes.get(JavaScriptBinding.key(condition))
@@ -248,7 +249,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
 
   /**
     * Gets the actual value of an attribute and compares it with an expected value or condition.
-    * 
+    *
     * @param name the name of the attribute being compared
     * @param expected the expected value, regex, xpath, or json path
     * @param actual the actual value of the element
@@ -337,7 +338,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     */
   def locateAndHighlight(binding: LocatorBinding): Unit = {
     withDriverAndElement(binding, s"trying to locate $binding") { (driver, webElement) =>
-      createActions(driver).moveToElement(webElement).perform() 
+      createActions(driver).moveToElement(webElement).perform()
     }
   }
 
@@ -413,7 +414,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
 
   def tryMoveTo(webElement: WebElement): Unit = {
     if (!webElement.isDisplayed && !isInViewport(webElement)) {
-      withWebDriver { driver => 
+      withWebDriver { driver =>
         createActions(driver).moveToElement(webElement).perform()
       }
     }
@@ -484,7 +485,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     * @param condition the boolean condition to wait for (until true)
     */
   def waitUntil(timeoutSecs: Option[Long], reason: String)(condition: => Boolean): Unit = {
-    timeoutSecs match { 
+    timeoutSecs match {
       case (Some(secs)) => waitUntil(secs, reason) { condition }
       case _ => waitUntil(reason) { condition }
     }
@@ -755,11 +756,11 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
             case ElementAction.submit => webElement.submit()
             case ElementAction.check | ElementAction.tick =>
               if (!webElement.isSelected) webElement.click()
-              if (!webElement.isSelected) 
+              if (!webElement.isSelected)
                 createActions(driver).sendKeys(webElement, Keys.SPACE).perform()
             case ElementAction.uncheck | ElementAction.untick =>
               if (webElement.isSelected) webElement.click()
-              if (webElement.isSelected) 
+              if (webElement.isSelected)
                 createActions(driver).sendKeys(webElement, Keys.SPACE).perform()
             case ElementAction.clear =>
               webElement.clear()
@@ -1108,11 +1109,11 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
 
   /**
     * Switches to a tab or child window ocurrance.
-    * 
+    *
     * @param occurrence the tag or window occurrence to switch to (first opened is occurrence 1, 2nd is 2, ..)
     */
   def switchToChild(occurrence: Int): Unit = {
-    waitUntil(s"trying to switch to child tab/window occurrence $occurrence") { 
+    waitUntil(s"trying to switch to child tab/window occurrence $occurrence") {
       driverManager.windows().lift(occurrence).nonEmpty
     }
     driverManager.switchToChild(occurrence)
@@ -1129,7 +1130,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
 
   /**
     * Closes the tab or child window occurrence.
-    * 
+    *
     * @param occurrence the tag or window occurrence to close (first opened is occurrence 1, 2nd is 2, ..)
     */
   def closeChild(occurrence: Int): Unit = {

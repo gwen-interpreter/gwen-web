@@ -20,15 +20,14 @@ lazy val projectSettings = Seq(
   startYear := Some(2014),
   licenses += "Apache License, Version 2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0.html"),
   homepage := Some(url("https://github.com/gwen-interpreter/gwen")),
-  scalaVersion := "2.13.3",
+  scalaVersion := "3.0.0",
   crossPaths := false,
   trapExit := false,
   scalacOptions ++= Seq(
     "-feature",
     "-language:postfixOps",
     "-deprecation",
-    "-target:8",
-    "-Xlint:_,-missing-interpolator"
+    "-Xtarget:8"
   ),
   initialize := {
     val _ = initialize.value
