@@ -24,8 +24,8 @@ import gwen.core.eval.ComparisonOperator
 import gwen.core.state.EnvState
 import gwen.core.state.StateLevel
 
-import org.scalatest.Matchers
 import org.scalatestplus.mockito.MockitoSugar
+import org.scalatest.matchers.should.Matchers
 
 class WebEnvironmentTest extends BaseTest with Matchers with MockitoSugar {
   

@@ -20,15 +20,14 @@ lazy val projectSettings = Seq(
   startYear := Some(2014),
   licenses += "Apache License, Version 2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0.html"),
   homepage := Some(url("https://github.com/gwen-interpreter/gwen")),
-  scalaVersion := "2.13.3",
+  scalaVersion := "3.0.0",
   crossPaths := false,
   trapExit := false,
   scalacOptions ++= Seq(
     "-feature",
     "-language:postfixOps",
     "-deprecation",
-    "-target:8",
-    "-Xlint:_,-missing-interpolator"
+    "-Xtarget:8"
   ),
   initialize := {
     val _ = initialize.value
@@ -62,16 +61,18 @@ lazy val mainDependencies = {
 }
 
 lazy val testDependencies = {
-  val scalaTest = "3.0.9"
-  val mockitoAll = "1.10.19"
+  val scalaTest = "3.2.9"
+  val scalaTestPlusMockito = "3.2.9.0"
+  val mockitoCore = "3.11.1"
 
   Seq(
     "org.scalatest" %% "scalatest" % scalaTest,
-    "org.mockito" % "mockito-all" % mockitoAll
+    "org.scalatestplus" %% "mockito-3-4" % scalaTestPlusMockito,
+    "org.mockito" % "mockito-core" % mockitoCore
   ).map(_ % Test)
 }
 
-mappings in(Compile, packageBin) ++= Seq(
+Compile / packageBin / mappings ++= Seq(
   file("README.md") -> "README.txt",
   file("LICENSE") -> "LICENSE.txt",
   file("NOTICE") -> "NOTICE.txt",

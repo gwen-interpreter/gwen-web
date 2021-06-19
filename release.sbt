@@ -12,7 +12,7 @@ def setVersionOnly(selectVersion: Versions => String): ReleaseStep =  { st: Stat
   val versionStr = (if (useGlobal) globalVersionString else versionString) format selected
 
   reapply(Seq(
-    if (useGlobal) version in ThisBuild := selected
+    if (useGlobal) ThisBuild / version := selected
     else version := selected
   ), st)
 }

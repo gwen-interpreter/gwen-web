@@ -20,13 +20,12 @@ import gwen.web.eval.WebContext
 import gwen.web.eval.WebErrors._
 import gwen.web.eval.WebSettings
 
-import gwen.core._
-
 import com.typesafe.scalalogging.LazyLogging
 import org.openqa.selenium.WebElement
 
 import scala.concurrent.duration.Duration
 import scala.util.Try
+import scala.util.chaining._
 
 import java.util.concurrent.TimeUnit
 
@@ -53,7 +52,7 @@ class LocatorBindingResolver(ctx: WebContext) extends LazyLogging {
 
   /**
    * Gets a locator binding.
-   * 
+   *
    * @param name the name of the web element
    * @param optional true to return None if not found; false to throw error
    */

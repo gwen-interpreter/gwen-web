@@ -1,5 +1,6 @@
 target/
-project/project/target/
+project/project
+.bsp
 .cache*
 .classpath
 .project

@@ -20,6 +20,7 @@ import gwen.core._
 
 import scala.jdk.CollectionConverters._
 import scala.collection.mutable
+import scala.util.chaining._
 
 import com.typesafe.scalalogging.LazyLogging
 import io.github.bonigarcia.wdm.WebDriverManager
@@ -57,11 +58,11 @@ class DriverManager() extends LazyLogging {
   // put drivers downloaded by WebDriverManager in ~.gwen/wdm dir by default
   if (sys.props.get("wdm.targetPath").isEmpty) {
     sys.props += (("wdm.targetPath", new File(new File(System.getProperty("user.home")), ".gwen/wdm").getAbsolutePath))
-  }    
-  
+  }
+
   /** The current web browser session. */
   private var session = "primary"
-  
+
   /** Map of web driver instances (keyed by name). */
   private [eval] val drivers: mutable.Map[String, WebDriver] = mutable.Map()
 
@@ -120,7 +121,7 @@ class DriverManager() extends LazyLogging {
         }
       }
     } catch {
-      case e: Throwable => 
+      case e: Throwable =>
         DriverManager.DriverPermit.release()
         throw e
     }
@@ -271,7 +272,7 @@ class DriverManager() extends LazyLogging {
           }
         }
         mobileEmulation.put("deviceMetrics", deviceMetrics)
-      }) { deviceName: String =>
+      }) { (deviceName: String) =>
         mobileEmulation.put("deviceName", deviceName)
       }
       logger.info(s"Chrome mobile emulation options: $mobileEmulation")
@@ -358,12 +359,12 @@ class DriverManager() extends LazyLogging {
   }
 
   private [eval] def remote(hubUrl: String, capabilities: DesiredCapabilities): WebDriver =
-    new RemoteWebDriver(new HttpCommandExecutor(new URL(hubUrl)), capabilities) tap { driver => 
+    new RemoteWebDriver(new HttpCommandExecutor(new URL(hubUrl)), capabilities) tap { driver =>
       if (WebSettings`gwen.web.remote.localFileDetector`) {
         driver.setFileDetector(new LocalFileDetector())
       }
     }
-  
+
   private def withGlobalSettings(driver: WebDriver): WebDriver = {
     logger.info(s"Implicit wait (default locator timeout) = ${WebSettings.`gwen.web.locator.wait.seconds`} second(s)")
     driver.manage().timeouts().implicitlyWait(WebSettings.`gwen.web.locator.wait.seconds`, TimeUnit.SECONDS)
@@ -387,7 +388,7 @@ class DriverManager() extends LazyLogging {
 
   /**
     * Switches to a tab or child window occurance.
-    * 
+    *
     * @param occurrence the tag or window occurrence to switch to (first opened is occurrence 1, 2nd is 2, ..)
     */
   def switchToChild(occurrence: Int): Unit = {
@@ -410,13 +411,13 @@ class DriverManager() extends LazyLogging {
 
   def closeChild(): Unit = {
     windows() match {
-      case parent::children => 
+      case parent::children =>
         val child = children.last
         webDriver.switchTo.window(child)
         logger.info(s"Closing child window ($child)")
         webDriver.close()
         switchToParent()
-      case _ => 
+      case _ =>
         WebErrors.noSuchWindowError("Cannot close child window: currently at root window which has no child")
     }
   }
@@ -435,9 +436,9 @@ class DriverManager() extends LazyLogging {
   /** Switches to the parent window. */
   def switchToParent(): Unit = {
     windows() match {
-      case parent::_ => 
+      case parent::_ =>
         switchToWindow(parent, isChild = false)
-      case _ => 
+      case _ =>
         logger.warn("Bypassing switch to parent window: no child windows open")
     }
   }

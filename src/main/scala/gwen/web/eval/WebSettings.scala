@@ -19,6 +19,7 @@ package gwen.web.eval
 import gwen.core._
 
 import scala.util.Try
+import scala.util.chaining._
 
 import java.io.File
 
@@ -102,7 +103,7 @@ object WebSettings {
     * Provides access to the `gwen.web.capture.screenshots` setting used to control whether
     * or not the web driver should capture screenshots for all steps (default value is `false`).
     * Note that setting this to `true` degrades performance significantly. If the setting is true,
-    * then the `gwen.report.slideshow.create` setting is also implicitly set to true if it is not 
+    * then the `gwen.report.slideshow.create` setting is also implicitly set to true if it is not
     * set so that the report generator in core web component knows to generate the slideshow.
     */
   def `gwen.web.capture.screenshots`: Boolean = Settings.getOpt("gwen.web.capture.screenshots").map(_.toBoolean).getOrElse(false) tap { isSet =>
@@ -112,8 +113,8 @@ object WebSettings {
   /**
     * Provides access to the `gwen.web.capture.screenshots.highlighting` setting used to control whether
     * or not the web driver should capture screenshots for all steps that highlight elements on a page
-    * (default value is `false`). If the setting is true, then the `gwen.report.slideshow.create` setting is 
-    * also implicitly set to true if it is not set so that the report generator in core web component knows 
+    * (default value is `false`). If the setting is true, then the `gwen.report.slideshow.create` setting is
+    * also implicitly set to true if it is not set so that the report generator in core web component knows
     * to generate the slideshow.
     * Note that setting this to `true` degrades performance significantly.
     */
@@ -263,6 +264,6 @@ object WebSettings {
   /**
    * If set, enables the local file detector on remote webdriver if `gwen.web.remote.url` is set (default is disabled).
    */
-  def `gwen.web.remote.localFileDetector`: Boolean = 
+  def `gwen.web.remote.localFileDetector`: Boolean =
     `gwen.web.remote.url`.nonEmpty && Settings.getOpt("gwen.web.remote.localFileDetector").map(_.toBoolean).getOrElse(false)
 }

@@ -18,9 +18,10 @@ package gwen.web.eval.eyes
 
 import gwen.web.eval.WebErrors
 
-import gwen.core._
 import gwen.core.Errors
 import gwen.core.state.Environment
+
+import scala.util.chaining._
 
 import com.applitools.eyes.selenium.Eyes
 import com.applitools.eyes.{BatchInfo, MatchLevel, RectangleSize, TestResults}

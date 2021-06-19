@@ -1,12 +1,12 @@
 /*
  * Copyright 2015-2021 Brady Wood, Branko Juric
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,7 +19,7 @@ package gwen.web.eval
 import gwen.web._
 import gwen.web.eval.WebErrors.NoSuchWindowException
 
-import gwen.core._
+import scala.util.chaining._
 
 import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
@@ -30,25 +30,26 @@ import org.openqa.selenium.WebDriver.Timeouts
 import org.openqa.selenium.WebDriver.Window
 import org.openqa.selenium.remote.DesiredCapabilities
 import org.openqa.selenium.remote.RemoteWebDriver
-import org.scalatest.{BeforeAndAfterEach, Matchers}
+import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
 
 import scala.collection.mutable
 import scala.jdk.CollectionConverters._
+import org.scalatest.matchers.should.Matchers
 
 class DriverManagerTest extends BaseTest with Matchers with MockitoSugar with BeforeAndAfterEach {
-  
+
   var mockChromeDriver: WebDriver = _
   var mockFirefoxDriver: WebDriver = _
   var mockIeDriver: WebDriver = _
   var mockEdgeDriver: WebDriver = _
   var mockSafariDriver: WebDriver = _
   var mockRemoteDriver: RemoteWebDriver = _
-  
+
   override def afterEach(): Unit = {
     DriverManager.DriverPermit.release();
   }
-  
+
   "Firefox setting" should "load firefox driver" in {
     withSetting("gwen.web.browser", "firefox") {
       val manager = newDriverManager()
@@ -203,7 +204,7 @@ class DriverManagerTest extends BaseTest with Matchers with MockitoSugar with Be
     manager.switchToDefaultContent()
     verify(mockTargetLocator).defaultContent()
   }
-  
+
   private def newDriverManager(): DriverManager ={
     new DriverManager {
       override private [eval] def chrome(): WebDriver = createMockLocalDriver() tap { driver =>
@@ -215,7 +216,7 @@ class DriverManagerTest extends BaseTest with Matchers with MockitoSugar with Be
       override private [eval] def ie(): WebDriver = createMockLocalDriver() tap { driver =>
         mockIeDriver = driver
       }
-      override private [eval] def edge(): WebDriver = createMockLocalDriver() tap { driver => 
+      override private [eval] def edge(): WebDriver = createMockLocalDriver() tap { driver =>
         mockEdgeDriver = driver
       }
       override private [eval] def safari(): WebDriver = createMockLocalDriver() tap { driver =>
@@ -229,13 +230,13 @@ class DriverManagerTest extends BaseTest with Matchers with MockitoSugar with Be
       }
     }
   }
-  
-  private def newDriverManager(mockDriver: WebDriver): DriverManager = new DriverManager() { 
+
+  private def newDriverManager(mockDriver: WebDriver): DriverManager = new DriverManager() {
     override private [eval] val drivers = mutable.Map() += ("primary" -> mockDriver)
   }
   private def createMockLocalDriver(): WebDriver = stubDriverMock(mock[WebDriver])
   private def createMockRemoteDriver(): RemoteWebDriver = stubDriverMock(mock[RemoteWebDriver])
-  
+
   private def stubDriverMock[T <: WebDriver](mockDriver: T): T = {
     val mockOptions = mock[Options]
     val mockTimeouts = mock[Timeouts]
@@ -245,5 +246,5 @@ class DriverManagerTest extends BaseTest with Matchers with MockitoSugar with Be
     when(mockOptions.window()).thenReturn(mockWindow)
     mockDriver
   }
-  
+
 }
