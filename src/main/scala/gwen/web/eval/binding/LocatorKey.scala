@@ -19,11 +19,11 @@ package gwen.web.eval.binding
 object LocatorKey {
 
   def baseKey(name: String) = s"$name/locator"
-  def selectorKey(name: String, selectorType: SelectorType.Value) = s"${baseKey(name)}/$selectorType"
-  def containerKey(name: String, selectorType: SelectorType.Value) = createKey(name, selectorType, "container") 
-  def timeoutSecsKey(name: String, selectorType: SelectorType.Value) = createKey(name, selectorType, "timeoutSecs")
-  def indexKey(name: String, selectorType: SelectorType.Value) = createKey(name, selectorType, "index")
+  def selectorKey(name: String, selectorType: SelectorType) = s"${baseKey(name)}/$selectorType"
+  def containerKey(name: String, selectorType: SelectorType) = createKey(name, selectorType, "container") 
+  def timeoutSecsKey(name: String, selectorType: SelectorType) = createKey(name, selectorType, "timeoutSecs")
+  def indexKey(name: String, selectorType: SelectorType) = createKey(name, selectorType, "index")
 
-  private def createKey(name: String, selectorType: SelectorType.Value, suffix: String) = s"${selectorKey(name, selectorType)}/$suffix"
+  private def createKey(name: String, selectorType: SelectorType, suffix: String) = s"${selectorKey(name, selectorType)}/$suffix"
 
 }

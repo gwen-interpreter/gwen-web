@@ -30,7 +30,7 @@ import scala.concurrent.duration.Duration
   * @param timeout optional timeout (defaults to `gwen.web.locator.wait.seconds` if not provided)
   * @param index optional index (if selector returns more than one element then index is required)
   */
-case class Selector(selectorType: SelectorType.Value, expression: String, container: Option[LocatorBinding], isContainer: Boolean, timeout: Option[Duration], index: Option[Int]) {
+case class Selector(selectorType: SelectorType, expression: String, container: Option[LocatorBinding], isContainer: Boolean, timeout: Option[Duration], index: Option[Int]) {
 
   override def toString: String =
     s"$selectorType=$expression${container.map(c => s" in $c").getOrElse("")}${index.map(i => s" at index $i").getOrElse("")}"
@@ -43,11 +43,11 @@ case class Selector(selectorType: SelectorType.Value, expression: String, contai
 /** Locator factory companion. */
 object Selector {
 
-  def apply(selectorType: SelectorType.Value, expression: String, container: Option[LocatorBinding], timeout: Option[Duration], index: Option[Int]): Selector = {
+  def apply(selectorType: SelectorType, expression: String, container: Option[LocatorBinding], timeout: Option[Duration], index: Option[Int]): Selector = {
     Selector(selectorType, expression, container, isContainer = false, timeout, index)
   }
 
-  def apply(selectorType: SelectorType.Value, expression: String): Selector = {
+  def apply(selectorType: SelectorType, expression: String): Selector = {
     Selector(selectorType, expression, None, isContainer = false, None, None)
   }
 

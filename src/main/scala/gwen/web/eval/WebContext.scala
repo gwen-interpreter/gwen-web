@@ -70,7 +70,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
   }
 
   /** Resets the context for the given state level. */
-  override def reset(level: StateLevel.Value): Unit = {
+  override def reset(level: StateLevel): Unit = {
     super.reset(level)
     reset()
     close()
@@ -166,7 +166,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     }
   }
 
-  def boundAttributeOrSelection(element: String, selection: Option[DropdownSelection.Value]): () => String = () => {
+  def boundAttributeOrSelection(element: String, selection: Option[DropdownSelection]): () => String = () => {
     selection match {
       case None => getBoundReferenceValue(element)
       case Some(sel) =>
@@ -257,7 +257,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     * @param negate true to negate the result
     * @return true if the actual value matches the expected value
     */
-  def compare(name: String, expected: String, actual: () => String, operator: ComparisonOperator.Value, negate: Boolean, nameSuffix: Option[String] = None): Unit = {
+  def compare(name: String, expected: String, actual: () => String, operator: ComparisonOperator, negate: Boolean, nameSuffix: Option[String] = None): Unit = {
     var result = false
     var error: Option[String] = None
     var actualValue = actual()
@@ -545,7 +545,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     * @param state the state to check
     * @param negate whether or not to negate the check
     */
-  def checkElementState(binding: LocatorBinding, state: ElementState.Value, negate: Boolean): Unit = {
+  def checkElementState(binding: LocatorBinding, state: ElementState, negate: Boolean): Unit = {
     perform {
       val result = isElementState(binding.jsEquivalent, state, negate)
       assert(result, s"$binding should${if(negate) " not" else ""} be $state")
@@ -559,24 +559,36 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     * @param state the state to check
     * @param negate whether or not to negate the check
     */
-  private def isElementState(binding: LocatorBinding, state: ElementState.Value, negate: Boolean): Boolean = {
+  private def isElementState(binding: LocatorBinding, state: ElementState, negate: Boolean): Boolean = {
     var result = false
     perform {
       try {
         withWebElement(binding, s"waiting for $binding to${if (negate) " not" else ""} be $state") { webElement =>
           result = state match {
-            case ElementState.displayed if !negate => isDisplayed(webElement)
-            case ElementState.displayed if negate => !isDisplayed(webElement)
-            case ElementState.hidden if !negate => !isDisplayed(webElement)
-            case ElementState.hidden if negate => isDisplayed(webElement)
-            case ElementState.checked | ElementState.ticked if !negate => webElement.isSelected
-            case ElementState.checked | ElementState.ticked if negate => !webElement.isSelected
-            case ElementState.unchecked | ElementState.unticked if !negate => !webElement.isSelected
-            case ElementState.unchecked | ElementState.unticked if negate => webElement.isSelected
-            case ElementState.enabled if !negate => webElement.isEnabled
-            case ElementState.enabled if negate => !webElement.isEnabled
-            case ElementState.disabled if !negate => !webElement.isEnabled
-            case ElementState.disabled if negate => webElement.isEnabled
+            case ElementState.displayed => 
+              if (!negate) isDisplayed(webElement)
+              else !isDisplayed(webElement)
+            case ElementState.hidden =>
+              if (!negate) !isDisplayed(webElement)
+              else isDisplayed(webElement)
+            case ElementState.checked =>
+              if (!negate) webElement.isSelected
+              else !webElement.isSelected
+            case ElementState.ticked =>
+              if (!negate) webElement.isSelected
+              else !webElement.isSelected
+            case ElementState.unchecked =>
+              if (!negate) !webElement.isSelected
+              else webElement.isSelected
+            case ElementState.unticked =>
+              if (!negate) !webElement.isSelected
+              else webElement.isSelected
+            case ElementState.enabled =>
+              if (!negate) webElement.isEnabled
+              else!webElement.isEnabled
+            case ElementState.disabled =>
+              if (!negate) !webElement.isEnabled
+              else webElement.isEnabled
           }
         }
       } catch {
@@ -596,7 +608,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     * @param state the state to wait for
     * @param negate whether or not to negate the check
     */
-  def waitForElementState(binding: LocatorBinding, state: ElementState.Value, negate: Boolean): Unit =
+  def waitForElementState(binding: LocatorBinding, state: ElementState, negate: Boolean): Unit =
     waitUntil(s"waiting for $binding to${if (negate) " not" else""} be $state") {
       isElementState(binding, state, negate)
     }
@@ -734,7 +746,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
 
   private [web] def createActions(driver: WebDriver): Actions = new Actions(driver)
 
-  def performAction(action: ElementAction.Value, binding: LocatorBinding): Unit = {
+  def performAction(action: ElementAction, binding: LocatorBinding): Unit = {
     val actionBinding = scopes.getOpt(JavaScriptBinding.key(s"${binding.name}/action/$action"))
     actionBinding match {
       case Some(javascript) =>
@@ -764,6 +776,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
                 createActions(driver).sendKeys(webElement, Keys.SPACE).perform()
             case ElementAction.clear =>
               webElement.clear()
+            case _ => WebErrors.invalidActionError(action)
           }
         }
         bindAndWait(binding.name, action.toString, "true")
@@ -787,7 +800,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     }
   }
 
-  def holdAndClick(modifierKeys: Array[String], clickAction: ElementAction.Value, binding: LocatorBinding): Unit = {
+  def holdAndClick(modifierKeys: Array[String], clickAction: ElementAction, binding: LocatorBinding): Unit = {
     val keys = modifierKeys.map(_.trim).map(key => Try(Keys.valueOf(key.toUpperCase)).getOrElse(unsupportedModifierKeyError(key)))
     withDriverAndElement(binding, s"trying to $clickAction $binding") { (driver, webElement) =>
       moveToAndCapture(driver, webElement)
@@ -797,6 +810,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
         case ElementAction.click => actions.click(webElement)
         case ElementAction.`right click` => actions.contextClick(webElement)
         case ElementAction.`double click` => actions.doubleClick(webElement)
+        case _ => WebErrors.invalidClickActionError(clickAction)
       }
       keys.reverse.foreach { key => actions = actions.keyUp(key) }
       actions.build().perform()
@@ -841,7 +855,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     }
   }
 
-  private def performScriptAction(action: ElementAction.Value, javascript: String, binding: LocatorBinding, reason: String): Unit = {
+  private def performScriptAction(action: ElementAction, javascript: String, binding: LocatorBinding, reason: String): Unit = {
     withDriverAndElement(binding, reason) { (driver, webElement) =>
       if (action != ElementAction.`move to`) {
         moveToAndCapture(driver, webElement)
@@ -858,7 +872,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     * @param element the name of the element to perform the action on
     * @param context the name of the context element binding to find the element in
     */
-  def performActionInContext(action: ElementAction.Value, element: String, context: String): Unit = {
+  def performActionInContext(action: ElementAction, element: String, context: String): Unit = {
     try {
         val contextBinding = getLocatorBinding(context)
         val binding = getLocatorBinding(element)
@@ -875,7 +889,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
       }
   }
 
-  private def performActionIn(action: ElementAction.Value, binding: LocatorBinding, contextBinding: LocatorBinding): Unit = {
+  private def performActionIn(action: ElementAction, binding: LocatorBinding, contextBinding: LocatorBinding): Unit = {
     def perform(webElement: WebElement, contextElement: WebElement)(buildAction: Actions => Actions): Unit = {
       withWebDriver { driver =>
         val moveTo = createActions(driver).moveToElement(contextElement).moveToElement(webElement)
@@ -899,6 +913,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
             if (webElement.isSelected) perform(webElement, contextElement) { _.click() }
             if (webElement.isSelected) perform(webElement, contextElement) { _.sendKeys(Keys.SPACE) }
           case ElementAction.`move to` => perform(webElement, contextElement) { action => action }
+          case _ => WebErrors.invalidContextActionError(action)
         }
         bindAndWait(binding.name, action.toString, "true")
       }
@@ -922,7 +937,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
    * @param binding the locator binding
    * @param scrollTo scroll element into view, options are: top or bottom
    */
-  def scrollIntoView(binding: LocatorBinding, scrollTo: ScrollTo.Value): Unit = {
+  def scrollIntoView(binding: LocatorBinding, scrollTo: ScrollTo): Unit = {
     withWebElement(binding, s"trying to scroll to $scrollTo of $binding") { scrollIntoView(_, scrollTo) }
   }
 
@@ -932,7 +947,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
    * @param webElement the web element to scroll to
    * @param scrollTo scroll element into view, options are: top or bottom
    */
-  def scrollIntoView(webElement: WebElement, scrollTo: ScrollTo.Value): Unit = {
+  def scrollIntoView(webElement: WebElement, scrollTo: ScrollTo): Unit = {
     executeJS(s"var elem = arguments[0]; if (typeof elem !== 'undefined' && elem != null) { elem.scrollIntoView(${scrollTo == ScrollTo.top}); }", webElement)
   }
 
@@ -1053,7 +1068,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     }
   }
 
-  private def getElementSelectionByJS(webElement: WebElement, by: DropdownSelection.Value): Option[String] = {
+  private def getElementSelectionByJS(webElement: WebElement, by: DropdownSelection): Option[String] = {
     Option(executeJS(s"""return (function(select){try{var byText=${by == DropdownSelection.text};var result='';var options=select && select.options;if(!!options){var opt;for(var i=0,iLen=options.length;i<iLen;i++){opt=options[i];if(opt.selected){if(result.length>0){result=result+',';}if(byText){result=result+opt.text;}else{result=result+opt.value;}}}return result;}else{return null;}}catch(e){return null;}})(arguments[0])""", webElement).asInstanceOf[String])
   }
 
@@ -1066,7 +1081,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
    * @return the selected value or a comma seprated string containing all
    * the selected values if multiple values are selected.
    */
-  def getElementSelection(name: String, selection: DropdownSelection.Value): Option[String] = {
+  def getElementSelection(name: String, selection: DropdownSelection): Option[String] = {
     if (selection == DropdownSelection.text) {
       getSelectedElementText(name)
     } else {

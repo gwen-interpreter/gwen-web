@@ -102,13 +102,13 @@ class WebEngine extends EvalEngine[WebContext] {
       case r"""I wait for (.+?)$$$element""" =>
         new WaitForElement(element, None)
       case r"""I wait ([0-9]+?)$duration second(?:s?) when (.+?)$element is (clicked|right clicked|double clicked|submitted|checked|ticked|unchecked|unticked|selected|deselected|typed|entered|tabbed|cleared|moved to)$$$event""" =>
-        new WaitForElementOnEvent(element, ElementEvent.withName(event), duration.toLong)
+        new WaitForElementOnEvent(element, ElementEvent.valueOf(event), duration.toLong)
       case r"""I wait until (.+?)$condition when (.+?)$element is (clicked|right clicked|double clicked||submitted|checked|ticked|unchecked|unticked|selected|deselected|typed|entered|tabbed|cleared|moved to)$$$event""" =>
-        new WaitForConditionOnEvent(element, ElementEvent.withName(event), condition)
+        new WaitForConditionOnEvent(element, ElementEvent.valueOf(event), condition)
       case r"""I wait until "(.+?)$javascript"""" =>
         new WaitForCondition(step.orDocString(javascript))
       case r"""I wait until (.+?)$element is( not)?$negation (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$$$state""" =>
-        new WaitForElementState(element, ElementState.withName(state), Option(negation).isDefined)
+        new WaitForElementState(element, ElementState.valueOf(state), Option(negation).isDefined)
       case r"""I wait until (.+?)$$$condition""" =>
         new WaitForBoundCondition(condition)
       case r"""I am on the (.+?)$$$page""" =>
@@ -118,7 +118,7 @@ class WebEngine extends EvalEngine[WebContext] {
       case r"""I navigate to "(.+?)"$$$url""" =>
         new NavigateToUrl(step.orDocString(url))
       case r"""I scroll to the (top|bottom)$position of (.+?)$$$element""" =>
-        new ScrollToElement(element, ScrollTo.withName(position))
+        new ScrollToElement(element, ScrollTo.valueOf(position))
       case r"""the url will be defined by (?:property|setting) "(.+?)"$$$name""" =>
         new BindUrl(Settings.get(step.orDocString(name)), None)
       case r"""the url will be "(.+?)"$$$url""" =>
@@ -168,21 +168,21 @@ class WebEngine extends EvalEngine[WebContext] {
       case r"""(.+?)$element can be located by""" if step.hasDualColumnTable =>
         new BindMultipleElementLocators(element, None, None, None)
       case r"""(.+?)$element can be (clicked|right clicked|double clicked|submitted|checked|ticked|unchecked|unticked|selected|deselected|typed|entered|tabbed|cleared|moved to)$event by (?:javascript|js) "(.+?)"$$$expression""" =>
-        new BindActionHandler(element, ElementEvent.withName(event), step.orDocString(expression))
+        new BindActionHandler(element, ElementEvent.valueOf(event), step.orDocString(expression))
       case r"""the page title should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file)$operator "(.*?)"$$$expression""" =>
-        new CompareTitle("title", step.orDocString(expression), false, ComparisonOperator.withName(operator), Option(negation).isDefined)
+        new CompareTitle("title", step.orDocString(expression), false, ComparisonOperator.valueOf(operator), Option(negation).isDefined)
       case r"""the page title should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$$$attribute""" =>
-        new CompareTitle("title", attribute, true, ComparisonOperator.withName(operator), Option(negation).isDefined)
+        new CompareTitle("title", attribute, true, ComparisonOperator.valueOf(operator), Option(negation).isDefined)
       case r"""the (alert|confirmation)$name popup message should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file)$operator "(.*?)"$$$expression""" =>
-        new ComparePopupMessage(name, step.orDocString(expression), false, ComparisonOperator.withName(operator), Option(negation).isDefined)
+        new ComparePopupMessage(name, step.orDocString(expression), false, ComparisonOperator.valueOf(operator), Option(negation).isDefined)
       case r"""the (alert|confirmation)$name popup message should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$$$attribute""" =>
-        new ComparePopupMessage(name, attribute, true, ComparisonOperator.withName(operator), Option(negation).isDefined)
+        new ComparePopupMessage(name, attribute, true, ComparisonOperator.valueOf(operator), Option(negation).isDefined)
       case r"""(.+?)$element should( not)?$negation be (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$$$state""" =>
-        new CompareElementState(element, ElementState.withName(state), Option(negation).nonEmpty)
+        new CompareElementState(element, ElementState.valueOf(state), Option(negation).nonEmpty)
       case r"""(.+?)$element( text| value)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file)$operator "(.*?)"$$$expression""" if !element.matches(".+at (json path|xpath).+") =>
-        new CompareValueOrSelectionToValue(element, Option(selection).map(_.trim).map(DropdownSelection.withName), step.orDocString(expression), ComparisonOperator.withName(operator), Option(negation).isDefined)
+        new CompareValueOrSelectionToValue(element, Option(selection).map(_.trim).map(DropdownSelection.valueOf), step.orDocString(expression), ComparisonOperator.valueOf(operator), Option(negation).isDefined)
       case r"""(.+?)$element( text| value)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$$$attribute""" if attribute != "absent" && !element.matches(".+at (json path|xpath).+") =>
-        new CompareValueOrSelectionToBoundValue(element, Option(selection).map(_.trim).map(DropdownSelection.withName), attribute, ComparisonOperator.withName(operator), Option(negation).isDefined)
+        new CompareValueOrSelectionToBoundValue(element, Option(selection).map(_.trim).map(DropdownSelection.valueOf), attribute, ComparisonOperator.valueOf(operator), Option(negation).isDefined)
       case r"""I capture (.+?)$attribute (?:of|on|in) (.+?)$element by (?:javascript|js) "(.+?)"$$$expression""" =>
         new CaptureElementAttribute(element, attribute, step.orDocString(expression))
       case r"""I capture the current URL""" =>
@@ -194,9 +194,9 @@ class WebEngine extends EvalEngine[WebContext] {
       case r"""I capture the current screenshot as (.+?)$attribute""" =>
         new CaptureScreenshot(Some(attribute))
       case r"""I capture (.+?)$element( value| text)$selection as (.+?)$attribute""" =>
-        new CaptureDropdownSelection(Some(attribute), element, DropdownSelection.withName(selection.trim))
+        new CaptureDropdownSelection(Some(attribute), element, DropdownSelection.valueOf(selection.trim))
       case r"""I capture (.+?)$element( value| text)$$$selection""" =>
-        new CaptureDropdownSelection(None, element, DropdownSelection.withName(selection.trim))
+        new CaptureDropdownSelection(None, element, DropdownSelection.valueOf(selection.trim))
       case r"I capture the (alert|confirmation)$name popup message" =>
         new CapturePopupMessage(s"the $name popup message")
       case r"I capture the (?:alert|confirmation) popup message as (.+?)$attribute" =>
@@ -222,25 +222,25 @@ class WebEngine extends EvalEngine[WebContext] {
       case r"""I send "(.+?)"$keys to (.+?)$$$element""" =>
         new SendKeysToElement(element, keys.split(","))
       case r"""I (enter|type)$action "(.*?)"$value in (.+?)$$$element""" =>
-        new SendValueToElement(element, value, ElementAction.withName(action) == ElementAction.enter)
+        new SendValueToElement(element, value, ElementAction.valueOf(action) == ElementAction.enter)
       case r"""I (enter|type)$action (.+?)$attribute in (.+?)$$$element""" =>
-        new SendBoundValueToElement(element, attribute, ElementAction.withName(action) == ElementAction.enter)
+        new SendBoundValueToElement(element, attribute, ElementAction.valueOf(action) == ElementAction.enter)
       case r"""I (select|deselect)$action the (\d+?)$position(?:st|nd|rd|th) option in (.+?)$$$element""" =>
-        new ChangeDropdownSelection(element, DropdownSelection.index, position, false, ElementAction.withName(action))
+        new ChangeDropdownSelection(element, DropdownSelection.index, position, false, ElementAction.valueOf(action))
       case r"""I (select|deselect)$action "(.*?)"$value in (.+?)$element by value""" =>
-        new ChangeDropdownSelection(element, DropdownSelection.value, value, false, ElementAction.withName(action))
+        new ChangeDropdownSelection(element, DropdownSelection.value, value, false, ElementAction.valueOf(action))
       case r"""I (select|deselect)$action "(.*?)"$value in (.+?)$$$element""" =>
-        new ChangeDropdownSelection(element, DropdownSelection.text, value, false, ElementAction.withName(action))
+        new ChangeDropdownSelection(element, DropdownSelection.text, value, false, ElementAction.valueOf(action))
       case r"""I (select|deselect)$action (.+?)$attribute in (.+?)$element by value""" =>
-        new ChangeDropdownSelection(element, DropdownSelection.value, attribute, true, ElementAction.withName(action))
+        new ChangeDropdownSelection(element, DropdownSelection.value, attribute, true, ElementAction.valueOf(action))
       case r"""I (select|deselect)$action (.+?)$attribute in (.+?)$$$element""" =>
-        new ChangeDropdownSelection(element, DropdownSelection.text, attribute, true, ElementAction.withName(action))
+        new ChangeDropdownSelection(element, DropdownSelection.text, attribute, true, ElementAction.valueOf(action))
       case r"""I (click|right click|double click|check|tick|uncheck|untick|move to)$action (.+?)$element of (.+?)$$$context""" =>
-        new PerformElementAction(element, ElementAction.withName(action), Some(context))
+        new PerformElementAction(element, ElementAction.valueOf(action), Some(context))
       case r"""I (click|right click|double click|submit|check|tick|uncheck|untick|move to)$action (.+?)$$$element""" =>
-        new PerformElementAction(element, ElementAction.withName(action), None)
+        new PerformElementAction(element, ElementAction.valueOf(action), None)
       case r"""I (.+?)$modifiers (click|right click|double click)$clickAction (.+?)$$$element""" =>
-        new HoldAndClick(element, modifiers.split("\\+"), ElementAction.withName(clickAction))
+        new HoldAndClick(element, modifiers.split("\\+"), ElementAction.valueOf(clickAction))
       case r"""I (?:highlight|locate) (.+?)$$$element""" =>
         new HighlightElement(element)
       case "I refresh the current page" =>
@@ -274,7 +274,7 @@ class WebEngine extends EvalEngine[WebContext] {
       case r"""I switch to (.+?)$session""" =>
         new SwitchToBrowserSession(session)
       case r"I (accept|dismiss)$action the (?:alert|confirmation) popup" =>
-        new HandlePopup(PopupAction.withName(action))
+        new HandlePopup(PopupAction.valueOf(action))
       case r"""I resize the window to width (\d+?)$width and height (\d+?)$$$height""" =>
         new ResizeWindow(width.toInt, height.toInt)
       case r"""I maximi(?:z|s)e the window""" =>

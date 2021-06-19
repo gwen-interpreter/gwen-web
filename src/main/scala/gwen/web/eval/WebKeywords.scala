@@ -15,16 +15,12 @@
  */
 package gwen.web.eval
 
-object ElementEvent extends Enumeration {
-  
-  type ElementEvent = Value
-  
-  val clicked, submitted, checked, ticked, unchecked, unticked, selected, deselected, typed, entered, tabbed, cleared = Value
-  val `right clicked` = Value("right clicked")
-  val `double clicked` = Value("double clicked")
-  val `moved to` = Value("moved to")
+enum ElementEvent:
+  case clicked, submitted, checked, ticked, unchecked, unticked, selected, deselected, typed, entered, tabbed, cleared, `right clicked`, `double clicked`, `moved to`
 
-  def actionOf(event: ElementEvent.Value): ElementAction.Value = {
+object ElementEvent {
+  
+  def actionOf(event: ElementEvent): ElementAction = {
     event match {
       case ElementEvent.clicked          => ElementAction.click
       case ElementEvent.`right clicked`  => ElementAction.`right click`
@@ -46,48 +42,17 @@ object ElementEvent extends Enumeration {
 
 }
 
-object ElementAction extends Enumeration {
-  
-  type ElementAction = Value
-  
-  val click, submit, check, tick, uncheck, untick, select, deselect, enter, tab, clear = Value
-  val `right click` = Value("right click")
-  val `double click` = Value("double click")
-  val `type` = Value("type")
-  val `move to` = Value("move to")
+enum ElementAction:
+  case click, submit, check, tick, uncheck, untick, select, deselect, enter, tab, clear, `right click`, `double click`, `type`, `move to`
 
-}
+enum ElementState:
+  case displayed, hidden, checked, ticked, unchecked, unticked, enabled, disabled
 
-object ElementState extends Enumeration {
-  
-  type ElementState = Value
+enum ScrollTo:
+ case top, bottom
 
-  val displayed, hidden, checked, ticked, unchecked, unticked, enabled, disabled = Value
+enum DropdownSelection:
+  case text, value, index
 
-}
-
-object ScrollTo extends Enumeration {
-
-  type ScrollTo = Value
-
-  val top, bottom = Value
-
-}
-
-object DropdownSelection extends Enumeration {
-
-  type DropdownSelection = Value
-
-  val text, value, index = Value
-
-}
-
-object PopupAction extends Enumeration {
-
-  type PopupAction = Value
-
-  val accept, dismiss = Value
-
-}
-
-
+enum PopupAction:
+  case accept, dismiss

@@ -30,7 +30,7 @@ import scala.util.Failure
 import scala.util.Success
 import scala.util.chaining._
 
-class CompareValueOrSelectionToValue(element: String, selection: Option[DropdownSelection.Value], expression: String, operator: ComparisonOperator.Value, negate: Boolean) extends UnitStep[WebContext] {
+class CompareValueOrSelectionToValue(element: String, selection: Option[DropdownSelection], expression: String, operator: ComparisonOperator, negate: Boolean) extends UnitStep[WebContext] {
 
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     checkStepRules(step, BehaviorType.Assertion, ctx)

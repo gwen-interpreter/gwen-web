@@ -27,11 +27,11 @@ import scala.concurrent.duration.Duration
 
 object LocatorBinding {
 
-  def apply(name: String, selectorType: SelectorType.Value, expression: String, container: Option[LocatorBinding], timeout: Option[Duration], index: Option[Int], ctx: WebContext): LocatorBinding = {
+  def apply(name: String, selectorType: SelectorType, expression: String, container: Option[LocatorBinding], timeout: Option[Duration], index: Option[Int], ctx: WebContext): LocatorBinding = {
     new LocatorBinding(name, List(Selector(selectorType, expression, container, timeout, index)), ctx)
   }
   
-  def apply(name: String, selectorType: SelectorType.Value, expression: String, container: Option[LocatorBinding], index: Option[Int], ctx: WebContext): LocatorBinding = {
+  def apply(name: String, selectorType: SelectorType, expression: String, container: Option[LocatorBinding], index: Option[Int], ctx: WebContext): LocatorBinding = {
     new LocatorBinding(name, List(Selector(selectorType, expression, container, None, index)), ctx)
   }
   

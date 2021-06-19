@@ -25,7 +25,7 @@ import gwen.core.node.gherkin.Step
 
 import scala.util.chaining._
 
-class OpenOrCloseBrowser(open: Boolean, name: Option[String], behaviorType: BehaviorType.Value) extends UnitStep[WebContext] {
+class OpenOrCloseBrowser(open: Boolean, name: Option[String], behaviorType: BehaviorType) extends UnitStep[WebContext] {
 
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     step tap { _ =>

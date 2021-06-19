@@ -1130,7 +1130,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
   "I <click|right click|double click|submit|check|tick|uncheck|untick|move to> <element>" should "evaluate" in {
     val mockBinding = mock[LocatorBinding]
     doReturn(mockBinding).when(ctx).getLocatorBinding("<element>")
-    List("click", "right click", "double click", "submit", "check", "tick", "uncheck", "untick", "move to").map(ElementAction.withName).foreach { action =>
+    List("click", "right click", "double click", "submit", "check", "tick", "uncheck", "untick", "move to").map(ElementAction.valueOf).foreach { action =>
       doNothing().when(ctx).performAction(action, mockBinding)
       evaluate(s"I $action <element>")
       verify(ctx).performAction(action, mockBinding)
@@ -1140,7 +1140,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
   "I <click|right click|double click> <element>" should "evaluate" in {
     val mockBinding = mock[LocatorBinding]
     doReturn(mockBinding).when(ctx).getLocatorBinding("<element>")
-    List("click", "right click", "double click").map(ElementAction.withName).foreach { action =>
+    List("click", "right click", "double click").map(ElementAction.valueOf).foreach { action =>
       doNothing().when(ctx).holdAndClick(Array("COMMAND", "SHIFT"), action, mockBinding)
       evaluate(s"I COMMAND+SHIFT $action <element>")
       verify(ctx).holdAndClick(Array("COMMAND", "SHIFT"), action, mockBinding)
@@ -1148,7 +1148,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
   }
 
   "I <click|right click|double click|check|tick|uncheck|untick|move to> <element> of <context>" should "evaluate" in {
-    List("click", "right click", "double click", "check", "tick", "uncheck", "untick", "move to").map(ElementAction.withName).foreach { action =>
+    List("click", "right click", "double click", "check", "tick", "uncheck", "untick", "move to").map(ElementAction.valueOf).foreach { action =>
       doNothing().when(ctx).performActionInContext(action, "<element>", "<context>")
       evaluate(s"I $action <element> of <context>")
       verify(ctx).performActionInContext(action, "<element>", "<context>")

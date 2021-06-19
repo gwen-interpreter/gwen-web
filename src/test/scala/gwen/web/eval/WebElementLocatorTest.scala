@@ -520,7 +520,7 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
 
   }
 
-  private def shouldFindWebElement(selectorType: SelectorType.Value, lookup: String, by: By, timeout: Option[Duration], index: Option[Int]): Unit = {
+  private def shouldFindWebElement(selectorType: SelectorType, lookup: String, by: By, timeout: Option[Duration], index: Option[Int]): Unit = {
 
     val envState = newEnvState
     val mockWebDriver: FirefoxDriver = mock[FirefoxDriver]
@@ -802,7 +802,7 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
 
   }
 
-  private def shouldFindAllWebElements(selectorType: SelectorType.Value, lookup: String, by: By, timeout: Option[Duration]): Unit = {
+  private def shouldFindAllWebElements(selectorType: SelectorType, lookup: String, by: By, timeout: Option[Duration]): Unit = {
 
     val envState = newEnvState
     val mockWebDriver: FirefoxDriver = mock[FirefoxDriver]

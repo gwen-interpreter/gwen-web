@@ -20,18 +20,13 @@ import scala.util.Failure
 import scala.util.Success
 import scala.util.Try
 
-object SelectorType extends Enumeration {
-  
-  type SelectorType = Value
-  val id, name, xpath, javascript, cache = Value
-  val `tag name` = Value("tag name")
-  val `css selector` = Value("css selector")
-  val `class name` = Value("class name")
-  val `link text` = Value("link text")
-  val `partial link text` = Value("partial link text")
+enum SelectorType:
+  case id, name, xpath, javascript, cache, `tag name`, `css selector`, `class name`, `link text`, `partial link text`
 
-  def parse(sType: String): SelectorType.Value = {
-    Try(withName(sType)) match {
+object SelectorType {
+  
+  def parse(sType: String): SelectorType = {
+    Try(valueOf(sType)) match {
       case Success(value) => value
       case Failure(error) => sType match {
         case "tag" => `tag name`

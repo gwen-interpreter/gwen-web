@@ -24,7 +24,7 @@ import gwen.core.eval.lambda.UnitStep
 import gwen.core.node.GwenNode
 import gwen.core.node.gherkin.Step
 
-class CaptureDropdownSelection(target: Option[String], element: String, selection: DropdownSelection.Value) extends UnitStep[WebContext] {
+class CaptureDropdownSelection(target: Option[String], element: String, selection: DropdownSelection) extends UnitStep[WebContext] {
 
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     checkStepRules(step, BehaviorType.Action, ctx)

@@ -26,7 +26,7 @@ import gwen.core.node.gherkin.Step
 
 import scala.util.chaining._
 
-class PerformElementAction(element: String, action: ElementAction.Value, inContext: Option[String]) extends UnitStep[WebContext] {
+class PerformElementAction(element: String, action: ElementAction, inContext: Option[String]) extends UnitStep[WebContext] {
 
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     step tap { _ =>

@@ -27,7 +27,7 @@ import gwen.core.node.gherkin.Step
 
 import scala.util.chaining._
 
-class WaitForConditionOnEvent(element: String, event: ElementEvent.Value, condition: String) extends UnitStep[WebContext] {
+class WaitForConditionOnEvent(element: String, event: ElementEvent, condition: String) extends UnitStep[WebContext] {
 
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     step tap { _ =>

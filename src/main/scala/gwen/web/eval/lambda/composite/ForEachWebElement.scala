@@ -27,7 +27,7 @@ import gwen.core.node.gherkin.Step
 
 import scala.concurrent.duration.Duration
 
-class ForEachWebElement(doStep: String, element: String, selectorType: SelectorType.Value, lookupExpr: String, container: Option[String], timeout: Option[Duration], engine: EvalEngine[WebContext]) extends ForEach[WebContext](engine) {
+class ForEachWebElement(doStep: String, element: String, selectorType: SelectorType, lookupExpr: String, container: Option[String], timeout: Option[Duration], engine: EvalEngine[WebContext]) extends ForEach[WebContext](engine) {
 
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     val containerBinding = container.map(ctx.getLocatorBinding)

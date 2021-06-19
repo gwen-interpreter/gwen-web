@@ -132,7 +132,6 @@ class WebElementLocator(ctx: WebContext) extends LazyLogging {
                   elementNotFoundError(new LocatorBinding(name, List(selector), ctx))
               }
             case SelectorType.cache => ctx.getCachedWebElement(name)
-            case _ => locatorBindingError(s"Unsupported locator defined for $name: $selector")
           }
         } finally {
           // restore default implicit wait if overriden

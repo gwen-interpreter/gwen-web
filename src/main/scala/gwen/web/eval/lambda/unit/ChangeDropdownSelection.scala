@@ -27,7 +27,7 @@ import gwen.core.node.gherkin.Step
 
 import scala.util.chaining._
 
-class ChangeDropdownSelection(element: String, by: DropdownSelection.Value, value: String, bound: Boolean, action: ElementAction.Value) extends UnitStep[WebContext] {
+class ChangeDropdownSelection(element: String, by: DropdownSelection, value: String, bound: Boolean, action: ElementAction) extends UnitStep[WebContext] {
 
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     step tap { _ =>

@@ -27,7 +27,7 @@ import gwen.core.node.gherkin.Step
 
 import scala.util.chaining._
 
-class WaitForElementState(element: String, state: ElementState.Value, negate: Boolean) extends UnitStep[WebContext] {
+class WaitForElementState(element: String, state: ElementState, negate: Boolean) extends UnitStep[WebContext] {
 
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     step tap { _ =>

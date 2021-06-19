@@ -37,6 +37,9 @@ object WebErrors {
       throw new WebElementNotFoundException(binding, cause)
     def invalidVisualSessionStateError(msg: String) = throw new InvalidVisualSessionStateException(msg)
     def visualAssertionError(msg: String) = throw new VisualAssertionException(msg)
+    def invalidClickActionError(action: ElementAction) = throw new InvalidClickActionException(action)
+    def invalidContextActionError(action: ElementAction) = throw new InvalidContextActionException(action)
+    def invalidActionError(action: ElementAction) = throw new InvalidActionException(action)
 
     /** Thrown when a locator binding error is detected . */
     class LocatorBindingException(msg: String) extends GwenException(msg)
@@ -69,5 +72,14 @@ object WebErrors {
 
     /** Thrown when a visual assertion fails. */
     class VisualAssertionException(msg: String) extends AssertionError(msg)
+
+    /** Thrown when an invalid click action is detected. */
+    class InvalidClickActionException(action: ElementAction) extends GwenException(s"Invalid click action: $action (only ${ElementAction.click}, ${ElementAction.`right click`}, or ${ElementAction.`double click`} supported)")
+
+    /** Thrown when an invalid context action is detected. */
+    class InvalidContextActionException(action: ElementAction) extends GwenException(s"Invalid context action: $action (only ${ElementAction.click}, ${ElementAction.`right click`}, ${ElementAction.`double click`}, ${ElementAction.`check`}, ${ElementAction.`tick`}, ${ElementAction.`uncheck`}, ${ElementAction.`untick`} or ${ElementAction.`move to`} supported)")
+
+    /** Thrown when an invalid action is detected. */
+    class InvalidActionException(action: ElementAction) extends GwenException(s"Invalid action: $action (only ${ElementAction.click}, ${ElementAction.`right click`}, ${ElementAction.`double click`}, ${ElementAction.`clear`}, ${ElementAction.`submit`}, ${ElementAction.`check`}, ${ElementAction.`tick`}, ${ElementAction.`uncheck`}, ${ElementAction.`untick`} or ${ElementAction.`move to`} supported)")
 
 }

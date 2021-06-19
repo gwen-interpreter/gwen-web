@@ -26,7 +26,7 @@ import gwen.core.node.gherkin.Step
 
 import scala.util.chaining._
 
-class HandlePopup(action: PopupAction.Value) extends UnitStep[WebContext] {
+class HandlePopup(action: PopupAction) extends UnitStep[WebContext] {
 
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     step tap { _ =>

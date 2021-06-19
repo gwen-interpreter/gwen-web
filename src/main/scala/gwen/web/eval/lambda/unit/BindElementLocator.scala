@@ -27,7 +27,7 @@ import gwen.core.node.gherkin.Step
 
 import scala.util.chaining._
 
-class BindElementLocator(name: String, selectorType: SelectorType.Value, expression: String, container: Option[String], timeoutSecs: Option[Long], index: Option[Int]) extends UnitStep[WebContext] {
+class BindElementLocator(name: String, selectorType: SelectorType, expression: String, container: Option[String], timeoutSecs: Option[Long], index: Option[Int]) extends UnitStep[WebContext] {
 
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
 
