@@ -1060,9 +1060,11 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
             withParams = List(("iteration.number", (iteration + 1).toString)) ++ step.params
           )
           lifecycle.beforeStep(preCondStepDef, preStep, env.scopes)
-          val fStep = preStep.copy(
-            withEvalStatus = Failed(nanos - condSteps.map(_.evalStatus.nanos).sum, error),
-            withStepDef = None
+          val fStep = env.finaliseStep(
+            preStep.copy(
+              withEvalStatus = Failed(nanos - condSteps.map(_.evalStatus.nanos).sum, error),
+              withStepDef = None
+            )
           )
           lifecycle.afterStep(fStep, env.scopes)
           fStep :: condSteps
@@ -1074,7 +1076,8 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
       lifecycle.afterStepDef(condStepDef, env.scopes)
       evaluatedStep.copy(
         withEvalStatus = condStepDef.evalStatus,
-        withStepDef = Some(condStepDef)
+        withStepDef = Some(condStepDef),
+        withAttachments = condStepDef.attachments
       )
     } else {
       evaluatedStep
