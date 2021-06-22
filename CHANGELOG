@@ -1,6 +1,6 @@
 2.52.0
 ======
-June 10, 2021
+June 22, 2021
 - Report portal integration release
 - Add `nodePath` and `sourceRef` options to `gwen.rp.testCaseId.keys` setting to support
   generating test case ID's based on node path or source reference only.
