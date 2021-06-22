@@ -1076,8 +1076,7 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
       lifecycle.afterStepDef(condStepDef, env.scopes)
       evaluatedStep.copy(
         withEvalStatus = condStepDef.evalStatus,
-        withStepDef = Some(condStepDef),
-        withAttachments = condStepDef.attachments
+        withStepDef = Some(condStepDef)
       )
     } else {
       evaluatedStep
