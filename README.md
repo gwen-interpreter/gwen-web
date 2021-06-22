@@ -31,9 +31,9 @@ finding elements or running functions on web pages may be necessary.
 
 ### What's New?
 
+- [Report Portal integration](https://github.com/gwen-interpreter/gwen/wiki/Report-Portal-Integration) for centralised reporting and real-time analytics.
 - [Masked Settings](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#masked-settings) to hide private and sensitive property values from view and prevent them from being logged and reported.
 - Simplified [data table iteration with @ForEach](https://github.com/gwen-interpreter/gwen/wiki/Data-Tables#simplified-foreach)
-- Configurable [maximum number of threads](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#gwenparallelmaxthreads) for parallel execution
 
 Why Gwen?
 ---------
@@ -136,6 +136,7 @@ Learn More
 - [Associative meta](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#gwenassociativemeta)
 - [Behavior rules](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#gwenbehaviorrules) to help enforce good Gherkin style
 - [Dialects](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#gwenfeaturedialect) for [Gherkin's spoken languages](https://cucumber.io/docs/gherkin/reference/#spoken-languages)
+- Configurable [maximum number of threads](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#gwenparallelmaxthreads) for parallel execution
 
 User Network and Support
 ------------------------

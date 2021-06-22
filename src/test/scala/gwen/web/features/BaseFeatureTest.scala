@@ -29,7 +29,8 @@ abstract class BaseFeatureTest extends BaseTest {
     Settings.synchronized {
       val reportPath = s"${this.getClass.getSimpleName}${if (dryRun) "-dryRun" else ""}"
       val execModePath = if (parallel) "parallel" else "sequential"
-      var args = Array("-b", "-r", s"target/reports/$reportPath/$execModePath/$reportDir", "-f", s"junit,html,json")
+      val runRP = !dryRun && Settings.getOpt("rp").map(_.toBoolean).getOrElse(false)
+      var args = Array("-b", "-r", s"target/reports/$reportPath/$execModePath/$reportDir", "-f", s"junit,html,json${if (runRP) ",rp" else ""}")
       if (parallel) args = args ++ Array("--parallel")
       if (parallelFeatures) args = args ++ Array("--parallel-features")
       if (dryRun) args = args ++ Array("-n")

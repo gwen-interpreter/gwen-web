@@ -18,15 +18,9 @@
 
   @StepDef
   @Action
-  Scenario: I increment counter1
-      Given counter1 is defined by javascript "${counter1} + 1"
-        And counter1 < 4 is defined by javascript "${counter1} < 4"
-
-  @StepDef
-  @Action
-  Scenario: I increment counter2
-      Given counter2 is defined by javascript "${counter2} + 1"
-        And counter2 < 4 is defined by javascript "${counter2} < 4"
+  Scenario: I increment counter<counterNo>
+      Given counter$<counterNo> is defined by javascript "${counter$<counterNo>} + 1"
+        And counter$<counterNo> < 4 is defined by javascript "${counter$<counterNo>} < 4"
 
   Scenario: Increment counter1
       Given counter1 is "-1"

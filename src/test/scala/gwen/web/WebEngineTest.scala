@@ -96,13 +96,13 @@ class WebEngineTest extends BaseTest with WebEngine with Matchers with MockitoSu
   }
 
   private def evaluate(name: String): Unit = {
-    val step = Step(None, StepKeyword.Given.toString, name, Nil, None, Nil, None, Pending)
+    val step = Step(None, StepKeyword.Given.toString, name, Nil, None, Nil, None, Pending, Nil, Nil)
     evaluate(step, env)
   }
 
   private def evaluatePriority(name: String): Option[Step] = {
     val parent = mock[Identifiable]
-    val step = Step(None, StepKeyword.Given.toString, name, Nil, None, Nil, None, Pending)
+    val step = Step(None, StepKeyword.Given.toString, name, Nil, None, Nil, None, Pending, Nil, Nil)
     evaluatePriority(parent, step, env)
   }
 

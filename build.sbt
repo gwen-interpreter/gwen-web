@@ -1,5 +1,5 @@
 lazy val gwenSrc = ProjectRef(file("../gwen"), "gwen")
-lazy val gwenLib = "org.gweninterpreter" % "gwen" % "2.32.0"
+lazy val gwenLib = "org.gweninterpreter" % "gwen" % "2.33.0"
 
 val gwenWeb = (project in file("."))
   .sourceDependency(gwenSrc, gwenLib)
@@ -9,7 +9,8 @@ val gwenWeb = (project in file("."))
   )
 
 resolvers ++= Seq(
-  "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"
+  "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/",
+  "EPAM Systems" at "https://dl.bintray.com/epam/reportportal"
 )
 
 lazy val projectSettings = Seq(

@@ -57,7 +57,7 @@
          And the decimal data[decimal] should be data[binary] in binary for each data record
 
   @StepDef
-  @DataTable(horizontal="decimal,binary")
+  @DataTable(header="top")
   @Context
   Scenario: each row contains a number in decimal and binary form
       Given name[1] should be "decimal"
@@ -137,7 +137,8 @@
       Given the result is defined by javascript "Math.pow(${data[number]}, $<power>)"
        Then the result should start with "${data[$<function>]}"
         And name[1] should be "number"
-        And name[2] should be "square"
+        And condition is defined by javascript "true"
+        And name[2] should be "square" if condition
         And name[3] should be "cube"
         And record.number should match regex "\d+"
 
@@ -201,9 +202,10 @@
   @Action
   Scenario: tables are nested in stepdefs
       Given each row contains a number in decimal and binary form
-             | 1 | 1  |
-             | 2 | 10 |
-             | 3 | 11 |
+             | decimal | binary |
+             | 1       | 1      |
+             | 2       | 10     |
+             | 3       | 11     |
         And the nested table should match against its table
 
   @StepDef
