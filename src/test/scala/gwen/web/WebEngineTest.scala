@@ -914,6 +914,16 @@ class WebEngineTest extends BaseTest with WebEngine with Matchers with MockitoSu
       }
     }
 
+    """<attribute> <is|will> be defined by system process "<process>" delimited by "<delimiter>"""" should "evaluate" in {
+      val mockScopes = mock[ScopedDataStack]
+      doReturn(mockScopes).when(env).scopes
+      List("is", "will be").zipWithIndex.foreach { case (x, i) =>
+        evaluate(s"""attribute-$i $x defined by system process "process-$i" delimited by ","""")
+        verify(mockScopes).set(s"attribute-$i/sysproc", s"process-$i")
+        verify(mockScopes).set(s"attribute-$i/delimiter", s",")
+      }
+    }
+
   """<attribute> <is|will> be defined by file "<filepath>"""" should "evaluate" in {
     val mockScopes = mock[ScopedDataStack]
     doReturn(mockScopes).when(env).scopes
@@ -1248,6 +1258,10 @@ class WebEngineTest extends BaseTest with WebEngine with Matchers with MockitoSu
 
   """I execute system process "<command>"""" should "evaluate" in {
     evaluate("""I execute system process "hostname"""")
+  }
+
+  """I execute system process "<command>" delimited by "<delimiter>"""" should "evaluate" in {
+    evaluate("""I execute system process "hostname" delimited by ","""")
   }
 
   "I refresh the current page" should "evaluate" in {

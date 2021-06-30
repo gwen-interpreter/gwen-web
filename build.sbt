@@ -1,5 +1,5 @@
 lazy val gwenSrc = ProjectRef(file("../gwen"), "gwen")
-lazy val gwenLib = "org.gweninterpreter" % "gwen" % "2.33.0"
+lazy val gwenLib = "org.gweninterpreter" % "gwen" % "2.34.0"
 
 val gwenWeb = (project in file("."))
   .sourceDependency(gwenSrc, gwenLib)
@@ -9,8 +9,7 @@ val gwenWeb = (project in file("."))
   )
 
 resolvers ++= Seq(
-  "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/",
-  "EPAM Systems" at "https://dl.bintray.com/epam/reportportal"
+  "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"
 )
 
 lazy val projectSettings = Seq(
@@ -21,7 +20,7 @@ lazy val projectSettings = Seq(
   startYear := Some(2014),
   licenses += "Apache License, Version 2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0.html"),
   homepage := Some(url("https://github.com/gwen-interpreter/gwen")),
-  scalaVersion := "2.13.3",
+  scalaVersion := "2.13.6",
   crossPaths := false,
   trapExit := false,
   scalacOptions ++= Seq(
@@ -42,8 +41,9 @@ lazy val projectSettings = Seq(
 lazy val mainDependencies = {
   val commonsIO = "2.8.0"
   val selenium = "3.141.59"
-  val appliTools = "3.178.0"
-  val driverMgr = "4.3.0"
+  val seleniumEdge = "3.141.0"
+  val appliTools = "3.204.1"
+  val driverMgr = "4.4.3"
 
   Seq(
     "commons-io" % "commons-io" % commonsIO,
@@ -53,6 +53,7 @@ lazy val mainDependencies = {
     "org.seleniumhq.selenium" % "selenium-ie-driver" % selenium,
     "org.seleniumhq.selenium" % "selenium-safari-driver" % selenium,
     "org.seleniumhq.selenium" % "selenium-support" % selenium excludeAll ExclusionRule(organization = "junit", name = "junit"),
+    "com.microsoft.edge" % "msedge-selenium-tools-java" % seleniumEdge,
     "io.github.bonigarcia" % "webdrivermanager" % driverMgr,
     "com.applitools" % "eyes-selenium-java3" % appliTools excludeAll(
       ExclusionRule(organization = "org.apache.ant", name = "ant"),
@@ -81,3 +82,5 @@ mappings in(Compile, packageBin) ++= Seq(
   file("LICENSE-THIRDPARTY") -> "LICENSE-THIRDPARTY.txt",
   file("CHANGELOG") -> "CHANGELOG.txt"
 )
+
+Global / semanticdbEnabled := true

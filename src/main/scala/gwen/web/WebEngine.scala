@@ -98,7 +98,7 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
             }
 
           case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$locator "(.+?)"$expression with (\d+)$timeout second (?:timeout|wait)""" =>
-            val binding = LocatorBinding(s"${element}/list", Locator.parse(locator), step.orDocString(expression), None, Some(Duration.create(timeout.toLong, TimeUnit.SECONDS)), None)
+            val binding = LocatorBinding(s"${element}/list", Locator.parse(locator), expression, None, Some(Duration.create(timeout.toLong, TimeUnit.SECONDS)), None)
             env.evaluate(foreach(() => List("$[dryRun:webElements]"), element, parent, step, doStep, env)) {
               foreach(() => webContext.locateAll(binding), element, parent, step, doStep, env)
             }
@@ -749,12 +749,12 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
 
       case r"""I send "(.+?)"$keys""" =>
         checkStepRules(step, BehaviorType.Action, env)
-        webContext.sendKeys(keys.split(","))
+        webContext.sendKeys(keys.split("[,\\+]"))
 
       case r"""I send "(.+?)"$keys to (.+?)$$$element""" =>
         checkStepRules(step, BehaviorType.Action, env)
         val elementBinding = env.getLocatorBinding(element)
-        webContext.sendKeys(elementBinding, keys.split(","))
+        webContext.sendKeys(elementBinding, keys.split("[,\\+]"))
 
       case r"""I (enter|type)$action "(.*?)"$value in (.+?)$$$element""" =>
         checkStepRules(step, BehaviorType.Action, env)

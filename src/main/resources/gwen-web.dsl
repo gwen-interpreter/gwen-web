@@ -547,12 +547,14 @@ I reset my <name> setting
 <attribute> is defined by javascript "<expression>"
 <attribute> is defined by js "<expression>"
 <attribute> is defined by system process "<process>"
+<attribute> is defined by system process "<process>" delimited by "<delimiter>"
 <attribute> is defined by property "<name>"
 <attribute> is defined by setting "<name>"
 <attribute> is defined by file "<filepath>"
 <attribute> will be defined by javascript "<expression>"
 <attribute> will be defined by js "<expression>"
 <attribute> will be defined by system process "<process>"
+<attribute> will be defined by system process "<process>" delimited by "<delimiter>"
 <attribute> will be defined by property "<name>"
 <attribute> will be defined by setting "<name>"
 <attribute> will be defined by file "<filepath>"
@@ -689,7 +691,9 @@ I locate <element>
 I execute javascript "<javascript>"
 I execute js "<javascript>"
 I execute system process "<command>"
+I execute system process "<command>" delimited by "<delimiter>"
 I execute a unix system process "<command>"
+I execute a unix system process "<command>" delimited by "<delimiter>"
 I refresh the current page
 I base64 decode <reference> as <attribute>
 I base64 decode <reference>
