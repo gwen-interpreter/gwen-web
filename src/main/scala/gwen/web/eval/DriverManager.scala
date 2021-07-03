@@ -22,6 +22,7 @@ import scala.jdk.CollectionConverters._
 import scala.collection.mutable
 import scala.util.chaining._
 
+import com.microsoft.edge.seleniumtools.{EdgeDriver, EdgeOptions}
 import com.typesafe.scalalogging.LazyLogging
 import io.github.bonigarcia.wdm.WebDriverManager
 import org.openqa.selenium.{Dimension, MutableCapabilities, WebDriver}
@@ -29,7 +30,6 @@ import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.chrome.ChromeOptions
 import org.openqa.selenium.firefox.{FirefoxDriver, FirefoxOptions, FirefoxProfile}
 import org.openqa.selenium.ie.{InternetExplorerDriver, InternetExplorerOptions}
-import org.openqa.selenium.edge.{EdgeDriver, EdgeOptions}
 import org.openqa.selenium.remote.CapabilityType
 import org.openqa.selenium.remote.DesiredCapabilities
 import org.openqa.selenium.remote.HttpCommandExecutor
@@ -281,6 +281,75 @@ class DriverManager() extends LazyLogging {
     setDesiredCapabilities(options)
   }
 
+  private def edgeOptions() : EdgeOptions = new EdgeOptions() tap { options =>
+    WebSettings.`gwen.web.useragent` foreach { agent =>
+      logger.info(s"Setting edge argument: --user-agent=$agent")
+      options.addArguments(s"--user-agent=$agent")
+    }
+    if (WebSettings.`gwen.web.authorize.plugins`) {
+      logger.info("Setting edge argument: --always-authorize-plugins")
+      options.addArguments("--always-authorize-plugins")
+    }
+    options.addArguments("--enable-automation")
+    if (WebSettings.`gwen.web.accept.untrusted.certs`) {
+      logger.info("Setting edge argument: --ignore-certificate-errors")
+      options.addArguments("--ignore-certificate-errors")
+    }
+    WebSettings.`gwen.web.edge.path` foreach { path =>
+      logger.info(s"Setting edge path: $path")
+      options.setBinary(path)
+    }
+    WebSettings.`gwen.web.edge.args` foreach { arg =>
+      logger.info(s"Setting edge argument: $arg")
+      options.addArguments(arg)
+    }
+    if (WebSettings.`gwen.web.browser.headless`) {
+      logger.info("Setting edge argument: headless")
+      options.addArguments("headless")
+    }
+    val prefs = new java.util.HashMap[String, Object]()
+    WebSettings.`gwen.web.edge.prefs` foreach { case (name, value) =>
+      logger.info(s"Setting edge preference: $name=$value")
+      try {
+        prefs.put(name, Integer.valueOf(value.trim))
+      } catch {
+        case _: Throwable =>
+          if (value.matches("(true|false)")) prefs.put(name, java.lang.Boolean.valueOf(value.trim))
+          else prefs.put(name, value)
+      }
+    }
+    if (!prefs.isEmpty) {
+      options.setExperimentalOption("prefs", prefs)
+    }
+    WebSettings.`gwen.web.edge.extensions` tap { extensions =>
+      if (extensions.nonEmpty) {
+        logger.info(s"Loading edge extension${if (extensions.size > 1) "s" else ""}: ${extensions.mkString(",")}")
+        options.addExtensions(extensions:_*)
+      }
+    }
+    val mobileSettings = WebSettings.`gwen.web.edge.mobile`
+    if (mobileSettings.nonEmpty) {
+      val mobileEmulation = new java.util.HashMap[String, Object]()
+      mobileSettings.get("deviceName").fold({
+        val deviceMetrics = new java.util.HashMap[String, Object]()
+        mobileSettings foreach { case (name, value) =>
+          name match {
+            case "width" | "height" => deviceMetrics.put(name, java.lang.Integer.valueOf(value.trim))
+            case "pixelRatio" => deviceMetrics.put(name, java.lang.Double.valueOf(value.trim))
+            case "touch" => deviceMetrics.put(name, java.lang.Boolean.valueOf(value.trim))
+            case _ => mobileEmulation.put(name, value)
+          }
+        }
+        mobileEmulation.put("deviceMetrics", deviceMetrics)
+      }) { (deviceName: String) =>
+        mobileEmulation.put("deviceName", deviceName)
+      }
+      logger.info(s"Edge mobile emulation options: $mobileEmulation")
+      options.setExperimentalOption("mobileEmulation", mobileEmulation)
+    }
+    setDesiredCapabilities(options)
+  }
+
   private def ieOptions(): InternetExplorerOptions = new InternetExplorerOptions() tap { options =>
     setDefaultCapability("requireWindowFocus", true, options)
     setDefaultCapability("nativeEvents", false, options);
@@ -288,10 +357,6 @@ class DriverManager() extends LazyLogging {
     setDefaultCapability("ignoreProtectedModeSettings", true, options);
     setDefaultCapability("disable-popup-blocking", true, options);
     setDefaultCapability("enablePersistentHover", true, options);
-  }
-
-  private def edgeOptions(): EdgeOptions = new EdgeOptions() tap { options =>
-    setDesiredCapabilities(options)
   }
 
   private def safariOptions(): SafariOptions = new SafariOptions() tap { options =>
