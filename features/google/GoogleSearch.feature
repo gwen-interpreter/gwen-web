@@ -29,3 +29,10 @@
         And I append " " to the search field
        Then the search field should be "search string "
 
+     Scenario: Perform a google search with DocString parameter
+      Given I have Google in my browser
+       When I do a search for
+            """
+            Gwen automation
+            """
+       Then the first result should open a Gwen page
