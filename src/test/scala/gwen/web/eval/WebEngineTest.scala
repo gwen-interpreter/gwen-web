@@ -896,11 +896,21 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
   }
 
    """<attribute> <is|will> be defined by system process "<process>"""" should "evaluate" in {
+    val mockScopes = mock[ScopedDataStack]
+    doReturn(mockScopes).when(envState).scopes
+    List("is", "will be").zipWithIndex.foreach { case (x, i) =>
+      evaluate(s"""attribute-$i $x defined by system process "process-$i"""")
+      verify(mockScopes).set(s"attribute-$i/sysproc", s"process-$i")
+    }
+  }
+
+   """<attribute> <is|will> be defined by system process "<process>" delimited by "<delimiter>"""" should "evaluate" in {
       val mockScopes = mock[ScopedDataStack]
       doReturn(mockScopes).when(envState).scopes
       List("is", "will be").zipWithIndex.foreach { case (x, i) =>
-        evaluate(s"""attribute-$i $x defined by system process "process-$i"""")
+        evaluate(s"""attribute-$i $x defined by system process "process-$i" delimited by ","""")
         verify(mockScopes).set(s"attribute-$i/sysproc", s"process-$i")
+        verify(mockScopes).set(s"attribute-$i/delimiter", s",")
       }
     }
 
@@ -1231,6 +1241,10 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
 
   """I execute system process "<command>"""" should "evaluate" in {
     evaluate("""I execute system process "hostname"""")
+  }
+
+  """I execute system process "<command>" delimited by "<delimiter>"""" should "evaluate" in {
+    evaluate("""I execute system process "hostname,-s" delimited by ","""")
   }
 
   "I refresh the current page" should "evaluate" in {
