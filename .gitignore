@@ -16,3 +16,4 @@ metals.sbt
 /bin/
 *.jar
 .java-version
+.bsp/

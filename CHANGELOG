@@ -1,3 +1,114 @@
+2.53.0
+======
+July 2, 2021
+- Fix send keys DSL to send keyboard shortcut commands through Selenium Keys.chord mechanism
+- Support `+` in addition to `,` as separator in send keys DSL
+- Use `msedge-selenium-tools-java` to support Edge with Selenium 3
+- Add edge settings
+- Update webdrivermanager from v4.3.0 to v4.4.3
+- Update scala from v2.13.3 to v2.13.6
+- Update report portal client-java from v5.0.21 to v5.0.22
+  - Long name trunctation fix
+- Update Gwen core from v2.33.0 to v[2.34.0](https://github.com/gwen-interpreter/gwen/releases/tag/v2.34.0)
+  - Add new DSLs to support invoking system processes with quoted strings and other special cases
+    - I execute system process "<process>" delmited by "<delimiter>"
+    - I execute a unix system process "<process>" delmited by "<delimiter>"
+    - <attribute> <is|will be> defined by system process "<expression>" delmited by "<delimiter>"
+  - Support passing DocStrings as parameters to StepDefs (addresses issue gwen-interpreter/gwen#60)  
+
+2.52.0
+======
+June 22, 2021
+- Report portal integration release
+- Add `nodePath` and `sourceRef` options to `gwen.rp.testCaseId.keys` setting to support
+  generating test case ID's based on node path or source reference only.
+June 7, 2021 - 2.52.0-rc-rp.2
+- Fix name clash between parameters and attributes in interpolator
+- Convert back slashes in sourceRef and nodePath to forward slashes on Windows
+- Send sourceRef as item attribute in report portal if it is less than or equal to 128 
+  characeters in length, otherwise append it to the item description instead.
+- Enforce case sensitivity on all report portal setting names.
+- Improved test case ID generation for nodePath+params mode:
+  - Remove all keywords from node paths and use node names only
+  - Remove table cooridnates and `Examples` keyword from expanded scenario names in outlines
+  - Use single dimension occurrence in node path of ForEach, While, and Until iterations
+  - Pass cumulative parameters to report portal 
+    - Incuding current parameters and all those previously visible in the call chain
+- Remove node path logging on node descriptions
+- Introduce new setting `gwen.rp.debug=true|false` to control whether or not
+  to log debug messages containing the node path and parameters for all nodes
+  in report portal. Default is false.
+- Update Gwen core from v2.32.0 to v[2.33.0](https://github.com/gwen-interpreter/gwen/releases/tag/v2.33.0)
+May 31, 2021 - 2.52.0-rc-rp.1
+- Fix duplicate launch histories in RP for scenario outlines
+- Send table row data associated with expanded scenarios of outlines to report portal as parameters
+- Send all parameters passed to stepdefs to report portal as parameters
+- Introduce node paths and use those in conjunction with parameters sent to report portal 
+  to generate unique test case IDs (SHA 256 hashes) for all nodes in RP instead of relying on 
+  the default auto generation based on line numbers in codeRefs. This ensures that history 
+  in RP remains in tact for nodes if their line numbers change (as long as nodes are not 
+  renamed and identically named sibling nodes are not deleted).
+- Add new configuration settings to control how test case IDs are generated in report portal:
+  - `gwen.rp.testCaseId.keys = nodePath+params | sourceRef+params | auto`
+  - Default is `nodePath+params`
+- Append source refs and node paths to descriptions of nodes in report portal
+  - Do not send source refs as attributes 
+  - This is to avoid 128 char limit on attributes in RP
+- Remove support for @TestCaseId annotation which was previously implemented on an invalid assumption
+- Drop column number from sourceRef string representation and codeRef sent to report portal
+- Ensure attachments are still logged in report portal when step def reporting is disabled
+- Drop Repeat prefix from While/Until keywords in reports
+- Change `gwen.rp.send.tags` setting to only send marker tags if enabled (default is true: enabled)
+- Add `gwen.rp.send.annotations` setting to send annotations if enabled (default is false: disabled)
+- Add parameters passed to StepDef's, expanded outlines and for-each records to HTML report
+
+2.51.0-beta-rp.10
+=================
+Apr 22, 2021 - 2.51.0-beta-rp.10
+- Add RP hearteat timeout setting (default is 3 seconds):
+  - `gwen.rp.heartbeat.timeoutSecs`
+- Truncate RP item names greater than 1024 chars and add `... ` to end and log INFO message
+- Log DocStrings and data tables as INFO messages in RP
+- Changed RP heartbeat to use /health URL and check payload
+- Added new setting `gwen.rp.send.markdownBlocks = true | false` (default is true)
+  - When enabled, surrounds all markdown content with triple back ticks to force block style render
+    and preserve original text as much as possible in report portal markdown view
+  - When disabled, sends all content to report portal as is (unmodified for markdown)
+- Removed setting `gwen.rp.escapeForMarkdown` (character level markdown escapes no longer supported)
+Apr 20, 2021 - 2.50.0-beta-rp.9
+- Replace double space with ` &nbsp;` when escaping for HTML
+- Skip RP reporting for skipped features
+- Add heartbeat to monitor RP connection during execution through setting:
+  - `gwen.rp.hearbeat = true | false` default is `true`
+    - If enabled, Gwen will check the report portal connection before the first step in each 
+      scenario is executed and fail fast if it's gone offline
+Apr 17, 2021 - 2.50.0-beta-rp.8
+- Enrich assertion errors to include binding information
+- Escape spaces and tildes in RP logs
+- Add `gwen.rp.escapeForMarkdown` setting to control whether or not to escape for markdown in report portal
+Apr 12, 2021 - 2.50.0-beta-rp.7
+- Fix parameter interpolation involving if conditions
+Apr 11, 2021 - 2.50.0-beta-rp.6
+- Fix composite steps involving if conditions
+- Add 1 ms delay to all lifecyce events to ensure millisecond timestamp accuracy for RP
+Apr 7, 2021 - 2.50.0-beta-rp.5
+- Add locator info to non interactable error
+- Fix report portal markdown escaping to encode `<>*` characters only
+- Fix sequence of skipped steps in report portal
+- Introduce synthetic stepdefs for `if` and `repeat` steps for consistent structure
+Mar 26, 2021 - 2.50.0-beta-rp.4
+- Fix logging of steps with "if" conditions to report portal
+- Update report portal library from v5.0.18 to v5.0.21
+Mar 25, 2021 - 2.50.0-beta-rp.3
+- Fix interrupted steps in report portal
+- Fix screenshot attachemnts in HTML report
+- Fix undefined step issue in report portal
+Mar 20, 2021 - 2.50.0-beta-rp.2
+- Fix report portal data table issues
+- Setting for optionally sending tags to report portal
+Feb 25, 2021 - 2.50.0-beta-rp.1
+- Introduce report portal integration
+
 2.51.1
 ======
 May 4, 2021

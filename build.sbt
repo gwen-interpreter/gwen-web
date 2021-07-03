@@ -39,8 +39,9 @@ lazy val projectSettings = Seq(
 
 lazy val mainDependencies = {
   val selenium = "3.141.59"
-  val appliTools = "3.178.0"
-  val driverMgr = "4.3.0"
+  val seleniumEdge = "3.141.0"
+  val appliTools = "3.204.1"
+  val driverMgr = "4.4.3"
 
   Seq(
     "org.seleniumhq.selenium" % "selenium-chrome-driver" % selenium,
@@ -49,6 +50,7 @@ lazy val mainDependencies = {
     "org.seleniumhq.selenium" % "selenium-ie-driver" % selenium,
     "org.seleniumhq.selenium" % "selenium-safari-driver" % selenium,
     "org.seleniumhq.selenium" % "selenium-support" % selenium excludeAll ExclusionRule(organization = "junit", name = "junit"),
+    "com.microsoft.edge" % "msedge-selenium-tools-java" % seleniumEdge,
     "io.github.bonigarcia" % "webdrivermanager" % driverMgr,
     "com.applitools" % "eyes-selenium-java3" % appliTools excludeAll(
       ExclusionRule(organization = "org.apache.ant", name = "ant"),

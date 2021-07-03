@@ -18,8 +18,9 @@ This product includes software developed at:
 - https://github.com/gwen-interpreter/gwen
 - https://github.com/gwen-interpreter/gwen-web
 
-This product integrates with software developed at:
+This product supports integration with the following products:
 - https://applitools.com (for visual testing)
+- https://reportportal.io (for centralised reporting and analytics)
 
 This product has dependencies on other open source software. All bundled 
 third party dependencies and their licenses are listed in the  
