@@ -1082,8 +1082,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val mockAction = mock[Action]
     val keys = Array("Command", "C")
     doReturn(mockActions).when(ctx).createActions(mockWebDriver)
-    when(mockActions.sendKeys(Keys.COMMAND)).thenReturn(mockActions)
-    when(mockActions.sendKeys("C")).thenReturn(mockActions)
+    when(mockActions.sendKeys(Keys.chord(Keys.COMMAND, "C"))).thenReturn(mockActions)
     when(mockActions.build()).thenReturn(mockAction)
     ctx.sendKeys(keys)
     verify(mockAction).perform()
@@ -1092,16 +1091,11 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
   "WebContext.sendKeys to element" should "" in {
     val elemBinding = LocatorBinding("element", SelectorType.id, "elem", None, None, ctx)
     val mockElement = mock[WebElement]
-    val mockActions = mock[Actions]
-    val mockAction = mock[Action]
     val keys = Array("Command", "C")
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
-    doReturn(mockActions).when(ctx).createActions(mockWebDriver)
-    when(mockActions.sendKeys(mockElement, Keys.COMMAND)).thenReturn(mockActions)
-    when(mockActions.sendKeys(mockElement, "C")).thenReturn(mockActions)
-    when(mockActions.build()).thenReturn(mockAction)
+    doNothing().when(mockElement).sendKeys(Keys.chord(Keys.COMMAND, "C"))
     ctx.sendKeys(elemBinding, keys)
-    verify(mockAction).perform()
+    verify(mockElement).sendKeys(Keys.chord(Keys.COMMAND, "C"))
   }
 
   "WebContext.performActionInContext" should "click element in context of another element" in {

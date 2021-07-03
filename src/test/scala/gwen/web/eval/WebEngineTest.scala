@@ -1170,13 +1170,15 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     doReturn(mockBinding).when(ctx).getLocatorBinding("<element>")
     doNothing().when(ctx).sendKeys(mockBinding, Array("CONTROL", "C"))
     evaluate("""I send "CONTROL,C" to <element>""")
-    verify(ctx).sendKeys(mockBinding, Array("CONTROL", "C"))
+    evaluate("""I send "CONTROL+C" to <element>""")
+    verify(ctx, times(2)).sendKeys(mockBinding, Array("CONTROL", "C"))
   }
 
   """I send "<keys>"""" should "evaluate" in {
     doNothing().when(ctx).sendKeys(Array("CONTROL", "C"))
     evaluate("""I send "CONTROL,C"""")
-    verify(ctx).sendKeys(Array("CONTROL", "C"))
+    evaluate("""I send "CONTROL+C"""")
+    verify(ctx, times(2)).sendKeys(Array("CONTROL", "C"))
   }
 
   "I wait 1 second when <element> is <clicked|right clicked|double clicked|submitted|checked|ticked|unchecked|unticked|selected|deselected|typed|entered|tabbed|cleared|moved to>" should "evaluate" in {

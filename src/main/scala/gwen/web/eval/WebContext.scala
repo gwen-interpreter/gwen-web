@@ -827,19 +827,15 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
   }
 
   def sendKeys(elementBindingOpt: Option[LocatorBinding], keysToSend: Array[String]): Unit = {
-    val keys = keysToSend.map(_.trim).map(key => Try(Keys.valueOf(key.toUpperCase)).getOrElse(key))
+    val keys = Keys.chord(keysToSend.map(k => Try(Keys.valueOf(k.toUpperCase)).getOrElse(k)): _*)
     elementBindingOpt match {
       case Some(binding) =>
         withDriverAndElement(binding, s"trying to send keys to $binding") { (driver, webElement) =>
-          var actions = createActions(driver)
-          keys.foreach { key => actions = actions.sendKeys(webElement, key) }
-          actions.build().perform()
+          webElement.sendKeys(keys)
         }
       case None =>
         withWebDriver { driver =>
-          var actions = createActions(driver)
-          keys.foreach { key => actions = actions.sendKeys(key) }
-          actions.build().perform()
+          createActions(driver).sendKeys(keys).build().perform()
         }
     }
   }

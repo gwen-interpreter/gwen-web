@@ -218,9 +218,9 @@ class WebEngine extends EvalEngine[WebContext] {
       case r"""I press (enter|tab)$key in (.+?)$$$element""" =>
         new SendKeyToElement(element, key)
       case r"""I send "(.+?)"$keys""" =>
-        new SendKeysToBrowser(keys.split(","))
+        new SendKeysToBrowser(keys.split("[,\\+]"))
       case r"""I send "(.+?)"$keys to (.+?)$$$element""" =>
-        new SendKeysToElement(element, keys.split(","))
+        new SendKeysToElement(element, keys.split("[,\\+]"))
       case r"""I (enter|type)$action "(.*?)"$value in (.+?)$$$element""" =>
         new SendValueToElement(element, value, ElementAction.valueOf(action) == ElementAction.enter)
       case r"""I (enter|type)$action (.+?)$attribute in (.+?)$$$element""" =>
