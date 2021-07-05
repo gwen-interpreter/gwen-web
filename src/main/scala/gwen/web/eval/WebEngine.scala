@@ -105,12 +105,24 @@ class WebEngine extends EvalEngine[WebContext] {
         new WaitForElementOnEvent(element, ElementEvent.valueOf(event), duration.toLong)
       case r"""I wait until (.+?)$condition when (.+?)$element is (clicked|right clicked|double clicked||submitted|checked|ticked|unchecked|unticked|selected|deselected|typed|entered|tabbed|cleared|moved to)$$$event""" =>
         new WaitForConditionOnEvent(element, ElementEvent.valueOf(event), condition)
+      case r"""I wait until "(.+?)$javascript" using (.+?)$delayPeriod (second|millisecond)$delayUnit delay and (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit timeout""" => 
+        new WaitForCondition(javascript, Some(Duration(delayPeriod.toLong, delayUnit).toMillis), Some(Duration(timeoutPeriod.toLong, timeoutUnit).toSeconds))
+      case r"""I wait until "(.+?)$javascript" using (.+?)$delayPeriod (second|millisecond)$delayUnit delay""" => 
+        new WaitForCondition(javascript, Some(Duration(delayPeriod.toLong, delayUnit).toMillis), None)
+      case r"""I wait until "(.+?)$javascript" using (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit timeout""" =>
+        new WaitForCondition(javascript, None, Some(Duration(timeoutPeriod.toLong, timeoutUnit).toSeconds))
       case r"""I wait until "(.+?)$javascript"""" =>
-        new WaitForCondition(step.orDocString(javascript))
+        new WaitForCondition(step.orDocString(javascript), None, None)
       case r"""I wait until (.+?)$element is( not)?$negation (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$$$state""" =>
         new WaitForElementState(element, ElementState.valueOf(state), Option(negation).isDefined)
+      case r"""I wait until (.+?)$condition using (.+?)$delayPeriod (second|millisecond)$delayUnit delay and (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit timeout""" =>
+        new WaitForBoundCondition(condition, Some(Duration(delayPeriod.toLong, delayUnit).toMillis), Some(Duration(timeoutPeriod.toLong, timeoutUnit).toSeconds))
+      case r"""I wait until (.+?)$condition using (.+?)$delayPeriod (second|millisecond)$delayUnit delay""" =>
+        new WaitForBoundCondition(condition, Some(Duration(delayPeriod.toLong, delayUnit).toMillis), None)
+      case r"""I wait until (.+?)$condition using (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit timeout""" =>
+        new WaitForBoundCondition(condition, None, Some(Duration(timeoutPeriod.toLong, timeoutUnit).toSeconds))
       case r"""I wait until (.+?)$$$condition""" =>
-        new WaitForBoundCondition(condition)
+        new WaitForBoundCondition(condition, None, None)
       case r"""I am on the (.+?)$$$page""" =>
         new CreatePageScope(page)
       case r"""I navigate to the (.+?)$$$page""" =>

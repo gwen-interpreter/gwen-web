@@ -38,7 +38,7 @@ class WaitForElementState(element: String, state: ElementState, negate: Boolean)
           val binding = ctx.getLocatorBinding(element).jsEquivalent
           ctx.waitForElementState(binding, state, negate)
         case Some(javascript) =>
-          new WaitForCondition(javascript).apply(parent, step, ctx)
+          new WaitForCondition(javascript, None, None).apply(parent, step, ctx)
       }
     }
   }

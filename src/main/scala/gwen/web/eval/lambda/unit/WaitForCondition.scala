@@ -25,12 +25,12 @@ import gwen.core.node.gherkin.Step
 
 import scala.util.chaining._
 
-class WaitForCondition(javascript: String) extends UnitStep[WebContext] {
+class WaitForCondition(javascript: String, delayMsecs: Option[Long], timeoutSecs: Option[Long]) extends UnitStep[WebContext] {
 
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     step tap { _ =>
       checkStepRules(step, BehaviorType.Action, ctx)
-      ctx.waitUntil(s"waiting for true return from javascript: $javascript") {
+      ctx.waitUntil(delayMsecs, timeoutSecs, s"waiting for true return from javascript: $javascript") {
         ctx.evaluateJSPredicate(javascript)
       }
     }

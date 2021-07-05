@@ -666,7 +666,29 @@ I wait until <condition> when <element> is typed
 I wait until <condition> when <element> is entered
 I wait until <condition> when <element> is tabbed
 I wait until <condition> when <element> is cleared
+I wait until "<javascript>" using <delayPeriod> second delay and <timeoutPeriod> minute timeout
+I wait until "<javascript>" using <delayPeriod> second delay and <timeoutPeriod> second timeout
+I wait until "<javascript>" using <delayPeriod> second delay and <timeoutPeriod> millisecond timeout
+I wait until "<javascript>" using <delayPeriod> millisecond delay and <timeoutPeriod> minute timeout
+I wait until "<javascript>" using <delayPeriod> millisecond delay and <timeoutPeriod> second timeout
+I wait until "<javascript>" using <delayPeriod> millisecond delay and <timeoutPeriod> millisecond timeout
+I wait until "<javascript>" using <delayPeriod> millisecond delay
+I wait until "<javascript>" using <delayPeriod> second delay
+I wait until "<javascript>" using <timeoutPeriod> minute timeout
+I wait until "<javascript>" using <timeoutPeriod> second timeout
+I wait until "<javascript>" using <timeoutPeriod> millisecond timeout
 I wait until "<javascript>"
+I wait until <condition> using <delayPeriod> second delay and <timeoutPeriod> minute timeout
+I wait until <condition> using <delayPeriod> second delay and <timeoutPeriod> second timeout
+I wait until <condition> using <delayPeriod> second delay and <timeoutPeriod> millisecond timeout
+I wait until <condition> using <delayPeriod> millisecond delay and <timeoutPeriod> minute timeout
+I wait until <condition> using <delayPeriod> millisecond delay and <timeoutPeriod> second timeout
+I wait until <condition> using <delayPeriod> millisecond delay and <timeoutPeriod> millisecond timeout
+I wait until <condition> using <delayPeriod> millisecond delay
+I wait until <condition> using <delayPeriod> second delay
+I wait until <condition> using <timeoutPeriod> minute timeout
+I wait until <condition> using <timeoutPeriod> second timeout
+I wait until <condition> using <timeoutPeriod> millisecond timeout
 I wait until <condition>
 I wait until <element> is displayed
 I wait until <element> is hidden

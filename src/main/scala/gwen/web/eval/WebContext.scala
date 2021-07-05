@@ -500,15 +500,37 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     * @param condition the boolean condition to wait for (until true)
     */
   override def waitUntil(timeoutSecs: Long, reason: String)(condition: => Boolean): Unit = {
+    waitUntil(None, Some(timeoutSecs), reason)(condition)
+  }
+
+  /**
+    * Waits until a given condition is ready for a given number of seconds using a given polling delay.
+    * Errors on given timeout out seconds.
+    *
+    * @param delayMsecs the polling delay (milliseconds)
+    * @param timeoutSecs the number of seconds to wait before timing out
+    * @param reason a description of what is being waited on
+    * @param condition the boolean condition to wait for (until true)
+    */
+  def waitUntil(delayMsecs: Option[Long], timeoutSecs: Option[Long], reason: String)(condition: => Boolean): Unit = {
+    val timeout = timeoutSecs.getOrElse(WebSettings.`gwen.web.wait.seconds`)
     try {
       withWebDriver { webDriver =>
-        new FluentWait(webDriver)
-          .withTimeout(java.time.Duration.ofSeconds(timeoutSecs))
-          .until { driver => condition }
+        delayMsecs match {
+          case Some(delay) =>
+            new FluentWait(webDriver)
+              .withTimeout(java.time.Duration.ofSeconds(timeout))
+              .pollingEvery(java.time.Duration.ofMillis(delay))
+              .until { driver => condition }
+          case _ =>
+            new FluentWait(webDriver)
+              .withTimeout(java.time.Duration.ofSeconds(timeout))
+              .until { driver => condition }
+        }
       }
     } catch {
       case e: TimeoutException =>
-        waitTimeoutError(timeoutSecs, reason, e)
+        waitTimeoutError(timeout, reason, e)
     }
   }
 
