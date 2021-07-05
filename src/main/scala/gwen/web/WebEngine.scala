@@ -121,14 +121,14 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
           case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using no delay""" =>
             repeat(operation, parent, step, doStep, condition, Duration.Zero, defaultRepeatTimeout(DefaultRepeatDelay), env)
 
-          case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using (.+?)$delayPeriod (second|millisecond)$delayUnit delay and (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit (?:timeout|wait)""" =>
+          case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using (.+?)$delayPeriod (second|millisecond)$delayUnit delay and (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit (?:timeout|wait)""" if doStep != "I wait" =>
             repeat(operation, parent, step, doStep, condition, Duration(delayPeriod.toLong, delayUnit), Duration(timeoutPeriod.toLong, timeoutUnit), env)
 
-          case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using (.+?)$delayPeriod (second|millisecond)$delayUnit delay""" =>
+          case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using (.+?)$delayPeriod (second|millisecond)$delayUnit delay""" if doStep != "I wait" =>
             val delayDuration = Duration(delayPeriod.toLong, delayUnit)
             repeat(operation, parent, step, doStep, condition, delayDuration, defaultRepeatTimeout(delayDuration), env)
 
-          case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit (?:timeout|wait)""" =>
+          case r"""(.+?)$doStep (until|while)$operation (.+?)$condition using (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit (?:timeout|wait)""" if doStep != "I wait" =>
             repeat(operation, parent, step, doStep, condition, DefaultRepeatDelay, Duration(timeoutPeriod.toLong, timeoutUnit), env)
 
           case r"""(.+?)$doStep (until|while)$operation (.+?)$$$condition""" if (doStep != "I wait" && !step.expression.matches(""".*".*(until|while).*".*""")) =>
@@ -192,6 +192,28 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
         env.scopes.get(s"$condition/javascript")
         env.getLocatorBinding(element)
         env.scopes.set(s"$element/${WebEvents.EventToAction(event)}/condition", condition)
+      
+      case r"""I wait until "(.+?)$javascript" using (.+?)$delayPeriod (second|millisecond)$delayUnit delay and (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit timeout""" => 
+        checkStepRules(step, BehaviorType.Action, env)
+        val delayMsecs = Duration(delayPeriod.toLong, delayUnit).toMillis
+        val timeoutSecs = Duration(timeoutPeriod.toLong, timeoutUnit).toSeconds
+        webContext.waitUntil(Some(delayMsecs), Some(timeoutSecs), s"waiting for true return from javascript: $javascript") {
+          env.evaluateJSPredicate(javascript)
+        }
+      
+      case r"""I wait until "(.+?)$javascript" using (.+?)$delayPeriod (second|millisecond)$delayUnit delay""" => 
+        checkStepRules(step, BehaviorType.Action, env)
+        val delayMsecs = Duration(delayPeriod.toLong, delayUnit).toMillis
+        webContext.waitUntil(Some(delayMsecs), None, s"waiting for true return from javascript: $javascript") {
+          env.evaluateJSPredicate(javascript)
+        }
+
+      case r"""I wait until "(.+?)$javascript" using (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit timeout""" =>
+        checkStepRules(step, BehaviorType.Action, env)
+        val timeoutSecs = Duration(timeoutPeriod.toLong, timeoutUnit).toSeconds
+        webContext.waitUntil(timeoutSecs, s"waiting for true return from javascript: $javascript") {
+          env.evaluateJSPredicate(javascript)
+        }
 
       case r"""I wait until "(.+?)$javascript"""" => step.orDocString(javascript) tap { javascript =>
         checkStepRules(step, BehaviorType.Action, env)
@@ -205,6 +227,31 @@ trait WebEngine extends DefaultEngineSupport[WebEnvContext] {
         val elementBinding = env.getLocatorBinding(element).jsEquivalent
         val negate = Option(negation).isDefined
         webContext.waitForElementState(elementBinding, state, negate)
+
+      case r"""I wait until (.+?)$condition using (.+?)$delayPeriod (second|millisecond)$delayUnit delay and (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit timeout""" =>
+        checkStepRules(step, BehaviorType.Action, env)
+        val javascript = env.scopes.get(s"$condition/javascript")
+        val delayMsecs = Duration(delayPeriod.toLong, delayUnit).toMillis
+        val timeoutSecs = Duration(timeoutPeriod.toLong, timeoutUnit).toSeconds
+        webContext.waitUntil(Some(delayMsecs), Some(timeoutSecs), s"waiting for true return from javascript: $javascript") {
+          env.evaluateJSPredicate(javascript)
+        }
+
+      case r"""I wait until (.+?)$condition using (.+?)$delayPeriod (second|millisecond)$delayUnit delay""" =>
+        checkStepRules(step, BehaviorType.Action, env)
+        val javascript = env.scopes.get(s"$condition/javascript")
+        val delayMsecs = Duration(delayPeriod.toLong, delayUnit).toMillis
+        webContext.waitUntil(Some(delayMsecs), None, s"waiting for true return from javascript: $javascript") {
+          env.evaluateJSPredicate(javascript)
+        }
+
+      case r"""I wait until (.+?)$condition using (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit timeout""" =>
+        checkStepRules(step, BehaviorType.Action, env)
+        val javascript = env.scopes.get(s"$condition/javascript")
+        val timeoutSecs = Duration(timeoutPeriod.toLong, timeoutUnit).toSeconds
+        webContext.waitUntil(timeoutSecs, s"waiting for true return from javascript: $javascript") {
+          env.evaluateJSPredicate(javascript)
+        }
 
       case r"""I wait until (.+?)$$$condition""" =>
         checkStepRules(step, BehaviorType.Action, env)

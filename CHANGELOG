@@ -1,10 +1,22 @@
 2.53.0
 ======
-July 2, 2021
+July 7, 2021
 - Fix send keys DSL to send keyboard shortcut commands through Selenium Keys.chord mechanism
 - Support `+` in addition to `,` as separator in send keys DSL
 - Use `msedge-selenium-tools-java` to support Edge with Selenium 3
 - Add edge settings
+- Add new DSLs to support invoking system processes with quoted strings and other special cases
+  - I execute system process "<process>" delmited by "<delimiter>"
+  - I execute a unix system process "<process>" delmited by "<delimiter>"
+  - <attribute> <is|will be> defined by system process "<expression>" delmited by "<delimiter>"
+- Add support for passing DocStrings as parameters to StepDefs (addresses issue gwen-interpreter/gwen#60)
+- Add optional poll `delay` and `timeout` parameters to `I wait until ..` DSLs
+  - I wait until "<javascript>" using <delayPeriod> <second|millisecond> delay and <timeoutPeriod> <minute|second|millisecond> timeout
+  - I wait until "<javascript>" using <delayPeriod> <second|millisecond> delay
+  - I wait until "<javascript>" using <timeoutPeriod> <minute|second|millisecond> timeout
+  - I wait until <condition> using <delayPeriod> <second|millisecond> delay and <timeoutPeriod> <minute|second|millisecond> timeout
+  - I wait until <condition> using <delayPeriod> <second|millisecond> delay
+  - I wait until <condition> using <timeoutPeriod> <minute|second|millisecond> timeout
 - Update webdrivermanager from v4.3.0 to v4.4.3
 - Update scala from v2.13.3 to v2.13.6
 - Update commonsIO from v2.8.0 to v2.10.0
@@ -12,11 +24,6 @@ July 2, 2021
 - Update report portal client-java from v5.0.21 to v5.0.22
   - Long name trunctation fix
 - Update Gwen core from v2.33.0 to v[2.34.0](https://github.com/gwen-interpreter/gwen/releases/tag/v2.34.0)
-  - Add new DSLs to support invoking system processes with quoted strings and other special cases
-    - I execute system process "<process>" delmited by "<delimiter>"
-    - I execute a unix system process "<process>" delmited by "<delimiter>"
-    - <attribute> <is|will be> defined by system process "<expression>" delmited by "<delimiter>"
-  - Support passing DocStrings as parameters to StepDefs (addresses issue gwen-interpreter/gwen#60)  
 
 2.52.0
 ======
