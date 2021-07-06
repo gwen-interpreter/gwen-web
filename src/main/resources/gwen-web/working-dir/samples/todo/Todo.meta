@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 
-  Feature: Todo Meta (automation glue)     # file: todo.meta
+  Feature: Todo Meta (automation glue)
                         
  @Context
  @StepDef

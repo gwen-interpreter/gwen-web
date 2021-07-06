@@ -9,7 +9,7 @@
  # in features that match this name are executed by Gwen by 
  # evaluating the sequence of steps defined in that step def.
 
- Feature: Google search meta
+ Feature: Google search meta (French dialect)
 
 @StepDef
 @Context

@@ -30,90 +30,64 @@ import scala.util.chaining._
 object GwenWebInterpreter extends GwenInterpreter(new WebEngine()) {
 
   /**
-    * Initialises a workspace directory.
+    * Initialises a Gwen working directory.
     *
     * @param dir the directory to initialise
     */
-  override def initWorkspace(dir: File): Unit = {
+  override def initWorkingDir(dir: File): Unit = {
     
-    super.initWorkspace(dir)
+    super.initWorkingDir(dir)
     
     new File(dir, "browsers") tap { dir =>
-      FileIO.copyClasspathTextResourceToFile("/gwen-web/workspace/browsers/chrome.properties", dir)
-      FileIO.copyClasspathTextResourceToFile("/gwen-web/workspace/browsers/edge.properties", dir)
-      FileIO.copyClasspathTextResourceToFile("/gwen-web/workspace/browsers/firefox.properties", dir)
-      FileIO.copyClasspathTextResourceToFile("/gwen-web/workspace/browsers/ie.properties", dir)
-      FileIO.copyClasspathTextResourceToFile("/gwen-web/workspace/browsers/safari.properties", dir)
-      FileIO.copyClasspathTextResourceToFile("/gwen-web/workspace/browsers/README.txt", dir)
+      FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/browsers/chrome.properties", dir)
+      FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/browsers/edge.properties", dir)
+      FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/browsers/firefox.properties", dir)
+      FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/browsers/ie.properties", dir)
+      FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/browsers/safari.properties", dir)
+      FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/browsers/README.txt", dir)
+      logger.info(s"Initalised $dir")
     }
 
     new File(dir, "env") tap { dir =>
-      FileIO.copyClasspathTextResourceToFile("/gwen-web/workspace/env/local.properties", dir)
-      FileIO.copyClasspathTextResourceToFile("/gwen-web/workspace/env/README.txt", dir)
+      FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/env/local.properties", dir)
+      FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/env/README.txt", dir)
+      logger.info(s"Initalised $dir")
     }
 
     new File(dir, "features") tap { dir =>
-      FileIO.copyClasspathTextResourceToFile("/gwen-web/workspace/features/README.txt", dir)
+      FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/features/README.txt", dir)
+      logger.info(s"Initalised $dir")
     }
 
     new File(dir, "samples/floodio") tap { dir =>
-      FileIO.copyClasspathTextResourceToFile("/gwen-web/workspace/samples/floodio/FloodIO.feature", dir)
-      FileIO.copyClasspathTextResourceToFile("/gwen-web/workspace/samples/floodio/FloodIO.meta", dir)
+      FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/samples/floodio/FloodIO.feature", dir)
+      FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/samples/floodio/FloodIO.meta", dir)
     }
 
     new File(dir, "samples/google") tap { dir =>
-      FileIO.copyClasspathTextResourceToFile("/gwen-web/workspace/samples/google/Google.feature", dir)
-      FileIO.copyClasspathTextResourceToFile("/gwen-web/workspace/samples/google/Google.meta", dir)
+      FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/samples/google/Google.feature", dir)
+      FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/samples/google/Google.meta", dir)
     }
 
     new File(dir, "samples/i18n") tap { dir =>
-      FileIO.copyClasspathTextResourceToFile("/gwen-web/workspace/samples/i18n/Google.feature", dir)
-      FileIO.copyClasspathTextResourceToFile("/gwen-web/workspace/samples/i18n/Google.meta", dir)
+      FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/samples/i18n/Google_fr.feature", dir)
+      FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/samples/i18n/Google_fr.meta", dir)
     }
 
-    new File(dir, "samples/set-test") tap { dir =>
-      FileIO.copyClasspathTextResourceToFile("/gwen-web/workspace/samples/se-test/SeleniumTestPage.feature", dir)
-      FileIO.copyClasspathTextResourceToFile("/gwen-web/workspace/samples/se-test/SeleniumTestPage.meta", dir)
-    }
-
-    new File(dir, "samples/todo/feature-level") tap { dir =>
-      FileIO.copyClasspathTextResourceToFile("/gwen-web/workspace/samples/todo/feature-level/Todo.feature", dir)
-      FileIO.copyClasspathTextResourceToFile("/gwen-web/workspace/samples/todo/feature-level/Todo.meta", dir)
-    }
-
-    new File(dir, "samples/todo/homepage-example") tap { dir =>
-      FileIO.copyClasspathTextResourceToFile("/gwen-web/workspace/samples/todo/homepage-example/Todo.feature", dir)
-      FileIO.copyClasspathTextResourceToFile("/gwen-web/workspace/samples/todo/homepage-example/Todo.meta", dir)
-    }
-
-    new File(dir, "samples/todo/lenient-rules") tap { dir =>
-      FileIO.copyClasspathTextResourceToFile("/gwen-web/workspace/samples/todo/lenient-rules/Todo.feature", dir)
-      FileIO.copyClasspathTextResourceToFile("/gwen-web/workspace/samples/todo/lenient-rules/Todo.meta", dir)
-    }
-
-    new File(dir, "samples/todo/scenario-level") tap { dir =>
-      FileIO.copyClasspathTextResourceToFile("/gwen-web/workspace/samples/todo/scenario-level/Todo.feature", dir)
-      FileIO.copyClasspathTextResourceToFile("/gwen-web/workspace/samples/todo/scenario-level/Todo.meta", dir)
-    }
-
-    new File(dir, "samples/todo/single-scenario") tap { dir =>
-      FileIO.copyClasspathTextResourceToFile("/gwen-web/workspace/samples/todo/single-scenario/Todo.feature", dir)
-      FileIO.copyClasspathTextResourceToFile("/gwen-web/workspace/samples/todo/single-scenario/Todo.meta", dir)
-    }
-
-    new File(dir, "samples/todo/strict-rules") tap { dir =>
-      FileIO.copyClasspathTextResourceToFile("/gwen-web/workspace/samples/todo/strict-rules/Todo.feature", dir)
-      FileIO.copyClasspathTextResourceToFile("/gwen-web/workspace/samples/todo/strict-rules/Todo.meta", dir)
+    new File(dir, "samples/todo") tap { dir =>
+      FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/samples/todo/Todo.feature", dir)
+      FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/samples/todo/Todo.meta", dir)
     }
 
     new File(dir, "samples/") tap { dir =>
-      FileIO.copyClasspathTextResourceToFile("/gwen-web/workspace/samples/README.txt", dir)
+      FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/samples/README.txt", dir)
+      logger.info(s"Initalised $dir")
     }
 
-    FileIO.copyClasspathTextResourceToFile("/gwen-web/workspace/gitignore", dir, Some(".gitignore"))
-    FileIO.copyClasspathTextResourceToFile("/gwen-web/workspace/gwen.properties", dir)
-    FileIO.copyClasspathTextResourceToFile("/gwen-web/workspace/log4j.properties", dir)
-    FileIO.copyClasspathTextResourceToFile("/gwen-web/workspace/README.txt", dir)
+    FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/gitignore", dir, Some(".gitignore"))
+    FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/gwen.properties", dir)
+    FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/README.txt", dir)
+    logger.info(s"Initalised $dir")
 
   }
 
