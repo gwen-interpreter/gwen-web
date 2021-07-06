@@ -44,18 +44,18 @@ object GwenWebInterpreter extends GwenInterpreter(new WebEngine()) {
       FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/browsers/firefox.properties", dir)
       FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/browsers/ie.properties", dir)
       FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/browsers/safari.properties", dir)
-      FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/browsers/README.txt", dir)
+      FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/browsers/README.md", dir)
       logger.info(s"Initalised $dir")
     }
 
     new File(dir, "env") tap { dir =>
       FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/env/local.properties", dir)
-      FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/env/README.txt", dir)
+      FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/env/README.md", dir)
       logger.info(s"Initalised $dir")
     }
 
     new File(dir, "features") tap { dir =>
-      FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/features/README.txt", dir)
+      FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/features/README.md", dir)
       logger.info(s"Initalised $dir")
     }
 
@@ -80,13 +80,13 @@ object GwenWebInterpreter extends GwenInterpreter(new WebEngine()) {
     }
 
     new File(dir, "samples/") tap { dir =>
-      FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/samples/README.txt", dir)
+      FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/samples/README.md", dir)
       logger.info(s"Initalised $dir")
     }
 
     FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/gitignore", dir, Some(".gitignore"))
     FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/gwen.properties", dir)
-    FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/README.txt", dir)
+    FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/README.md", dir)
     logger.info(s"Initalised $dir")
 
   }

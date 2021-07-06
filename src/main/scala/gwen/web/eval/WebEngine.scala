@@ -30,6 +30,7 @@ import gwen.core.node.gherkin.Step
 import gwen.core.state.EnvState
 
 import scala.concurrent.duration._
+import scala.util.chaining._
 
 import com.applitools.eyes.MatchLevel
 
@@ -54,7 +55,9 @@ class WebEngine extends EvalEngine[WebContext] {
       val fps = GwenSettings.`gwen.report.slideshow.framespersecond`
       Settings.setLocal("gwen.report.slideshow.framespersecond", (fps.toDouble * 1.8d).toInt.toString)
     }
-    new WebContext(options, envState, new DriverManager())
+    new WebContext(options, envState, new DriverManager()) tap { _ =>
+      logger.info(s"Web context initialised")
+    }
   }
 
   /**
