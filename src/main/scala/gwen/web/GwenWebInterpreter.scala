@@ -37,7 +37,7 @@ object GwenWebInterpreter extends GwenInterpreter(new WebEngine()) {
   override def initWorkingDir(dir: File): Unit = {
     
     super.initWorkingDir(dir)
-    
+
     new File(dir, "browsers") tap { dir =>
       FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/browsers/chrome.properties", dir)
       FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/browsers/edge.properties", dir)
@@ -45,18 +45,16 @@ object GwenWebInterpreter extends GwenInterpreter(new WebEngine()) {
       FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/browsers/ie.properties", dir)
       FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/browsers/safari.properties", dir)
       FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/browsers/README.md", dir)
-      logger.info(s"Initalised $dir")
     }
 
     new File(dir, "env") tap { dir =>
-      FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/env/local.properties", dir)
+      FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/env/dev.properties", dir)
+      FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/env/test.properties", dir)
       FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/env/README.md", dir)
-      logger.info(s"Initalised $dir")
     }
 
     new File(dir, "features") tap { dir =>
       FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/features/README.md", dir)
-      logger.info(s"Initalised $dir")
     }
 
     new File(dir, "samples/floodio") tap { dir =>
@@ -81,13 +79,34 @@ object GwenWebInterpreter extends GwenInterpreter(new WebEngine()) {
 
     new File(dir, "samples/") tap { dir =>
       FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/samples/README.md", dir)
-      logger.info(s"Initalised $dir")
     }
 
-    FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/gitignore", dir, Some(".gitignore"))
-    FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/gwen.properties", dir)
     FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/README.md", dir)
-    logger.info(s"Initalised $dir")
+    if (!new File("gwen.properties").exists()) {
+      FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/gwen.properties", new File("."))
+    } 
+
+    println(
+      s"""!  ./
+          !   |  gwen.properties
+          !   +--/${dir.getPath}
+          !      |  README.md
+          !      +--/browsers
+          !      |     chrome.proeprties
+          !      |     edge.proeprties
+          !      |     firefox.proeprties
+          !      |     safari.proeprties
+          !      |     ie.proeprties
+          !      |     README.md
+          !      +--/env
+          !      |     local.properties
+          !      |     README.md
+          !      +--/features
+          !      |     README.md
+          !      +--/samples
+          !
+          !""".stripMargin('!')
+    )
 
   }
 

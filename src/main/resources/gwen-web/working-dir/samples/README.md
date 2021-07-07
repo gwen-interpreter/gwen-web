@@ -1,4 +1,4 @@
 Gwen Samples
 ============
 
-This directory includes some sample Gwen features (delete or keep? Up to you)
+This directory contains some sample Gwen features to help you get started (delete or keep them, it's up to you).
