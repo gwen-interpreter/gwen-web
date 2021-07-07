@@ -3,13 +3,14 @@
 Gwen Web Automation
 ===================
 
-A dynamic interpreter that enables teams to quickly 
-automate front end web tests and repetitive online processes with 
-[Gherkin](https://docs.cucumber.io/gherkin/reference/) feature specifications. A 
-[web DSL](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL) interacts with 
-[Selenium](http://www.seleniumhq.org/projects/webdriver) under the covers for you so you don't have to do any of that programming or technical development work. All the standard Selenium 
-locators are supported and you can additionally inject JavaScript in places where dynamically 
-finding elements or running functions on web pages may be necessary.
+A dynamic interpreter that enables teams to quickly automate front end web tests and 
+repetitive online processes with [Gherkin](https://docs.cucumber.io/gherkin/reference/) 
+feature specifications. A [web DSL](https://github.com/gwen-interpreter/gwen-web/wiki/
+Supported-DSL) interacts with [Selenium](http://www.seleniumhq.org/projects/webdriver) 
+under the covers for you so you don't have to do any of that programming or technical 
+development work. All the standard Selenium locators are supported and you can
+additionally inject JavaScript in places where dynamically finding elements or running 
+functions on web pages may be necessary.
 
 > [Home](http://gweninterpreter.org)
   | [Get Started](https://github.com/gwen-interpreter/gwen-web/wiki/Getting-Started)
@@ -24,7 +25,7 @@ finding elements or running functions on web pages may be necessary.
 
 ## Current Status
 
-[![Build Status](https://travis-ci.org/gwen-interpreter/gwen-web.svg?branch=master)](https://travis-ci.org/gwen-interpreter/gwen-web) ![GitHub All Releases](https://img.shields.io/github/downloads/gwen-interpreter/gwen-web/total)
+[![Build Status](https://travis-ci.org/gwen-interpreter/gwen-web.svg?branch=master)](https://travis-ci.org/gwen-interpreter/gwen-web)
 
 - [Latest release](https://github.com/gwen-interpreter/gwen-web/releases/latest)
 - [Change log](CHANGELOG)
@@ -147,7 +148,7 @@ Join our user network at [Gwenify](https://www.gwenify.com/) to get access to th
 License
 -------
 
-Copyright 2014-2021 Brady Wood, Branko Juric and [Gwen contributors](#code-contributors).
+Copyright 2014-2021 Brady Wood, Branko Juric.
 
 This software is open sourced under the
 [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt).
@@ -188,8 +189,7 @@ Contributors
 
 We thank the following contributors and active users for helping to make Gwen better. You are all awesome!
 
-The following [contributors](https://github.com/gwen-interpreter/gwen/graphs/contributors) submitted pull requests
-that have been merged:
+The following contributors submitted pull requests that have been merged:
 
 - [Jacob Juric](https://github.com/Sorixelle)
 | [Alexandru Cuciureanu](https://github.com/acuciureanu)
@@ -207,7 +207,6 @@ The following users raised issues or requests that have been addressed:
 | [rkevin99](https://github.com/rkevin99)
 | [Sergio Freire](https://github.com/bitcoder)
 | [dfriquet](https://github.com/dfriquet)
-
 
 Credits
 -------

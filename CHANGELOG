@@ -6,9 +6,9 @@ July 7, 2021
 - Use `msedge-selenium-tools-java` to support Edge with Selenium 3
 - Add edge settings
 - Add new DSLs to support invoking system processes with quoted strings and other special cases
-  - I execute system process "<process>" delmited by "<delimiter>"
-  - I execute a unix system process "<process>" delmited by "<delimiter>"
-  - <attribute> <is|will be> defined by system process "<expression>" delmited by "<delimiter>"
+  - I execute system process "<process>" delimited by "<delimiter>"
+  - I execute a unix system process "<process>" delimited by "<delimiter>"
+  - <attribute> <is|will be> defined by system process "<process>" delimited by "<delimiter>"
 - Add support for passing DocStrings as parameters to StepDefs (addresses issue gwen-interpreter/gwen#60)
 - Add optional poll `delay` and `timeout` parameters to `I wait until ..` DSLs
   - I wait until "<javascript>" using <delayPeriod> <second|millisecond> delay and <timeoutPeriod> <minute|second|millisecond> timeout
