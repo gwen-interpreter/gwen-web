@@ -25,6 +25,8 @@ functions on web pages may be necessary.
 
 ## Current Status
 
+[![CI](https://github.com/gwen-interpreter/gwen-web/actions/workflows/ci.yml/badge.svg)](https://github.com/gwen-interpreter/gwen-web/actions/workflows/ci.yml)
+
 - [Latest release](https://github.com/gwen-interpreter/gwen-web/releases/latest)
 - [Change log](CHANGELOG)
 
