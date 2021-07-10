@@ -1,0 +1,29 @@
+name: CI
+on:
+  pull_request:
+  push:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        path: gwen-web
+    - name: Checkout Gwen core repo
+      uses: actions/checkout@v2
+      with:
+        repository: gwen-interpreter/gwen
+        path: gwen
+    - name: Setup Scala
+      uses: olafurpg/setup-scala@v12
+      with:
+        java-version: "adopt@1.8"
+    - name: Setup Chrome
+      uses: browser-actions/setup-chrome@latest
+      run: chrome --version
+    - name: Build and Test
+      working-directory: ./gwen-web
+      run: sbt -v -Dfile.encoding=UTF-8 -Dgwen.web.browser=chrome -Dgwen.web.browser.headless=true +test
