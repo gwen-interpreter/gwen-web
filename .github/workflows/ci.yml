@@ -21,6 +21,7 @@ jobs:
       with:
         repository: gwen-interpreter/gwen
         path: gwen
+        ref: gwen3
     - name: Setup Scala
       uses: olafurpg/setup-scala@v12
       with:

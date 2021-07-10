@@ -24,7 +24,7 @@ finding elements or running functions on web pages may be necessary.
 
 ## Current Status
 
-[![Build Status](https://travis-ci.org/gwen-interpreter/gwen-web.svg?branch=master)](https://travis-ci.org/gwen-interpreter/gwen-web) ![GitHub All Releases](https://img.shields.io/github/downloads/gwen-interpreter/gwen-web/total)
+[![CI](https://github.com/gwen-interpreter/gwen-web/actions/workflows/ci.yml/badge.svg)](https://github.com/gwen-interpreter/gwen-web/actions/workflows/ci.yml)
 
 - [Latest release](https://github.com/gwen-interpreter/gwen-web/releases/latest)
 - [Change log](CHANGELOG)
