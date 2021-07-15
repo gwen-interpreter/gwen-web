@@ -27,7 +27,6 @@ class DryRunTest extends BaseFeatureTest {
           evaluate(
             List(
               "features",
-              "features-visual",
               "gwen-workspace/samples"), 
             parallel = false, 
             parallelFeatures = false,
@@ -46,7 +45,6 @@ class DryRunTest extends BaseFeatureTest {
           evaluate(
             List(
               "features",
-              "features-visual",
               "gwen-workspace/samples"),
             parallel = true, 
             parallelFeatures = false,

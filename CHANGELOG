@@ -2,10 +2,11 @@
 =====
 July X, 2021
 - Gwen 3 release
-  - Migrate code to Scala 3
-  - Refactor codebase for improved maintenance and execution
-  - Introduce init CLI option for initialising Gwen working directory
+  - Refactor code
+  - Migrate to Scala 3
   - Migrate to Selenium 4
+  - Drop Applitools integration
+  - Add init CLI option for initialising Gwen working directory
 
 2.53.0
 ======

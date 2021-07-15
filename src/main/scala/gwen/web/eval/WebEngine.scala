@@ -32,8 +32,6 @@ import gwen.core.state.EnvState
 import scala.concurrent.duration._
 import scala.util.chaining._
 
-import com.applitools.eyes.MatchLevel
-
 import java.util.concurrent.TimeUnit
 
 /**
@@ -224,16 +222,6 @@ class WebEngine extends EvalEngine[WebContext] {
         new CapturePopupMessage(s"the $name popup message")
       case r"I capture the (?:alert|confirmation) popup message as (.+?)$attribute" =>
         new CapturePopupMessage(attribute)
-      case r"""I start visual test as "(.+?)"$testName in (\d+?)$width x (\d+?)$height viewport""" =>
-        new StartVisualTest(testName, Some(width.toInt), Some(height.toInt))
-      case r"""I start visual test as "(.+?)"$testName""" =>
-        new StartVisualTest(testName, None, None)
-      case r"""I check (viewport|full page)?$mode visual as "(.+?)"$name using (.+?)$matchLevel match""" =>
-        new CheckViewPort(name, mode == "full page", Some(MatchLevel.valueOf(matchLevel)))
-      case r"""I check (viewport|full page)?$mode visual as "(.+?)"$name""" =>
-        new CheckViewPort(name, mode == "full page", None)
-      case "the visual test should pass" =>
-        new AssertVisuals()
       case r"""I drag and drop (.+?)$source to (.+?)$$$target""" =>
         new DragAndDrop(source, target)
       case r"""I clear (.+?)$$$element""" =>

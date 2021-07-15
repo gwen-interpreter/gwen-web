@@ -39,7 +39,6 @@ lazy val projectSettings = Seq(
 
 lazy val mainDependencies = {
   val selenium = "4.0.0-beta-4"
-  val appliTools = "3.206.0"
   val driverMgr = "4.4.3"
 
   Seq(
@@ -49,8 +48,7 @@ lazy val mainDependencies = {
     "org.seleniumhq.selenium" % "selenium-ie-driver" % selenium,
     "org.seleniumhq.selenium" % "selenium-safari-driver" % selenium,
     "org.seleniumhq.selenium" % "selenium-support" % selenium excludeAll ExclusionRule(organization = "junit", name = "junit"),
-    "io.github.bonigarcia" % "webdrivermanager" % driverMgr,
-    "com.applitools" % "eyes-selenium-java3" % appliTools
+    "io.github.bonigarcia" % "webdrivermanager" % driverMgr
   )
 }
 
@@ -73,6 +71,3 @@ Compile / packageBin / mappings ++= Seq(
   file("LICENSE-THIRDPARTY") -> "LICENSE-THIRDPARTY.txt",
   file("CHANGELOG") -> "CHANGELOG.txt"
 )
-
-run / fork := true
-run / javaOptions += "-Djava.util.concurrent.ForkJoinPool.common.parallelism=0"

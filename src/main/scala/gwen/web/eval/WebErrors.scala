@@ -35,8 +35,6 @@ object WebErrors {
       throw new WebElementNotInteractableException(binding, cause)
     def elementNotFoundError(binding: LocatorBinding, cause: Throwable = null) =
       throw new WebElementNotFoundException(binding, cause)
-    def invalidVisualSessionStateError(msg: String) = throw new InvalidVisualSessionStateException(msg)
-    def visualAssertionError(msg: String) = throw new VisualAssertionException(msg)
     def invalidClickActionError(action: ElementAction) = throw new InvalidClickActionException(action)
     def invalidContextActionError(action: ElementAction) = throw new InvalidContextActionException(action)
     def invalidActionError(action: ElementAction) = throw new InvalidActionException(action)
@@ -67,12 +65,6 @@ object WebErrors {
     class WebElementNotFoundException(binding: LocatorBinding, cause: Throwable)
       extends NotFoundOrInteractableException(s"Could not locate element: $binding", cause)
     
-    /** Thrown when a visual checking session is in an invalid state. */
-    class InvalidVisualSessionStateException(msg: String) extends AssertionError(msg)
-
-    /** Thrown when a visual assertion fails. */
-    class VisualAssertionException(msg: String) extends AssertionError(msg)
-
     /** Thrown when an invalid click action is detected. */
     class InvalidClickActionException(action: ElementAction) extends GwenException(s"Invalid click action: $action (only ${ElementAction.click}, ${ElementAction.`right click`}, or ${ElementAction.`double click`} supported)")
 

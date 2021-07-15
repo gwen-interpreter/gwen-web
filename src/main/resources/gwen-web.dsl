@@ -1010,21 +1010,4 @@ I drag and drop <element> to <element>
 I append "<text>" to <element>
 I append <reference> to <element>
 I insert a new line in <element>
-I start visual test as "visual test"
-I start visual test as "test name" in <w> x <h> viewport
-I check viewport visual as "checkpoint name"
-I check viewport visual as "checkpoint name" using LAYOUT match
-I check viewport visual as "checkpoint name" using LAYOUT2 match
-I check viewport visual as "checkpoint name" using CONTENT match
-I check viewport visual as "checkpoint name" using STRICT match
-I check viewport visual as "checkpoint name" using EXACT match
-I check viewport visual as "checkpoint name" using NONE match
-I check full page visual as "checkpoint name"
-I check full page visual as "checkpoint name" using LAYOUT match
-I check full page visual as "checkpoint name" using LAYOUT2 match
-I check full page visual as "checkpoint name" using CONTENT match
-I check full page visual as "checkpoint name" using STRICT match
-I check full page visual as "checkpoint name" using EXACT match
-I check full page visual as "checkpoint name" using NONE match
-the visual test should pass
 I attach "<filepath>" as "name"

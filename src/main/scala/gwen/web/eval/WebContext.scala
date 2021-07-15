@@ -17,7 +17,6 @@ package gwen.web.eval
 
 import WebErrors._
 import gwen.web.eval.binding._
-import gwen.web.eval.eyes.EyesContext
 
 import gwen.core._
 import gwen.core.Errors._
@@ -38,14 +37,12 @@ import scala.jdk.CollectionConverters._
 import scala.util.{Failure, Success, Try}
 import scala.util.chaining._
 
-import com.applitools.eyes.{MatchLevel, RectangleSize}
 import com.typesafe.scalalogging.LazyLogging
 import org.openqa.selenium._
 import org.openqa.selenium.interactions.Actions
 import org.openqa.selenium.support.ui.{FluentWait, Select}
 
 import java.io.File
-import com.applitools.eyes.TestResults
 
 /**
   * The web evaluatioin context.
@@ -57,7 +54,6 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
 
   private val locatorBindingResolver = new LocatorBindingResolver(this)
   private var lastScreenshotSize: Option[Long] = None
-  private var eyesContext: Option[EyesContext] = None
 
   def locator = new WebElementLocator(this)
 
@@ -65,8 +61,6 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
   def reset(): Unit = {
     driverManager.reset()
     lastScreenshotSize = None
-    eyesContext.foreach(_.close())
-    eyesContext = None
   }
 
   /** Resets the context for the given state level. */
@@ -80,7 +74,6 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
   /** Closes the context and all browsers and associated web drivers (if any have loaded). */
   override def close(): Unit = {
     perform {
-      eyesContext.foreach(_.close())
       driverManager.quit()
     }
     super.close()
@@ -211,9 +204,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     } else {
       step
     }) tap { _ =>
-      val isVisualAssertionError =
-        failure.cause.map(_.isInstanceOf[VisualAssertionException]).getOrElse(false)
-      if (!failure.isLicenseError && !isVisualAssertionError) {
+      if (!failure.isLicenseError) {
         captureScreenshot(true)
       }
     }
@@ -1238,56 +1229,6 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
   /** Checks if an element is not in the view port. */
   def isInViewport(webElement: WebElement): Boolean = {
     executeJS("return (function(elem){var b=elem.getBoundingClientRect(); return b.top>=0 && b.left>=0 && b.bottom<=(window.innerHeight || document.documentElement.clientHeight) && b.right<=(window.innerWidth || document.documentElement.clientWidth);})(arguments[0])", webElement).asInstanceOf[Boolean]
-  }
-
-  /**
-    * Performs the given function on the eyes context.
-    *
-    * @param f the function to perform
-    * @return the result of the function
-    */
-  private def withEyesContext[T](f: EyesContext => T): Option[T] = {
-    evaluate(None.asInstanceOf[Option[T]]) {
-      if (eyesContext.isEmpty) {
-        eyesContext = Some(new EyesContext(this))
-      }
-      eyesContext.map(f)
-    }
-  }
-
-  /**
-    * Starts a visual text.
-    *
-    * @param testName the name of the visual test
-    * @param viewportSize optional viewport size
-    */
-  def startVisualTest(testName: String, viewportSize: Option[RectangleSize]): Unit =
-    withEyesContext { context =>
-      withWebDriver { driver =>
-        context.open(driver, testName, viewportSize)
-      }
-    }
-
-  /**
-    * Performs a visual checkpoint of the contents in the current browser window.
-    *
-    * @param checkpoint the checkpoint name
-    * @param fullPage true to capture full page, false otherwise
-    * @param matchLevel optional match Level
-    */
-  def checkVisual(checkpoint: String, fullPage: Boolean, matchLevel: Option[MatchLevel]): Unit =
-    withEyesContext { context =>
-      Thread.sleep(150) // give browser time to render
-      context.check(checkpoint, fullPage, matchLevel)
-    }
-
-  /**
-    * Performs a visual check of all checkpoints in current eyes session.
-    */
-  def asertVisuals(): Option[TestResults] = {
-    withEyesContext { context =>
-      context.results()
-    }
   }
 
 }
