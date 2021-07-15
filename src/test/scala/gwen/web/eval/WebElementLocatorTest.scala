@@ -43,6 +43,7 @@ import org.mockito.ArgumentMatchers.{any, same}
 import scala.jdk.CollectionConverters._
 import scala.concurrent.duration.Duration
 
+import java.{time => jt}
 import java.util
 import java.util.concurrent.TimeUnit
 import org.scalatest.matchers.should.Matchers
@@ -342,8 +343,8 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
     locator.locate(LocatorBinding("username", selectorType, lookup, None, Some(Duration.Zero), None, ctx)) should be (mockWebElement)
 
     verify(mockWebDriver, times(1)).executeScript(s"return $lookup")
-    verify(mockWebDriverTimeouts, times(1)).implicitlyWait(200L, TimeUnit.MILLISECONDS)
-    verify(mockWebDriverTimeouts, times(1)).implicitlyWait(WebSettings.`gwen.web.locator.wait.seconds`, TimeUnit.SECONDS)
+    verify(mockWebDriverTimeouts, times(1)).implicitlyWait(jt.Duration.ofMillis(200L))
+    verify(mockWebDriverTimeouts, times(1)).implicitlyWait(jt.Duration.ofSeconds(WebSettings.`gwen.web.locator.wait.seconds`))
 
   }
 
@@ -363,8 +364,8 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
     locator.locate(LocatorBinding("username", selectorType, lookup, None, Some(Duration.Zero), Some(0), ctx)) should be (mockWebElement)
 
     verify(mockWebDriver, times(1)).executeScript(s"return $lookup")
-    verify(mockWebDriverTimeouts, times(1)).implicitlyWait(200L, TimeUnit.MILLISECONDS)
-    verify(mockWebDriverTimeouts, times(1)).implicitlyWait(WebSettings.`gwen.web.locator.wait.seconds`, TimeUnit.SECONDS)
+    verify(mockWebDriverTimeouts, times(1)).implicitlyWait(jt.Duration.ofMillis(200L))
+    verify(mockWebDriverTimeouts, times(1)).implicitlyWait(jt.Duration.ofSeconds(WebSettings.`gwen.web.locator.wait.seconds`))
 
   }
 
@@ -388,8 +389,8 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
     locator.locate(LocatorBinding("username", selectorType, lookup, None, Some(Duration.Zero), Some(1), ctx)) should be (mockWebElement)
 
     verify(mockWebDriver, times(1)).executeScript(s"return $lookup")
-    verify(mockWebDriverTimeouts, times(1)).implicitlyWait(200L, TimeUnit.MILLISECONDS)
-    verify(mockWebDriverTimeouts, times(1)).implicitlyWait(WebSettings.`gwen.web.locator.wait.seconds`, TimeUnit.SECONDS)
+    verify(mockWebDriverTimeouts, times(1)).implicitlyWait(jt.Duration.ofMillis(200L))
+    verify(mockWebDriverTimeouts, times(1)).implicitlyWait(jt.Duration.ofSeconds(WebSettings.`gwen.web.locator.wait.seconds`))
 
   }
 
@@ -409,8 +410,8 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
     locator.locate(LocatorBinding("username", selectorType, lookup, None, Some(Duration.create(2, TimeUnit.SECONDS)), None, ctx)) should be (mockWebElement)
 
     verify(mockWebDriver, times(1)).executeScript(s"return $lookup")
-    verify(mockWebDriverTimeouts, times(1)).implicitlyWait(2000L, TimeUnit.MILLISECONDS)
-    verify(mockWebDriverTimeouts, times(1)).implicitlyWait(WebSettings.`gwen.web.locator.wait.seconds`, TimeUnit.SECONDS)
+    verify(mockWebDriverTimeouts, times(1)).implicitlyWait(jt.Duration.ofMillis(2000L))
+    verify(mockWebDriverTimeouts, times(1)).implicitlyWait(jt.Duration.ofSeconds(WebSettings.`gwen.web.locator.wait.seconds`))
 
   }
 
@@ -430,8 +431,8 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
     locator.locate(LocatorBinding("username", selectorType, lookup, None, Some(Duration.create(2, TimeUnit.SECONDS)), Some(0), ctx)) should be (mockWebElement)
 
     verify(mockWebDriver, times(1)).executeScript(s"return $lookup")
-    verify(mockWebDriverTimeouts, times(1)).implicitlyWait(2000L, TimeUnit.MILLISECONDS)
-    verify(mockWebDriverTimeouts, times(1)).implicitlyWait(WebSettings.`gwen.web.locator.wait.seconds`, TimeUnit.SECONDS)
+    verify(mockWebDriverTimeouts, times(1)).implicitlyWait(jt.Duration.ofMillis(2000L))
+    verify(mockWebDriverTimeouts, times(1)).implicitlyWait(jt.Duration.ofSeconds(WebSettings.`gwen.web.locator.wait.seconds`))
 
   }
 
@@ -455,8 +456,8 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
     locator.locate(LocatorBinding("username", selectorType, lookup, None, Some(Duration.create(2, TimeUnit.SECONDS)), Some(1), ctx)) should be (mockWebElement)
 
     verify(mockWebDriver, times(1)).executeScript(s"return $lookup")
-    verify(mockWebDriverTimeouts, times(1)).implicitlyWait(2000L, TimeUnit.MILLISECONDS)
-    verify(mockWebDriverTimeouts, times(1)).implicitlyWait(WebSettings.`gwen.web.locator.wait.seconds`, TimeUnit.SECONDS)
+    verify(mockWebDriverTimeouts, times(1)).implicitlyWait(jt.Duration.ofMillis(2000L))
+    verify(mockWebDriverTimeouts, times(1)).implicitlyWait(jt.Duration.ofSeconds(WebSettings.`gwen.web.locator.wait.seconds`))
 
   }
 
@@ -577,8 +578,8 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
 
     timeout.foreach { t =>
       val expectedTimeout = if(t == Duration.Zero) 200L else t.toMillis
-      verify(mockWebDriverTimeouts, times(4)).implicitlyWait(expectedTimeout, TimeUnit.MILLISECONDS)
-      verify(mockWebDriverTimeouts, times(4)).implicitlyWait(WebSettings.`gwen.web.locator.wait.seconds`, TimeUnit.SECONDS)
+      verify(mockWebDriverTimeouts, times(4)).implicitlyWait(jt.Duration.ofMillis(expectedTimeout))
+      verify(mockWebDriverTimeouts, times(4)).implicitlyWait(jt.Duration.ofSeconds(WebSettings.`gwen.web.locator.wait.seconds`))
     }
     if (timeout.isEmpty) {
       verifyNoInteractions(mockWebDriverTimeouts)
@@ -752,8 +753,8 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
     locator.locateAll(LocatorBinding("username", selectorType, lookup, None, Some(Duration.Zero), None, ctx)) should be (mockWebElements)
 
     verify(mockWebDriver, times(1)).executeScript(s"return $lookup")
-    verify(mockWebDriverTimeouts, times(1)).implicitlyWait(200L, TimeUnit.MILLISECONDS)
-    verify(mockWebDriverTimeouts, times(1)).implicitlyWait(WebSettings.`gwen.web.locator.wait.seconds`, TimeUnit.SECONDS)
+    verify(mockWebDriverTimeouts, times(1)).implicitlyWait(jt.Duration.ofMillis(200L))
+    verify(mockWebDriverTimeouts, times(1)).implicitlyWait(jt.Duration.ofSeconds(WebSettings.`gwen.web.locator.wait.seconds`))
 
   }
 
@@ -777,8 +778,8 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
     locator.locateAll(LocatorBinding("username", selectorType, lookup, None, Some(Duration.create(2, TimeUnit.SECONDS)), None, ctx)) should be (mockWebElements)
 
     verify(mockWebDriver, times(1)).executeScript(s"return $lookup")
-    verify(mockWebDriverTimeouts, times(1)).implicitlyWait(2000L, TimeUnit.MILLISECONDS)
-    verify(mockWebDriverTimeouts, times(1)).implicitlyWait(WebSettings.`gwen.web.locator.wait.seconds`, TimeUnit.SECONDS)
+    verify(mockWebDriverTimeouts, times(1)).implicitlyWait(jt.Duration.ofMillis(2000L))
+    verify(mockWebDriverTimeouts, times(1)).implicitlyWait(jt.Duration.ofSeconds(WebSettings.`gwen.web.locator.wait.seconds`))
 
   }
 
@@ -847,8 +848,8 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
 
     timeout.foreach { t =>
       val expectedTimeout = if(t == Duration.Zero) 200L else t.toMillis
-      verify(mockWebDriverTimeouts, times(4)).implicitlyWait(expectedTimeout, TimeUnit.MILLISECONDS)
-      verify(mockWebDriverTimeouts, times(4)).implicitlyWait(WebSettings.`gwen.web.locator.wait.seconds`, TimeUnit.SECONDS)
+      verify(mockWebDriverTimeouts, times(4)).implicitlyWait(jt.Duration.ofMillis(expectedTimeout))
+      verify(mockWebDriverTimeouts, times(4)).implicitlyWait(jt.Duration.ofSeconds(WebSettings.`gwen.web.locator.wait.seconds`))
     }
     if (timeout.isEmpty) {
       verifyNoInteractions(mockWebDriverTimeouts)

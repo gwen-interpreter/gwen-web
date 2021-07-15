@@ -22,12 +22,14 @@ import scala.jdk.CollectionConverters._
 import scala.collection.mutable
 import scala.util.chaining._
 
-import com.microsoft.edge.seleniumtools.{EdgeDriver, EdgeOptions}
 import com.typesafe.scalalogging.LazyLogging
 import io.github.bonigarcia.wdm.WebDriverManager
 import org.openqa.selenium.{Dimension, MutableCapabilities, WebDriver}
 import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.chrome.ChromeOptions
+import org.openqa.selenium.chromium.ChromiumOptions
+import org.openqa.selenium.edge.EdgeDriver
+import org.openqa.selenium.edge.EdgeOptions
 import org.openqa.selenium.firefox.{FirefoxDriver, FirefoxOptions, FirefoxProfile}
 import org.openqa.selenium.ie.{InternetExplorerDriver, InternetExplorerOptions}
 import org.openqa.selenium.remote.CapabilityType
@@ -39,6 +41,7 @@ import org.openqa.selenium.safari.{SafariDriver, SafariOptions}
 
 import java.io.File
 import java.net.URL
+import java.{time => jt}
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.Semaphore
 
@@ -212,104 +215,51 @@ class DriverManager() extends LazyLogging {
       }
   }
 
-  private def chromeOptions() : ChromeOptions = new ChromeOptions() tap { options =>
-    WebSettings.`gwen.web.useragent` foreach { agent =>
-      logger.info(s"Setting chrome argument: --user-agent=$agent")
-      options.addArguments(s"--user-agent=$agent")
-    }
-    if (WebSettings.`gwen.web.authorize.plugins`) {
-      logger.info("Setting chrome argument: --always-authorize-plugins")
-      options.addArguments("--always-authorize-plugins")
-    }
-    options.addArguments("--enable-automation")
-    if (WebSettings.`gwen.web.accept.untrusted.certs`) {
-      logger.info("Setting chrome argument: --ignore-certificate-errors")
-      options.addArguments("--ignore-certificate-errors")
-    }
-    WebSettings.`gwen.web.chrome.path` foreach { path =>
-      logger.info(s"Setting chrome path: $path")
-      options.setBinary(path)
-    }
-    WebSettings.`gwen.web.chrome.args` foreach { arg =>
-      logger.info(s"Setting chrome argument: $arg")
-      options.addArguments(arg)
-    }
-    if (WebSettings.`gwen.web.browser.headless`) {
-      logger.info("Setting chrome argument: headless")
-      options.addArguments("headless")
-    }
-    val prefs = new java.util.HashMap[String, Object]()
-    WebSettings.`gwen.web.chrome.prefs` foreach { case (name, value) =>
-      logger.info(s"Setting chrome preference: $name=$value")
-      try {
-        prefs.put(name, Integer.valueOf(value.trim))
-      } catch {
-        case _: Throwable =>
-          if (value.matches("(true|false)")) prefs.put(name, java.lang.Boolean.valueOf(value.trim))
-          else prefs.put(name, value)
-      }
-    }
-    if (!prefs.isEmpty) {
-      options.setExperimentalOption("prefs", prefs)
-    }
-    WebSettings.`gwen.web.chrome.extensions` tap { extensions =>
-      if (extensions.nonEmpty) {
-        logger.info(s"Loading chrome extension${if (extensions.size > 1) "s" else ""}: ${extensions.mkString(",")}")
-        options.addExtensions(extensions:_*)
-      }
-    }
-    val mobileSettings = WebSettings.`gwen.web.chrome.mobile`
-    if (mobileSettings.nonEmpty) {
-      val mobileEmulation = new java.util.HashMap[String, Object]()
-      mobileSettings.get("deviceName").fold({
-        val deviceMetrics = new java.util.HashMap[String, Object]()
-        mobileSettings foreach { case (name, value) =>
-          name match {
-            case "width" | "height" => deviceMetrics.put(name, java.lang.Integer.valueOf(value.trim))
-            case "pixelRatio" => deviceMetrics.put(name, java.lang.Double.valueOf(value.trim))
-            case "touch" => deviceMetrics.put(name, java.lang.Boolean.valueOf(value.trim))
-            case _ => mobileEmulation.put(name, value)
-          }
-        }
-        mobileEmulation.put("deviceMetrics", deviceMetrics)
-      }) { (deviceName: String) =>
-        mobileEmulation.put("deviceName", deviceName)
-      }
-      logger.info(s"Chrome mobile emulation options: $mobileEmulation")
-      options.setExperimentalOption("mobileEmulation", mobileEmulation)
-    }
-    setDesiredCapabilities(options)
-  }
+  private def chromeOptions() : ChromeOptions = chromiumOptions("chrome", new ChromeOptions())
 
-  private def edgeOptions() : EdgeOptions = new EdgeOptions() tap { options =>
+  private def edgeOptions() : EdgeOptions = chromiumOptions("edge", new EdgeOptions())
+
+  private def chromiumOptions[T <: ChromiumOptions[T]](browser: String, options: T): T = {
     WebSettings.`gwen.web.useragent` foreach { agent =>
-      logger.info(s"Setting edge argument: --user-agent=$agent")
+      logger.info(s"Setting $browser argument: --user-agent=$agent")
       options.addArguments(s"--user-agent=$agent")
     }
     if (WebSettings.`gwen.web.authorize.plugins`) {
-      logger.info("Setting edge argument: --always-authorize-plugins")
+      logger.info(s"Setting $browser argument: --always-authorize-plugins")
       options.addArguments("--always-authorize-plugins")
     }
     options.addArguments("--enable-automation")
     if (WebSettings.`gwen.web.accept.untrusted.certs`) {
-      logger.info("Setting edge argument: --ignore-certificate-errors")
+      logger.info(s"Setting $browser argument: --ignore-certificate-errors")
       options.addArguments("--ignore-certificate-errors")
     }
-    WebSettings.`gwen.web.edge.path` foreach { path =>
-      logger.info(s"Setting edge path: $path")
+    val browserPath = browser match {
+      case "chrome" => WebSettings.`gwen.web.chrome.path`
+      case "edge" => WebSettings.`gwen.web.edge.path`
+    }
+    browserPath foreach { path =>
+      logger.info(s"Setting $browser path: $path")
       options.setBinary(path)
     }
-    WebSettings.`gwen.web.edge.args` foreach { arg =>
-      logger.info(s"Setting edge argument: $arg")
+    val browserArgs =  browser match {
+      case "chrome" => WebSettings.`gwen.web.chrome.args`
+      case "edge" => WebSettings.`gwen.web.edge.args`
+    }
+    browserArgs foreach { arg =>
+      logger.info(s"Setting $browser argument: $arg")
       options.addArguments(arg)
     }
     if (WebSettings.`gwen.web.browser.headless`) {
-      logger.info("Setting edge argument: headless")
+      logger.info(s"Setting $browser argument: headless")
       options.addArguments("headless")
     }
     val prefs = new java.util.HashMap[String, Object]()
-    WebSettings.`gwen.web.edge.prefs` foreach { case (name, value) =>
-      logger.info(s"Setting edge preference: $name=$value")
+    val browserPrefs = browser match {
+      case "chrome" => WebSettings.`gwen.web.chrome.prefs`
+      case "edge" => WebSettings.`gwen.web.edge.prefs`
+    }
+    browserPrefs foreach { case (name, value) =>
+      logger.info(s"Setting $browser preference: $name=$value")
       try {
         prefs.put(name, Integer.valueOf(value.trim))
       } catch {
@@ -321,13 +271,20 @@ class DriverManager() extends LazyLogging {
     if (!prefs.isEmpty) {
       options.setExperimentalOption("prefs", prefs)
     }
-    WebSettings.`gwen.web.edge.extensions` tap { extensions =>
+    val browserExensions = browser match {
+      case "chrome" => WebSettings.`gwen.web.chrome.extensions`
+      case "edge" => WebSettings.`gwen.web.edge.extensions`
+    }
+    browserExensions tap { extensions =>
       if (extensions.nonEmpty) {
-        logger.info(s"Loading edge extension${if (extensions.size > 1) "s" else ""}: ${extensions.mkString(",")}")
+        logger.info(s"Loading $browser extension${if (extensions.size > 1) "s" else ""}: ${extensions.mkString(",")}")
         options.addExtensions(extensions:_*)
       }
     }
-    val mobileSettings = WebSettings.`gwen.web.edge.mobile`
+    val mobileSettings = browser match {
+      case "chrome" => WebSettings.`gwen.web.chrome.mobile`
+      case "edge" => WebSettings.`gwen.web.edge.mobile`
+    }
     if (mobileSettings.nonEmpty) {
       val mobileEmulation = new java.util.HashMap[String, Object]()
       mobileSettings.get("deviceName").fold({
@@ -344,10 +301,11 @@ class DriverManager() extends LazyLogging {
       }) { (deviceName: String) =>
         mobileEmulation.put("deviceName", deviceName)
       }
-      logger.info(s"Edge mobile emulation options: $mobileEmulation")
+      logger.info(s"$browser mobile emulation options: $mobileEmulation")
       options.setExperimentalOption("mobileEmulation", mobileEmulation)
     }
     setDesiredCapabilities(options)
+    options
   }
 
   private def ieOptions(): InternetExplorerOptions = new InternetExplorerOptions() tap { options =>
@@ -432,7 +390,7 @@ class DriverManager() extends LazyLogging {
 
   private def withGlobalSettings(driver: WebDriver): WebDriver = {
     logger.info(s"Implicit wait (default locator timeout) = ${WebSettings.`gwen.web.locator.wait.seconds`} second(s)")
-    driver.manage().timeouts().implicitlyWait(WebSettings.`gwen.web.locator.wait.seconds`, TimeUnit.SECONDS)
+    driver.manage().timeouts().implicitlyWait(jt.Duration.ofSeconds(WebSettings.`gwen.web.locator.wait.seconds`))
     if (WebSettings.`gwen.web.maximize`) {
       logger.info(s"Attempting to maximize window")
       try {

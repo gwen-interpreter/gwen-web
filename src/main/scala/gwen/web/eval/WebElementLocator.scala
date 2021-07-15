@@ -27,6 +27,7 @@ import org.openqa.selenium.{By, NoSuchElementException, WebElement}
 import scala.jdk.CollectionConverters._
 import scala.util.{Failure, Success, Try}
 
+import java.{time => jt}
 import java.util.ArrayList
 import java.util.concurrent.TimeUnit
 
@@ -62,7 +63,7 @@ class WebElementLocator(ctx: WebContext) extends LazyLogging {
       ctx.withWebDriver { driver =>
         // override implicit wait for each selector to configured throttle time (or 200 msecs if that is zero)
         val wait = WebSettings.`gwen.web.throttle.msecs`
-        driver.manage().timeouts().implicitlyWait(if (wait > 0) wait else 200, TimeUnit.MILLISECONDS)
+        driver.manage().timeouts().implicitlyWait(jt.Duration.ofMillis(if (wait > 0) wait else 200))
         try {
           // return the first one that resolves
           val iter = selectors.iterator.flatMap(loc => Try(findElementBySelector(name, loc)).getOrElse(None))
@@ -71,7 +72,7 @@ class WebElementLocator(ctx: WebContext) extends LazyLogging {
           }
         } finally {
           // restore implicit waits
-          driver.manage().timeouts().implicitlyWait(WebSettings.`gwen.web.locator.wait.seconds`, TimeUnit.SECONDS)
+          driver.manage().timeouts().implicitlyWait(jt.Duration.ofSeconds(WebSettings.`gwen.web.locator.wait.seconds`))
         }
       }
     }
@@ -112,7 +113,7 @@ class WebElementLocator(ctx: WebContext) extends LazyLogging {
           selector.timeout foreach { _ =>
             val wait = selector.timeoutMilliseconds
             ctx.withWebDriver { driver =>
-              driver.manage().timeouts().implicitlyWait(if (wait > 0) wait else 200, TimeUnit.MILLISECONDS)
+              driver.manage().timeouts().implicitlyWait(jt.Duration.ofMillis(if (wait > 0) wait else 200))
             }
           }
           selectorType match {
@@ -137,7 +138,7 @@ class WebElementLocator(ctx: WebContext) extends LazyLogging {
           // restore default implicit wait if overriden
           selector.timeout foreach { _ =>
             ctx.withWebDriver { driver =>
-              driver.manage().timeouts().implicitlyWait(WebSettings.`gwen.web.locator.wait.seconds`, TimeUnit.SECONDS)
+              driver.manage().timeouts().implicitlyWait(jt.Duration.ofSeconds(WebSettings.`gwen.web.locator.wait.seconds`))
             }
           }
         }
@@ -222,7 +223,7 @@ class WebElementLocator(ctx: WebContext) extends LazyLogging {
       selector.timeout foreach { _ =>
         val wait = selector.timeoutMilliseconds
         ctx.withWebDriver { driver =>
-          driver.manage().timeouts().implicitlyWait(if (wait > 0) wait else 200, TimeUnit.MILLISECONDS)
+          driver.manage().timeouts().implicitlyWait(jt.Duration.ofMillis(if (wait > 0) wait else 200))
         }
       }
       selectorType match {
@@ -247,7 +248,7 @@ class WebElementLocator(ctx: WebContext) extends LazyLogging {
       // restore default implicit wait if overriden
       selector.timeout foreach { _ =>
         ctx.withWebDriver { driver =>
-          driver.manage().timeouts().implicitlyWait(WebSettings.`gwen.web.locator.wait.seconds`, TimeUnit.SECONDS)
+          driver.manage().timeouts().implicitlyWait(jt.Duration.ofSeconds(WebSettings.`gwen.web.locator.wait.seconds`))
         }
       }
     }

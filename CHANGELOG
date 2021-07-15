@@ -5,6 +5,7 @@ July X, 2021
   - Migrate code to Scala 3
   - Refactor codebase for improved maintenance and execution
   - Introduce init CLI option for initialising Gwen working directory
+  - Migrate to Selenium 4
 
 2.53.0
 ======
