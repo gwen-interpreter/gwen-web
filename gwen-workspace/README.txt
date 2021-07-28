@@ -7,12 +7,12 @@ feature, meta, and settings files.
 The structure of this workspace is as follows:
 
 gwen-workspace
-|--browsers               : Browser properties folder
-|--env                    : Environment properties folder
+|--browsers               : Browser config folder
+|--env                    : Environment config folder
 |--features               : Gherkin features folder
 |  gwen                   : Gwen launch script for Linux/Mac environments
 |  gwen.bat               : Gwen launch script for Windows environments
-|  gwen.properties        : Global workspace properties
+|  gwen.conf              : Global workspace config
 |  log4j.properties       : Log4j properties file for Gwen
 |  gwen-gpm.jar           : Gwen package manager JAR
 |  .gitignore             : Git ignore file

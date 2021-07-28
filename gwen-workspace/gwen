@@ -21,11 +21,11 @@ if [[ $1 = "help" ]] || [[ $1 = "--help" ]] || [[ $1 = "-h" ]];
     echo "      chrome  : to use chrome browser (default)"
     echo "      firefox : to use firefox browser"
     echo "      safari  : to use safari browser"
-    echo "       other  : name of browser properties file in browsers directory"
+    echo "       other  : name of browser config file in browsers directory"
     echo "    [env]     ="
     echo "      local   : to use local user environment (default)"
     echo "      name    : name of environment to use"
-    echo "                (e.g: dev will load env/dev.properties)"
+    echo "                (e.g: dev will load env/dev.conf)"
     echo "    [options] ="
     echo "      --version"
     echo "              : Prints the implementation version"
@@ -38,8 +38,6 @@ if [[ $1 = "help" ]] || [[ $1 = "--help" ]] || [[ $1 = "-h" ]];
     echo "                on state level"
     echo "      --parallel-features"
     echo "              : Run features in parallel regardless of state level"
-    echo "      --parallel"
-    echo "              : Parallel batch execution mode"
     echo "      -f, --formats <formats>"
     echo "              : Comma separated report formats to produce."
     echo "                Supported formats include: html slideshow junit json"
@@ -58,7 +56,7 @@ if [[ $1 = "help" ]] || [[ $1 = "--help" ]] || [[ $1 = "-h" ]];
 fi
 
 # Set target browser
-if [[ -f browsers/$1.properties ]];
+if [[ -f browsers/$1.conf ]];
   then
     TARGET_BROWSER="$1"
     shift
@@ -67,7 +65,7 @@ if [[ -f browsers/$1.properties ]];
 fi
 
 # Set target environment
-if [[ $1 = "local" ]] || [[ -f env/$1.properties ]];
+if [[ $1 = "local" ]] || [[ -f env/$1.conf ]];
   then
     TARGET_ENV="$1"
     shift
@@ -78,13 +76,13 @@ fi
 echo "Target browser is $TARGET_BROWSER"
 echo "Target environment is $TARGET_ENV"
 
-# Prepare Gwen JVM args and properties
-GWEN_JVM_ARGS="-Dgwen.web.browser=$TARGET_BROWSER"
-GWEN_PROPS="gwen.properties,browsers/$TARGET_BROWSER.properties,env/$TARGET_ENV.properties"
+# Prepare Gwen JVM args and configs
+GWEN_JVM_ARGS="-Dgwen.web.browser.target=$TARGET_BROWSER"
+GWEN_PROPS="gwen.conf,browsers/$TARGET_BROWSER.conf,env/$TARGET_ENV.conf"
 
 # Install gwen-web
 GWEN_WEB_HOME="target/gwen-web"
-java -jar gwen-gpm.jar update gwen-web gwen.gwen-web.version $GWEN_WEB_HOME -p "$GWEN_PROPS"
+java -jar gwen-gpm.jar update gwen-web gwen.gwen-web.version $GWEN_WEB_HOME -c "$GWEN_PROPS"
 rc=$?
 if [ $rc == 1 ];
   then
@@ -94,7 +92,7 @@ fi
 # If gwen.selenium.version is set to a specific version, then install that
 # selenium-java API version and set SELENIUM_HOME to the installed location
 # Otherwise do nothing if gwen.selenium.version=provided (exit code 2).
-java -jar gwen-gpm.jar update selenium gwen.selenium.version target/selenium -p "$GWEN_PROPS"
+java -jar gwen-gpm.jar update selenium gwen.selenium.version target/selenium -c "$GWEN_PROPS"
 rc=$?
 if [ $rc == 0 ];
   then
@@ -112,5 +110,5 @@ fi
 # Call Gwen passing in the arguments
 echo
 echo "Launching gwen"
-$GWEN_WEB_HOME/bin/gwen-web $GWEN_JVM_ARGS -r target/reports -p "$GWEN_PROPS" "$@"
+$GWEN_WEB_HOME/bin/gwen-web $GWEN_JVM_ARGS -r target/reports -c "$GWEN_PROPS" "$@"
 exit $?

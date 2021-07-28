@@ -1,12 +1,20 @@
 3.0.0
 =====
-July X, 2021
+m d, yyyy
 - Gwen 3 release
-  - Refactor code
-  - Migrate to Scala 3
+  - Refactor codebase for improved performance and maintainability
+  - Migrate codebase to Scala 3
+  - Add init CLI option for initialising Gwen working directory
   - Migrate to Selenium 4
   - Drop Applitools integration
-  - Add init CLI option for initialising Gwen working directory
+  - Support *.conf (HOCON), and *.json settings files in addition to *.properties files
+  - Deprecated settings:
+    - `gwen.feature.failfast` in favor of `gwen.feature.failfast.enabled`
+    - `gwen.rp.heartbeat` in favor of `gwen.rp.heartbeat.enabled`
+    - `gwen.web.capture.screenshots` in favor of `gwen.web.capture.screenshots.enabled`
+    - `gwen.web.browser` in favor of `gwen.web.browser.target`
+  - Deprecated CLI option:
+    - `-p/--properties` in favor of `-c/--config`
 
 2.53.0
 ======

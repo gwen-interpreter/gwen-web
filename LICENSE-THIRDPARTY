@@ -26,6 +26,7 @@ com.lihaoyi                              geny_2.13                              
 com.lihaoyi                              scalatags_2.13                            | 0.9.4        | [MIT](https://github.com/com-lihaoyi/scalatags/blob/master/LICENSE)
 com.lihaoyi                              sourcecode_2.13                           | 0.2.3        | [MIT](https://github.com/com-lihaoyi/sourcecode/blob/master/LICENSE)
 com.sun.activation                       jakarta.activation                        | 1.2.2        | [EDL 1.0](http://www.eclipse.org/org/documents/edl-v10.php)
+com.typesafe                             config                                    | 1.4.1        | [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 com.typesafe.netty                       netty-reactive-streams                    | 2.0.4        | [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 com.typesafe.scala-logging               scala-logging_3                           | 3.9.4        | [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 commons-codec                            commons-codec                             | 1.15         | [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)

@@ -49,10 +49,11 @@ class WebEngine extends EvalEngine[WebContext] {
     * @param envState the initial environment state
     */
   override def init(options: GwenOptions, envState: EnvState): WebContext = {
+    WebSettings.check()
     if (options.parallel) {
       val commonParallelism = "java.util.concurrent.ForkJoinPool.common.parallelism"
       if (sys.props.get(commonParallelism).filter(_ == "0").isEmpty) {
-        Errors.missingPropertyError(
+        Errors.missingSettingError(
           s"""|You must launch Gwen with the following JVM option to enable parallel execution:
               |  -D$commonParallelism=0""".stripMargin)
       }
@@ -301,7 +302,7 @@ class WebEngine extends EvalEngine[WebContext] {
     }
   }
   
-  override val DefaultRepeatDelay: Duration = {
+  override def defaultRepeatDelay: Duration = {
     val waitSecs = WebSettings.`gwen.web.wait.seconds` 
     if (waitSecs > 9 && waitSecs % 10 == 0) Duration(waitSecs / 10, SECONDS) else Duration(waitSecs * 100, MILLISECONDS)
   }

@@ -39,67 +39,68 @@ object GwenWebInterpreter extends GwenInterpreter(new WebEngine()) {
     super.initWorkingDir(dir)
 
     new File(dir, "browsers") tap { dir =>
-      FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/browsers/chrome.properties", dir)
-      FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/browsers/edge.properties", dir)
-      FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/browsers/firefox.properties", dir)
-      FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/browsers/ie.properties", dir)
-      FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/browsers/safari.properties", dir)
-      FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/browsers/README.md", dir)
+      FileIO.copyClasspathTextResourceToFile("/init/browsers/chrome.conf", dir)
+      FileIO.copyClasspathTextResourceToFile("/init/browsers/edge.conf", dir)
+      FileIO.copyClasspathTextResourceToFile("/init/browsers/firefox.conf", dir)
+      FileIO.copyClasspathTextResourceToFile("/init/browsers/ie.conf", dir)
+      FileIO.copyClasspathTextResourceToFile("/init/browsers/safari.conf", dir)
+      FileIO.copyClasspathTextResourceToFile("/init/browsers/README.md", dir)
     }
 
     new File(dir, "env") tap { dir =>
-      FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/env/dev.properties", dir)
-      FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/env/test.properties", dir)
-      FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/env/README.md", dir)
+      FileIO.copyClasspathTextResourceToFile("/init/env/dev.conf", dir)
+      FileIO.copyClasspathTextResourceToFile("/init/env/test.conf", dir)
+      FileIO.copyClasspathTextResourceToFile("/init/env/README.md", dir)
     }
 
     new File(dir, "features") tap { dir =>
-      FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/features/README.md", dir)
+      FileIO.copyClasspathTextResourceToFile("/init/features/README.md", dir)
     }
 
     new File(dir, "samples/floodio") tap { dir =>
-      FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/samples/floodio/FloodIO.feature", dir)
-      FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/samples/floodio/FloodIO.meta", dir)
+      FileIO.copyClasspathTextResourceToFile("/init/samples/floodio/FloodIO.feature", dir)
+      FileIO.copyClasspathTextResourceToFile("/init/samples/floodio/FloodIO.meta", dir)
     }
 
     new File(dir, "samples/google") tap { dir =>
-      FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/samples/google/Google.feature", dir)
-      FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/samples/google/Google.meta", dir)
+      FileIO.copyClasspathTextResourceToFile("/init/samples/google/Google.feature", dir)
+      FileIO.copyClasspathTextResourceToFile("/init/samples/google/Google.meta", dir)
     }
 
     new File(dir, "samples/i18n") tap { dir =>
-      FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/samples/i18n/Google_fr.feature", dir)
-      FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/samples/i18n/Google_fr.meta", dir)
+      FileIO.copyClasspathTextResourceToFile("/init/samples/i18n/Google_fr.feature", dir)
+      FileIO.copyClasspathTextResourceToFile("/init/samples/i18n/Google_fr.meta", dir)
     }
 
     new File(dir, "samples/todo") tap { dir =>
-      FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/samples/todo/Todo.feature", dir)
-      FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/samples/todo/Todo.meta", dir)
+      FileIO.copyClasspathTextResourceToFile("/init/samples/todo/Todo.feature", dir)
+      FileIO.copyClasspathTextResourceToFile("/init/samples/todo/Todo.meta", dir)
     }
 
     new File(dir, "samples/") tap { dir =>
-      FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/samples/README.md", dir)
+      FileIO.copyClasspathTextResourceToFile("/init/samples/README.md", dir)
     }
 
-    FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/README.md", dir)
-    if (!new File("gwen.properties").exists()) {
-      FileIO.copyClasspathTextResourceToFile("/gwen-web/working-dir/gwen.properties", new File("."))
+    FileIO.copyClasspathTextResourceToFile("/init/README.md", dir)
+    if (!new File("gwen.conf").exists()) {
+      FileIO.copyClasspathTextResourceToFile("/init/gwen.conf", targetDir = new File("."))
     } 
 
     println(
       s"""!  ./
-          !   |  gwen.properties
+          !   |  gwen.conf
           !   +--/${dir.getPath}
           !      |  README.md
           !      +--/browsers
-          !      |     chrome.proeprties
-          !      |     edge.proeprties
-          !      |     firefox.proeprties
-          !      |     safari.proeprties
-          !      |     ie.proeprties
+          !      |     chrome.conf
+          !      |     edge.conf
+          !      |     firefox.conf
+          !      |     safari.conf
+          !      |     ie.conf
           !      |     README.md
           !      +--/env
-          !      |     local.properties
+          !      |     dev.conf
+          !      |     test.conf
           !      |     README.md
           !      +--/features
           !      |     README.md

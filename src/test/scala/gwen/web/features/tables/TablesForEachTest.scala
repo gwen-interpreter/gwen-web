@@ -15,6 +15,7 @@
  */
 package gwen.web.features.tables
 
+import gwen.web.BaseTest
 import gwen.web.GwenWebInterpreter
 
 import gwen.core.GwenOptions
@@ -24,9 +25,8 @@ import gwen.core.status.Passed
 
 
 import java.io.File
-import org.scalatest.flatspec.AnyFlatSpec
 
-class TablesForEachTest extends AnyFlatSpec {
+class TablesForEachTest extends BaseTest {
 
   val interpreter = GwenWebInterpreter
   

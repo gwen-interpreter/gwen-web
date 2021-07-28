@@ -8,19 +8,19 @@ Default structure:
 
 ```
 ./
- |  gwen.properties
+ |  gwen.conf
  +--/gwen
     |  README.md
     +--/browsers
-    |     chrome.proeprties
-    |     edge.proeprties
-    |     firefox.proeprties
-    |     safari.proeprties
-    |     ie.proeprties
+    |     chrome.conf
+    |     edge.conf
+    |     firefox.conf
+    |     safari.conf
+    |     ie.conf
     |     README.md
     +--/env
-    |     dev.properties
-    |     test.properties
+    |     dev.conf
+    |     test.conf
     |     README.md
     +--/features
     |     README.md

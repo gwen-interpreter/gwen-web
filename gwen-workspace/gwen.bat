@@ -33,7 +33,7 @@ IF "%1%" == "-h" (
 )
 
 REM Set target browser or default to chrome if no target browser was provided
-IF EXIST "browsers\%1.properties" (
+IF EXIST "browsers\%1.conf" (
   SET TARGET_BROWSER=%1
   SHIFT
 ) ELSE (
@@ -42,7 +42,7 @@ IF EXIST "browsers\%1.properties" (
 
 REM Set target environment
 IF NOT "%1" == "%DEFAULT_ENV%" (
-  IF NOT EXIST "env\%1.properties" (
+  IF NOT EXIST "env\%1.conf" (
     SET TARGET_ENV=%DEFAULT_ENV%
   ) ELSE (
     SET TARGET_ENV=%1
@@ -54,13 +54,13 @@ IF NOT "%1" == "%DEFAULT_ENV%" (
 ECHO Target browser is %TARGET_BROWSER%
 ECHO Target environment is %TARGET_ENV%
 
-REM Prepare gwen JVM arguments and properties
-SET GWEN_JVM_ARGS=-Dgwen.web.browser=%TARGET_BROWSER%
-SET GWEN_PROPS=gwen.properties,browsers\%TARGET_BROWSER%.properties,env\%TARGET_ENV%.properties
+REM Prepare gwen JVM arguments and configs
+SET GWEN_JVM_ARGS=-Dgwen.web.browser.target=%TARGET_BROWSER%
+SET GWEN_PROPS=gwen.conf,browsers\%TARGET_BROWSER%.conf,env\%TARGET_ENV%.conf
 
 REM Install gwen-web
 SET GWEN_WEB_HOME=target\gwen-web
-java -jar gwen-gpm.jar -p "%GWEN_PROPS%" update gwen-web gwen.gwen-web.version %GWEN_WEB_HOME%
+java -jar gwen-gpm.jar -c "%GWEN_PROPS%" update gwen-web gwen.gwen-web.version %GWEN_WEB_HOME%
 SET EXITCODE=!ERRORLEVEL!
 IF !EXITCODE! EQU 1 (
   ECHO Failed to auto update/install gwen-web ^(no internet connection maybe^)
@@ -69,7 +69,7 @@ IF !EXITCODE! EQU 1 (
 REM If gwen.selenium.version is set to a specific version, then install that
 REM selenium-java API version and set SELENIUM_HOME to the installed location
 REM Otherwise do nothing if gwen.selenium.version=provided (exit code 2).
-java -jar gwen-gpm.jar -p "%GWEN_PROPS%" update selenium gwen.selenium.version target\selenium
+java -jar gwen-gpm.jar -c "%GWEN_PROPS%" update selenium gwen.selenium.version target\selenium
 SET EXITCODE=!ERRORLEVEL!
 IF !EXITCODE! EQU 0 (
     SET SELENIUM_HOME=target\selenium
@@ -97,7 +97,7 @@ IF "%ARG1%" == "%TARGET_BROWSER%" (
 REM Launch Gwen
 ECHO
 ECHO Launching Gwen
-CALL %GWEN_WEB_HOME%\bin\gwen-web %GWEN_JVM_ARGS% -r target/reports -p "%GWEN_PROPS%" %GWEN_ARGS%
+CALL %GWEN_WEB_HOME%\bin\gwen-web %GWEN_JVM_ARGS% -r target/reports -c "%GWEN_PROPS%" %GWEN_ARGS%
 EXIT /B !ERRORLEVEL!
 
 :HELPGWEN
@@ -109,11 +109,11 @@ ECHO       firefox ^: to use firefox browser
 ECHO       safari  ^: to use safari browser
 ECHO       edge    ^: to use Edge browser
 ECHO       ie      ^: to use IE browser
-ECHO       other   ^: name of browser properties file in browsers directory
+ECHO       other   ^: name of browser config file in browsers directory
 ECHO      ^[env^]    =
 ECHO         local ^: to use local user environment
 ECHO          name ^: name of environment to use
-ECHO            ^(dev will load env\dev.properties^)
+ECHO            ^(dev will load env\dev.conf^)
 ECHO      ^[options^] =
 ECHO      --version
 ECHO               ^: Prints the implementation version

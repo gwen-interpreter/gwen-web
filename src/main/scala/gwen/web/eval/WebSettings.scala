@@ -18,6 +18,8 @@ package gwen.web.eval
 
 import gwen.core._
 
+import com.typesafe.scalalogging.LazyLogging
+
 import scala.util.Try
 import scala.util.chaining._
 
@@ -29,85 +31,152 @@ import java.io.File
   *
   * @author Branko Juric
   */
-object WebSettings {
-
-  /** Chrome driver setting. */
-  def `webdriver.chrome.driver`: Option[String] = Settings.getOpt("webdriver.chrome.driver")
-
-  /** Gecko (firefox) driver setting. */
-  def `webdriver.gecko.driver`: Option[String] = Settings.getOpt("webdriver.gecko.driver")
-
-  /** IE driver setting. */
-  def `webdriver.ie.driver`: Option[String] = Settings.getOpt("webdriver.ie.driver")
-
-  /** Edge driver setting. */
-  def `webdriver.edge.driver`: Option[String] = Settings.getOpt("webdriver.edge.driver")
+object WebSettings extends LazyLogging {
 
   /**
-    * Provides access to the `gwen.web.browser` setting used to set the target browser
+    * Checks all mandatory settings.
+    */
+  def check(): Unit = {
+    `gwen.web.accept.untrusted.certs`
+    `gwen.web.authorize.plugins`
+    `gwen.web.browser.headless`
+    `gwen.web.browser.target`
+    `gwen.web.browser.size`
+    `gwen.web.capabilities`
+    `gwen.web.capture.screenshots.enabled`
+    `gwen.web.capture.screenshots.duplicates`
+    `gwen.web.capture.screenshots.highlighting`
+    `gwen.web.chrome.args`
+    `gwen.web.chrome.extensions`
+    `gwen.web.chrome.mobile`
+    `gwen.web.chrome.path`
+    `gwen.web.chrome.prefs`
+    `gwen.web.edge.args`
+    `gwen.web.edge.extensions`
+    `gwen.web.edge.mobile`
+    `gwen.web.edge.path`
+    `gwen.web.edge.prefs`
+    `gwen.web.firefox.path`
+    `gwen.web.firefox.prefs`
+    `gwen.web.highlight.style`
+    `gwen.web.implicit.element.focus`
+    `gwen.web.implicit.js.locators`
+    `gwen.web.locator.wait.seconds`
+    `gwen.web.maximize`
+    `gwen.web.remote.localFileDetector`
+    `gwen.web.remote.url`
+    `gwen.web.sendKeys.clearFirst`
+    `gwen.web.sendKeys.clickFirst`
+    `gwen.web.suppress.images`
+    `gwen.web.throttle.msecs`
+    `gwen.web.useragent`
+    `gwen.web.wait.seconds`
+  }
+
+  /** Chrome driver setting. */
+  def `webdriver.chrome.driver`: Option[String] = {
+    Settings.getOpt("webdriver.chrome.driver")
+  }
+
+  /** Gecko (firefox) driver setting. */
+  def `webdriver.gecko.driver`: Option[String] = {
+    Settings.getOpt("webdriver.gecko.driver")
+  }
+
+  /** IE driver setting. */
+  def `webdriver.ie.driver`: Option[String] = {
+    Settings.getOpt("webdriver.ie.driver")
+  }
+
+  /** Edge driver setting. */
+  def `webdriver.edge.driver`: Option[String] = {
+    Settings.getOpt("webdriver.edge.driver")
+  }
+
+  /**
+    * Provides access to the `gwen.web.browser.target` setting used to set the target browser
     * (default value is `chrome`). Valid values include chrome, firefox, safari, ie, and edge
     */
-  def `gwen.web.browser`: String =
-    Settings.getOpt("gwen.web.browser").getOrElse("chrome")
+  def `gwen.web.browser.target`: String = {
+    Settings.get("gwen.web.browser.target", Some("gwen.web.browser"))
+  }
 
   /**
     * Provides access to the `gwen.web.useragent` setting used to set the user agent header
     * in the browser (currently only supported for firefox and chrome).
     */
-  def `gwen.web.useragent`: Option[String] = Settings.getOpt("gwen.web.useragent")
+  def `gwen.web.useragent`: Option[String] = {
+    Settings.getOpt("gwen.web.useragent")
+  }
 
   /**
    * If set, allows gwen-web to connect to a remote webdriver.
    */
-  def `gwen.web.remote.url`: Option[String] = Settings.getOpt("gwen.web.remote.url")
+  def `gwen.web.remote.url`: Option[String] = {
+    Settings.getOpt("gwen.web.remote.url")
+  }
 
   /**
     * Provides access to the `gwen.authorize.plugins` setting used to control whether
     * or not the browser should authorize browser plugins. (default value is `false`).
     */
-  def `gwen.web.authorize.plugins`: Boolean = Settings.getOpt("gwen.web.authorize.plugins").map(_.toBoolean).getOrElse(false)
+  def `gwen.web.authorize.plugins`: Boolean = {
+    Settings.getBoolean("gwen.web.authorize.plugins")
+  }
 
   /**
     * Provides access to the `gwen.web.wait.seconds` setting used to set the implicit
     * timeout/wait time in the web driver (default is 10 seconds). This value is also used as the default for
     * `gwen.web.locator.wait.seconds`.
     */
-  def `gwen.web.wait.seconds`: Long = Settings.getOpt("gwen.web.wait.seconds").map(_.toLong).getOrElse(10)
+  def `gwen.web.wait.seconds`: Long = {
+    Settings.getLong("gwen.web.wait.seconds")
+  }
 
   /**
     * Provides access to the `gwen.web.locator.wait.seconds` setting used to set the implicit
     * locator wait/timeout time in the web driver (default is `gwen.web.wait.seconds` seconds).
     */
-  def `gwen.web.locator.wait.seconds`: Long = Settings.getOpt("gwen.web.locator.wait.seconds").map(_.toLong).getOrElse(`gwen.web.wait.seconds`)
+  def `gwen.web.locator.wait.seconds`: Long = {
+    Settings.getLong("gwen.web.locator.wait.seconds")
+  }
 
   /**
     * Provides access to the `gwen.web.maximize` setting used to control whether
     * or not the web driver should maximize the browser window (default value is `false`).
     */
-  def `gwen.web.maximize`: Boolean = Settings.getOpt("gwen.web.maximize").map(_.toBoolean).getOrElse(false)
+  def `gwen.web.maximize`: Boolean = {
+    Settings.getBoolean("gwen.web.maximize")
+  }
 
   /**
     * Provides access to the `gwen.web.throttle.msecs` setting used to control the wait
     * between javascript evaluations and duration of element highlighting (default value
     * is 100 msecs).
     */
-  def `gwen.web.throttle.msecs`: Long = Settings.getOpt("gwen.web.throttle.msecs").getOrElse("100").toLong
+  def `gwen.web.throttle.msecs`: Long = {
+    Settings.getLong("gwen.web.throttle.msecs")
+  }
 
   /**
     * Provides access to the `gwen.web.highlight.style` setting used to control how
     * elements are highlighted (default value is `background: yellow; border: 2px solid gold;`).
     */
-  def `gwen.web.highlight.style`: String = Settings.getOpt("gwen.web.highlight.style").getOrElse("background: yellow; border: 2px solid gold;")
+  def `gwen.web.highlight.style`: String = {
+    Settings.get("gwen.web.highlight.style")
+  }
 
   /**
-    * Provides access to the `gwen.web.capture.screenshots` setting used to control whether
+    * Provides access to the `gwen.web.capture.screenshots.enabled` setting used to control whether
     * or not the web driver should capture screenshots for all steps (default value is `false`).
     * Note that setting this to `true` degrades performance significantly. If the setting is true,
     * then the `gwen.report.slideshow.create` setting is also implicitly set to true if it is not
     * set so that the report generator in core web component knows to generate the slideshow.
     */
-  def `gwen.web.capture.screenshots`: Boolean = Settings.getOpt("gwen.web.capture.screenshots").map(_.toBoolean).getOrElse(false) tap { isSet =>
-    if (isSet) Settings.set("gwen.report.slideshow.create", "true")
+  def `gwen.web.capture.screenshots.enabled`: Boolean = {
+    Settings.getBoolean("gwen.web.capture.screenshots.enabled", Some("gwen.web.capture.screenshots")) tap { isSet =>
+      if (isSet) Settings.set("gwen.report.slideshow.create", true.toString)
+    }
   }
 
   /**
@@ -118,8 +187,10 @@ object WebSettings {
     * to generate the slideshow.
     * Note that setting this to `true` degrades performance significantly.
     */
-  def `gwen.web.capture.screenshots.highlighting`: Boolean = Settings.getOpt("gwen.web.capture.screenshots.highlighting").getOrElse("false").toBoolean  tap { isSet =>
-    if (isSet) Settings.set("gwen.report.slideshow.create", "true")
+  def `gwen.web.capture.screenshots.highlighting`: Boolean = {
+    Settings.getBoolean("gwen.web.capture.screenshots.highlighting") tap { isSet =>
+      if (isSet) Settings.set("gwen.report.slideshow.create", true.toString)
+    }
   }
 
   /**
@@ -127,14 +198,18 @@ object WebSettings {
     * or not the web driver should accept untrusted (self signed) SSL certificates (default value
     * is `true`).
     */
-  def `gwen.web.accept.untrusted.certs`: Boolean = Settings.getOpt("gwen.web.accept.untrusted.certs").map(_.toBoolean).getOrElse(true)
+  def `gwen.web.accept.untrusted.certs`: Boolean = {
+    Settings.getBoolean("gwen.web.accept.untrusted.certs")
+  }
 
   /**
     * Provides access to the `gwen.web.suppress.images` setting used to control whether
     * or not image rendering will be suppressed in the browser (default value
     * is `false`). Currently this capability is only supported in firefox driver.
     */
-  def `gwen.web.suppress.images`: Boolean = Settings.getOpt("gwen.web.suppress.images").map(_.toBoolean).getOrElse(false)
+  def `gwen.web.suppress.images`: Boolean = {
+    Settings.getBoolean("gwen.web.suppress.images")
+  }
 
   /**
    * Provides access to the `gwen.web.chrome.extensions` settings use to set
@@ -142,7 +217,9 @@ object WebSettings {
    * The settings accepts a comma separated list of paths to extensions (.crx files
    * or location paths). Each extension provided is loaded into the Chrome web driver.
    */
-  def `gwen.web.chrome.extensions`: List[File] = Settings.getOpt("gwen.web.chrome.extensions").map(_.split(",").toList.map(_.trim)).getOrElse(Nil).map(new File(_))
+  def `gwen.web.chrome.extensions`: List[File] = {
+    Settings.getOpt("gwen.web.chrome.extensions").map(_.split(",").toList.map(_.trim)).getOrElse(Nil).map(new File(_))
+  }
 
   /**
    * Provides access to the `gwen.web.edge.extensions` settings use to set
@@ -150,7 +227,9 @@ object WebSettings {
    * The settings accepts a comma separated list of paths to extensions (.crx files
    * or location paths). Each extension provided is loaded into the Edge web driver.
    */
-  def `gwen.web.edge.extensions`: List[File] = Settings.getOpt("gwen.web.edge.extensions").map(_.split(",").toList.map(_.trim)).getOrElse(Nil).map(new File(_))
+  def `gwen.web.edge.extensions`: List[File] = {
+    Settings.getOpt("gwen.web.edge.extensions").map(_.split(",").toList.map(_.trim)).getOrElse(Nil).map(new File(_))
+  }
 
   /**
     * Provides access to the `gwen.web.capture.screenshots.duplicates` setting used to control whether
@@ -158,7 +237,9 @@ object WebSettings {
     * (default value is `false` ~ to discard). If set to `false`, then a screenshot will be discarded
     * if its size in bytes matches that of the last captured screenshot.
     */
-  def `gwen.web.capture.screenshots.duplicates`: Boolean = Settings.getOpt("gwen.web.capture.screenshots.duplicates").map(_.toBoolean).getOrElse(false)
+  def `gwen.web.capture.screenshots.duplicates`: Boolean = {
+    Settings.getBoolean("gwen.web.capture.screenshots.duplicates")
+  }
 
   /**
     * Provides access to the `gwen.web.chrome.path` setting used to specify the
@@ -166,14 +247,18 @@ object WebSettings {
     * default system Chrome install. On macOS, this should be the actual binary,
     * not just the app (e.g., `/Applications/Google Chrome.app/Contents/MacOS/Google Chrome`).
     */
-  def `gwen.web.chrome.path`: Option[String] = Settings.getOpt("gwen.web.chrome.path")
+  def `gwen.web.chrome.path`: Option[String] = {
+    Settings.getOpt("gwen.web.chrome.path")
+  }
 
   /**
     * Provides access to the `gwen.web.edge.path` setting used to specify the
     * path to the Edge browser binary. If not set, edgedriver will use the
     * default system Edge install.
     */
-  def `gwen.web.edge.path`: Option[String] = Settings.getOpt("gwen.web.edge.path")
+  def `gwen.web.edge.path`: Option[String] = {
+    Settings.getOpt("gwen.web.edge.path")
+  }
 
   /**
    * Provides access to the `gwen.web.chrome.args` setting used to set
@@ -182,7 +267,9 @@ object WebSettings {
    * the value of all properties that start with `gwen.web.chrome.args.`.
    * List of chrome arguments: https://peter.sh/experiments/chromium-command-line-switches
    */
-  def `gwen.web.chrome.args`: List[String] = Settings.findAllMulti("gwen.web.chrome.args")
+  def `gwen.web.chrome.args`: List[String] = {
+    Settings.findAllMulti("gwen.web.chrome.args")
+  }
 
   /**
    * Provides access to the `gwen.web.edge.args` setting used to set
@@ -191,21 +278,27 @@ object WebSettings {
    * the value of all properties that start with `gwen.web.edge.args.`.
    * List of edge arguments: https://peter.sh/experiments/chromium-command-line-switches
    */
-  def `gwen.web.edge.args`: List[String] = Settings.findAllMulti("gwen.web.edge.args")
+  def `gwen.web.edge.args`: List[String] = {
+    Settings.findAllMulti("gwen.web.edge.args")
+  }
 
   /**
    * Provides access to the chrome preference settings. This setting merges a comma separated list of preferences
    * set in the `gwen.web.chrome.prefs` property with all properties that start with `gwen.web.chrome.pref.`.
    * List of chrome prefs: https://chromium.googlesource.com/chromium/src/+/master/chrome/common/pref_names.cc
    */
-  def `gwen.web.chrome.prefs`: Map[String, String] = Settings.findAllMulti("gwen.web.chrome.prefs", "gwen.web.chrome.pref")
+  def `gwen.web.chrome.prefs`: Map[String, String] = {
+    Settings.findAllMulti("gwen.web.chrome.prefs", "gwen.web.chrome.pref")
+  }
 
   /**
    * Provides access to the edge preference settings. This setting merges a comma separated list of preferences
    * set in the `gwen.web.edge.prefs` property with all properties that start with `gwen.web.edge.pref.`.
    * List of edge prefs: https://chromium.googlesource.com/chromium/src/+/master/chrome/common/pref_names.cc
    */
-  def `gwen.web.edge.prefs`: Map[String, String] = Settings.findAllMulti("gwen.web.edge.prefs", "gwen.web.edge.pref")
+  def `gwen.web.edge.prefs`: Map[String, String] = {
+    Settings.findAllMulti("gwen.web.edge.prefs", "gwen.web.edge.pref")
+  }
 
   /**
     * Provides access to the `gwen.web.firefox.path` setting used to specify the
@@ -213,40 +306,52 @@ object WebSettings {
     * default system Firefox install. On macOS, this should be the actual binary,
     * not just the app (e.g, `/Applications/Firefox.app/Contents/MacOS/firefox`).
     */
-  def `gwen.web.firefox.path`: Option[String] = Settings.getOpt("gwen.web.firefox.path")
+  def `gwen.web.firefox.path`: Option[String] = {
+    Settings.getOpt("gwen.web.firefox.path")
+  }
 
   /**
    * Provides access to the firefox preference settings. This setting merges a comma separated list of preferences
    * set in the `gwen.web.firefox.prefs` property with all properties that start with `gwen.web.firefox.pref.`.
    * List of firefox prefs: https://stackoverflow.com/questions/25251583/downloading-file-to-specified-location-with-selenium-and-python
    */
-  def `gwen.web.firefox.prefs`: Map[String, String] = Settings.findAllMulti("gwen.web.firefox.prefs", "gwen.web.firefox.pref")
+  def `gwen.web.firefox.prefs`: Map[String, String] = {
+    Settings.findAllMulti("gwen.web.firefox.prefs", "gwen.web.firefox.pref")
+  }
 
   /**
     * Provides access to the `gwen.web.browser.headless` setting used to control whether
     * or not the browser should run headless. (default value is `false`).
     */
-  def `gwen.web.browser.headless`: Boolean = Settings.getOpt("gwen.web.browser.headless").map(_.toBoolean).getOrElse(false)
+  def `gwen.web.browser.headless`: Boolean = { 
+    Settings.getBoolean("gwen.web.browser.headless")
+  }
 
   /**
    * Provides access to the web capabilities settings. This setting merges a comma separated list of capabilities
    * set in the `gwen.web.capabilities` property with all properties that start with `gwen.web.capability.`.
    * See: https://github.com/SeleniumHQ/selenium/wiki/DesiredCapabilities
    */
-  def `gwen.web.capabilities`: Map[String, String] = Settings.findAllMulti("gwen.web.capabilities", "gwen.web.capability")
+  def `gwen.web.capabilities`: Map[String, String] = {
+    Settings.findAllMulti("gwen.web.capabilities", "gwen.web.capability")
+  }
 
   /**
     * Provides access to the `gwen.web.implicit.js.locators` setting used to determine whether or not Gwen should
     * implicitly convert all locator bindings to JavaScript equivalents to force all elements to be located by
     * executing javascript on the page. Default value is false.
     */
-  def `gwen.web.implicit.js.locators`: Boolean = Settings.getOpt("gwen.web.implicit.js.locators").map(_.toBoolean).getOrElse(false)
+  def `gwen.web.implicit.js.locators`: Boolean = {
+    Settings.getBoolean("gwen.web.implicit.js.locators")
+  }
 
   /**
     * Provides access to the `gwen.web.implicit.element.focus` setting used to determine whether or not Gwen should
     * implicitly put the focus on all located web elements. Default value is true.
     */
-  def `gwen.web.implicit.element.focus`: Boolean = Settings.getOpt("gwen.web.implicit.element.focus").map(_.toBoolean).getOrElse(true)
+  def `gwen.web.implicit.element.focus`: Boolean = {
+    Settings.getBoolean("gwen.web.implicit.element.focus")
+  }
 
   /**
     * Provides access to the `gwen.web.browser.size` setting used to set the browser window size.
@@ -274,13 +379,17 @@ object WebSettings {
     * Provides access to the `gwen.web.sendKeys.clearFirst` setting used to control whether
     * or not Gwen will clear fields before sending keys to them. (default value is `false`).
     */
-  def `gwen.web.sendKeys.clearFirst`: Boolean = Settings.getOpt("gwen.web.sendKeys.clearFirst").map(_.toBoolean).getOrElse(false)
+  def `gwen.web.sendKeys.clearFirst`: Boolean = {
+    Settings.getBoolean("gwen.web.sendKeys.clearFirst")
+  }
 
   /**
     * Provides access to the `gwen.web.sendKeys.clickFirst` setting used to control whether
     * or not Gwen will click fields before sending keys to them. (default value is `false`).
     */
-  def `gwen.web.sendKeys.clickFirst`: Boolean = Settings.getOpt("gwen.web.sendKeys.clickFirst").map(_.toBoolean).getOrElse(false)
+  def `gwen.web.sendKeys.clickFirst`: Boolean = {
+    Settings.getBoolean("gwen.web.sendKeys.clickFirst")
+  }
 
   /**
    * Provides access to the chrome mobile emulation settings. This setting merges a comma separated list of values
@@ -289,8 +398,9 @@ object WebSettings {
    * See: https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#mobile-emulation-by-device-name
    * See: https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#mobile-emulation-by-device-metrics
    */
-  def `gwen.web.chrome.mobile`: Map[String, String] =
+  def `gwen.web.chrome.mobile`: Map[String, String] = {
     Settings.findAllMulti("gwen.web.chrome.mobile", "gwen.web.chrome.mobile")
+  }
 
   /**
    * Provides access to the edge mobile emulation settings. This setting merges a comma separated list of values
@@ -299,12 +409,14 @@ object WebSettings {
    * See: https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#mobile-emulation-by-device-name
    * See: https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#mobile-emulation-by-device-metrics
    */
-  def `gwen.web.edge.mobile`: Map[String, String] =
+  def `gwen.web.edge.mobile`: Map[String, String] = {
     Settings.findAllMulti("gwen.web.edge.mobile", "gwen.web.edge.mobile")
+  }
     
   /**
    * If set, enables the local file detector on remote webdriver if `gwen.web.remote.url` is set (default is disabled).
    */
-  def `gwen.web.remote.localFileDetector`: Boolean =
-    `gwen.web.remote.url`.nonEmpty && Settings.getOpt("gwen.web.remote.localFileDetector").map(_.toBoolean).getOrElse(false)
+  def `gwen.web.remote.localFileDetector`: Boolean = {
+    `gwen.web.remote.url`.nonEmpty && Settings.getBoolean("gwen.web.remote.localFileDetector")
+  }
 }

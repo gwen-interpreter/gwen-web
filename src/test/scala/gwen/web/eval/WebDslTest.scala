@@ -21,13 +21,13 @@ import gwen.web._
 import gwen.core.GwenOptions
 import gwen.core.node.GwenNode
 import gwen.core.node.gherkin.Step
-import gwen.core.state.EnvState
-
-import org.scalatestplus.mockito.MockitoSugar
 import gwen.core.node.gherkin.table.FlatTable
 import gwen.core.node.gherkin.StepKeyword
+import gwen.core.state.EnvState
 import gwen.core.status._
+
 import org.scalatest.matchers.should.Matchers
+import org.scalatestplus.mockito.MockitoSugar
 
 class WebDslTest extends BaseTest with Matchers with MockitoSugar {
 

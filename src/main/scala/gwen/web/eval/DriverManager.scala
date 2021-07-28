@@ -115,7 +115,7 @@ class DriverManager() extends LazyLogging {
         case Some(addr) =>
           remoteDriver(addr)
         case None =>
-          val driverName = WebSettings.`gwen.web.browser`.toLowerCase
+          val driverName = WebSettings.`gwen.web.browser.target`.toLowerCase
           localDriver(driverName)
       }) tap { driver =>
         WebSettings.`gwen.web.browser.size` foreach { case (width, height) =>
@@ -132,7 +132,7 @@ class DriverManager() extends LazyLogging {
 
   private def remoteDriver(addr: String): WebDriver = {
     val capSettings = WebSettings.`gwen.web.capabilities`
-    val browser = capSettings.get("browserName").orElse(capSettings.get("browser")).orElse(capSettings.get("device")).getOrElse(WebSettings.`gwen.web.browser`)
+    val browser = capSettings.get("browserName").orElse(capSettings.get("browser")).orElse(capSettings.get("device")).getOrElse(WebSettings.`gwen.web.browser.target`)
     val capabilities = new DesiredCapabilities(
       browser.trim.toLowerCase match {
         case "firefox" => firefoxOptions()
@@ -278,7 +278,7 @@ class DriverManager() extends LazyLogging {
     browserExensions tap { extensions =>
       if (extensions.nonEmpty) {
         logger.info(s"Loading $browser extension${if (extensions.size > 1) "s" else ""}: ${extensions.mkString(",")}")
-        options.addExtensions(extensions:_*)
+        options.addExtensions(extensions*)
       }
     }
     val mobileSettings = browser match {

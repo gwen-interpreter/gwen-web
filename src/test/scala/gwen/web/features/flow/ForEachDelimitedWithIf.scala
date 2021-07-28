@@ -15,6 +15,7 @@
  */
 package gwen.web.features.flow
 
+import gwen.web.BaseTest
 import gwen.web.GwenWebInterpreter
 
 import gwen.core.GwenOptions
@@ -24,9 +25,8 @@ import gwen.core.status.Passed
 
 
 import java.io.File
-import org.scalatest.flatspec.AnyFlatSpec
 
-class ForEachDelimitedWithIf extends AnyFlatSpec {
+class ForEachDelimitedWithIf extends BaseTest {
 
   val interpreter = GwenWebInterpreter
   

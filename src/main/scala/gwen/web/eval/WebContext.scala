@@ -108,7 +108,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     * @param params optional parameters to the script
     */
   override def evaluateJS(javascript: String, params: Any*): Any =
-    executeJS(javascript, params.map(_.asInstanceOf[AnyRef]) : _*)
+    executeJS(javascript, params.map(_.asInstanceOf[AnyRef])*)
 
   /**
     * Gets a bound value from memory. A search for the value is made in
@@ -387,7 +387,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
         result.map {
           case Success(res) =>
             res tap { _ =>
-              if (WebSettings.`gwen.web.capture.screenshots`) {
+              if (WebSettings.`gwen.web.capture.screenshots.enabled`) {
                 captureScreenshot(false)
               }
             }
@@ -439,8 +439,8 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
   def executeJS(javascript: String, params: Any*)(implicit takeScreenShot: Boolean = false): Any =
     withWebDriver { webDriver =>
       try {
-        webDriver.asInstanceOf[JavascriptExecutor].executeScript(javascript, params.map(_.asInstanceOf[AnyRef]) : _*) tap { result =>
-          if (takeScreenShot && WebSettings.`gwen.web.capture.screenshots`) {
+        webDriver.asInstanceOf[JavascriptExecutor].executeScript(javascript, params.map(_.asInstanceOf[AnyRef])*) tap { result =>
+          if (takeScreenShot && WebSettings.`gwen.web.capture.screenshots.enabled`) {
             captureScreenshot(false)
           }
           logger.debug(s"Evaluated javascript: $javascript, result='$result'")
@@ -541,7 +541,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
         val style = WebSettings.`gwen.web.highlight.style`
         val origStyle = executeJS(s"element = arguments[0]; type = element.getAttribute('type'); if (('radio' == type || 'checkbox' == type) && element.parentElement.getElementsByTagName('input').length == 1) { element = element.parentElement; } original_style = element.getAttribute('style'); element.setAttribute('style', original_style + '; $style'); return original_style;", element)(WebSettings.`gwen.web.capture.screenshots.highlighting`)
         try {
-          if (!WebSettings.`gwen.web.capture.screenshots.highlighting` || !WebSettings.`gwen.web.capture.screenshots`) {
+          if (!WebSettings.`gwen.web.capture.screenshots.highlighting` || !WebSettings.`gwen.web.capture.screenshots.enabled`) {
             Thread.sleep(msecs)
           }
         } finally {
@@ -798,7 +798,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
 
   def moveToAndCapture(driver: WebDriver, webElement: WebElement): Unit = {
     createActions(driver).moveToElement(webElement).perform()
-    if (WebSettings.`gwen.web.capture.screenshots`) {
+    if (WebSettings.`gwen.web.capture.screenshots.enabled`) {
       captureScreenshot(false)
     }
   }
@@ -840,7 +840,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
   }
 
   def sendKeys(elementBindingOpt: Option[LocatorBinding], keysToSend: Array[String]): Unit = {
-    val keys = Keys.chord(keysToSend.map(k => Try(Keys.valueOf(k.toUpperCase)).getOrElse(k)): _*)
+    val keys = Keys.chord(keysToSend.map(k => Try(Keys.valueOf(k.toUpperCase)).getOrElse(k))*)
     elementBindingOpt match {
       case Some(binding) =>
         withDriverAndElement(binding, s"trying to send keys to $binding") { (driver, webElement) =>
@@ -903,7 +903,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
       withWebDriver { driver =>
         val moveTo = createActions(driver).moveToElement(contextElement).moveToElement(webElement)
         buildAction(moveTo).build().perform()
-        if (WebSettings.`gwen.web.capture.screenshots`) {
+        if (WebSettings.`gwen.web.capture.screenshots.enabled`) {
           captureScreenshot(false)
         }
       }
@@ -1207,7 +1207,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
   def navigateTo(url: String): Unit = {
     withWebDriver { driver =>
       driver.get(url)
-    } (WebSettings.`gwen.web.capture.screenshots`)
+    } (WebSettings.`gwen.web.capture.screenshots.enabled`)
   }
 
   /**
