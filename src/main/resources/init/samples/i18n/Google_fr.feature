@@ -1,5 +1,6 @@
 # language: fr
 
+@Samples
 Fonctionnalité: recherche Google
 
       Scénario: recherche Google fructueuse

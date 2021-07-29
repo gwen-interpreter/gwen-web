@@ -1,0 +1,38 @@
+#
+# Copyright 2020 Brady Wood, Branko Juric
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+  Feature: Todo Meta (automation glue)     # file: todo.meta
+                        
+ @Context
+ @StepDef
+ Scenario: a new todo list
+      When I navigate to "http://todomvc.com/examples/react"
+      Then the todo field can be located by class "new-todo"
+       And count can be located by css ".todo-count strong"
+
+ @Action
+ @StepDef
+ @ForEach
+ @DataTable(horizontal="item")
+ Scenario: the following items are added
+      When I enter data[item] in the todo field
+      Then count should be record.number
+
+ @Assertion
+ @StepDef
+ Scenario: the list will contain <expected> items
+      Then count should be "$<expected>"
+      

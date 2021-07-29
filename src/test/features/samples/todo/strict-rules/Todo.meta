@@ -1,0 +1,53 @@
+#
+# Copyright 2020 Brady Wood, Branko Juric
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+Feature: Todo meta
+
+  @StepDef
+  @Context
+  Scenario: a new todo list
+      Given the heading can be located by tag name "h1"
+       When I navigate to "http://todomvc.com/examples/angularjs"
+       Then the heading should be "todos"
+        And the todo field can be located by class name "new-todo"
+        And the active item count can be located by css selector ".todo-count > strong"
+
+  @StepDef
+  @Action
+  @DataTable(header="top")
+  Scenario: the following items are added
+        And I add a todo item for each data record
+
+  @StepDef
+  Scenario: I add a todo item
+      Given the todo item is "${data[ITEM]}"
+       When I enter the todo item in the todo field
+       Then the added item can be located by xpath
+             """
+             //label[contains(.,'${the todo item}')]/preceding-sibling::input
+             """
+        And the added item should be unticked
+        And the active item count should be "${record.number}"
+
+  @StepDef
+  @Action
+  Scenario: all items are completed
+       When I tick item for each item located by class name "toggle"
+
+  @StepDef
+  @Assertion
+  Scenario: no active items should remain
+       Then the active item count should be "0"

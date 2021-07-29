@@ -1,0 +1,80 @@
+#
+# Copyright 2017-2019 Brady Wood, Branko Juric
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+ Feature: Todo meta
+  
+@StepDef
+@Context
+Scenario: I launch the Todo app
+    Given I start a new browser
+     When I resize the window to width 800 and height 800
+      And I navigate to "http://todomvc.com/examples/angularjs"
+     Then I should be on the Todo page
+
+@StepDef
+@Assertion
+Scenario: I should be on the Todo page
+    Given the heading can be located by tag name "h1"
+     Then the heading should be "todos"
+      And I am on the Todo page
+      And the todo field can be located by class name "new-todo"
+      And the number of open items can be located by css selector ".todo-count > strong"
+      And the clear completed button can be located by class name "clear-completed"
+      And the number of open items should not be displayed
+
+@StepDef
+@Action
+Scenario: I add a "<todo>" item
+    Given the "$<todo>" item can be located by xpath "//label[contains(.,'$<todo>')]/preceding-sibling::input"
+     When I enter "$<todo>" in the todo field
+     Then the "$<todo>" item should be unchecked
+
+@StepDef
+@Action
+Scenario: I complete the "<todo>" item
+     When I tick the "$<todo>" item
+     Then the "$<todo>" item should be ticked
+
+@StepDef
+@Action
+Scenario: I clear all completed items
+     When I click the clear completed button
+
+@StepDef
+@Context
+Scenario: I have three open items
+    Given I launch the Todo app
+     When I add a "Walk the dog" item
+      And I add a "Get the milk" item
+      And I add a "Feed the cat" item
+     Then the number of open items should be "3"
+
+@StepDef
+@Action
+Scenario: I complete each open item
+    Given I am on the Todo page
+     When I complete the "Get the milk" item
+     Then the number of open items should be "2"
+     When I complete the "Walk the dog" item
+     Then the number of open items should be "1"
+     When I complete the "Feed the cat" item
+     Then the number of open items should be "0"
+
+@StepDef 
+@Assertion
+Scenario: I should have no items left
+     Then the number of open items should not be displayed
+

@@ -1,0 +1,149 @@
+#
+# Copyright 2014-2015 Brady Wood, Branko Juric
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+#     http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+   @floodio
+   Feature: floodio meta
+  
+  Scenario: Initialise
+      Given the heading is displayed is defined by javascript "!!$('h2')"
+        And the heading can be located by tag name "h2"
+        And the next button can be located by class name "btn"
+       
+  @StepDef
+  @Context
+  Scenario: I launch the floodio challenge
+      Given I navigate to "https://challengers.flood.io/start"
+       Then I should be on the start page
+      
+  @StepDef
+  @Context
+  Scenario: I am on the <page-name> page
+      Given I wait until the heading is displayed
+       Then I am on the $<page-name> page
+  
+  @StepDef 
+  @Assertion
+  Scenario: I should be on the start page
+      Given I am on the start page
+        And the heading can be located by tag name "h1"
+       Then the heading should be "Welcome to our Script Challenge"
+        And the Start button can be located by name "commit"
+
+  @StepDef
+  @Assertion
+  Scenario: I should be on the step 2 page
+      Given I am on the step 2 page
+       Then the heading should contain "Step 2"
+        And the how old are you dropdown can be located by id "challenger_age"
+
+  @StepDef
+  @Assertion
+  Scenario: I should be on the step 3 page
+      Given I am on the step 3 page
+       Then the heading should contain "Step 3"
+        And the largest order value is defined by javascript "Math.max.apply(Math, $.map($('.radio'), function(x) { return parseInt($(x).text()); }))"
+        And the largest order input field can be located by id "challenger_largest_order"
+        And the largest order radio button can be located by javascript "$('.radio:contains(${the largest order value}) input').get(0);"
+      
+  @StepDef  
+  @Assertion
+  Scenario: I should be on the step 4 page
+      Given I am on the step 4 page
+       Then the heading should contain "Step 4"
+        
+  @StepDef
+  @Assertion
+  Scenario: I should be on the step 5 page
+      Given I am on the step 5 page
+       Then the heading should contain "Step 5"
+        And the one time token can be located by javascript "$('.token').get(0)"
+        And the one time token field can be located by id "challenger_one_time_token"
+        
+  @StepDef
+  @Assertion
+  Scenario: I should be on the challenge completed page
+      Given I am on the challenge completed page
+       Then the heading should contain "You're Done!"
+        And the lead paragraph can be located by class name "lead"
+     
+  @StepDef
+  @Action
+  Scenario: I select and enter the largest order value
+      Given I type the largest order value in the largest order input field
+        And I click the largest order radio button
+  
+  @StepDef
+  @Action
+  Scenario: I enter the one time token
+      Given I wait for the one time token text
+        And I type the one time token in the one time token field
+
+  @StepDef
+  @Action
+  Scenario: I complete step 1
+      Given I am on the start page
+       When I click the Start button
+       Then I should be on the step 2 page
+
+  @StepDef
+  @Action
+  Scenario: I complete step 2
+      Given I am on the step 2 page
+       When I select "21" in the how old are you dropdown
+       Then the how old are you dropdown text should be "21"
+        And the how old are you dropdown value should be "21"
+       When I click the next button
+       Then I should be on the step 3 page
+       
+  @StepDef
+  @Action
+  Scenario: I complete step 3
+      Given I am on the step 3 page
+       When I select and enter the largest order value
+        And I click the next button
+       Then I should be on the step 4 page
+   
+  @StepDef
+  @Action
+  Scenario: I complete step 4
+      Given I am on the step 4 page
+       When I click the next button
+       Then I should be on the step 5 page
+
+  @StepDef
+  @Action
+  Scenario: I complete step 5
+      Given I am on the step 5 page
+       When I enter the one time token
+        And I capture the one time token
+        And I click the next button
+       Then I should be on the challenge completed page
+
+  @StepDef
+  @Action
+  Scenario: I complete all steps
+       When I complete step 1
+        And I complete step 2
+        And I complete step 3
+        And I complete step 4
+        And I complete step 5
+
+  @StepDef
+  @Assertion
+  Scenario: I should pass the challenge
+      Given I am on the challenge completed page
+       Then the lead paragraph should contain "That's it"
+             

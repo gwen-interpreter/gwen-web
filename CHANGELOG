@@ -2,19 +2,24 @@
 =====
 m d, yyyy
 - Gwen 3 release
-  - Refactor codebase for improved performance and maintainability
-  - Migrate codebase to Scala 3
-  - Add init CLI option for initialising Gwen working directory
-  - Migrate to Selenium 4
-  - Drop Applitools integration
+  - Refactor and migrate codebase to Scala 3
+  - Add init CLI option for initialising a new Gwen working directory
+  - Introduce [Gwen-Web NPM package]([gwen-web-npm](https://github.com/gwen-interpreter/gwen-web-npm)
+    for integrating Gwen into JS projects
+    - Deprecate gwen-gpm and Gwen workspaces in favor of NPM package and init CLI option
+  - Migrate to Selenium 4, and add support for:
+    - Relative locators introducted in SE4
+    - Window and tab handling
+    - Full page screenshot capture
   - Support *.conf (HOCON), and *.json settings files in addition to *.properties files
-  - Deprecated settings:
-    - `gwen.feature.failfast` in favor of `gwen.feature.failfast.enabled`
-    - `gwen.rp.heartbeat` in favor of `gwen.rp.heartbeat.enabled`
-    - `gwen.web.capture.screenshots` in favor of `gwen.web.capture.screenshots.enabled`
-    - `gwen.web.browser` in favor of `gwen.web.browser.target`
-  - Deprecated CLI option:
-    - `-p/--properties` in favor of `-c/--config`
+      - Deprecate CLI option:
+      - `-p/--properties` in favor of `-c/--config`
+    - Deprecate settings:
+      - `gwen.feature.failfast` in favor of `gwen.feature.failfast.enabled`
+      - `gwen.rp.heartbeat` in favor of `gwen.rp.heartbeat.enabled`
+      - `gwen.web.capture.screenshots` in favor of `gwen.web.capture.screenshots.enabled`
+      - `gwen.web.browser` in favor of `gwen.web.browser.target`
+  - Drop Applitools integration
 
 2.53.0
 ======

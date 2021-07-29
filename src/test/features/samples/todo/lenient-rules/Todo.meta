@@ -1,0 +1,33 @@
+#
+# Copyright 2020 Brady Wood, Branko Juric
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+Feature: Todo meta
+ 
+@StepDef
+Scenario: I should be on the todo page
+    Given the heading can be located by tag name "h1"
+     Then the heading should be "todos"
+      And the todo field can be located by class name "new-todo"
+      And the active item count can be located by css selector ".todo-count > strong"
+ 
+@StepDef
+Scenario: I add a "<todo>" item
+     When I enter "$<todo>" in the todo field
+     Then the "$<todo>" item can be located by xpath
+          """
+          //label[contains(.,'$<todo>')]/preceding-sibling::input
+          """
+      And the "$<todo>" item should not be ticked

@@ -44,10 +44,12 @@ object GwenWebInterpreter extends GwenInterpreter(new WebEngine()) {
       FileIO.copyClasspathTextResourceToFile("/init/browsers/firefox.conf", dir)
       FileIO.copyClasspathTextResourceToFile("/init/browsers/ie.conf", dir)
       FileIO.copyClasspathTextResourceToFile("/init/browsers/safari.conf", dir)
+      FileIO.copyClasspathTextResourceToFile("/init/browsers/remote.conf", dir)
       FileIO.copyClasspathTextResourceToFile("/init/browsers/README.md", dir)
     }
 
     new File(dir, "env") tap { dir =>
+      FileIO.copyClasspathTextResourceToFile("/init/env/localhost.conf", dir)
       FileIO.copyClasspathTextResourceToFile("/init/env/dev.conf", dir)
       FileIO.copyClasspathTextResourceToFile("/init/env/test.conf", dir)
       FileIO.copyClasspathTextResourceToFile("/init/env/README.md", dir)
@@ -87,24 +89,26 @@ object GwenWebInterpreter extends GwenInterpreter(new WebEngine()) {
     } 
 
     println(
-      s"""!  ./
-          !   |  gwen.conf
-          !   +--/${dir.getPath}
+      s"""!  ./                        # Your project root
+          !   |  gwen.conf             # Common/default Gwen settings
+          !   +--/${dir.getPath}       # Gwen working directory
           !      |  README.md
-          !      +--/browsers
+          !      +--/browsers          # Browser settings
           !      |     chrome.conf
           !      |     edge.conf
           !      |     firefox.conf
           !      |     safari.conf
           !      |     ie.conf
+          !      |     remote.conf     # Remote web driver settings
           !      |     README.md
-          !      +--/env
+          !      +--/env               # Environment settings
+          !      |     localhost.conf
           !      |     dev.conf
           !      |     test.conf
           !      |     README.md
-          !      +--/features
+          !      +--/features          # Your feature/meta files go here 
           !      |     README.md
-          !      +--/samples
+          !      +--/samples           # Sample features
           !
           !""".stripMargin('!')
     )

@@ -72,7 +72,7 @@ class WebDslTest extends BaseTest with Matchers with MockitoSugar {
               .replace("<modifiers>", "Command+Shift")
               .replace("<keys>", "Command,Shift,T")
               .replace("for each <element>", "for each <entry>")
-              .replace("<filepath>", "../gwen/features/sample/templates/json/StaticMultiLineTemplate.json")
+              .replace("<filepath>", "../gwen/src/test/features/templates/json/StaticMultiLineTemplate.json")
               .replace("<name> setting", "gwen.web setting")
               .replace("<name> property", "gwen.web property")
               .replace("<index>", "1")

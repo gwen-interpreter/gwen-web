@@ -26,8 +26,7 @@ class DryRunTest extends BaseFeatureTest {
         withSetting("gwen.state.level", "feature") {
           evaluate(
             List(
-              "features",
-              "gwen-workspace/samples"), 
+              "src/test/features"), 
             parallel = false, 
             parallelFeatures = false,
             dryRun = true, 
@@ -44,8 +43,7 @@ class DryRunTest extends BaseFeatureTest {
         withSetting("gwen.state.level", "feature") {
           evaluate(
             List(
-              "features",
-              "gwen-workspace/samples"),
+              "src/test/features"),
             parallel = true, 
             parallelFeatures = false,
             dryRun = true, 
@@ -62,10 +60,10 @@ class DryRunTest extends BaseFeatureTest {
         withSetting("gwen.state.level", "scenario") {
           evaluate(
             List(
-              "features/flow",
-              "features/multi-locators",
-              "gwen-workspace/samples/todo/scenario-level",
-              "gwen-workspace/samples/todo/single-scenario"), 
+              "src/test/features/flow",
+              "src/test/features/multi-locators",
+              "src/test/features/samples/todo/scenario-level",
+              "src/test/features/samples/todo/single-scenario"), 
             parallel = false, 
             parallelFeatures = false,
             dryRun = true, 
@@ -83,10 +81,10 @@ class DryRunTest extends BaseFeatureTest {
           List(false, true).foreach { parallelFeatures =>
             evaluate(
               List(
-                "features/flow",
-                "features/multi-locators",
-                "gwen-workspace/samples/todo/scenario-level",
-                "gwen-workspace/samples/todo/single-scenario"), 
+                "src/test/features/flow",
+                "src/test/features/multi-locators",
+                "src/test/features/samples/todo/scenario-level",
+                "src/test/features/samples/todo/single-scenario"), 
               parallel = true, 
               parallelFeatures = parallelFeatures,
               dryRun = true, 
