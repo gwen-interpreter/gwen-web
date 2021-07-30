@@ -7,10 +7,11 @@ This is the Gwen working directory for your project where you can launch and man
 ```
 ./                        # Your project root
  |  gwen.conf             # Common/default Gwen settings
- +--/gwen                 # Gwen working directory
+ +--/gwen
+    |  .gitignore         # Git ignore file
     |  README.md
     +--/browsers          # Browser settings
-    |     chrome.conf
+    |     chrome.conf     # - default is chrome
     |     edge.conf
     |     firefox.conf
     |     safari.conf
@@ -18,23 +19,15 @@ This is the Gwen working directory for your project where you can launch and man
     |     remote.conf     # Remote web driver settings
     |     README.md
     +--/env               # Environment settings
-    |     localhost.conf
+    |     local.conf      # - default is local
     |     dev.conf
     |     test.conf
     |     README.md
     +--/features          # Your feature/meta files go here 
     |     README.md
+    +--/reports           # Report output directory
     +--/samples           # Sample features
 ```
-
-## Samples
-----------
-
-To run all the provided samples on the default browser (chrome), run the follwing in your project root:
-- `./gwen -b samples`
-  - Note: the `-b` switch instructs Gwen to exit once done (otherwise REPL mode opens)
-
-> If you don't want chrome to be the default browser, you can change it by updating the `gwen.web.browser.target` setting in the `gwen.conf` file in your project root.
 
 Help
 ----
@@ -46,8 +39,10 @@ See also:
 - [browsers/README.md](browsers/README.md)
 - [env/README.md](env/README.md)
 - [features/README.md](features/README.md)
+- [reports/README.md](reports/README.md)
+- [samples/README.md](samples/README.md)
 
-### Links and Resources
+Links and Resources
 ----------------------
 
 - [Gwen Home](http://gweninterpreter.org)

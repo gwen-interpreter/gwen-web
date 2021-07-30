@@ -218,7 +218,7 @@ object WebSettings extends LazyLogging {
    * or location paths). Each extension provided is loaded into the Chrome web driver.
    */
   def `gwen.web.chrome.extensions`: List[File] = {
-    Settings.getOpt("gwen.web.chrome.extensions").map(_.split(",").toList.map(_.trim)).getOrElse(Nil).map(new File(_))
+    Settings.getList("gwen.web.chrome.extensions").map(new File(_))
   }
 
   /**
@@ -228,7 +228,7 @@ object WebSettings extends LazyLogging {
    * or location paths). Each extension provided is loaded into the Edge web driver.
    */
   def `gwen.web.edge.extensions`: List[File] = {
-    Settings.getOpt("gwen.web.edge.extensions").map(_.split(",").toList.map(_.trim)).getOrElse(Nil).map(new File(_))
+    Settings.getList("gwen.web.edge.extensions").map(new File(_))
   }
 
   /**
@@ -268,7 +268,7 @@ object WebSettings extends LazyLogging {
    * List of chrome arguments: https://peter.sh/experiments/chromium-command-line-switches
    */
   def `gwen.web.chrome.args`: List[String] = {
-    Settings.findAllMulti("gwen.web.chrome.args")
+    Settings.getList("gwen.web.chrome.args")
   }
 
   /**
@@ -279,7 +279,7 @@ object WebSettings extends LazyLogging {
    * List of edge arguments: https://peter.sh/experiments/chromium-command-line-switches
    */
   def `gwen.web.edge.args`: List[String] = {
-    Settings.findAllMulti("gwen.web.edge.args")
+    Settings.getList("gwen.web.edge.args")
   }
 
   /**
@@ -288,7 +288,7 @@ object WebSettings extends LazyLogging {
    * List of chrome prefs: https://chromium.googlesource.com/chromium/src/+/master/chrome/common/pref_names.cc
    */
   def `gwen.web.chrome.prefs`: Map[String, String] = {
-    Settings.findAllMulti("gwen.web.chrome.prefs", "gwen.web.chrome.pref")
+    Settings.getMap("gwen.web.chrome.prefs", "gwen.web.chrome.pref")
   }
 
   /**
@@ -297,7 +297,7 @@ object WebSettings extends LazyLogging {
    * List of edge prefs: https://chromium.googlesource.com/chromium/src/+/master/chrome/common/pref_names.cc
    */
   def `gwen.web.edge.prefs`: Map[String, String] = {
-    Settings.findAllMulti("gwen.web.edge.prefs", "gwen.web.edge.pref")
+    Settings.getMap("gwen.web.edge.prefs", "gwen.web.edge.pref")
   }
 
   /**
@@ -316,7 +316,7 @@ object WebSettings extends LazyLogging {
    * List of firefox prefs: https://stackoverflow.com/questions/25251583/downloading-file-to-specified-location-with-selenium-and-python
    */
   def `gwen.web.firefox.prefs`: Map[String, String] = {
-    Settings.findAllMulti("gwen.web.firefox.prefs", "gwen.web.firefox.pref")
+    Settings.getMap("gwen.web.firefox.prefs", "gwen.web.firefox.pref")
   }
 
   /**
@@ -333,7 +333,7 @@ object WebSettings extends LazyLogging {
    * See: https://github.com/SeleniumHQ/selenium/wiki/DesiredCapabilities
    */
   def `gwen.web.capabilities`: Map[String, String] = {
-    Settings.findAllMulti("gwen.web.capabilities", "gwen.web.capability")
+    Settings.getMap("gwen.web.capabilities", "gwen.web.capability")
   }
 
   /**
@@ -399,7 +399,7 @@ object WebSettings extends LazyLogging {
    * See: https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#mobile-emulation-by-device-metrics
    */
   def `gwen.web.chrome.mobile`: Map[String, String] = {
-    Settings.findAllMulti("gwen.web.chrome.mobile", "gwen.web.chrome.mobile")
+    Settings.getMap("gwen.web.chrome.mobile", "gwen.web.chrome.mobile")
   }
 
   /**
@@ -410,7 +410,7 @@ object WebSettings extends LazyLogging {
    * See: https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#mobile-emulation-by-device-metrics
    */
   def `gwen.web.edge.mobile`: Map[String, String] = {
-    Settings.findAllMulti("gwen.web.edge.mobile", "gwen.web.edge.mobile")
+    Settings.getMap("gwen.web.edge.mobile", "gwen.web.edge.mobile")
   }
     
   /**

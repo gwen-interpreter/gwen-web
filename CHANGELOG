@@ -12,14 +12,15 @@ m d, yyyy
     - Window and tab handling
     - Full page screenshot capture
   - Support *.conf (HOCON), and *.json settings files in addition to *.properties files
-      - Deprecate CLI option:
-      - `-p/--properties` in favor of `-c/--config`
-    - Deprecate settings:
-      - `gwen.feature.failfast` in favor of `gwen.feature.failfast.enabled`
-      - `gwen.rp.heartbeat` in favor of `gwen.rp.heartbeat.enabled`
-      - `gwen.web.capture.screenshots` in favor of `gwen.web.capture.screenshots.enabled`
-      - `gwen.web.browser` in favor of `gwen.web.browser.target`
-  - Drop Applitools integration
+  - Configurable CLI defaults
+  - Deprecated CLI option:
+    - `-p/--properties` in favor of `-c/--config`
+  - Deprecated settings:
+    - `gwen.feature.failfast` in favor of `gwen.feature.failfast.enabled`
+    - `gwen.rp.heartbeat` in favor of `gwen.rp.heartbeat.enabled`
+    - `gwen.web.capture.screenshots` in favor of `gwen.web.capture.screenshots.enabled`
+    - `gwen.web.browser` in favor of `gwen.web.browser.target`
+- Drop Applitools integration
 
 2.53.0
 ======

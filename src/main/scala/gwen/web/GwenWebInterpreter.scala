@@ -17,11 +17,13 @@
 package gwen.web
 
 import gwen.web.eval.WebEngine
+
 import gwen.GwenInterpreter
-import gwen.core.FileIO
+import gwen.core._
 
 import java.io.File
 
+import scala.io.Source
 import scala.util.chaining._
 
 /**
@@ -49,7 +51,7 @@ object GwenWebInterpreter extends GwenInterpreter(new WebEngine()) {
     }
 
     new File(dir, "env") tap { dir =>
-      FileIO.copyClasspathTextResourceToFile("/init/env/localhost.conf", dir)
+      FileIO.copyClasspathTextResourceToFile("/init/env/local.conf", dir)
       FileIO.copyClasspathTextResourceToFile("/init/env/dev.conf", dir)
       FileIO.copyClasspathTextResourceToFile("/init/env/test.conf", dir)
       FileIO.copyClasspathTextResourceToFile("/init/env/README.md", dir)
@@ -57,6 +59,10 @@ object GwenWebInterpreter extends GwenInterpreter(new WebEngine()) {
 
     new File(dir, "features") tap { dir =>
       FileIO.copyClasspathTextResourceToFile("/init/features/README.md", dir)
+    }
+
+    new File(dir, "reports") tap { dir =>
+      FileIO.copyClasspathTextResourceToFile("/init/reports/README.md", dir)
     }
 
     new File(dir, "samples/floodio") tap { dir =>
@@ -84,17 +90,21 @@ object GwenWebInterpreter extends GwenInterpreter(new WebEngine()) {
     }
 
     FileIO.copyClasspathTextResourceToFile("/init/README.md", dir)
+    FileIO.copyClasspathTextResourceToFile("/init/gitignore", dir, Some(".gitignore"))
     if (!new File("gwen.conf").exists()) {
-      FileIO.copyClasspathTextResourceToFile("/init/gwen.conf", targetDir = new File("."))
-    } 
+      val res = Source.fromInputStream(getClass.getResourceAsStream("/init/gwen.conf"))
+      val conf = try res.mkString.replace("${gwen.dir}", dir.getPath) finally res.close()
+      new File("gwen.conf").writeText(conf)
+    }
 
     println(
       s"""!  ./                        # Your project root
           !   |  gwen.conf             # Common/default Gwen settings
-          !   +--/${dir.getPath}       # Gwen working directory
+          !   +--/${dir.getPath}
+          !      |  .gitignore         # Git ignore file
           !      |  README.md
           !      +--/browsers          # Browser settings
-          !      |     chrome.conf
+          !      |     chrome.conf     # - default is chrome
           !      |     edge.conf
           !      |     firefox.conf
           !      |     safari.conf
@@ -102,12 +112,13 @@ object GwenWebInterpreter extends GwenInterpreter(new WebEngine()) {
           !      |     remote.conf     # Remote web driver settings
           !      |     README.md
           !      +--/env               # Environment settings
-          !      |     localhost.conf
+          !      |     local.conf      # - default is local
           !      |     dev.conf
           !      |     test.conf
           !      |     README.md
           !      +--/features          # Your feature/meta files go here 
           !      |     README.md
+          !      +--/reports           # Report output directory
           !      +--/samples           # Sample features
           !
           !""".stripMargin('!')
