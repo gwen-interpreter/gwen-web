@@ -2,7 +2,6 @@ Gwen Working Directory
 ======================
 
 This is the Gwen working directory for your project where you can launch and manage all your Gherkin features, Gwen meta and settings files.
-- [Get Started](https://github.com/gwen-interpreter/gwen-web/wiki/Getting-Started)
 
 ```
 ./                        # Your project root
@@ -23,11 +22,15 @@ This is the Gwen working directory for your project where you can launch and man
     |     dev.conf
     |     test.conf
     |     README.md
-    +--/features          # Your feature/meta files go here 
+    +--/features          # Features and associative meta
+    |     README.md
+    +--/meta              # Common/reusable meta
     |     README.md
     +--/reports           # Report output directory
     +--/samples           # Sample features
 ```
+
+By default, Gwen will run all features on your local chrome browser. You can reconfigure the CLI defaults (`gwen.cli.*` settings in `gwen.conf`) and rearrange the directory structure to your linking. The default setup is just a starting point.
 
 Help
 ----
@@ -42,7 +45,10 @@ See also:
 - [reports/README.md](reports/README.md)
 - [samples/README.md](samples/README.md)
 
-Links and Resources
+Learn more:
+- [Geting Started](https://github.com/gwen-interpreter/gwen-web/wiki/Getting-Started)
+
+Links and Resources:
 ----------------------
 
 - [Gwen Home](http://gweninterpreter.org)

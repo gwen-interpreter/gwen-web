@@ -7,12 +7,13 @@ m d, yyyy
   - Introduce [Gwen-Web NPM package]([gwen-web-npm](https://github.com/gwen-interpreter/gwen-web-npm)
     for integrating Gwen into JS projects
     - Deprecate gwen-gpm and Gwen workspaces in favor of NPM package and init CLI option
-  - Migrate to Selenium 4, and add support for:
-    - Relative locators introducted in SE4
+  - Migrate to Selenium 4 and add support for:
+    - Relative locators
     - Window and tab handling
     - Full page screenshot capture
   - Support *.conf (HOCON), and *.json settings files in addition to *.properties files
   - Configurable CLI defaults
+  - Associated meta enabled by default
   - Deprecated CLI option:
     - `-p/--properties` in favor of `-c/--config`
   - Deprecated settings:

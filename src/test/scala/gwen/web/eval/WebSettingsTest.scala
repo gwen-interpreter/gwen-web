@@ -38,7 +38,7 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
   "Default Gwen core settings" should "should load" in {
     Settings.exclusively {
       GwenSettings.`gwen.assertion.mode` should be (AssertionMode.hard)
-      GwenSettings.`gwen.associative.meta` should be (false)
+      GwenSettings.`gwen.associative.meta` should be (true)
       GwenSettings.`gwen.auto.discover.data.csv` should be (true)
       GwenSettings.`gwen.auto.discover.meta` should be (true)
       GwenSettings.`gwen.behavior.rules` should be (BehaviorMode.lenient)
@@ -53,6 +53,12 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
       GwenSettings.`gwen.report.suppress.meta` should be (false)
       GwenSettings.`gwen.report.slideshow.create` should be (false)
       GwenSettings.`gwen.report.slideshow.framespersecond` should be (4)
+      GwenSettings.`gwen.state.level` should be (StateLevel.feature)
+    }
+  }
+
+  "Default Gwen RP settings" should "should load" in {
+    Settings.exclusively {
       RPSettings.`gwen.rp.debug` should be (false)
       RPSettings.`gwen.rp.heartbeat.enabled` should be (true)
       RPSettings.`gwen.rp.heartbeat.timeoutSecs` should be (3)
@@ -68,7 +74,6 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
       RPSettings.`gwen.rp.send.stepDefs` should be (StepDefFormat.none)
       RPSettings.`gwen.rp.send.tags` should be (true)
       RPSettings.`gwen.rp.testCaseId.keys` should be (TestCaseIdKeys.`nodePath+params`)
-      GwenSettings.`gwen.state.level` should be (StateLevel.feature)
     }
   }
 
