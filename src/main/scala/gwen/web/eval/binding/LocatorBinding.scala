@@ -27,12 +27,12 @@ import scala.concurrent.duration.Duration
 
 object LocatorBinding {
 
-  def apply(name: String, selectorType: SelectorType, expression: String, container: Option[LocatorBinding], timeout: Option[Duration], index: Option[Int], ctx: WebContext): LocatorBinding = {
-    new LocatorBinding(name, List(Selector(selectorType, expression, container, timeout, index)), ctx)
+  def apply(name: String, selectorType: SelectorType, expression: String, relative: Option[(RelativeSelectorType, LocatorBinding, Option[Int])], timeout: Option[Duration], index: Option[Int], ctx: WebContext): LocatorBinding = {
+    new LocatorBinding(name, List(Selector(selectorType, expression, relative, timeout, index)), ctx)
   }
   
-  def apply(name: String, selectorType: SelectorType, expression: String, container: Option[LocatorBinding], index: Option[Int], ctx: WebContext): LocatorBinding = {
-    new LocatorBinding(name, List(Selector(selectorType, expression, container, None, index)), ctx)
+  def apply(name: String, selectorType: SelectorType, expression: String, relative: Option[(RelativeSelectorType, LocatorBinding, Option[Int])], index: Option[Int], ctx: WebContext): LocatorBinding = {
+    new LocatorBinding(name, List(Selector(selectorType, expression, relative, None, index)), ctx)
   }
   
   def apply(binding: LocatorBinding, selector: Selector, ctx: WebContext): LocatorBinding = {
@@ -72,7 +72,7 @@ class LocatorBinding(val name: String, val selectors: List[Selector], ctx: WebCo
           s"""document.evaluate('//a[contains(text(), "${StringEscapeUtils.escapeEcmaScript(loc.expression)}")]', document, null, XPathResult.${if (isListSelector) "ORDERED_NODE_ITERATOR_TYPE" else "FIRST_ORDERED_NODE_TYPE"}, null)${if (isListSelector) "" else ".singleNodeValue"}"""
         case _ => loc.expression
       }
-      Selector(SelectorType.javascript, jsExpression, loc.container, loc.timeout, loc.index)
+      Selector(SelectorType.javascript, jsExpression, loc.relative, loc.timeout, loc.index)
     }
     new LocatorBinding(name, jsSelectors, ctx)
   }

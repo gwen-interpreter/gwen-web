@@ -565,9 +565,9 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
     envState.scopes.set("frame/locator/id", "frame")
 
     locator.locate(LocatorBinding("username", selectorType, lookup, None, timeout, index, ctx)) should be (mockWebElement)
-    locator.locate(LocatorBinding("username", selectorType, lookup, Some(new LocatorBinding("container", List(Selector(SelectorType.id, "container")), ctx)), timeout, index, ctx)) should be (mockWebElement)
-    locator.locate(LocatorBinding("username", selectorType, lookup, Some(new LocatorBinding("iframe", List(Selector(SelectorType.id, "iframe")), ctx)), timeout, index, ctx)) should be (mockWebElement)
-    locator.locate(LocatorBinding("username", selectorType, lookup, Some(new LocatorBinding("frame", List(Selector(SelectorType.id, "frame")), ctx)), timeout, index, ctx)) should be (mockWebElement)
+    locator.locate(LocatorBinding("username", selectorType, lookup, Some((RelativeSelectorType.in, new LocatorBinding("container", List(Selector(SelectorType.id, "container")), ctx), None)), timeout, index, ctx)) should be (mockWebElement)
+    locator.locate(LocatorBinding("username", selectorType, lookup, Some((RelativeSelectorType.in, new LocatorBinding("iframe", List(Selector(SelectorType.id, "iframe")), ctx), None)), timeout, index, ctx)) should be (mockWebElement)
+    locator.locate(LocatorBinding("username", selectorType, lookup, Some((RelativeSelectorType.in, new LocatorBinding("frame", List(Selector(SelectorType.id, "frame")), ctx), None)), timeout, index, ctx)) should be (mockWebElement)
 
     index match {
       case Some(idx) if idx > 0 =>
@@ -840,9 +840,9 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
     envState.scopes.set("frame/locator/id", "frame")
 
     locator.locateAll(LocatorBinding("username", selectorType, lookup, None, timeout, None, ctx)) should be (mockWebElements)
-    locator.locateAll(LocatorBinding("username", selectorType, lookup, Some(new LocatorBinding("container", List(Selector(SelectorType.id, "container")), ctx)), timeout, None, ctx)) should be (mockWebElements)
-    locator.locateAll(LocatorBinding("username", selectorType, lookup, Some(new LocatorBinding("iframe", List(Selector(SelectorType.id, "iframe")), ctx)), timeout, None, ctx)) should be (mockWebElements)
-    locator.locateAll(LocatorBinding("username", selectorType, lookup, Some(new LocatorBinding("frame", List(Selector(SelectorType.id, "frame")), ctx)), timeout, None, ctx)) should be (mockWebElements)
+    locator.locateAll(LocatorBinding("username", selectorType, lookup, Some((RelativeSelectorType.in, new LocatorBinding("container", List(Selector(SelectorType.id, "container")), ctx), None)), timeout, None, ctx)) should be (mockWebElements)
+    locator.locateAll(LocatorBinding("username", selectorType, lookup, Some((RelativeSelectorType.in, new LocatorBinding("iframe", List(Selector(SelectorType.id, "iframe")), ctx), None)), timeout, None, ctx)) should be (mockWebElements)
+    locator.locateAll(LocatorBinding("username", selectorType, lookup, Some((RelativeSelectorType.in, new LocatorBinding("frame", List(Selector(SelectorType.id, "frame")), ctx), None)), timeout, None, ctx)) should be (mockWebElements)
 
     verify(mockWebDriver, times(3)).findElements(by)
 
@@ -945,7 +945,7 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
     val mockWebDriver: FirefoxDriver = mock[FirefoxDriver]
     val ctx = newCtx(None, mockWebDriver)
 
-    val container = Some(new LocatorBinding("container", List(Selector(SelectorType.id, "container")), ctx))
+    val container = Some((RelativeSelectorType.in, new LocatorBinding("container", List(Selector(SelectorType.id, "container")), ctx), None))
 
     LocatorBinding("user name", SelectorType.id, "username", None, None, ctx).jsEquivalent.toString should be (
       """user name [locator: javascript=document.getElementById('username')]"""
@@ -1022,7 +1022,7 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
     val mockWebDriver: FirefoxDriver = mock[FirefoxDriver]
     val ctx = newCtx(None, mockWebDriver)
 
-    val container = Some(new LocatorBinding("container", List(Selector(SelectorType.id, "container")), ctx))
+    val container = Some((RelativeSelectorType.in, new LocatorBinding("container", List(Selector(SelectorType.id, "container")), ctx), None))
 
     LocatorBinding("user name/list", SelectorType.id, "username", None, None, ctx).jsEquivalent.toString should be (
      """user name/list [locator: javascript=document.querySelectorAll('#username')]"""

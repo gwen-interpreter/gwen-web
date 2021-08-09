@@ -23,6 +23,7 @@ import gwen.core.Errors.ScriptException
 
 import com.typesafe.scalalogging.LazyLogging
 import org.openqa.selenium.{By, NoSuchElementException, WebElement}
+import org.openqa.selenium.support.locators.RelativeLocator
 
 import scala.jdk.CollectionConverters._
 import scala.util.{Failure, Success, Try}
@@ -117,14 +118,6 @@ class WebElementLocator(ctx: WebContext) extends LazyLogging {
             }
           }
           selectorType match {
-            case SelectorType.id => getElement(By.id(expression), selector)
-            case SelectorType.name => getElement(By.name(expression), selector)
-            case SelectorType.`tag name` => getElement(By.tagName(expression), selector)
-            case SelectorType.`css selector` => getElement(By.cssSelector(expression), selector)
-            case SelectorType.xpath => getElement(By.xpath(expression), selector)
-            case SelectorType.`class name` => getElement(By.className(expression), selector)
-            case SelectorType.`link text` => getElement(By.linkText(expression), selector)
-            case SelectorType.`partial link text` => getElement(By.partialLinkText(expression), selector)
             case SelectorType.javascript =>
               try {
                 getElementByJavaScript(s"$expression", selector)
@@ -133,6 +126,8 @@ class WebElementLocator(ctx: WebContext) extends LazyLogging {
                   elementNotFoundError(new LocatorBinding(name, List(selector), ctx))
               }
             case SelectorType.cache => ctx.getCachedWebElement(name)
+            case _ => getElement(selector)
+
           }
         } finally {
           // restore default implicit wait if overriden
@@ -145,23 +140,59 @@ class WebElementLocator(ctx: WebContext) extends LazyLogging {
     }
   }
 
+  private def getBySelector(selector: Selector): By = {
+    val expression = selector.expression
+    selector.selectorType match {
+      case SelectorType.id => By.id(expression)
+      case SelectorType.name => By.name(expression)
+      case SelectorType.`tag name` => By.tagName(expression)
+      case SelectorType.`css selector` => By.cssSelector(expression)
+      case SelectorType.xpath => By.xpath(expression)
+      case SelectorType.`class name` => By.className(expression)
+      case SelectorType.`link text` => By.linkText(expression)
+      case SelectorType.`partial link text` => By.partialLinkText(expression)
+      case _ => locatorBindingError(s"No such By selector for $selector")
+    }
+  }
+
   /**
     * Gets a web element using the given by selector.
     *
-    * @param by the by locator
     * @param selector the selector
     */
-  private def getElement(by: By, selector: Selector): Option[WebElement] =
+  private def getElement(selector: Selector): Option[WebElement] = {
     ctx.withWebDriver { driver =>
       val handle = driver.getWindowHandle
       try {
-        selector.container.fold(driver.findElement(by)) { containerBinding =>
-          getContainerElement(containerBinding) match {
-            case Some(containerElem) =>
-              containerElem.findElement(by)
-            case _ =>
-              driver.findElement(by)
-          }
+        val by = getBySelector(selector)
+        selector.relative match {
+          case None =>
+            driver.findElement(by)
+          case Some((rSelector, rBinding, rAtMostPixels)) =>
+            rSelector match {
+              case RelativeSelectorType.in =>
+                getContainerElement(rBinding) match {
+                  case Some(containerElem) =>
+                    containerElem.findElement(by)
+                  case _ =>
+                    driver.findElement(by)
+                }
+              case RelativeSelectorType.above =>
+                driver.findElement(RelativeLocator.`with`(getBySelector(selector)).above(locate(rBinding)))
+              case RelativeSelectorType.below =>
+                driver.findElement(RelativeLocator.`with`(getBySelector(selector)).below(locate(rBinding)))
+              case RelativeSelectorType.near =>
+                rAtMostPixels match {
+                  case None =>
+                    driver.findElement(RelativeLocator.`with`(getBySelector(selector)).near(locate(rBinding)))
+                  case Some(pixels) => 
+                    driver.findElement(RelativeLocator.`with`(getBySelector(selector)).near(locate(rBinding), pixels))
+                }
+              case RelativeSelectorType.`to left of` =>
+                driver.findElement(RelativeLocator.`with`(getBySelector(selector)).toLeftOf(locate(rBinding)))
+              case RelativeSelectorType.`to right of` =>
+                driver.findElement(RelativeLocator.`with`(getBySelector(selector)).toRightOf(locate(rBinding)))
+            }
         }
       } catch {
         case e: Throwable =>
@@ -169,6 +200,7 @@ class WebElementLocator(ctx: WebContext) extends LazyLogging {
           throw e
       }
     }
+  }
 
   /**
     * Gets container web element using the given binding.
@@ -195,8 +227,11 @@ class WebElementLocator(ctx: WebContext) extends LazyLogging {
     *
     */
   private def getElementByJavaScript(javascript: String, selector: Selector): Option[WebElement] = {
-    val result = selector.container.fold(ctx.executeJS(s"return $javascript")) { containerBinding =>
-      getContainerElement(containerBinding) match {
+    val result = selector.relative match {
+      case None =>
+        ctx.executeJS(s"return $javascript")
+      case Some((_, rBinding, _)) =>
+        getContainerElement(rBinding) match {
           case Some(containerElem) =>
             ctx.executeJS(s"return (function(containerElem) { return $javascript })(arguments[0])", containerElem)
           case _ =>
@@ -227,14 +262,6 @@ class WebElementLocator(ctx: WebContext) extends LazyLogging {
         }
       }
       selectorType match {
-        case SelectorType.id => getAllElements(By.id(expression), selector)
-        case SelectorType.name => getAllElements(By.name(expression), selector)
-        case SelectorType.`tag name` => getAllElements(By.tagName(expression), selector)
-        case SelectorType.`css selector` => getAllElements(By.cssSelector(expression), selector)
-        case SelectorType.xpath => getAllElements(By.xpath(expression), selector)
-        case SelectorType.`class name` => getAllElements(By.className(expression), selector)
-        case SelectorType.`link text` => getAllElements(By.linkText(expression), selector)
-        case SelectorType.`partial link text` => getAllElements(By.partialLinkText(expression), selector)
         case SelectorType.javascript =>
           try {
             getAllElementsByJavaScript(s"$expression", selector)
@@ -242,7 +269,9 @@ class WebElementLocator(ctx: WebContext) extends LazyLogging {
             case e: ScriptException =>
               elementNotFoundError(new LocatorBinding(name, List(selector), ctx), e)
           }
-        case _ => locatorBindingError(s"Unsupported locator defined for $name: $selector")
+        case SelectorType.cache => locatorBindingError(s"Unsupported locator defined for $name: $selector")
+        case _ => getAllElements(selector)
+
       }
     } finally {
       // restore default implicit wait if overriden
@@ -257,17 +286,18 @@ class WebElementLocator(ctx: WebContext) extends LazyLogging {
   /**
     * Gets all web elements using the given by selector.
     *
-    * @param by the by locator
+    * @param selector the selector
     */
-  private def getAllElements(by: By, selector: Selector): List[WebElement] =
+  private def getAllElements(selector: Selector): List[WebElement] = {
     ctx.withWebDriver { driver =>
       val handle = driver.getWindowHandle
       try {
-        val elems = selector.container match {
+        val by = getBySelector(selector)
+        val elems = selector.relative match {
           case None => 
             driver.findElements(by)
-          case Some(binding) => 
-            getContainerElement(binding) match {
+          case Some((_, rBinding, _)) => 
+            getContainerElement(rBinding) match {
               case Some(containerElem) => containerElem.findElements(by)
               case _ => driver.findElements(by)
             }
@@ -279,6 +309,7 @@ class WebElementLocator(ctx: WebContext) extends LazyLogging {
           throw e
       }
     } getOrElse Nil
+  }
 
   /**
     * Gets all web elements by the given javascript expression. If the first web element is not

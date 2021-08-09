@@ -47,6 +47,8 @@ class WebDslTest extends BaseTest with Matchers with MockitoSugar {
     envState.scopes.set("<condition>/javascript", "condition")
     envState.scopes.set("<container>/locator", "id")
     envState.scopes.set("<container>/locator/id", "id")
+    envState.scopes.set("<relative>/locator", "id")
+    envState.scopes.set("<relative>/locator/id", "id")
     envState.scopes.set("<context>/locator", "id")
     envState.scopes.set("<context>/locator/id", "id")
     envState.scopes.set("<filepath>/file", "file.txt")
@@ -77,6 +79,7 @@ class WebDslTest extends BaseTest with Matchers with MockitoSugar {
               .replace("<name> property", "gwen.web property")
               .replace("<index>", "1")
               .replace("<count>", "2")
+              .replace("<pixels>", "100")
           } foreach { dsl =>
             val iStep = Step(None, StepKeyword.Given.toString, dsl.replaceAll("<step>", """a is "b""""), Nil, None, Nil, None, Pending, Nil, Nil)
             engine.evaluateStep(parent, iStep, ctx).evalStatus match {

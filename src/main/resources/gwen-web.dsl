@@ -73,68 +73,453 @@ I scroll to the bottom of <element>
 <element> can be located by javascript "<expression>" with <timeoutPeriod> second wait
 <element> can be located by js "<expression>" with <timeoutPeriod> second wait
 <element> can be located by id "<value>" in <container>
+<element> can be located by id "<value>" above <relative>
+<element> can be located by id "<value>" below <relative>
+<element> can be located by id "<value>" near <relative>
+<element> can be located by id "<value>" near <relative> within 1 pixel
+<element> can be located by id "<value>" near <relative> within <pixels> pixels
+<element> can be located by id "<value>" to left of <relative>
+<element> can be located by id "<value>" to right of <relative>
 <element> can be located by name "<value>" in <container>
+<element> can be located by name "<value>" above <relative>
+<element> can be located by name "<value>" below <relative>
+<element> can be located by name "<value>" near <relative>
+<element> can be located by name "<value>" near <relative> within 1 pixel
+<element> can be located by name "<value>" near <relative> within <pixels> pixels
+<element> can be located by name "<value>" to left of <relative>
+<element> can be located by name "<value>" to right of <relative>
+<element> can be located by tag name "<value>" above <relative>
+<element> can be located by tag name "<value>" below <relative>
 <element> can be located by tag name "<value>" in <container>
+<element> can be located by tag name "<value>" near <relative>
+<element> can be located by tag name "<value>" near <relative> within 1 pixel
+<element> can be located by tag name "<value>" near <relative> within <pixels> pixels
+<element> can be located by tag name "<value>" to left of <relative>
+<element> can be located by tag name "<value>" to right of <relative>
+<element> can be located by tag "<value>" above <relative>
+<element> can be located by tag "<value>" below <relative>
 <element> can be located by tag "<value>" in <container>
+<element> can be located by tag "<value>" near <relative>
+<element> can be located by tag "<value>" near <relative> within 1 pixel
+<element> can be located by tag "<value>" near <relative> within <pixels> pixels
+<element> can be located by tag "<value>" to left of <relative>
+<element> can be located by tag "<value>" to right of <relative>
 <element> can be located by css selector "<value>" in <container>
+<element> can be located by css selector "<value>" above <relative>
+<element> can be located by css selector "<value>" below <relative>
+<element> can be located by css selector "<value>" near <relative>
+<element> can be located by css selector "<value>" near <relative> within 1 pixel
+<element> can be located by css selector "<value>" near <relative> within <pixels> pixels
+<element> can be located by css selector "<value>" to left of <relative>
+<element> can be located by css selector "<value>" to right of <relative>
 <element> can be located by css "<value>" in <container>
+<element> can be located by css "<value>" above <relative>
+<element> can be located by css "<value>" below <relative>
+<element> can be located by css "<value>" near <relative>
+<element> can be located by css "<value>" near <relative> within 1 pixel
+<element> can be located by css "<value>" near <relative> within <pixels> pixels
+<element> can be located by css "<value>" to left of <relative>
+<element> can be located by css "<value>" to right of <relative>
 <element> can be located by xpath "<value>" in <container>
+<element> can be located by xpath "<value>" above <relative>
+<element> can be located by xpath "<value>" below <relative>
+<element> can be located by xpath "<value>" near <relative>
+<element> can be located by xpath "<value>" near <relative> within 1 pixel
+<element> can be located by xpath "<value>" near <relative> within <pixels> pixels
+<element> can be located by xpath "<value>" to left of <relative>
+<element> can be located by xpath "<value>" to right of <relative>
 <element> can be located by class name "<value>" in <container>
+<element> can be located by class name "<value>" above <relative>
+<element> can be located by class name "<value>" below <relative>
+<element> can be located by class name "<value>" near <relative>
+<element> can be located by class name "<value>" near <relative> within 1 pixel
+<element> can be located by class name "<value>" near <relative> within <pixels> pixels
+<element> can be located by class name "<value>" to left of <relative>
+<element> can be located by class name "<value>" to right of <relative>
 <element> can be located by class "<value>" in <container>
+<element> can be located by class "<value>" above <relative>
+<element> can be located by class "<value>" below <relative>
+<element> can be located by class "<value>" near <relative>
+<element> can be located by class "<value>" near <relative> within 1 pixel
+<element> can be located by class "<value>" near <relative> within <pixels> pixels
+<element> can be located by class "<value>" to left of <relative>
+<element> can be located by class "<value>" to right of <relative>
 <element> can be located by link text "<value>" in <container>
+<element> can be located by link text "<value>" above <relative>
+<element> can be located by link text "<value>" below <relative>
+<element> can be located by link text "<value>" near <relative>
+<element> can be located by link text "<value>" near <relative> within 1 pixel
+<element> can be located by link text "<value>" near <relative> within <pixels> pixels
+<element> can be located by link text "<value>" to left of <relative>
+<element> can be located by link text "<value>" to right of <relative>
 <element> can be located by partial link text "<value>" in <container>
+<element> can be located by partial link text "<value>" above <relative>
+<element> can be located by partial link text "<value>" below <relative>
+<element> can be located by partial link text "<value>" near <relative>
+<element> can be located by partial link text "<value>" near <relative> within 1 pixel
+<element> can be located by partial link text "<value>" near <relative> within <pixels> pixels
+<element> can be located by partial link text "<value>" to left of <relative>
+<element> can be located by partial link text "<value>" to right of <relative>
 <element> can be located by javascript "<expression>" in <container>
 <element> can be located by js "<expression>" in <container>
 <element> can be located by id "<value>" in <container> with no timeout
+<element> can be located by id "<value>" above <relative> with no timeout
+<element> can be located by id "<value>" below <relative> with no timeout
+<element> can be located by id "<value>" near <relative> with no timeout
+<element> can be located by id "<value>" near <relative> within 1 pixel with no timeout
+<element> can be located by id "<value>" near <relative> within <pixels> pixels with no timeout
+<element> can be located by id "<value>" to left of <relative> with no timeout
+<element> can be located by id "<value>" to right of <relative> with no timeout
 <element> can be located by name "<value>" in <container> with no timeout
+<element> can be located by name "<value>" above <relative> with no timeout
+<element> can be located by name "<value>" below <relative> with no timeout
+<element> can be located by name "<value>" near <relative> with no timeout
+<element> can be located by name "<value>" near <relative> within 1 pixel with no timeout
+<element> can be located by name "<value>" near <relative> within <pixels> pixels with no timeout
+<element> can be located by name "<value>" to left of <relative> with no timeout
+<element> can be located by name "<value>" to right of <relative> with no timeout
+<element> can be located by tag name "<value>" above <relative> with no timeout
+<element> can be located by tag name "<value>" below <relative> with no timeout
 <element> can be located by tag name "<value>" in <container> with no timeout
+<element> can be located by tag name "<value>" near <relative> with no timeout
+<element> can be located by tag name "<value>" near <relative> within 1 pixel with no timeout
+<element> can be located by tag name "<value>" near <relative> within <pixels> pixels with no timeout
+<element> can be located by tag name "<value>" to left of <relative> with no timeout
+<element> can be located by tag name "<value>" to right of <relative> with no timeout
+<element> can be located by tag "<value>" above <relative> with no timeout
+<element> can be located by tag "<value>" below <relative> with no timeout
 <element> can be located by tag "<value>" in <container> with no timeout
+<element> can be located by tag "<value>" near <relative> with no timeout
+<element> can be located by tag "<value>" near <relative> within 1 pixel with no timeout
+<element> can be located by tag "<value>" near <relative> within <pixels> pixels with no timeout
+<element> can be located by tag "<value>" to left of <relative> with no timeout
+<element> can be located by tag "<value>" to right of <relative> with no timeout
 <element> can be located by css selector "<value>" in <container> with no timeout
+<element> can be located by css selector "<value>" above <relative> with no timeout
+<element> can be located by css selector "<value>" below <relative> with no timeout
+<element> can be located by css selector "<value>" near <relative> with no timeout
+<element> can be located by css selector "<value>" near <relative> within 1 pixel with no timeout
+<element> can be located by css selector "<value>" near <relative> within <pixels> pixels with no timeout
+<element> can be located by css selector "<value>" to left of <relative> with no timeout
+<element> can be located by css selector "<value>" to right of <relative> with no timeout
 <element> can be located by css "<value>" in <container> with no timeout
+<element> can be located by css "<value>" above <relative> with no timeout
+<element> can be located by css "<value>" below <relative> with no timeout
+<element> can be located by css "<value>" near <relative> with no timeout
+<element> can be located by css "<value>" near <relative> within 1 pixel with no timeout
+<element> can be located by css "<value>" near <relative> within <pixels> pixels with no timeout
+<element> can be located by css "<value>" to left of <relative> with no timeout
+<element> can be located by css "<value>" to right of <relative> with no timeout
 <element> can be located by xpath "<value>" in <container> with no timeout
+<element> can be located by xpath "<value>" above <relative> with no timeout
+<element> can be located by xpath "<value>" below <relative> with no timeout
+<element> can be located by xpath "<value>" near <relative> with no timeout
+<element> can be located by xpath "<value>" near <relative> within 1 pixel with no timeout
+<element> can be located by xpath "<value>" near <relative> within <pixels> pixels with no timeout
+<element> can be located by xpath "<value>" to left of <relative> with no timeout
+<element> can be located by xpath "<value>" to right of <relative> with no timeout
 <element> can be located by class name "<value>" in <container> with no timeout
+<element> can be located by class name "<value>" above <relative> with no timeout
+<element> can be located by class name "<value>" below <relative> with no timeout
+<element> can be located by class name "<value>" near <relative> with no timeout
+<element> can be located by class name "<value>" near <relative> within 1 pixel with no timeout
+<element> can be located by class name "<value>" near <relative> within <pixels> pixels with no timeout
+<element> can be located by class name "<value>" to left of <relative> with no timeout
+<element> can be located by class name "<value>" to right of <relative> with no timeout
 <element> can be located by class "<value>" in <container> with no timeout
+<element> can be located by class "<value>" above <relative> with no timeout
+<element> can be located by class "<value>" below <relative> with no timeout
+<element> can be located by class "<value>" near <relative> with no timeout
+<element> can be located by class "<value>" near <relative> within 1 pixel with no timeout
+<element> can be located by class "<value>" near <relative> within <pixels> pixels with no timeout
+<element> can be located by class "<value>" to left of <relative> with no timeout
+<element> can be located by class "<value>" to right of <relative> with no timeout
 <element> can be located by link text "<value>" in <container> with no timeout
+<element> can be located by link text "<value>" above <relative> with no timeout
+<element> can be located by link text "<value>" below <relative> with no timeout
+<element> can be located by link text "<value>" near <relative> with no timeout
+<element> can be located by link text "<value>" near <relative> within 1 pixel with no timeout
+<element> can be located by link text "<value>" near <relative> within <pixels> pixels with no timeout
+<element> can be located by link text "<value>" to left of <relative> with no timeout
+<element> can be located by link text "<value>" to right of <relative> with no timeout
 <element> can be located by partial link text "<value>" in <container> with no timeout
+<element> can be located by partial link text "<value>" above <relative> with no timeout
+<element> can be located by partial link text "<value>" below <relative> with no timeout
+<element> can be located by partial link text "<value>" near <relative> with no timeout
+<element> can be located by partial link text "<value>" near <relative> within 1 pixel with no timeout
+<element> can be located by partial link text "<value>" near <relative> within <pixels> pixels with no timeout
+<element> can be located by partial link text "<value>" to left of <relative> with no timeout
+<element> can be located by partial link text "<value>" to right of <relative> with no timeout
 <element> can be located by javascript "<expression>" in <container> with no timeout
 <element> can be located by js "<expression>" in <container> with no timeout
 <element> can be located by id "<value>" in <container> with no wait
+<element> can be located by id "<value>" above <relative> with no wait
+<element> can be located by id "<value>" below <relative> with no wait
+<element> can be located by id "<value>" near <relative> with no wait
+<element> can be located by id "<value>" near <relative> within 1 pixel with no wait
+<element> can be located by id "<value>" near <relative> within <pixels> pixels with no wait
+<element> can be located by id "<value>" to left of <relative> with no wait
+<element> can be located by id "<value>" to right of <relative> with no wait
 <element> can be located by name "<value>" in <container> with no wait
+<element> can be located by name "<value>" above <relative> with no wait
+<element> can be located by name "<value>" below <relative> with no wait
+<element> can be located by name "<value>" near <relative> with no wait
+<element> can be located by name "<value>" near <relative> within 1 pixel with no wait
+<element> can be located by name "<value>" near <relative> within <pixels> pixels with no wait
+<element> can be located by name "<value>" to left of <relative> with no wait
+<element> can be located by name "<value>" to right of <relative> with no wait
+<element> can be located by tag name "<value>" above <relative> with no wait
+<element> can be located by tag name "<value>" below <relative> with no wait
 <element> can be located by tag name "<value>" in <container> with no wait
+<element> can be located by tag name "<value>" near <relative> with no wait
+<element> can be located by tag name "<value>" near <relative> within 1 pixel with no wait
+<element> can be located by tag name "<value>" near <relative> within <pixels> pixels with no wait
+<element> can be located by tag name "<value>" to left of <relative> with no wait
+<element> can be located by tag name "<value>" to right of <relative> with no wait
+<element> can be located by tag "<value>" above <relative> with no wait
+<element> can be located by tag "<value>" below <relative> with no wait
 <element> can be located by tag "<value>" in <container> with no wait
+<element> can be located by tag "<value>" near <relative> with no wait
+<element> can be located by tag "<value>" near <relative> within 1 pixel with no wait
+<element> can be located by tag "<value>" near <relative> within <pixels> pixels with no wait
+<element> can be located by tag "<value>" to left of <relative> with no wait
+<element> can be located by tag "<value>" to right of <relative> with no wait
 <element> can be located by css selector "<value>" in <container> with no wait
+<element> can be located by css selector "<value>" above <relative> with no wait
+<element> can be located by css selector "<value>" below <relative> with no wait
+<element> can be located by css selector "<value>" near <relative> with no wait
+<element> can be located by css selector "<value>" near <relative> within 1 pixel with no wait
+<element> can be located by css selector "<value>" near <relative> within <pixels> pixels with no wait
+<element> can be located by css selector "<value>" to left of <relative> with no wait
+<element> can be located by css selector "<value>" to right of <relative> with no wait
 <element> can be located by css "<value>" in <container> with no wait
+<element> can be located by css "<value>" above <relative> with no wait
+<element> can be located by css "<value>" below <relative> with no wait
+<element> can be located by css "<value>" near <relative> with no wait
+<element> can be located by css "<value>" near <relative> within 1 pixel with no wait
+<element> can be located by css "<value>" near <relative> within <pixels> pixels with no wait
+<element> can be located by css "<value>" to left of <relative> with no wait
+<element> can be located by css "<value>" to right of <relative> with no wait
 <element> can be located by xpath "<value>" in <container> with no wait
+<element> can be located by xpath "<value>" above <relative> with no wait
+<element> can be located by xpath "<value>" below <relative> with no wait
+<element> can be located by xpath "<value>" near <relative> with no wait
+<element> can be located by xpath "<value>" near <relative> within 1 pixel with no wait
+<element> can be located by xpath "<value>" near <relative> within <pixels> pixels with no wait
+<element> can be located by xpath "<value>" to left of <relative> with no wait
+<element> can be located by xpath "<value>" to right of <relative> with no wait
 <element> can be located by class name "<value>" in <container> with no wait
+<element> can be located by class name "<value>" above <relative> with no wait
+<element> can be located by class name "<value>" below <relative> with no wait
+<element> can be located by class name "<value>" near <relative> with no wait
+<element> can be located by class name "<value>" near <relative> within 1 pixel with no wait
+<element> can be located by class name "<value>" near <relative> within <pixels> pixels with no wait
+<element> can be located by class name "<value>" to left of <relative> with no wait
+<element> can be located by class name "<value>" to right of <relative> with no wait
 <element> can be located by class "<value>" in <container> with no wait
+<element> can be located by class "<value>" above <relative> with no wait
+<element> can be located by class "<value>" below <relative> with no wait
+<element> can be located by class "<value>" near <relative> with no wait
+<element> can be located by class "<value>" near <relative> within 1 pixel with no wait
+<element> can be located by class "<value>" near <relative> within <pixels> pixels with no wait
+<element> can be located by class "<value>" to left of <relative> with no wait
+<element> can be located by class "<value>" to right of <relative> with no wait
 <element> can be located by link text "<value>" in <container> with no wait
+<element> can be located by link text "<value>" above <relative> with no wait
+<element> can be located by link text "<value>" below <relative> with no wait
+<element> can be located by link text "<value>" near <relative> with no wait
+<element> can be located by link text "<value>" near <relative> within 1 pixel with no wait
+<element> can be located by link text "<value>" near <relative> within <pixels> pixels with no wait
+<element> can be located by link text "<value>" to left of <relative> with no wait
+<element> can be located by link text "<value>" to right of <relative> with no wait
 <element> can be located by partial link text "<value>" in <container> with no wait
+<element> can be located by partial link text "<value>" above <relative> with no wait
+<element> can be located by partial link text "<value>" below <relative> with no wait
+<element> can be located by partial link text "<value>" near <relative> with no wait
+<element> can be located by partial link text "<value>" near <relative> within 1 pixel with no wait
+<element> can be located by partial link text "<value>" near <relative> within <pixels> pixels with no wait
+<element> can be located by partial link text "<value>" to left of <relative> with no wait
+<element> can be located by partial link text "<value>" to right of <relative> with no wait
 <element> can be located by javascript "<expression>" in <container> with no wait
 <element> can be located by js "<expression>" in <container> with no wait
 <element> can be located by id "<value>" in <container> with <timeoutPeriod> second timeout
+<element> can be located by id "<value>" above <relative> with <timeoutPeriod> second timeout
+<element> can be located by id "<value>" below <relative> with <timeoutPeriod> second timeout
+<element> can be located by id "<value>" near <relative> with <timeoutPeriod> second timeout
+<element> can be located by id "<value>" near <relative> within 1 pixel with <timeoutPeriod> second timeout
+<element> can be located by id "<value>" near <relative> within <pixels> pixels with <timeoutPeriod> second timeout
+<element> can be located by id "<value>" to left of <relative> with <timeoutPeriod> second timeout
+<element> can be located by id "<value>" to right of <relative> with <timeoutPeriod> second timeout
 <element> can be located by name "<value>" in <container> with <timeoutPeriod> second timeout
+<element> can be located by name "<value>" above <relative> with <timeoutPeriod> second timeout
+<element> can be located by name "<value>" below <relative> with <timeoutPeriod> second timeout
+<element> can be located by name "<value>" near <relative> with <timeoutPeriod> second timeout
+<element> can be located by name "<value>" near <relative> within 1 pixel with <timeoutPeriod> second timeout
+<element> can be located by name "<value>" near <relative> within <pixels> pixels with <timeoutPeriod> second timeout
+<element> can be located by name "<value>" to left of <relative> with <timeoutPeriod> second timeout
+<element> can be located by name "<value>" to right of <relative> with <timeoutPeriod> second timeout
+<element> can be located by tag name "<value>" above <relative> with <timeoutPeriod> second timeout
+<element> can be located by tag name "<value>" below <relative> with <timeoutPeriod> second timeout
 <element> can be located by tag name "<value>" in <container> with <timeoutPeriod> second timeout
+<element> can be located by tag name "<value>" near <relative> with <timeoutPeriod> second timeout
+<element> can be located by tag name "<value>" near <relative> within 1 pixel with <timeoutPeriod> second timeout
+<element> can be located by tag name "<value>" near <relative> within <pixels> pixels with <timeoutPeriod> second timeout
+<element> can be located by tag name "<value>" to left of <relative> with <timeoutPeriod> second timeout
+<element> can be located by tag name "<value>" to right of <relative> with <timeoutPeriod> second timeout
+<element> can be located by tag "<value>" above <relative> with <timeoutPeriod> second timeout
+<element> can be located by tag "<value>" below <relative> with <timeoutPeriod> second timeout
 <element> can be located by tag "<value>" in <container> with <timeoutPeriod> second timeout
+<element> can be located by tag "<value>" near <relative> with <timeoutPeriod> second timeout
+<element> can be located by tag "<value>" near <relative> within 1 pixel with <timeoutPeriod> second timeout
+<element> can be located by tag "<value>" near <relative> within <pixels> pixels with <timeoutPeriod> second timeout
+<element> can be located by tag "<value>" to left of <relative> with <timeoutPeriod> second timeout
+<element> can be located by tag "<value>" to right of <relative> with <timeoutPeriod> second timeout
 <element> can be located by css selector "<value>" in <container> with <timeoutPeriod> second timeout
+<element> can be located by css selector "<value>" above <relative> with <timeoutPeriod> second timeout
+<element> can be located by css selector "<value>" below <relative> with <timeoutPeriod> second timeout
+<element> can be located by css selector "<value>" near <relative> with <timeoutPeriod> second timeout
+<element> can be located by css selector "<value>" near <relative> within 1 pixel with <timeoutPeriod> second timeout
+<element> can be located by css selector "<value>" near <relative> within <pixels> pixels with <timeoutPeriod> second timeout
+<element> can be located by css selector "<value>" to left of <relative> with <timeoutPeriod> second timeout
+<element> can be located by css selector "<value>" to right of <relative> with <timeoutPeriod> second timeout
 <element> can be located by css "<value>" in <container> with <timeoutPeriod> second timeout
+<element> can be located by css "<value>" above <relative> with <timeoutPeriod> second timeout
+<element> can be located by css "<value>" below <relative> with <timeoutPeriod> second timeout
+<element> can be located by css "<value>" near <relative> with <timeoutPeriod> second timeout
+<element> can be located by css "<value>" near <relative> within 1 pixel with <timeoutPeriod> second timeout
+<element> can be located by css "<value>" near <relative> within <pixels> pixels with <timeoutPeriod> second timeout
+<element> can be located by css "<value>" to left of <relative> with <timeoutPeriod> second timeout
+<element> can be located by css "<value>" to right of <relative> with <timeoutPeriod> second timeout
 <element> can be located by xpath "<value>" in <container> with <timeoutPeriod> second timeout
+<element> can be located by xpath "<value>" above <relative> with <timeoutPeriod> second timeout
+<element> can be located by xpath "<value>" below <relative> with <timeoutPeriod> second timeout
+<element> can be located by xpath "<value>" near <relative> with <timeoutPeriod> second timeout
+<element> can be located by xpath "<value>" near <relative> within 1 pixel with <timeoutPeriod> second timeout
+<element> can be located by xpath "<value>" near <relative> within <pixels> pixels with <timeoutPeriod> second timeout
+<element> can be located by xpath "<value>" to left of <relative> with <timeoutPeriod> second timeout
+<element> can be located by xpath "<value>" to right of <relative> with <timeoutPeriod> second timeout
 <element> can be located by class name "<value>" in <container> with <timeoutPeriod> second timeout
+<element> can be located by class name "<value>" above <relative> with <timeoutPeriod> second timeout
+<element> can be located by class name "<value>" below <relative> with <timeoutPeriod> second timeout
+<element> can be located by class name "<value>" near <relative> with <timeoutPeriod> second timeout
+<element> can be located by class name "<value>" near <relative> within 1 pixel with <timeoutPeriod> second timeout
+<element> can be located by class name "<value>" near <relative> within <pixels> pixels with <timeoutPeriod> second timeout
+<element> can be located by class name "<value>" to left of <relative> with <timeoutPeriod> second timeout
+<element> can be located by class name "<value>" to right of <relative> with <timeoutPeriod> second timeout
 <element> can be located by class "<value>" in <container> with <timeoutPeriod> second timeout
+<element> can be located by class "<value>" above <relative> with <timeoutPeriod> second timeout
+<element> can be located by class "<value>" below <relative> with <timeoutPeriod> second timeout
+<element> can be located by class "<value>" near <relative> with <timeoutPeriod> second timeout
+<element> can be located by class "<value>" near <relative> within 1 pixel with <timeoutPeriod> second timeout
+<element> can be located by class "<value>" near <relative> within <pixels> pixels with <timeoutPeriod> second timeout
+<element> can be located by class "<value>" to left of <relative> with <timeoutPeriod> second timeout
+<element> can be located by class "<value>" to right of <relative> with <timeoutPeriod> second timeout
 <element> can be located by link text "<value>" in <container> with <timeoutPeriod> second timeout
+<element> can be located by link text "<value>" above <relative> with <timeoutPeriod> second timeout
+<element> can be located by link text "<value>" below <relative> with <timeoutPeriod> second timeout
+<element> can be located by link text "<value>" near <relative> with <timeoutPeriod> second timeout
+<element> can be located by link text "<value>" near <relative> within 1 pixel with <timeoutPeriod> second timeout
+<element> can be located by link text "<value>" near <relative> within <pixels> pixels with <timeoutPeriod> second timeout
+<element> can be located by link text "<value>" to left of <relative> with <timeoutPeriod> second timeout
+<element> can be located by link text "<value>" to right of <relative> with <timeoutPeriod> second timeout
 <element> can be located by partial link text "<value>" in <container> with <timeoutPeriod> second timeout
+<element> can be located by partial link text "<value>" above <relative> with <timeoutPeriod> second timeout
+<element> can be located by partial link text "<value>" below <relative> with <timeoutPeriod> second timeout
+<element> can be located by partial link text "<value>" near <relative> with <timeoutPeriod> second timeout
+<element> can be located by partial link text "<value>" near <relative> within 1 pixel with <timeoutPeriod> second timeout
+<element> can be located by partial link text "<value>" near <relative> within <pixels> pixels with <timeoutPeriod> second timeout
+<element> can be located by partial link text "<value>" to left of <relative> with <timeoutPeriod> second timeout
+<element> can be located by partial link text "<value>" to right of <relative> with <timeoutPeriod> second timeout
 <element> can be located by javascript "<expression>" in <container> with <timeoutPeriod> second timeout
 <element> can be located by js "<expression>" in <container> with <timeoutPeriod> second timeout
 <element> can be located by id "<value>" in <container> with <timeoutPeriod> second wait
+<element> can be located by id "<value>" above <relative> with <timeoutPeriod> second wait
+<element> can be located by id "<value>" below <relative> with <timeoutPeriod> second wait
+<element> can be located by id "<value>" near <relative> with <timeoutPeriod> second wait
+<element> can be located by id "<value>" near <relative> within 1 pixel with <timeoutPeriod> second wait
+<element> can be located by id "<value>" near <relative> within <pixels> pixels with <timeoutPeriod> second wait
+<element> can be located by id "<value>" to left of <relative> with <timeoutPeriod> second wait
+<element> can be located by id "<value>" to right of <relative> with <timeoutPeriod> second wait
 <element> can be located by name "<value>" in <container> with <timeoutPeriod> second wait
+<element> can be located by name "<value>" above <relative> with <timeoutPeriod> second wait
+<element> can be located by name "<value>" below <relative> with <timeoutPeriod> second wait
+<element> can be located by name "<value>" near <relative> with <timeoutPeriod> second wait
+<element> can be located by name "<value>" near <relative> within 1 pixel with <timeoutPeriod> second wait
+<element> can be located by name "<value>" near <relative> within <pixels> pixels with <timeoutPeriod> second wait
+<element> can be located by name "<value>" to left of <relative> with <timeoutPeriod> second wait
+<element> can be located by name "<value>" to right of <relative> with <timeoutPeriod> second wait
+<element> can be located by tag name "<value>" above <relative> with <timeoutPeriod> second wait
+<element> can be located by tag name "<value>" below <relative> with <timeoutPeriod> second wait
 <element> can be located by tag name "<value>" in <container> with <timeoutPeriod> second wait
+<element> can be located by tag name "<value>" near <relative> with <timeoutPeriod> second wait
+<element> can be located by tag name "<value>" near <relative> within 1 pixel with <timeoutPeriod> second wait
+<element> can be located by tag name "<value>" near <relative> within <pixels> pixels with <timeoutPeriod> second wait
+<element> can be located by tag name "<value>" to left of <relative> with <timeoutPeriod> second wait
+<element> can be located by tag name "<value>" to right of <relative> with <timeoutPeriod> second wait
+<element> can be located by tag "<value>" above <relative> with <timeoutPeriod> second wait
+<element> can be located by tag "<value>" below <relative> with <timeoutPeriod> second wait
 <element> can be located by tag "<value>" in <container> with <timeoutPeriod> second wait
+<element> can be located by tag "<value>" near <relative> with <timeoutPeriod> second wait
+<element> can be located by tag "<value>" near <relative> within 1 pixel with <timeoutPeriod> second wait
+<element> can be located by tag "<value>" near <relative> within <pixels> pixels with <timeoutPeriod> second wait
+<element> can be located by tag "<value>" to left of <relative> with <timeoutPeriod> second wait
+<element> can be located by tag "<value>" to right of <relative> with <timeoutPeriod> second wait
 <element> can be located by css selector "<value>" in <container> with <timeoutPeriod> second wait
+<element> can be located by css selector "<value>" above <relative> with <timeoutPeriod> second wait
+<element> can be located by css selector "<value>" below <relative> with <timeoutPeriod> second wait
+<element> can be located by css selector "<value>" near <relative> with <timeoutPeriod> second wait
+<element> can be located by css selector "<value>" near <relative> within 1 pixel with <timeoutPeriod> second wait
+<element> can be located by css selector "<value>" near <relative> within <pixels> pixels with <timeoutPeriod> second wait
+<element> can be located by css selector "<value>" to left of <relative> with <timeoutPeriod> second wait
+<element> can be located by css selector "<value>" to right of <relative> with <timeoutPeriod> second wait
 <element> can be located by css "<value>" in <container> with <timeoutPeriod> second wait
+<element> can be located by css "<value>" above <relative> with <timeoutPeriod> second wait
+<element> can be located by css "<value>" below <relative> with <timeoutPeriod> second wait
+<element> can be located by css "<value>" near <relative> with <timeoutPeriod> second wait
+<element> can be located by css "<value>" near <relative> within 1 pixel with <timeoutPeriod> second wait
+<element> can be located by css "<value>" near <relative> within <pixels> pixels with <timeoutPeriod> second wait
+<element> can be located by css "<value>" to left of <relative> with <timeoutPeriod> second wait
+<element> can be located by css "<value>" to right of <relative> with <timeoutPeriod> second wait
 <element> can be located by xpath "<value>" in <container> with <timeoutPeriod> second wait
+<element> can be located by xpath "<value>" above <relative> with <timeoutPeriod> second wait
+<element> can be located by xpath "<value>" below <relative> with <timeoutPeriod> second wait
+<element> can be located by xpath "<value>" near <relative> with <timeoutPeriod> second wait
+<element> can be located by xpath "<value>" near <relative> within 1 pixel with <timeoutPeriod> second wait
+<element> can be located by xpath "<value>" near <relative> within <pixels> pixels with <timeoutPeriod> second wait
+<element> can be located by xpath "<value>" to left of <relative> with <timeoutPeriod> second wait
+<element> can be located by xpath "<value>" to right of <relative> with <timeoutPeriod> second wait
 <element> can be located by class name "<value>" in <container> with <timeoutPeriod> second wait
+<element> can be located by class name "<value>" above <relative> with <timeoutPeriod> second wait
+<element> can be located by class name "<value>" below <relative> with <timeoutPeriod> second wait
+<element> can be located by class name "<value>" near <relative> with <timeoutPeriod> second wait
+<element> can be located by class name "<value>" near <relative> within 1 pixel with <timeoutPeriod> second wait
+<element> can be located by class name "<value>" near <relative> within <pixels> pixels with <timeoutPeriod> second wait
+<element> can be located by class name "<value>" to left of <relative> with <timeoutPeriod> second wait
+<element> can be located by class name "<value>" to right of <relative> with <timeoutPeriod> second wait
 <element> can be located by class "<value>" in <container> with <timeoutPeriod> second wait
+<element> can be located by class "<value>" above <relative> with <timeoutPeriod> second wait
+<element> can be located by class "<value>" below <relative> with <timeoutPeriod> second wait
+<element> can be located by class "<value>" near <relative> with <timeoutPeriod> second wait
+<element> can be located by class "<value>" near <relative> within 1 pixel with <timeoutPeriod> second wait
+<element> can be located by class "<value>" near <relative> within <pixels> pixels with <timeoutPeriod> second wait
+<element> can be located by class "<value>" to left of <relative> with <timeoutPeriod> second wait
+<element> can be located by class "<value>" to right of <relative> with <timeoutPeriod> second wait
 <element> can be located by link text "<value>" in <container> with <timeoutPeriod> second wait
+<element> can be located by link text "<value>" above <relative> with <timeoutPeriod> second wait
+<element> can be located by link text "<value>" below <relative> with <timeoutPeriod> second wait
+<element> can be located by link text "<value>" near <relative> with <timeoutPeriod> second wait
+<element> can be located by link text "<value>" near <relative> within 1 pixel with <timeoutPeriod> second wait
+<element> can be located by link text "<value>" near <relative> within <pixels> pixels with <timeoutPeriod> second wait
+<element> can be located by link text "<value>" to left of <relative> with <timeoutPeriod> second wait
+<element> can be located by link text "<value>" to right of <relative> with <timeoutPeriod> second wait
 <element> can be located by partial link text "<value>" in <container> with <timeoutPeriod> second wait
+<element> can be located by partial link text "<value>" above <relative> with <timeoutPeriod> second wait
+<element> can be located by partial link text "<value>" below <relative> with <timeoutPeriod> second wait
+<element> can be located by partial link text "<value>" near <relative> with <timeoutPeriod> second wait
+<element> can be located by partial link text "<value>" near <relative> within 1 pixel with <timeoutPeriod> second wait
+<element> can be located by partial link text "<value>" near <relative> within <pixels> pixels with <timeoutPeriod> second wait
+<element> can be located by partial link text "<value>" to left of <relative> with <timeoutPeriod> second wait
+<element> can be located by partial link text "<value>" to right of <relative> with <timeoutPeriod> second wait
 <element> can be located by javascript "<expression>" in <container> with <timeoutPeriod> second wait
 <element> can be located by js "<expression>" in <container> with <timeoutPeriod> second wait
 <element> can be located by id "<value>" at index <index>

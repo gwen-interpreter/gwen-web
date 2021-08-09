@@ -20,7 +20,8 @@ object LocatorKey {
 
   def baseKey(name: String) = s"$name/locator"
   def selectorKey(name: String, selectorType: SelectorType) = s"${baseKey(name)}/$selectorType"
-  def containerKey(name: String, selectorType: SelectorType) = createKey(name, selectorType, "container") 
+  def relativeKey(name: String, selectorType: SelectorType, relativeSelectorType: RelativeSelectorType) = createKey(name, selectorType, relativeSelectorType.toString)
+  def relativeKeyWithinPixels(name: String, selectorType: SelectorType, relativeSelectorType: RelativeSelectorType) = s"${relativeKey(name, selectorType, relativeSelectorType)}/withinPixels"
   def timeoutSecsKey(name: String, selectorType: SelectorType) = createKey(name, selectorType, "timeoutSecs")
   def indexKey(name: String, selectorType: SelectorType) = createKey(name, selectorType, "index")
 

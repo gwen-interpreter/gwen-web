@@ -61,6 +61,9 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     "id", "name", "tag name", "tag", "css selector", "css", "xpath", "class name", "class", "link text", "partial link text", "javascript", "js"
   ).map(s => (s, SelectorType.parse(s)))
 
+  private val selectorTypesNoJS = selectorTypes.filter(_._2 != SelectorType.javascript)
+  private val rSelectorTypes = RelativeSelectorType.values.filter(_ != RelativeSelectorType.in)
+
   private val matchers =
     List(
       (ComparisonOperator.be, "value", "value"),
@@ -187,11 +190,55 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
       evaluate(s"""<element> can be located by $selectorType "<value>" in <container>""")
       verify(mockScopes, atLeastOnce()).set("<element>/locator", pSelectorType.toString())
       verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType", "<value>")
-      verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType/container", "<container>")
+      verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType/in", "<container>")
     }
   }
 
-   """<element> can be located by <locator> "<value>" at index <index> in <container>""" should "evaluate" in {
+  """<element> can be located by <locator> "<value>" <relativeLocator> <otherElement>""" should "evaluate" in {
+    val mockBinding = mock[LocatorBinding]
+    doReturn(mockBinding).when(ctx).getLocatorBinding("<otherElement>")
+    selectorTypesNoJS.foreach { case (selectorType, pSelectorType) =>
+      rSelectorTypes.foreach { rSelectorType =>
+        when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/$rSelectorType")).thenReturn(Some("<otherElement>"))
+        if (rSelectorType == RelativeSelectorType.near) {
+          when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/$rSelectorType/withinPixels")).thenReturn(None)
+        }
+        rSelectorTypes.filter(_ != rSelectorType) foreach { rSelectorType2 =>
+          when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/$rSelectorType2")).thenReturn(None)
+          if (rSelectorType2 == RelativeSelectorType.near) {
+            when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/$rSelectorType2/withinPixels")).thenReturn(None)
+          }
+        }
+        when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/timeoutSecs")).thenReturn(None)
+        when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/index")).thenReturn(None)
+        evaluate(s"""<element> can be located by $selectorType "<value>" $rSelectorType <otherElement>""")
+        verify(mockScopes, atLeastOnce()).set("<element>/locator", pSelectorType.toString())
+        verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType", "<value>")
+        verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType/$rSelectorType", "<otherElement>")
+      }
+    }
+  }
+
+  """<element> can be located by <locator> "<value>" near <otherElement> within <pixels> pixels""" should "evaluate" in {
+    val mockBinding = mock[LocatorBinding]
+    doReturn(mockBinding).when(ctx).getLocatorBinding("<otherElement>")
+    selectorTypesNoJS.foreach { case (selectorType, pSelectorType) =>
+      when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/near")).thenReturn(Some("<otherElement>"))
+      when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/near/withinPixels")).thenReturn(None)
+      rSelectorTypes.filter(_ != RelativeSelectorType.near) foreach { rSelectorType2 =>
+        when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/$rSelectorType2")).thenReturn(None)
+      }
+      when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/timeoutSecs")).thenReturn(None)
+      when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/index")).thenReturn(None)
+      evaluate(s"""<element> can be located by $selectorType "<value>" near <otherElement> within 100 pixels""")
+      verify(mockScopes, atLeastOnce()).set("<element>/locator", pSelectorType.toString())
+      verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType", "<value>")
+      verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType/near", "<otherElement>")
+      verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType/near/withinPixels", "100")
+    }
+  }
+
+  """<element> can be located by <locator> "<value>" at index <index> in <container>""" should "evaluate" in {
     val mockBinding = mock[LocatorBinding]
     doReturn(mockBinding).when(ctx).getLocatorBinding("<container>")
     selectorTypes.foreach { case (selectorType, pSelectorType) =>
@@ -201,7 +248,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
       verify(mockScopes, atLeastOnce()).set("<element>/locator", pSelectorType.toString())
       verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType", "<value>")
       verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType/index", "2")
-      verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType/container", "<container>")
+      verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType/in", "<container>")
     }
   }
 
@@ -214,7 +261,57 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
         evaluate(s"""<element> can be located by $selectorType "<value>" in <container> with no $wait""")
         verify(mockScopes, atLeastOnce()).set("<element>/locator", pSelectorType.toString())
         verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType", "<value>")
-        verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType/container", "<container>")
+        verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType/in", "<container>")
+        verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType/timeoutSecs", "0")
+        reset(mockScopes)
+      }
+    }
+  }
+
+  """<element> can be located by <locator> "<value>" <relativeLocator> <otherElement> with no <wait|timeout>""" should "evaluate" in {
+    val mockBinding = mock[LocatorBinding]
+    doReturn(mockBinding).when(ctx).getLocatorBinding("<otherElement>")
+    selectorTypesNoJS.foreach { case (selectorType, pSelectorType) =>
+      rSelectorTypes.foreach { rSelectorType =>
+        when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/$rSelectorType")).thenReturn(Some("<otherElement>"))
+        if (rSelectorType == RelativeSelectorType.near) {
+          when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/$rSelectorType/withinPixels")).thenReturn(None)
+        }
+        rSelectorTypes.filter(_ != rSelectorType) foreach { rSelectorType2 =>
+          when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/$rSelectorType2")).thenReturn(None)
+          if (rSelectorType2 == RelativeSelectorType.near) {
+            when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/$rSelectorType2/withinPixels")).thenReturn(None)
+          }
+        }
+        waits.foreach { wait =>
+          when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/index")).thenReturn(None)
+          evaluate(s"""<element> can be located by $selectorType "<value>" $rSelectorType <otherElement> with no $wait""")
+          verify(mockScopes, atLeastOnce()).set("<element>/locator", pSelectorType.toString())
+          verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType", "<value>")
+          verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType/$rSelectorType", "<otherElement>")
+          verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType/timeoutSecs", "0")
+          reset(mockScopes)
+        }
+      }
+    }
+  }
+
+  """<element> can be located by <locator> "<value>" near <otherElement> within <pixels> pixels with no <wait|timeout>""" should "evaluate" in {
+    val mockBinding = mock[LocatorBinding]
+    doReturn(mockBinding).when(ctx).getLocatorBinding("<otherElement>")
+    selectorTypesNoJS.foreach { case (selectorType, pSelectorType) =>
+      when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/near")).thenReturn(Some("<otherElement>"))
+      when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/near/withinPixels")).thenReturn(None)
+      rSelectorTypes.filter(_ != RelativeSelectorType.near) foreach { rSelectorType2 =>
+        when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/$rSelectorType2")).thenReturn(None)
+      }
+      waits.foreach { wait =>
+        when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/index")).thenReturn(None)
+        evaluate(s"""<element> can be located by $selectorType "<value>" near <otherElement> within 100 pixels with no $wait""")
+        verify(mockScopes, atLeastOnce()).set("<element>/locator", pSelectorType.toString())
+        verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType", "<value>")
+        verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType/near", "<otherElement>")
+        verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType/near/withinPixels", "100")
         verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType/timeoutSecs", "0")
         reset(mockScopes)
       }
@@ -230,7 +327,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
         evaluate(s"""<element> can be located by $selectorType "<value>" at index 2 in <container> with no $wait""")
         verify(mockScopes, atLeastOnce()).set("<element>/locator", pSelectorType.toString())
         verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType", "<value>")
-        verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType/container", "<container>")
+        verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType/in", "<container>")
         verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType/timeoutSecs", "0")
         verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType/index", "2")
         reset(mockScopes)
@@ -247,7 +344,55 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
         evaluate(s"""<element> can be located by $selectorType "<value>" in <container> with 2 second $wait""")
         verify(mockScopes, atLeastOnce()).set("<element>/locator", pSelectorType.toString())
         verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType", "<value>")
-        verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType/container", "<container>")
+        verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType/in", "<container>")
+        reset(mockScopes)
+      }
+    }
+  }
+
+  """<element> can be located by <locator> "<value>" <relativeLocator> <otherElement> with <timeoutPeriod> second <wait|timeout>""" should "evaluate" in {
+    val mockBinding = mock[LocatorBinding]
+    doReturn(mockBinding).when(ctx).getLocatorBinding("<otherElement>")
+    selectorTypesNoJS.foreach { case (selectorType, pSelectorType) =>
+      rSelectorTypes.foreach { rSelectorType =>
+        when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/$rSelectorType")).thenReturn(Some("<otherElement>"))
+        if (rSelectorType == RelativeSelectorType.near) {
+          when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/$rSelectorType/withinPixels")).thenReturn(None)
+        }
+        rSelectorTypes.filter(_ != rSelectorType) foreach { rSelectorType2 =>
+          when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/$rSelectorType2")).thenReturn(None)
+          if (rSelectorType2 == RelativeSelectorType.near) {
+            when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/$rSelectorType2/withinPixels")).thenReturn(None)
+          }
+        }
+        waits.foreach { wait =>
+          when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/index")).thenReturn(None)
+          evaluate(s"""<element> can be located by $selectorType "<value>" $rSelectorType <otherElement> with 2 second $wait""")
+          verify(mockScopes, atLeastOnce()).set("<element>/locator", pSelectorType.toString())
+          verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType", "<value>")
+          verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType/$rSelectorType", "<otherElement>")
+          reset(mockScopes)
+        }
+      }
+    }
+  }
+
+  """<element> can be located by <locator> "<value>" near <otherElement> within <pixels> pixels with <timeoutPeriod> second <wait|timeout>""" should "evaluate" in {
+    val mockBinding = mock[LocatorBinding]
+    doReturn(mockBinding).when(ctx).getLocatorBinding("<otherElement>")
+    selectorTypesNoJS.foreach { case (selectorType, pSelectorType) =>
+      when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/near")).thenReturn(Some("<otherElement>"))
+      when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/near/withinPixels")).thenReturn(None)
+      rSelectorTypes.filter(_ != RelativeSelectorType.near) foreach { rSelectorType2 =>
+        when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/$rSelectorType2")).thenReturn(None)
+      }
+      waits.foreach { wait =>
+        when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/index")).thenReturn(None)
+        evaluate(s"""<element> can be located by $selectorType "<value>" near <otherElement> within 100 pixels with 2 second $wait""")
+        verify(mockScopes, atLeastOnce()).set("<element>/locator", pSelectorType.toString())
+        verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType", "<value>")
+        verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType/near", "<otherElement>")
+        verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType/near/withinPixels", "100")
         reset(mockScopes)
       }
     }
@@ -262,7 +407,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
         evaluate(s"""<element> can be located by $selectorType "<value>" at index 2 in <container> with 2 second $wait""")
         verify(mockScopes, atLeastOnce()).set("<element>/locator", pSelectorType.toString())
         verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType", "<value>")
-        verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType/container", "<container>")
+        verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType/in", "<container>")
         verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType/timeoutSecs", "2")
         reset(mockScopes)
       }
@@ -271,13 +416,19 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
 
   """<element> can be located by <locator> "<value>"""" should "evaluate" in {
     selectorTypes.foreach { case (selectorType, pSelectorType) =>
-      when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/container")).thenReturn(Some("container"))
+      when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/in")).thenReturn(Some("container"))
+      when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/above")).thenReturn(None)
+      when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/below")).thenReturn(None)
+      when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/near")).thenReturn(None)
+      when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/near/withinPixels")).thenReturn(None)
+      when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/to left of")).thenReturn(None)
+      when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/to right of")).thenReturn(None)
       when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/timeoutSecs")).thenReturn(Some("2"))
       when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/index")).thenReturn(Some("2"))
       evaluate(s"""<element> can be located by $selectorType "<value>"""")
       verify(mockScopes, atLeastOnce()).set("<element>/locator", pSelectorType.toString())
       verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType", "<value>")
-      verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType/container", null)
+      verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType/in", null)
       verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType/timeoutSecs", null)
       verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType/index", null)
     }
@@ -285,13 +436,19 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
 
   """<element> can be located by <locator> "<value>" at index 2""" should "evaluate" in {
     selectorTypes.foreach { case (selectorType, pSelectorType) =>
-      when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/container")).thenReturn(Some("container"))
+      when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/in")).thenReturn(Some("container"))
+      when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/above")).thenReturn(None)
+      when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/below")).thenReturn(None)
+      when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/near")).thenReturn(None)
+      when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/near/withinPixels")).thenReturn(None)
+      when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/to left of")).thenReturn(None)
+      when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/to right of")).thenReturn(None)
       when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/timeoutSecs")).thenReturn(Some("2"))
       when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/index")).thenReturn(Some("2"))
       evaluate(s"""<element> can be located by $selectorType "<value>" at index 2""")
       verify(mockScopes, atLeastOnce()).set("<element>/locator", pSelectorType.toString())
       verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType", "<value>")
-      verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType/container", null)
+      verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType/in", null)
       verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType/timeoutSecs", null)
       verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType/index", "2")
     }
@@ -300,13 +457,19 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
    """<element> can be located by <locator> "<value>" with no <wait|timeout>""" should "evaluate" in {
     selectorTypes.foreach { case (selectorType, pSelectorType) =>
       waits.foreach { wait =>
-        when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/container")).thenReturn(Some("container"))
+        when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/in")).thenReturn(Some("container"))
+        when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/above")).thenReturn(None)
+        when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/below")).thenReturn(None)
+        when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/near")).thenReturn(None)
+        when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/near/withinPixels")).thenReturn(None)
+        when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/to left of")).thenReturn(None)
+        when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/to right of")).thenReturn(None)
         when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/timeoutSecs")).thenReturn(Some("2"))
         when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/index")).thenReturn(Some("2"))
         evaluate(s"""<element> can be located by $selectorType "<value>" with no $wait""")
         verify(mockScopes, atLeastOnce()).set("<element>/locator", pSelectorType.toString())
         verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType", "<value>")
-        verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType/container", null)
+        verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType/in", null)
         verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType/timeoutSecs", "0")
         verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType/index", null)
         reset(mockScopes)
@@ -317,13 +480,19 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
    """<element> can be located by <locator> "<value>" at index 2 with no <wait|timeout>""" should "evaluate" in {
     selectorTypes.foreach { case (selectorType, pSelectorType) =>
       waits.foreach { wait =>
-        when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/container")).thenReturn(Some("container"))
+        when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/in")).thenReturn(Some("container"))
+        when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/above")).thenReturn(None)
+        when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/below")).thenReturn(None)
+        when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/near")).thenReturn(None)
+        when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/near/withinPixels")).thenReturn(None)
+        when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/to left of")).thenReturn(None)
+        when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/to right of")).thenReturn(None)
         when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/timeoutSecs")).thenReturn(Some("2"))
         when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/index")).thenReturn(Some("2"))
         evaluate(s"""<element> can be located by $selectorType "<value>" at index 2 with no $wait""")
         verify(mockScopes, atLeastOnce()).set("<element>/locator", pSelectorType.toString())
         verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType", "<value>")
-        verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType/container", null)
+        verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType/in", null)
         verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType/timeoutSecs", "0")
         verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType/index", "2")
         reset(mockScopes)
@@ -334,13 +503,19 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
   """<element> can be located by <locator> "<value>" with <timeoutPeriod> second <wait|timeout>""" should "evaluate" in {
     selectorTypes.foreach { case (selectorType, pSelectorType) =>
       waits.foreach { wait =>
-        when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/container")).thenReturn(Some("container"))
+        when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/in")).thenReturn(Some("container"))
+        when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/above")).thenReturn(None)
+        when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/below")).thenReturn(None)
+        when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/near")).thenReturn(None)
+        when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/near/withinPixels")).thenReturn(None)
+        when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/to left of")).thenReturn(None)
+        when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/to right of")).thenReturn(None)
         when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/timeoutSecs")).thenReturn(Some("2"))
         when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/index")).thenReturn(Some("2"))
         evaluate(s"""<element> can be located by $selectorType "<value>" with 2 second $wait""")
         verify(mockScopes, atLeastOnce()).set("<element>/locator", pSelectorType.toString())
         verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType", "<value>")
-        verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType/container", null)
+        verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType/in", null)
         verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType/timeoutSecs", "2")
         verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType/index", null)
         reset(mockScopes)
@@ -351,13 +526,19 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
   """<element> can be located by <locator> "<value>" at index 2 with <timeoutPeriod> second <wait|timeout>""" should "evaluate" in {
     selectorTypes.foreach { case (selectorType, pSelectorType) =>
       waits.foreach { wait =>
-        when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/container")).thenReturn(Some("container"))
+        when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/in")).thenReturn(Some("container"))
+        when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/above")).thenReturn(None)
+        when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/below")).thenReturn(None)
+        when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/near")).thenReturn(None)
+        when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/near/withinPixels")).thenReturn(None)
+        when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/to left of")).thenReturn(None)
+        when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/to right of")).thenReturn(None)
         when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/timeoutSecs")).thenReturn(Some("2"))
         when(mockScopes.getOpt(s"<element>/locator/$pSelectorType/index")).thenReturn(Some("2"))
         evaluate(s"""<element> can be located by $selectorType "<value>" at index 2 with 2 second $wait""")
         verify(mockScopes, atLeastOnce()).set("<element>/locator", pSelectorType.toString())
         verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType", "<value>")
-        verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType/container", null)
+        verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType/in", null)
         verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType/timeoutSecs", "2")
         verify(mockScopes, atLeastOnce()).set(s"<element>/locator/$pSelectorType/index", "2")
         reset(mockScopes)

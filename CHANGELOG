@@ -9,6 +9,12 @@ m d, yyyy
     - Deprecate gwen-gpm and Gwen workspaces in favor of NPM package and init CLI option
   - Migrate to Selenium 4 and add support for:
     - Relative locators
+      - `<element> can be located by <id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text> "<expression>" <above|below|near|to left of|to right of> <otherElement>`
+      - `<element> can be located by <id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text> "<expression>" <above|below|near|to left of|to right of> <otherElement> with no <timeout|wait>`
+      - `<element> can be located by <id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text> "<expression>" <above|below|near|to left of|to right of> <otherElement> with <timeoutSecs> second <timeout|wait>`
+      - `<element> can be located by <id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text> "<expression>" near <otherElement> within <noOfPixels> pixels`
+      - `<element> can be located by <id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text> "<expression>" near <otherElement> within <noOfPixels> pixels with no <timeout|wait>`
+      - `<element> can be located by <id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text> "<expression>" near <otherElement> within <noOfPixels> pixels with <timeoutSecs> second <timeout|wait>`
     - Window and tab handling
     - Full page screenshot capture
   - Support *.conf (HOCON), and *.json settings files in addition to *.properties files

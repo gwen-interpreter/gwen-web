@@ -74,11 +74,11 @@ class WebEngine extends EvalEngine[WebContext] {
     super.translateCompositeStep(step) orElse {
       step.expression match {
         case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression in (.+?)$container with no (?:timeout|wait)""" =>
-          Some(new ForEachWebElement(doStep, element, SelectorType.parse(selectorType), expression, Some(container), Some(Duration.Zero), this))
+          Some(new ForEachWebElement(doStep, element, SelectorType.parse(selectorType), expression, Some((RelativeSelectorType.in, container, None)), Some(Duration.Zero), this))
         case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression in (.+?)$container with (\d+)$timeout second (?:timeout|wait)""" =>
-          Some(new ForEachWebElement(doStep, element, SelectorType.parse(selectorType), expression, Some(container), Some(Duration.create(timeout.toLong, TimeUnit.SECONDS)), this))
+          Some(new ForEachWebElement(doStep, element, SelectorType.parse(selectorType), expression, Some((RelativeSelectorType.in, container, None)), Some(Duration.create(timeout.toLong, TimeUnit.SECONDS)), this))
         case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression in (.+?)$container""" =>
-          Some(new ForEachWebElement(doStep, element, SelectorType.parse(selectorType), expression, Some(container), None, this))
+          Some(new ForEachWebElement(doStep, element, SelectorType.parse(selectorType), expression, Some((RelativeSelectorType.in, container, None)), None, this))
         case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression with no (?:timeout|wait)""" =>
           Some(new ForEachWebElement(doStep, element, SelectorType.parse(selectorType), expression, None, Some(Duration.Zero), this))
         case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression with (\d+)$timeout second (?:timeout|wait)""" =>
@@ -148,17 +148,29 @@ class WebEngine extends EvalEngine[WebContext] {
       case r"""the (.+?)$page url is "(.+?)"$$$url""" =>
         new BindUrl(step.orDocString(url), Some(page))
       case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression at index (\d+)$index in (.+?)$container with no (?:timeout|wait)""" =>
-        new BindElementLocator(element, SelectorType.parse(selectorType), expression, Some(container), Some(0), Some(index.toInt))
+        new BindElementLocator(element, SelectorType.parse(selectorType), expression, Some((RelativeSelectorType.in, container, None)), Some(0), Some(index.toInt))
       case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression in (.+?)$container with no (?:timeout|wait)""" =>
-        new BindElementLocator(element, SelectorType.parse(selectorType), expression, Some(container), Some(0), None)
+        new BindElementLocator(element, SelectorType.parse(selectorType), expression, Some((RelativeSelectorType.in, container, None)), Some(0), None)
       case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression at index (\d+)$index in (.+?)$container with (\d+)$timeout second (?:timeout|wait)""" =>
-        new BindElementLocator(element, SelectorType.parse(selectorType), expression, Some(container), Some(timeout.toInt), Some(index.toInt))
+        new BindElementLocator(element, SelectorType.parse(selectorType), expression, Some((RelativeSelectorType.in, container, None)), Some(timeout.toInt), Some(index.toInt))
       case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression in (.+?)$container with (\d+)$timeout second (?:timeout|wait)""" =>
-        new BindElementLocator(element, SelectorType.parse(selectorType), expression, Some(container), Some(timeout.toInt), None)
+        new BindElementLocator(element, SelectorType.parse(selectorType), expression, Some((RelativeSelectorType.in, container, None)), Some(timeout.toInt), None)
       case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression at index (\d+)$index in (.+?)$container""" =>
-        new BindElementLocator(element, SelectorType.parse(selectorType), expression, Some(container), None, Some(index.toInt))
+        new BindElementLocator(element, SelectorType.parse(selectorType), expression, Some((RelativeSelectorType.in, container, None)), None, Some(index.toInt))
       case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression in (.+?)$container""" =>
-        new BindElementLocator(element, SelectorType.parse(selectorType), expression, Some(container), None, None)
+        new BindElementLocator(element, SelectorType.parse(selectorType), expression, Some((RelativeSelectorType.in, container, None)), None, None)
+      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text)$selectorType "(.+?)"$expression near (.+?)$rElement within (\d+)$pixels pixel(?:s?) with no (?:timeout|wait)""" =>
+        new BindElementLocator(element, SelectorType.parse(selectorType), expression, Some((RelativeSelectorType.near, rElement, Some(pixels.toInt))), Some(0), None)
+      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text)$selectorType "(.+?)"$expression near (.+?)$rElement within (\d+)$pixels pixel(?:s?) with (\d+)$timeout second (?:timeout|wait)""" =>
+        new BindElementLocator(element, SelectorType.parse(selectorType), expression, Some((RelativeSelectorType.near, rElement, Some(pixels.toInt))), Some(timeout.toInt), None)
+      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text)$selectorType "(.+?)"$expression near (.+?)$rElement within (\d+)$pixels pixel(?:s?)""" =>
+        new BindElementLocator(element, SelectorType.parse(selectorType), expression, Some((RelativeSelectorType.near, rElement, Some(pixels.toInt))), None, None)
+      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text)$selectorType "(.+?)"$expression (above|below|near|to left of|to right of)$rSelectorType (.+?)$rElement with no (?:timeout|wait)""" =>
+        new BindElementLocator(element, SelectorType.parse(selectorType), expression, Some((RelativeSelectorType.valueOf(rSelectorType), rElement, None)), Some(0), None)
+      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text)$selectorType "(.+?)"$expression (above|below|near|to left of|to right of)$rSelectorType (.+?)$rElement with (\d+)$timeout second (?:timeout|wait)""" =>
+        new BindElementLocator(element, SelectorType.parse(selectorType), expression, Some((RelativeSelectorType.valueOf(rSelectorType), rElement, None)), Some(timeout.toInt), None)
+      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text)$selectorType "(.+?)"$expression (above|below|near|to left of|to right of)$rSelectorType (.+?)$rElement""" =>
+        new BindElementLocator(element, SelectorType.parse(selectorType), expression, Some((RelativeSelectorType.valueOf(rSelectorType), rElement, None)), None, None)
       case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression at index (\d+)$index with no (?:timeout|wait)""" =>
         new BindElementLocator(element, SelectorType.parse(selectorType), expression, None, Some(0), Some(index.toInt))
       case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression with no (?:timeout|wait)""" =>

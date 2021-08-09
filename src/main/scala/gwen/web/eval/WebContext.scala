@@ -343,7 +343,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
   private def withWebElement[T](binding: LocatorBinding, reason: String)(operation: WebElement => T): Option[T] =
     evaluate(None.asInstanceOf[Option[T]]) {
       val selector = binding.selectors.head
-      val wHandle = selector.container.flatMap(_ => withWebDriver(_.getWindowHandle))
+      val wHandle = selector.relative.flatMap(_ => withWebDriver(_.getWindowHandle))
       try {
         var result: Option[Try[T]] = None
         val start = System.nanoTime()

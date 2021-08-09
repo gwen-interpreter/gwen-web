@@ -17,6 +17,7 @@
 package gwen.web.eval.lambda.unit
 
 import gwen.web.eval.WebContext
+import gwen.web.eval.binding.RelativeSelectorType
 import gwen.web.eval.binding.SelectorType
 import gwen.web.eval.binding.LocatorKey
 
@@ -39,7 +40,7 @@ class BindMultipleElementLocators(name: String, container: Option[String], timeo
       step.table foreach { case (_, row ) =>
         val selectorType = SelectorType.parse(row.head)
         val expression = row(1)
-        new BindElementLocator(name, selectorType, expression, container, timeoutSecs, index).apply(parent, step, ctx)
+        new BindElementLocator(name, selectorType, expression, container.map(c => (RelativeSelectorType.in, c, None)), timeoutSecs, index).apply(parent, step, ctx)
       }
     }
   }

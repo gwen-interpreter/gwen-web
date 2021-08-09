@@ -25,15 +25,15 @@ import scala.concurrent.duration.Duration
   *
   * @param selectorType the seletor type
   * @param expression the selector expression
-  * @param container optional parent container binding
+  * @param relative optional relative selector and binding
   * @param isContainer true if this is a selector for a container element, false otherwise
   * @param timeout optional timeout (defaults to `gwen.web.locator.wait.seconds` if not provided)
   * @param index optional index (if selector returns more than one element then index is required)
   */
-case class Selector(selectorType: SelectorType, expression: String, container: Option[LocatorBinding], isContainer: Boolean, timeout: Option[Duration], index: Option[Int]) {
+case class Selector(selectorType: SelectorType, expression: String, relative: Option[(RelativeSelectorType, LocatorBinding, Option[Int])], isContainer: Boolean, timeout: Option[Duration], index: Option[Int]) {
 
   override def toString: String =
-    s"$selectorType=$expression${container.map(c => s" in $c").getOrElse("")}${index.map(i => s" at index $i").getOrElse("")}"
+    s"$selectorType=$expression${relative.map((s, e, px) => s" $s $e${px.map(p => s" within $p pixel(s)").getOrElse("")}").getOrElse("")}${index.map(i => s" at index $i").getOrElse("")}"
 
   lazy val timeoutSeconds = timeout.map(_.toSeconds).getOrElse(WebSettings.`gwen.web.locator.wait.seconds`)
 
@@ -43,8 +43,8 @@ case class Selector(selectorType: SelectorType, expression: String, container: O
 /** Locator factory companion. */
 object Selector {
 
-  def apply(selectorType: SelectorType, expression: String, container: Option[LocatorBinding], timeout: Option[Duration], index: Option[Int]): Selector = {
-    Selector(selectorType, expression, container, isContainer = false, timeout, index)
+  def apply(selectorType: SelectorType, expression: String, relative: Option[(RelativeSelectorType, LocatorBinding, Option[Int])], timeout: Option[Duration], index: Option[Int]): Selector = {
+    Selector(selectorType, expression, relative, isContainer = false, timeout, index)
   }
 
   def apply(selectorType: SelectorType, expression: String): Selector = {
@@ -52,7 +52,7 @@ object Selector {
   }
 
   def apply(selector: Selector, timeout: Option[Duration], index: Option[Int]): Selector = {
-    Selector(selector.selectorType, selector.expression, selector.container, timeout, index)
+    Selector(selector.selectorType, selector.expression, selector.relative, selector.isContainer, timeout, index)
   }
 
 }

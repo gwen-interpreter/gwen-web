@@ -28,6 +28,7 @@ import scala.util.Try
 import scala.util.chaining._
 
 import java.util.concurrent.TimeUnit
+import org.xml.sax.Locator
 
 /**
   *  Resolves locator bindings to actual web elements.
@@ -73,15 +74,29 @@ class LocatorBindingResolver(ctx: WebContext) extends LazyLogging {
               ctx.scopes.getOpt(selectorKey) match {
                 case Some(expression) =>
                   val selector = ctx.interpolate(expression)
-                  val container: Option[String] = ctx.scopes.getOpt(ctx.interpolate(LocatorKey.containerKey(name, selectorType)))
+                  val rKeys = RelativeSelectorType.values map { rSelector => 
+                    LocatorKey.relativeKey(name, selectorType, rSelector)
+                  }
+                  val rKeyAndElement: Option[(String, String)] = (rKeys flatMap { rKey => 
+                    ctx.scopes.getOpt(ctx.interpolate(rKey)) map { rElement => 
+                      (rKey, rElement)
+                    }
+                  }).headOption
                   if (ctx.options.dryRun) {
-                    container.foreach(c => getBinding(c, optional))
+                    rKeyAndElement.foreach((k, e) => getBinding(e, optional))
+                  }
+                  val relative = rKeyAndElement map { (rKey, rElement) => 
+                    val rSelector = RelativeSelectorType.valueOf(rKey.substring(rKey.lastIndexOf("/") + 1))
+                    val rBinding = getBinding(rElement, false).get
+                    val rKeyWithinPixels = LocatorKey.relativeKeyWithinPixels(name, selectorType, rSelector)
+                    val withinPixels = ctx.scopes.getOpt(ctx.interpolate(rKeyWithinPixels)).map(_.toInt)
+                    (rSelector, rBinding, withinPixels)
                   }
                   val timeout = ctx.scopes.getOpt(ctx.interpolate(LocatorKey.timeoutSecsKey(name, selectorType))).map { timeoutSecs =>
                     Duration.create(timeoutSecs.toLong, TimeUnit.SECONDS)
                   }
                   val index = ctx.scopes.getOpt(ctx.interpolate(LocatorKey.indexKey(name, selectorType))).map(_.toInt)
-                  Some(Selector(selectorType, selector, container.flatMap(c => getBinding(c, optional)), timeout, index))
+                  Some(Selector(selectorType, selector, relative, timeout, index))
                 case None =>
                   if (optional) None else locatorBindingError(s"Undefined locator lookup binding for $name: $selectorKey")
               }

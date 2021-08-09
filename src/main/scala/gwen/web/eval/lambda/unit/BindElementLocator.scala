@@ -17,6 +17,7 @@
 package gwen.web.eval.lambda.unit
 
 import gwen.web.eval.WebContext
+import gwen.web.eval.binding.RelativeSelectorType
 import gwen.web.eval.binding.SelectorType
 import gwen.web.eval.binding.LocatorKey
 
@@ -27,28 +28,41 @@ import gwen.core.node.gherkin.Step
 
 import scala.util.chaining._
 
-class BindElementLocator(name: String, selectorType: SelectorType, expression: String, container: Option[String], timeoutSecs: Option[Long], index: Option[Int]) extends UnitStep[WebContext] {
+class BindElementLocator(name: String, selectorType: SelectorType, expression: String, relative: Option[(RelativeSelectorType, String, Option[Int])], timeoutSecs: Option[Long], index: Option[Int]) extends UnitStep[WebContext] {
 
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
 
     step tap { _ =>
 
       checkStepRules(step, BehaviorType.Context, ctx)
-      container foreach { cont =>
-        ctx.getLocatorBinding(cont)
+      relative foreach { (rSelector, rElement, rWithinPixels) =>
+        ctx.getLocatorBinding(rElement)
       }
 
       ctx.scopes.set(LocatorKey.baseKey(name), selectorType.toString)
       ctx.scopes.set(LocatorKey.selectorKey(name, selectorType), expression)
 
-      val cKey = LocatorKey.containerKey(name, selectorType)
-      if (container.isEmpty) {
-        ctx.scopes.getOpt(cKey) foreach { _ =>
-          ctx.scopes.set(cKey, null)
+      if (relative.isEmpty) {
+        RelativeSelectorType.values foreach { rSelectorType =>
+          val rKey = LocatorKey.relativeKey(name, selectorType, rSelectorType)
+          ctx.scopes.getOpt(rKey) foreach { _ =>
+            ctx.scopes.set(rKey, null)
+          }
+          if (rSelectorType == RelativeSelectorType.near) {
+            val rKeyWithinPixels = LocatorKey.relativeKeyWithinPixels(name, selectorType, rSelectorType)
+            ctx.scopes.getOpt(rKeyWithinPixels) foreach { _ =>
+              ctx.scopes.set(rKeyWithinPixels, null)
+            }
+          }
         }
       } else {
-        container foreach { cont =>
-          ctx.scopes.set(cKey, cont)
+        relative foreach { (rSelectorType, rElement, rPixels) =>
+          val rKey = LocatorKey.relativeKey(name, selectorType, rSelectorType)
+          ctx.scopes.set(rKey, rElement)
+          rPixels foreach { withinPixels =>
+            val rKeyWithinPixels = LocatorKey.relativeKeyWithinPixels(name, selectorType, rSelectorType)
+            ctx.scopes.set(rKeyWithinPixels, withinPixels.toString)
+          }
         }
       }
 
