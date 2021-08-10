@@ -134,7 +134,7 @@ class DriverManagerTest extends BaseTest with Matchers with MockitoSugar with Be
     val mockWebDriver = stubDriverMock( mock[WebDriver])
     val manager = newDriverManager(mockWebDriver)
     intercept[NoSuchWindowException] {
-      manager.switchToChild(1)
+      manager.switchToWindow(1)
     }
   }
 
@@ -144,7 +144,7 @@ class DriverManagerTest extends BaseTest with Matchers with MockitoSugar with Be
     val mockTargetLocator = mock[WebDriver.TargetLocator]
     when(mockWebDriver.getWindowHandles).thenReturn(Set("parent", "child").asJava)
     when(mockWebDriver.switchTo()).thenReturn(mockTargetLocator)
-    manager.switchToChild(1)
+    manager.switchToWindow(1)
     verify(mockTargetLocator).window("child")
   }
 
@@ -154,7 +154,7 @@ class DriverManagerTest extends BaseTest with Matchers with MockitoSugar with Be
     val mockTargetLocator = mock[WebDriver.TargetLocator]
     when(mockWebDriver.getWindowHandles).thenReturn(Set("parent", "child1", "child2").asJava)
     when(mockWebDriver.switchTo()).thenReturn(mockTargetLocator)
-    manager.switchToChild(1)
+    manager.switchToWindow(1)
     verify(mockTargetLocator).window("child1")
   }
 
@@ -164,7 +164,7 @@ class DriverManagerTest extends BaseTest with Matchers with MockitoSugar with Be
     val mockTargetLocator = mock[WebDriver.TargetLocator]
     when(mockWebDriver.getWindowHandles).thenReturn(Set("parent", "child1", "child2").asJava)
     when(mockWebDriver.switchTo()).thenReturn(mockTargetLocator)
-    manager.switchToChild(2)
+    manager.switchToWindow(2)
     verify(mockTargetLocator).window("child2")
   }
 

@@ -1110,6 +1110,17 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
   }
 
   /**
+    * Starts and switches to a new tab or window.
+    *
+    * @param winType tab or window
+    */
+  def switchToNewWindow(winType: WindowType): Unit = {
+    perform {
+      driverManager.switchToNewWindow(winType)
+    }
+  }
+
+  /**
     * Starts a new session if there isn't one or stays in the current one.
     */
   def newOrCurrentSession(): Unit = {
@@ -1125,22 +1136,22 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
   def noOfWindows(): Int = driverManager.noOfWindows()
 
   /**
-    * Switches to the child window if one was just opened.
+    * Switches to the first child window if one was just opened.
     */
   def switchToChild(): Unit = {
-    switchToChild(1)
+    switchToWindow(1)
   }
 
   /**
-    * Switches to a tab or child window ocurrance.
+    * Switches to a tab or window occurrence.
     *
-    * @param occurrence the tag or window occurrence to switch to (first opened is occurrence 1, 2nd is 2, ..)
+    * @param occurrence the tag or window occurrence to switch to (primary is 0, first opened is occurrence 1, 2nd is 2, ..)
     */
-  def switchToChild(occurrence: Int): Unit = {
-    waitUntil(s"trying to switch to child tab/window occurrence $occurrence") {
+  def switchToWindow(occurrence: Int): Unit = {
+    waitUntil(s"trying to switch to tab/window occurrence $occurrence") {
       driverManager.windows().lift(occurrence).nonEmpty
     }
-    driverManager.switchToChild(occurrence)
+    driverManager.switchToWindow(occurrence)
   }
 
   /**
@@ -1153,13 +1164,13 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
   }
 
   /**
-    * Closes the tab or child window occurrence.
+    * Closes the tab or window occurrence.
     *
-    * @param occurrence the tag or window occurrence to close (first opened is occurrence 1, 2nd is 2, ..)
+    * @param occurrence the tag or window occurrence to close (primary is 0, first opened is occurrence 1, 2nd is 2, ..)
     */
-  def closeChild(occurrence: Int): Unit = {
+  def closeWindow(occurrence: Int): Unit = {
     perform {
-      driverManager.closeChild(occurrence)
+      driverManager.closeWindow(occurrence)
     }
   }
 

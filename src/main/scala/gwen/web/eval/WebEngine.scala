@@ -29,6 +29,8 @@ import gwen.core.eval.lambda.UnitStep
 import gwen.core.node.gherkin.Step
 import gwen.core.state.EnvState
 
+import org.openqa.selenium.WindowType
+
 import scala.concurrent.duration._
 import scala.util.chaining._
 
@@ -271,6 +273,8 @@ class WebEngine extends EvalEngine[WebContext] {
         new RefreshPage()
       case r"I start a new browser" =>
         new StartBrowserSession("primary")
+      case r"I start a new browser (tab|window)$winType" =>
+        new SwitchToNewWindow(WindowType.valueOf(winType.toUpperCase))
       case r"""I start a browser for (.+?)$$$session""" =>
         new StartBrowserSession(session)
       case r"""I should have (\d+?)$count open browser(?:s?)""" =>
@@ -284,13 +288,17 @@ class WebEngine extends EvalEngine[WebContext] {
       case r"""I close the browser for (.+?)$session""" =>
         new OpenOrCloseBrowser(false, Some(session), BehaviorType.Action)
       case r"""I switch to the child (?:window|tab)""" =>
-        new SwitchToChildWindow(None)
+        new SwitchToWindow(None)
       case r"""I switch to child (?:window|tab) (\d+?)$occurrence""" =>
-        new SwitchToChildWindow(Some(occurrence.toInt))
+        new SwitchToWindow(Some(occurrence.toInt))
+      case r"""I switch to (?:window|tab) (\d+?)$occurrence""" =>
+        new SwitchToWindow(Some(occurrence.toInt))
       case r"""I close the child (?:window|tab)""" =>
-        new OpenOrCloseChildWindow(false, None)
+        new OpenOrCloseWindow(false, None)
       case r"""I close child (?:window|tab) (\d+?)$occurrence""" =>
-        new OpenOrCloseChildWindow(false, Some(occurrence.toInt))
+        new OpenOrCloseWindow(false, Some(occurrence.toInt))
+      case r"""I close (?:window|tab) (\d+?)$occurrence""" =>
+        new OpenOrCloseWindow(false, Some(occurrence.toInt))
       case r"""I switch to the (?:root|parent) (?:window|tab)""" =>
         new SwitchToRootWindow()
       case """I switch to the default content""" =>

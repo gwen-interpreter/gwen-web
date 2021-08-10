@@ -1686,9 +1686,9 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
 
   "WebContext.switchToChild" should "switch to child window" in {
     doReturn(Set("parent", "child").asJava).when(mockWebDriver).getWindowHandles()
-    doNothing().when(driverManager).switchToChild(1)
+    doNothing().when(driverManager).switchToWindow(1)
     ctx.switchToChild()
-    verify(driverManager).switchToChild(1)
+    verify(driverManager).switchToWindow(1)
   }
 
   "WebContext.closeChild" should "close the child window" in {

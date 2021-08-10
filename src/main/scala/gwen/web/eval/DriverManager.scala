@@ -24,7 +24,7 @@ import scala.util.chaining._
 
 import com.typesafe.scalalogging.LazyLogging
 import io.github.bonigarcia.wdm.WebDriverManager
-import org.openqa.selenium.{Dimension, MutableCapabilities, WebDriver}
+import org.openqa.selenium.{Dimension, MutableCapabilities, WebDriver, WindowType}
 import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.chrome.ChromeOptions
 import org.openqa.selenium.chromium.ChromiumOptions
@@ -410,15 +410,15 @@ class DriverManager() extends LazyLogging {
   }
 
   /**
-    * Switches to a tab or child window occurance.
+    * Switches to a tab or window occurance.
     *
-    * @param occurrence the tag or window occurrence to switch to (first opened is occurrence 1, 2nd is 2, ..)
+    * @param occurrence the tag or window occurrence to switch to (primary is zero, 1st opened is 1, 2nd open is 2, ..)
     */
-  def switchToChild(occurrence: Int): Unit = {
-    windows().lift(occurrence) map { child =>
-      switchToWindow(child, isChild = true)
+  def switchToWindow(occurrence: Int): Unit = {
+    windows().lift(occurrence) map { handle =>
+      switchToWindow(handle, isChild = (occurrence > 0))
     } getOrElse {
-      WebErrors.noSuchWindowError(s"Cannot switch to child window $occurrence: no such occurrence")
+      WebErrors.noSuchWindowError(s"Cannot switch to window $occurrence: no such occurrence")
     }
   }
 
@@ -445,14 +445,14 @@ class DriverManager() extends LazyLogging {
     }
   }
 
-  def closeChild(occurrence: Int): Unit = {
-    windows().lift(occurrence) map { child =>
-      switchToWindow(child, isChild = true)
-      logger.info(s"Closing child window at occurrence $occurrence ($child)")
+  def closeWindow(occurrence: Int): Unit = {
+    windows().lift(occurrence) map { handle =>
+      switchToWindow(handle, isChild = (occurrence > 0))
+      logger.info(s"Closing window occurrence $occurrence ($handle)")
       webDriver.close()
       switchToParent()
     } getOrElse {
-      WebErrors.noSuchWindowError(s"Cannot close child window $occurrence: no such occurrence")
+      WebErrors.noSuchWindowError(s"Cannot close window $occurrence: no such occurrence")
     }
   }
 
@@ -480,6 +480,20 @@ class DriverManager() extends LazyLogging {
     logger.info(s"Switching to browser session: $session")
     this.session = session
     webDriver
+  }
+
+  /**
+    * Starts and switches to a new tab or window.
+    *
+    * @param winType tab or window
+    */
+  def switchToNewWindow(winType: WindowType): Unit = {
+    logger.info(s"Switching to new browser ${winType.name.toLowerCase}")
+    if (noOfSessions() > 0) {
+      webDriver.switchTo().newWindow(winType)
+    } else {
+      switchToSession("primary")
+    }
   }
 
   /** Gets the number of open sesions. */

@@ -7,6 +7,18 @@ m d, yyyy
   - Introduce [Gwen-Web NPM package]([gwen-web-npm](https://github.com/gwen-interpreter/gwen-web-npm)
     for integrating Gwen into JS projects
     - Deprecate gwen-gpm and Gwen workspaces in favor of NPM package and init CLI option
+  - Support *.conf (HOCON), and *.json settings files in addition to *.properties files
+  - Configurable CLI defaults
+  - Associative meta enabled by default:
+    - Changed setting `gwen.associative.meta` default from false to true
+  - Deprecated CLI option:
+    - `-p/--properties` in favor of `-c/--config`
+  - Deprecated settings:
+    - `gwen.feature.failfast` in favor of `gwen.feature.failfast.enabled`
+    - `gwen.rp.heartbeat` in favor of `gwen.rp.heartbeat.enabled`
+    - `gwen.web.capture.screenshots` in favor of `gwen.web.capture.screenshots.enabled`
+    - `gwen.web.browser` in favor of `gwen.web.browser.target`
+  - Drop Applitools integration
   - Migrate to Selenium 4 and add support for:
     - Relative locators
       - `<element> can be located by <id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text> "<expression>" <above|below|near|to left of|to right of> <otherElement>`
@@ -15,19 +27,14 @@ m d, yyyy
       - `<element> can be located by <id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text> "<expression>" near <otherElement> within <noOfPixels> pixels`
       - `<element> can be located by <id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text> "<expression>" near <otherElement> within <noOfPixels> pixels with no <timeout|wait>`
       - `<element> can be located by <id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text> "<expression>" near <otherElement> within <noOfPixels> pixels with <timeoutSecs> second <timeout|wait>`
-    - Window and tab handling
+    - Windows and tabs
+      - `I start a new browser tab`
+      - `I start a new browser window`
+      - `I switch to window <occurrence>`
+      - `I switch to tab <occurrence>`
+      - `I close window <occurrence>`
+      - `I close tab <occurrence>`
     - Full page screenshot capture
-  - Support *.conf (HOCON), and *.json settings files in addition to *.properties files
-  - Configurable CLI defaults
-  - Associated meta enabled by default
-  - Deprecated CLI option:
-    - `-p/--properties` in favor of `-c/--config`
-  - Deprecated settings:
-    - `gwen.feature.failfast` in favor of `gwen.feature.failfast.enabled`
-    - `gwen.rp.heartbeat` in favor of `gwen.rp.heartbeat.enabled`
-    - `gwen.web.capture.screenshots` in favor of `gwen.web.capture.screenshots.enabled`
-    - `gwen.web.browser` in favor of `gwen.web.browser.target`
-- Drop Applitools integration
 
 2.53.0
 ======

@@ -1163,6 +1163,8 @@ I base64 decode <reference>
 I close the current browser
 I close the browser
 I start a new browser
+I start a new browser tab
+I start a new browser window
 I start a browser for <session>
 I should have 1 open browser
 I should have <count> open browsers
@@ -1177,10 +1179,14 @@ I switch to the child window
 I switch to the child tab
 I switch to child window <occurrence>
 I switch to child tab <occurrence>
+I switch to window <occurrence>
+I switch to tab <occurrence>
 I close the child window
 I close the child tab
 I close child window <occurrence>
 I close child tab <occurrence>
+I close window <occurrence>
+I close tab <occurrence>
 I switch to the parent window
 I switch to the parent tab
 I switch to the root window

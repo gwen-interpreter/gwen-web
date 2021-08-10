@@ -38,6 +38,7 @@ import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
 
+import org.openqa.selenium.WindowType
 import org.openqa.selenium.WebElement
 
 import java.io.File
@@ -1517,6 +1518,16 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     verify(ctx).switchToSession("primary")
   }
 
+  "I start a new browser tab" should "evaluate" in {
+    doNothing().when(ctx).switchToNewWindow(WindowType.TAB)
+    evaluate("I start a new browser tab")
+  }
+
+  "I start a new browser window" should "evaluate" in {
+    doNothing().when(ctx).switchToNewWindow(WindowType.WINDOW)
+    evaluate("I start a new browser window")
+  }
+
   "I start a browser for <session>" should "evaluate" in {
     doNothing().when(ctx).close("<session>")
     doNothing().when(ctx).switchToSession("<session>")
@@ -1599,6 +1610,42 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     doNothing().when(ctx).switchToDefaultContent()
     evaluate("I switch to the default content")
     verify(ctx).switchToDefaultContent()
+  }
+
+  "I switch to child <window|tab> <occurrence>" should "evaluate" in {
+    val occurNo = 1
+    doNothing().when(ctx).switchToWindow(occurNo)
+    List("window", "tab").foreach { x =>
+      evaluate(s"I switch to child $x $occurNo")
+    }
+    verify(ctx, times(2)).switchToWindow(occurNo)
+  }
+
+  "I switch to <window|tab> <occurrence>" should "evaluate" in {
+    val occurNo = 1
+    doNothing().when(ctx).switchToWindow(occurNo)
+    List("window", "tab").foreach { x =>
+      evaluate(s"I switch to $x $occurNo")
+    }
+    verify(ctx, times(2)).switchToWindow(occurNo)
+  }
+
+  "I close child <window|tab> <occurrence>" should "evaluate" in {
+    val occurNo = 1
+    doNothing().when(ctx).closeWindow(occurNo)
+    List("window", "tab").foreach { x =>
+      evaluate(s"I close child $x $occurNo")
+    }
+    verify(ctx, times(2)).closeWindow(occurNo)
+  }
+
+  "I close <window|tab> <occurrence>" should "evaluate" in {
+    val occurNo = 1
+    doNothing().when(ctx).closeWindow(occurNo)
+    List("window", "tab").foreach { x =>
+      evaluate(s"I close $x $occurNo")
+    }
+    verify(ctx, times(2)).closeWindow(occurNo)
   }
 
   "I capture the current screenshot" should "evaluate" in {

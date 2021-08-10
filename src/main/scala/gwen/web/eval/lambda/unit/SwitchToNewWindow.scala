@@ -23,21 +23,16 @@ import gwen.core.eval.lambda.UnitStep
 import gwen.core.node.GwenNode
 import gwen.core.node.gherkin.Step
 
+import org.openqa.selenium.WindowType
+
 import scala.util.chaining._
 
-class SwitchToChildWindow(occurrence: Option[Int]) extends UnitStep[WebContext] {
+class SwitchToNewWindow(winType: WindowType) extends UnitStep[WebContext] {
 
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     step tap { _ =>
       checkStepRules(step, BehaviorType.Action, ctx)
-      ctx.perform {
-        occurrence match {
-          case Some(occurNo) =>
-            ctx.switchToChild(occurNo)
-          case None =>
-            ctx.switchToChild()
-        }
-      }
+      ctx.switchToNewWindow(winType)
     }
   }
 

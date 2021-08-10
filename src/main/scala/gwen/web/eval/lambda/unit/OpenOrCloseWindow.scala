@@ -25,7 +25,7 @@ import gwen.core.node.gherkin.Step
 
 import scala.util.chaining._
 
-class OpenOrCloseChildWindow(open: Boolean, occurence: Option[Int]) extends UnitStep[WebContext] {
+class OpenOrCloseWindow(open: Boolean, occurence: Option[Int]) extends UnitStep[WebContext] {
 
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     step tap { _ =>
@@ -35,7 +35,7 @@ class OpenOrCloseChildWindow(open: Boolean, occurence: Option[Int]) extends Unit
       } else {
         occurence match {
           case Some(occurNo) =>
-            ctx.closeChild(occurNo)
+            ctx.closeWindow(occurNo)
           case None =>
             ctx.closeChild()
         }
