@@ -65,8 +65,8 @@ object GwenWebInterpreter extends GwenInterpreter(new WebEngine()) {
       FileIO.copyClasspathTextResourceToFile("/init/meta/README.md", dir)
     }
 
-    new File(dir, "reports") tap { dir =>
-      FileIO.copyClasspathTextResourceToFile("/init/reports/README.md", dir)
+    new File(dir, "output") tap { dir =>
+      FileIO.copyClasspathTextResourceToFile("/init/output/README.md", dir)
     }
 
     new File(dir, "samples/floodio") tap { dir =>
@@ -124,7 +124,7 @@ object GwenWebInterpreter extends GwenInterpreter(new WebEngine()) {
           !      |     README.md
           !      +--/meta              # Common/reusable meta
           !      |     README.md
-          !      +--/reports           # Report output directory
+          !      +--/output            # Output directory
           !      +--/samples           # Sample features
           !
           !""".stripMargin('!')

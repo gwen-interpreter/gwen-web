@@ -18,6 +18,8 @@ m d, yyyy
     - `gwen.rp.heartbeat` in favor of `gwen.rp.heartbeat.enabled`
     - `gwen.web.capture.screenshots` in favor of `gwen.web.capture.screenshots.enabled`
     - `gwen.web.browser` in favor of `gwen.web.browser.target`
+  - New setting for specifying output directory of Gwen generated files (reports, etc..)
+    - `gwen.output.dir` (default = target)
   - Drop Applitools integration
   - Migrate to Selenium 4 and add support for:
     - Relative locators
