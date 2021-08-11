@@ -411,7 +411,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     }
   }
 
-  /** Captures and the current screenshot and adds it to the attachments list. */
+  /** Captures the current screenshot and adds it to the attachments list. */
   def captureScreenshot(unconditional: Boolean, name: String = "Screenshot"): Option[File] = {
     evaluate(Option(new File("$[dryRun:screenshotFile]"))) {
       val screenshot = driverManager.withWebDriver { driver =>
@@ -425,6 +425,18 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
         Some(screenshot)
       } else {
         None
+      }
+    }
+  }
+
+  /** Captures an element screenshot and adds it to the attachments list. */
+  def captureElementScreenshot(binding: LocatorBinding, name: String = "Element Screenshot"): Option[File] = {
+    evaluate(Option(new File("$[dryRun:elementScreenshotFile]"))) {
+      withWebElement(binding, s"trying to capture element screenshot of $binding") { webElement =>
+        Thread.sleep(150) // give element time to render
+        webElement.getScreenshotAs(OutputType.FILE) tap { elementshot =>
+          addAttachment(name, elementshot)
+        }
       }
     }
   }

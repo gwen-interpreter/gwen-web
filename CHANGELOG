@@ -36,6 +36,9 @@ m d, yyyy
       - `I switch to tab <occurrence>`
       - `I close window <occurrence>`
       - `I close tab <occurrence>`
+    - Web element screenshots
+      - `I capture the screenshot of <element> as <my element screenshot>`
+      - `I capture the screenshot of <element>`
     - Full page screenshot capture
 
 2.53.0

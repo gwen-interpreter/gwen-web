@@ -1197,7 +1197,9 @@ I should have <count> open windows
 I should have 1 open tab
 I should have <count> open tabs
 I capture the current screenshot
-I capture the current screenshot as my screenshot
+I capture the current screenshot as <my screenshot>
+I capture the screenshot of <element> as <my element screenshot>
+I capture the screenshot of <element>
 <element> can be clicked by javascript "<javascript>"
 <element> can be right clicked by javascript "<javascript>"
 <element> can be double clicked by javascript "<javascript>"
