@@ -343,6 +343,13 @@ case class LocatorBinding(name: String, locators: List[Locator]) extends Binding
     LocatorBinding(name, jsLocators)
   }
   def withJSEquivalent = LocatorBinding(name, locators ++ List(jsEquivalent.locators.head))
+  def withFastTimeout: LocatorBinding = {
+    val fastTimeout = Some(Duration("200 ms"))
+    val fastLocators = locators map { l => 
+      Locator(l, fastTimeout, l.index)
+    }
+    new LocatorBinding(name, fastLocators)
+  }
   override def toString = s"$name [locator${if (locators.size > 1) "s" else ""}: ${locators.mkString(", ")}]"
 }
 

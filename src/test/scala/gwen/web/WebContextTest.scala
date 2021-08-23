@@ -316,22 +316,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     }
   }
 
-  "WebContext.checkElementState" should "fail when the state does not match 'hidden'" in {
-    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
-    val mockElement = mock[WebElement]
-    doReturn(mockElement).when(webContext).locate(elemBinding)
-    doReturn(mockElement).when(webContext).locate(elemBinding.jsEquivalent)
-    doReturn(true).when(webContext).isDisplayed(mockElement)
-    withSetting("gwen.web.wait.seconds", "1") {
-      intercept[AssertionError] {
-        webContext.checkElementState(elemBinding, "hidden", negate = false)
-      }
-      intercept[WaitTimeoutException] {
-        webContext.waitForElementState(elemBinding, "hidden", negate = false)
-      }
-    }
-  }
-
   "WebContext.checkElementState" should "fail when the state does not match 'checked'" in {
     val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     val mockElement = mock[WebElement]
@@ -428,22 +412,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     }
   }
   
-  "WebContext.checkElementState" should "fail when the state should not but does match 'displayed'" in {
-    val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
-    val mockElement = mock[WebElement]
-    doReturn(mockElement).when(webContext).locate(elemBinding)
-    doReturn(mockElement).when(webContext).locate(elemBinding.jsEquivalent)
-    doReturn(true).when(webContext).isDisplayed(mockElement)
-    withSetting("gwen.web.wait.seconds", "1") {
-      intercept[AssertionError] {
-        webContext.checkElementState(elemBinding, "displayed", negate = true)
-      }
-      intercept[WaitTimeoutException] {
-        webContext.waitForElementState(elemBinding, "displayed", negate = true)
-      }
-    }
-  }
-
   "WebContext.checkElementState" should "fail when the state should not but does match 'hidden'" in {
     val elemBinding = LocatorBinding("name", "id", "name", None, Some(Duration.Zero), None)
     val mockElement = mock[WebElement]

@@ -346,8 +346,17 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
   private def isElementState(elementBinding: LocatorBinding, state: String, negate: Boolean): Boolean = {
     var result = false
     env.perform {
+      // use fast locator if checking for element absence so we don't have to wait for timeout to lapse
+      val parsedBinding = state match {
+        case "displayed" if negate =>
+          elementBinding.withFastTimeout
+        case "hidden" if !negate =>
+          elementBinding.withFastTimeout
+        case _ =>
+          elementBinding
+      }
       try {
-        withWebElement(elementBinding, s"waiting for $elementBinding to${if (negate) " not" else ""} be $state") { webElement =>
+        withWebElement(parsedBinding, s"waiting for $parsedBinding to${if (negate) " not" else ""} be $state") { webElement =>
           result = state match {
             case "displayed" if !negate => isDisplayed(webElement)
             case "displayed" if negate => !isDisplayed(webElement)
