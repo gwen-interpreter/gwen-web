@@ -9,7 +9,7 @@
 # in features that match this name are executed by Gwen by 
 # evaluating the sequence of steps defined in that step def.
 
- @Samples
+ @Sample
  Feature: Google search meta
 
 @StepDef

@@ -9,8 +9,6 @@ m d, yyyy
     - Deprecate gwen-gpm and Gwen workspaces in favor of NPM package and init CLI option
   - Support *.conf (HOCON), and *.json settings files in addition to *.properties files
   - Configurable CLI defaults
-  - Associative meta enabled by default:
-    - Changed setting `gwen.associative.meta` default from false to true
   - Deprecated CLI option:
     - `-p/--properties` in favor of `-c/--config`
   - Deprecated settings:
@@ -18,6 +16,8 @@ m d, yyyy
     - `gwen.rp.heartbeat` in favor of `gwen.rp.heartbeat.enabled`
     - `gwen.web.capture.screenshots` in favor of `gwen.web.capture.screenshots.enabled`
     - `gwen.web.browser` in favor of `gwen.web.browser.target`
+  - Changed setting defaults:
+    - `gwen.associative.meta = true` instead of `false`
   - New setting for specifying output directory of Gwen generated files (reports, etc..)
     - `gwen.output.dir` (default = target)
   - Drop Applitools integration
@@ -40,6 +40,8 @@ m d, yyyy
       - `I capture the screenshot of <element> as <my element screenshot>`
       - `I capture the screenshot of <element>`
     - Full page screenshot capture
+    - Use implict fast locators when checking for absence of elements to avoid 
+      waiting for timeout period to lapse
 
 2.53.0
 ======

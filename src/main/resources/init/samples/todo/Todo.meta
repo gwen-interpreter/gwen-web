@@ -1,24 +1,27 @@
+@Sample
+Feature: Todo Meta
 
-  @Samples
-  Feature: Todo Meta (automation glue)
-                        
- @Context
- @StepDef
- Scenario: a new todo list
-      When I navigate to "http://todomvc.com/examples/react"
-      Then the todo field can be located by class "new-todo"
-       And count can be located by css ".todo-count strong"
+  @Context
+  @StepDef
+  Scenario: a new todo list
+      Given my todo list can be located by css ".todo-list"
+       When I navigate to "${todo.page.url}"
+       Then the page title should contain "TodoMVC"
+        And my todo list should be hidden
 
- @Action
- @StepDef
- @ForEach
- @DataTable(horizontal="item")
- Scenario: the following items are added
-      When I enter data[item] in the todo field
-      Then count should be record.number
+  @Action
+  @StepDef
+  @DataTable(header="top")
+  @ForEach
+  Scenario: the following items are added
+      Given the todo field can be located by class "new-todo"
+        And my new item is "${data[Item]}"
+       When I enter my new item in the todo field
+       Then my todo list should contain my new item
 
- @Assertion
- @StepDef
- Scenario: the list will contain <expected> items
-      Then count should be "$<expected>"
-      
+  @Assertion
+  @StepDef
+  Scenario: the list will contain <expected-count> items
+      Given the displayed count can be located by css ".todo-count strong"
+       Then the displayed count should be "$<expected-count>"
+       

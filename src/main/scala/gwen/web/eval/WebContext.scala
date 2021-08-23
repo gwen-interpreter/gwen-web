@@ -587,8 +587,17 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
   private def isElementState(binding: LocatorBinding, state: ElementState, negate: Boolean): Boolean = {
     var result = false
     perform {
-      try {
-        withWebElement(binding, s"waiting for $binding to${if (negate) " not" else ""} be $state") { webElement =>
+      // use fast binding selector if checking for element absence so we don't have to wait for timeout
+      val parsedBinding = state match {
+        case ElementState.displayed if negate =>
+          binding.withFastTimeout
+        case ElementState.hidden if !negate =>
+          binding.withFastTimeout
+        case _ =>
+          binding
+      }
+      try {  
+        withWebElement(parsedBinding, s"waiting for $binding to${if (negate) " not" else ""} be $state") { webElement =>
           result = state match {
             case ElementState.displayed => 
               if (!negate) isDisplayed(webElement)

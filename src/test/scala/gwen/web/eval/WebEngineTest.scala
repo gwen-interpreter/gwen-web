@@ -1662,20 +1662,20 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     verify(mockScopes).set("name", file.getAbsolutePath)
   }
 
-  "I capture the screenshot of <element>" should "evaluate" in {
+  "I capture element screenshot of <element>" should "evaluate" in {
     val mockBinding = mock[LocatorBinding]
     doReturn(mockBinding).when(ctx).getLocatorBinding("<element>")
     doReturn(Option(new File("elementshot"))).when(ctx).captureElementScreenshot(mockBinding, "Element Screenshot")
-    evaluate("I capture the screenshot of <element>")
+    evaluate("I capture element screenshot of <element>")
     verify(ctx).captureElementScreenshot(mockBinding, "Element Screenshot")
   }
 
-  "I capture the screenshot of <element> as name" should "evaluate" in {
+  "I capture element screenshot of <element> as name" should "evaluate" in {
     val mockBinding = mock[LocatorBinding]
     doReturn(mockBinding).when(ctx).getLocatorBinding("<element>")
     val file = new File("elementshot")
     doReturn(Option(file)).when(ctx).captureElementScreenshot(mockBinding, "name")
-    evaluate("I capture the screenshot of <element> as name")
+    evaluate("I capture element screenshot of <element> as name")
     verify(ctx).captureElementScreenshot(mockBinding, "name")
     verify(mockScopes).set("name", file.getAbsolutePath)
   }

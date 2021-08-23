@@ -27,7 +27,7 @@
         And the search field can be located by name "q"
        When I type "search string" in the search field
         And I append " " to the search field
-        And I capture the screenshot of the search field
+        And I capture element screenshot of the search field
        Then the search field should be "search string "
 
      Scenario: Perform a google search with DocString parameter

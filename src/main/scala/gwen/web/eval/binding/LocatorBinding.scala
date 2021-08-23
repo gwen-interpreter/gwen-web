@@ -78,6 +78,14 @@ class LocatorBinding(val name: String, val selectors: List[Selector], ctx: WebCo
   }
 
   def withJSEquivalent = new LocatorBinding(name, selectors ++ List(jsEquivalent.selectors.head), ctx)
+
+  def withFastTimeout: LocatorBinding = {
+    val fastTimeout = Duration("200 ms")
+    val newSelectors = selectors map { s => 
+      Selector(s, Some(fastTimeout), s.index)
+    }
+    new LocatorBinding(name, newSelectors, ctx)
+  }
   
   override def toString = s"$name [locator${if (selectors.size > 1) "s" else ""}: ${selectors.mkString(", ")}]"
 

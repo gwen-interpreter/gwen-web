@@ -229,9 +229,9 @@ class WebEngine extends EvalEngine[WebContext] {
         new CaptureScreenshot(None)
       case r"""I capture the current screenshot as (.+?)$attribute""" =>
         new CaptureScreenshot(Some(attribute))
-      case r"""I capture the screenshot of (.+?)$element as (.+?)$attribute""" =>
+      case r"""I capture element screenshot of (.+?)$element as (.+?)$attribute""" =>
         new CaptureElementScreenshot(element, Some(attribute))
-      case r"""I capture the screenshot of (.+?)$element""" =>
+      case r"""I capture element screenshot of (.+?)$element""" =>
         new CaptureElementScreenshot(element, None)
       case r"""I capture (.+?)$element( value| text)$selection as (.+?)$attribute""" =>
         new CaptureDropdownSelection(Some(attribute), element, DropdownSelection.valueOf(selection.trim))

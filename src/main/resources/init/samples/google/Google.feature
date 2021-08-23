@@ -1,5 +1,5 @@
 
- @Samples
+ @Sample
  Feature: Google search
 
 Scenario: Lucky Google search

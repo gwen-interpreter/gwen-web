@@ -32,13 +32,13 @@ import scala.util.chaining._
 object GwenWebInterpreter extends GwenInterpreter(new WebEngine()) {
 
   /**
-    * Initialises a Gwen working directory.
+    * Initialises a Gwen project directory.
     *
     * @param dir the directory to initialise
     */
-  override def initWorkingDir(dir: File): Unit = {
+  override def initProjectDir(dir: File): Unit = {
     
-    super.initWorkingDir(dir)
+    super.initProjectDir(dir)
 
     new File(dir, "browsers") tap { dir =>
       FileIO.copyClasspathTextResourceToFile("/init/browsers/chrome.conf", dir)
@@ -101,33 +101,37 @@ object GwenWebInterpreter extends GwenInterpreter(new WebEngine()) {
       new File("gwen.conf").writeText(conf)
     }
 
+    val standalone = dir.isSame(new File("."))
+    val filler = if (standalone) "   " else "       "
+
     println(
-      s"""!  ./                        # Your project root
-          !   |  gwen.conf             # Common/default Gwen settings
-          !   +--/${dir.getPath}
-          !      |  .gitignore         # Git ignore file
-          !      |  README.md
-          !      +--/browsers          # Browser settings
-          !      |     chrome.conf     # - default is chrome
-          !      |     edge.conf
-          !      |     firefox.conf
-          !      |     safari.conf
-          !      |     ie.conf
-          !      |     remote.conf     # Remote web driver settings
-          !      |     README.md
-          !      +--/env               # Environment settings
-          !      |     local.conf      # - default is local
-          !      |     dev.conf
-          !      |     test.conf
-          !      |     README.md
-          !      +--/features          # Features and associative meta
-          !      |     README.md
-          !      +--/meta              # Common/reusable meta
-          !      |     README.md
-          !      +--/output            # Output directory
-          !      +--/samples           # Sample features
-          !
-          !""".stripMargin('!')
+      s"""|   /project                    # Project root
+          |   ├── gwen.conf               # Common/default Gwen settings${if (standalone) "" else {
+      s"""|
+          |   └── /${dir.getPath}""".stripMargin}}
+          |$filler├── .gitignore          # Git ignore file
+          |$filler├── README.md
+          |$filler├── /browsers           # Browser settings
+          |$filler│   ├── chrome.conf     # - default is chrome
+          |$filler│   ├── edge.conf
+          |$filler│   ├── firefox.conf
+          |$filler│   ├── safari.conf
+          |$filler│   ├── ie.conf
+          |$filler│   ├── remote.conf     # Remote web driver settings
+          |$filler│   └── README.md
+          |$filler├── /env                # Environment settings
+          |$filler│   ├── local.conf      # - default is local
+          |$filler│   ├── dev.conf
+          |$filler│   ├── test.conf
+          |$filler│   └── README.md
+          |$filler├── /features           # Features and associative meta
+          |$filler│   └── README.md
+          |$filler├── /meta               # Optional common/reusable meta
+          |$filler│   └── README.md
+          |$filler├── /output             # Output directory
+          |$filler└── /samples            # Sample features and meta
+          |
+          |""".stripMargin
     )
 
   }
