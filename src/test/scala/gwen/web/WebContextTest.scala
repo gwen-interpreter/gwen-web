@@ -996,12 +996,16 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val sourceElement = mock[WebElement]
     val targetElement = mock[WebElement]
     val mockActions = mock[Actions]
+    val mockAction = mock[Action]
     doReturn(sourceElement).when(webContext).locate(sourceBinding)
     doReturn(targetElement).when(webContext).locate(targetBinding)
     doReturn(mockActions).when(webContext).createActions(mockWebDriver)
-    when(mockActions.dragAndDrop(sourceElement, targetElement)).thenReturn(mockActions)
+    when(mockActions.clickAndHold(sourceElement)).thenReturn(mockActions)
+    when(mockActions.moveToElement(targetElement)).thenReturn(mockActions)
+    when(mockActions.release(targetElement)).thenReturn(mockActions)
+    when(mockActions.build()).thenReturn(mockAction)
     webContext.dragAndDrop(sourceBinding, targetBinding)
-    verify(mockActions).perform()
+    verify(mockAction).perform()
   }
 
   "WebContext.holdAndClick" should "command-shift click element" in {
