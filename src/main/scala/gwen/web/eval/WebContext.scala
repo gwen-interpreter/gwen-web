@@ -40,7 +40,10 @@ import scala.util.chaining._
 import com.typesafe.scalalogging.LazyLogging
 import org.openqa.selenium._
 import org.openqa.selenium.interactions.Actions
-import org.openqa.selenium.support.ui.{ExpectedConditions, FluentWait, Select}
+import org.openqa.selenium.support.ui.ExpectedCondition
+import org.openqa.selenium.support.ui.ExpectedConditions
+import org.openqa.selenium.support.ui.FluentWait
+import org.openqa.selenium.support.ui.Select
 
 import java.io.File
 
@@ -530,6 +533,20 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
               .withTimeout(java.time.Duration.ofSeconds(timeout))
               .until { driver => condition }
         }
+      }
+    } catch {
+      case e: TimeoutException =>
+        waitTimeoutError(timeout, reason, e)
+    }
+  }
+
+  def waitUntil[T](reason: String, condition: ExpectedCondition[T]): Unit = {
+    val timeout = WebSettings.`gwen.web.wait.seconds`
+    try {
+      withWebDriver { webDriver =>
+        new FluentWait(webDriver)
+          .withTimeout(java.time.Duration.ofSeconds(timeout))
+          .until(condition)
       }
     } catch {
       case e: TimeoutException =>
@@ -1226,9 +1243,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     */
   def handleAlert(accept: Boolean): Unit = {
     withWebDriver { driver =>
-      waitUntil("waiting for alert popup") {
-        ExpectedConditions.alertIsPresent().apply(driver) != null
-      }
+      waitUntil("waiting for alert popup", ExpectedConditions.alertIsPresent())
       if (accept) {
         driver.switchTo().alert().accept()
       } else {
@@ -1255,9 +1270,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     */
   def getPopupMessage: String = {
     withWebDriver { driver =>
-      waitUntil("waiting for alert popup") {
-        ExpectedConditions.alertIsPresent().apply(driver) != null
-      }
+      waitUntil("waiting for alert popup", ExpectedConditions.alertIsPresent())
       driver.switchTo().alert().getText
     } getOrElse "$[dryRun:popupMessage]"
   }
