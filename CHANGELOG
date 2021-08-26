@@ -43,6 +43,24 @@ m d, yyyy
     - Use implict fast locators when checking for absence of elements to avoid 
       waiting for timeout period to lapse
 
+2.53.3
+======
+July 25, 2021
+- Improved usage (--help) text
+- Issue #83: fix drag drop
+
+2.53.2
+======
+August 23, 2021
+- Use fast locators when checking for absence of elements to avoid waiting 
+  for timeout period to lapse
+
+2.53.1
+======
+July 31, 2021
+- Update Gwen core from v2.34.0 to v[2.34.1](https://github.com/gwen-interpreter/gwen/releases/tag/v2.34.1)
+  - Default `gwen.rp.send.annotations` setting to false
+  
 2.53.0
 ======
 July 2, 2021

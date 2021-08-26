@@ -234,9 +234,9 @@ class WebEngine extends EvalEngine[WebContext] {
       case r"""I capture element screenshot of (.+?)$element""" =>
         new CaptureElementScreenshot(element, None)
       case r"""I capture (.+?)$element( value| text)$selection as (.+?)$attribute""" =>
-        new CaptureDropdownSelection(Some(attribute), element, DropdownSelection.valueOf(selection.trim))
+        new CaptureDropdownOrElement(Some(attribute), element, DropdownSelection.valueOf(selection.trim))
       case r"""I capture (.+?)$element( value| text)$$$selection""" =>
-        new CaptureDropdownSelection(None, element, DropdownSelection.valueOf(selection.trim))
+        new CaptureDropdownOrElement(None, element, DropdownSelection.valueOf(selection.trim))
       case r"I capture the (alert|confirmation)$name popup message" =>
         new CapturePopupMessage(s"the $name popup message")
       case r"I capture the (?:alert|confirmation) popup message as (.+?)$attribute" =>

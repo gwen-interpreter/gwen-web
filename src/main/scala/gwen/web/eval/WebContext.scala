@@ -828,7 +828,10 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     withWebDriver { driver =>
       withWebElement(sourceBinding, s"trying to drag $sourceBinding to $targetBinding") { source =>
         withWebElement(targetBinding, s"trying to drag $sourceBinding to $targetBinding") { target =>
-          createActions(driver).dragAndDrop(source, target).perform()
+          createActions(driver).clickAndHold(source)
+            .moveToElement(target)
+            .release(target)
+            .build().perform()
         }
       }
     }

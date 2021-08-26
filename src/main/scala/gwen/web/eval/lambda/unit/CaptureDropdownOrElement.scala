@@ -18,20 +18,32 @@ package gwen.web.eval.lambda.unit
 
 import gwen.web.eval.DropdownSelection
 import gwen.web.eval.WebContext
+import gwen.web.eval.WebErrors
 
+import gwen.core._
 import gwen.core.behavior.BehaviorType
 import gwen.core.eval.lambda.UnitStep
+import gwen.core.eval.lambda.unit.Capture
 import gwen.core.node.GwenNode
 import gwen.core.node.gherkin.Step
 
-class CaptureDropdownSelection(target: Option[String], element: String, selection: DropdownSelection) extends UnitStep[WebContext] {
+class CaptureDropdownOrElement(target: Option[String], element: String, selection: DropdownSelection) extends UnitStep[WebContext] {
 
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     checkStepRules(step, BehaviorType.Action, ctx)
     val name = target.getOrElse(element)
-    val content = ctx.boundAttributeOrSelection(element, Option(selection))()
-    ctx.topScope.set(name, content)
-    step.addAttachment(name, "txt", content)
+    try {
+      val content = ctx.boundAttributeOrSelection(element, Option(selection))()
+      ctx.topScope.set(name, content)
+      step.addAttachment(name, "txt", content)
+    } catch {
+      case e: WebErrors.LocatorBindingException =>
+        element match {
+          case r"""(.+?)$source as (.+?)$suffix""" =>
+            new Capture(s"$suffix $selection", source).apply(parent, step, ctx)
+          case _ => throw e
+        }
+    }
   }
 
 }
