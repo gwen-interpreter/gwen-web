@@ -29,7 +29,10 @@ import com.typesafe.scalalogging.LazyLogging
 import org.apache.commons.io.FileUtils
 import org.openqa.selenium._
 import org.openqa.selenium.interactions.Actions
-import org.openqa.selenium.support.ui.{ExpectedConditions, FluentWait, Select}
+import org.openqa.selenium.support.ui.ExpectedConditions
+import org.openqa.selenium.support.ui.ExpectedCondition
+import org.openqa.selenium.support.ui.FluentWait
+import org.openqa.selenium.support.ui.Select
 
 import java.io.File
 
