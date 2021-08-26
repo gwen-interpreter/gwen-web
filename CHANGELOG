@@ -4,6 +4,7 @@ July 25, 2021
 - Improved usage (--help) text
 - Issue #83: fix drag drop
 - Issue #79: resolve attributes in examples tables
+- Issue #80: wait for alert popup with timeout of `gwen.web.wait.seconds`
 
 2.53.2
 ======
