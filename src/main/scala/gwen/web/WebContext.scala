@@ -296,6 +296,20 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
     }
   }
 
+  def waitUntil[T](reason: String, condition: ExpectedCondition[T]): Unit = {
+    val timeout = WebSettings.`gwen.web.wait.seconds`
+    try {
+      withWebDriver { webDriver =>
+        new FluentWait(webDriver)
+          .withTimeout(java.time.Duration.ofSeconds(timeout))
+          .until(condition)
+      }
+    } catch {
+      case e: TimeoutException =>
+        waitTimeoutError(timeout, reason, e)
+    }
+  }
+
   /**
     * Highlights and then un-highlights a browser element.
     * Uses pure javascript, as suggested by https://github.com/alp82.
@@ -959,9 +973,7 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
     */
   def handleAlert(accept: Boolean): Unit = {
     withWebDriver { driver =>
-      waitUntil("waiting for alert popup") {
-        ExpectedConditions.alertIsPresent().apply(driver) != null
-      }
+      waitUntil("waiting for alert popup", ExpectedConditions.alertIsPresent())
       if (accept) {
         driver.switchTo().alert().accept()
       } else {
@@ -988,9 +1000,7 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
     */
   def getPopupMessage: String = {
     withWebDriver { driver =>
-      waitUntil("waiting for alert popup") {
-        ExpectedConditions.alertIsPresent().apply(driver) != null
-      }
+      waitUntil("waiting for alert popup", ExpectedConditions.alertIsPresent())
       driver.switchTo().alert().getText
     } getOrElse "$[dryRun:popupMessage]"
   }
