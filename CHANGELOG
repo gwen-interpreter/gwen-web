@@ -3,6 +3,7 @@
 July 25, 2021
 - Improved usage (--help) text
 - Issue #83: fix drag drop
+- Issue #79: resolve attributes in examples tables
 
 2.53.2
 ======
