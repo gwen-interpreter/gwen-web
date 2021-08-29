@@ -2,15 +2,13 @@
    @Sample
    Feature: floodio meta
   
-  Scenario: Initialise
-      Given the heading is displayed is defined by javascript "!!$('h2')"
-        And the heading can be located by tag name "h2"
-        And the next button can be located by class name "btn"
-       
   @StepDef
   @Context
   Scenario: I launch the floodio challenge
-      Given I navigate to "https://challengers.flood.io/start"
+      Given the heading is displayed is defined by javascript "!!$('h2')"
+        And the heading can be located by tag name "h2"
+        And the next button can be located by class name "btn"
+       When I navigate to "https://challengers.flood.io/start"
        Then I should be on the start page
       
   @StepDef

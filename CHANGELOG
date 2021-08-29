@@ -1,10 +1,13 @@
 2.53.3
 ======
 July 25, 2021
-- Improved usage (--help) text
 - Issue #83: fix drag drop
 - Issue #79: resolve attributes in examples tables
 - Issue #80: wait for alert popup with timeout of `gwen.web.wait.seconds`
+- Issue #82: move to element when sending single character control keys
+- Improved usage (--help) text
+- Fix parallel scenario-level execution for Gherkin's spoken languages/dialects
+- Bundle same samples in universal package and workspace
 
 2.53.2
 ======

@@ -28,7 +28,7 @@ class DryRunTest extends BaseFeatureTest {
             List(
               "features",
               "features-visual",
-              "gwen-workspace/samples"), 
+              "samples"), 
             parallel = false, 
             parallelFeatures = false,
             dryRun = true, 
@@ -47,7 +47,7 @@ class DryRunTest extends BaseFeatureTest {
             List(
               "features",
               "features-visual",
-              "gwen-workspace/samples"),
+              "samples"),
             parallel = true, 
             parallelFeatures = false,
             dryRun = true, 
@@ -66,8 +66,7 @@ class DryRunTest extends BaseFeatureTest {
             List(
               "features/flow",
               "features/multi-locators",
-              "gwen-workspace/samples/todo/scenario-level",
-              "gwen-workspace/samples/todo/single-scenario"), 
+              "samples"), 
             parallel = false, 
             parallelFeatures = false,
             dryRun = true, 
@@ -87,8 +86,7 @@ class DryRunTest extends BaseFeatureTest {
               List(
                 "features/flow",
                 "features/multi-locators",
-                "gwen-workspace/samples/todo/scenario-level",
-                "gwen-workspace/samples/todo/single-scenario"), 
+                "samples"), 
               parallel = true, 
               parallelFeatures = parallelFeatures,
               dryRun = true, 

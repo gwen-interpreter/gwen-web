@@ -23,7 +23,7 @@ class FeaturesTest extends BaseFeatureTest {
       evaluate(
         List(
           "features",
-          "gwen-workspace/samples"), 
+          "samples"), 
         parallel = true, 
         parallelFeatures = false,
         dryRun = false, 
@@ -38,8 +38,7 @@ class FeaturesTest extends BaseFeatureTest {
         evaluate(
           List(
             "features/bindings/ScopedBindings2.feature",
-            "gwen-workspace/samples/todo/scenario-level", 
-            "gwen-workspace/samples/todo/single-scenario"), 
+            "samples"), 
           parallel = true,
           parallelFeatures = parallelFeatures, 
           dryRun = false, 
@@ -52,7 +51,7 @@ class FeaturesTest extends BaseFeatureTest {
   "Implicit javascript locators" should "evaluate" in {
     withSetting("gwen.web.implicit.js.locators", "true") {
       evaluate(
-        List("gwen-workspace/samples/se-test"),
+        List("samples"),
         parallel = true, 
         parallelFeatures = false,
         dryRun = false, 
