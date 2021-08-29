@@ -630,7 +630,11 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
     elementBindingOpt match {
       case Some(elementBinding) =>
         withDriverAndElement(elementBinding, s"trying to send keys to $elementBinding") { (driver, webElement) =>
-          webElement.sendKeys(keys)
+          if (keys.size > 1) {
+            webElement.sendKeys(keys)
+          } else {
+            createActions(driver).moveToElement(webElement).sendKeys(webElement, keys).build().perform()
+          }
         }
       case None =>
         withWebDriver { driver =>
