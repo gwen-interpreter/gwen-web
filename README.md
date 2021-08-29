@@ -1,26 +1,7 @@
-[![Gwen-web](https://github.com/gwen-interpreter/gwen/wiki/img/gwen-attractor.png)](https://github.com/gwen-interpreter/gwen/wiki/The-Gwen-Logo)
+Gwen-Web
+========
 
-Gwen Web Automation
-===================
-
-A dynamic interpreter that enables teams to quickly 
-automate front end web tests and repetitive online processes with 
-[Gherkin](https://docs.cucumber.io/gherkin/reference/) feature specifications. A 
-[web DSL](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL) interacts with 
-[Selenium](http://www.seleniumhq.org/projects/webdriver) under the covers for you so you don't have to do any of that programming or technical development work. All the standard Selenium 
-locators are supported and you can additionally inject JavaScript in places where dynamically 
-finding elements or running functions on web pages may be necessary.
-
-> [Home](http://gweninterpreter.org)
-  | [Get Started](https://github.com/gwen-interpreter/gwen-web/wiki/Getting-Started)
-  | [DSL](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL)
-  | [Settings](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings)
-  | [Blog](https://gweninterpreter.wordpress.com)
-  | [Wiki](https://github.com/gwen-interpreter/gwen-web/wiki)
-  | [FAQ](https://github.com/gwen-interpreter/gwen-web/wiki/FAQ)
-  | [License](https://github.com/gwen-interpreter/gwen-web/blob/master/README.md#license)
-  | [Support](#user-network-and-support)
-  | [Twitter](https://twitter.com/gweninterpreter)
+A [Gherkin](https://docs.cucumber.io/gherkin/reference/) interpreter that enables teams to quickly automate front end web tests and repetitive online processes with feature specifications. A [web DSL](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL) interacts with [Selenium](http://www.seleniumhq.org/projects/webdriver) under the covers to perform operations and checks in a consistent reliable manner across browsers for you. All the standard Selenium locators are supported and you can additionally inject JavaScript in places where dynamically finding elements or running functions on web pages may be necessary.
 
 ## Current Status
 
@@ -35,9 +16,9 @@ finding elements or running functions on web pages may be necessary.
 - [Report Portal integration](https://github.com/gwen-interpreter/gwen/wiki/Report-Portal-Integration) for centralised reporting and real-time analytics.
 - [Masked Settings](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#masked-settings) to hide private and sensitive property values from view and prevent them from being logged and reported.
 
-Why Gwen?
----------
-So you can drive web based tests and online processes with declarative Gherkin [feature](https://docs.cucumber.io/gherkin/reference/) specs that describe behavior ..
+How it Works?
+-------------
+1. Declare [feature specs](https://docs.cucumber.io/gherkin/reference/) to describe how scenarios and examples must behave.
 ```gherkin
   Feature: Todo
 
@@ -49,7 +30,7 @@ So you can drive web based tests and online processes with declarative Gherkin [
       Then the list will contain 2 items
 ```
 
-.. by defining locators and step definitions in separate and imperative Gherkin [meta](https://github.com/gwen-interpreter/gwen/wiki/Meta-Features) specs that describe automation ..
+2. Compose [meta specs](https://github.com/gwen-interpreter/gwen/wiki/Meta-Features) to describe what your feature specs will execute.
 ```gherkin
   Feature: Todo Meta (automation glue)
                         
@@ -70,12 +51,19 @@ So you can drive web based tests and online processes with declarative Gherkin [
  Scenario: the list will contain <expected> items
       Then count should be "$<expected>"
  ```
-.. without having to develop any framework, page objects or Selenium code.
+3. Launch Gwen to bind your meta and execute your features to drive automation.
 
-How it Works
-------------
+System Requirements
+-------------------
 
-[Meta features](https://github.com/gwen-interpreter/gwen/wiki/Meta-Features) are the automation glue in Gwen and they are defined in Gherkin too. They define locators and step definitions that are matched against steps in features to locate elements and perform browser operations using the Gwen [web DSL](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL). `@StepDef` annotated scenarios in meta are loaded into memory when Gwen is launched and bound to steps in features by name to achieve execution at runtime. So your features remain clean and free of automation clutter.
+- Linux, Mac or Windows OS
+- Chrome, Firefox, Safari, Edge or IE web browser
+- Java 8 (version 1.8) or higher
+
+Get Started
+-----------
+
+See the [getting started](https://gweninterpreter.org/docs/get-started) guide on our Gwen project website.
 
 Key Features
 ------------
@@ -87,24 +75,6 @@ Key Features
 - A prescribed [Web DSL](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL) performs all browser interactions for you
 - Automation across browsers and platforms is consistent (Chrome, Firefox, Safari, Edge and IE)
 - An interactive [REPL console](https://github.com/gwen-interpreter/gwen/wiki/REPL-Console) provides a step by step execution environment
-
-Get Started
------------
-
-### System Requirements
-
-- Linux, Mac or Windows OS
-- Chrome, Firefox, Safari, Edge or IE web browser
-- Java JRE or JDK 8 (version 1.8) or higher
-  - You can verify that you have Java installed by opening a command prompt and typing `java -version`. A version will be displayed if you have Java installed.
-  - [Install Java](https://www.java.com/en/download/manual.jsp) if you do not see a version displayed 
-
-### Install Gwen and Go!
-
-Ensure that your system meets the above requirements and then perform the following:
-
-1. Download and extract [gwen-workspace.zip](https://github.com/gwen-interpreter/gwen-web/releases/latest/download/gwen-workspace.zip) into to a folder on your computer
-2. [Start automating](https://github.com/gwen-interpreter/gwen-web/wiki/Getting-Started)
 
 Learn More
 ----------
@@ -138,11 +108,6 @@ Learn More
 - [Dialects](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#gwenfeaturedialect) for [Gherkin's spoken languages](https://cucumber.io/docs/gherkin/reference/#spoken-languages)
 - Configurable [maximum number of threads](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#gwenparallelmaxthreads) for parallel execution
 - Simplified [data table iteration with @ForEach](https://github.com/gwen-interpreter/gwen/wiki/Data-Tables#simplified-foreach)
-
-User Network and Support
-------------------------
-
-Join our user network at [Gwenify](https://www.gwenify.com/) to get access to the community and company level chat and support for your workplace.
 
 License
 -------
