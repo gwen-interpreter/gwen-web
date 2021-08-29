@@ -1,13 +1,16 @@
 2.53.3
 ======
-July 25, 2021
+July 29, 2021
 - Issue #83: fix drag drop
 - Issue #79: resolve attributes in examples tables
 - Issue #80: wait for alert popup with timeout of `gwen.web.wait.seconds`
 - Issue #82: move to element when sending single character control keys
-- Improved usage (--help) text
-- Fix parallel scenario-level execution for Gherkin's spoken languages/dialects
 - Bundle same samples in universal package and workspace
+- Update Gwen core from v2.34.1 to v[2.34.2](https://github.com/gwen-interpreter/gwen/releases/tag/v2.34.2)
+  - Improved usage (--help) text
+  - Fix parallel scenario-level execution for Gherkin's spoken languages/dialects
+
+
 
 2.53.2
 ======
