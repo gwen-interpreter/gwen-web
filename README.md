@@ -1,27 +1,9 @@
 [![Gwen-web](https://github.com/gwen-interpreter/gwen/wiki/img/gwen-attractor.png)](https://github.com/gwen-interpreter/gwen/wiki/The-Gwen-Logo)
 
-Gwen Web Automation
-===================
+Gwen-Web
+========
 
-A dynamic interpreter that enables teams to quickly automate front end web tests and 
-repetitive online processes with [Gherkin](https://docs.cucumber.io/gherkin/reference/) 
-feature specifications. A [web DSL](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL) 
-interacts with [Selenium](http://www.seleniumhq.org/projects/webdriver) 
-under the covers for you so you don't have to do any of that programming or technical 
-development work. All the standard Selenium locators are supported and you can
-additionally inject JavaScript in places where dynamically finding elements or running 
-functions on web pages may be necessary.
-
-> [Home](http://gweninterpreter.org)
-  | [Get Started](https://gweninterpreter.org/docs/get-started)
-  | [DSL](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL)
-  | [Settings](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings)
-  | [Blog](https://gweninterpreter.wordpress.com)
-  | [Wiki](https://github.com/gwen-interpreter/gwen-web/wiki)
-  | [FAQ](https://github.com/gwen-interpreter/gwen-web/wiki/FAQ)
-  | [License](https://github.com/gwen-interpreter/gwen-web/blob/master/README.md#license)
-  | [Support](#user-network-and-support)
-  | [Twitter](https://twitter.com/gweninterpreter)
+A [Gherkin](https://docs.cucumber.io/gherkin/reference/) interpreter that enables teams to quickly automate front end web tests and repetitive online processes with feature specifications. A [web DSL](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL) interacts with [Selenium](http://www.seleniumhq.org/projects/webdriver) under the covers to perform operations and checks in a consistent reliable manner across browsers for you. All the standard Selenium locators are supported and you can additionally inject JavaScript in places where dynamically finding elements or running functions on web pages may be necessary.
 
 ## Current Status
 
@@ -36,9 +18,9 @@ functions on web pages may be necessary.
 - [Report Portal integration](https://github.com/gwen-interpreter/gwen/wiki/Report-Portal-Integration) for centralised reporting and real-time analytics.
 - [Masked Settings](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#masked-settings) to hide private and sensitive property values from view and prevent them from being logged and reported.
 
-Why Gwen?
----------
-So you can drive web based tests and online processes with declarative Gherkin [feature](https://docs.cucumber.io/gherkin/reference/) specs that describe behavior ..
+How it Works?
+-------------
+1. Declare [feature specs](https://docs.cucumber.io/gherkin/reference/) to describe how scenarios and examples must behave.
 ```gherkin
   Feature: Todo
 
@@ -50,7 +32,7 @@ So you can drive web based tests and online processes with declarative Gherkin [
       Then the list will contain 2 items
 ```
 
-.. by defining locators and step definitions in separate and imperative Gherkin [meta](https://github.com/gwen-interpreter/gwen/wiki/Meta-Features) specs that describe automation ..
+2. Compose [meta specs](https://github.com/gwen-interpreter/gwen/wiki/Meta-Features) to describe what your feature specs will execute.
 ```gherkin
   Feature: Todo Meta (automation glue)
                         
@@ -71,12 +53,12 @@ So you can drive web based tests and online processes with declarative Gherkin [
  Scenario: the list will contain <expected> items
       Then count should be "$<expected>"
  ```
-.. without having to develop any framework, page objects or Selenium code.
+3. Launch Gwen to bind your meta and execute your features to drive automation.
 
 Get Started
 -----------
 
-See the [getting started](https://gweninterpreter.org/docs/get-started) user guide on our Gwen project website.
+See the [getting started](https://gweninterpreter.org/docs/get-started) guide on our Gwen project website.
 
 Key Features
 ------------
