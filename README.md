@@ -55,6 +55,13 @@ How it Works?
  ```
 3. Launch Gwen to bind your meta and execute your features to drive automation.
 
+System Requirements
+-------------------
+
+- Linux, Mac or Windows OS
+- Chrome, Firefox, Safari, Edge or IE web browser
+- Java 8 (version 1.8) or higher
+
 Get Started
 -----------
 
