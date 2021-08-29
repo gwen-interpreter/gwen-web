@@ -13,7 +13,7 @@ additionally inject JavaScript in places where dynamically finding elements or r
 functions on web pages may be necessary.
 
 > [Home](http://gweninterpreter.org)
-  | [Get Started](https://github.com/gwen-interpreter/gwen-web/wiki/Getting-Started)
+  | [Get Started](https://gweninterpreter.org/docs/get-started)
   | [DSL](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL)
   | [Settings](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings)
   | [Blog](https://gweninterpreter.wordpress.com)
@@ -73,10 +73,10 @@ So you can drive web based tests and online processes with declarative Gherkin [
  ```
 .. without having to develop any framework, page objects or Selenium code.
 
-How it Works
-------------
+Get Started
+-----------
 
-[Meta features](https://github.com/gwen-interpreter/gwen/wiki/Meta-Features) are the automation glue in Gwen and they are defined in Gherkin too. They define locators and step definitions that are matched against steps in features to locate elements and perform browser operations using the Gwen [web DSL](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL). `@StepDef` annotated scenarios in meta are loaded into memory when Gwen is launched and bound to steps in features by name to achieve execution at runtime. So your features remain clean and free of automation clutter.
+See the [getting started](https://gweninterpreter.org/docs/get-started) user guide on our Gwen project website.
 
 Key Features
 ------------
@@ -88,24 +88,6 @@ Key Features
 - A prescribed [Web DSL](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL) performs all browser interactions for you
 - Automation across browsers and platforms is consistent (Chrome, Firefox, Safari, Edge and IE)
 - An interactive [REPL console](https://github.com/gwen-interpreter/gwen/wiki/REPL-Console) provides a step by step execution environment
-
-Get Started
------------
-
-### System Requirements
-
-- Linux, Mac or Windows OS
-- Chrome, Firefox, Safari, Edge or IE web browser
-- Java JRE or JDK 8 (version 1.8) or higher
-  - You can verify that you have Java installed by opening a command prompt and typing `java -version`. A version will be displayed if you have Java installed.
-  - [Install Java](https://www.java.com/en/download/manual.jsp) if you do not see a version displayed 
-
-### Install Gwen and Go!
-
-Ensure that your system meets the above requirements and then perform the following:
-
-1. Download and extract [gwen-workspace.zip](https://github.com/gwen-interpreter/gwen-web/releases/latest/download/gwen-workspace.zip) into to a folder on your computer
-2. [Start automating](https://github.com/gwen-interpreter/gwen-web/wiki/Getting-Started)
 
 Learn More
 ----------
@@ -139,11 +121,6 @@ Learn More
 - [Dialects](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#gwenfeaturedialect) for [Gherkin's spoken languages](https://cucumber.io/docs/gherkin/reference/#spoken-languages)
 - Configurable [maximum number of threads](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#gwenparallelmaxthreads) for parallel execution
 - Simplified [data table iteration with @ForEach](https://github.com/gwen-interpreter/gwen/wiki/Data-Tables#simplified-foreach)
-
-User Network and Support
-------------------------
-
-Join our user network at [Gwenify](https://www.gwenify.com/) to get access to the community and company level chat and support for your workplace.
 
 License
 -------
