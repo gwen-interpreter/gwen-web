@@ -884,8 +884,12 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     val keys = Keys.chord(keysToSend.map(k => Try(Keys.valueOf(k.toUpperCase)).getOrElse(k))*)
     elementBindingOpt match {
       case Some(binding) =>
-        withDriverAndElement(binding, s"trying to send keys to $binding") { (driver, webElement) =>
-          webElement.sendKeys(keys)
+        withDriverAndElement(binding, s"trying to send key(s) to $binding") { (driver, webElement) =>
+          if (keys.size > 1) {
+            webElement.sendKeys(keys)
+          } else {
+            createActions(driver).moveToElement(webElement).sendKeys(webElement, keys).build().perform()
+          }
         }
       case None =>
         withWebDriver { driver =>
