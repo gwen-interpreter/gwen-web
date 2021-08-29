@@ -1,3 +1,5 @@
+import NativePackagerHelper._
+
 enablePlugins(JavaAppPackaging)
 enablePlugins(ClasspathJarPlugin)
 
@@ -7,6 +9,8 @@ mappings in Universal += file("LICENSE") -> "LICENSE.txt"
 mappings in Universal += file("NOTICE") -> "NOTICE.txt"
 mappings in Universal += file("LICENSE-THIRDPARTY") -> "LICENSE-THIRDPARTY.txt"
 mappings in Universal += file("CHANGELOG") -> "CHANGELOG.txt"
+mappings in Universal ++= directory("samples")
+
 
 // include GWEN_CLASSPATH variable in app classpath of universal script
 val bashClasspathPattern = "declare -r app_classpath=\"(.*)\"\n".r

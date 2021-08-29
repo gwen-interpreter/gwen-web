@@ -1,0 +1,27 @@
+@Sample
+Feature: Todo Meta
+
+  @Context
+  @StepDef
+  Scenario: a new todo list
+      Given my todo list can be located by css ".todo-list"
+       When I navigate to "https://todomvc.com/examples/react"
+       Then the page title should contain "TodoMVC"
+        And my todo list should be hidden
+
+  @Action
+  @StepDef
+  @DataTable(header="top")
+  @ForEach
+  Scenario: the following items are added
+      Given the todo field can be located by class "new-todo"
+        And my new item is "${data[Item]}"
+       When I enter my new item in the todo field
+       Then my todo list should contain my new item
+
+  @Assertion
+  @StepDef
+  Scenario: the list will contain <expected-count> items
+      Given the displayed count can be located by css ".todo-count strong"
+       Then the displayed count should be "$<expected-count>"
+       
