@@ -5,7 +5,7 @@ Feature: Todo Meta
   @StepDef
   Scenario: a new todo list
       Given my todo list can be located by css ".todo-list"
-       When I navigate to "${todo.page.url}"
+       When I navigate to "https://todomvc.com/examples/react"
        Then the page title should contain "TodoMVC"
         And my todo list should be hidden
 
