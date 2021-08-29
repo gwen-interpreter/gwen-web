@@ -49,7 +49,7 @@ import java.util.concurrent.Semaphore
 object DriverManager {
 
   /** Semaphore to limit number of permitted web drivers to max threads setting. */
-  lazy val DriverPermit = new Semaphore(GwenSettings.`gwen.parallel.maxThreads`, true)
+  val DriverPermit = new Semaphore(GwenSettings.`gwen.parallel.maxThreads`, true)
 
 }
 
