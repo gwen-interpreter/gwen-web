@@ -626,19 +626,27 @@ class WebContext(env: WebEnvContext, driverManager: DriverManager) extends WebEl
   }
 
   def sendKeys(elementBindingOpt: Option[LocatorBinding], keysToSend: Array[String]): Unit = {
-    val keys = Keys.chord(keysToSend.map(k => Try(Keys.valueOf(k.toUpperCase)).getOrElse(k)): _*)
+    val keys =  keysToSend.map(_.trim).map(key => Try(Keys.valueOf(key.toUpperCase)).getOrElse(key))
     elementBindingOpt match {
       case Some(elementBinding) =>
         withDriverAndElement(elementBinding, s"trying to send keys to $elementBinding") { (driver, webElement) =>
           if (keys.size > 1) {
-            webElement.sendKeys(keys)
+            webElement.sendKeys(Keys.chord(keys: _*))
           } else {
-            createActions(driver).moveToElement(webElement).sendKeys(webElement, keys).build().perform()
+            var actions = createActions(driver).moveToElement(webElement)
+            keys.foreach { key => actions = actions.sendKeys(webElement, key) }
+            actions.build().perform()
           }
         }
       case None =>
         withWebDriver { driver =>
-          createActions(driver).sendKeys(keys).build().perform()
+          var actions = createActions(driver)
+          if (keys.size > 1) {
+            actions = actions.sendKeys(Keys.chord(keys: _*))
+          } else {
+            keys.foreach { key => actions = actions.sendKeys(key) }
+          }
+          actions.build().perform()
         }
     }
   }
