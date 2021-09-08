@@ -1,9 +1,16 @@
+2.53.5
+======
+September 8, 2021
+- Update Gwen core from v2.34.3 to v[2.34.4](https://github.com/gwen-interpreter/gwen/releases/tag/v2.34.4)
+  - Banner fix
+
 2.53.4
 ======
 September 8, 2021
 - Issue #82: - Do not send single control keys with Selenium Keys.chord mechanism
 - Update Gwen core from v2.34.2 to v[2.34.3](https://github.com/gwen-interpreter/gwen/releases/tag/v2.34.3)
   - Update usage CLI text
+
 2.53.3
 ======
 August 29, 2021
