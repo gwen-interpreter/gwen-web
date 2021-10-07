@@ -27,7 +27,7 @@ class CaptureUrl(target: Option[String]) extends UnitStep[WebContext] {
 
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     checkStepRules(step, BehaviorType.Action, ctx)
-    val name = "the current URL"
+    val name = target.getOrElse("the current URL")
     val url = ctx.captureCurrentUrl
     ctx.topScope.set(name, url)
     step.addAttachment(name, "txt", url)
