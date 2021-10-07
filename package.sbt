@@ -23,18 +23,6 @@ bashScriptDefines := bashScriptDefines.value.map {
 }
 batScriptExtraDefines += """set "APP_CLASSPATH=%GWEN_CLASSPATH%;%SELENIUM_HOME%\*;%SELENIUM_HOME%\libs\*;%APP_CLASSPATH%""""
 
-// Set common pool parallelism to zero in parallel mode (required for Selenium 4)
-bashScriptExtraDefines += """[[ "$*" == *--parallel* ]] && addJava "-Djava.util.concurrent.ForkJoinPool.common.parallelism=0""""
-batScriptExtraDefines += """
-  |set args="%*"
-  |set args=%args:"=%
-  |set args=%args:&=%
-  |set args=%args:<=%
-  |set args=%args:>=%
-  |set args=%args:|=%
-  |if not "x%args:--parallel=%" == "x%args%" (call :add_java "-Djava.util.concurrent.ForkJoinPool.common.parallelism=0")
-  |""".stripMargin
-
 // add universal zip to published artifacts
 val packageZip = taskKey[File]("package-zip")
 packageZip := (Compile / baseDirectory).value / "target" / "universal" / (name.value + "-" + version.value + ".zip")

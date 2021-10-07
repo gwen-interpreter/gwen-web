@@ -52,14 +52,6 @@ class WebEngine extends EvalEngine[WebContext] {
     */
   override def init(options: GwenOptions, envState: EnvState): WebContext = {
     WebSettings.check()
-    if (options.parallel) {
-      val commonParallelism = "java.util.concurrent.ForkJoinPool.common.parallelism"
-      if (sys.props.get(commonParallelism).filter(_ == "0").isEmpty) {
-        Errors.missingSettingError(
-          s"""|You must launch Gwen with the following JVM option to enable parallel execution:
-              |  -D$commonParallelism=0""".stripMargin)
-      }
-    }
     if (WebSettings.`gwen.web.capture.screenshots.highlighting`) {
       val fps = GwenSettings.`gwen.report.slideshow.framespersecond`
       Settings.setLocal("gwen.report.slideshow.framespersecond", (fps.toDouble * 1.8d).toInt.toString)
