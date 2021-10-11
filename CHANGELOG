@@ -1,3 +1,11 @@
+2.53.6
+======
+October 11, 2021
+- Update Gwen core from v2.34.4 to v[2.34.5](https://github.com/gwen-interpreter/gwen/releases/tag/v2.34.5)
+  - Fix RP heartbeat timeout issue #85:
+    - Close input stream after reading RP heartbeat response.
+    - Keep retrying failed RP heartbeats until configured timeout expires
+
 2.53.5
 ======
 September 8, 2021
