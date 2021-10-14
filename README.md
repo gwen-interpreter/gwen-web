@@ -1,7 +1,12 @@
 Gwen-Web
 ========
 
-A [Gherkin](https://docs.cucumber.io/gherkin/reference/) interpreter that enables teams to quickly automate front end web tests and repetitive online processes with feature specifications. A [web DSL](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL) interacts with [Selenium](http://www.seleniumhq.org/projects/webdriver) under the covers to perform operations and checks in a consistent reliable manner across browsers for you. All the standard Selenium locators are supported and you can additionally inject JavaScript in places where dynamically finding elements or running functions on web pages may be necessary.
+A [Gwen](https://github.com/gwen-interpreter/gwen/) interpreter that enables teams to automate front end web tests and repetitive online processes with [Gherkin](https://docs.cucumber.io/gherkin/reference/) feature specifications. A web engine interacts with [Selenium](http://www.seleniumhq.org/projects/webdriver) under the covers to perform operations and checks in browsers for you. All the standard Selenium locators are supported and you can additionally inject JavaScript in places where dynamically finding elements or running functions on web pages may be necessary.
+
+Get Started
+-----------
+
+Visit the [Gwen home page](https://gweninterpreter.org) for our user documentation and getting started guide.
 
 ## Current Status
 
@@ -59,11 +64,6 @@ System Requirements
 - Linux, Mac or Windows OS
 - Chrome, Firefox, Safari, Edge or IE web browser
 - Java 8 (version 1.8) or higher
-
-Get Started
------------
-
-See the [getting started](https://gweninterpreter.org/docs/get-started) guide on our Gwen project website.
 
 Key Features
 ------------

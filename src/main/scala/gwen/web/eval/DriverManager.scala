@@ -49,7 +49,15 @@ import java.util.concurrent.Semaphore
 object DriverManager {
 
   /** Semaphore to limit number of permitted web drivers to max threads setting. */
-  val DriverPermit = new Semaphore(GwenSettings.`gwen.parallel.maxThreads`, true)
+  private lazy val totalPermits = GwenSettings.`gwen.parallel.maxThreads`
+  private lazy val driverPermits = new Semaphore(totalPermits, true)
+
+  def acquireDriverPermit(): Unit = driverPermits.acquire()
+  def releaseDriverPermit(): Unit = {
+    if (driverPermits.availablePermits() < totalPermits) {
+      driverPermits.release()
+    }
+  }
 
 }
 
@@ -94,7 +102,7 @@ class DriverManager() extends LazyLogging {
         driver.quit()
         drivers.remove(name)
       } finally {
-        DriverManager.DriverPermit.release()
+        DriverManager.releaseDriverPermit()
       }
     }
     session = "primary"
@@ -109,7 +117,7 @@ class DriverManager() extends LazyLogging {
 
   /** Loads the selenium webdriver. */
   private [eval] def loadWebDriver: WebDriver = withGlobalSettings {
-    DriverManager.DriverPermit.acquire()
+    DriverManager.acquireDriverPermit()
     try {
       (WebSettings.`gwen.web.remote.url` match {
         case Some(addr) =>
@@ -125,7 +133,7 @@ class DriverManager() extends LazyLogging {
       }
     } catch {
       case e: Throwable =>
-        DriverManager.DriverPermit.release()
+        DriverManager.releaseDriverPermit()
         throw e
     }
   }

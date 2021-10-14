@@ -47,7 +47,7 @@ class DriverManagerTest extends BaseTest with Matchers with MockitoSugar with Be
   var mockRemoteDriver: RemoteWebDriver = _
 
   override def afterEach(): Unit = {
-    DriverManager.DriverPermit.release();
+    DriverManager.releaseDriverPermit()
   }
 
   "Firefox setting" should "load firefox driver" in {

@@ -38,7 +38,7 @@ lazy val projectSettings = Seq(
 )
 
 lazy val mainDependencies = {
-  val selenium = "4.0.0-rc-2"
+  val selenium = "4.0.0"
   val driverMgr = "5.0.3"
 
   Seq(
