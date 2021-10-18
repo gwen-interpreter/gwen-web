@@ -10,25 +10,42 @@ m d, yyyy
   - Support *.conf (HOCON), and *.json settings files in addition to *.properties files
   - Configurable CLI defaults
   - Deprecated CLI option:
-    - `-p/--properties` in favor of `-c/--config`
-  - Deprecated settings:
-    - `gwen.feature.failfast` in favor of `gwen.feature.failfast.enabled`
-    - `gwen.rp.heartbeat` in favor of `gwen.rp.heartbeat.enabled`
-    - `gwen.web.capture.screenshots` in favor of `gwen.web.capture.screenshots.enabled`
-    - `gwen.web.browser` in favor of `gwen.web.browser.target`
-  - Changed setting defaults:
+    - `-p/--properties` in favor of `-c/--conf`
+  - Renamed settings:
+    - `gwen.feature.failfast` renamed to `gwen.feature.failfast.enabled`
+    - `gwen.rp.heartbeat` renamed to `gwen.rp.heartbeat.enabled`
+    - `gwen.web.capture.screenshots` renamed to `gwen.web.capture.screenshots.enabled`
+    - `gwen.web.browser` renamed to `gwen.web.browser.target`
+  - Changed settings defaults:
     - `gwen.associative.meta = true` instead of `false`
-  - New setting for specifying output directory of Gwen generated files (reports, etc..)
-    - `gwen.output.dir` (default = target)
+    - `gwen.behavior.rules = strict` instead of `lenient`
+    - `gwen.feature.mode = declarative` instead of `imperative`
+    - `gwen.report.suppress.meta = true` instead of `false`
+    - `gwen.auto.discover.data.csv = false` instead of `true`
+  - New settings
+    - For specifying output directory of Gwen generated files (reports, etc..)
+      - `gwen.output.dir` (default = target)
+    - Configurable CLI defaults:
+      - `gwen.cli.options.batch`
+      - `gwen.cli.options.formats`
+      - `gwen.cli.options.config`
+      - `gwen.cli.options.dryRun`
+      - `gwen.cli.options.features`
+      - `gwen.cli.options.input`
+      - `gwen.cli.options.meta`
+      - `gwen.cli.options.parallel`
+      - `gwen.cli.options.parallelFeatures`
+      - `gwen.cli.options.report`
+      - `gwen.cli.options.tags`
   - Drop Applitools integration
   - Migrate to Selenium 4 and add support for:
     - Relative locators
       - `<element> can be located by <id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text> "<expression>" <above|below|near|to left of|to right of> <otherElement>`
       - `<element> can be located by <id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text> "<expression>" <above|below|near|to left of|to right of> <otherElement> with no <timeout|wait>`
       - `<element> can be located by <id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text> "<expression>" <above|below|near|to left of|to right of> <otherElement> with <timeoutSecs> second <timeout|wait>`
-      - `<element> can be located by <id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text> "<expression>" near <otherElement> within <noOfPixels> pixels`
-      - `<element> can be located by <id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text> "<expression>" near <otherElement> within <noOfPixels> pixels with no <timeout|wait>`
-      - `<element> can be located by <id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text> "<expression>" near <otherElement> within <noOfPixels> pixels with <timeoutSecs> second <timeout|wait>`
+      - `<element> can be located by <id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text> "<expression>" near and within <noOfPixels> pixel[s] of <otherElement>`
+      - `<element> can be located by <id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text> "<expression>" near and within <noOfPixels> pixel[s] of <otherElement> with no <timeout|wait>`
+      - `<element> can be located by <id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text> "<expression>" near and within <noOfPixels> pixel[s] of <otherElement> with <timeoutSecs> second <timeout|wait>`
     - Windows and tabs
       - `I start a new browser tab`
       - `I start a new browser window`
@@ -37,11 +54,10 @@ m d, yyyy
       - `I close window <occurrence>`
       - `I close tab <occurrence>`
     - Web element screenshots
-      - `I capture the screenshot of <element> as <my element screenshot>`
-      - `I capture the screenshot of <element>`
-    - Full page screenshot capture
+      - `I capture element screenshot of <element>`
+      - `I capture element screenshot of <element> as <name>`
     - Use implict fast locators when checking for absence of elements to avoid 
-      waiting for timeout period to lapse
+      waiting for entire timeout period to lapse
 
 2.53.6
 ======
