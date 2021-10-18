@@ -50,7 +50,7 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
       GwenSettings.`gwen.parallel.maxThreads` should be (GwenSettings.availableProcessors)
       GwenSettings.`gwen.rampup.interval.seconds` should be (None)
       GwenSettings.`gwen.report.overwrite` should be (false)
-      GwenSettings.`gwen.report.suppress.meta` should be (false)
+      GwenSettings.`gwen.report.suppress.meta` should be (true)
       GwenSettings.`gwen.report.slideshow.create` should be (false)
       GwenSettings.`gwen.report.slideshow.framespersecond` should be (4)
       GwenSettings.`gwen.state.level` should be (StateLevel.feature)
