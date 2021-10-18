@@ -3,40 +3,9 @@
 m d, yyyy
 - Gwen 3 release
   - Refactor and migrate codebase to Scala 3
-  - Add init CLI option for initialising a new Gwen working directory
-  - Introduce [Gwen-Web NPM package]([gwen-web-npm](https://github.com/gwen-interpreter/gwen-web-npm)
-    for integrating Gwen into JS projects
-    - Deprecate gwen-gpm and Gwen workspaces in favor of NPM package and init CLI option
-  - Support *.conf (HOCON), and *.json settings files in addition to *.properties files
-  - Configurable CLI defaults
-  - Deprecated CLI option:
-    - `-p/--properties` in favor of `-c/--conf`
-  - Renamed settings:
-    - `gwen.feature.failfast` renamed to `gwen.feature.failfast.enabled`
-    - `gwen.rp.heartbeat` renamed to `gwen.rp.heartbeat.enabled`
-    - `gwen.web.capture.screenshots` renamed to `gwen.web.capture.screenshots.enabled`
-    - `gwen.web.browser` renamed to `gwen.web.browser.target`
-  - Changed settings defaults:
-    - `gwen.associative.meta = true` instead of `false`
-    - `gwen.behavior.rules = strict` instead of `lenient`
-    - `gwen.feature.mode = declarative` instead of `imperative`
-    - `gwen.report.suppress.meta = true` instead of `false`
-    - `gwen.auto.discover.data.csv = false` instead of `true`
-  - New settings
-    - For specifying output directory of Gwen generated files (reports, etc..)
-      - `gwen.output.dir` (default = target)
-    - Configurable CLI defaults:
-      - `gwen.cli.options.batch`
-      - `gwen.cli.options.formats`
-      - `gwen.cli.options.config`
-      - `gwen.cli.options.dryRun`
-      - `gwen.cli.options.features`
-      - `gwen.cli.options.input`
-      - `gwen.cli.options.meta`
-      - `gwen.cli.options.parallel`
-      - `gwen.cli.options.parallelFeatures`
-      - `gwen.cli.options.report`
-      - `gwen.cli.options.tags`
+  - Introduce [Gwen-Web npm package]([gwen-web-npm](https://github.com/gwen-interpreter/gwen-web-npm)
+  - Deprecate gwen-gpm in favor of npm
+  - Deprecate Gwen workspaces in favor of JS projects
   - Drop Applitools integration
   - Migrate to Selenium 4 and add support for:
     - Relative locators
@@ -58,6 +27,45 @@ m d, yyyy
       - `I capture element screenshot of <element> as <name>`
     - Use implict fast locators when checking for absence of elements to avoid 
       waiting for entire timeout period to lapse
+  - Update Gwen core from v2.53.6 to v[3.0.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.0.0)
+    - Settings changes:
+      - Support *.conf (HOCON), and *.json settings files in addition to *.properties files
+      - Renamed settings:
+        - `gwen.feature.failfast` renamed to `gwen.feature.failfast.enabled`
+        - `gwen.rp.heartbeat` renamed to `gwen.rp.heartbeat.enabled`
+        - `gwen.web.capture.screenshots` renamed to `gwen.web.capture.screenshots.enabled`
+        - `gwen.web.browser` renamed to `gwen.web.browser.target`
+      - Changed settings defaults:
+        - `gwen.associative.meta = true` instead of `false`
+        - `gwen.behavior.rules = strict` instead of `lenient`
+        - `gwen.feature.mode = declarative` instead of `imperative`
+        - `gwen.report.suppress.meta = true` instead of `false`
+        - `gwen.auto.discover.data.csv = false` instead of `true`
+      - New settings
+        - Configurable output directory
+          - `gwen.output.dir` (default = target)
+        - Configurable CLI options:
+          - `gwen.cli.options.batch`
+          - `gwen.cli.options.formats`
+          - `gwen.cli.options.config`
+          - `gwen.cli.options.dryRun`
+          - `gwen.cli.options.features`
+          - `gwen.cli.options.input`
+          - `gwen.cli.options.meta`
+          - `gwen.cli.options.parallel`
+          - `gwen.cli.options.parallelFeatures`
+          - `gwen.cli.options.report`
+          - `gwen.cli.options.tags`
+    - CLI changes:
+      - New command
+        - `init` for initialising a new Gwen working directory
+      - New options
+        - `-c|--conf` for loading .conf, .json and .properties settings files
+        - `-f|--format none` for no report generation
+      - Deprecated option
+        -  `-p|--properties` in favor of `-c|--conf`
+      - Configurable defaults for all CLI options
+      - Generate HTML reports by default
 
 2.53.6
 ======
