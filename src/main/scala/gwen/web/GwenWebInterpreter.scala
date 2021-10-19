@@ -36,9 +36,9 @@ object GwenWebInterpreter extends GwenInterpreter(new WebEngine()) {
     *
     * @param dir the directory to initialise
     */
-  override def initProjectDir(dir: File): Unit = {
+  override def initProject(dir: File): Unit = {
     
-    super.initProjectDir(dir)
+    super.initProject(dir)
 
     new File(dir, "browsers") tap { dir =>
       FileIO.copyClasspathTextResourceToFile("/init/browsers/chrome.conf", dir)
@@ -65,10 +65,6 @@ object GwenWebInterpreter extends GwenInterpreter(new WebEngine()) {
       FileIO.copyClasspathTextResourceToFile("/init/meta/README.md", dir)
     }
 
-    new File(dir, "output") tap { dir =>
-      FileIO.copyClasspathTextResourceToFile("/init/output/README.md", dir)
-    }
-
     new File(dir, "samples/floodio") tap { dir =>
       FileIO.copyClasspathTextResourceToFile("/init/samples/floodio/FloodIO.feature", dir)
       FileIO.copyClasspathTextResourceToFile("/init/samples/floodio/FloodIO.meta", dir)
@@ -89,10 +85,6 @@ object GwenWebInterpreter extends GwenInterpreter(new WebEngine()) {
       FileIO.copyClasspathTextResourceToFile("/init/samples/todo/Todo.meta", dir)
     }
 
-    new File(dir, "samples/") tap { dir =>
-      FileIO.copyClasspathTextResourceToFile("/init/samples/README.md", dir)
-    }
-
     FileIO.copyClasspathTextResourceToFile("/init/README.md", dir)
     FileIO.copyClasspathTextResourceToFile("/init/gitignore", dir, Some(".gitignore"))
     if (!new File("gwen.conf").exists()) {
@@ -105,8 +97,8 @@ object GwenWebInterpreter extends GwenInterpreter(new WebEngine()) {
     val filler = if (standalone) "   " else "       "
 
     println(
-      s"""|   /project                    # Project root
-          |   ├── gwen.conf               # Common/default Gwen settings${if (standalone) "" else {
+      s"""|  ./            $filler        # Project root
+          |   ├── gwen.conf$filler        # Common/default Gwen settings${if (standalone) "" else {
       s"""|
           |   └── /${dir.getPath}""".stripMargin}}
           |$filler├── .gitignore          # Git ignore file
@@ -128,7 +120,6 @@ object GwenWebInterpreter extends GwenInterpreter(new WebEngine()) {
           |$filler│   └── README.md
           |$filler├── /meta               # Optional common/reusable meta
           |$filler│   └── README.md
-          |$filler├── /output             # Output directory
           |$filler└── /samples            # Sample features and meta
           |
           |""".stripMargin

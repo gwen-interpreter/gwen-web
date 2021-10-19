@@ -42,12 +42,7 @@ lazy val mainDependencies = {
   val driverMgr = "5.0.3"
 
   Seq(
-    "org.seleniumhq.selenium" % "selenium-chrome-driver" % selenium,
-    "org.seleniumhq.selenium" % "selenium-firefox-driver" % selenium,
-    "org.seleniumhq.selenium" % "selenium-edge-driver" % selenium,
-    "org.seleniumhq.selenium" % "selenium-ie-driver" % selenium,
-    "org.seleniumhq.selenium" % "selenium-safari-driver" % selenium,
-    "org.seleniumhq.selenium" % "selenium-support" % selenium excludeAll ExclusionRule(organization = "junit", name = "junit"),
+    "org.seleniumhq.selenium" % "selenium-java" % selenium,
     "io.github.bonigarcia" % "webdrivermanager" % driverMgr
   )
 }
@@ -71,3 +66,5 @@ Compile / packageBin / mappings ++= Seq(
   file("LICENSE-THIRDPARTY") -> "LICENSE-THIRDPARTY.txt",
   file("CHANGELOG") -> "CHANGELOG.txt"
 )
+
+executableScriptName := "gwen"
