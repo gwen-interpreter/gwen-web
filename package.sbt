@@ -12,9 +12,6 @@ Universal / mappings ++= Seq(
   file("CHANGELOG") -> "CHANGELOG.txt"
 )
 
-Universal / mappings ++= directory("src/main/resources/init/samples")
-
-
 // include GWEN_CLASSPATH variable in app classpath of universal script
 val bashClasspathPattern = "declare -r app_classpath=\"(.*)\"\n".r
 bashScriptDefines := bashScriptDefines.value.map {
