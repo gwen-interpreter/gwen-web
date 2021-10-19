@@ -47,6 +47,7 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
       GwenSettings.`gwen.feature.failfast.exit` should be (false)
       GwenSettings.`gwen.feature.mode` should be (FeatureMode.imperative)
       GwenSettings.`gwen.mask.char` should be ('●')
+      GwenSettings.`gwen.output.dir`.getPath should be ("target")
       GwenSettings.`gwen.parallel.maxThreads` should be (GwenSettings.availableProcessors)
       GwenSettings.`gwen.rampup.interval.seconds` should be (None)
       GwenSettings.`gwen.report.overwrite` should be (false)
