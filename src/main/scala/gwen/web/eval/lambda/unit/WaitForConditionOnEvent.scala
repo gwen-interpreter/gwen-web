@@ -19,7 +19,7 @@ package gwen.web.eval.lambda.unit
 import gwen.web.eval.ElementEvent
 import gwen.web.eval.WebContext
 
-import gwen.core.behavior.BehaviorType
+import gwen.core.behaviour.BehaviourType
 import gwen.core.eval.binding.JavaScriptBinding
 import gwen.core.eval.lambda.UnitStep
 import gwen.core.node.GwenNode
@@ -31,7 +31,7 @@ class WaitForConditionOnEvent(element: String, event: ElementEvent, condition: S
 
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     step tap { _ =>
-      checkStepRules(step, BehaviorType.Context, ctx)
+      checkStepRules(step, BehaviourType.Context, ctx)
       ctx.scopes.get(JavaScriptBinding.key(condition))
       ctx.getLocatorBinding(element)
       ctx.scopes.set(s"$element/${ElementEvent.actionOf(event)}/condition", condition)

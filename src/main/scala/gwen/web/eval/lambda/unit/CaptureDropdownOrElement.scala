@@ -21,7 +21,7 @@ import gwen.web.eval.WebContext
 import gwen.web.eval.WebErrors
 
 import gwen.core._
-import gwen.core.behavior.BehaviorType
+import gwen.core.behaviour.BehaviourType
 import gwen.core.eval.lambda.UnitStep
 import gwen.core.eval.lambda.unit.Capture
 import gwen.core.node.GwenNode
@@ -30,7 +30,7 @@ import gwen.core.node.gherkin.Step
 class CaptureDropdownOrElement(target: Option[String], element: String, selection: DropdownSelection) extends UnitStep[WebContext] {
 
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
-    checkStepRules(step, BehaviorType.Action, ctx)
+    checkStepRules(step, BehaviourType.Action, ctx)
     val name = target.getOrElse(element)
     try {
       val content = ctx.boundAttributeOrSelection(element, Option(selection))()

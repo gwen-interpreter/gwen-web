@@ -16,13 +16,13 @@
 
 package gwen.web.features
 
-import gwen.core.behavior.BehaviorMode
+import gwen.core.behaviour.BehaviourMode
 
 class DryRunTest extends BaseFeatureTest {
 
   "Sequential dry run using feature-level state" should "validate all features" in {
-    BehaviorMode.values.foreach { rule => 
-      withSetting("gwen.behavior.rules", rule.toString) {
+    BehaviourMode.values.foreach { rule => 
+      withSetting("gwen.behaviour.rules", rule.toString) {
         withSetting("gwen.state.level", "feature") {
           evaluate(
             List(
@@ -38,8 +38,8 @@ class DryRunTest extends BaseFeatureTest {
   }
 
   "Parallel dry run using feature-level state" should "validate all features" in {
-    BehaviorMode.values.foreach { rule => 
-      withSetting("gwen.behavior.rules", rule.toString) {
+    BehaviourMode.values.foreach { rule => 
+      withSetting("gwen.behaviour.rules", rule.toString) {
         withSetting("gwen.state.level", "feature") {
           evaluate(
             List(
@@ -55,8 +55,8 @@ class DryRunTest extends BaseFeatureTest {
   }
 
   "Sequential dry run using scenario-level state" should "validate all features" in {
-    BehaviorMode.values.foreach { rule => 
-      withSetting("gwen.behavior.rules", rule.toString) {
+    BehaviourMode.values.foreach { rule => 
+      withSetting("gwen.behaviour.rules", rule.toString) {
         withSetting("gwen.state.level", "scenario") {
           evaluate(
             List(
@@ -75,8 +75,8 @@ class DryRunTest extends BaseFeatureTest {
   }
 
   "Parallel dry run using scenario-level state" should "validate all features" in {
-    BehaviorMode.values.foreach { rule => 
-      withSetting("gwen.behavior.rules", rule.toString) {
+    BehaviourMode.values.foreach { rule => 
+      withSetting("gwen.behaviour.rules", rule.toString) {
         withSetting("gwen.state.level", "scenario") {
           List(false, true).foreach { parallelFeatures =>
             evaluate(

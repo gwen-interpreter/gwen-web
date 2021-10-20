@@ -20,7 +20,7 @@ import gwen.web.eval.ElementState
 import gwen.web.eval.WebContext
 import gwen.core.eval.binding.JavaScriptBinding
 
-import gwen.core.behavior.BehaviorType
+import gwen.core.behaviour.BehaviourType
 import gwen.core.eval.lambda.UnitStep
 import gwen.core.node.GwenNode
 import gwen.core.node.gherkin.Step
@@ -34,7 +34,7 @@ class WaitForElementState(element: String, state: ElementState, negate: Boolean)
       val jsCondition = s"$element is${if (negate) " not" else ""} $state"
       ctx.scopes.getOpt(JavaScriptBinding.key(jsCondition)) match {
         case None =>
-          checkStepRules(step, BehaviorType.Action, ctx)
+          checkStepRules(step, BehaviourType.Action, ctx)
           val binding = ctx.getLocatorBinding(element).jsEquivalent
           ctx.waitForElementState(binding, state, negate)
         case Some(javascript) =>

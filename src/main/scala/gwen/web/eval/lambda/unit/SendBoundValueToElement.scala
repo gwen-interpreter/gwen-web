@@ -19,7 +19,7 @@ package gwen.web.eval.lambda.unit
 import gwen.web.eval.WebContext
 import gwen.web.eval.WebSettings
 
-import gwen.core.behavior.BehaviorType
+import gwen.core.behaviour.BehaviourType
 import gwen.core.eval.lambda.UnitStep
 import gwen.core.node.GwenNode
 import gwen.core.node.gherkin.Step
@@ -30,7 +30,7 @@ class SendBoundValueToElement(element: String, source: String, sendEnterKey: Boo
 
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     step tap { _ =>
-      checkStepRules(step, BehaviorType.Action, ctx)
+      checkStepRules(step, BehaviourType.Action, ctx)
       val binding = ctx.getLocatorBinding(element)
       val value = ctx.getBoundReferenceValue(source)
       val clickFirst = WebSettings.`gwen.web.sendKeys.clickFirst`

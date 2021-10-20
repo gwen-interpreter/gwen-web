@@ -19,7 +19,7 @@ package gwen.web.eval.lambda.unit
 import gwen.web.eval.ElementAction
 import gwen.web.eval.WebContext
 
-import gwen.core.behavior.BehaviorType
+import gwen.core.behaviour.BehaviourType
 import gwen.core.eval.lambda.UnitStep
 import gwen.core.node.GwenNode
 import gwen.core.node.gherkin.Step
@@ -30,7 +30,7 @@ class PerformElementAction(element: String, action: ElementAction, inContext: Op
 
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     step tap { _ =>
-      checkStepRules(step, BehaviorType.Action, ctx)
+      checkStepRules(step, BehaviourType.Action, ctx)
       inContext match {
         case Some(context) =>
           ctx.performActionInContext(action, element, context)

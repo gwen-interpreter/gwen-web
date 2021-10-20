@@ -20,7 +20,7 @@ import gwen.web.eval.DropdownSelection
 import gwen.web.eval.WebContext
 
 import gwen.core.Errors
-import gwen.core.behavior.BehaviorType
+import gwen.core.behaviour.BehaviourType
 import gwen.core.eval.ComparisonOperator
 import gwen.core.eval.lambda.UnitStep
 import gwen.core.node.GwenNode
@@ -33,7 +33,7 @@ import scala.util.chaining._
 class CompareValueOrSelectionToValue(element: String, selection: Option[DropdownSelection], expression: String, operator: ComparisonOperator, negate: Boolean) extends UnitStep[WebContext] {
 
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
-    checkStepRules(step, BehaviorType.Assertion, ctx)
+    checkStepRules(step, BehaviourType.Assertion, ctx)
     if (element == "I") Errors.undefinedStepError(step)
     if (element == "the current URL") {
       val url = ctx.captureCurrentUrl

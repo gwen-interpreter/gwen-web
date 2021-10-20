@@ -15,12 +15,6 @@ Visit the [Gwen home page](https://gweninterpreter.org) for our user documentati
 - [Latest release](https://github.com/gwen-interpreter/gwen-web/releases/latest)
 - [Change log](CHANGELOG)
 
-### What's New?
-
-- [Doc Strings as Parameters](https://github.com/gwen-interpreter/gwen/wiki/Doc-Strings/_edit#doc-strings-as-parameters)
-- [Report Portal integration](https://github.com/gwen-interpreter/gwen/wiki/Report-Portal-Integration) for centralised reporting and real-time analytics.
-- [Masked Settings](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#masked-settings) to hide private and sensitive property values from view and prevent them from being logged and reported.
-
 How it Works?
 -------------
 1. Declare [feature specs](https://docs.cucumber.io/gherkin/reference/) to describe how scenarios and examples must behave.
@@ -69,45 +63,12 @@ Key Features
 ------------
 
 - Behavour driven automation
-  - Declarative features describe behavior
+  - Declarative features describe behaviour
   - Imperative [Meta features](https://github.com/gwen-interpreter/gwen/wiki/Meta-Features) describe automation
   - Gwen binds the two at runtime to drive automation
 - A prescribed [Web DSL](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL) performs all browser interactions for you
 - Automation across browsers and platforms is consistent (Chrome, Firefox, Safari, Edge and IE)
 - An interactive [REPL console](https://github.com/gwen-interpreter/gwen/wiki/REPL-Console) provides a step by step execution environment
-
-Learn More
-----------
-
-- Features can execute in [batch mode](https://github.com/gwen-interpreter/gwen/wiki/Execution-Modes#batch-execution) or [interactively](https://github.com/gwen-interpreter/gwen/wiki/Execution-Modes#interactive-repl-execution)
-- Features and scenarios can execute [sequentially](https://github.com/gwen-interpreter/gwen/wiki/Execution-Modes#serial-execution) or in [parallel](https://github.com/gwen-interpreter/gwen/wiki/Execution-Modes#parallel-execution)
-- [Runtime settings](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings)
-- Execution can be [data driven](https://github.com/gwen-interpreter/gwen/wiki/Execution-Modes#csv-data-feeds) (using csv data feeds)
-- [Remote web driver](https://gweninterpreter.wordpress.com/2015/04/23/remote-webdriver-feature-now-available-in-gwen-web/) support
-- [Screenshot capture and slideshow](https://github.com/gwen-interpreter/gwen-web/wiki/Screenshot-Capture-and-Slideshows) playback
-- [Interchangeable Selenium](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#changing-the-selenium-version) implementation
-- [Locator Chaining](https://github.com/gwen-interpreter/gwen-web/wiki/Locator-Chaining)
-- [Headless Browser Execution](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#gwenwebbrowserheadless)
-- [Gwen Workspaces](https://gweninterpreter.wordpress.com/2017/12/18/gwen-workspaces/) for easy installation
-- [Template matching](https://github.com/gwen-interpreter/gwen/wiki/Template-Matching)
-- [Drag and Drop](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL#i-drag-and-drop-sourceelement-to-targetelement)
-- [Locator level timeouts](https://github.com/gwen-interpreter/gwen-web/wiki/Locator-Level-Timeouts)
-- [Implicit JavaScript Locators](https://github.com/gwen-interpreter/gwen-web/wiki/Implicit-JavaScript-Locators)
-- [Remote BrowserStack execution](https://gweninterpreter.wordpress.com/2018/06/16/running-gwen-on-browserstack/)
-- [Synchronized StepDef execution](https://github.com/gwen-interpreter/gwen/wiki/Synchronized-StepDefs)
-- [Indexed element locators](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL#element-can-be-located-by-idnametag-namecss-selectorxpathclass-namelink-textpartial-link-textjavascript-expression-at-index-index)
-- Hard, soft, and sustained [assertion modes](https://github.com/gwen-interpreter/gwen/wiki/Assertion-Modes)
-- [Visual Testing with AppliTools](https://github.com/gwen-interpreter/gwen-web/wiki/Visual-Testing)
-- [Mobile Emulation](https://github.com/gwen-interpreter/gwen-web/wiki/Mobile-Emulation)
-- Integrated [WebDriverManager](https://github.com/bonigarcia/webdrivermanager) manages all native webdrivers for you
-- Supports full Gherkin syntax including [example mapping](https://cucumber.io/blog/2015/12/08/example-mapping-introduction)
-- [State levels](https://github.com/gwen-interpreter/gwen/wiki/State-Levels) and [parallel execution](https://github.com/gwen-interpreter/gwen/wiki/Execution-Modes#parallel-scenario-execution) for scenarios in additon to features
-- [Declarative feature mode](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#gwenfeaturemode) to force all imperative steps to meta and promote cleaner features.
-- [Associative meta](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#gwenassociativemeta)
-- [Behavior rules](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#gwenbehaviorrules) to help enforce good Gherkin style
-- [Dialects](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#gwenfeaturedialect) for [Gherkin's spoken languages](https://cucumber.io/docs/gherkin/reference/#spoken-languages)
-- Configurable [maximum number of threads](https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#gwenparallelmaxthreads) for parallel execution
-- Simplified [data table iteration with @ForEach](https://github.com/gwen-interpreter/gwen/wiki/Data-Tables#simplified-foreach)
 
 License
 -------

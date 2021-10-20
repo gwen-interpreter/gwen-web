@@ -19,7 +19,7 @@ package gwen.web.eval.lambda.unit
 import gwen.web.eval.ScrollTo
 import gwen.web.eval.WebContext
 
-import gwen.core.behavior.BehaviorType
+import gwen.core.behaviour.BehaviourType
 import gwen.core.eval.lambda.UnitStep
 import gwen.core.node.GwenNode
 import gwen.core.node.gherkin.Step
@@ -30,7 +30,7 @@ class ScrollToElement(element: String, position: ScrollTo) extends UnitStep[WebC
 
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     step tap { _ =>
-      checkStepRules(step, BehaviorType.Action, ctx)
+      checkStepRules(step, BehaviourType.Action, ctx)
       val binding = ctx.getLocatorBinding(element)
       ctx.scrollIntoView(binding, position)
     }

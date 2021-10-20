@@ -18,7 +18,7 @@ package gwen.web.eval.lambda.unit
 
 import gwen.web.eval.WebContext
 
-import gwen.core.behavior.BehaviorType
+import gwen.core.behaviour.BehaviourType
 import gwen.core.eval.lambda.UnitStep
 import gwen.core.node.GwenNode
 import gwen.core.node.gherkin.Step
@@ -29,7 +29,7 @@ class BindUrl(url: String, targetScope: Option[String]) extends UnitStep[WebCont
 
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     step tap { _ =>
-      checkStepRules(step, BehaviorType.Context, ctx)
+      checkStepRules(step, BehaviourType.Context, ctx)
       targetScope.foreach { scope =>
         ctx.scopes.addScope(scope)
       }

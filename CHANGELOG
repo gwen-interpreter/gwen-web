@@ -37,10 +37,12 @@ m d, yyyy
         - `gwen.web.browser` renamed to `gwen.web.browser.target`
       - Changed settings defaults:
         - `gwen.associative.meta = true` instead of `false`
-        - `gwen.behavior.rules = strict` instead of `lenient`
+        - `gwen.behaviour.rules = strict` instead of `lenient`
         - `gwen.feature.mode = declarative` instead of `imperative`
         - `gwen.report.suppress.meta = true` instead of `false`
         - `gwen.auto.discover.data.csv = false` instead of `true`
+      - Removed settings alias
+        - `gwen.behavior.rules` in favor of `gwen.behaviour.rules`
       - New settings
         - Configurable output directory
           - `gwen.output.dir` (default = target)
@@ -386,8 +388,8 @@ March 11, 2020
 2.41.0
 ======
 March 8, 2020
-- Introduce behavior rules setting to enforce good Gherkin style
-  - `gwen.behavior.rules=strict|lenient`
+- Introduce behaviour rules setting to enforce good Gherkin style
+  - `gwen.behaviour.rules=strict|lenient`
     - `strict`: The following rules are enforced in feature files with violations reported as errors:
       - Steps in scenarios and backgrounds must satisfy *Given-When-Then order*
       - *Given* steps must set context
@@ -546,7 +548,7 @@ June 28, 2019
 March 28, 2019
 - Update Gwen core from v2.19.0 to v[2.19.1](https://github.com/gwen-interpreter/gwen/releases/tag/v2.19.1)
   - Resolve hostname in JUnit reports
-- Restore clear first behavior in sendKeys operation when `gwen.web.sendKeys.clearFirst=true`
+- Restore clear first behaviour in sendKeys operation when `gwen.web.sendKeys.clearFirst=true`
 
 2.32.0
 ======
@@ -785,7 +787,7 @@ June 5, 2018
 May 18, 2018
 - Add setting to enable/disable implicit element focus (default is enabled, true)
   `gwen.web.implicit.element.focus=true|false`
-- Restore previous timeout behavior for compare operations
+- Restore previous timeout behaviour for compare operations
   - Retry failed comparisons until timeout expires instead of returning immediately
 
 2.21.0
@@ -949,7 +951,7 @@ Feb 24, 2018
 2.15.4
 ======
 Feb 9, 2018
-- Roll back implicit auto-scroll behavior introduced in issue #46 implementation
+- Roll back implicit auto-scroll behaviour introduced in issue #46 implementation
   - This had negative side effects on select controls in that options could not be selected if they appear near the
     viewport boundary
 
@@ -967,7 +969,7 @@ Feb 6, 2018
 ======
 Feb 6, 2018
 - Enhancement: address issue #46 reopened by @anshu781126: unable to auto scroll and click
-  - include auto-scroll behavior on elements before performing actions
+  - include auto-scroll behaviour on elements before performing actions
   - as noted on the issue, the behaviour is still not fully consistent across all drivers/environments
 - Update Gwen from v2.12.1 to v[2.12.4](https://github.com/gwen-interpreter/gwen/releases/tag/v2.12.4)
   - Fix issue #47 raised by @Rahul9844: infinite recursion error when calling a step that expects a data table with
@@ -1518,7 +1520,7 @@ Feb 29, 2016, 9:18 PM GMT+11 (AEDT)
     The interval can be set through the `gwen.rampup.interval.seconds` setting
     This setting is only applicable for parallel execution mode. If it is 
     not set or is set to zero, then no staggering will occur (as per default 
-    behavior). 
+    behaviour). 
   - Added new `gwen.report.suppress.meta` setting for controlling whether or 
     not meta reports should be generated with HTML reports (default value is 
     false). If you have a lot of meta, suppressing the meta reports can 

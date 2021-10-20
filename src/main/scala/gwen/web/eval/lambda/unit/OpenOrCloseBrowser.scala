@@ -18,18 +18,18 @@ package gwen.web.eval.lambda.unit
 
 import gwen.web.eval.WebContext
 
-import gwen.core.behavior.BehaviorType
+import gwen.core.behaviour.BehaviourType
 import gwen.core.eval.lambda.UnitStep
 import gwen.core.node.GwenNode
 import gwen.core.node.gherkin.Step
 
 import scala.util.chaining._
 
-class OpenOrCloseBrowser(open: Boolean, name: Option[String], behaviorType: BehaviorType) extends UnitStep[WebContext] {
+class OpenOrCloseBrowser(open: Boolean, name: Option[String], behaviourType: BehaviourType) extends UnitStep[WebContext] {
 
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     step tap { _ =>
-      checkStepRules(step, behaviorType, ctx)
+      checkStepRules(step, behaviourType, ctx)
       if (open) {
         ctx.newOrCurrentSession()
       } else {
