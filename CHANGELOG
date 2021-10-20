@@ -68,6 +68,8 @@ m d, yyyy
         -  `-p|--properties` in favor of `-c|--conf`
       - Configurable defaults for all CLI options
       - Generate HTML reports by default
+      - Add alternative DSL for attaching files to report (without quotes around name)
+      - `I attach "<filepath>" as <name>`
 
 2.53.6
 ======
