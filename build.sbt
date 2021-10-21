@@ -20,7 +20,7 @@ lazy val projectSettings = Seq(
   startYear := Some(2014),
   licenses += "Apache License, Version 2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0.html"),
   homepage := Some(url("https://github.com/gwen-interpreter/gwen")),
-  scalaVersion := "3.0.0",
+  scalaVersion := "3.0.2",
   crossPaths := false,
   trapExit := false,
   scalacOptions ++= Seq(
@@ -48,9 +48,9 @@ lazy val mainDependencies = {
 }
 
 lazy val testDependencies = {
-  val scalaTest = "3.2.9"
-  val scalaTestPlusMockito = "3.2.9.0"
-  val mockitoCore = "3.11.1"
+  val scalaTest = "3.2.10"
+  val scalaTestPlusMockito = "3.2.10.0"
+  val mockitoCore = "3.12.4"
 
   Seq(
     "org.scalatest" %% "scalatest" % scalaTest,

@@ -3,6 +3,7 @@
 m d, yyyy
 - Gwen 3 release
   - Refactor and migrate codebase to Scala 3
+  - Update Gherkin parser and all dependencies
   - Introduce [Gwen-Web npm package]([gwen-web-npm](https://github.com/gwen-interpreter/gwen-web-npm)
   - Deprecate gwen-gpm in favor of npm
   - Deprecate Gwen workspaces in favor of JS projects
@@ -68,7 +69,7 @@ m d, yyyy
         -  `-p|--properties` in favor of `-c|--conf`
       - Configurable defaults for all CLI options
       - Generate HTML reports by default
-      - Add alternative DSL for attaching files to report (without quotes around name)
+    - Add alternative DSL for attaching files to report (without quotes around name)
       - `I attach "<filepath>" as <name>`
 
 2.53.6
