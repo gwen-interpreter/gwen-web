@@ -395,8 +395,6 @@ object WebSettings extends LazyLogging {
    * Provides access to the chrome mobile emulation settings. This setting merges a comma separated list of values
    * set in the `gwen.web.chrome.mobile` property with all properties that start with
    * `gwen.web.chrome.mobile.`.
-   * See: https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#mobile-emulation-by-device-name
-   * See: https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#mobile-emulation-by-device-metrics
    */
   def `gwen.web.chrome.mobile`: Map[String, String] = {
     Settings.getMap("gwen.web.chrome.mobile", "gwen.web.chrome.mobile")
@@ -406,8 +404,6 @@ object WebSettings extends LazyLogging {
    * Provides access to the edge mobile emulation settings. This setting merges a comma separated list of values
    * set in the `gwen.web.edge.mobile` property with all properties that start with
    * `gwen.web.edge.mobile.`.
-   * See: https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#mobile-emulation-by-device-name
-   * See: https://github.com/gwen-interpreter/gwen-web/wiki/Runtime-Settings#mobile-emulation-by-device-metrics
    */
   def `gwen.web.edge.mobile`: Map[String, String] = {
     Settings.getMap("gwen.web.edge.mobile", "gwen.web.edge.mobile")

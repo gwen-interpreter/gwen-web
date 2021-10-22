@@ -8,7 +8,7 @@ By default, Gwen will run all features on your local chrome browser. You can rec
 ### Reports
 
 HTML reports will be generated in the output directory by default. To change the default report format, either:
-- Update the `gwen.report.output.formats` setting in the `gwen.conf` file in your root project to specify your desired formats
+- Update the `gwen.report.output.format` setting in the `gwen.conf` file in your root project to specify your desired formats
 - Or invoke Gwen with the `-f/--format` option and explicitly specify your desired formats
 
 Help
@@ -24,15 +24,14 @@ See also:
 - [samples/README.md](samples/README.md)
 
 Learn more:
-- [Geting Started](https://github.com/gwen-interpreter/gwen-web/wiki/Getting-Started)
-- [Gwen reports](https://github.com/gwen-interpreter/gwen/wiki/Evaluation-Reports)
+- [Geting Started](https://gweninterpreter.org/docs/get-started)
+- [Gwen reports](https://gweninterpreter.org/docs/reports/html)
 
 Links and Resources:
 ----------------------
 
 - [Gwen Home](http://gweninterpreter.org)
-- [Web DSL](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL)
-- [FAQ](https://github.com/gwen-interpreter/gwen-web/wiki/FAQ)
+- [Web DSL](https://gweninterpreter.org/docs/dsl/reference)
 - [Blog](https://gweninterpreter.wordpress.com)
 - [Twitter](https://twitter.com/gweninterpreter)
 - [Support](https://gwenify.com)

@@ -1,4 +1,5 @@
 target/
+output/
 project/project
 .bsp
 .cache*

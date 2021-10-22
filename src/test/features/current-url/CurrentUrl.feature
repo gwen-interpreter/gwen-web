@@ -20,10 +20,3 @@
       Given the gwen page url is "https://github.com/gwen-interpreter/gwen-web"
        When I navigate to the gwen page
        Then the current URL should contain "gwen"
-        And the current URL should not contain "wiki"
-
-  Scenario: Current URL in gwen wiki page
-      Given the gwen wiki page url is "https://github.com/gwen-interpreter/gwen-web/wiki"
-       When I navigate to the gwen wiki page
-       Then the current URL should contain "gwen"
-        And the current URL should contain "wiki"

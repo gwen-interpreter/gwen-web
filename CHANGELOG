@@ -48,17 +48,17 @@ m d, yyyy
         - Configurable output directory
           - `gwen.output.dir` (default = target)
         - Configurable CLI options:
-          - `gwen.cli.options.batch`
-          - `gwen.cli.options.formats`
-          - `gwen.cli.options.config`
-          - `gwen.cli.options.dryRun`
-          - `gwen.cli.options.features`
-          - `gwen.cli.options.input`
-          - `gwen.cli.options.meta`
           - `gwen.cli.options.parallel`
           - `gwen.cli.options.parallelFeatures`
+          - `gwen.cli.options.batch`
+          - `gwen.cli.options.dryRun`
+          - `gwen.cli.options.conf`
           - `gwen.cli.options.report`
+          - `gwen.cli.options.format`
           - `gwen.cli.options.tags`
+          - `gwen.cli.options.inputData`
+          - `gwen.cli.options.meta`
+          - `gwen.cli.options.features`
     - CLI changes:
       - New command
         - `init` for initialising a new Gwen working directory
@@ -536,7 +536,7 @@ July 27, 2019
 ======
 June 28, 2019
 - Manage child windows at web driver session level
-- Add settings for [mobile emulation in Chrome](https://github.com/gwen-interpreter/gwen-web/wiki/Mobile-Emulation) browser by:
+- Add settings for mobile emulation in Chrome browser by:
   - device name
     - `gwen.web.chrome.mobile.deviceName`
   - device metrics
@@ -595,7 +595,7 @@ February 17, 2019
 ======
 January 26, 2019
 - Updated Gwen core from v2.17.0 to v[2.18.0](https://github.com/gwen-interpreter/gwen/releases/tag/v2.18.0)
-  - Add support for hard, soft, and sustained [assertion modes](https://github.com/gwen-interpreter/gwen/wiki/Assertion-Modes)
+  - Add support for hard, soft, and sustained assertion modes
     though new setting:
     - `gwen.assertion.mode`
       - Set to one of these values:
@@ -801,7 +801,6 @@ May 13, 2018
 - Fix slow dropdown select issue #59 (raised by @anshu781126)
 - Make all Gwen settings set in features or meta by following DSL thread-local
   - `my <name> <property|setting> <is|will be> "<value>"`
-  -  The DSL documentation has been updated [here](https://github.com/gwen-interpreter/gwen-web/wiki/Supported-DSL#my-name-propertysetting-iswill-be-value)
   - Also added following DSL to support resetting (undoing the thread-local setting)
     - `I reset my <name> <property|setting>`
 - Update Gwen from v2.13.2 to v[2.14.0](https://github.com/gwen-interpreter/gwen/releases/tag/v2.14.0)
@@ -909,7 +908,7 @@ Mar 24, 2018
   - Contributions by @acuciureanu
     - PR gwen-interpreter/gwen#42 - Unit tests for SQL support
     - PR gwen-interpreter/gwen#43 - Refactoring of sbt build file
-- Introduce [template matching](https://github.com/gwen-interpreter/gwen/wiki/Template-Matching)
+- Introduce template matching
   - The following DSL's where introduced
     - `<reference> <should|should not> match template "<expression>"`
     - `<reference> <should|should not> match template file "<filepath>"`
