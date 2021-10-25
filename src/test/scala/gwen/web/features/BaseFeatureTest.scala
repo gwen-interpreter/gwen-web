@@ -21,7 +21,7 @@ import gwen.web.GwenWebInterpreter
 
 import gwen.core.GwenOptions
 import gwen.core.Settings
-import gwen.core.behaviour.BehaviourMode
+import gwen.core.behavior.BehaviorMode
 import gwen.core.status.Passed
 import gwen.core.status.Failed
 
@@ -37,7 +37,7 @@ abstract class BaseFeatureTest extends BaseTest {
       if (parallelFeatures) args = args ++ Array("--parallel-features")
       if (dryRun) args = args ++ Array("-n")
       if (dataFile.nonEmpty) args = args ++ Array("-i", dataFile.get)
-      if (BehaviourMode.isStrict) args = args ++ Array("-t", "~@Lenient")
+      if (BehaviorMode.isStrict) args = args ++ Array("-t", "~@Lenient")
       args = args ++ features.toArray.asInstanceOf[Array[String]]
       val options = GwenOptions(args)
       val interpreter = GwenWebInterpreter

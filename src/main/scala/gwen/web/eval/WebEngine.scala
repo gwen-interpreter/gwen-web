@@ -21,7 +21,7 @@ import gwen.web.eval.lambda.composite._
 import gwen.web.eval.lambda.unit._
 
 import gwen.core._
-import gwen.core.behaviour.BehaviourType
+import gwen.core.behavior.BehaviorType
 import gwen.core.eval.ComparisonOperator
 import gwen.core.eval.EvalEngine
 import gwen.core.eval.lambda.CompositeStep
@@ -278,11 +278,11 @@ class WebEngine extends EvalEngine[WebContext] {
       case r"""I should have (\d+?)$count open (?:window|tab)(?:s?)""" =>
         new AssertBrowserWindowCount(count.toInt)
       case r"I have (no|an)$open open browser" =>
-        new OpenOrCloseBrowser(open == "an", None, BehaviourType.Context)
+        new OpenOrCloseBrowser(open == "an", None, BehaviorType.Context)
       case r"I close the(?: current)? browser" =>
-        new OpenOrCloseBrowser(false, None, BehaviourType.Action)
+        new OpenOrCloseBrowser(false, None, BehaviorType.Action)
       case r"""I close the browser for (.+?)$session""" =>
-        new OpenOrCloseBrowser(false, Some(session), BehaviourType.Action)
+        new OpenOrCloseBrowser(false, Some(session), BehaviorType.Action)
       case r"""I switch to the child (?:window|tab)""" =>
         new SwitchToWindow(None)
       case r"""I switch to child (?:window|tab) (\d+?)$occurrence""" =>

@@ -18,7 +18,7 @@ package gwen.web.eval.lambda.unit
 
 import gwen.web.eval.WebContext
 
-import gwen.core.behaviour.BehaviourType
+import gwen.core.behavior.BehaviorType
 import gwen.core.eval.ComparisonOperator
 import gwen.core.eval.lambda.UnitStep
 import gwen.core.node.GwenNode
@@ -30,7 +30,7 @@ class AssertBrowserCount(expectedCount: Int) extends UnitStep[WebContext] {
 
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     step tap { _ =>
-      checkStepRules(step, BehaviourType.Assertion, ctx)
+      checkStepRules(step, BehaviorType.Assertion, ctx)
       ctx.perform {
         ctx.compare("open browser sessions", expectedCount.toString, () => ctx.noOfSessions().toString, ComparisonOperator.be, false)
       }

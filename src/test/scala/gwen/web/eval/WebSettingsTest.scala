@@ -21,8 +21,8 @@ import gwen.web._
 import gwen.core.AssertionMode
 import gwen.core.GwenSettings
 import gwen.core.Settings
-import gwen.core.behaviour.BehaviourMode
-import gwen.core.behaviour.FeatureMode
+import gwen.core.behavior.BehaviorMode
+import gwen.core.behavior.FeatureMode
 import gwen.core.report.rp.RPConfig.ErrorBlocks
 import gwen.core.report.rp.RPConfig.ErrorReportingMode
 import gwen.core.report.rp.RPConfig.StepDefFormat
@@ -43,7 +43,7 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
   //     GwenSettings.`gwen.associative.meta` should be (true)
   //     GwenSettings.`gwen.auto.discover.data.csv` should be (true)
   //     GwenSettings.`gwen.auto.discover.meta` should be (true)
-  //     GwenSettings.`gwen.behaviour.rules` should be (BehaviourMode.lenient)
+  //     GwenSettings.`gwen.behavior.rules` should be (BehaviorMode.lenient)
   //     GwenSettings.`gwen.feature.dialect` should be ("en")
   //     GwenSettings.`gwen.feature.failfast.enabled` should be (true)
   //     GwenSettings.`gwen.feature.failfast.exit` should be (false)
@@ -144,7 +144,7 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
     GwenSettings.`gwen.associative.meta` should be (true)
     GwenSettings.`gwen.auto.discover.data.csv` should be (true)
     GwenSettings.`gwen.auto.discover.meta` should be (true)
-    GwenSettings.`gwen.behaviour.rules` should be (BehaviourMode.strict)
+    GwenSettings.`gwen.behavior.rules` should be (BehaviorMode.strict)
     GwenSettings.`gwen.feature.dialect` should be ("en")
     GwenSettings.`gwen.feature.failfast.enabled` should be (true)
     GwenSettings.`gwen.feature.failfast.exit` should be (false)

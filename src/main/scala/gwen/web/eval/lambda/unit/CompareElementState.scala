@@ -19,7 +19,7 @@ package gwen.web.eval.lambda.unit
 import gwen.web.eval.ElementState
 import gwen.web.eval.WebContext
 
-import gwen.core.behaviour.BehaviourType
+import gwen.core.behavior.BehaviorType
 import gwen.core.eval.lambda.UnitStep
 import gwen.core.node.GwenNode
 import gwen.core.node.gherkin.Step
@@ -30,7 +30,7 @@ class CompareElementState(element: String, state: ElementState, negate: Boolean)
 
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     step tap { _ =>
-      checkStepRules(step, BehaviourType.Assertion, ctx)
+      checkStepRules(step, BehaviorType.Assertion, ctx)
       val binding = ctx.getLocatorBinding(element)
       ctx.checkElementState(binding, state, negate)
     }

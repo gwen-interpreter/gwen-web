@@ -319,7 +319,7 @@ class DriverManager() extends LazyLogging {
   private def ieOptions(): InternetExplorerOptions = new InternetExplorerOptions() tap { options =>
     setDefaultCapability("requireWindowFocus", true, options)
     setDefaultCapability("nativeEvents", false, options);
-    setDefaultCapability("unexpectedAlertBehaviour", "accept", options);
+    setDefaultCapability("unexpectedAlertBehavior", "accept", options);
     setDefaultCapability("ignoreProtectedModeSettings", true, options);
     setDefaultCapability("disable-popup-blocking", true, options);
     setDefaultCapability("enablePersistentHover", true, options);

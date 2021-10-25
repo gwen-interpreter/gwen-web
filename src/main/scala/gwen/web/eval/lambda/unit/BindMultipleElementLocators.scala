@@ -21,7 +21,7 @@ import gwen.web.eval.binding.RelativeSelectorType
 import gwen.web.eval.binding.SelectorType
 import gwen.web.eval.binding.LocatorKey
 
-import gwen.core.behaviour.BehaviourType
+import gwen.core.behavior.BehaviorType
 import gwen.core.eval.lambda.UnitStep
 import gwen.core.node.GwenNode
 import gwen.core.node.gherkin.Step
@@ -32,7 +32,7 @@ class BindMultipleElementLocators(name: String, container: Option[String], timeo
 
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     step tap { _ =>
-      checkStepRules(step, BehaviourType.Context, ctx)
+      checkStepRules(step, BehaviorType.Context, ctx)
       container foreach { cont =>
         ctx.getLocatorBinding(cont)
       }

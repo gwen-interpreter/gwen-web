@@ -18,7 +18,7 @@ package gwen.web.eval.lambda.unit
 
 import gwen.web.eval.WebContext
 
-import gwen.core.behaviour.BehaviourType
+import gwen.core.behavior.BehaviorType
 import gwen.core.eval.lambda.UnitStep
 import gwen.core.node.GwenNode
 import gwen.core.node.gherkin.Step
@@ -29,7 +29,7 @@ class WaitForText(element: String, waitSecs: Option[Long]) extends UnitStep[WebC
 
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     step tap { _ =>
-      checkStepRules(step, BehaviourType.Action, ctx)
+      checkStepRules(step, BehaviorType.Action, ctx)
       val binding = ctx.getLocatorBinding(element)
       ctx.waitUntil(waitSecs, s"waiting for text of $binding") {
         ctx.waitForText(binding)

@@ -19,7 +19,7 @@ package gwen.web.eval.lambda.unit
 import gwen.web.eval.ElementEvent
 import gwen.web.eval.WebContext
 
-import gwen.core.behaviour.BehaviourType
+import gwen.core.behavior.BehaviorType
 import gwen.core.eval.lambda.UnitStep
 import gwen.core.node.GwenNode
 import gwen.core.node.gherkin.Step
@@ -30,7 +30,7 @@ class WaitForElementOnEvent(element: String, event: ElementEvent, waitSecs: Long
 
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     step tap { _ =>
-      checkStepRules(step, BehaviourType.Context, ctx)
+      checkStepRules(step, BehaviorType.Context, ctx)
       ctx.getLocatorBinding(element)
       ctx.scopes.set(s"$element/${ElementEvent.actionOf(event)}/wait", waitSecs.toString)
     }

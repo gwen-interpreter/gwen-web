@@ -21,7 +21,7 @@ import gwen.web.eval.binding.RelativeSelectorType
 import gwen.web.eval.binding.SelectorType
 import gwen.web.eval.binding.LocatorKey
 
-import gwen.core.behaviour.BehaviourType
+import gwen.core.behavior.BehaviorType
 import gwen.core.eval.lambda.UnitStep
 import gwen.core.node.GwenNode
 import gwen.core.node.gherkin.Step
@@ -34,7 +34,7 @@ class BindElementLocator(name: String, selectorType: SelectorType, expression: S
 
     step tap { _ =>
 
-      checkStepRules(step, BehaviourType.Context, ctx)
+      checkStepRules(step, BehaviorType.Context, ctx)
       relative foreach { (rSelector, rElement, rWithinPixels) =>
         ctx.getLocatorBinding(rElement)
       }

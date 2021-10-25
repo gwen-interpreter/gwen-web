@@ -18,7 +18,7 @@ package gwen.web.eval.lambda.unit
 
 import gwen.web.eval.WebContext
 
-import gwen.core.behaviour.BehaviourType
+import gwen.core.behavior.BehaviorType
 import gwen.core.eval.lambda.UnitStep
 import gwen.core.node.GwenNode
 import gwen.core.node.gherkin.Step
@@ -26,7 +26,7 @@ import gwen.core.node.gherkin.Step
 class CaptureUrl(target: Option[String]) extends UnitStep[WebContext] {
 
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
-    checkStepRules(step, BehaviourType.Action, ctx)
+    checkStepRules(step, BehaviorType.Action, ctx)
     val name = target.getOrElse("the current URL")
     val url = ctx.captureCurrentUrl
     ctx.topScope.set(name, url)

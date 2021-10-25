@@ -18,7 +18,7 @@ package gwen.web.eval.lambda.unit
 
 import gwen.web.eval.WebContext
 
-import gwen.core.behaviour.BehaviourType
+import gwen.core.behavior.BehaviorType
 import gwen.core.eval.ComparisonOperator
 import gwen.core.eval.lambda.UnitStep
 import gwen.core.node.GwenNode
@@ -30,7 +30,7 @@ class ComparePopupMessage(name: String, value: String, bound: Boolean, operator:
 
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     step tap { _ =>
-      checkStepRules(step, BehaviourType.Assertion, ctx)
+      checkStepRules(step, BehaviorType.Assertion, ctx)
       val expected = if (bound) {
         ctx.getBoundReferenceValue(value)
       } else {
