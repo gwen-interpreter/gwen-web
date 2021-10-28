@@ -5,6 +5,7 @@ m d, yyyy
   - Refactor and migrate codebase to Scala 3
   - Update Gherkin parser and all dependencies
   - Introduce [Gwen-Web npm package]([gwen-web-npm](https://github.com/gwen-interpreter/gwen-web-npm)
+  - Introduce pretty console logger
   - Deprecate gwen-gpm in favor of npm
   - Deprecate Gwen workspaces in favor of JS projects
   - Drop Applitools integration
@@ -66,6 +67,7 @@ m d, yyyy
       - New options
         - `-c|--conf` for loading .conf, .json and .properties settings files
         - `-f|--format none` for no report generation
+        - `-v|--verbose` for verbose logging (pretty logging otherwise)
       - Deprecated option
         -  `-p|--properties` in favor of `-c|--conf`
       - Configurable defaults for all CLI options
