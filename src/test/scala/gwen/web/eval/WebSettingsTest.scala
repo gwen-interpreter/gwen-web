@@ -169,7 +169,7 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
     GwenSettings.`gwen.console.log.colors` should be (true)
     GwenSettings.`gwen.console.log.stepDefs` should be (true)
 
-    CLISettings.`gwen.cli.options.format` should be (List(ReportFormat.html))
+    CLISettings.`gwen.cli.options.format` should be (Nil)
 
     RPSettings.`gwen.rp.debug` should be (false)
     RPSettings.`gwen.rp.heartbeat.enabled` should be (true)
