@@ -51,35 +51,35 @@ class DriverManagerTest extends BaseTest with Matchers with MockitoSugar with Be
   }
 
   "Firefox setting" should "load firefox driver" in {
-    withSetting("gwen.web.browser.target", "firefox") {
+    withSetting("gwen.target.browser", "firefox") {
       val manager = newDriverManager()
       manager.withWebDriver { _ should be (mockFirefoxDriver) }
     }
   }
 
   "Chrome setting" should "load chrome driver" in {
-    withSetting("gwen.web.browser.target", "chrome") {
+    withSetting("gwen.target.browser", "chrome") {
       val manager = newDriverManager()
       manager.withWebDriver { _ should be (mockChromeDriver) }
     }
   }
 
   "IE setting" should "load IE driver" in {
-    withSetting("gwen.web.browser.target", "ie") {
+    withSetting("gwen.target.browser", "ie") {
       val manager = newDriverManager()
       manager.withWebDriver { _ should be (mockIeDriver) }
     }
   }
 
   "Edge setting" should "load Edge driver" in {
-    withSetting("gwen.web.browser.target", "edge") {
+    withSetting("gwen.target.browser", "edge") {
       val manager = newDriverManager()
       manager.withWebDriver { _ should be (mockEdgeDriver) }
     }
   }
 
   "Safari setting" should "load safari driver" in {
-    withSetting("gwen.web.browser.target", "safari") {
+    withSetting("gwen.target.browser", "safari") {
       val manager = newDriverManager()
       manager.withWebDriver { _ should be (mockSafariDriver) }
     }
@@ -87,7 +87,7 @@ class DriverManagerTest extends BaseTest with Matchers with MockitoSugar with Be
 
   "Hub URL setting" should "load remote web driver" in {
     withSetting("gwen.web.remote.url", "http://localhost:44466/wd/hub") {
-      withSetting("gwen.web.browser.target", "chrome") {
+      withSetting("gwen.target.browser", "chrome") {
         val manager = newDriverManager()
         val driver = manager.withWebDriver { _.asInstanceOf[RemoteWebDriver] }
         driver should be (mockRemoteDriver)

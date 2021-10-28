@@ -35,7 +35,7 @@ m d, yyyy
         - `gwen.feature.failfast` renamed to `gwen.feature.failfast.enabled`
         - `gwen.rp.heartbeat` renamed to `gwen.rp.heartbeat.enabled`
         - `gwen.web.capture.screenshots` renamed to `gwen.web.capture.screenshots.enabled`
-        - `gwen.web.browser` renamed to `gwen.web.browser.target`
+        - `gwen.web.browser` renamed to `gwen.target.browser`
       - Changed settings defaults:
         - `gwen.associative.meta = true` instead of `false`
         - `gwen.behavior.rules = strict` instead of `lenient`
@@ -45,8 +45,9 @@ m d, yyyy
       - Removed settings alias
         - `gwen.behavior.rules` in favor of `gwen.behaviour.rules`
       - New settings
-        - Configurable output directory
-          - `gwen.output.dir` (default = target)
+        - Configurable base and output directories
+          - `gwen.baseDir` (default = .)
+          - `gwen.outDir` (default = ${gwen.baseDir}/output)
         - Configurable CLI options:
           - `gwen.cli.options.parallel`
           - `gwen.cli.options.parallelFeatures`

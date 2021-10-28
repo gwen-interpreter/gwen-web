@@ -22,7 +22,7 @@ import gwen.web.GwenWebInterpreter
 import gwen.core.GwenOptions
 import gwen.core.Settings
 import gwen.core.behavior.BehaviorMode
-import gwen.core.status.Passed
+import gwen.core.status.OK
 import gwen.core.status.Failed
 
 abstract class BaseFeatureTest extends BaseTest {
@@ -42,7 +42,7 @@ abstract class BaseFeatureTest extends BaseTest {
       val options = GwenOptions(args)
       val interpreter = GwenWebInterpreter
       interpreter.run(options, None) match {
-        case Passed(_) => // woo hoo
+        case OK(_) => // woo hoo
         case Failed(_, error) => error.printStackTrace(); fail(error.getMessage)
         case _ => fail("evaluation expected but got noop")
       }

@@ -19,7 +19,7 @@
  @Context
  @StepDef
  Scenario: a new todo list
-      When I navigate to "http://todomvc.com/examples/react"
+      When I navigate to "https://todomvc.com/examples/react"
       Then the todo field can be located by class "new-todo"
        And count can be located by css ".todo-count strong"
 

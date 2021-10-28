@@ -89,7 +89,7 @@ object GwenWebInterpreter extends GwenInterpreter(new WebEngine()) {
     FileIO.copyClasspathTextResourceToFile("/init/gitignore", dir, Some(".gitignore"))
     if (!new File("gwen.conf").exists()) {
       val res = Source.fromInputStream(getClass.getResourceAsStream("/init/gwen.conf"))
-      val conf = try res.mkString.replace("${gwen.dir}", dir.getPath) finally res.close()
+      val conf = try res.mkString.replace("${gwen.initDir}", dir.getPath) finally res.close()
       new File("gwen.conf").writeText(conf)
     }
 
@@ -98,13 +98,13 @@ object GwenWebInterpreter extends GwenInterpreter(new WebEngine()) {
 
     println(
       s"""|  ./            $filler        # Project root
-          |   ├── gwen.conf$filler        # Common/default Gwen settings${if (standalone) "" else {
+          |   ├── gwen.conf$filler        # Project settings${if (standalone) "" else {
       s"""|
           |   └── /${dir.getPath}""".stripMargin}}
           |$filler├── .gitignore          # Git ignore file
           |$filler├── README.md
           |$filler├── /browsers           # Browser settings
-          |$filler│   ├── chrome.conf     # - default is chrome
+          |$filler│   ├── chrome.conf
           |$filler│   ├── edge.conf
           |$filler│   ├── firefox.conf
           |$filler│   ├── safari.conf
@@ -112,7 +112,7 @@ object GwenWebInterpreter extends GwenInterpreter(new WebEngine()) {
           |$filler│   ├── remote.conf     # Remote web driver settings
           |$filler│   └── README.md
           |$filler├── /env                # Environment settings
-          |$filler│   ├── local.conf      # - default is local
+          |$filler│   ├── local.conf
           |$filler│   ├── dev.conf
           |$filler│   ├── test.conf
           |$filler│   └── README.md

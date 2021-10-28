@@ -37,10 +37,10 @@ object WebSettings extends LazyLogging {
     * Checks all mandatory settings.
     */
   def check(): Unit = {
+    `gwen.target.browser`
     `gwen.web.accept.untrusted.certs`
     `gwen.web.authorize.plugins`
     `gwen.web.browser.headless`
-    `gwen.web.browser.target`
     `gwen.web.browser.size`
     `gwen.web.capabilities`
     `gwen.web.capture.screenshots.enabled`
@@ -94,11 +94,11 @@ object WebSettings extends LazyLogging {
   }
 
   /**
-    * Provides access to the `gwen.web.browser.target` setting used to set the target browser
+    * Provides access to the `gwen.target.browser` setting used to set the target browser
     * (default value is `chrome`). Valid values include chrome, firefox, safari, ie, and edge
     */
-  def `gwen.web.browser.target`: String = {
-    Settings.get("gwen.web.browser.target", Some("gwen.web.browser"))
+  def `gwen.target.browser`: String = {
+    Settings.get("gwen.target.browser", Some("gwen.web.browser"))
   }
 
   /**

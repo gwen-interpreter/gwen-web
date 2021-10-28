@@ -20,7 +20,7 @@ Feature: Todo meta
   @Context
   Scenario: a new todo list
       Given the heading can be located by tag name "h1"
-       When I navigate to "http://todomvc.com/examples/angularjs"
+       When I navigate to "https://todomvc.com/examples/angularjs"
        Then the heading should be "todos"
         And the todo field can be located by class name "new-todo"
         And the active item count can be located by css selector ".todo-count > strong"

@@ -26,6 +26,7 @@ import com.typesafe.scalalogging.LazyLogging
 import io.github.bonigarcia.wdm.WebDriverManager
 import org.openqa.selenium.{Dimension, MutableCapabilities, WebDriver, WindowType}
 import org.openqa.selenium.chrome.ChromeDriver
+import org.openqa.selenium.chrome.ChromeDriverService
 import org.openqa.selenium.chrome.ChromeOptions
 import org.openqa.selenium.chromium.ChromiumOptions
 import org.openqa.selenium.edge.EdgeDriver
@@ -46,7 +47,7 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.Semaphore
 
 /** Driver manager companion. */
-object DriverManager {
+object DriverManager extends LazyLogging {
 
   /** Semaphore to limit number of permitted web drivers to max threads setting. */
   private lazy val totalPermits = GwenSettings.`gwen.parallel.maxThreads`
@@ -113,7 +114,9 @@ class DriverManager() extends LazyLogging {
     *
     * @param f the function to perform
     */
-  def withWebDriver[T](f: WebDriver => T): T = f(webDriver)
+  def withWebDriver[T](f: WebDriver => T): T = {
+      f(webDriver)
+  }
 
   /** Loads the selenium webdriver. */
   private [eval] def loadWebDriver: WebDriver = withGlobalSettings {
@@ -123,7 +126,7 @@ class DriverManager() extends LazyLogging {
         case Some(addr) =>
           remoteDriver(addr)
         case None =>
-          val driverName = WebSettings.`gwen.web.browser.target`.toLowerCase
+          val driverName = WebSettings.`gwen.target.browser`.toLowerCase
           localDriver(driverName)
       }) tap { driver =>
         WebSettings.`gwen.web.browser.size` foreach { case (width, height) =>
@@ -140,7 +143,7 @@ class DriverManager() extends LazyLogging {
 
   private def remoteDriver(addr: String): WebDriver = {
     val capSettings = WebSettings.`gwen.web.capabilities`
-    val browser = capSettings.get("browserName").orElse(capSettings.get("browser")).orElse(capSettings.get("device")).getOrElse(WebSettings.`gwen.web.browser.target`)
+    val browser = capSettings.get("browserName").orElse(capSettings.get("browser")).orElse(capSettings.get("device")).getOrElse(WebSettings.`gwen.target.browser`)
     val capabilities = new DesiredCapabilities(
       browser.trim.toLowerCase match {
         case "firefox" => firefoxOptions()
@@ -332,7 +335,7 @@ class DriverManager() extends LazyLogging {
   private def setDesiredCapabilities(capabilities: MutableCapabilities): MutableCapabilities = {
     capabilities tap { caps =>
       WebSettings.`gwen.web.capabilities` foreach { case (name, value) =>
-        setCapabilty(name, value, caps);
+        setCapability(name, value, caps);
       }
       setDefaultCapability(CapabilityType.ACCEPT_SSL_CERTS, WebSettings.`gwen.web.accept.untrusted.certs`, caps)
       setDefaultCapability("javascriptEnabled", true, caps)
@@ -341,11 +344,11 @@ class DriverManager() extends LazyLogging {
 
   private def setDefaultCapability(name: String, value: Any, capabilities: MutableCapabilities): Unit = {
     if (capabilities.getCapability(name) == null) {
-      setCapabilty(name, value, capabilities)
+      setCapability(name, value, capabilities)
     }
   }
 
-  private def setCapabilty(name: String, value: Any, capabilities: MutableCapabilities): Unit = {
+  private def setCapability(name: String, value: Any, capabilities: MutableCapabilities): Unit = {
     def strValue = String.valueOf(value).trim
     try {
       logger.info(s"Setting web capability: $name=$strValue")

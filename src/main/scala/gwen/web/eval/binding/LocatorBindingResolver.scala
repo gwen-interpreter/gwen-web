@@ -67,7 +67,7 @@ class LocatorBindingResolver(ctx: WebContext) extends LazyLogging {
               val selectorType = Try(SelectorType.parse(boundValue)) getOrElse {
                 locatorBindingError(s"Unsupported selector type defined for $name: $boundValue")
               }
-              if (selectorType == SelectorType.xpath && WebSettings.`gwen.web.browser.target` == "ie" ) {
+              if (selectorType == SelectorType.xpath && WebSettings.`gwen.target.browser` == "ie" ) {
                 locatorBindingError("Cannot locate element by XPath because IE does not support it")
               }
               val selectorKey = ctx.interpolate(LocatorKey.selectorKey(name, selectorType))
