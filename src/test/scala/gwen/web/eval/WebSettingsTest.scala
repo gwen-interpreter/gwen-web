@@ -60,7 +60,7 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
       GwenSettings.`gwen.report.slideshow.create` should be (false)
       GwenSettings.`gwen.report.slideshow.framespersecond` should be (4)
       GwenSettings.`gwen.state.level` should be (StateLevel.feature)
-      GwenSettings.`gwen.console.log.colors` should be (true)
+      GwenSettings.`gwen.console.log.colors`
       GwenSettings.`gwen.console.log.stepDefs` should be (true)
     }
   }
@@ -166,7 +166,7 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
     GwenSettings.`gwen.report.slideshow.create` should be (false)
     GwenSettings.`gwen.report.slideshow.framespersecond` should be (4)
     GwenSettings.`gwen.state.level` should be (StateLevel.feature)
-    GwenSettings.`gwen.console.log.colors` should be (true)
+    GwenSettings.`gwen.console.log.colors`
     GwenSettings.`gwen.console.log.stepDefs` should be (true)
 
     CLISettings.`gwen.cli.options.format` should be (Nil)
@@ -265,7 +265,7 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
     GwenSettings.`gwen.report.slideshow.create` should be (false)
     GwenSettings.`gwen.report.slideshow.framespersecond` should be (4)
     GwenSettings.`gwen.state.level` should be (StateLevel.feature)
-    GwenSettings.`gwen.console.log.colors` should be (true)
+    GwenSettings.`gwen.console.log.colors`
     GwenSettings.`gwen.console.log.stepDefs` should be (true)
 
     RPSettings.`gwen.rp.debug` should be (false)

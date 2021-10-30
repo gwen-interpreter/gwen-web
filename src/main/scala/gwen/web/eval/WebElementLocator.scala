@@ -151,7 +151,7 @@ class WebElementLocator(ctx: WebContext) extends LazyLogging {
       case SelectorType.`class name` => By.className(expression)
       case SelectorType.`link text` => By.linkText(expression)
       case SelectorType.`partial link text` => By.partialLinkText(expression)
-      case _ => locatorBindingError(s"No such By selector for $selector")
+      case _ => locatorBindingError(s"No such selector: $selector")
     }
   }
 
@@ -269,7 +269,7 @@ class WebElementLocator(ctx: WebContext) extends LazyLogging {
             case e: ScriptException =>
               elementNotFoundError(new LocatorBinding(name, List(selector), ctx), e)
           }
-        case SelectorType.cache => locatorBindingError(s"Unsupported locator defined for $name: $selector")
+        case SelectorType.cache => locatorBindingError(s"Unsupported selector defined for: $name")
         case _ => getAllElements(selector)
 
       }

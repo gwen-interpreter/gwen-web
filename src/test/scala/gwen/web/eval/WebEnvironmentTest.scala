@@ -185,13 +185,13 @@ class WebEnvironmentTest extends BaseTest with Matchers with MockitoSugar {
 
   "Attempt to locate unbound element "should "throw locator bindingerror" in {
     val ctx = newCtx()
-    shouldFailWithLocatorBindingError("username", ctx, "Undefined locator binding for username: username/locator")
+    shouldFailWithLocatorBindingError("username", ctx, "Undefined selector for: username")
   }
 
   "Attempt to locate element with unbound locator" should "throw locator binding error" in {
     val ctx = newCtx()
     ctx.scopes.addScope("login").set("username/locator", "id")
-    shouldFailWithLocatorBindingError("username", ctx, "Undefined locator lookup binding for username: username/locator/id")
+    shouldFailWithLocatorBindingError("username", ctx, "Undefined selector for: username")
   }
 
   def newCtx(dry:Boolean = false): WebContext = {

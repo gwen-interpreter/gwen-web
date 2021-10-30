@@ -65,10 +65,10 @@ class LocatorBindingResolver(ctx: WebContext) extends LazyLogging {
           case Some(boundValue) =>
             val selectors = boundValue.split(",") flatMap { boundValue =>
               val selectorType = Try(SelectorType.parse(boundValue)) getOrElse {
-                locatorBindingError(s"Unsupported selector type defined for $name: $boundValue")
+                locatorBindingError(s"Unsupported selector type defined for: $name")
               }
               if (selectorType == SelectorType.xpath && WebSettings.`gwen.target.browser` == "ie" ) {
-                locatorBindingError("Cannot locate element by XPath because IE does not support it")
+                locatorBindingError("IE does not support XPath selectors")
               }
               val selectorKey = ctx.interpolate(LocatorKey.selectorKey(name, selectorType))
               ctx.scopes.getOpt(selectorKey) match {
@@ -98,7 +98,7 @@ class LocatorBindingResolver(ctx: WebContext) extends LazyLogging {
                   val index = ctx.scopes.getOpt(ctx.interpolate(LocatorKey.indexKey(name, selectorType))).map(_.toInt)
                   Some(Selector(selectorType, selector, relative, timeout, index))
                 case None =>
-                  if (optional) None else locatorBindingError(s"Undefined locator lookup binding for $name: $selectorKey")
+                  if (optional) None else locatorBindingError(s"Undefined selector for: $name")
               }
             }
             if (selectors.nonEmpty) {
@@ -110,7 +110,7 @@ class LocatorBindingResolver(ctx: WebContext) extends LazyLogging {
               }
             }
             else None
-          case None => if (optional) None else locatorBindingError(s"Undefined locator binding for $name: $locatorKey")
+          case None => if (optional) None else locatorBindingError(s"Undefined selector for: $name")
         }
       case Some(x) if x.isInstanceOf[WebElement] || ctx.options.dryRun => Some(LocatorBinding(name, SelectorType.cache, name, None, None, None, ctx))
       case _ => None
