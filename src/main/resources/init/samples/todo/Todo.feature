@@ -7,7 +7,7 @@ Feature: Add todo items
 
   Scenario: Create todo list
 
-    Open the tomomvc online app to add items 
+    Open the todomvc online app to add items 
     and check the displayed count when done
 
     Given a new todo list
