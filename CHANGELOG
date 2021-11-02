@@ -29,7 +29,7 @@ m d, yyyy
       - `I capture element screenshot of <element> as <name>`
     - Use implict fast locators when checking for absence of elements to avoid 
       waiting for entire timeout period to lapse
-  - Update Gwen core from v2.53.6 to v[3.0.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.0.0)
+  - Update Gwen core from v2.53.7 to v[3.0.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.0.0)
     - Settings changes:
       - Support *.conf (HOCON), and *.json settings files in addition to *.properties files
       - Renamed settings:
@@ -76,6 +76,12 @@ m d, yyyy
       - `I attach "<filepath>" as <name>`
   - New user documentation
     - At Gwen home page here: https://gweninterpreter.org/
+
+2.53.7
+======
+Nov 2, 2021
+- Update Gwen core from v2.34.5 to v[2.34.6](https://github.com/gwen-interpreter/gwen/releases/tag/v2.34.6)
+  - Remove trailing commas in JSON report #86
 
 2.53.6
 ======
