@@ -1,3 +1,9 @@
+2.53.7
+======
+Nov 2, 2021
+- Update Gwen core from v2.34.5 to v[2.34.6](https://github.com/gwen-interpreter/gwen/releases/tag/v2.34.6)
+  - Remove trailing commas in JSON report #86
+
 2.53.6
 ======
 October 11, 2021
