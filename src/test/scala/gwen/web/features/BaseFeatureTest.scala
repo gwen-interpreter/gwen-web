@@ -28,7 +28,7 @@ import gwen.core.status.Failed
 abstract class BaseFeatureTest extends BaseTest {
 
   private [features] def evaluate(features: List[String], parallel: Boolean, parallelFeatures: Boolean, dryRun: Boolean, reportDir: String, dataFile: Option[String]): Unit = {
-    Settings.synchronized {
+    Settings.exclusively {
       val reportPath = s"${this.getClass.getSimpleName}${if (dryRun) "-dryRun" else ""}"
       val execModePath = if (parallel) "parallel" else "sequential"
       val runRP = !dryRun && Settings.getOpt("rp").map(_.toBoolean).getOrElse(false)

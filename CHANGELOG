@@ -74,6 +74,8 @@ m d, yyyy
       - Generate HTML reports by default
     - Add alternative DSL for attaching files to report (without quotes around name)
       - `I attach "<filepath>" as <name>`
+    - Simplified @DataTable annotation
+      - Read top header row by default and use names in header to lookup cell values
   - New user documentation
     - At Gwen home page here: https://gweninterpreter.org/
 
