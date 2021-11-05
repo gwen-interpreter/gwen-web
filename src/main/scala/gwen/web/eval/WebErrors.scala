@@ -38,6 +38,7 @@ object WebErrors {
     def invalidClickActionError(action: ElementAction) = throw new InvalidClickActionException(action)
     def invalidContextActionError(action: ElementAction) = throw new InvalidContextActionException(action)
     def invalidActionError(action: ElementAction) = throw new InvalidActionException(action)
+    def invalidSelectorTypeError(selectorType: String) = throw new InvalidSelectorTypeException(selectorType)
 
     /** Thrown when a locator binding error is detected . */
     class LocatorBindingException(msg: String) extends GwenException(msg)
@@ -73,5 +74,8 @@ object WebErrors {
 
     /** Thrown when an invalid action is detected. */
     class InvalidActionException(action: ElementAction) extends GwenException(s"Invalid action: $action (only ${ElementAction.click}, ${ElementAction.`right click`}, ${ElementAction.`double click`}, ${ElementAction.`clear`}, ${ElementAction.`submit`}, ${ElementAction.`check`}, ${ElementAction.`tick`}, ${ElementAction.`uncheck`}, ${ElementAction.`untick`} or ${ElementAction.`move to`} supported)")
+
+    /** Thrown when an invalid selector is detected. */
+    class InvalidSelectorTypeException(selectorType: String) extends GwenException(s"Invalid selector type: $selectorType")
 
 }

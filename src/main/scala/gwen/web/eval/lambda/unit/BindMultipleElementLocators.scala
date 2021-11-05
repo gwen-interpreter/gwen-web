@@ -27,6 +27,9 @@ import gwen.core.node.GwenNode
 import gwen.core.node.gherkin.Step
 
 import scala.util.chaining._
+import scala.util.Try
+import scala.util.Failure
+import scala.util.Success
 
 class BindMultipleElementLocators(name: String, container: Option[String], timeoutSecs: Option[Long], index: Option[Int]) extends UnitStep[WebContext] {
 
@@ -36,11 +39,18 @@ class BindMultipleElementLocators(name: String, container: Option[String], timeo
       container foreach { cont =>
         ctx.getLocatorBinding(cont)
       }
-      ctx.scopes.set(LocatorKey.baseKey(name), step.table.map(_._2.head).mkString(","))
-      step.table foreach { case (_, row ) =>
-        val selectorType = SelectorType.parse(row.head)
-        val expression = row(1)
-        new BindElementLocator(name, selectorType, expression, container.map(c => (RelativeSelectorType.in, c, None)), timeoutSecs, index).apply(parent, step, ctx)
+      val selectors = step.table.zipWithIndex flatMap { case ((_, row), idx) =>
+        Try(SelectorType.parse(row.head)) match {
+          case Failure(e) => if (idx == 0) None else throw e
+          case Success(value) => Some(value)
+        } map { selectorType => 
+          val expression = row(1)
+          new BindElementLocator(name, selectorType, expression, container.map(c => (RelativeSelectorType.in, c, None)), timeoutSecs, index).apply(parent, step, ctx)
+          selectorType
+        }
+      }
+      if (selectors.nonEmpty) {
+        ctx.scopes.set(LocatorKey.baseKey(name), selectors.mkString(","))
       }
     }
   }

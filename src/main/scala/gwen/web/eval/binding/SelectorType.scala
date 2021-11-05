@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
- package gwen.web.eval.binding
+package gwen.web.eval.binding
+
+import gwen.web.eval.WebErrors
 
 import scala.util.Failure
 import scala.util.Success
@@ -33,7 +35,7 @@ object SelectorType {
         case "class" => `class name`
         case "css" => `css selector`
         case "js" => javascript
-        case _ => throw error
+        case _ => WebErrors.invalidSelectorTypeError(sType)
       }
     }
   }

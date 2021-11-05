@@ -25,6 +25,7 @@ Background: Open browser to google
             Defines three locators for the search field.
             The 1st and 2nd will fail and the 3rd will succeed.
       Given the search field can be located by
+            | selector   | expression    |
             | id         | search        |
             | class name | .search-field |
             | name       | q             |
