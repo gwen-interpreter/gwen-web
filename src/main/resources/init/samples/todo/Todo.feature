@@ -1,4 +1,3 @@
-
 @Sample
 Feature: Add todo items
   
@@ -16,4 +15,3 @@ Feature: Add todo items
           | Get the milk  |
           | Walk the dog  |
      Then the list will contain 2 items
-       

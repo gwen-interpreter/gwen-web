@@ -1,120 +1,104 @@
-#
-# Copyright 2017-2021 Branko Juric, Brady Wood
-# 
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-# 
-#     http://www.apache.org/licenses/LICENSE-2.0
-# 
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
+Feature: Number tables meta (for each)
 
- Feature: Number tables meta (for each)
+  @StepDef
+  @ForEach
+  @DataTable(horizontal="decimal,binary")
+  @Context
+  Scenario: single row without header contains a number in decimal and binary form
+     Then the decimal data[decimal] should be data[binary] in binary
 
-   @StepDef
-   @ForEach
-   @DataTable(horizontal="decimal,binary")
-   @Context
-   Scenario: single row without header contains a number in decimal and binary form
-        Then the decimal data[decimal] should be data[binary] in binary
+  @StepDef
+  @ForEach
+  @DataTable(header="top")
+  @Context
+  Scenario: single row with header contains a number in decimal and binary form
+     Then the decimal data[decimal] should be data[binary] in binary
 
-   @StepDef
-   @ForEach
-   @DataTable(header="top")
-   @Context
-   Scenario: single row with header contains a number in decimal and binary form
-        Then the decimal data[decimal] should be data[binary] in binary
+  @StepDef
+  @ForEach
+  @DataTable(vertical="decimal,binary")
+  @Context
+  Scenario: single column without header contains a number in decimal and binary form
+     Then the decimal data[decimal] should be data[binary] in binary
 
-   @StepDef
-   @ForEach
-   @DataTable(vertical="decimal,binary")
-   @Context
-   Scenario: single column without header contains a number in decimal and binary form
-        Then the decimal data[decimal] should be data[binary] in binary
+  @StepDef
+  @ForEach
+  @DataTable(header="left")
+  @Context
+  Scenario: single column with header contains a number in decimal and binary form
+     Then the decimal data[decimal] should be data[binary] in binary
 
-   @StepDef
-   @ForEach
-   @DataTable(header="left")
-   @Context
-   Scenario: single column with header contains a number in decimal and binary form
-        Then the decimal data[decimal] should be data[binary] in binary
+  @StepDef
+  @ForEach
+  @DataTable(horizontal="decimal,binary")
+  @Context
+  Scenario: each row contains a number in decimal and binary form
+     Then the decimal data[decimal] should be data[binary] in binary
 
-   @StepDef
-   @ForEach
-   @DataTable(horizontal="decimal,binary")
-   @Context
-   Scenario: each row contains a number in decimal and binary form
-        Then the decimal data[decimal] should be data[binary] in binary
-
-   @StepDef
-   @ForEach
-   @DataTable(vertical="decimal,binary")
-   @Context
-   Scenario: each column contains a number in decimal and binary form
-        Then the decimal data[decimal] should be data[binary] in binary
+  @StepDef
+  @ForEach
+  @DataTable(vertical="decimal,binary")
+  @Context
+  Scenario: each column contains a number in decimal and binary form
+     Then the decimal data[decimal] should be data[binary] in binary
 
   @StepDef
   Scenario: the decimal <decimal> should be <binary> in binary
-     Given the result is defined by javascript "Number(${$<decimal>}).toString(2)"
-      Then the result should be "${$<binary>}"
-       And name[1] should be "decimal"
-       And name[2] should be "binary"
-       And record.number should match regex "\d+"
+    Given the result is defined by javascript "Number(${$<decimal>}).toString(2)"
+     Then the result should be "${$<binary>}"
+      And name[1] should be "decimal"
+      And name[2] should be "binary"
+      And record.number should match regex "\d+"
 
   @StepDef
   @ForEach
   @DataTable(header="top")
   @Context
   Scenario: each row contains a number and its square and cube
-       Then number ^ 2 = square of number
-        And number ^ 3 = cube of number
+     Then number ^ 2 = square of number
+      And number ^ 3 = cube of number
 
   @StepDef
   @ForEach
   @DataTable(header="left")
   @Context
   Scenario: each column contains a number and its square and cube
-       Then number ^ 2 = square of number
-        And number ^ 3 = cube of number
+     Then number ^ 2 = square of number
+      And number ^ 3 = cube of number
 
   @StepDef
   Scenario: number ^ <power> = <function> of number
-      Given the result is defined by javascript "Math.pow(${data[number]}, $<power>)"
-       Then the result should start with "${data[$<function>]}"
-        And name[1] should be "number"
-        And name[2] should be "square"
-        And name[3] should be "cube"
-        And record.number should match regex "\d+"
+    Given the result is defined by javascript "Math.pow(${data[number]}, $<power>)"
+     Then the result should start with "${data[$<function>]}"
+      And name[1] should be "number"
+      And name[2] should be "square"
+      And name[3] should be "cube"
+      And record.number should match regex "\d+"
 
   @StepDef
   @ForEach
   @DataTable(horizontal="a,b,c")
   @Context
   Scenario: each row contains two numbers that sum to a Fibonacci number in the third
-       Then a + b = c
+     Then a + b = c
 
   @StepDef
   Scenario: a + b = c
-      Given the sum is defined by javascript "${data[a]} + ${data[b]}"
-       Then the sum should be "${data[c]}"
+    Given the sum is defined by javascript "${data[a]} + ${data[b]}"
+     Then the sum should be "${data[c]}"
 
   @StepDef
   @Action
   Scenario: tables are nested in stepdefs
-      Given each row contains a number in decimal and binary form
-             | 1 | 1  |
-             | 2 | 10 |
-             | 3 | 11 |
-        And the nested table should match against its table
+    Given each row contains a number in decimal and binary form
+          | 1 | 1  |
+          | 2 | 10 |
+          | 3 | 11 |
+      And the nested table should match against its table
 
   @StepDef
   Scenario: the nested table should match against its table
-      Given each column contains a number in decimal and binary form
-             | 4   | 5    | 6   |
-             | 100 | 101  | 110 |
-       Then everything is "ok"
+    Given each column contains a number in decimal and binary form
+          | 4   | 5    | 6   |
+          | 100 | 101  | 110 |
+     Then everything is "ok"

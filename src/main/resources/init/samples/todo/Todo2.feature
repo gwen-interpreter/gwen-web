@@ -10,4 +10,3 @@ Feature: Add todo items 2
           | Walk the dog |
           | Get the milk |
           | Feed the cat |
-       

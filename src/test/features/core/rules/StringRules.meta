@@ -1,46 +1,29 @@
-#
-# Copyright 2019-2021 Branko Juric, Brady Wood
-# 
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-# 
-#     http://www.apache.org/licenses/LICENSE-2.0
-# 
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
-
- Feature: Strings rules Meta
+Feature: Strings rules Meta
 
   @StepDef
   @Action
   Scenario: I join the two strings
-      Given the result is "${string 1}${string 2}"
+    Given the result is "${string 1}${string 2}"
 
   @StepDef
   @Action
   Scenario Template: I join two strings in meta
 
-      Given string 1 is "<string 1>"
-        And string 2 is "<string 2>"
-       When I join the two strings
-       Then the result should be "<result>"
+    Given string 1 is "<string 1>"
+      And string 2 is "<string 2>"
+     When I join the two strings
+     Then the result should be "<result>"
 
-  Examples:
+    Examples:
 
-            The header row contains the placeholder names. The body rows that
-            follow contain the data that is bound to each scenario that is evaluated.
+      The header row contains the placeholder names. The body rows that
+      follow contain the data that is bound to each scenario that is evaluated.
 
-            | string 1 | string 2 | result   |
-            | howdy    | doo      | howdydoo |
-            | any      | thing    | anything |
+        | string 1 | string 2 | result   |
+        | howdy    | doo      | howdydoo |
+        | any      | thing    | anything |
 
   @StepDef
   @Action
   Scenario: I substitute string 1 for string 2 in string 3
-      Given the result is defined by javascript "'${string 3}'.replace('${string 1}', '${string 2}')"
-      
+    Given the result is defined by javascript "'${string 3}'.replace('${string 1}', '${string 2}')"

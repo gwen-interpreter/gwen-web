@@ -12,4 +12,3 @@ Feature: Add todo items (for each)
       And the active count can be located by css ".todo-count strong"
      When I capture the active count as count
      Then count should be "3"
-       

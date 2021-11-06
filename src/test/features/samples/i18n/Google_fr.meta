@@ -9,25 +9,25 @@
  # in features that match this name are executed by Gwen by 
  # evaluating the sequence of steps defined in that step def.
 
- Feature: Google search meta
+Feature: Google search meta
 
-@StepDef
-@Context
-Scenario: mon navigateur ouvert sur Google
+  @StepDef
+  @Context
+  Scenario: mon navigateur ouvert sur Google
     Given I start a new browser
      When I navigate to "http://www.google.com"
      Then the page title should be "Google"
 
-@StepDef
-@Action
-Scenario: je recherche "<query>"
+  @StepDef
+  @Action
+  Scenario: je recherche "<query>"
     Given the search field can be located by name "q"
      When I enter "$<query>" in the search field
      Then the page title should contain "$<query>"
 
-@StepDef
-@Assertion
-Scenario: je dois trouver une page concernant Gwen
+  @StepDef
+  @Assertion
+  Scenario: je dois trouver une page concernant Gwen
     Given link 1 can be located by css selector ".g a"
      When I click link 1
      Then the current URL should match regex ".+[G|g]wen.*"
