@@ -25,7 +25,9 @@ import org.scalatest.flatspec.AnyFlatSpec
 
 abstract class BaseTest extends AnyFlatSpec {
 
-  Settings.init()
+  Settings.exclusively {
+    Settings.init()
+  }
 
   val levels = Table ( ("level"), ("feature"), ("scenario") )
 
