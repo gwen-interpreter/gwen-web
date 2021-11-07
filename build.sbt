@@ -1,5 +1,14 @@
+enablePlugins(GitVersioning)
+
+// gwen core & web versions
+val gwenVersion = "3.0.0"
+val gwenWebVersion = "3.0.0"
+
+git.baseVersion := gwenWebVersion
+git.useGitDescribe := true
+
 lazy val gwenSrc = ProjectRef(file("../gwen"), "gwen")
-lazy val gwenLib = "org.gweninterpreter" % "gwen" % "3.0.0"
+lazy val gwenLib = "org.gweninterpreter" % "gwen" % gwenVersion
 
 val gwenWeb = (project in file("."))
   .sourceDependency(gwenSrc, gwenLib)
