@@ -29,3 +29,5 @@ publish := ((publish) dependsOn (Universal / packageBin)).value
 publishM2 := ((publishM2) dependsOn (Universal / packageBin)).value
 publishLocal := ((publishLocal) dependsOn (Universal / packageBin)).value
 PgpKeys.publishSigned := ((PgpKeys.publishSigned) dependsOn (Universal / packageBin)).value
+
+executableScriptName := "gwen"

@@ -67,4 +67,4 @@ Compile / packageBin / mappings ++= Seq(
   file("CHANGELOG") -> "CHANGELOG.txt"
 )
 
-executableScriptName := "gwen"
+Test/ parallelExecution := false
