@@ -1,15 +1,15 @@
 Feature: TodoMVC tables meta
   
   @StepDef
-  @DataTable(horizontal="Item")
+  @DataTable
   @Context
   Scenario: I have the following active items
     Given I launch the Todo app
-     When I add a "${data[Item]}" item for each data record
-     Then the "${data[Item]}" item should be active for each data record
+     When I add a "${Item}" item for each data record
+     Then the "${Item}" item should be active for each data record
 
   @StepDef
-  @DataTable(header="top")
+  @DataTable
   @Assertion
   Scenario: the status of my items should be
-     Then the "${data[Item]}" item should be ${data[Status]} for each data record
+     Then the "${Item}" item should be ${Status} for each data record

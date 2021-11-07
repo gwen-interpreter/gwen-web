@@ -2,6 +2,7 @@ Feature: Managing todo items with data tables
 
   Scenario: Complete a todo item
     Given I have the following active items
+          | Item         |
           | Walk the dog |
           | Get the milk |
           | Feed the cat |
