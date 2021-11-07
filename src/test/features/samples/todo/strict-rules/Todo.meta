@@ -11,7 +11,7 @@ Feature: Todo meta
 
   @StepDef
   @Action
-  @DataTable(header="top")
+  @DataTable
   Scenario: the following items are added
       And I add a todo item for each data record
 

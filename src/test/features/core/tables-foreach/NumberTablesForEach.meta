@@ -52,7 +52,7 @@ Feature: Number tables meta (for each)
 
   @StepDef
   @ForEach
-  @DataTable(header="top")
+  @DataTable
   @Context
   Scenario: each row contains a number and its square and cube
      Then number ^ 2 = square of number

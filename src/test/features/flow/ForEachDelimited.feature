@@ -7,7 +7,7 @@ Feature: For each delimited value
      Then value should be absent
 
   @StepDef
-  @DataTable(header="top")
+  @DataTable
   @Context
   Scenario: I process the following user roles
     Given processed roles is ""

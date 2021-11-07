@@ -11,7 +11,7 @@ Feature: Number tables meta
       And the decimal data[decimal] should be data[binary] in binary for each data record
 
   @StepDef
-  @DataTable(header="top")
+  @DataTable
   @Context
   Scenario: single row with header contains a number in decimal and binary form
     Given name[1] should be "decimal"
@@ -77,7 +77,7 @@ Feature: Number tables meta
       And record.number should match regex "\d+"
 
   @StepDef
-  @DataTable(header="top")
+  @DataTable
   @Context
   Scenario: each row contains a number and its square and cube
     Given name[1] should be "number"
@@ -95,7 +95,7 @@ Feature: Number tables meta
       And number ^ 2 = square of number for each data record
       And number ^ 3 = cube of number for each data record
       And condition is defined by javascript "true"
-      And number is "${data[number]}" for each data record if condition
+      And number is "${number}" for each data record if condition
 
   @StepDef
   @DataTable(header="left")
