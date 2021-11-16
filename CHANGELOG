@@ -1,6 +1,6 @@
 3.0.0
 =====
-m d, yyyy
+Nov 16, 2021
 - Gwen 3 release
   - Refactor and migrate codebase to Scala 3
   - Update Gherkin parser and all dependencies

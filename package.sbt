@@ -31,3 +31,5 @@ publishLocal := ((publishLocal) dependsOn (Universal / packageBin)).value
 PgpKeys.publishSigned := ((PgpKeys.publishSigned) dependsOn (Universal / packageBin)).value
 
 executableScriptName := "gwen"
+
+maintainer := "gweninterpreter.gwenify@com"
