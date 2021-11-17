@@ -1,3 +1,9 @@
+3.0.1
+=====
+Nov 17, 2021
+- Fix issue #88 
+  - Ensure -v option is passed through wrapper script
+
 3.0.0
 =====
 Nov 16, 2021
