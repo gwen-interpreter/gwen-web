@@ -1,3 +1,8 @@
+3.0.3
+=====
+Nov 17, 2021
+- Fix issue #88: Ensure -v option is passed through to bash script 
+
 3.0.2
 =====
 Nov 17, 2021
@@ -6,8 +11,7 @@ Nov 17, 2021
 3.0.1
 =====
 Nov 17, 2021
-- Fix issue #88 
-  - Ensure -v option is passed through wrapper script
+- Fix issue #88: Ensure -v option is passed through wrapper script
 
 3.0.0
 =====

@@ -20,6 +20,9 @@ bashScriptDefines := bashScriptDefines.value.map {
 }
 batScriptExtraDefines += """set "APP_CLASSPATH=%GWEN_CLASSPATH%;%SELENIUM_HOME%\*;%SELENIUM_HOME%\libs\*;%APP_CLASSPATH%""""
 
+// Pass through -v option
+bashScriptExtraDefines += """[[ " $@ " =~ " -v " ]] && addApp "-v""""
+
 // add universal zip to published artifacts
 val packageZip = taskKey[File]("package-zip")
 packageZip := (Compile / baseDirectory).value / "target" / "universal" / (name.value + "-" + version.value + ".zip")
