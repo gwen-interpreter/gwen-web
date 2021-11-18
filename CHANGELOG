@@ -3,6 +3,7 @@
 Nov 18, 2021
 - Update Gwen core from v3.0.0 to v[3.0.1](https://github.com/gwen-interpreter/gwen/releases/tag/v3.0.1)  
   - Set default mask char to '*' instead of '●'
+  - Temporaritly default `gwen.console.log.colors` to false (until windows ANSI issues are fixed)
 
 3.0.3
 =====
