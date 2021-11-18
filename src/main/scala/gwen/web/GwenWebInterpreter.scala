@@ -75,11 +75,6 @@ object GwenWebInterpreter extends GwenInterpreter(new WebEngine()) {
       FileIO.copyClasspathTextResourceToFile("/init/samples/google/Google.meta", dir)
     }
 
-    new File(dir, "samples/i18n") tap { dir =>
-      FileIO.copyClasspathTextResourceToFile("/init/samples/i18n/Google_fr.feature", dir)
-      FileIO.copyClasspathTextResourceToFile("/init/samples/i18n/Google_fr.meta", dir)
-    }
-
     new File(dir, "samples/todo") tap { dir =>
       FileIO.copyClasspathTextResourceToFile("/init/samples/todo/Todo.feature", dir)
       FileIO.copyClasspathTextResourceToFile("/init/samples/todo/Todo.meta", dir)
