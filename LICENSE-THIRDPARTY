@@ -88,6 +88,7 @@ org.bouncycastle                         bcpkix-jdk15on                         
 org.bouncycastle                         bcprov-jdk15on                                | 1.64         | [MIT License](https://www.bouncycastle.org/licence.html)
 org.brotli                               dec                                           | 0.1.2        | [MIT License](http://www.opensource.org/licenses/mit-license.php)
 org.checkerframework                     checker-qual                                  | 3.12.0       | [MIT License](http://www.slf4j.org/license.html)
+org.fusesource.jansi                     jansi                                         | 2.4.0        | [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 org.jdom                                 jdom2                                         | 2.0.5        | [Similar to Apache License but with the acknowledgment clause removed](https://raw.githubusercontent.com/hunterhacker/jdom/master/LICENSE.txt)
 org.jsoup                                jsoup                                         | 1.14.2       | [MIT License](https://jsoup.org/license)
 org.ow2.asm                              asm                                           | 9.1          | [BSD License](https://asm.ow2.io/license.html)
