@@ -1,9 +1,10 @@
 3.0.5
 =====
-Nov 18, 2021
+Nov 19, 2021
 - Update Gwen core from v3.0.1 to v[3.0.2](https://github.com/gwen-interpreter/gwen/releases/tag/v3.0.2)  
   - Fix Ansi colors for windows
   - Restore `gwen.console.log.colors` default to true
+  - Fix encoding of non breaking space in HTML reports
 
 3.0.4
 =====

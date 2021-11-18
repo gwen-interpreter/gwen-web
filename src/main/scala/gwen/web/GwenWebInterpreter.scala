@@ -91,7 +91,7 @@ object GwenWebInterpreter extends GwenInterpreter(new WebEngine()) {
     val standalone = dir.isSame(new File("."))
     val filler = if (standalone) "   " else "       "
 
-    System.out.println(
+    println(
       s"""|  ./            $filler        # Project root
           |   ├── gwen.conf$filler        # Project settings${if (standalone) "" else {
       s"""|
