@@ -1,3 +1,9 @@
+3.0.7
+=====
+Nov 27, 2021
+- Update Gwen core from v3.0.2 to v[3.0.4](https://github.com/gwen-interpreter/gwen/releases/tag/v3.0.4)
+  - Fix issue gwen-interpreter/gwen #61 - NPE if meta directory does not exist
+
 3.0.6
 =====
 Nov 25, 2021
