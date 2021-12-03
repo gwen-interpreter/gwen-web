@@ -1,3 +1,10 @@
+3.0.8
+=====
+Dec 4, 2021
+- Update Gwen core from v3.0.4 to v[3.0.5](https://github.com/gwen-interpreter/gwen/releases/tag/v3.0.5)
+  - Fix issue #61
+    - Skip tag filtering for meta specs
+
 3.0.7
 =====
 Nov 27, 2021
