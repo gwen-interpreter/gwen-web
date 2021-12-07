@@ -1,3 +1,5 @@
+# website unavailable: https://chercher.tech/practice/relative-locators
+@Ignore
 Feature: Relative locators
 
   Scenario: Locate input fields relative to a button

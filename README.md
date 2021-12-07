@@ -47,7 +47,7 @@ How it Works?
  @ForEach
  @DataTable(horizontal="item")
  Scenario: the following items are added
-      When I enter data[item] in the todo field
+      When I enter item in the todo field
       Then count should be record.number
 
  @StepDef
