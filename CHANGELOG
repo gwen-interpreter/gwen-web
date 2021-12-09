@@ -1,3 +1,17 @@
+3.0.11
+======
+Dec 9, 2021
+- Update Gwen core from v3.0.7 to v[3.0.8](https://github.com/gwen-interpreter/gwen/releases/tag/v3.0.8)
+  - Fix issue #93:
+    - Handle step defs containing if keyword in name
+
+3.0.10
+======
+Dec 8, 2021
+- Update Gwen core from v3.0.6 to v[3.0.7](https://github.com/gwen-interpreter/gwen/releases/tag/v3.0.7)
+  - Fix issue #92:
+    - Honor launch settings for RP reruns
+
 3.0.9
 =====
 Dec 7, 2021
