@@ -1,0 +1,42 @@
+# tests gwen-web issue #93
+Feature: DSL conflicts meta
+
+  @Context
+  @StepDef
+  Scenario: I do this if condition
+    Given keyword is "if"
+
+  @Context
+  @StepDef
+  Scenario: I do this while condition
+    Given keyword is "while"
+
+  @Context
+  @StepDef
+  Scenario: I do this until condition
+    Given keyword is "until"
+
+  @Context
+  @StepDef
+  Scenario: I do this for each entry in list
+    Given keyword is "for each"
+
+  @Action
+  @StepDef
+  Scenario: some function "<param1>"
+    Given attr is "$<param1>"
+
+  @Context
+  @StepDef
+  Scenario: I check if the dashboard is displaying "<role>" role
+    Given role name is "$<role>"
+
+  @Context
+  @StepDef
+  Scenario: I validate error while creating new dashboard
+    Given something is "value"
+
+  @Context
+  @StepDef
+  Scenario: I validate hyperlink is available for each of an entity ID in Timeline summary
+    Given something is "value"
