@@ -20,20 +20,20 @@ import gwen.web.EyesSettings
 
 class VisualTest extends BaseFeatureTest {
 
-  "Visual tests" should "pass" in  {
-    if (EyesSettings.`gwen.applitools.eyes.enabled`) {
-      sys.env.get("APPLITOOLS_API_KEY").foreach { _ =>
-        withSetting("gwen.state.level", "feature") {
-          evaluate(
-            List("features-visual"), 
-            parallel = false, 
-            parallelFeatures = false,
-            dryRun = false, 
-            s"features-visual",
-            None)
-        }
-      }
-    }
-  }
+  // "Visual tests" should "pass" in  {
+  //   if (EyesSettings.`gwen.applitools.eyes.enabled`) {
+  //     sys.env.get("APPLITOOLS_API_KEY").foreach { _ =>
+  //       withSetting("gwen.state.level", "feature") {
+  //         evaluate(
+  //           List("features-visual"), 
+  //           parallel = false, 
+  //           parallelFeatures = false,
+  //           dryRun = false, 
+  //           s"features-visual",
+  //           None)
+  //       }
+  //     }
+  //   }
+  // }
 
 }

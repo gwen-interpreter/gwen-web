@@ -25,9 +25,12 @@ releaseVersion := { ver =>
     .map(_.bump(releaseVersionBump.value).string).getOrElse(versionFormatError(ver))
 }
 
-publishTo := sonatypePublishToBundle.value
 releaseCrossBuild := false
 releasePublishArtifactsAction := PgpKeys.publishSigned.value
+sonatypeCredentialHost := "s01.oss.sonatype.org"
+sonatypeRepository := "https://s01.oss.sonatype.org/service/local"
+
+publishTo := sonatypePublishToBundle.value
 
 releaseProcess := Seq(
   checkSnapshotDependencies,
