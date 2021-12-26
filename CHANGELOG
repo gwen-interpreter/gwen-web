@@ -1,3 +1,11 @@
+3.1.2
+=====
+Dec 26, 2021
+- Update selenium-java from 4.1.0 to 4.1.1
+- Update Gwen core from v3.1.1 to v[3.1.2](https://github.com/gwen-interpreter/gwen/releases/tag/v3.1.2)
+  - Fix issue #93:
+    - Resolve composite step conflicts
+
 3.1.1
 =====
 Dec 18, 2021

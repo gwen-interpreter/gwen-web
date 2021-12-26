@@ -23,12 +23,12 @@ import gwen.core.eval.lambda.composite.ForEach
 import gwen.core.node.GwenNode
 import gwen.core.node.gherkin.Step
 
-class ForEachWebElementInIteration(doStep: String, element: String, iteration: String, engine: EvalEngine[WebContext]) extends ForEach[WebContext](engine) {
+class ForEachWebElementInIteration(doStep: String, element: String, iteration: String, engine: EvalEngine[WebContext]) extends ForEach[WebContext](engine, doStep) {
 
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     val binding = ctx.getLocatorBinding(iteration)
-    ctx.evaluate(evaluateForEach(() => List("$[dryRun:webElements]"), element, parent, step, doStep, ctx)) {
-      evaluateForEach(() => binding.resolveAll(), element, parent, step, doStep, ctx)
+    ctx.evaluate(evaluateForEach(() => List("$[dryRun:webElements]"), element, parent, step, ctx)) {
+      evaluateForEach(() => binding.resolveAll(), element, parent, step, ctx)
     }
     
   }

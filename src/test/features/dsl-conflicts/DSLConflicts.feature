@@ -45,4 +45,10 @@ Feature: DSL conflicts
     Given strings is "some string1, some string2, some string3"
      When some function "${str}" for each str in strings delimited by ","
      Then attr should not be ""
-    
+
+  Scenario: Test
+    Given add roles textfield can be located by xpath "//input"
+      And role not added is defined by javascript "true"
+     When I navigate to "https://google.com"
+      And I enter "RoleName" in add roles textfield if role not added
+     Then role not added should be "true"

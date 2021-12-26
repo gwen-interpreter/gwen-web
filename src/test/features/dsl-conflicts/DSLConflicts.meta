@@ -40,3 +40,9 @@ Feature: DSL conflicts meta
   @StepDef
   Scenario: I validate hyperlink is available for each of an entity ID in Timeline summary
     Given something is "value"
+
+  @Action
+  @StepDef
+  Scenario: I enter "<text>" in <elem>
+    When I clear $<elem>
+     And I enter "$<text>" in $<elem>
