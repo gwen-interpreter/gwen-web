@@ -1,3 +1,9 @@
+2.54.2
+======
+Dec 30, 2021
+- Update Gwen core from v2.35.1 to v[2.35.2](https://github.com/gwen-interpreter/gwen/releases/tag/v2.35.2)
+  - Update log4j from version 2.17.0 to 2.17.1
+
 2.54.1
 ======
 Dec 18, 2021
