@@ -3,6 +3,8 @@
 Jan 11, 2022
 - Fix issue #94:
   - Handle wait/until errors correctly
+- Fix issue #95:
+  - Handle similar step defs
 
 3.1.3
 =====

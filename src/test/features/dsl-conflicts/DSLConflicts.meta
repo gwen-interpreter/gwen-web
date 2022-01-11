@@ -46,3 +46,13 @@ Feature: DSL conflicts meta
   Scenario: I enter "<text>" in <elem>
     When I clear $<elem>
      And I enter "$<text>" in $<elem>
+
+  @Action
+  @StepDef
+  Scenario: I select "<mainMenuText>"
+    Given info is "GWEN SHOULD NOT run this DSL"
+
+  @Action
+  @StepDef
+  Scenario: I select "<mainMenuText>" "<listOfSubMenu>" in sidebar
+    Given info is "GWEN SHOULD run this DSL"
