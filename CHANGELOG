@@ -1,10 +1,17 @@
+3.1.5
+=====
+Jan 13, 2022
+- Update Gwen core from v3.1.4 to v[3.1.5](https://github.com/gwen-interpreter/gwen/releases/tag/v3.1.5)
+  - Handle env vars in masked settings
+
 3.1.4
 =====
 Jan 11, 2022
-- Fix issue #94:
-  - Handle wait/until errors correctly
-- Fix issue #95:
-  - Handle similar step defs
+- Update Gwen core from v3.1.3 to v[3.1.4](https://github.com/gwen-interpreter/gwen/releases/tag/v3.1.4)
+  - Fix issue #94:
+    - Handle wait/until errors correctly
+  - Fix issue #95:
+    - Handle similar step defs
 
 3.1.3
 =====
