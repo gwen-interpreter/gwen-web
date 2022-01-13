@@ -1,3 +1,10 @@
+3.1.6
+=====
+Jan 14, 2022
+- Update Gwen core from v3.1.5 to v[3.1.6](https://github.com/gwen-interpreter/gwen/releases/tag/v3.1.6)
+- Fix issue gwen-interpreter/gwen-web#95:
+  - Handle similar step defs
+
 3.1.5
 =====
 Jan 13, 2022
