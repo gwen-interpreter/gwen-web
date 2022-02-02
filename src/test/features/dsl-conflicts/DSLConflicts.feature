@@ -47,7 +47,7 @@ Feature: DSL conflicts
      Then attr should not be ""
 
   Scenario: Test
-    Given add roles textfield can be located by xpath "//input"
+    Given add roles textfield can be located by name "q"
       And role not added is defined by javascript "true"
      When I navigate to "https://google.com"
       And I enter "RoleName" in add roles textfield if role not added

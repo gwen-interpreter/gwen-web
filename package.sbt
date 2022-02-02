@@ -23,6 +23,9 @@ batScriptExtraDefines += """set "APP_CLASSPATH=%GWEN_CLASSPATH%;%SELENIUM_HOME%\
 // Pass through -v option
 bashScriptExtraDefines += """[[ " $@ " =~ " -v " ]] && addApp "-v""""
 
+// Pass through -d option
+bashScriptExtraDefines += """[[ " $@ " =~ " -d " ]] && addApp "-d""""
+
 // add universal zip to published artifacts
 val packageZip = taskKey[File]("package-zip")
 packageZip := (Compile / baseDirectory).value / "target" / "universal" / (name.value + "-" + version.value + ".zip")

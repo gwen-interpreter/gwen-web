@@ -1,13 +1,17 @@
 3.2.0
 =====
-Jan 31, 2022
+Feb 2, 2022
 - Update Gwen core from v3.1.6 to v[3.2.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.2.0)
   - Improved Background reporting
     - Put Backgrounds above Sceanrios in HTML reports
     - Remove name/value parameters from generated input data steps
     - Include input data file name and record number in generated Background description
-- Update scala from v3.0.2 to v3.1.0
-- Update Selenium from v4.1.1 to v4.2.2
+  - Add support for adding breakpoints to feature and meta steps
+    - Breakpoints are created by adding `@Breakpoint ` to the start of step expressions
+    - Breakpoints are activated by invoking Gwen with the new `-d|--debug` CLI option
+  - Fix Gwen impl name and version outputs
+- Update Scala from v3.0.2 to v3.1.0
+- Update selenium-java from v4.1.1 to v4.1.2
 
 3.1.6
 =====
