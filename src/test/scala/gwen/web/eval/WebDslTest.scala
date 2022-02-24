@@ -89,7 +89,7 @@ class WebDslTest extends BaseTest with Matchers with MockitoSugar {
               .replace("<count>", "2")
               .replace("<pixels>", "100")
           } foreach { dsl =>
-            val iStep = Step(None, StepKeyword.Given.toString, dsl.replaceAll("<step>", """a is "b""""), Nil, None, Nil, None, Pending, Nil, Nil, false)
+            val iStep = Step(None, StepKeyword.Given.toString, dsl.replaceAll("<step>", """a is "b""""), Nil, None, Nil, None, Pending, Nil, Nil, Nil)
             engine.evaluateStep(parent, iStep, ctx).evalStatus match {
               case Failed(_, error) => fail(error)
               case evalStatus => evalStatus.keyword should not be (StatusKeyword.Failed)

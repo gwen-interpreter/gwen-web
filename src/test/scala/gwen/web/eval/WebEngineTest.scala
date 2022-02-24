@@ -120,7 +120,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
   }
 
   private def evaluate(name: String): Step = {
-    val step = Step(None, StepKeyword.Given.toString, name, Nil, None, Nil, None, Pending, Nil, Nil, false)
+    val step = Step(None, StepKeyword.Given.toString, name, Nil, None, Nil, None, Pending, Nil, Nil, Nil)
     engine.evaluateStep(Root, step, ctx)
   }
 

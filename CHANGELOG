@@ -1,3 +1,24 @@
+3.3.1
+=====
+Feb 25, 2022
+- Update Gwen core from v3.3.0 to v[3.3.1](https://github.com/gwen-interpreter/gwen/releases/tag/v3.3.1)
+  - Only generate slideshow report if screenshotting is enabled
+
+3.3.0
+=====
+Feb 22, 2022
+- Update Gwen core from v3.2.0 to v[3.3.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.3.0)
+  - Remove redundant reference to data file record number in html reports
+  - Report undefined step errors in StepDefs
+  - Handle breakpoints entered in REPL
+  - Add `@Finally` step annotation
+    - Steps with this annotation will execute regardless of current evaluation status
+  - Add implicit attributes
+    - `gwen.eval.status.keyword`
+      - The current evaluation status
+    - `gwen.eval.status.message` 
+      - The current evaluation status message (if failed or sustained, blank otherwise)
+
 3.2.0
 =====
 Feb 2, 2022
