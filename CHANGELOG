@@ -1,3 +1,11 @@
+3.4.0
+=====
+Mar 7, 2022
+- Update Gwen core from v3.3.2 to v[3.4.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.4.0)
+  - Add support for negated if conditions
+  - Introduce abstained status for steps that are skipped due to false if conditions
+    - Greyed out in HTML reports
+
 3.3.2
 =====
 Feb 25, 2022
