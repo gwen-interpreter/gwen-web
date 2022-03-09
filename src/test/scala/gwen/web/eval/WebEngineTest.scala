@@ -660,9 +660,9 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     doReturn(mockBinding).when(ctx).getLocatorBinding("<element>")
     doReturn(mockBinding).when(mockBinding).jsEquivalent
     elemStates.foreach { state =>
-      doNothing().when(ctx).checkElementState(mockBinding, state, negate = false)
+      doNothing().when(ctx).checkElementState(mockBinding, state, negate = false, None)
       evaluate(s"<element> should be $state")
-      verify(ctx).checkElementState(mockBinding, state, negate = false)
+      verify(ctx).checkElementState(mockBinding, state, negate = false, None)
     }
   }
 
@@ -671,9 +671,9 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     doReturn(mockBinding).when(ctx).getLocatorBinding("<element>")
     doReturn(mockBinding).when(mockBinding).jsEquivalent
     elemStates.foreach { state =>
-      doNothing().when(ctx).checkElementState(mockBinding, state, negate = true)
+      doNothing().when(ctx).checkElementState(mockBinding, state, negate = true, None)
       evaluate(s"<element> should not be $state")
-      verify(ctx).checkElementState(mockBinding, state, negate = true)
+      verify(ctx).checkElementState(mockBinding, state, negate = true, None)
     }
   }
 

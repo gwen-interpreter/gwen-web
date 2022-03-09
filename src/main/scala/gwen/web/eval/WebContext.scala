@@ -249,9 +249,11 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     * @param actual the actual value of the element
     * @param operator the comparison operator
     * @param negate true to negate the result
+    * @param nameSuffix optional name suffix
+    * @param message optional error message to use
     * @return true if the actual value matches the expected value
     */
-  def compare(name: String, expected: String, actual: () => String, operator: ComparisonOperator, negate: Boolean, nameSuffix: Option[String] = None): Unit = {
+  def compare(name: String, expected: String, actual: () => String, operator: ComparisonOperator, negate: Boolean, nameSuffix: Option[String], message: Option[String]): Unit = {
     var result = false
     var error: Option[String] = None
     var actualValue = actual()
@@ -277,7 +279,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     }
     error match {
       case Some(msg) =>
-        assert(assertion = false, msg)
+        assert(assertion = false, message getOrElse msg)
       case None =>
         if (!polled) {
           result = super.compare(name, expected, actualValue, operator, negate).getOrElse(result)
@@ -287,7 +289,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
             getBinding(name)
           }
         ).map(_.toString).getOrElse(name)
-        assert(result, s"Expected $binding to ${if(negate) "not " else ""}$operator '$expected' but got '$actualValue'")
+        assert(result, message getOrElse s"Expected $binding to ${if(negate) "not " else ""}$operator '$expected' but got '$actualValue'")
     }
 
   }
@@ -586,11 +588,12 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     * @param binding the locator binding of the element
     * @param state the state to check
     * @param negate whether or not to negate the check
+    * @param message optional assertion error message
     */
-  def checkElementState(binding: LocatorBinding, state: ElementState, negate: Boolean): Unit = {
+  def checkElementState(binding: LocatorBinding, state: ElementState, negate: Boolean, message: Option[String]): Unit = {
     perform {
       val result = isElementState(binding.jsEquivalent, state, negate)
-      assert(result, s"$binding should${if(negate) " not" else ""} be $state")
+      assert(result, message getOrElse s"$binding should${if(negate) " not" else ""} be $state")
     }
   }
 
@@ -1289,11 +1292,26 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
 
   /** Checks if an element is displayed. */
   def isDisplayed(webElement: WebElement): Boolean = {
+    if (!isDisplayedAndInViewport(webElement)) {
+      Try(
+        withWebDriver { driver =>
+          createActions(driver).moveToElement(webElement).perform()
+        }
+      ) match {
+        case Success(_) => isDisplayedAndInViewport(webElement)
+        case Failure(_) => false
+      }
+    } else {
+      true
+    }
+  }
+
+  private def isDisplayedAndInViewport(webElement: WebElement): Boolean = {
     webElement.isDisplayed && isInViewport(webElement)
   }
 
   /** Checks if an element is not in the view port. */
-  def isInViewport(webElement: WebElement): Boolean = {
+  private def isInViewport(webElement: WebElement): Boolean = {
     executeJS("return (function(elem){var b=elem.getBoundingClientRect(); return b.top>=0 && b.left>=0 && b.bottom<=(window.innerHeight || document.documentElement.clientHeight) && b.right<=(window.innerWidth || document.documentElement.clientWidth);})(arguments[0])", webElement).asInstanceOf[Boolean]
   }
 

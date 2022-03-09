@@ -1,3 +1,15 @@
+3.5.0
+=====
+Mar 9, 2022
+- Update Gwen core from v3.4.0 to v[3.5.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.5.0)
+- Add support for custom messages to all assertion steps `: "<message>"` suffix.
+  - Example: 
+    - Without custom message (the standard assertion message will be reported if assertion fails): 
+      - `Then x should be y`
+    - With custom message: 
+      - `Then x should be y: "This custom message will be reported if assertion fails"`
+- Attempt to bring element into view (if it is already not) when checking if it's displayed
+
 3.4.0
 =====
 Mar 7, 2022

@@ -30,7 +30,7 @@ import scala.util.Failure
 import scala.util.Success
 import scala.util.chaining._
 
-class CompareValueOrSelectionToValue(element: String, selection: Option[DropdownSelection], expression: String, operator: ComparisonOperator, negate: Boolean) extends UnitStep[WebContext] {
+class CompareValueOrSelectionToValue(element: String, selection: Option[DropdownSelection], expression: String, operator: ComparisonOperator, negate: Boolean, message: Option[String]) extends UnitStep[WebContext] {
 
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     checkStepRules(step, BehaviorType.Assertion, ctx)
@@ -45,16 +45,16 @@ class CompareValueOrSelectionToValue(element: String, selection: Option[Dropdown
       ctx.perform {
         if (ctx.scopes.findEntry { case (n, _) => n.startsWith(element) } forall { case (n, _) => n != element }) {
           val nameSuffix = selection.map(sel => s" $sel")
-          ctx.compare(s"$element${nameSuffix.getOrElse("")}", expected, actual, operator, negate, nameSuffix)
+          ctx.compare(s"$element${nameSuffix.getOrElse("")}", expected, actual, operator, negate, nameSuffix, message)
         } else {
           val actualValue = ctx.scopes.getOpt(element).getOrElse(actual())
           val result = ctx.compare(element, expected, actualValue, operator, negate)
           result match {
             case Success(assertion) =>
               val binding = ctx.getLocatorBinding(element, optional = true)
-              assert(assertion, s"Expected ${binding.map(_.toString).getOrElse(element)} to ${if(negate) "not " else ""}$operator '$expected' but got '$actualValue'")
+              assert(assertion, message getOrElse s"Expected ${binding.map(_.toString).getOrElse(element)} to ${if(negate) "not " else ""}$operator '$expected' but got '$actualValue'")
             case Failure(error) =>
-              assert(assertion = false, error.getMessage)
+              assert(assertion = false, message getOrElse error.getMessage)
           }
         }
       } getOrElse {

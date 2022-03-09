@@ -28,7 +28,7 @@ import gwen.core.node.gherkin.Step
 
 import scala.util.chaining._
 
-class CompareValueOrSelectionToBoundValue(element: String, selection: Option[DropdownSelection], source: String, operator: ComparisonOperator, negate: Boolean) extends UnitStep[WebContext] {
+class CompareValueOrSelectionToBoundValue(element: String, selection: Option[DropdownSelection], source: String, operator: ComparisonOperator, negate: Boolean, message: Option[String]) extends UnitStep[WebContext] {
 
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     checkStepRules(step, BehaviorType.Assertion, ctx)
@@ -42,7 +42,7 @@ class CompareValueOrSelectionToBoundValue(element: String, selection: Option[Dro
     step tap { _ =>
       ctx.perform {
         val nameSuffix = selection.map(sel => s" $sel")
-        ctx.compare(s"$element${nameSuffix.getOrElse("")}", expected, actual, operator, negate, nameSuffix)
+        ctx.compare(s"$element${nameSuffix.getOrElse("")}", expected, actual, operator, negate, nameSuffix, message)
       } getOrElse  {
         actual()
       }

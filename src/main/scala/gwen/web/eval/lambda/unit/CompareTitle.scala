@@ -26,7 +26,7 @@ import gwen.core.node.gherkin.Step
 
 import scala.util.chaining._
 
-class CompareTitle(name: String, value: String, bound: Boolean, operator: ComparisonOperator, negate: Boolean) extends UnitStep[WebContext] {
+class CompareTitle(name: String, value: String, bound: Boolean, operator: ComparisonOperator, negate: Boolean, message: Option[String]) extends UnitStep[WebContext] {
 
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     step tap { _ =>
@@ -37,7 +37,7 @@ class CompareTitle(name: String, value: String, bound: Boolean, operator: Compar
         ctx.parseExpression(operator, value)
       }
       ctx.perform {
-        ctx.compare(name, expected, () => ctx.getTitle, operator, negate)
+        ctx.compare(name, expected, () => ctx.getTitle, operator, negate, None, message)
       }
     }
   }

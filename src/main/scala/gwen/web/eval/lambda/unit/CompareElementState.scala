@@ -26,13 +26,13 @@ import gwen.core.node.gherkin.Step
 
 import scala.util.chaining._
 
-class CompareElementState(element: String, state: ElementState, negate: Boolean) extends UnitStep[WebContext] {
+class CompareElementState(element: String, state: ElementState, negate: Boolean, message: Option[String]) extends UnitStep[WebContext] {
 
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     step tap { _ =>
       checkStepRules(step, BehaviorType.Assertion, ctx)
       val binding = ctx.getLocatorBinding(element)
-      ctx.checkElementState(binding, state, negate)
+      ctx.checkElementState(binding, state, negate, message)
     }
   }
 

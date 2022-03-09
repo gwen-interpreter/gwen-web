@@ -155,7 +155,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     doReturn(true).when(ctx).isDisplayed(mockElement)
-    ctx.checkElementState(elemBinding, ElementState.displayed, negate = false)
+    ctx.checkElementState(elemBinding, ElementState.displayed, negate = false, None)
     ctx.waitForElementState(elemBinding, ElementState.displayed, negate = false)
   }
 
@@ -164,7 +164,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     doReturn(false).when(ctx).isDisplayed(mockElement)
-    ctx.checkElementState(elemBinding, ElementState.hidden, negate = false)
+    ctx.checkElementState(elemBinding, ElementState.hidden, negate = false, None)
     ctx.waitForElementState(elemBinding, ElementState.hidden, negate = false)
   }
 
@@ -173,7 +173,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     when(mockElement.isSelected).thenReturn(true)
-    ctx.checkElementState(elemBinding, ElementState.checked, negate = false)
+    ctx.checkElementState(elemBinding, ElementState.checked, negate = false, None)
     ctx.waitForElementState(elemBinding, ElementState.checked, negate = false)
   }
 
@@ -182,7 +182,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     when(mockElement.isSelected).thenReturn(true)
-    ctx.checkElementState(elemBinding, ElementState.ticked, negate = false)
+    ctx.checkElementState(elemBinding, ElementState.ticked, negate = false, None)
     ctx.waitForElementState(elemBinding, ElementState.ticked, negate = false)
   }
 
@@ -191,7 +191,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     when(mockElement.isSelected).thenReturn(false)
-    ctx.checkElementState(elemBinding, ElementState.unchecked, negate = false)
+    ctx.checkElementState(elemBinding, ElementState.unchecked, negate = false, None)
     ctx.waitForElementState(elemBinding, ElementState.unchecked, negate = false)
   }
 
@@ -200,7 +200,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     when(mockElement.isSelected).thenReturn(false)
-    ctx.checkElementState(elemBinding, ElementState.unticked, negate = false)
+    ctx.checkElementState(elemBinding, ElementState.unticked, negate = false, None)
     ctx.waitForElementState(elemBinding, ElementState.unticked, negate = false)
   }
 
@@ -209,7 +209,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     when(mockElement.isEnabled).thenReturn(true)
-    ctx.checkElementState(elemBinding, ElementState.enabled, negate = false)
+    ctx.checkElementState(elemBinding, ElementState.enabled, negate = false, None)
     ctx.waitForElementState(elemBinding, ElementState.enabled, negate = false)
   }
 
@@ -218,7 +218,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     when(mockElement.isEnabled).thenReturn(false)
-    ctx.checkElementState(elemBinding, ElementState.disabled, negate = false)
+    ctx.checkElementState(elemBinding, ElementState.disabled, negate = false, None)
     ctx.waitForElementState(elemBinding, ElementState.disabled, negate = false)
   }
 
@@ -227,7 +227,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     doReturn(false).when(ctx).isDisplayed(mockElement)
-    ctx.checkElementState(elemBinding, ElementState.displayed, negate = true)
+    ctx.checkElementState(elemBinding, ElementState.displayed, negate = true, None)
     ctx.waitForElementState(elemBinding, ElementState.displayed, negate = true)
   }
 
@@ -236,7 +236,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     doReturn(true).when(ctx).isDisplayed(mockElement)
-    ctx.checkElementState(elemBinding, ElementState.hidden, negate = true)
+    ctx.checkElementState(elemBinding, ElementState.hidden, negate = true, None)
     ctx.waitForElementState(elemBinding, ElementState.hidden, negate = true)
   }
 
@@ -245,7 +245,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     when(mockElement.isSelected).thenReturn(false)
-    ctx.checkElementState(elemBinding, ElementState.checked, negate = true)
+    ctx.checkElementState(elemBinding, ElementState.checked, negate = true, None)
     ctx.waitForElementState(elemBinding, ElementState.checked, negate = true)
   }
 
@@ -254,7 +254,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     when(mockElement.isSelected).thenReturn(false)
-    ctx.checkElementState(elemBinding, ElementState.ticked, negate = true)
+    ctx.checkElementState(elemBinding, ElementState.ticked, negate = true, None)
     ctx.waitForElementState(elemBinding, ElementState.ticked, negate = true)
   }
 
@@ -263,7 +263,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     when(mockElement.isSelected).thenReturn(true)
-    ctx.checkElementState(elemBinding, ElementState.unchecked, negate = true)
+    ctx.checkElementState(elemBinding, ElementState.unchecked, negate = true, None)
     ctx.waitForElementState(elemBinding, ElementState.unchecked, negate = true)
   }
 
@@ -272,7 +272,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     when(mockElement.isSelected).thenReturn(true)
-    ctx.checkElementState(elemBinding, ElementState.unticked, negate = true)
+    ctx.checkElementState(elemBinding, ElementState.unticked, negate = true, None)
     ctx.scopes.allEntries.isEmpty should be (true)
     ctx.waitForElementState(elemBinding, ElementState.unticked, negate = true)
   }
@@ -282,7 +282,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     when(mockElement.isEnabled).thenReturn(false)
-    ctx.checkElementState(elemBinding, ElementState.enabled, negate = true)
+    ctx.checkElementState(elemBinding, ElementState.enabled, negate = true, None)
     ctx.waitForElementState(elemBinding, ElementState.enabled, negate = true)
   }
 
@@ -291,7 +291,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     when(mockElement.isEnabled).thenReturn(true)
-    ctx.checkElementState(elemBinding, ElementState.disabled, negate = true)
+    ctx.checkElementState(elemBinding, ElementState.disabled, negate = true, None)
     ctx.waitForElementState(elemBinding, ElementState.disabled, negate = true)
   }
 
@@ -302,7 +302,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     doReturn(false).when(ctx).isDisplayed(mockElement)
     withSetting("gwen.web.wait.seconds", "1") {
       intercept[AssertionError] {
-        ctx.checkElementState(elemBinding, ElementState.displayed, negate = false)
+        ctx.checkElementState(elemBinding, ElementState.displayed, negate = false, None)
       }
       intercept[Errors.WaitTimeoutException] {
         ctx.waitForElementState(elemBinding, ElementState.displayed, negate = false)
@@ -317,7 +317,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     doReturn(true).when(ctx).isDisplayed(mockElement)
     withSetting("gwen.web.wait.seconds", "1") {
       intercept[AssertionError] {
-        ctx.checkElementState(elemBinding, ElementState.hidden, negate = false)
+        ctx.checkElementState(elemBinding, ElementState.hidden, negate = false, None)
       }
       intercept[Errors.WaitTimeoutException] {
         ctx.waitForElementState(elemBinding, ElementState.hidden, negate = false)
@@ -332,7 +332,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     when(mockElement.isSelected).thenReturn(false)
     withSetting("gwen.web.wait.seconds", "1") {
       intercept[AssertionError] {
-        ctx.checkElementState(elemBinding, ElementState.checked, negate = false)
+        ctx.checkElementState(elemBinding, ElementState.checked, negate = false, None)
       }
       intercept[Errors.WaitTimeoutException] {
         ctx.waitForElementState(elemBinding, ElementState.checked, negate = false)
@@ -347,7 +347,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     when(mockElement.isSelected).thenReturn(false)
     withSetting("gwen.web.wait.seconds", "1") {
       intercept[AssertionError] {
-        ctx.checkElementState(elemBinding, ElementState.ticked, negate = false)
+        ctx.checkElementState(elemBinding, ElementState.ticked, negate = false, None)
       }
       intercept[Errors.WaitTimeoutException] {
         ctx.waitForElementState(elemBinding, ElementState.ticked, negate = false)
@@ -362,7 +362,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     when(mockElement.isSelected).thenReturn(true)
     withSetting("gwen.web.wait.seconds", "1") {
       intercept[AssertionError] {
-        ctx.checkElementState(elemBinding, ElementState.unchecked, negate = false)
+        ctx.checkElementState(elemBinding, ElementState.unchecked, negate = false, None)
       }
       intercept[Errors.WaitTimeoutException] {
         ctx.waitForElementState(elemBinding, ElementState.unchecked, negate = false)
@@ -377,7 +377,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     when(mockElement.isSelected).thenReturn(true)
     withSetting("gwen.web.wait.seconds", "1") {
       intercept[AssertionError] {
-        ctx.checkElementState(elemBinding, ElementState.unticked, negate = false)
+        ctx.checkElementState(elemBinding, ElementState.unticked, negate = false, None)
       }
       intercept[Errors.WaitTimeoutException] {
         ctx.waitForElementState(elemBinding, ElementState.unticked, negate = false)
@@ -392,7 +392,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     when(mockElement.isEnabled).thenReturn(false)
     withSetting("gwen.web.wait.seconds", "1") {
       intercept[AssertionError] {
-        ctx.checkElementState(elemBinding, ElementState.enabled, negate = false)
+        ctx.checkElementState(elemBinding, ElementState.enabled, negate = false, None)
       }
       intercept[Errors.WaitTimeoutException] {
         ctx.waitForElementState(elemBinding, ElementState.enabled, negate = false)
@@ -407,7 +407,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     when(mockElement.isEnabled).thenReturn(true)
     withSetting("gwen.web.wait.seconds", "1") {
       intercept[AssertionError] {
-        ctx.checkElementState(elemBinding, ElementState.disabled, negate = false)
+        ctx.checkElementState(elemBinding, ElementState.disabled, negate = false, None)
       }
       intercept[Errors.WaitTimeoutException] {
         ctx.waitForElementState(elemBinding, ElementState.disabled, negate = false)
@@ -422,7 +422,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     doReturn(true).when(ctx).isDisplayed(mockElement)
     withSetting("gwen.web.wait.seconds", "1") {
       intercept[AssertionError] {
-        ctx.checkElementState(elemBinding, ElementState.displayed, negate = true)
+        ctx.checkElementState(elemBinding, ElementState.displayed, negate = true, None)
       }
       intercept[Errors.WaitTimeoutException] {
         ctx.waitForElementState(elemBinding, ElementState.displayed, negate = true)
@@ -437,7 +437,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     doReturn(false).when(ctx).isDisplayed(mockElement)
     withSetting("gwen.web.wait.seconds", "1") {
       intercept[AssertionError] {
-        ctx.checkElementState(elemBinding, ElementState.hidden, negate = true)
+        ctx.checkElementState(elemBinding, ElementState.hidden, negate = true, None)
       }
       intercept[Errors.WaitTimeoutException] {
         ctx.waitForElementState(elemBinding, ElementState.hidden, negate = true)
@@ -452,7 +452,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     when(mockElement.isSelected).thenReturn(true)
     withSetting("gwen.web.wait.seconds", "1") {
       intercept[AssertionError] {
-       ctx.checkElementState(elemBinding, ElementState.checked, negate = true)
+       ctx.checkElementState(elemBinding, ElementState.checked, negate = true, None)
       }
       intercept[Errors.WaitTimeoutException] {
         ctx.waitForElementState(elemBinding, ElementState.checked, negate = true)
@@ -467,7 +467,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     when(mockElement.isSelected).thenReturn(true)
     withSetting("gwen.web.wait.seconds", "1") {
       intercept[AssertionError] {
-        ctx.checkElementState(elemBinding, ElementState.ticked, negate = true)
+        ctx.checkElementState(elemBinding, ElementState.ticked, negate = true, None)
       }
       intercept[Errors.WaitTimeoutException] {
         ctx.waitForElementState(elemBinding, ElementState.ticked, negate = true)
@@ -482,7 +482,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     when(mockElement.isSelected).thenReturn(false)
     withSetting("gwen.web.wait.seconds", "1") {
       intercept[AssertionError] {
-        ctx.checkElementState(elemBinding, ElementState.unchecked, negate = true)
+        ctx.checkElementState(elemBinding, ElementState.unchecked, negate = true, None)
       }
       intercept[Errors.WaitTimeoutException] {
         ctx.waitForElementState(elemBinding, ElementState.unchecked, negate = true)
@@ -497,7 +497,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     when(mockElement.isSelected).thenReturn(false)
     withSetting("gwen.web.wait.seconds", "1") {
       intercept[AssertionError] {
-        ctx.checkElementState(elemBinding, ElementState.unticked, negate = true)
+        ctx.checkElementState(elemBinding, ElementState.unticked, negate = true, None)
       }
       intercept[Errors.WaitTimeoutException] {
         ctx.waitForElementState(elemBinding, ElementState.unticked, negate = true)
@@ -512,7 +512,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     when(mockElement.isEnabled).thenReturn(true)
     withSetting("gwen.web.wait.seconds", "1") {
       intercept[AssertionError] {
-        ctx.checkElementState(elemBinding, ElementState.enabled, negate = true)
+        ctx.checkElementState(elemBinding, ElementState.enabled, negate = true, None)
       }
       intercept[Errors.WaitTimeoutException] {
         ctx.waitForElementState(elemBinding, ElementState.enabled, negate = true)
@@ -527,7 +527,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     when(mockElement.isEnabled).thenReturn(false)
     withSetting("gwen.web.wait.seconds", "1") {
       intercept[AssertionError] {
-        ctx.checkElementState(elemBinding, ElementState.disabled, negate = true)
+        ctx.checkElementState(elemBinding, ElementState.disabled, negate = true, None)
       }
       intercept[Errors.WaitTimeoutException] {
         ctx.waitForElementState(elemBinding, ElementState.disabled, negate = true)
@@ -538,14 +538,14 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
   "WebContext.checkElementState" should "return when the state should not match 'displayed' and there is no such element" in {
     val elemBinding = LocatorBinding("name", SelectorType.id, "name", None, Some(Duration.Zero), None, ctx)
     doThrow(new NoSuchElementException("no id")).when(mockLocator).locate(any[LocatorBinding])
-    ctx.checkElementState(elemBinding, ElementState.displayed, negate = true)
+    ctx.checkElementState(elemBinding, ElementState.displayed, negate = true, None)
     ctx.waitForElementState(elemBinding, ElementState.displayed, negate = true)
   }
 
   "WebContext.checkElementState" should "return when the state should match 'hidden' and there is no such element" in {
     val elemBinding = LocatorBinding("name", SelectorType.id, "name", None, Some(Duration.Zero), None, ctx)
     doThrow(new NoSuchElementException("no id")).when(mockLocator).locate(any[LocatorBinding])
-    ctx.checkElementState(elemBinding, ElementState.hidden, negate = false)
+    ctx.checkElementState(elemBinding, ElementState.hidden, negate = false, None)
     ctx.waitForElementState(elemBinding, ElementState.hidden, negate = false)
   }
 
@@ -554,7 +554,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     doThrow(new NoSuchElementException("no id")).when(mockLocator).locate(any[LocatorBinding])
     withSetting("gwen.web.wait.seconds", "1") {
       intercept[AssertionError] {
-        ctx.checkElementState(elemBinding, ElementState.displayed, negate = false)
+        ctx.checkElementState(elemBinding, ElementState.displayed, negate = false, None)
       }
       intercept[Errors.WaitTimeoutException] {
         ctx.waitForElementState(elemBinding, ElementState.displayed, negate = false)
@@ -567,7 +567,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     doThrow(new NoSuchElementException("no id")).when(mockLocator).locate(any[LocatorBinding])
     withSetting("gwen.web.wait.seconds", "1") {
       intercept[AssertionError] {
-        ctx.checkElementState(elemBinding, ElementState.hidden, negate = true)
+        ctx.checkElementState(elemBinding, ElementState.hidden, negate = true, None)
       }
       intercept[Errors.WaitTimeoutException] {
         ctx.waitForElementState(elemBinding, ElementState.hidden, negate = true)

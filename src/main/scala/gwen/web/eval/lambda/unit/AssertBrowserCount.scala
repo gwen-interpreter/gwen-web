@@ -26,13 +26,13 @@ import gwen.core.node.gherkin.Step
 
 import scala.util.chaining._
 
-class AssertBrowserCount(expectedCount: Int) extends UnitStep[WebContext] {
+class AssertBrowserCount(expectedCount: Int, message: Option[String]) extends UnitStep[WebContext] {
 
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     step tap { _ =>
       checkStepRules(step, BehaviorType.Assertion, ctx)
       ctx.perform {
-        ctx.compare("open browser sessions", expectedCount.toString, () => ctx.noOfSessions().toString, ComparisonOperator.be, false)
+        ctx.compare("open browser sessions", expectedCount.toString, () => ctx.noOfSessions().toString, ComparisonOperator.be, false, None, message)
       }
     }
   }
