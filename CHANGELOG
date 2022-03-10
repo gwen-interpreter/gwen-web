@@ -1,3 +1,9 @@
+3.5.1
+=====
+Mar 11, 2022
+- Update Gwen core from v3.5.0 to v[3.5.1](https://github.com/gwen-interpreter/gwen/releases/tag/v3.5.1)
+  - Fix if conditions match to capture condition after last if keyword
+
 3.5.0
 =====
 Mar 9, 2022
