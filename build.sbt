@@ -49,7 +49,7 @@ lazy val projectSettings = Seq(
 
 lazy val mainDependencies = {
   val selenium = "4.1.2"
-  val driverMgr = "5.0.3"
+  val driverMgr = "5.1.0"
 
   Seq(
     "org.seleniumhq.selenium" % "selenium-java" % selenium,

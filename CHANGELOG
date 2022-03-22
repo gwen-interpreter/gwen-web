@@ -5,6 +5,7 @@ Mar 22, 2022
   - Treat  `true` and `false` string attribute bindings as booleans
     - So now , the `x` in `x is "true"` will be bound as a JavaScript expression instead of a plain string
       enabling it to be used as a boolean condition in control flow steps (if, while or until steps).
+- Update webdrivermanager from v5.0.3 to v5.1.0
 
 3.5.1
 =====
