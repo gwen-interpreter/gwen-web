@@ -1,3 +1,11 @@
+3.6.0
+=====
+Mar 22, 2022
+- Update Gwen core from v3.5.1 to v[3.6.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.6.0)
+  - Treat  `true` and `false` string attribute bindings as booleans
+    - So now , the `x` in `x is "true"` will be bound as a JavaScript expression instead of a plain string
+      enabling it to be used as a boolean condition in control flow steps (if, while or until steps).
+
 3.5.1
 =====
 Mar 11, 2022
