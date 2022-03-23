@@ -1,3 +1,9 @@
+3.6.1
+=====
+Mar 23, 2022
+- Update Gwen core from v3.6.0 to v[3.6.1](https://github.com/gwen-interpreter/gwen/releases/tag/v3.6.1)
+  - Skip empty step defs
+
 3.6.0
 =====
 Mar 22, 2022
