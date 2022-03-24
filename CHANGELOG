@@ -1,3 +1,11 @@
+3.6.2
+=====
+Mar 24, 2022
+- Check child window exists before closing
+- Update Gwen core from v3.6.1 to v[3.6.2](https://github.com/gwen-interpreter/gwen/releases/tag/v3.6.2)
+  - Invert links in HTML reports
+  - Fix rendering of non expanded outlines in HTML reports
+
 3.6.1
 =====
 Mar 23, 2022
