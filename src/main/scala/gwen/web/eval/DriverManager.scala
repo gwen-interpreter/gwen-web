@@ -445,7 +445,7 @@ class DriverManager() extends LazyLogging {
 
   def closeChild(): Unit = {
     windows() match {
-      case parent::children =>
+      case parent::children if children.nonEmpty =>
         val child = children.last
         webDriver.switchTo.window(child)
         logger.info(s"Closing child window ($child)")
