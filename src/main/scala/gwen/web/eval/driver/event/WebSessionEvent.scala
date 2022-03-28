@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2021 Branko Juric, Brady Wood
+ * Copyright 2022 Branko Juric, Brady Wood
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,21 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package gwen.web.features
 
-class AdhocFeatureTest extends BaseFeatureTest {
+package gwen.web.eval.driver.event
 
-  val feature = "src/test/features/todo/AddItems.feature"
+import org.openqa.selenium.WebDriver
 
-  s"Feature should" should "execute" in {
-    evaluate(
-        List(feature), 
-        parallel = false, 
-        parallelFeatures = false,
-        dryRun = false, 
-        "ad-hoc",
-        None)
-        
-  }
-  
-}
+case class WebSessionEvent(phase: WebSessionPhase, driver: WebDriver)

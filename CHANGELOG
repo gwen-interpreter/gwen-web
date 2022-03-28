@@ -1,3 +1,9 @@
+3.7.0
+=====
+Mar 29, 2022
+- Update Gwen core from v3.6.2 to v[3.7.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.7.0)
+  - Add video attachments to HTML reports when executing and recording video in Selenoid
+
 3.6.2
 =====
 Mar 24, 2022

@@ -22,6 +22,7 @@ import gwen.web.eval.DropdownSelection
 import gwen.web.eval.ElementAction
 import gwen.web.eval.ElementState
 import gwen.web.eval.binding._
+import gwen.web.eval.driver.DriverManager
 
 import gwen.core.Errors
 import gwen.core.GwenOptions

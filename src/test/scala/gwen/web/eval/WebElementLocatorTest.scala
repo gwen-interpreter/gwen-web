@@ -19,6 +19,7 @@ package gwen.web.eval
 import gwen.web._
 import gwen.web.eval.WebErrors._
 import gwen.web.eval.binding._
+import gwen.web.eval.driver.DriverManager
 
 import gwen.core.Errors
 import gwen.core.GwenOptions

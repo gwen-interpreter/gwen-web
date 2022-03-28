@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package gwen.web.eval
+package gwen.web.eval.driver
 
 import gwen.web._
 import gwen.web.eval.WebErrors.NoSuchWindowException

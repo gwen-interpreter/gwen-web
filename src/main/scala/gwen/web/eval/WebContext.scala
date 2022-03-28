@@ -17,6 +17,8 @@ package gwen.web.eval
 
 import WebErrors._
 import gwen.web.eval.binding._
+import gwen.web.eval.driver.DriverManager
+import gwen.web.eval.driver.event.WebSessionEventListener
 
 import gwen.core._
 import gwen.core.Errors._
@@ -30,6 +32,7 @@ import gwen.core.state.StateLevel
 import gwen.core.state.EnvState
 import gwen.core.state.SensitiveData
 import gwen.core.status.Failed
+
 
 import scala.concurrent.duration.Duration
 import scala.io.Source
@@ -46,17 +49,38 @@ import org.openqa.selenium.support.ui.FluentWait
 import org.openqa.selenium.support.ui.Select
 
 import java.io.File
+import org.openqa.selenium.remote.RemoteWebDriver
+import gwen.web.eval.driver.event.WebSessionEvent
 
 /**
   * The web evaluatioin context.
   */
-class WebContext(options: GwenOptions, envState: EnvState, driverManager: DriverManager) extends EvalContext(options, envState) with LazyLogging {
+class WebContext(options: GwenOptions, envState: EnvState, driverManager: DriverManager) extends EvalContext(options, envState) with LazyLogging with WebSessionEventListener {
 
   Try(logger.info(s"GWEN_CLASSPATH = ${sys.env("GWEN_CLASSPATH")}"))
   Try(logger.info(s"SELENIUM_HOME = ${sys.env("SELENIUM_HOME")}"))
 
   private val locatorBindingResolver = new LocatorBindingResolver(this)
   private var lastScreenshotSize: Option[Long] = None
+
+  driverManager.addWebSessionEventListener(this)
+
+  override def sessionOpened(event: WebSessionEvent): Unit = { 
+    WebSettings.`gwen.web.video.source` foreach { source => 
+      if (source == "selenoid") {
+        val videoEnabled = Settings.getOpt("gwen.web.capability.enableVideo").map(_.toBoolean).getOrElse(false)
+        if (videoEnabled) {
+          WebSettings.`gwen.web.video.dir` foreach { dir => 
+            driverManager.getSessionId(event.driver) foreach { sessionId =>
+              addVideo(new File(dir, s"$sessionId.mp4"))
+            }
+          }
+        }
+      } else {
+        WebErrors.unsupportedVideoSourceError(source)
+      }
+    }
+  }
 
   def locator = new WebElementLocator(this)
 
@@ -76,16 +100,21 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
 
   /** Closes the context and all browsers and associated web drivers (if any have loaded). */
   override def close(): Unit = {
-    perform {
-      driverManager.quit()
-    }
+    closeDriverSession(None)
     super.close()
   }
 
   /** Closes a named browser and associated web driver. */
   def close(name: String): Unit = {
+    closeDriverSession(Some(name))
+  }
+
+  private def closeDriverSession(name: Option[String]): Unit = {
     perform {
-      driverManager.quit(name)
+      name match {
+        case Some(n) => driverManager.quit(n)
+        case _ => driverManager.quit()
+      }
     }
   }
 

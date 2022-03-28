@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
-package gwen.web.eval
+package gwen.web.eval.driver
 
 import gwen.core._
+import gwen.web.eval.WebSettings
+import gwen.web.eval.WebErrors
 
 import scala.jdk.CollectionConverters._
 import scala.collection.mutable
@@ -45,6 +47,8 @@ import java.net.URL
 import java.{time => jt}
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.Semaphore
+import gwen.web.eval.driver.event.WebSessionEventDispatcher
+import gwen.web.eval.driver.event.WebSessionEventListener
 
 /** Driver manager companion. */
 object DriverManager extends LazyLogging {
@@ -52,7 +56,7 @@ object DriverManager extends LazyLogging {
   /** Semaphore to limit number of permitted web drivers to max threads setting. */
   private lazy val totalPermits = GwenSettings.`gwen.parallel.maxThreads`
   private lazy val driverPermits = new Semaphore(totalPermits, true)
-
+  
   def acquireDriverPermit(): Unit = driverPermits.acquire()
   def releaseDriverPermit(): Unit = {
     if (driverPermits.availablePermits() < totalPermits) {
@@ -78,6 +82,12 @@ class DriverManager() extends LazyLogging {
   /** Map of web driver instances (keyed by name). */
   private [eval] val drivers: mutable.Map[String, WebDriver] = mutable.Map()
 
+  private val eventDispatcher = new WebSessionEventDispatcher()
+
+  def addWebSessionEventListener(listener: WebSessionEventListener): Unit = {
+    eventDispatcher.addListener(listener)
+  }
+
   /** Provides private access to the web driver */
   private def webDriver: WebDriver = drivers.getOrElse(session, {
       loadWebDriver tap { driver =>
@@ -102,6 +112,7 @@ class DriverManager() extends LazyLogging {
         logger.info(s"Closing browser session${ if(name == "primary") "" else s": $name"}")
         driver.quit()
         drivers.remove(name)
+        eventDispatcher.sessionClosed(driver)
       } finally {
         DriverManager.releaseDriverPermit()
       }
@@ -129,6 +140,7 @@ class DriverManager() extends LazyLogging {
           val driverName = WebSettings.`gwen.target.browser`.toLowerCase
           localDriver(driverName)
       }) tap { driver =>
+        eventDispatcher.sessionOpened(driver)
         WebSettings.`gwen.web.browser.size` foreach { case (width, height) =>
           logger.info(s"Resizing browser window to width $width and height $height")
           driver.manage().window().setSize(new Dimension(width, height))
@@ -523,5 +535,17 @@ class DriverManager() extends LazyLogging {
   }
 
   def windows(): List[String] = withWebDriver(_.getWindowHandles.asScala.toList)
+
+  def getSessionId: Option[String] = {
+    withWebDriver { getSessionId }
+  }
+
+  def getSessionId(driver: WebDriver): Option[String] = {
+    if (driver.isInstanceOf[RemoteWebDriver]) {
+      Some(driver.asInstanceOf[RemoteWebDriver].getSessionId.toString)
+    } else {
+      None
+    }
+  }
 
 }

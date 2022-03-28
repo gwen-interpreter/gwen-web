@@ -18,6 +18,7 @@ package gwen.web.eval
 
 import gwen.web._
 import gwen.web.eval.WebErrors
+import gwen.web.eval.driver.DriverManager
 
 import gwen.core.GwenOptions
 import gwen.core.eval.ComparisonOperator

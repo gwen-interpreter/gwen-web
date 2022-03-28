@@ -17,6 +17,7 @@
 package gwen.web.eval
 
 import gwen.web.eval.binding._
+import gwen.web.eval.driver.DriverManager
 import gwen.web.eval.lambda.composite._
 import gwen.web.eval.lambda.unit._
 
