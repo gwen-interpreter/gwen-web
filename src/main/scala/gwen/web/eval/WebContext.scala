@@ -66,18 +66,10 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
   driverManager.addWebSessionEventListener(this)
 
   override def sessionOpened(event: WebSessionEvent): Unit = { 
-    WebSettings.`gwen.web.video.source` foreach { source => 
-      if (source == "selenoid") {
-        val videoEnabled = Settings.getOpt("gwen.web.capability.enableVideo").map(_.toBoolean).getOrElse(false)
-        if (videoEnabled) {
-          WebSettings.`gwen.web.video.dir` foreach { dir => 
-            driverManager.getSessionId(event.driver) foreach { sessionId =>
-              addVideo(new File(dir, s"$sessionId.mp4"))
-            }
-          }
-        }
-      } else {
-        WebErrors.unsupportedVideoSourceError(source)
+    val videoEnabled = Settings.getOpt("gwen.web.capability.enableVideo").map(_.toBoolean).getOrElse(false)
+    if (videoEnabled) {
+      driverManager.getSessionId(event.driver) foreach { sessionId =>
+        addVideo(new File(GwenSettings.`gwen.video.dir`, s"$sessionId.mp4"))
       }
     }
   }
@@ -448,17 +440,22 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
   /** Captures the current screenshot and adds it to the attachments list. */
   def captureScreenshot(unconditional: Boolean, name: String = "Screenshot"): Option[File] = {
     evaluate(Option(new File("$[dryRun:screenshotFile]"))) {
-      val screenshot = driverManager.withWebDriver { driver =>
-        Thread.sleep(150) // give browser time to render
-        driver.asInstanceOf[TakesScreenshot].getScreenshotAs(OutputType.FILE)
-      }
-      val keep = unconditional || WebSettings.`gwen.web.capture.screenshots.duplicates` || lastScreenshotSize.fold(true) { _ != screenshot.length}
-      if (keep) {
-        if (!WebSettings.`gwen.web.capture.screenshots.duplicates`) lastScreenshotSize = Some(screenshot.length())
-        addAttachment(name, screenshot)
-        Some(screenshot)
-      } else {
-        None
+      Try(
+        driverManager.withWebDriver { driver =>
+          Thread.sleep(150) // give browser time to render
+          driver.asInstanceOf[TakesScreenshot].getScreenshotAs(OutputType.FILE)
+        }
+      ) match { 
+        case Success(screenshot) =>
+          val keep = unconditional || WebSettings.`gwen.web.capture.screenshots.duplicates` || lastScreenshotSize.fold(true) { _ != screenshot.length}
+          if (keep) {
+            if (!WebSettings.`gwen.web.capture.screenshots.duplicates`) lastScreenshotSize = Some(screenshot.length())
+            addAttachment(name, screenshot)
+            Some(screenshot)
+          } else {
+            None
+          }
+        case Failure(_) => None
       }
     }
   }
