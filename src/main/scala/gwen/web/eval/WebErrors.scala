@@ -39,7 +39,6 @@ object WebErrors {
     def invalidContextActionError(action: ElementAction) = throw new InvalidContextActionException(action)
     def invalidActionError(action: ElementAction) = throw new InvalidActionException(action)
     def invalidSelectorTypeError(selectorType: String) = throw new InvalidSelectorTypeException(selectorType)
-    def unsupportedVideoSourceError(source: String) = throw new UnsupportedVideoSourceException(source)
 
     /** Thrown when a locator binding error is detected . */
     class LocatorBindingException(msg: String) extends GwenException(msg)
@@ -78,9 +77,5 @@ object WebErrors {
 
     /** Thrown when an invalid selector is detected. */
     class InvalidSelectorTypeException(selectorType: String) extends GwenException(s"Invalid selector type: $selectorType")
-
-    /** Thrown when an unspported video source is provided. */
-    class UnsupportedVideoSourceException(source: String)
-      extends GwenException(s"Unsupported video source: $source (currently only selenoid is supported).")
 
 }

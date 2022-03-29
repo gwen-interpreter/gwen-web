@@ -62,6 +62,8 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
       GwenSettings.`gwen.state.level` should be (StateLevel.feature)
       GwenSettings.`gwen.console.log.colors` should be (true)
       GwenSettings.`gwen.console.log.stepDefs` should be (true)
+      GwenSettings.`gwen.video.dir`.getPath should be ("output/.video")
+      GwenSettings.`gwen.video.timeoutSecs` should be (10)
     }
   }
 
@@ -221,7 +223,6 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
     WebSettings.`gwen.web.throttle.msecs` should be (100)
     WebSettings.`gwen.web.useragent` should be (None)
     WebSettings.`gwen.web.wait.seconds` should be (10L)
-
   }
 
   "Sample migration .conf" should "should override defaults" in {

@@ -71,7 +71,6 @@ object WebSettings extends LazyLogging {
     `gwen.web.throttle.msecs`
     `gwen.web.useragent`
     `gwen.web.wait.seconds`
-    `gwen.web.video.dir`
   }
 
   /** Chrome driver setting. */
@@ -415,20 +414,6 @@ object WebSettings extends LazyLogging {
    */
   def `gwen.web.remote.localFileDetector`: Boolean = {
     `gwen.web.remote.url`.nonEmpty && Settings.getBoolean("gwen.web.remote.localFileDetector")
-  }
-
-  /**
-   * Gets the optional video output directory.
-   */
-  def `gwen.web.video.dir`: Option[File] = {
-    Settings.getOpt("gwen.web.video.dir").map(new File(_))
-  }
-
-  /**
-   * Gets the optional video source (example: selenoid).
-   */
-  def `gwen.web.video.source`: Option[String] = {
-    Settings.getOpt("gwen.web.video.source")
   }
 
 }
