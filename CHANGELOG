@@ -1,3 +1,9 @@
+3.8.0
+=====
+Mar 31, 2022
+- Add setting to enable/disable implicit element moveTo (default is disabled, false)
+  `gwen.web.implicit.element.moveTo=true|false`
+
 3.7.0
 =====
 Mar 29, 2022

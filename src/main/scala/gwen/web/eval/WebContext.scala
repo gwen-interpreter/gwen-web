@@ -430,7 +430,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     }
 
   def tryMoveTo(webElement: WebElement): Unit = {
-    if (!webElement.isDisplayed && !isInViewport(webElement)) {
+    if (WebSettings.`gwen.web.implicit.element.moveTo` || (!webElement.isDisplayed && !isInViewport(webElement))) {
       withWebDriver { driver =>
         createActions(driver).moveToElement(webElement).perform()
       }

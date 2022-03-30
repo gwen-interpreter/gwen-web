@@ -354,6 +354,14 @@ object WebSettings extends LazyLogging {
   }
 
   /**
+    * Provides access to the `gwen.web.implicit.element.moveTo` setting used to determine whether or not Gwen should
+    * implicitly move to all located web elements. Default value is false.
+    */
+  def `gwen.web.implicit.element.moveTo`: Boolean = {
+    Settings.getBooleanOpt("gwen.web.implicit.element.moveTo").getOrElse(false)
+  }
+
+  /**
     * Provides access to the `gwen.web.browser.size` setting used to set the browser window size.
     * Expects value matching `width x height (e:g 1200 x 800 for height 1200 and width 800).
     * This setting is only applicable if the gwen.web.maximize` is not set to `true`.
