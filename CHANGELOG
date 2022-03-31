@@ -1,8 +1,20 @@
+3.8.1
+=====
+Mar 31, 2022
+- Update Gwen core from v3.7.1 to v[3.7.3](https://github.com/gwen-interpreter/gwen/releases/tag/v3.7.3)
+- Update dependencies to eliminate transitive vulnerabilities:
+  - Update commons-io from v2.6 to v2.11.10
+  - Update jackson-databind from v2.10.2 to v2.13.2.2
+  - Update guava from v28.2-jre to v31.1-jre
+  - Update tika-core from v1.20 to v1.26
+
 3.8.0
 =====
 Mar 31, 2022
 - Add setting to enable/disable implicit element moveTo (default is disabled, false)
   `gwen.web.implicit.element.moveTo=true|false`
+- Update Gwen core from v3.7.0 to v[3.7.1](https://github.com/gwen-interpreter/gwen/releases/tag/v3.7.1)
+  - Log error instead of failing when timing out waiting for video files
 
 3.7.0
 =====

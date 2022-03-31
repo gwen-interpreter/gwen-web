@@ -1,8 +1,8 @@
 enablePlugins(GitVersioning)
 
 // gwen core & web versions
-val gwenVersion = "3.7.1"
-val gwenWebVersion = "3.8.0"
+val gwenVersion = "3.7.3"
+val gwenWebVersion = "3.8.1"
 
 git.baseVersion := gwenWebVersion
 git.useGitDescribe := true
@@ -54,6 +54,14 @@ lazy val mainDependencies = {
   Seq(
     "org.seleniumhq.selenium" % "selenium-java" % selenium,
     "io.github.bonigarcia" % "webdrivermanager" % driverMgr
+  ) ++ mainOverrides
+}
+
+lazy val mainOverrides = {
+  val commonsIO = "2.11.0"
+
+  Seq(
+    "commons-io" % "commons-io" % commonsIO,
   )
 }
 
