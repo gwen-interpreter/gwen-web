@@ -6,4 +6,4 @@ Feature: Add Todo items
     Given I launch the Todo app
      When I add a "Walk the dog" item
       And I add a "Get the milk" item
-     Then the number of active items should be "2"
+     Then the number of active items should be "2": "wrong number of steps added"

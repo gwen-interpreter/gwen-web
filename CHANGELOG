@@ -6,6 +6,7 @@ Apr 2, 2022
     - `@Eager` evaluates Y on the spot and assigns the value to X for subsequent reuse
     - `@Lazy` evaluates Y when referenced the first time and assigns the value to X for subsequent reuse
     - Neither (the default) evaluates Y when referenced every time and assigns the value to X for one-time use
+  - Parse out custom assert messages so they do not appear in reported step output
 
 3.8.1
 =====

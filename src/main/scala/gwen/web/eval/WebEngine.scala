@@ -198,20 +198,20 @@ class WebEngine extends EvalEngine[WebContext] {
         new BindMultipleElementLocators(element, None, None, None)
       case r"""(.+?)$element can be (clicked|right clicked|double clicked|submitted|checked|ticked|unchecked|unticked|selected|deselected|typed|entered|tabbed|cleared|moved to)$event by (?:javascript|js) "(.+?)"$expression""" =>
         new BindActionHandler(element, ElementEvent.valueOf(event), step.orDocString(expression))
-      case r"""the page title should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file)$operator "(.*?)"$expression(?:: )?(".+")?$message""" =>
-        new CompareTitle("title", step.orDocString(expression), false, ComparisonOperator.valueOf(operator), Option(negation).isDefined, Option(message))
-      case r"""the page title should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$attribute(?:: )?(".+")?$message""" =>
-        new CompareTitle("title", attribute, true, ComparisonOperator.valueOf(operator), Option(negation).isDefined, Option(message))
-      case r"""the (alert|confirmation)$name popup message should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file)$operator "(.*?)"$expression(?:: )?(".+")?$message""" =>
-        new ComparePopupMessage(name, step.orDocString(expression), false, ComparisonOperator.valueOf(operator), Option(negation).isDefined, Option(message))
-      case r"""the (alert|confirmation)$name popup message should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$attribute(?:: )?(".+")?$message""" =>
-        new ComparePopupMessage(name, attribute, true, ComparisonOperator.valueOf(operator), Option(negation).isDefined, Option(message))
-      case r"""(.+?)$element should( not)?$negation be (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$state(?:: )?(".+")?$message""" =>
-        new CompareElementState(element, ElementState.valueOf(state), Option(negation).nonEmpty, Option(message))
-      case r"""(.+?)$element( text| value)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file)$operator "(.*?)"$expression(?:: )?(".+")?$message""" if !element.matches(".+at (json path|xpath).+") =>
-        new CompareValueOrSelectionToValue(element, Option(selection).map(_.trim).map(DropdownSelection.valueOf), step.orDocString(expression), ComparisonOperator.valueOf(operator), Option(negation).isDefined, Option(message))
-      case r"""(.+?)$element( text| value)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$attribute(?:: )?(".+")?$message""" if attribute != "absent" && !element.matches(".+at (json path|xpath).+") =>
-        new CompareValueOrSelectionToBoundValue(element, Option(selection).map(_.trim).map(DropdownSelection.valueOf), attribute, ComparisonOperator.valueOf(operator), Option(negation).isDefined, Option(message))
+      case r"""the page title should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file)$operator "(.*?)"$expression""" =>
+        new CompareTitle("title", step.orDocString(expression), false, ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message)
+      case r"""the page title should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$attribute""" =>
+        new CompareTitle("title", attribute, true, ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message)
+      case r"""the (alert|confirmation)$name popup message should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file)$operator "(.*?)"$expression""" =>
+        new ComparePopupMessage(name, step.orDocString(expression), false, ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message)
+      case r"""the (alert|confirmation)$name popup message should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$attribute""" =>
+        new ComparePopupMessage(name, attribute, true, ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message)
+      case r"""(.+?)$element should( not)?$negation be (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$state""" =>
+        new CompareElementState(element, ElementState.valueOf(state), Option(negation).nonEmpty, step.message)
+      case r"""(.+?)$element( text| value)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file)$operator "(.*?)"$expression""" if !element.matches(".+at (json path|xpath).+") =>
+        new CompareValueOrSelectionToValue(element, Option(selection).map(_.trim).map(DropdownSelection.valueOf), step.orDocString(expression), ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message)
+      case r"""(.+?)$element( text| value)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$attribute""" if attribute != "absent" && !element.matches(".+at (json path|xpath).+") =>
+        new CompareValueOrSelectionToBoundValue(element, Option(selection).map(_.trim).map(DropdownSelection.valueOf), attribute, ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message)
       case r"""I capture (.+?)$attribute (?:of|on|in) (.+?)$element by (?:javascript|js) "(.+?)"$expression""" =>
         new CaptureElementAttribute(element, attribute, step.orDocString(expression))
       case r"""I capture the current URL""" =>
@@ -274,10 +274,10 @@ class WebEngine extends EvalEngine[WebContext] {
         new SwitchToNewWindow(WindowType.valueOf(winType.toUpperCase))
       case r"""I start a browser for (.+?)$session""" =>
         new StartBrowserSession(session)
-      case r"""I should have (\d+?)$count open browser(?:s?)(?:: )?(".+")?$message""" =>
-        new AssertBrowserCount(count.toInt, Option(message))
-      case r"""I should have (\d+?)$count open (?:window|tab)(?:s?)(?:: )?(".+")?$message""" =>
-        new AssertBrowserWindowCount(count.toInt, Option(message))
+      case r"""I should have (\d+?)$count open browser(?:s?)""" =>
+        new AssertBrowserCount(count.toInt, step.message)
+      case r"""I should have (\d+?)$count open (?:window|tab)(?:s?)""" =>
+        new AssertBrowserWindowCount(count.toInt, step.message)
       case r"I have (no|an)$open open browser" =>
         new OpenOrCloseBrowser(open == "an", None, BehaviorType.Context)
       case r"I close the(?: current)? browser" =>
