@@ -1,3 +1,12 @@
+3.9.0
+=====
+Apr 2, 2022
+- Update Gwen core from v3.7.3 to v[3.8.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.8.0)
+  - Introduce `@Eager` and `@Lazy` annotations for `X defined by Y` DSL steps
+    - `@Eager` evaluates Y on the spot and assigns the value to X for subsequent reuse
+    - `@Lazy` evaluates Y when referenced the first time and assigns the value to X for subsequent reuse
+    - Neither (the default) evaluates Y when referenced every time and assigns the value to X for one-time use
+
 3.8.1
 =====
 Mar 31, 2022
