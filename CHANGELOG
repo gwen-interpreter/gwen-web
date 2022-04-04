@@ -7,12 +7,12 @@ Apr 2, 2022
     - `@Lazy` evaluates Y when referenced the first time and assigns the value to X for subsequent reuse
     - Neither (the default) evaluates Y when referenced every time and assigns the value to X for one-time use
   - Parse out custom assert messages so they do not appear in reported step output
-  - Introduce `@Message` annotation for custom assertion messages in addition to `: "message"` notation
+  - Introduce `@Message("msg")` annotation for custom assertion messages in addition to `: "msg"` notation
     - Example: 
       - Without custom message (the standard assertion message will be reported if assertion fails): 
         - `Then x should be y`
       - With custom message: 
-        - `Then x should be y @Message "This custom message will be reported if assertion fails"` (new approach)
+        - `Then x should be y  @Message("This custom message will be reported if assertion fails")` (new approach)
         - or `Then x should be y: "This custom message will be reported if assertion fails"` (old approach)
 
 3.8.1
