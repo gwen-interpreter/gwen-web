@@ -1,3 +1,9 @@
+3.9.1
+=====
+Apr 4, 2022
+- Update Gwen core from v3.8.0 to v[3.8.1](https://github.com/gwen-interpreter/gwen/releases/tag/v3.8.1)
+  - Fix `@Lazy` bindings for if conditions
+
 3.9.0
 =====
 Apr 2, 2022

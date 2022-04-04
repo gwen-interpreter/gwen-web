@@ -1859,6 +1859,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     doReturn(Some("false")).when(mockScopes).getOpt("<condition>/javascript")
     doReturn("false").when(ctx).interpolate("false")
     doReturn(false).when(ctx).evaluateJS("return false")
+    doReturn(None).when(mockTopScope).getOpt("<condition>/loading")
     val step = evaluate("""x is "1" if <condition>""")
     step.toString should be (s"""Given x is "1" if <condition>""")
   }
