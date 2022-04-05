@@ -18,7 +18,7 @@ package gwen.web.eval.lambda.unit
 
 import gwen.web.eval.ElementState
 import gwen.web.eval.WebContext
-import gwen.core.eval.binding.JavaScriptBinding
+import gwen.core.eval.binding.JSBinding
 
 import gwen.core.behavior.BehaviorType
 import gwen.core.eval.lambda.UnitStep
@@ -32,7 +32,7 @@ class WaitForElementState(element: String, state: ElementState, negate: Boolean)
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     step tap { _ =>
       val jsCondition = s"$element is${if (negate) " not" else ""} $state"
-      ctx.scopes.getOpt(JavaScriptBinding.key(jsCondition)) match {
+      ctx.scopes.getOpt(JSBinding.key(jsCondition)) match {
         case None =>
           checkStepRules(step, BehaviorType.Action, ctx)
           val binding = ctx.getLocatorBinding(element).jsEquivalent

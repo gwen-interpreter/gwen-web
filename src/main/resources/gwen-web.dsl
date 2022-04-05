@@ -1,3 +1,4 @@
+<name> is "<value>"
 I am on the <page>
 the <page> url is "<url>"
 I navigate to the <page>
@@ -926,6 +927,8 @@ I reset my <name> property
 I reset my <name> setting
 <name> is defined by javascript "<expression>"
 <name> is defined by js "<expression>"
+<name> is defined by <javascriptRef> applied to "<arguments>"
+<name> is defined by <javascriptRef> applied to "<arguments>" delimited by "-"
 <name> is defined by system process "<process>"
 <name> is defined by system process "<process>" delimited by "<delimiter>"
 <name> is defined by property "<name>"

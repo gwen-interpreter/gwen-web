@@ -19,7 +19,7 @@ package gwen.web.eval.lambda.unit
 import gwen.web.eval.WebContext
 
 import gwen.core.behavior.BehaviorType
-import gwen.core.eval.binding.JavaScriptBinding
+import gwen.core.eval.binding.JSBinding
 import gwen.core.eval.lambda.UnitStep
 import gwen.core.node.GwenNode
 import gwen.core.node.gherkin.Step
@@ -31,7 +31,7 @@ class WaitForBoundCondition(condition: String, delayMsecs: Option[Long], timeout
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     step tap { _ =>
       checkStepRules(step, BehaviorType.Action, ctx)
-      val javascript = ctx.scopes.get(JavaScriptBinding.key(condition))
+      val javascript = ctx.scopes.get(JSBinding.key(condition))
       ctx.waitUntil(delayMsecs, timeoutSecs, s"waiting for true return from javascript: $javascript") {
         ctx.evaluateJSPredicate(javascript)
       }

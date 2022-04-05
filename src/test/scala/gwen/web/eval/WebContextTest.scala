@@ -26,7 +26,7 @@ import gwen.web.eval.driver.DriverManager
 
 import gwen.core.Errors
 import gwen.core.GwenOptions
-import gwen.core.eval.binding.JavaScriptBinding
+import gwen.core.eval.binding.JSBinding
 import gwen.core.state.EnvState
 
 import org.mockito.Mockito._
@@ -991,7 +991,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("element", SelectorType.id, "elem", None, None, ctx)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
-    ctx.scopes.set(JavaScriptBinding.key("element/action/click"), "element.click()")
+    ctx.scopes.set(JSBinding.key("element/action/click"), "element.click()")
     ctx.performAction(ElementAction.click, elemBinding)
     verify(mockElement, never()).clear()
     verify(ctx).executeJS("(function(element) { element.click() })(arguments[0])", mockElement)(WebSettings.`gwen.web.capture.screenshots.highlighting`)

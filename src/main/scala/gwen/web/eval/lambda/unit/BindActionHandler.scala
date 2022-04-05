@@ -20,7 +20,7 @@ import gwen.web.eval.ElementEvent
 import gwen.web.eval.WebContext
 
 import gwen.core.behavior.BehaviorType
-import gwen.core.eval.binding.JavaScriptBinding
+import gwen.core.eval.binding.JSBinding
 import gwen.core.eval.lambda.UnitStep
 import gwen.core.node.GwenNode
 import gwen.core.node.gherkin.Step
@@ -33,7 +33,7 @@ class BindActionHandler(element: String, event: ElementEvent, javascript: String
     step tap { _ =>
       checkStepRules(step, BehaviorType.Context, ctx)
       ctx.getLocatorBinding(element)
-      ctx.scopes.set(JavaScriptBinding.key(s"$element/action/${ElementEvent.actionOf(event)}"), javascript)
+      ctx.scopes.set(JSBinding.key(s"$element/action/${ElementEvent.actionOf(event)}"), javascript)
     }
   }
 

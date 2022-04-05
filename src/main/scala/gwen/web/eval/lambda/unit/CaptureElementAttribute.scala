@@ -19,7 +19,7 @@ package gwen.web.eval.lambda.unit
 import gwen.web.eval.WebContext
 
 import gwen.core.behavior.BehaviorType
-import gwen.core.eval.binding.JavaScriptBinding
+import gwen.core.eval.binding.JSBinding
 import gwen.core.eval.lambda.UnitStep
 import gwen.core.node.GwenNode
 import gwen.core.node.gherkin.Step
@@ -29,17 +29,17 @@ class CaptureElementAttribute(element: String, attribute: String, javascript: St
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     checkStepRules(step, BehaviorType.Action, ctx)
     val binding = ctx.getLocatorBinding(element)
-    ctx.scopes.set(JavaScriptBinding.key(attribute), javascript)
+    ctx.scopes.set(JSBinding.key(attribute), javascript)
     try {
       ctx.perform {
-        ctx.topScope.pushObject(s"${JavaScriptBinding.key(attribute)}/param/webElement", binding.resolve())
+        ctx.topScope.pushObject(s"${JSBinding.key(attribute)}/param/webElement", binding.resolve())
       }
       val content = ctx.getBoundReferenceValue(attribute)
       ctx.topScope.set(attribute, content)
       step.addAttachment(attribute, "txt", content)
     } finally {
       ctx.perform {
-        ctx.topScope.popObject(s"${JavaScriptBinding.key(attribute)}/param/webElement")
+        ctx.topScope.popObject(s"${JSBinding.key(attribute)}/param/webElement")
       }
     }
   }

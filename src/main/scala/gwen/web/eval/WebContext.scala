@@ -25,7 +25,7 @@ import gwen.core.Errors._
 import gwen.core.eval.ComparisonOperator
 import gwen.core.eval.EvalContext
 import gwen.core.eval.binding.BindingType
-import gwen.core.eval.binding.JavaScriptBinding
+import gwen.core.eval.binding.JSBinding
 import gwen.core.eval.binding.TextBinding
 import gwen.core.node.gherkin.Step
 import gwen.core.state.StateLevel
@@ -167,8 +167,8 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     * @param name the name of the bound attribute to find
     */
   def getAttribute(name: String): String = {
-    getCachedWebElement(s"${JavaScriptBinding.key(name)}/param/webElement") map { webElement =>
-      val javascript = interpolate(scopes.get(JavaScriptBinding.key(name)))
+    getCachedWebElement(s"${JSBinding.key(name)}/param/webElement") map { webElement =>
+      val javascript = interpolate(scopes.get(JSBinding.key(name)))
       val jsFunction = s"return (function(element) { return $javascript })(arguments[0])"
       Option(executeJS(jsFunction, webElement)).map(_.toString).getOrElse("")
     } getOrElse {
@@ -253,7 +253,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
 
     // wait for javascript post condition if one is configured for this action
     scopes.getOpt(s"$element/$action/condition") foreach { condition =>
-      val javascript = scopes.get(JavaScriptBinding.key(condition))
+      val javascript = scopes.get(JSBinding.key(condition))
       logger.info(s"waiting until $condition (post-$action condition)")
       logger.debug(s"Waiting for script to return true: $javascript")
       waitUntil(s"waiting for true return from javascript: $javascript") {
@@ -479,7 +479,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     * @param params optional parameters to the script
     * @param takeScreenShot true to take screenshot after performing the function
     */
-  def executeJS(javascript: String, params: Any*)(implicit takeScreenShot: Boolean = false): Any =
+  def executeJS(javascript: String, params: Any*)(implicit takeScreenShot: Boolean = false): Any = {
     withWebDriver { webDriver =>
       try {
         webDriver.asInstanceOf[JavascriptExecutor].executeScript(javascript, params.map(_.asInstanceOf[AnyRef])*) tap { result =>
@@ -498,6 +498,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
       if (options.dryRun) s"$$[${BindingType.javascript}:$javascript]"
       else null  //js returned null
     }
+  }
 
   /**
     * Waits for a given condition to be true. Errors on time out
@@ -827,7 +828,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
   private [web] def createActions(driver: WebDriver): Actions = new Actions(driver)
 
   def performAction(action: ElementAction, binding: LocatorBinding): Unit = {
-    val actionBinding = scopes.getOpt(JavaScriptBinding.key(s"${binding.name}/action/$action"))
+    val actionBinding = scopes.getOpt(JSBinding.key(s"${binding.name}/action/$action"))
     actionBinding match {
       case Some(javascript) =>
         performScriptAction(action, javascript, binding, s"trying to $action $binding")
