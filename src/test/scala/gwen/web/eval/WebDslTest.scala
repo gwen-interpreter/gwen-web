@@ -49,6 +49,7 @@ class WebDslTest extends BaseTest with Matchers with MockitoSugar {
     envState.scopes.set("<expressionRef>", "expression")
     envState.scopes.set("<javascriptRef>/javascript", "identity")
     envState.scopes.set("identity", "arguments[0]")
+    envState.scopes.set("<argument>", "arg0")
     envState.scopes.set("<arguments>", "arg0")
     envState.scopes.set("<optionRef>", "option")
     envState.scopes.set("<dropdown>/locator", "id")

@@ -1,3 +1,10 @@
+3.10.1
+======
+Apr 5, 2022
+- Update Gwen core from v3.9.0 to v[3.9.1](https://github.com/gwen-interpreter/gwen/releases/tag/v3.9.1)
+- JS function application binding without delimiter takes single argument only
+  - `<name> is defined by <javascriptRef> applied to "<argument>"`
+
 3.10.0
 =====
 Apr 5, 2022
