@@ -1,3 +1,10 @@
+3.10.1
+======
+Apr 6, 2022
+- Update Gwen core from v3.10.0 to v[3.10.1](https://github.com/gwen-interpreter/gwen/releases/tag/v3.10.1)
+  - Add duration to `Ignored` status and render ignored stepdef links in grey
+  - Change CSV record number label suffux from ' (plus input data record n)' to ' + Input data record n'
+
 3.11.0
 ======
 Apr 6, 2022
