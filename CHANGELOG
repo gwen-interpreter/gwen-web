@@ -1,17 +1,25 @@
+3.11.0
+======
+Apr 6, 2022
+- Update Gwen core from v3.9.1 to v[3.10.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.10.0)
+  - Introduced `@Try` annotation and `Ignored` status
+    - Steps annotated with `@Try` that fail will be reported as `Ignored`
+  - Fix: Accept blank arguments into JS function application bindings
+
 3.10.1
 ======
 Apr 5, 2022
 - Update Gwen core from v3.9.0 to v[3.9.1](https://github.com/gwen-interpreter/gwen/releases/tag/v3.9.1)
-- JS function application binding without delimiter takes single argument only
-  - `<name> is defined by <javascriptRef> applied to "<argument>"`
+  - JS function application binding without delimiter takes single argument only
+    - `<name> is defined by <javascriptRef> applied to "<argument>"`
 
 3.10.0
 =====
 Apr 5, 2022
 - Update Gwen core from v3.8.1 to v[3.9.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.9.0)
-- JS function application bindings
-  - `<name> is defined by <javascriptRef> applied to "<arguments>"`
-  - `<name> is defined by <javascriptRef> applied to "<arguments>" delimited by "<delimiter>"`
+  - JS function application bindings
+    - `<name> is defined by <javascriptRef> applied to "<arguments>"`
+    - `<name> is defined by <javascriptRef> applied to "<arguments>" delimited by "<delimiter>"`
 
 3.9.1
 =====
