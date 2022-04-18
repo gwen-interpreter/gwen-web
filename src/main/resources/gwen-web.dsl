@@ -1388,3 +1388,51 @@ I append <reference> to <element>
 I insert a new line in <element>
 I attach "<filepath>" as "<name>"
 I attach "<filepath>" as <name>
+<textRef> should be <percentage>% similar to "<text>"
+<textRef> should be less than <percentage>% similar to "<text>"
+<textRef> should be at most <percentage>% similar to "<text>"
+<textRef> should be more than <percentage>% similar to "<text>"
+<textRef> should be at least <percentage>% similar to "<text>"
+<textRef> should be <percentage>% similar to "<text>" ignoring case
+<textRef> should be less than <percentage>% similar to "<text>" ignoring case
+<textRef> should be at most <percentage>% similar to "<text>" ignoring case
+<textRef> should be more than <percentage>% similar to "<text>" ignoring case
+<textRef> should be at least <percentage>% similar to "<text>" ignoring case
+<textRef> should not be <percentage>% similar to "<text>"
+<textRef> should not be less than <percentage>% similar to "<text>"
+<textRef> should not be at most <percentage>% similar to "<text>"
+<textRef> should not be more than <percentage>% similar to "<text>"
+<textRef> should not be at least <percentage>% similar to "<text>"
+<textRef> should not be <percentage>% similar to "<text>" ignoring case
+<textRef> should not be less than <percentage>% similar to "<text>" ignoring case
+<textRef> should not be at most <percentage>% similar to "<text>" ignoring case
+<textRef> should not be more than <percentage>% similar to "<text>" ignoring case
+<textRef> should not be at least <percentage>% similar to "<text>" ignoring case
+<textRef1> should be <percentage>% similar to <textRef2>
+<textRef1> should be less than <percentage>% similar to <textRef2>
+<textRef1> should be at most <percentage>% similar to <textRef2>
+<textRef1> should be more than <percentage>% similar to <textRef2>
+<textRef1> should be at least <percentage>% similar to <textRef2>
+<textRef1> should be <percentage>% similar to <textRef2> ignoring case
+<textRef1> should be less than <percentage>% similar to <textRef2> ignoring case
+<textRef1> should be at most <percentage>% similar to <textRef2> ignoring case
+<textRef1> should be more than <percentage>% similar to <textRef2> ignoring case
+<textRef1> should be at least <percentage>% similar to <textRef2> ignoring case
+<textRef1> should not be <percentage>% similar to <textRef2>
+<textRef1> should not be less than <percentage>% similar to <textRef2>
+<textRef1> should not be at most <percentage>% similar to <textRef2>
+<textRef1> should not be more than <percentage>% similar to <textRef2>
+<textRef1> should not be at least <percentage>% similar to <textRef2>
+<textRef1> should not be <percentage>% similar to <textRef2> ignoring case
+<textRef1> should not be less than <percentage>% similar to <textRef2> ignoring case
+<textRef1> should not be at most <percentage>% similar to <textRef2> ignoring case
+<textRef1> should not be more than <percentage>% similar to <textRef2> ignoring case
+<textRef1> should not be at least <percentage>% similar to <textRef2> ignoring case
+I capture the similarity score of <textRef> compared to "<text>" as <name>
+I capture the similarity score of <textRef1> compared to <textRef2> as <name>
+I capture the similarity score of <textRef> compared to "<text>"
+I capture the similarity score of <textRef1> compared to <textRef2>
+I capture the similarity score of <textRef> compared to "<text>" ignoring case as <name>
+I capture the similarity score of <textRef1> compared to <textRef2> ignoring case as <name>
+I capture the similarity score of <textRef> compared to "<text>" ignoring case
+I capture the similarity score of <textRef1> compared to <textRef2> ignoring case

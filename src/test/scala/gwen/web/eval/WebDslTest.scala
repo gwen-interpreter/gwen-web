@@ -66,6 +66,8 @@ class WebDslTest extends BaseTest with Matchers with MockitoSugar {
     envState.scopes.set("<elements>/locator", "css selector")
     envState.scopes.set("<elements>/locator/css selector", "expression")
     envState.scopes.set("<textRef>", "source")
+    envState.scopes.set("<textRef1>", "source")
+    envState.scopes.set("<textRef2>", "source")
     envState.scopes.set("<xmlRef>", "xml")
     envState.scopes.set("<jsonRef>", "json")
     envState.scopes.topScope.pushObject("table", new FlatTable(List(List("1", "2")), List("a", "b")))
@@ -93,10 +95,12 @@ class WebDslTest extends BaseTest with Matchers with MockitoSugar {
               .replace("<index>", "1")
               .replace("<count>", "2")
               .replace("<pixels>", "100")
+              .replace("<percentage>", "80")
           } foreach { dsl =>
             val iStep = Step(None, StepKeyword.Given.toString, dsl.replaceAll("<step>", """a is "b""""), Nil, None, Nil, None, Pending, Nil, Nil, Nil, None)
             engine.evaluateStep(parent, iStep, ctx).evalStatus match {
               case Failed(_, error) => 
+                error.printStackTrace
                 fail(iStep.toString, error)
               case evalStatus => evalStatus.keyword should not be (StatusKeyword.Failed)
             }
