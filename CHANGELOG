@@ -4,6 +4,7 @@ Apr 20, 2022
 - Update Gwen core from v3.11.0 to v[3.11.1](https://github.com/gwen-interpreter/gwen/releases/tag/v3.11.1)
   - Add video, attachments, and error message to HTML report summary lines
   - Use SVG instead of PNG Gwen logo image in HTML reports
+  - Support CSV data interpolation in feature name and description
 
 3.12.0
 ======

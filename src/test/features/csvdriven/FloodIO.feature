@@ -1,7 +1,7 @@
 @floodio
-Feature: Complete the floodio challenge
+Feature: Complete the Floodio challenge ${my age}
      
-  As a gwen user
+  As a gwen user aged ${my age}
   I want to automate the floodio challenge
   So that I can be on the hall of fame
       
