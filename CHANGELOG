@@ -1,3 +1,9 @@
+3.12.1
+======
+Apr 20, 2022
+- Update Gwen core from v3.11.0 to v[3.11.1](https://github.com/gwen-interpreter/gwen/releases/tag/v3.11.1)
+  - Add video, attachments, and error message to HTML report summary lines
+
 3.12.0
 ======
 Apr 19, 2022
