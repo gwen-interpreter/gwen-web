@@ -1,8 +1,14 @@
+3.12.3
+======
+Apr 21, 2022
+- Update Gwen core from v3.11.2 to v[3.11.3](https://github.com/gwen-interpreter/gwen/releases/tag/v3.11.3)
+  - Fix positioning of attachments dropdown and video buttons in HTML reports
+
 3.12.2
 ======
 Apr 20, 2022
 - Update Gwen core from v3.11.1 to v[3.11.2](https://github.com/gwen-interpreter/gwen/releases/tag/v3.11.2)
-  - Optmised Gwen logo image in HTML report to exact size
+  - Optimised Gwen logo image in HTML report to exact size
 
 3.12.1
 ======
