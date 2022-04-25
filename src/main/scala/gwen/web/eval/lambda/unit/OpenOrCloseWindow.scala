@@ -33,11 +33,19 @@ class OpenOrCloseWindow(open: Boolean, occurence: Option[Int]) extends UnitStep[
       if (open) {
         ctx.newOrCurrentSession()
       } else {
-        occurence match {
-          case Some(occurNo) =>
-            ctx.closeWindow(occurNo)
-          case None =>
-            ctx.closeChild()
+        try {
+          occurence match {
+            case Some(occurNo) =>
+              ctx.closeWindow(occurNo)
+            case None =>
+              ctx.closeChild()
+          }
+        } catch {
+          case e: Throwable =>
+            if (step.isTry) {
+              ctx.switchToParent()
+            }
+            throw e
         }
       }
     }
