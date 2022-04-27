@@ -1,7 +1,14 @@
+3.12.5
+======
+Apr 27, 2022
+- Update Gwen core from v3.11.3 to v[3.11.4](https://github.com/gwen-interpreter/gwen/releases/tag/v3.11.4)
+  - Change summary HTML report heading from Feature Summary to Results Summary
+  - Change detail HTML report heading from Feature Detail to Feature Specification
+
 3.12.4
 ======
 Apr 26, 2022
-- When closing window with @Try, switch to parent window regardless of outcome
+- When closing window with `@Try`, switch to parent window regardless of outcome
 
 3.12.3
 ======
