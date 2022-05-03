@@ -1,3 +1,9 @@
+3.12.7
+======
+May 03, 2022
+- Update Gwen core from v3.11.5 to v[3.11.6](https://github.com/gwen-interpreter/gwen/releases/tag/v3.11.6)
+- Grey attachments for ignored steps in HTML reports
+
 3.12.6
 ======
 Apr 28, 2022
