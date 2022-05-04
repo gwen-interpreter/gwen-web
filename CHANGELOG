@@ -1,8 +1,15 @@
+3.12.8
+======
+May 04, 2022
+- Update Gwen core from v3.11.6 to v[3.11.7](https://github.com/gwen-interpreter/gwen/releases/tag/v3.11.7)
+  - Auto expand low level single step links in HTHML reports
+  - Include `not` prefix when naming negated synthetic If stepDefs
+
 3.12.7
 ======
 May 03, 2022
 - Update Gwen core from v3.11.5 to v[3.11.6](https://github.com/gwen-interpreter/gwen/releases/tag/v3.11.6)
-- Grey attachments for ignored steps in HTML reports
+  - Grey attachments for ignored steps in HTML reports
 
 3.12.6
 ======
