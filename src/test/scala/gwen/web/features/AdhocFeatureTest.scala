@@ -17,7 +17,7 @@ package gwen.web.features
 
 class AdhocFeatureTest extends BaseFeatureTest {
 
-  val feature = "src/test/features/csvdriven"
+  val feature = "src/test/features/similarity"
 
   s"Feature should" should "execute" in {
     evaluate(
