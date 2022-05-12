@@ -310,7 +310,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
             getBinding(name)
           }
         ).map(_.toString).getOrElse(name)
-        assert(result, message getOrElse s"Expected $binding to ${if(negate) "not " else ""}$operator '$expected' but got '$actualValue'")
+        assert(result, message getOrElse s"Expected $binding to ${if(negate) "not " else ""}$operator '$expected'${if (operator == ComparisonOperator.be && actualValue == expected) "" else s" but got '$actualValue'"}")
     }
 
   }
