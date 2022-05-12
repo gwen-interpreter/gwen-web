@@ -1,8 +1,14 @@
+3.12.10
+=======
+May 12, 2022
+- Update Gwen core from v3.11.8 to v[3.11.9](https://github.com/gwen-interpreter/gwen/releases/tag/v3.11.9)
+  - Remove redundant data from negated assertion error messages
+
 3.12.9
 ======
 May 11, 2022
 - Update selenium from v4.1.3 to v4.1.4
-- Update Gwen core from v3.11.6 to v[3.11.8](https://github.com/gwen-interpreter/gwen/releases/tag/v3.11.9)
+- Update Gwen core from v3.11.7 to v[3.11.8](https://github.com/gwen-interpreter/gwen/releases/tag/v3.11.8)
   - Adjust keyword column width in HTML reports
 
 3.12.8
