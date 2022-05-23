@@ -1,3 +1,9 @@
+3.12.12
+=======
+May 23, 2022
+- Update Gwen core from v3.11.9 to v[3.11.10](https://github.com/gwen-interpreter/gwen/releases/tag/v3.11.10)
+  - Fix Lazy/Eager validation
+
 3.12.11
 =======
 May 12, 2022
