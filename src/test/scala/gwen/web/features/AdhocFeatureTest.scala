@@ -17,14 +17,14 @@ package gwen.web.features
 
 class AdhocFeatureTest extends BaseFeatureTest {
 
-  val feature = "src/test/features/similarity"
+  val feature = "src/test/features/todo/LoadItemsFromCSVs.feature"
 
   s"Feature should" should "execute" in {
     evaluate(
         List(feature), 
         parallel = false, 
         parallelFeatures = false,
-        dryRun = false, 
+        dryRun = true, 
         "ad-hoc",
         None)
         

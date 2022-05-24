@@ -1,3 +1,11 @@
+3.13.0
+======
+May 25, 2022
+- Update Gwen core from v3.11.10 to v[3.12.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.12.0)
+  - Add where clause (filter) to `@Examples` tag
+  - Add note for turning off declarative feature mode and strict behavior rules in respective error messages
+  - Interpolate input data into feature and scenario level tags, names and descriptions
+
 3.12.12
 =======
 May 23, 2022
