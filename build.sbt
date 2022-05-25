@@ -1,7 +1,7 @@
 enablePlugins(GitVersioning)
 
 // gwen core & web versions
-val gwenVersion = "3.12.0"
+val gwenVersion = "3.12.1"
 val gwenWebVersion = "3.13.0"
 
 git.baseVersion := gwenWebVersion
@@ -30,7 +30,7 @@ lazy val projectSettings = Seq(
   licenses += "Apache License, Version 2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0.html"),
   homepage := Some(url("https://github.com/gwen-interpreter/gwen")),
   versionScheme := Some("semver-spec"),
-  scalaVersion := "3.1.1",
+  scalaVersion := "3.1.2",
   crossPaths := false,
   trapExit := false,
   scalacOptions ++= Seq(
@@ -49,19 +49,11 @@ lazy val projectSettings = Seq(
 
 lazy val mainDependencies = {
   val selenium = "4.1.4"
-  val driverMgr = "5.1.0"
+  val driverMgr = "5.1.1"
 
   Seq(
     "org.seleniumhq.selenium" % "selenium-java" % selenium,
     "io.github.bonigarcia" % "webdrivermanager" % driverMgr
-  ) ++ mainOverrides
-}
-
-lazy val mainOverrides = {
-  val commonsIO = "2.11.0"
-
-  Seq(
-    "commons-io" % "commons-io" % commonsIO,
   )
 }
 

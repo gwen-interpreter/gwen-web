@@ -6,6 +6,13 @@ May 25, 2022
   - Add note for turning off declarative feature mode and strict behavior rules in respective error messages
   - Interpolate input data into feature and scenario level tags, names and descriptions
   - No wrap on table data rows in HTML
+- Update libs
+  - Update tika-core from v1.26 to v1.28.2
+  - Update jackson-databind from v2.13.2.2 to v2.13.3
+  - Update scala from v3.1.1 to v3.1.2
+  - Update webdrivermanager from v5.1.0 to v5.1.1
+  - Update gherkin from v22.0.0 to v23.0.1
+  - Update scala-logging from v3.9.4 to v3.9.5
 
 3.12.12
 =======
