@@ -1,8 +1,8 @@
 enablePlugins(GitVersioning)
 
 // gwen core & web versions
-val gwenVersion = "3.12.2"
-val gwenWebVersion = "3.13.2"
+val gwenVersion = "3.12.3"
+val gwenWebVersion = "3.13.3"
 
 git.baseVersion := gwenWebVersion
 git.useGitDescribe := true
@@ -23,12 +23,12 @@ resolvers ++= Seq(
 
 lazy val projectSettings = Seq(
   name := "gwen-web",
-  description := "Web automation engine for Gwen",
+  description := "Web Automation and Robotics for Gherkin",
   organization := "org.gweninterpreter",
-  organizationHomepage := Some(url("http://gweninterpreter.org")),
+  organizationHomepage := Some(url("https://github.com/gwen-interpreter")),
   startYear := Some(2014),
   licenses += "Apache License, Version 2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0.html"),
-  homepage := Some(url("https://github.com/gwen-interpreter/gwen")),
+  homepage := Some(url("https://gweninterpreter.org")),
   versionScheme := Some("semver-spec"),
   scalaVersion := "3.1.2",
   crossPaths := false,
