@@ -1,3 +1,9 @@
+3.13.2
+======
+May 30, 2022
+- Update Gwen core from v3.12.1 to v[3.12.2](https://github.com/gwen-interpreter/gwen/releases/tag/v3.12.2)
+  - Update console summary report to include feature name
+
 3.13.1
 ======
 May 28, 2022
