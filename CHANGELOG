@@ -1,3 +1,9 @@
+3.14.0
+======
+May 31, 2022
+- Update Gwen core from v3.12.3. to v[3.13.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.13.0)
+  - Remove concatenation syntax in favor of interpolation/substitution
+
 3.13.3
 ======
 May 30, 2022
