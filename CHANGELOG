@@ -3,6 +3,7 @@
 May 31, 2022
 - Update Gwen core from v3.12.3. to v[3.13.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.13.0)
   - Remove concatenation syntax in favor of interpolation/substitution
+  - Add line break between each status group in console report summary
 
 3.13.3
 ======
