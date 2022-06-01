@@ -1,3 +1,9 @@
+3.14.1
+======
+Jun 1, 2022
+- Update Gwen core from v3.13.0. to v[3.13.1](https://github.com/gwen-interpreter/gwen/releases/tag/v3.13.1)
+  - Do not allow quotes in if condition reference names
+
 3.14.0
 ======
 May 31, 2022
