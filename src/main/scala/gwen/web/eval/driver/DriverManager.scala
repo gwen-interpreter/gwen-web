@@ -17,8 +17,12 @@
 package gwen.web.eval.driver
 
 import gwen.core._
+import gwen.core.state.SensitiveData
+
 import gwen.web.eval.WebSettings
 import gwen.web.eval.WebErrors
+import gwen.web.eval.driver.event.WebSessionEventDispatcher
+import gwen.web.eval.driver.event.WebSessionEventListener
 
 import scala.jdk.CollectionConverters._
 import scala.collection.mutable
@@ -47,8 +51,6 @@ import java.net.URL
 import java.{time => jt}
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.Semaphore
-import gwen.web.eval.driver.event.WebSessionEventDispatcher
-import gwen.web.eval.driver.event.WebSessionEventListener
 
 /** Driver manager companion. */
 object DriverManager extends LazyLogging {
@@ -270,7 +272,9 @@ class DriverManager() extends LazyLogging {
     }
     browserArgs foreach { arg =>
       logger.info(s"Setting $browser argument: $arg")
-      options.addArguments(arg)
+      SensitiveData.withValue(arg) { a =>
+        options.addArguments(a)
+      }
     }
     if (WebSettings.`gwen.web.browser.headless`) {
       logger.info(s"Setting $browser argument: headless")
