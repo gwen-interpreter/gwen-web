@@ -1301,7 +1301,9 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     */
   def navigateTo(url: String): Unit = {
     withWebDriver { driver =>
-      driver.get(url)
+      SensitiveData.withValue(url) { u =>
+        driver.get(u)
+      }
     } (WebSettings.`gwen.web.capture.screenshots.enabled`)
   }
 

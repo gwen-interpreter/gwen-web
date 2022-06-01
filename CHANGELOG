@@ -1,7 +1,14 @@
+3.14.3
+======
+Jun 2, 2022
+- Update Gwen core from v3.13.3 to v[3.13.4](https://github.com/gwen-interpreter/gwen/releases/tag/v3.13.4)
+  - Support masked data in system process DSLs
+- Support masked data in navigation DSL
+
 3.14.2
 ======
 Jun 2, 2022
-- Update Gwen core from v3.13.1 to v[3.13.2](https://github.com/gwen-interpreter/gwen/releases/tag/v3.13.3)
+- Update Gwen core from v3.13.1 to v[3.13.3](https://github.com/gwen-interpreter/gwen/releases/tag/v3.13.3)
   - Add overloaded DSLs:
     - `I execute unix system process "<process>"`
     - `I execute unix system process "<process>" delimited by "<delimiter>"`
