@@ -5,6 +5,8 @@ Jun 1, 2022
   - Add overloaded DSLs:
     - `I execute unix system process "<process>"`
     - `I execute unix system process "<process>" delmited by "<delimiter>"`
+- Update selenium-java from v4.2.0 to v4.2.1
+- Update webdrivermanager from v5.1.1 to v5.2.0
 
 3.14.1
 ======
