@@ -1,13 +1,21 @@
+3.14.2
+======
+Jun 1, 2022
+- Update Gwen core from v3.13.1 to v[3.13.1](https://github.com/gwen-interpreter/gwen/releases/tag/v3.13.1)
+  - Add overloaded DSLs:
+    - `I execute unix system process "<process>"`
+    - `I execute unix system process "<process>" delmited by "<delimiter>"`
+
 3.14.1
 ======
 Jun 1, 2022
-- Update Gwen core from v3.13.0. to v[3.13.1](https://github.com/gwen-interpreter/gwen/releases/tag/v3.13.1)
+- Update Gwen core from v3.13.0 to v[3.13.1](https://github.com/gwen-interpreter/gwen/releases/tag/v3.13.1)
   - Do not allow quotes in if condition reference names
 
 3.14.0
 ======
 May 31, 2022
-- Update Gwen core from v3.12.3. to v[3.13.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.13.0)
+- Update Gwen core from v3.12.3 to v[3.13.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.13.0)
   - Remove concatenation syntax in favor of interpolation/substitution
   - Add line break between each status group in console report summary
 

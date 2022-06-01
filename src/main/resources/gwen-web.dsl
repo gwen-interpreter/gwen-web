@@ -1084,7 +1084,9 @@ I execute javascript "<javascript>"
 I execute js "<javascript>"
 I execute system process "<command>"
 I execute system process "<command>" delimited by "<delimiter>"
-I execute a unix system process "<command>"
+I execute unix system process "<command>"
+I execute unix system process "<command>"
+I execute a unix system process "<command>" delimited by "<delimiter>"
 I execute a unix system process "<command>" delimited by "<delimiter>"
 I refresh the current page
 I base64 decode <reference> as <name>
