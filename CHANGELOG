@@ -1,3 +1,9 @@
+3.14.5
+======
+Jun 5, 2022
+- Update Gwen core from v3.13.5 to v[3.13.6](https://github.com/gwen-interpreter/gwen/releases/tag/v3.13.6)
+  - Add horizontal scrolling to tables in HTML reports
+
 3.14.4
 ======
 Jun 2, 2022
