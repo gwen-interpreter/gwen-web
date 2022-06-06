@@ -1,3 +1,9 @@
+3.14.6
+======
+Jun 6, 2022
+- Do not allow quotes in expressionRef for dropdown assertion DSL:
+  - `<dropdown> <text|value> should[ not] <match> <expressionRef>`
+
 3.14.5
 ======
 Jun 5, 2022
