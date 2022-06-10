@@ -43,6 +43,7 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
     Settings.exclusively {
       GwenSettings.`gwen.assertion.mode` should be (AssertionMode.hard)
       GwenSettings.`gwen.associative.meta` should be (true)
+      GwenSettings.`gwen.auto.bind.tableData.outline.examples` should be (true)
       GwenSettings.`gwen.auto.discover.data.csv` should be (true)
       GwenSettings.`gwen.auto.discover.meta` should be (true)
       GwenSettings.`gwen.behavior.rules` should be (BehaviorMode.lenient)
@@ -152,6 +153,7 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
 
     GwenSettings.`gwen.assertion.mode` should be (AssertionMode.hard)
     GwenSettings.`gwen.associative.meta` should be (true)
+    GwenSettings.`gwen.auto.bind.tableData.outline.examples` should be (true)
     GwenSettings.`gwen.auto.discover.data.csv` should be (false)
     GwenSettings.`gwen.auto.discover.meta` should be (true)
     GwenSettings.`gwen.behavior.rules` should be (BehaviorMode.strict)
@@ -251,6 +253,7 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
   private def assertMigrationSample(): Unit = {
     GwenSettings.`gwen.assertion.mode` should be (AssertionMode.hard)
     GwenSettings.`gwen.associative.meta` should be (true)
+    GwenSettings.`gwen.auto.bind.tableData.outline.examples` should be (true)
     GwenSettings.`gwen.auto.discover.data.csv` should be (true)
     GwenSettings.`gwen.auto.discover.meta` should be (true)
     GwenSettings.`gwen.behavior.rules` should be (BehaviorMode.strict)
