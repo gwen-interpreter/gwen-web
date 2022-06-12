@@ -1,6 +1,6 @@
 3.15.0
 ======
-Jun 12, 2022
+Jun 14, 2022
 - Update Gwen core from v3.13.6 to v[3.14.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.14.0)
   - Introduce new setting to bind row data in outline examples tables to same named attributes in the current scope:
     - `gwen.auto.bind.tableData.outline.examples = true|false`
