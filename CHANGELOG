@@ -12,6 +12,7 @@ Jun 12, 2022
         - or `infinity` to log all depths
   - Add total CSV record count to record descriptor suffix
     - example: `1` becomes `1 of n` where `n` = total number of records)
+- Update selenium-java from v4.2.1 to v4.2.2
 
 3.14.6
 ======
