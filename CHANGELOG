@@ -12,7 +12,7 @@ Jun 14, 2022
         - or `infinity` to log all depths
   - Add total CSV record count to record descriptor suffix
     - example: `1` becomes `1 of n` where `n` = total number of records)
-  - Allow applied function references to be used as if conditionals
+  - Allow applied function references to be used in if, while, or until conditionals
 - Update selenium-java from v4.2.1 to v4.2.2
 
 3.14.6

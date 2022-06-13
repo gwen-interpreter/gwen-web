@@ -31,7 +31,7 @@ class WaitForCondition(javascript: String, delayMsecs: Option[Long], timeoutSecs
     step tap { _ =>
       checkStepRules(step, BehaviorType.Action, ctx)
       ctx.waitUntil(delayMsecs, timeoutSecs, s"waiting for true return from javascript: $javascript") {
-        ctx.evaluateJSPredicate(javascript)
+        ctx.evaluateJS(ctx.formatJSReturn(javascript)).asInstanceOf[Boolean]
       }
     }
   }
