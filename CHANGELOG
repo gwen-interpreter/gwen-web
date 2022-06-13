@@ -7,11 +7,12 @@ Jun 14, 2022
       - `true` (default) to make each cell in each row accessible as `${name}` in the current scope and `<name>` in the template
       - `false` to make each cell in each row accessible as `<name>` in the template only
   - Introduce new setting to set console logging depth
-    - `gwen.console.log.depth=number` (default is 1)
+    - `gwen.console.log.depth=number|infinity` (default is 1)
       - Accepts a number greater than 1 representing the step depth to log to
         - or `infinity` to log all depths
   - Add total CSV record count to record descriptor suffix
     - example: `1` becomes `1 of n` where `n` = total number of records)
+  - Allow applied function references to be used as if conditionals
 - Update selenium-java from v4.2.1 to v4.2.2
 
 3.14.6
