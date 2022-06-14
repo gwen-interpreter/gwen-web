@@ -4,8 +4,8 @@ Jun 14, 2022
 - Update Gwen core from v3.13.6 to v[3.14.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.14.0)
   - Introduce new setting to bind row data in outline examples tables to same named attributes in the current scope:
     - `gwen.auto.bind.tableData.outline.examples = true|false`
-      - `true` (default) to make each cell in each row accessible as `${name}` in the current scope and `<name>` in the template
-      - `false` to make each cell in each row accessible as `<name>` in the template only
+      - `true` (default) to bind table data to same named attributes in the current scope for each rows
+      - `false` to not bind table data cells to attributes in the current scope
   - Introduce new setting to set console logging depth
     - `gwen.console.log.depth=number|infinity` (default is 1)
       - Accepts a number greater than 1 representing the step depth to log to
@@ -13,6 +13,7 @@ Jun 14, 2022
   - Add total CSV record count to record descriptor suffix
     - example: `1` becomes `1 of n` where `n` = total number of records)
   - Allow applied function references to be used in if, while, or until conditionals
+  - Add Data annotation to CSV and table data binding steps and defer interpolation
 - Update selenium-java from v4.2.1 to v4.2.2
 
 3.14.6
