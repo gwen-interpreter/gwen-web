@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2021 Brady Wood, Branko Juric
+ * Copyright 2015-2022 Brady Wood, Branko Juric
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package gwen.web.eval
 import WebErrors._
 import gwen.web.eval.binding._
 import gwen.web.eval.driver.DriverManager
+import gwen.web.eval.driver.event.WebSessionEvent
 import gwen.web.eval.driver.event.WebSessionEventListener
 
 import gwen.core._
@@ -51,7 +52,6 @@ import org.openqa.selenium.support.ui.Select
 
 import java.io.File
 import org.openqa.selenium.remote.RemoteWebDriver
-import gwen.web.eval.driver.event.WebSessionEvent
 
 /**
   * The web evaluatioin context.
@@ -839,22 +839,19 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
           }
           action match {
             case ElementAction.click =>
-            webElement.click()
+              webElement.click()
             case ElementAction.`right click` =>
               createActions(driver).contextClick(webElement).perform()
             case ElementAction.`double click` =>
               createActions(driver).doubleClick(webElement).perform()
             case ElementAction.`move to` =>
               moveToAndCapture(driver, webElement)
-            case ElementAction.submit => webElement.submit()
+            case ElementAction.submit => 
+              webElement.submit()
             case ElementAction.check | ElementAction.tick =>
-              if (!webElement.isSelected) webElement.click()
-              if (!webElement.isSelected)
-                createActions(driver).sendKeys(webElement, Keys.SPACE).perform()
+              clickCheckbox(webElement, None, true)
             case ElementAction.uncheck | ElementAction.untick =>
-              if (webElement.isSelected) webElement.click()
-              if (webElement.isSelected)
-                createActions(driver).sendKeys(webElement, Keys.SPACE).perform()
+              clickCheckbox(webElement, None, false)
             case ElementAction.clear =>
               webElement.clear()
             case _ => WebErrors.invalidActionError(action)
@@ -862,6 +859,31 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
         }
         bindAndWait(binding.name, action.toString, "true")
     }
+  }
+
+  private def clickCheckbox(webElement: WebElement, contextElement: Option[WebElement], selected: Boolean): Unit = {
+    contextElement match {
+      case None =>
+        if (webElement.isSelected != selected) {
+          Try(webElement.click()) match {
+            case Failure(e) =>
+              jsClickCheckbox(webElement)
+              if (webElement.isSelected != selected) webElement.sendKeys(Keys.SPACE)
+              if (webElement.isSelected != selected) throw e
+            case _ =>
+              if (webElement.isSelected != selected) jsClickCheckbox(webElement)
+              if (webElement.isSelected != selected) webElement.sendKeys(Keys.SPACE)
+          }
+        }
+      case Some(ctxElement) =>
+        if (webElement.isSelected != selected) perform(webElement, ctxElement) { _.click() }
+        if (webElement.isSelected != selected) jsClickCheckbox(webElement)
+        if (webElement.isSelected != selected) perform(webElement, ctxElement) { _.sendKeys(Keys.SPACE) }
+    }
+  }
+
+  private def jsClickCheckbox(webElement: WebElement): Unit = {
+    executeJS("(function(element){element.click();})(arguments[0]);", webElement)
   }
 
   def moveToAndCapture(driver: WebDriver, webElement: WebElement): Unit = {
@@ -982,15 +1004,6 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
   }
 
   private def performActionIn(action: ElementAction, binding: LocatorBinding, contextBinding: LocatorBinding): Unit = {
-    def perform(webElement: WebElement, contextElement: WebElement)(buildAction: Actions => Actions): Unit = {
-      withWebDriver { driver =>
-        val moveTo = createActions(driver).moveToElement(contextElement).moveToElement(webElement)
-        buildAction(moveTo).build().perform()
-        if (WebSettings.`gwen.web.capture.screenshots.enabled`) {
-          captureScreenshot(false)
-        }
-      }
-    }
     val reason = s"trying to $action $binding"
     withWebElement(contextBinding, reason) { contextElement =>
       withWebElement(binding, reason) { webElement =>
@@ -999,15 +1012,23 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
           case ElementAction.`right click` => perform(webElement, contextElement) { _.contextClick() }
           case ElementAction.`double click` => perform(webElement, contextElement) { _.doubleClick() }
           case ElementAction.check | ElementAction.tick =>
-            if (!webElement.isSelected) perform(webElement, contextElement) { _.click() }
-            if (!webElement.isSelected) perform(webElement, contextElement) { _.sendKeys(Keys.SPACE) }
+            clickCheckbox(webElement, Some(contextElement), true)
           case ElementAction.uncheck | ElementAction.untick =>
-            if (webElement.isSelected) perform(webElement, contextElement) { _.click() }
-            if (webElement.isSelected) perform(webElement, contextElement) { _.sendKeys(Keys.SPACE) }
+            clickCheckbox(webElement, Some(contextElement), false)
           case ElementAction.`move to` => perform(webElement, contextElement) { action => action }
           case _ => WebErrors.invalidContextActionError(action)
         }
         bindAndWait(binding.name, action.toString, "true")
+      }
+    }
+  }
+
+  private def perform(webElement: WebElement, contextElement: WebElement)(buildAction: Actions => Actions): Unit = {
+    withWebDriver { driver =>
+      val moveTo = createActions(driver).moveToElement(contextElement).moveToElement(webElement)
+      buildAction(moveTo).build().perform()
+      if (WebSettings.`gwen.web.capture.screenshots.enabled`) {
+        captureScreenshot(false)
       }
     }
   }

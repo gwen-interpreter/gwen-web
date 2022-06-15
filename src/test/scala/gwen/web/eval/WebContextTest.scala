@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2021 Brady Wood, Branko Juric
+ * Copyright 2014-2022 Brady Wood, Branko Juric
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -813,17 +813,33 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     ctx.scopes.get("element/submit") should be ("true")
   }
 
+  "WebContext.performAction" should "check element by javascript" in {
+    val elemBinding = LocatorBinding("element", SelectorType.id, "elem", None, None, ctx)
+    val mockElement = mock[WebElement]
+    val mockActions = mock[Actions]
+    doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
+    doReturn(mockActions).when(ctx).createActions(mockWebDriver)
+    doReturn(true).when(ctx).executeJS("(function(element){element.click();})(arguments[0]);", mockElement)
+    when(mockElement.isSelected).thenReturn(false).thenReturn(false).thenReturn(true)
+    when(mockActions.moveToElement(mockElement)).thenReturn(mockActions)
+    ctx.performAction(ElementAction.check, elemBinding)
+    verify(mockActions, times(2)).perform()
+    verify(mockElement).click()
+    ctx.scopes.get("element/check") should be ("true")
+  }
+
   "WebContext.performAction" should "check element by sending space char" in {
     val elemBinding = LocatorBinding("element", SelectorType.id, "elem", None, None, ctx)
     val mockElement = mock[WebElement]
     val mockActions = mock[Actions]
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     doReturn(mockActions).when(ctx).createActions(mockWebDriver)
+    doReturn(false).when(ctx).executeJS("(function(element){element.click();})(arguments[0]);", mockElement)
     doReturn(mockActions).when(mockActions).sendKeys(mockElement, Keys.SPACE)
-    when(mockElement.isSelected).thenReturn(false).thenReturn(false)
+    when(mockElement.isSelected).thenReturn(false).thenReturn(false).thenReturn(false)
     when(mockActions.moveToElement(mockElement)).thenReturn(mockActions)
     ctx.performAction(ElementAction.check, elemBinding)
-    verify(mockActions, times(2)).perform()
+    verify(mockActions, times(1)).perform()
     verify(mockElement).click()
     ctx.scopes.get("element/check") should be ("true")
   }
@@ -852,17 +868,33 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     ctx.scopes.get("element/check") should be ("true")
   }
 
+  "WebContext.performAction" should "tick element by javascript" in {
+    val elemBinding = LocatorBinding("element", SelectorType.id, "elem", None, None, ctx)
+    val mockElement = mock[WebElement]
+    val mockActions = mock[Actions]
+    doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
+    doReturn(mockActions).when(ctx).createActions(mockWebDriver)
+    doReturn(false).when(ctx).executeJS("(function(element){element.click();})(arguments[0]);", mockElement)
+    when(mockElement.isSelected).thenReturn(false).thenReturn(false).thenReturn(true)
+    when(mockActions.moveToElement(mockElement)).thenReturn(mockActions)
+    ctx.performAction(ElementAction.tick, elemBinding)
+    verify(mockActions, times(1)).perform()
+    verify(mockElement).click()
+    ctx.scopes.get("element/tick") should be ("true")
+  }
+
   "WebContext.performAction" should "tick element by sending space char" in {
     val elemBinding = LocatorBinding("element", SelectorType.id, "elem", None, None, ctx)
     val mockElement = mock[WebElement]
     val mockActions = mock[Actions]
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     doReturn(mockActions).when(ctx).createActions(mockWebDriver)
+    doReturn(false).when(ctx).executeJS("(function(element){element.click();})(arguments[0]);", mockElement)
     doReturn(mockActions).when(mockActions).sendKeys(mockElement, Keys.SPACE)
-    when(mockElement.isSelected).thenReturn(false).thenReturn(false)
+    when(mockElement.isSelected).thenReturn(false).thenReturn(false).thenReturn(false)
     when(mockActions.moveToElement(mockElement)).thenReturn(mockActions)
     ctx.performAction(ElementAction.tick, elemBinding)
-    verify(mockActions, times(2)).perform()
+    verify(mockActions, times(1)).perform()
     verify(mockElement).click()
     ctx.scopes.get("element/tick") should be ("true")
   }
@@ -873,11 +905,12 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val mockActions = mock[Actions]
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     doReturn(mockActions).when(ctx).createActions(mockWebDriver)
+    doReturn(false).when(ctx).executeJS("(function(element){element.click();})(arguments[0]);", mockElement)
     doReturn(mockActions).when(mockActions).sendKeys(mockElement, Keys.SPACE)
-    when(mockElement.isSelected).thenReturn(false).thenReturn(false)
+    when(mockElement.isSelected).thenReturn(false).thenReturn(false).thenReturn(false)
     when(mockActions.moveToElement(mockElement)).thenReturn(mockActions)
     ctx.performAction(ElementAction.tick, elemBinding)
-    verify(mockActions, times(2)).perform()
+    verify(mockActions, times(1)).perform()
     verify(mockElement).click()
     ctx.scopes.get("element/tick") should be ("true")
   }
@@ -886,10 +919,25 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("element", SelectorType.id, "elem", None, None, ctx)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
-    when(mockElement.isSelected).thenReturn(true).thenReturn(true)
+    when(mockElement.isSelected).thenReturn(true).thenReturn(true).thenReturn(true)
     ctx.performAction(ElementAction.tick, elemBinding)
     verify(mockElement, never()).click()
     ctx.scopes.get("element/tick") should be ("true")
+  }
+
+  "WebContext.performAction" should "uncheck element by javascript" in {
+    val elemBinding = LocatorBinding("element", SelectorType.id, "elem", None, None, ctx)
+    val mockElement = mock[WebElement]
+    val mockActions = mock[Actions]
+    doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
+    doReturn(mockActions).when(ctx).createActions(mockWebDriver)
+    doReturn(true).when(ctx).executeJS("(function(element){element.click();})(arguments[0]);", mockElement)
+    when(mockElement.isSelected).thenReturn(true).thenReturn(true).thenReturn(false)
+    when(mockActions.moveToElement(mockElement)).thenReturn(mockActions)
+    ctx.performAction(ElementAction.uncheck, elemBinding)
+    verify(mockActions, times(2)).perform()
+    verify(mockElement).click()
+    ctx.scopes.get("element/uncheck") should be ("true")
   }
 
   "WebContext.performAction" should "uncheck element by sending space char" in {
@@ -898,11 +946,12 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val mockActions = mock[Actions]
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     doReturn(mockActions).when(ctx).createActions(mockWebDriver)
+    doReturn(false).when(ctx).executeJS("(function(element){element.click();})(arguments[0]);", mockElement)
     doReturn(mockActions).when(mockActions).sendKeys(mockElement, Keys.SPACE)
-    when(mockElement.isSelected).thenReturn(true).thenReturn(true)
+    when(mockElement.isSelected).thenReturn(true).thenReturn(true).thenReturn(true)
     when(mockActions.moveToElement(mockElement)).thenReturn(mockActions)
     ctx.performAction(ElementAction.uncheck, elemBinding)
-    verify(mockActions, times(2)).perform()
+    verify(mockActions, times(1)).perform()
     verify(mockElement).click()
     ctx.scopes.get("element/uncheck") should be ("true")
   }
@@ -913,7 +962,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val mockActions = mock[Actions]
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     doReturn(mockActions).when(ctx).createActions(mockWebDriver)
-    when(mockElement.isSelected).thenReturn(true).thenReturn(false)
+    when(mockElement.isSelected).thenReturn(true).thenReturn(false).thenReturn(false)
     when(mockActions.moveToElement(mockElement)).thenReturn(mockActions)
     ctx.performAction(ElementAction.uncheck, elemBinding)
     verify(mockActions).perform()
@@ -926,7 +975,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val mockElement = mock[WebElement]
     val mockActions = mock[Actions]
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
-    when(mockElement.isSelected).thenReturn(false).thenReturn(false)
+    when(mockElement.isSelected).thenReturn(false).thenReturn(false).thenReturn(false)
     doReturn(mockActions).when(ctx).createActions(mockWebDriver)
     when(mockActions.moveToElement(mockElement)).thenReturn(mockActions)
     ctx.performAction(ElementAction.uncheck, elemBinding)
@@ -942,11 +991,12 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val mockActions = mock[Actions]
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     doReturn(mockActions).when(ctx).createActions(mockWebDriver)
+    doReturn(false).when(ctx).executeJS("(function(element){element.click();})(arguments[0]);", mockElement)
     doReturn(mockActions).when(mockActions).sendKeys(mockElement, Keys.SPACE)
-    when(mockElement.isSelected).thenReturn(true).thenReturn(true)
+    when(mockElement.isSelected).thenReturn(true).thenReturn(true).thenReturn(true)
     when(mockActions.moveToElement(mockElement)).thenReturn(mockActions)
     ctx.performAction(ElementAction.untick, elemBinding)
-    verify(mockActions, times(2)).perform()
+    verify(mockActions, times(1)).perform()
     verify(mockElement).click()
     ctx.scopes.get("element/untick") should be ("true")
   }
@@ -957,12 +1007,13 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val mockActions = mock[Actions]
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     doReturn(mockActions).when(ctx).createActions(mockWebDriver)
+    doReturn(false).when(ctx).executeJS("(function(element){element.click();})(arguments[0]);", mockElement)
     doReturn(mockActions).when(mockActions).sendKeys(mockElement, Keys.SPACE)
     doReturn(false).when(mockElement).isSelected
-    when(mockElement.isSelected).thenReturn(true).thenReturn(true)
+    when(mockElement.isSelected).thenReturn(true).thenReturn(true).thenReturn(true)
     when(mockActions.moveToElement(mockElement)).thenReturn(mockActions)
     ctx.performAction(ElementAction.untick, elemBinding)
-    verify(mockActions, times(2)).perform()
+    verify(mockActions, times(1)).perform()
     verify(mockElement).click()
     ctx.scopes.get("element/untick") should be ("true")
   }
@@ -971,7 +1022,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("element", SelectorType.id, "elem", None, None, ctx)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
-    when(mockElement.isSelected).thenReturn(false).thenReturn(false)
+    when(mockElement.isSelected).thenReturn(false).thenReturn(false).thenReturn(false)
     ctx.performAction(ElementAction.untick, elemBinding)
     verify(mockElement, never()).sendKeys(Keys.SPACE)
     verify(mockElement, never()).click()
