@@ -24,3 +24,8 @@ Feature: For each delimited value
           | cbd  | role3,role4 |
      When I capture processed roles
      Then processed roles should be "role1role2role3role4"
+
+  Scenario: For-each on empty iteration should do nothing
+    Given items is ""
+     When z is "${item}" for each item in items delimited by ","
+     Then z should be absent
