@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2021 Brady Wood, Branko Juric
+ * Copyright 2014-2022 Brady Wood, Branko Juric
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -514,7 +514,7 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
     when(mockWebDriverOptions.timeouts()).thenReturn(mockWebDriverTimeouts)
     doReturn(null).when(mockWebDriver).executeScript(same(s"return $lookup"), any())
 
-    intercept[Errors.WaitTimeoutException] {
+    intercept[WebErrors.WebElementNotFoundException] {
       locator.locate(LocatorBinding("username", selectorType, lookup, None, Some(1), ctx))
     }
 

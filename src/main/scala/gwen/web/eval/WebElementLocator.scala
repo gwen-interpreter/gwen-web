@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2021 Branko Juric, Brady Wood
+ * Copyright 2014-2022 Branko Juric, Brady Wood
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import WebErrors._
 import gwen.web.eval.binding._
 
 import gwen.core.Errors.ScriptException
+import gwen.core.Errors.WaitTimeoutException
 
 import com.typesafe.scalalogging.LazyLogging
 import org.openqa.selenium.{By, NoSuchElementException, WebElement}
@@ -266,8 +267,7 @@ class WebElementLocator(ctx: WebContext) extends LazyLogging {
           try {
             getAllElementsByJavaScript(s"$expression", selector)
           } catch {
-            case e: ScriptException =>
-              elementNotFoundError(new LocatorBinding(name, List(selector), ctx), e)
+            case e: WaitTimeoutException => Nil
           }
         case SelectorType.cache => locatorBindingError(s"Unsupported selector defined for: $name")
         case _ => getAllElements(selector)

@@ -60,6 +60,12 @@ Feature: TodoMVC meta
      When I add a <Status> "<Item>" item
 
   @StepDef
+  @Examples("src/test/features-data/TodoItems3.csv")
+  @Action
+  Scenario Outline: I load items from empty CSV file
+     When I add a <Status> "<Item>" item
+
+  @StepDef
   @Action
   Scenario: I add a pending "<todo>" item
      When I add a "$<todo>" item

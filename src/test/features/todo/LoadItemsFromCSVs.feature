@@ -3,6 +3,7 @@ Feature: Load Todo items from CSV files
   Scenario: Launch the Todo application
     Given I launch the Todo app
      When I load items from CSV files
+      And I load items from empty CSV file
      Then the "Walk the dog" item should be unticked
       And the "Get the milk" item should not be displayed
       And the "Take out trash" item should be unticked
