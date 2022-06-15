@@ -716,7 +716,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     withDriverAndElement(binding, s"trying to send value to $element") { (driver, webElement) =>
       createActions(driver)
       if (clickFirst) {
-        webElement.click()
+        click(webElement)
       }
       if (clearFirst) {
         webElement.clear()
@@ -839,7 +839,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
           }
           action match {
             case ElementAction.click =>
-              webElement.click()
+              click(webElement)
             case ElementAction.`right click` =>
               createActions(driver).contextClick(webElement).perform()
             case ElementAction.`double click` =>
@@ -867,22 +867,33 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
         if (webElement.isSelected != selected) {
           Try(webElement.click()) match {
             case Failure(e) =>
-              jsClickCheckbox(webElement)
+              jsClick(webElement)
               if (webElement.isSelected != selected) webElement.sendKeys(Keys.SPACE)
               if (webElement.isSelected != selected) throw e
             case _ =>
-              if (webElement.isSelected != selected) jsClickCheckbox(webElement)
+              if (webElement.isSelected != selected) jsClick(webElement)
               if (webElement.isSelected != selected) webElement.sendKeys(Keys.SPACE)
           }
         }
       case Some(ctxElement) =>
         if (webElement.isSelected != selected) perform(webElement, ctxElement) { _.click() }
-        if (webElement.isSelected != selected) jsClickCheckbox(webElement)
+        if (webElement.isSelected != selected) jsClick(webElement)
         if (webElement.isSelected != selected) perform(webElement, ctxElement) { _.sendKeys(Keys.SPACE) }
     }
   }
 
-  private def jsClickCheckbox(webElement: WebElement): Unit = {
+  private def click(webElement: WebElement): Unit = {
+    Try(webElement.click()) match {
+      case Failure(e) =>
+        Try(jsClick(webElement)) match {
+          case Failure(e2) => throw e
+          case _ =>
+        }
+      case _ =>
+    }
+  }
+
+  private def jsClick(webElement: WebElement): Unit = {
     executeJS("(function(element){element.click();})(arguments[0]);", webElement)
   }
 
