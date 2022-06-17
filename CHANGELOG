@@ -1,9 +1,15 @@
-3.15.3
+3.16.0
 ======
 Jun 17, 2022
-- Update Gwen core from v3.14.2 to v[3.14.3](https://github.com/gwen-interpreter/gwen/releases/tag/v3.14.3)
-  - Add total CSV record count to record descriptor suffix to console reporter output
+- Update Gwen core from v3.14.2 to v[3.15.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.15.0)
+  - Add total CSV record count to record descriptor suffix to console report output
   - Ignore empty CSV records
+  - Add ability to enable or disable the following CLI options with environment variables:
+    - `GWEN_DRY_RUN=true|fase` to set default `-n|--dry-run` option
+    - `GWEN_PARALLEL=true|fase` to set default `--parallel` option
+    - `GWEN_PARALLEL_FEATURES=true|fase` to set default `--parallel-features` option
+- Add ability to enable or disable the following setting with an environment variable:
+  - `GWEN_WEB_BROWSER_HEADLESS=true|flase` to set default headless mode
 
 3.15.2
 ======
