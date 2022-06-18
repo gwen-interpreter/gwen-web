@@ -31,6 +31,16 @@ import scala.util.chaining._
   */
 object GwenWebInterpreter extends GwenInterpreter(new WebEngine()) {
 
+  override def initDefaultEnvSettings(): Unit = {
+    applyEnvSettings(
+      List(
+        ("gwen.target.browser", "GWEN_BROWSER"), 
+        ("gwen.web.browser.headless", "GWEN_HEADLESS")
+      )
+    )
+    super.initDefaultEnvSettings()
+  }
+
   /**
     * Initialises a Gwen project directory.
     *
@@ -41,20 +51,24 @@ object GwenWebInterpreter extends GwenInterpreter(new WebEngine()) {
     super.initProject(dir)
 
     new File(dir, "browsers") tap { dir =>
+      FileIO.copyClasspathTextResourceToFile("/init/browsers/browsers.json", dir)
       FileIO.copyClasspathTextResourceToFile("/init/browsers/chrome.conf", dir)
       FileIO.copyClasspathTextResourceToFile("/init/browsers/edge.conf", dir)
       FileIO.copyClasspathTextResourceToFile("/init/browsers/firefox.conf", dir)
       FileIO.copyClasspathTextResourceToFile("/init/browsers/ie.conf", dir)
-      FileIO.copyClasspathTextResourceToFile("/init/browsers/safari.conf", dir)
-      FileIO.copyClasspathTextResourceToFile("/init/browsers/remote.conf", dir)
       FileIO.copyClasspathTextResourceToFile("/init/browsers/README.md", dir)
+      FileIO.copyClasspathTextResourceToFile("/init/browsers/remote.conf", dir)
+      FileIO.copyClasspathTextResourceToFile("/init/browsers/safari.conf", dir)
+      FileIO.copyClasspathTextResourceToFile("/init/browsers/selenoid.conf", dir)
+      
     }
 
     new File(dir, "env") tap { dir =>
-      FileIO.copyClasspathTextResourceToFile("/init/env/local.conf", dir)
       FileIO.copyClasspathTextResourceToFile("/init/env/dev.conf", dir)
-      FileIO.copyClasspathTextResourceToFile("/init/env/test.conf", dir)
+      FileIO.copyClasspathTextResourceToFile("/init/env/local.conf", dir)
+      FileIO.copyClasspathTextResourceToFile("/init/env/prod.conf", dir)
       FileIO.copyClasspathTextResourceToFile("/init/env/README.md", dir)
+      FileIO.copyClasspathTextResourceToFile("/init/env/test.conf", dir)
     }
 
     new File(dir, "features") tap { dir =>
@@ -69,17 +83,21 @@ object GwenWebInterpreter extends GwenInterpreter(new WebEngine()) {
       FileIO.copyClasspathTextResourceToFile("/init/samples/floodio/FloodIO.feature", dir)
       FileIO.copyClasspathTextResourceToFile("/init/samples/floodio/FloodIO.meta", dir)
     }
-
     new File(dir, "samples/google") tap { dir =>
       FileIO.copyClasspathTextResourceToFile("/init/samples/google/Google.feature", dir)
       FileIO.copyClasspathTextResourceToFile("/init/samples/google/Google.meta", dir)
     }
-
     new File(dir, "samples/todo") tap { dir =>
       FileIO.copyClasspathTextResourceToFile("/init/samples/todo/Todo.feature", dir)
       FileIO.copyClasspathTextResourceToFile("/init/samples/todo/Todo.meta", dir)
     }
+    new File(dir, "samples") tap { dir =>
+      FileIO.copyClasspathTextResourceToFile("/init/samples/README.md", dir)
+    }
 
+    FileIO.copyClasspathTextResourceToFile("/init/Dockerfile", dir)
+    FileIO.copyClasspathTextResourceToFile("/init/docker-compose.yml", dir)
+    FileIO.copyClasspathTextResourceToFile("/init/Jenkinsfile", dir)
     FileIO.copyClasspathTextResourceToFile("/init/README.md", dir)
     FileIO.copyClasspathTextResourceToFile("/init/gitignore", dir, Some(".gitignore"))
     if (!new File("gwen.conf").exists()) {
@@ -87,30 +105,36 @@ object GwenWebInterpreter extends GwenInterpreter(new WebEngine()) {
       val conf = try res.mkString.replace("${gwen.initDir}", dir.getPath) finally res.close()
       new File("gwen.conf").writeText(conf)
     }
-
+    
     val standalone = dir.isSame(new File("."))
     val filler = if (standalone) "   " else "       "
 
     println(
       s"""|  ./            $filler        # Project root
-          |   ├── gwen.conf$filler        # Project settings${if (standalone) "" else {
+          |   ├── gwen.conf$filler        # Gwen settings file${if (standalone) "" else {
       s"""|
           |   └── /${dir.getPath}""".stripMargin}}
-          |$filler├── .gitignore          # Git ignore file
+          |$filler├── docker-compose.yml  # Docker compose file
+          |$filler├── Dockerfile          # Docker image file
+          |$filler├── Jenkinsfile         # Jenkins pipeline file
           |$filler├── README.md
+          |$filler├── .gitignore          # Git ignore file
           |$filler├── /browsers           # Browser settings
+          |$filler│   ├── browsers.json   # Selenoid browsers file
           |$filler│   ├── chrome.conf
           |$filler│   ├── edge.conf
           |$filler│   ├── firefox.conf
-          |$filler│   ├── safari.conf
           |$filler│   ├── ie.conf
+          |$filler│   ├── README.md
           |$filler│   ├── remote.conf     # Remote web driver settings
-          |$filler│   └── README.md
+          |$filler│   ├── safari.conf
+          |$filler│   └── selenoid.conf   # Selenoid settings
           |$filler├── /env                # Environment settings
-          |$filler│   ├── local.conf
           |$filler│   ├── dev.conf
-          |$filler│   ├── test.conf
-          |$filler│   └── README.md
+          |$filler│   ├── local.conf
+          |$filler│   ├── prod.conf
+          |$filler│   ├── README.md
+          |$filler│   └── test.conf
           |$filler├── /features           # Features and associative meta
           |$filler│   └── README.md
           |$filler├── /meta               # Optional common/reusable meta

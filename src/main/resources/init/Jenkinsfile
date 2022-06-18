@@ -1,0 +1,50 @@
+pipeline {
+  agent {
+      // an agent with docker installed
+      label 'docker-agent'
+  }
+  parameters { 
+    choice(name: 'browser', choices: ['chrome', 'firefox', 'edge'], description: 'Target web browser')
+    booleanParam(name: 'dry_run', defaultValue: false, description: 'Validate without executing')
+    booleanParam(name: 'parallel', defaultValue: false, description: 'Enable parallel execution') 
+    booleanParam(name: 'headless', defaultValue: false, description: 'Enable headless browser') 
+  }
+  environment {
+    GWEN_BROWSER = "${params.browser}"
+    GWEN_DRY_RUN = "${params.dry_run}"
+    GWEN_PARALLEL = "${params.parallel}"
+    GWEN_HEADLESS = "${params.headless}"
+  }
+  stages {
+    stage("Prepare") {
+      steps {
+        script {
+          // Create output dir to avoid potential permission issues in docker
+          sh 'mkdir -p gwen/output'
+        }
+      }
+    }
+    stage("Gwen") {
+      steps {
+        script {
+          // Spin up environment and execute Gwen in docker
+          sh "docker-compose run gwen"
+        }
+      }
+      post {
+        always {
+          sh "docker-compose down"
+          archiveArtifacts artifacts: 'gwen/output/reports/**'
+          publishHTML(target: [
+                  allowMissing         : false,
+                  alwaysLinkToLastBuild: false,
+                  keepAll              : true,
+                  reportDir            : "gwen/output/reports/html",
+                  reportFiles          : 'index.html',
+                  reportName           : "Gwen-Report"
+          ])
+        }
+      }
+    }
+  }
+}

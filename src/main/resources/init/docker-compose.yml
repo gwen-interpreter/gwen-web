@@ -1,0 +1,58 @@
+version: '3.5'
+services:
+  chrome:
+    image: selenoid/chrome:latest
+    networks:
+      - gwen-net
+  firefox:
+    image: selenoid/firefox:latest
+    networks:
+      - gwen-net
+  edge:
+    image: browsers/edge:latest
+    networks:
+      - gwen-net
+  video-recorder:
+    image: selenoid/video-recorder:latest-release
+    networks:
+      - gwen-net
+  selenoid:
+    depends_on:
+      - chrome
+      - firefox
+      - edge
+      - video-recorder
+    image: aerokube/selenoid:latest-release
+    networks:
+      - gwen-net
+    ports:
+      - "4444:4444"
+    volumes:
+      - "$PWD/gwen/browsers:/etc/selenoid/:ro"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "$PWD/gwen/output/.video:/opt/selenoid/video"
+    environment:
+      - OVERRIDE_VIDEO_OUTPUT=$PWD/gwen/output/.video
+    command: ["-container-network", "gwen-net", "-video-output-dir", "/opt/selenoid/video"]
+  gwen:
+    depends_on:
+      - selenoid
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - SELENIUM_HUB=selenoid
+      - NO_COLOR=1
+      - GWEN_BROWSER
+      - GWEN_DRY_RUN
+      - GWEN_PARALLEL
+      - GWEN_HEADLESS
+    volumes:
+      - "$PWD:/project"
+    working_dir: /project
+    command: bash -c "yarn install && yarn gwen:selenoid"
+    networks:
+      - gwen-net
+networks:
+  gwen-net:
+    name: gwen-net

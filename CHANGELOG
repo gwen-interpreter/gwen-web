@@ -13,6 +13,7 @@ Jun 17, 2022
 - Add ability to enable or disable the following web settings with environment variables:
   - `GWEN_BROWSER=chrome|firefox|safari|edge|ie` to set default target browser
   - `GWEN_HEADLESS=true|false` to set default headless mode
+- Add docker and Jenkins files to gwen init
 
 3.15.2
 ======
