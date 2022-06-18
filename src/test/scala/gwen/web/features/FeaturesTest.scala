@@ -24,7 +24,6 @@ class FeaturesTest extends BaseFeatureTest {
         List(
           "src/test/features"), 
         parallel = true, 
-        parallelFeatures = false,
         dryRun = false, 
         "feature-level",
         None)
@@ -33,18 +32,15 @@ class FeaturesTest extends BaseFeatureTest {
 
   "Parallel mode using scenario-level state " should "evaluate all features" in {
     withSetting("gwen.state.level", "scenario") {
-      List(false, true).foreach { parallelFeatures =>
-        evaluate(
-          List(
-            "src/test/features/bindings/ScopedBindings2.feature",
-            "src/test/features/samples/todo/scenario-level", 
-            "src/test/features/samples/todo/single-scenario"), 
-          parallel = true,
-          parallelFeatures = parallelFeatures, 
-          dryRun = false, 
-          s"parallel-${if (parallelFeatures) "features" else "scenarios"}/scenario-level",
-          None)
-      }
+      evaluate(
+        List(
+          "src/test/features/bindings/ScopedBindings2.feature",
+          "src/test/features/samples/todo/scenario-level", 
+          "src/test/features/samples/todo/single-scenario"), 
+        parallel = true,
+        dryRun = false, 
+        "parallel-scenarios",
+        None)
     }
   }
 
@@ -53,7 +49,6 @@ class FeaturesTest extends BaseFeatureTest {
       evaluate(
         List("src/test/features/samples/se-test"),
         parallel = true, 
-        parallelFeatures = false,
         dryRun = false, 
         "implicit-js-locators",
         None)

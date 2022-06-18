@@ -28,7 +28,6 @@ class DryRunTest extends BaseFeatureTest {
             List(
               "src/test/features"), 
             parallel = false, 
-            parallelFeatures = false,
             dryRun = true, 
             s"feature-level/$rule-rules", 
             None)
@@ -45,7 +44,6 @@ class DryRunTest extends BaseFeatureTest {
             List(
               "src/test/features"),
             parallel = true, 
-            parallelFeatures = false,
             dryRun = true, 
            s"feature-level/$rule-rules", 
             None)
@@ -65,7 +63,6 @@ class DryRunTest extends BaseFeatureTest {
               "src/test/features/samples/todo/scenario-level",
               "src/test/features/samples/todo/single-scenario"), 
             parallel = false, 
-            parallelFeatures = false,
             dryRun = true, 
             s"scenario-level/$rule-rules", 
             None)
@@ -78,19 +75,16 @@ class DryRunTest extends BaseFeatureTest {
     BehaviorMode.values.foreach { rule => 
       withSetting("gwen.behavior.rules", rule.toString) {
         withSetting("gwen.state.level", "scenario") {
-          List(false, true).foreach { parallelFeatures =>
-            evaluate(
-              List(
-                "src/test/features/flow",
-                "src/test/features/multi-locators",
-                "src/test/features/samples/todo/scenario-level",
-                "src/test/features/samples/todo/single-scenario"), 
-              parallel = true, 
-              parallelFeatures = parallelFeatures,
-              dryRun = true, 
-              s"parallel-${if (parallelFeatures) "features" else "scenarios"}/scenario-level/$rule-rules", 
-              None)
-          }
+          evaluate(
+            List(
+              "src/test/features/flow",
+              "src/test/features/multi-locators",
+              "src/test/features/samples/todo/scenario-level",
+              "src/test/features/samples/todo/single-scenario"), 
+            parallel = true, 
+            dryRun = true, 
+            s"parallel-scenarios/$rule-rules", 
+            None)
         }
       }
     }

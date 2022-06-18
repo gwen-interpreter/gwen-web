@@ -23,7 +23,6 @@ class AdhocFeatureTest extends BaseFeatureTest {
     evaluate(
         List(feature), 
         parallel = false, 
-        parallelFeatures = false,
         dryRun = true, 
         "ad-hoc",
         None)

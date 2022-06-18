@@ -7,7 +7,8 @@ Jun 17, 2022
   - Add ability to enable or disable the following CLI options with environment variables:
     - `GWEN_DRY_RUN=true|fase` to set default `-n|--dry-run` option
     - `GWEN_PARALLEL=true|fase` to set default `--parallel` option
-    - `GWEN_PARALLEL_FEATURES=true|fase` to set default `--parallel-features` option
+  - Drop `--parallelFeatures` CLI option and `gwen.cli.options.parallelFeatures` setting
+    - Feature or scenarios run in parallel based on `--parallel` option and state level only
 - Add ability to enable or disable the following setting with an environment variable:
   - `GWEN_WEB_BROWSER_HEADLESS=true|flase` to set default headless mode
 

@@ -27,14 +27,13 @@ import gwen.core.status.Failed
 
 abstract class BaseFeatureTest extends BaseTest {
 
-  private [features] def evaluate(features: List[String], parallel: Boolean, parallelFeatures: Boolean, dryRun: Boolean, reportDir: String, dataFile: Option[String]): Unit = {
+  private [features] def evaluate(features: List[String], parallel: Boolean, dryRun: Boolean, reportDir: String, dataFile: Option[String]): Unit = {
     Settings.exclusively {
       val reportPath = s"${this.getClass.getSimpleName}${if (dryRun) "-dryRun" else ""}"
       val execModePath = if (parallel) "parallel" else "sequential"
       val runRP = !dryRun && Settings.getOpt("rp").map(_.toBoolean).getOrElse(false)
       var args = Array("-b", "-r", s"target/reports/$reportPath/$execModePath/$reportDir", "-f", s"junit,html,json${if (runRP) ",rp" else ""}")
       if (parallel) args = args ++ Array("--parallel")
-      if (parallelFeatures) args = args ++ Array("--parallel-features")
       if (dryRun) args = args ++ Array("-n")
       if (dataFile.nonEmpty) args = args ++ Array("-i", dataFile.get)
       if (BehaviorMode.isStrict) args = args ++ Array("-t", "~@Lenient")
