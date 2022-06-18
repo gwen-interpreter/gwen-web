@@ -9,6 +9,7 @@ Jun 17, 2022
     - `GWEN_PARALLEL=true|false` to set default `--parallel` option
   - Drop `--parallelFeatures` CLI option and `gwen.cli.options.parallelFeatures` setting
     - Feature or scenarios run in parallel based on `--parallel` option and state level only
+  - Log scenario worker thread to console report when running scenarios in parallel
 - Add ability to enable or disable the following web settings with environment variables:
   - `GWEN_BROWSER=chrome|firefox|safari|edge|ie` to set default target browser
   - `GWEN_HEADLESS=true|false` to set default headless mode
