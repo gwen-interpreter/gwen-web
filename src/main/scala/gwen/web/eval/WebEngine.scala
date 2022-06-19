@@ -53,6 +53,12 @@ class WebEngine extends EvalEngine[WebContext] {
     */
   override def init(options: GwenOptions, envState: EnvState): WebContext = {
     WebSettings.check()
+    if (options.parallel) {
+      WebSettings.`gwen.web.capabilities`.get("enableVideo").filter(_ == "true") foreach { _ =>
+        logger.info("Disabling video in parallel mode")
+        sys.props.put("gwen.web.capability.enableVideo", "false")
+      }
+    }
     if (WebSettings.`gwen.web.capture.screenshots.highlighting`) {
       val fps = GwenSettings.`gwen.report.slideshow.framespersecond`
       Settings.setLocal("gwen.report.slideshow.framespersecond", (fps.toDouble * 1.8d).toInt.toString)
