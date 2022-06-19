@@ -28,11 +28,11 @@ services:
     ports:
       - "4444:4444"
     volumes:
-      - "$PWD/gwen/browsers:/etc/selenoid/:ro"
+      - "$PWD/${gwen.initDir}${slash}browsers:/etc/selenoid/:ro"
       - "/var/run/docker.sock:/var/run/docker.sock"
-      - "$PWD/gwen/output/.video:/opt/selenoid/video"
+      - "$PWD/${gwen.initDir}${slash}output/.video:/opt/selenoid/video"
     environment:
-      - OVERRIDE_VIDEO_OUTPUT_DIR=$PWD/gwen/output/.video
+      - OVERRIDE_VIDEO_OUTPUT_DIR=$PWD/${gwen.initDir}${slash}output/.video
     command: ["-container-network", "gwen-net", "-video-output-dir", "/opt/selenoid/video"]
   gwen:
     depends_on:

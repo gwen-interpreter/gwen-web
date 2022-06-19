@@ -34,13 +34,13 @@ trait WebProjectInitialiser extends ProjectInitialiser {
     * Initialises a new Gwen project.
     *
     * @param isNew true if the project is new, false otherwise
-    * @param standalone true if initialising a standalone project, false otherwise
+    * @param flat true if initialising in current or nested directory
     * @param options Gwen options
     */
-  override def init(isNew: Boolean, standalone: Boolean, options: GwenOptions): Unit = {
+  override def init(isNew: Boolean, flat: Boolean, options: GwenOptions): Unit = {
     
     val dir = options.initDir
-    val filler = if (standalone) "   " else "       "
+    val filler = if (flat) "   " else "       "
 
     if (isNew) {
 
@@ -88,15 +88,13 @@ trait WebProjectInitialiser extends ProjectInitialiser {
 
       FileIO.copyClasspathTextResourceToFile("/init/README.md", dir, allowExists = false)
       FileIO.copyClasspathTextResourceToFile("/init/gitignore", dir, Some(".gitignore"), allowExists = false)
-      val res = Source.fromInputStream(getClass.getResourceAsStream("/init/gwen.conf"))
-      val conf = try res.mkString.replace("${gwen.initDir}", dir.getPath) finally res.close()
-      new File("gwen.conf").writeText(conf)
+      copyClasspathResourceAndInjectInitDir("/init/gwen.conf", dir, flat, targetFile = Some(new File("gwen.conf")), targetPath = Some(if (flat) "." else dir.getPath))
 
       println(
         s"""|Project directory initialised
             |
             |  ./            $filler        # Current directory
-            |   ├── gwen.conf$filler        # Gwen settings file${if (standalone) "" else {
+            |   ├── gwen.conf$filler        # Gwen settings file${if (flat) "" else {
         s"""|
             |   └── /${dir.getPath}""".stripMargin}}
             |$filler├── README.md
@@ -126,7 +124,7 @@ trait WebProjectInitialiser extends ProjectInitialiser {
     }
     if (options.docker) {
       FileIO.copyClasspathTextResourceToFile("/init/Dockerfile", dir, allowExists = false)
-      FileIO.copyClasspathTextResourceToFile("/init/docker-compose.yml", dir, allowExists = false)
+      copyClasspathResourceAndInjectInitDir("/init/docker-compose.yml", dir, flat)
       new File(dir, "browsers") tap { dir =>
         FileIO.copyClasspathTextResourceToFile("/init/browsers/browsers.json", dir, allowExists = false)
         FileIO.copyClasspathTextResourceToFile("/init/browsers/selenoid.conf", dir, allowExists = false)
@@ -134,7 +132,7 @@ trait WebProjectInitialiser extends ProjectInitialiser {
       println(
         s"""|Docker files initialised
             |
-            |  ./            $filler        # Current directory${if (standalone) "" else {
+            |  ./            $filler        # Current directory${if (flat) "" else {
         s"""|
             |   └── /${dir.getPath}""".stripMargin}}
             |$filler├── docker-compose.yml  # Docker compose file
@@ -147,11 +145,11 @@ trait WebProjectInitialiser extends ProjectInitialiser {
       )
     }
     if (options.jenkins) {
-      FileIO.copyClasspathTextResourceToFile("/init/Jenkinsfile", dir, allowExists = false)
+      copyClasspathResourceAndInjectInitDir("/init/Jenkinsfile", dir, flat)
       println(
         s"""|Jenkinsfile initialised
             |
-            |  ./            $filler        # Current directory${if (standalone) "" else {
+            |  ./            $filler        # Current directory${if (flat) "" else {
         s"""|
             |   └── /${dir.getPath}""".stripMargin}}
             |$filler└── Jenkinsfile         # Jenkins pipeline file
@@ -161,5 +159,17 @@ trait WebProjectInitialiser extends ProjectInitialiser {
     }
 
   }
-  
+
+  private def copyClasspathResourceAndInjectInitDir(resource: String, dir: File, flat: Boolean, targetFile: Option[File] = None, targetPath: Option[String] = None ): Unit = {
+    val toFile = targetFile.getOrElse(new File(dir, new File(resource).getName))
+    if (toFile.exists) Errors.copyResourceError("Cannot create or overwrite existing file: " + toFile)
+    val res = Source.fromInputStream(getClass.getResourceAsStream(resource))
+    try {
+      val initDir = targetPath.getOrElse(if (flat) "" else dir.getPath)
+      toFile.writeText(res.mkString.replace("${gwen.initDir}", initDir).replace("${slash}", if (flat) "" else "/").replace("${docker.compose.options}", if (flat) "" else s" -f $initDir/docker-compose.yml"))
+    } finally {
+     res.close()
+    }
+  }
+
 }

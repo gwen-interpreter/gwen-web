@@ -1,6 +1,6 @@
 pipeline {
   agent {
-      // an agent with docker installed
+      // replace with an agent that has docker installed
       label 'docker-agent'
   }
   parameters { 
@@ -20,7 +20,7 @@ pipeline {
       steps {
         script {
           // Create output dir to avoid potential permission issues in docker
-          sh 'mkdir -p gwen/output'
+          sh 'mkdir -p ${gwen.initDir}${slash}output'
         }
       }
     }
@@ -28,18 +28,18 @@ pipeline {
       steps {
         script {
           // Spin up environment and execute Gwen in docker
-          sh "docker-compose run gwen"
+          sh 'docker-compose${docker.compose.options} run gwen'
         }
       }
       post {
         always {
-          sh "docker-compose down"
-          archiveArtifacts artifacts: 'gwen/output/reports/**'
+          sh 'docker-compose${docker.compose.options} down'
+          archiveArtifacts artifacts: '${gwen.initDir}${slash}output/reports/**'
           publishHTML(target: [
                   allowMissing         : false,
                   alwaysLinkToLastBuild: false,
                   keepAll              : true,
-                  reportDir            : "gwen/output/reports/html",
+                  reportDir            : '${gwen.initDir}${slash}output/reports/html',
                   reportFiles          : 'index.html',
                   reportName           : "Gwen-Report"
           ])
