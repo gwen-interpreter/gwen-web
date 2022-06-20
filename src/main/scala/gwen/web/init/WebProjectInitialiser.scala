@@ -17,6 +17,7 @@
 package gwen.web.init
 
 import gwen.core._
+import gwen.core.init.InitOption
 import gwen.core.init.ProjectInitialiser
 
 import scala.io.Source
@@ -41,57 +42,58 @@ trait WebProjectInitialiser extends ProjectInitialiser {
     
     val dir = options.initDir
     val filler = if (flat) "   " else "       "
+    val force = options.initOptions.contains(InitOption.force)
 
-    if (isNew) {
+    if (isNew || options.initOptions == List(InitOption.force)) {
 
       new File(dir, "browsers") tap { dir =>
-        FileIO.copyClasspathTextResourceToFile("/init/browsers/chrome.conf", dir, allowExists = false)
-        FileIO.copyClasspathTextResourceToFile("/init/browsers/edge.conf", dir, allowExists = false)
-        FileIO.copyClasspathTextResourceToFile("/init/browsers/firefox.conf", dir, allowExists = false)
-        FileIO.copyClasspathTextResourceToFile("/init/browsers/ie.conf", dir, allowExists = false)
-        FileIO.copyClasspathTextResourceToFile("/init/browsers/README.md", dir, allowExists = false)
-        FileIO.copyClasspathTextResourceToFile("/init/browsers/remote.conf", dir, allowExists = false)
-        FileIO.copyClasspathTextResourceToFile("/init/browsers/safari.conf", dir, allowExists = false)
+        FileIO.copyClasspathTextResourceToFile("/init/browsers/chrome.conf", dir, allowReplace = force)
+        FileIO.copyClasspathTextResourceToFile("/init/browsers/edge.conf", dir, allowReplace = force)
+        FileIO.copyClasspathTextResourceToFile("/init/browsers/firefox.conf", dir, allowReplace = force)
+        FileIO.copyClasspathTextResourceToFile("/init/browsers/ie.conf", dir, allowReplace = force)
+        FileIO.copyClasspathTextResourceToFile("/init/browsers/README.md", dir, allowReplace = force)
+        FileIO.copyClasspathTextResourceToFile("/init/browsers/remote.conf", dir, allowReplace = force)
+        FileIO.copyClasspathTextResourceToFile("/init/browsers/safari.conf", dir, allowReplace = force)
       }
 
       new File(dir, "env") tap { dir =>
-        FileIO.copyClasspathTextResourceToFile("/init/env/dev.conf", dir, allowExists = false)
-        FileIO.copyClasspathTextResourceToFile("/init/env/local.conf", dir, allowExists = false)
-        FileIO.copyClasspathTextResourceToFile("/init/env/prod.conf", dir, allowExists = false)
-        FileIO.copyClasspathTextResourceToFile("/init/env/README.md", dir, allowExists = false)
-        FileIO.copyClasspathTextResourceToFile("/init/env/test.conf", dir, allowExists = false)
+        FileIO.copyClasspathTextResourceToFile("/init/env/dev.conf", dir, allowReplace = force)
+        FileIO.copyClasspathTextResourceToFile("/init/env/local.conf", dir, allowReplace = force)
+        FileIO.copyClasspathTextResourceToFile("/init/env/prod.conf", dir, allowReplace = force)
+        FileIO.copyClasspathTextResourceToFile("/init/env/README.md", dir, allowReplace = force)
+        FileIO.copyClasspathTextResourceToFile("/init/env/test.conf", dir, allowReplace = force)
       }
 
       new File(dir, "features") tap { dir =>
-        FileIO.copyClasspathTextResourceToFile("/init/features/README.md", dir, allowExists = false)
+        FileIO.copyClasspathTextResourceToFile("/init/features/README.md", dir, allowReplace = force)
       }
 
       new File(dir, "meta") tap { dir =>
-        FileIO.copyClasspathTextResourceToFile("/init/meta/README.md", dir, allowExists = false)
+        FileIO.copyClasspathTextResourceToFile("/init/meta/README.md", dir, allowReplace = force)
       }
 
       new File(dir, "samples/floodio") tap { dir =>
-        FileIO.copyClasspathTextResourceToFile("/init/samples/floodio/FloodIO.feature", dir, allowExists = false)
-        FileIO.copyClasspathTextResourceToFile("/init/samples/floodio/FloodIO.meta", dir, allowExists = false)
+        FileIO.copyClasspathTextResourceToFile("/init/samples/floodio/FloodIO.feature", dir, allowReplace = force)
+        FileIO.copyClasspathTextResourceToFile("/init/samples/floodio/FloodIO.meta", dir, allowReplace = force)
       }
       new File(dir, "samples/google") tap { dir =>
-        FileIO.copyClasspathTextResourceToFile("/init/samples/google/Google.feature", dir, allowExists = false)
-        FileIO.copyClasspathTextResourceToFile("/init/samples/google/Google.meta", dir, allowExists = false)
+        FileIO.copyClasspathTextResourceToFile("/init/samples/google/Google.feature", dir, allowReplace = force)
+        FileIO.copyClasspathTextResourceToFile("/init/samples/google/Google.meta", dir, allowReplace = force)
       }
       new File(dir, "samples/todo") tap { dir =>
-        FileIO.copyClasspathTextResourceToFile("/init/samples/todo/Todo.feature", dir, allowExists = false)
-        FileIO.copyClasspathTextResourceToFile("/init/samples/todo/Todo.meta", dir, allowExists = false)
+        FileIO.copyClasspathTextResourceToFile("/init/samples/todo/Todo.feature", dir, allowReplace = force)
+        FileIO.copyClasspathTextResourceToFile("/init/samples/todo/Todo.meta", dir, allowReplace = force)
       }
       new File(dir, "samples") tap { dir =>
-        FileIO.copyClasspathTextResourceToFile("/init/samples/README.md", dir, allowExists = false)
+        FileIO.copyClasspathTextResourceToFile("/init/samples/README.md", dir, allowReplace = force)
       }
 
-      FileIO.copyClasspathTextResourceToFile("/init/README.md", dir, allowExists = false)
-      FileIO.copyClasspathTextResourceToFile("/init/gitignore", dir, Some(".gitignore"), allowExists = false)
-      copyClasspathResourceAndInjectInitDir("/init/gwen.conf", dir, flat, targetFile = Some(new File("gwen.conf")), targetPath = Some(if (flat) "." else dir.getPath))
+      FileIO.copyClasspathTextResourceToFile("/init/README.md", dir, allowReplace = force)
+      FileIO.copyClasspathTextResourceToFile("/init/gitignore", dir, Some(".gitignore"), allowReplace = force)
+      copyClasspathResourceAndInject("/init/gwen.conf", dir, flat, allowReplace = force, targetFile = Some(new File("gwen.conf")), targetPath = Some(if (flat) "." else dir.getPath))
 
       println(
-        s"""|Project directory initialised
+        s"""|Project directory initialised${if (force) " (forced)" else ""}
             |
             |  ./            $filler        # Current directory
             |   ├── gwen.conf$filler        # Gwen settings file${if (flat) "" else {
@@ -122,15 +124,15 @@ trait WebProjectInitialiser extends ProjectInitialiser {
             |""".stripMargin
       )
     }
-    if (options.docker) {
-      FileIO.copyClasspathTextResourceToFile("/init/Dockerfile", dir, allowExists = false)
-      copyClasspathResourceAndInjectInitDir("/init/docker-compose.yml", dir, flat)
+    if (options.initOptions.contains(InitOption.docker)) {
+      FileIO.copyClasspathTextResourceToFile("/init/Dockerfile", dir, allowReplace = force)
+      copyClasspathResourceAndInject("/init/docker-compose.yml", dir, flat, allowReplace = force)
       new File(dir, "browsers") tap { dir =>
-        FileIO.copyClasspathTextResourceToFile("/init/browsers/browsers.json", dir, allowExists = false)
-        FileIO.copyClasspathTextResourceToFile("/init/browsers/selenoid.conf", dir, allowExists = false)
+        FileIO.copyClasspathTextResourceToFile("/init/browsers/browsers.json", dir, allowReplace = force)
+        FileIO.copyClasspathTextResourceToFile("/init/browsers/selenoid.conf", dir, allowReplace = force)
       }
       println(
-        s"""|Docker files initialised
+        s"""|Docker files initialised${if (force) " (forced)" else ""}
             |
             |  ./            $filler        # Current directory${if (flat) "" else {
         s"""|
@@ -144,10 +146,10 @@ trait WebProjectInitialiser extends ProjectInitialiser {
             |""".stripMargin
       )
     }
-    if (options.jenkins) {
-      copyClasspathResourceAndInjectInitDir("/init/Jenkinsfile", dir, flat)
+    if (options.initOptions.contains(InitOption.jenkins)) {
+      copyClasspathResourceAndInject("/init/Jenkinsfile", dir, flat, allowReplace = force)
       println(
-        s"""|Jenkinsfile initialised
+        s"""|Jenkinsfile initialised${if (force) " (forced)" else ""}
             |
             |  ./            $filler        # Current directory${if (flat) "" else {
         s"""|
@@ -160,13 +162,15 @@ trait WebProjectInitialiser extends ProjectInitialiser {
 
   }
 
-  private def copyClasspathResourceAndInjectInitDir(resource: String, dir: File, flat: Boolean, targetFile: Option[File] = None, targetPath: Option[String] = None ): Unit = {
+  private def copyClasspathResourceAndInject(resource: String, dir: File, flat: Boolean, allowReplace: Boolean = false, targetFile: Option[File] = None, targetPath: Option[String] = None ): Unit = {
     val toFile = targetFile.getOrElse(new File(dir, new File(resource).getName))
-    if (toFile.exists) Errors.copyResourceError("Cannot create or overwrite existing file: " + toFile)
+    if (!allowReplace && toFile.exists) Errors.copyResourceError(s"File alredy exists: $toFile (use --force option to replace).")
     val res = Source.fromInputStream(getClass.getResourceAsStream(resource))
     try {
       val initDir = targetPath.getOrElse(if (flat) "" else dir.getPath)
-      toFile.writeText(res.mkString.replace("${gwen.initDir}", initDir).replace("${slash}", if (flat) "" else "/").replace("${docker.compose.options}", if (flat) "" else s" -f $initDir/docker-compose.yml"))
+      if (!toFile.exists || allowReplace) {
+        toFile.writeText(res.mkString.replace("${gwen.initDir}", initDir).replace("${slash}", if (flat) "" else "/").replace("${docker.compose.options}", if (flat) "" else s" -f $initDir/docker-compose.yml"))
+      }
     } finally {
      res.close()
     }
