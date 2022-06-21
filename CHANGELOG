@@ -1,7 +1,13 @@
+3.17.1
+======
+Jun 21, 2022
+- Set publishHTML.alwaysLinkToLastBuild to true in generated Jenkinsfile
+- Drop remote.conf from browsers initialisation
+
 3.17.0
 ======
 Jun 20, 2022
-- Update Gwen core from v3.15.0 to v[3.15.1](https://github.com/gwen-interpreter/gwen/releases/tag/v3.15.1)
+- Update Gwen core from v3.15.0 to v[3.16.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.16.0)
   - Allow project init in non empty directory
   - Add `--force` option to `init` command to regenerate and replace existing files
 - Inject initialised project directory into generated files when running init --docker and --jenkins options

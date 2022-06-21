@@ -52,7 +52,6 @@ trait WebProjectInitialiser extends ProjectInitialiser {
         FileIO.copyClasspathTextResourceToFile("/init/browsers/firefox.conf", dir, allowReplace = force)
         FileIO.copyClasspathTextResourceToFile("/init/browsers/ie.conf", dir, allowReplace = force)
         FileIO.copyClasspathTextResourceToFile("/init/browsers/README.md", dir, allowReplace = force)
-        FileIO.copyClasspathTextResourceToFile("/init/browsers/remote.conf", dir, allowReplace = force)
         FileIO.copyClasspathTextResourceToFile("/init/browsers/safari.conf", dir, allowReplace = force)
       }
 
@@ -107,7 +106,6 @@ trait WebProjectInitialiser extends ProjectInitialiser {
             |$filler│   ├── firefox.conf
             |$filler│   ├── ie.conf
             |$filler│   ├── README.md
-            |$filler│   ├── remote.conf     # Remote web driver settings
             |$filler│   └── safari.conf
             |$filler├── /env                # Environment settings
             |$filler│   ├── dev.conf

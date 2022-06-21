@@ -36,15 +36,15 @@ pipeline {
           sh 'docker-compose${docker.compose.options} down'
           archiveArtifacts artifacts: '${gwen.initDir}${slash}output/reports/**'
           publishHTML(target: [
-                  allowMissing         : false,
-                  alwaysLinkToLastBuild: false,
-                  keepAll              : true,
-                  reportDir            : '${gwen.initDir}${slash}output/reports/html',
-                  reportFiles          : 'index.html',
-                  reportName           : "Gwen-Report"
+                      allowMissing          : false,
+                      alwaysLinkToLastBuild : true,
+                      keepAll               : true,
+                      reportDir             : '${gwen.initDir}${slash}output/reports/html',
+                      reportFiles           : 'index.html',
+                      reportName            : "Gwen-Report"
           ])
         }
       }
     }
-  }
+  }
 }
