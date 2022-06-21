@@ -1,3 +1,9 @@
+3.17.3
+======
+Jun 20, 2022
+- Update Gwen core from v3.16.1 to v[3.16.2](https://github.com/gwen-interpreter/gwen/releases/tag/v3.16.2)
+  - Make video button column width in HTML report 60px or 0px if there no vidoes
+
 3.17.2
 ======
 Jun 20, 2022
