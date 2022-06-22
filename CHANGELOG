@@ -1,7 +1,8 @@
 3.17.4
 ======
-Jun 21, 2022
-- Enable video recording by default in selenoid docker container
+Jun 22, 2022
+- Update Gwen core from v3.16.2 to v[3.16.3](https://github.com/gwen-interpreter/gwen/releases/tag/v3.16.3)
+- Fix last (feature file) column in html summary report
 
 3.17.3
 ======
