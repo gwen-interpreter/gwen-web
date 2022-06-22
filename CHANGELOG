@@ -1,3 +1,8 @@
+3.17.4
+======
+Jun 21, 2022
+- Enable video recording by default in selenoid docker container
+
 3.17.3
 ======
 Jun 20, 2022
@@ -12,7 +17,7 @@ Jun 20, 2022
 
 3.17.1
 ======
-Jun 21, 2022
+Jun 21, 2022`
 - Set publishHTML.alwaysLinkToLastBuild to true in generated Jenkinsfile
 - Drop remote.conf from browsers initialisation
 
@@ -22,7 +27,6 @@ Jun 20, 2022
 - Update Gwen core from v3.15.0 to v[3.16.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.16.0)
   - Allow project init in non empty directory
   - Add `--force` option to `init` command to regenerate and replace existing files
-- Inject initialised project directory into generated files when running init --docker and --jenkins options
 
 3.16.0
 ======
@@ -39,7 +43,7 @@ Jun 19, 2022
 - Add ability to enable or disable the following web settings with environment variables:
   - `GWEN_BROWSER=chrome|firefox|safari|edge|ie` to set default target browser
   - `GWEN_HEADLESS=true|false` to set default headless mode
-- Add docker and Jenkins files to gwen init
+- Add `--docker` and `jenkins` options to gwen init do generate docker and Jenkins files
 - Disable video capture if parallel execution mode is enabled
 
 3.15.2
