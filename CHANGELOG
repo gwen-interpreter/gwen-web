@@ -1,8 +1,14 @@
+3.17.5
+======
+Jun 23, 2022
+- Update Gwen core from v3.16.3 to v[3.16.4](https://github.com/gwen-interpreter/gwen/releases/tag/v3.16.4)
+  - Ajdust feature column in HTML summary report for best fit
+
 3.17.4
 ======
 Jun 22, 2022
 - Update Gwen core from v3.16.2 to v[3.16.3](https://github.com/gwen-interpreter/gwen/releases/tag/v3.16.3)
-- Fix last (feature file) column in html summary report
+  - Fix last (feature file) column in html summary report
 
 3.17.3
 ======
