@@ -215,12 +215,6 @@ class DriverManager() extends LazyLogging {
         logger.info("Setting firefox preference: plugin.state.java=2")
         profile.setPreference("plugin.state.java", 2)
       }
-      WebSettings.`gwen.web.accept.untrusted.certs` tap { _ =>
-        logger.info("Setting firefox option: setAcceptUntrustedCertificates(true)")
-        profile.setAcceptUntrustedCertificates(true)
-        logger.info("Setting firefox option: setAssumeUntrustedCertificateIssuer(false)")
-        profile.setAssumeUntrustedCertificateIssuer(false)
-      }
       if (WebSettings.`gwen.web.suppress.images`) {
         logger.info("Setting firefox preference: permissions.default.image=2")
         profile.setPreference("permissions.default.image", 2)
@@ -254,10 +248,6 @@ class DriverManager() extends LazyLogging {
       options.addArguments("--always-authorize-plugins")
     }
     options.addArguments("--enable-automation")
-    if (WebSettings.`gwen.web.accept.untrusted.certs`) {
-      logger.info(s"Setting $browser argument: --ignore-certificate-errors")
-      options.addArguments("--ignore-certificate-errors")
-    }
     val browserPath = browser match {
       case "chrome" => WebSettings.`gwen.web.chrome.path`
       case "edge" => WebSettings.`gwen.web.edge.path`
@@ -353,8 +343,6 @@ class DriverManager() extends LazyLogging {
       WebSettings.`gwen.web.capabilities` foreach { case (name, value) =>
         setCapability(name, value, caps);
       }
-      setDefaultCapability(CapabilityType.ACCEPT_SSL_CERTS, WebSettings.`gwen.web.accept.untrusted.certs`, caps)
-      setDefaultCapability("javascriptEnabled", true, caps)
     }
   }
 

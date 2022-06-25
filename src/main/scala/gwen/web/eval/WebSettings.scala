@@ -38,7 +38,6 @@ object WebSettings extends LazyLogging {
     */
   def check(): Unit = {
     `gwen.target.browser`
-    `gwen.web.accept.untrusted.certs`
     `gwen.web.authorize.plugins`
     `gwen.web.browser.headless`
     `gwen.web.browser.size`
@@ -191,15 +190,6 @@ object WebSettings extends LazyLogging {
     Settings.getBoolean("gwen.web.capture.screenshots.highlighting") tap { isSet =>
       if (isSet) Settings.set("gwen.report.slideshow.create", true.toString)
     }
-  }
-
-  /**
-    * Provides access to the `gwen.web.accept.untrusted.certs` setting used to control whether
-    * or not the web driver should accept untrusted (self signed) SSL certificates (default value
-    * is `true`).
-    */
-  def `gwen.web.accept.untrusted.certs`: Boolean = {
-    Settings.getBoolean("gwen.web.accept.untrusted.certs")
   }
 
   /**

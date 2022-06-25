@@ -92,7 +92,6 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
   "Default Gwen web settings" should "should load" in {
     Settings.exclusively {
       WebSettings.`gwen.target.browser` should be ("chrome")
-      WebSettings.`gwen.web.accept.untrusted.certs` should be (true)
       WebSettings.`gwen.web.authorize.plugins` should be (false)
       WebSettings.`gwen.web.browser.size` should be (None)
       WebSettings.`gwen.web.capabilities` should be (Map())
@@ -196,7 +195,6 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
 
     WebSettings.`gwen.target.browser` should be ("chrome")
 
-    WebSettings.`gwen.web.accept.untrusted.certs` should be (true)
     WebSettings.`gwen.web.authorize.plugins` should be (false)
     WebSettings.`gwen.web.browser.size` should be (None)
     WebSettings.`gwen.web.capabilities` should be (Map())
@@ -295,7 +293,6 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
 
     WebSettings.`gwen.target.browser` should be ("chrome")
 
-    WebSettings.`gwen.web.accept.untrusted.certs` should be (true)
     WebSettings.`gwen.web.authorize.plugins` should be (false)
     WebSettings.`gwen.web.browser.size` should be (None)
     WebSettings.`gwen.web.capabilities` should be (Map())

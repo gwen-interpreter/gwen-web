@@ -1,8 +1,15 @@
+3.17.6
+======
+Jun 25, 2022
+- Update selenium-java from v4.2.2 to v4.3.0
+- Removed all references to deprecated `acceptSslCerts` and `javascriptEnabled` capabilities
+- Dropped `gwen.web.accept.untrusted.certs` setting in favor of standard W3C `acceptInsecureCerts` capability
+
 3.17.5
 ======
 Jun 23, 2022
 - Update Gwen core from v3.16.3 to v[3.16.4](https://github.com/gwen-interpreter/gwen/releases/tag/v3.16.4)
-  - Ajdust feature column in HTML summary report for best fit
+  - Adjust feature column in HTML summary report for best fit
 
 3.17.4
 ======
