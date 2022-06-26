@@ -6,14 +6,18 @@ pipeline {
   parameters { 
     choice(name: 'browser', choices: ['chrome', 'firefox', 'edge'], description: 'Target web browser')
     booleanParam(name: 'dry_run', defaultValue: false, description: 'Validate without executing')
-    booleanParam(name: 'parallel', defaultValue: false, description: 'Enable parallel execution') 
+    booleanParam(name: 'parallel', defaultValue: false, description: 'Enable parallel execution')
+    choice(name: 'threads', choices: ['auto', '2', '4', '8', '12', '16', '24', '32', '48', '64'], description: 'Number of parallel threads (auto = one thread per available core)')
     booleanParam(name: 'headless', defaultValue: false, description: 'Enable headless browser') 
+    booleanParam(name: 'video', defaultValue: true, description: 'Enable video capture (not available with parallel or headless)') 
   }
   environment {
     GWEN_BROWSER = "${params.browser}"
     GWEN_DRY_RUN = "${params.dry_run}"
     GWEN_PARALLEL = "${params.parallel}"
+    GWEN_THREADS = "${params.threads}"
     GWEN_HEADLESS = "${params.headless}"
+    GWEN_VIDEO = "${params.video}"
   }
   stages {
     stage("Prepare") {
@@ -36,12 +40,12 @@ pipeline {
           sh 'docker-compose${docker.compose.options} down'
           archiveArtifacts artifacts: '${gwen.initDir}${slash}output/reports/**'
           publishHTML(target: [
-                      allowMissing          : false,
-                      alwaysLinkToLastBuild : true,
-                      keepAll               : true,
-                      reportDir             : '${gwen.initDir}${slash}output/reports/html',
-                      reportFiles           : 'index.html',
-                      reportName            : "Gwen-Report"
+                        allowMissing          : false,
+                        alwaysLinkToLastBuild : true,
+                        keepAll               : true,
+                        reportDir             : '${gwen.initDir}${slash}output/reports/html',
+                        reportFiles           : 'index.html',
+                        reportName            : "Gwen-Report"
           ])
         }
       }

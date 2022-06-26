@@ -1,9 +1,19 @@
-3.17.6
+3.18.0
 ======
 Jun 25, 2022
+- Update Gwen core from v3.16.4 to v[3.17.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.17.0)
+  - `gwen.parallel.maxThreads` 
+    - can be set to `auto` for one thread per available core
+    - can be set to a number that exceeds total available cores (multiple threads per core)
+  - Add ability to override `gwen.parallel.maxThreads` setting with an environment variable:
+    - `GWEN_THREADS=auto|number` to set the maximum number of parallel threads
 - Update selenium-java from v4.2.2 to v4.3.0
 - Removed all references to deprecated `acceptSslCerts` and `javascriptEnabled` capabilities
 - Dropped `gwen.web.accept.untrusted.certs` setting in favor of standard W3C `acceptInsecureCerts` capability
+- Add ability to override the `gwen.web.capability.enableVideo` setting with an environment variable:
+  - `GWEN_VIDEO=true|fakse` to enable or disable Selenoid video recordig in Docker
+- Enable selenoid video recording by default
+- Run as non root user in docker containers
 
 3.17.5
 ======
@@ -48,14 +58,17 @@ Jun 19, 2022
 - Update Gwen core from v3.14.2 to v[3.15.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.15.0)
   - Add total CSV record count to record descriptor suffix to console report output
   - Ignore empty CSV records
-  - Add ability to enable or disable the following CLI options with environment variables:
-    - `GWEN_DRY_RUN=true|false` to set default `-n|--dry-run` option
+  - Add ability to override the `gwen.web.capability.enableVideo` setting with an environment variable:
+  - Add ability to overrdie `gwen.cli.options.dryRun` setting with an environment variable:
+    - `GWEN_DRY_RUN=true|false`
+  - Add ability to overrdie `gwen.cli.options.parallel` setting with an environment variable:
     - `GWEN_PARALLEL=true|false` to set default `--parallel` option
   - Drop `--parallelFeatures` CLI option and `gwen.cli.options.parallelFeatures` setting
     - Feature or scenarios run in parallel based on `--parallel` option and state level only
   - Log scenario worker thread to console report when running scenarios in parallel
-- Add ability to enable or disable the following web settings with environment variables:
+- Add ability to overrdie `gwen.cli.options.parallel` setting with an environment variable:
   - `GWEN_BROWSER=chrome|firefox|safari|edge|ie` to set default target browser
+- Add ability to overrdie `gwen.web.browser.headless` setting with an environment variable:
   - `GWEN_HEADLESS=true|false` to set default headless mode
 - Add `--docker` and `jenkins` options to gwen init do generate docker and Jenkins files
 - Disable video capture if parallel execution mode is enabled

@@ -4,12 +4,12 @@ services:
     image: selenoid/chrome:latest
     networks:
       - gwen-net
-  firefox:
-    image: selenoid/firefox:latest
-    networks:
-      - gwen-net
   edge:
     image: browsers/edge:latest
+    networks:
+      - gwen-net
+  firefox:
+    image: selenoid/firefox:latest
     networks:
       - gwen-net
   video-recorder:
@@ -17,11 +17,6 @@ services:
     networks:
       - gwen-net
   selenoid:
-    depends_on:
-      - chrome
-      - firefox
-      - edge
-      - video-recorder
     image: aerokube/selenoid:latest-release
     networks:
       - gwen-net
@@ -37,6 +32,8 @@ services:
   gwen:
     depends_on:
       - selenoid
+      - video-recorder
+      - $GWEN_BROWSER
     build:
       context: .
       dockerfile: Dockerfile
@@ -46,7 +43,9 @@ services:
       - GWEN_BROWSER
       - GWEN_DRY_RUN
       - GWEN_PARALLEL
+      - GWEN_THREADS
       - GWEN_HEADLESS
+      - GWEN_VIDEO
     volumes:
       - "$PWD:/project"
     working_dir: /project
