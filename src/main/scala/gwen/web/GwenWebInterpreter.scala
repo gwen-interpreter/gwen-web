@@ -30,7 +30,8 @@ object GwenWebInterpreter extends GwenInterpreter(new WebEngine()) with WebProje
     applyEnvSettings(
       List(
         ("gwen.target.browser", "GWEN_BROWSER"), 
-        ("gwen.web.browser.headless", "GWEN_HEADLESS")
+        ("gwen.web.browser.headless", "GWEN_HEADLESS"),
+        ("gwen.web.capability.enableVideo", "GWEN_VIDEO"), 
       )
     )
     super.initDefaultEnvSettings()
