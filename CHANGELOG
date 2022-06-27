@@ -1,6 +1,12 @@
+3.18.1
+======
+Jun 27, 2022
+- Update Gwen core from v3.17.0 to v[3.17.1](https://github.com/gwen-interpreter/gwen/releases/tag/v3.17.1)
+  - Capture cause in exception when a system process call fails
+
 3.18.0
 ======
-Jun 25, 2022
+Jun 26, 2022
 - Update Gwen core from v3.16.4 to v[3.17.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.17.0)
   - `gwen.parallel.maxThreads` 
     - can be set to `auto` for one thread per available core
