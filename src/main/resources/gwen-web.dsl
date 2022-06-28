@@ -931,6 +931,7 @@ I reset my <name> setting
 <name> is defined by <javascriptRef> applied to "<arguments>" delimited by "-"
 <name> is defined by system process "<process>"
 <name> is defined by system process "<process>" delimited by "<delimiter>"
+<name> is defined by unix system process "<process>"
 <name> is defined by property "<name>"
 <name> is defined by setting "<name>"
 <name> is defined by file "<filepath>"
@@ -1084,10 +1085,8 @@ I execute javascript "<javascript>"
 I execute js "<javascript>"
 I execute system process "<command>"
 I execute system process "<command>" delimited by "<delimiter>"
+I execute a unix system process "<command>"
 I execute unix system process "<command>"
-I execute unix system process "<command>"
-I execute a unix system process "<command>" delimited by "<delimiter>"
-I execute a unix system process "<command>" delimited by "<delimiter>"
 I refresh the current page
 I base64 decode <reference> as <name>
 I base64 decode <reference>
