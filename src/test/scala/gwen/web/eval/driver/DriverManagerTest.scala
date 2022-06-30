@@ -24,11 +24,11 @@ import scala.util.chaining._
 import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.when
+import org.openqa.selenium.Capabilities
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.WebDriver.Options
 import org.openqa.selenium.WebDriver.Timeouts
 import org.openqa.selenium.WebDriver.Window
-import org.openqa.selenium.remote.DesiredCapabilities
 import org.openqa.selenium.remote.RemoteWebDriver
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
@@ -222,7 +222,7 @@ class DriverManagerTest extends BaseTest with Matchers with MockitoSugar with Be
       override private [eval] def safari(): WebDriver = createMockLocalDriver() tap { driver =>
         mockSafariDriver = driver
       }
-      override private [eval] def remote(hubUrl: String, capabilities: DesiredCapabilities): WebDriver = {
+      override private [eval] def remote(hubUrl: String, capabilities: Capabilities): WebDriver = {
         val mockDriver = createMockRemoteDriver()
         when(mockDriver.getCapabilities).thenReturn(capabilities)
         mockRemoteDriver = mockDriver

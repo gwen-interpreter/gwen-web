@@ -77,4 +77,6 @@ Compile / packageBin / mappings ++= Seq(
   file("CHANGELOG") -> "CHANGELOG.txt"
 )
 
-Test/ parallelExecution := false
+Test / parallelExecution := false
+Test / fork := true
+Test / envVars := Map("SELENIUM_HUB" -> "selenoid")

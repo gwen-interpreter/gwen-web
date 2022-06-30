@@ -18,6 +18,7 @@ package gwen.web
 
 import gwen.web.init.WebProjectInitialiser
 import gwen.web.eval.WebEngine
+import gwen.web.eval.WebSettings
 
 import gwen.GwenInterpreter
 
@@ -31,7 +32,7 @@ object GwenWebInterpreter extends GwenInterpreter(new WebEngine()) with WebProje
       List(
         ("gwen.target.browser", "GWEN_BROWSER"), 
         ("gwen.web.browser.headless", "GWEN_HEADLESS"),
-        ("gwen.web.capability.enableVideo", "GWEN_VIDEO"), 
+        (WebSettings.enableVideoKey, "GWEN_VIDEO"), 
       )
     )
     super.initDefaultEnvSettings()

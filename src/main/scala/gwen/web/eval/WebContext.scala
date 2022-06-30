@@ -51,7 +51,6 @@ import org.openqa.selenium.support.ui.FluentWait
 import org.openqa.selenium.support.ui.Select
 
 import java.io.File
-import org.openqa.selenium.remote.RemoteWebDriver
 
 /**
   * The web evaluatioin context.
@@ -67,8 +66,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
   driverManager.addWebSessionEventListener(this)
 
   override def sessionOpened(event: WebSessionEvent): Unit = { 
-    val videoEnabled = Settings.getOpt("gwen.web.capability.enableVideo").map(_.toBoolean).getOrElse(false)
-    if (videoEnabled) {
+    if (WebSettings.videoEnabled) {
       driverManager.getSessionId(event.driver) foreach { sessionId =>
         addVideo(new File(GwenSettings.`gwen.video.dir`, s"$sessionId.mp4"))
       }

@@ -28,6 +28,7 @@ import org.openqa.selenium.Keys
 object WebErrors {
   
     def locatorBindingError(msg: String) = throw new LocatorBindingException(msg)
+    def unsupportedWebBrowserError(browser: String) = throw new UnsupportedWebBrowserException(browser)
     def unsupportedWebDriverError(driverName: String) = throw new UnsupportedWebDriverException(driverName)
     def noSuchWindowError(msg: String) = throw new NoSuchWindowException(msg)
     def unsupportedModifierKeyError(key: String) = throw new UnsupportedModifierKeyException(key)
@@ -42,6 +43,10 @@ object WebErrors {
 
     /** Thrown when a locator binding error is detected . */
     class LocatorBindingException(msg: String) extends GwenException(msg)
+
+     /** Thrown when an unsupported browser is detected. */
+    class UnsupportedWebBrowserException(browser: String)
+      extends GwenException(s"Unsupported web brower: $browser")
 
     /** Thrown when an unsupported web driver is detected. */
     class UnsupportedWebDriverException(driverName: String)

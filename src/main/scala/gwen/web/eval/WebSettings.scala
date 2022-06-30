@@ -19,7 +19,10 @@ package gwen.web.eval
 import gwen.core._
 
 import com.typesafe.scalalogging.LazyLogging
+import org.openqa.selenium.Capabilities
+import org.openqa.selenium.MutableCapabilities
 
+import scala.jdk.CollectionConverters._
 import scala.util.Try
 import scala.util.chaining._
 
@@ -70,6 +73,9 @@ object WebSettings extends LazyLogging {
     `gwen.web.throttle.msecs`
     `gwen.web.useragent`
     `gwen.web.wait.seconds`
+
+    videoEnabled
+
   }
 
   /** Chrome driver setting. */
@@ -322,8 +328,39 @@ object WebSettings extends LazyLogging {
    * set in the `gwen.web.capabilities` property with all properties that start with `gwen.web.capability.`.
    * See: https://github.com/SeleniumHQ/selenium/wiki/DesiredCapabilities
    */
-  def `gwen.web.capabilities`: Map[String, String] = {
-    Settings.getMap("gwen.web.capabilities", "gwen.web.capability")
+  def `gwen.web.capabilities`: Capabilities = {
+    getCapabilities(Settings.getMap("gwen.web.capabilities", "gwen.web.capability"))
+  }
+
+  private def getCapabilities(input: Map[String, Any]): Capabilities = {
+    input.foldLeft(new MutableCapabilities()) { (acc, entry) => 
+      val (name, value) = entry
+      name.split("""\.""").toList match {
+        case head :: tail if tail.nonEmpty => 
+          val unqualifiedName = tail.mkString(".")
+          addExtensionCapability(head, unqualifiedName, value, acc)
+        case _ => 
+          addCapability(name, value, acc)
+      }
+      acc
+    }
+  }
+
+  private def addExtensionCapability(key: String, name: String, value: Any, capabilities: MutableCapabilities): Unit = {
+    val caps = Option(capabilities.getCapability(key)).map(_.asInstanceOf[MutableCapabilities]).getOrElse(new MutableCapabilities())
+    addCapability(name, value, caps)
+    capabilities.setCapability(key, getCapabilities(caps.asMap.asScala.toMap))
+  }
+
+  private def addCapability(name: String, value: Any, capabilities: MutableCapabilities): Unit = {
+    def strValue = String.valueOf(value).trim
+    try {
+      capabilities.setCapability(name, Integer.valueOf(strValue))
+    } catch {
+      case _: Throwable =>
+        if (strValue.matches("(true|false)")) capabilities.setCapability(name, java.lang.Boolean.valueOf(strValue))
+        else capabilities.setCapability(name, strValue)
+    }
   }
 
   /**
@@ -413,5 +450,11 @@ object WebSettings extends LazyLogging {
   def `gwen.web.remote.localFileDetector`: Boolean = {
     `gwen.web.remote.url`.nonEmpty && Settings.getBoolean("gwen.web.remote.localFileDetector")
   }
+
+  def videoEnabled: Boolean = {
+    Settings.getBooleanOpt(enableVideoKey, Some("gwen.web.capability.enableVideo")).getOrElse(false)
+  }
+
+  val enableVideoKey = "gwen.web.capability.selenoid:options.enableVideo"
 
 }

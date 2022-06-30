@@ -30,7 +30,7 @@ import scala.util.chaining._
 
 import com.typesafe.scalalogging.LazyLogging
 import io.github.bonigarcia.wdm.WebDriverManager
-import org.openqa.selenium.{Dimension, MutableCapabilities, WebDriver, WindowType}
+import org.openqa.selenium.{Dimension, Capabilities, MutableCapabilities, WebDriver, WindowType}
 import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.chrome.ChromeDriverService
 import org.openqa.selenium.chrome.ChromeOptions
@@ -39,8 +39,6 @@ import org.openqa.selenium.edge.EdgeDriver
 import org.openqa.selenium.edge.EdgeOptions
 import org.openqa.selenium.firefox.{FirefoxDriver, FirefoxOptions, FirefoxProfile}
 import org.openqa.selenium.ie.{InternetExplorerDriver, InternetExplorerOptions}
-import org.openqa.selenium.remote.CapabilityType
-import org.openqa.selenium.remote.DesiredCapabilities
 import org.openqa.selenium.remote.HttpCommandExecutor
 import org.openqa.selenium.remote.LocalFileDetector
 import org.openqa.selenium.remote.RemoteWebDriver
@@ -157,21 +155,17 @@ class DriverManager() extends LazyLogging {
 
   private def remoteDriver(addr: String): WebDriver = {
     val capSettings = WebSettings.`gwen.web.capabilities`
-    val browser = capSettings.get("browserName").orElse(capSettings.get("browser")).orElse(capSettings.get("device")).getOrElse(WebSettings.`gwen.target.browser`)
-    val capabilities = new DesiredCapabilities(
-      browser.trim.toLowerCase match {
-        case "firefox" => firefoxOptions()
-        case "chrome" => chromeOptions()
-        case "ie" => ieOptions()
-        case "edge" => edgeOptions()
-        case "safari" => safariOptions()
-        case _ =>
-          new MutableCapabilities() tap { caps =>
-            setDesiredCapabilities(caps)
-          }
-      })
+    val browser = (capSettings.asMap.asScala.get("browserName").orElse(capSettings.asMap.asScala.get("browser")).orElse(capSettings.asMap.asScala.get("device")).getOrElse(WebSettings.`gwen.target.browser`)).toString
+    val options = browser.trim.toLowerCase match {
+      case "firefox" => firefoxOptions()
+      case "chrome" => chromeOptions()
+      case "ie" => ieOptions()
+      case "edge" => edgeOptions()
+      case "safari" => safariOptions()
+      case _ => WebErrors.unsupportedWebBrowserError(browser)
+    }
     logger.info(s"Starting remote $browser session${ if(session == "primary") "" else s": $session"}")
-    remote(addr, capabilities)
+    remote(addr, options)
   }
 
   /**
@@ -230,7 +224,7 @@ class DriverManager() extends LazyLogging {
           logger.info(s"Setting firefox path: $path")
           options.setBinary(path)
         }
-        setDesiredCapabilities(options)
+        setCapabilities(options)
       }
   }
 
@@ -321,46 +315,36 @@ class DriverManager() extends LazyLogging {
       logger.info(s"$browser mobile emulation options: $mobileEmulation")
       options.setExperimentalOption("mobileEmulation", mobileEmulation)
     }
-    setDesiredCapabilities(options)
+    setCapabilities(options)
     options
   }
 
   private def ieOptions(): InternetExplorerOptions = new InternetExplorerOptions() tap { options =>
-    setDefaultCapability("requireWindowFocus", true, options)
-    setDefaultCapability("nativeEvents", false, options);
+    setDefaultCapability("requireWindowFocus", java.lang.Boolean.TRUE, options)
+    setDefaultCapability("nativeEvents", java.lang.Boolean.TRUE, options);
     setDefaultCapability("unexpectedAlertBehavior", "accept", options);
-    setDefaultCapability("ignoreProtectedModeSettings", true, options);
-    setDefaultCapability("disable-popup-blocking", true, options);
-    setDefaultCapability("enablePersistentHover", true, options);
+    setDefaultCapability("ignoreProtectedModeSettings", java.lang.Boolean.TRUE, options);
+    setDefaultCapability("disable-popup-blocking", java.lang.Boolean.TRUE, options);
+    setDefaultCapability("enablePersistentHover", java.lang.Boolean.TRUE, options);
   }
 
   private def safariOptions(): SafariOptions = new SafariOptions() tap { options =>
-    setDesiredCapabilities(options)
+    setCapabilities(options)
   }
 
-  private def setDesiredCapabilities(capabilities: MutableCapabilities): MutableCapabilities = {
+  private def setCapabilities(capabilities: MutableCapabilities): Capabilities = {
     capabilities tap { caps =>
-      WebSettings.`gwen.web.capabilities` foreach { case (name, value) =>
-        setCapability(name, value, caps);
+      WebSettings.`gwen.web.capabilities`.asMap.asScala foreach { case (name, value) =>
+        logger.info(s"Setting web capability: $name=$value")
+        caps.setCapability(name, value)
       }
     }
   }
 
   private def setDefaultCapability(name: String, value: Any, capabilities: MutableCapabilities): Unit = {
     if (capabilities.getCapability(name) == null) {
-      setCapability(name, value, capabilities)
-    }
-  }
-
-  private def setCapability(name: String, value: Any, capabilities: MutableCapabilities): Unit = {
-    def strValue = String.valueOf(value).trim
-    try {
-      logger.info(s"Setting web capability: $name=$strValue")
-      capabilities.setCapability(name, Integer.valueOf(strValue))
-    } catch {
-      case _: Throwable =>
-        if (strValue.matches("(true|false)")) capabilities.setCapability(name, java.lang.Boolean.valueOf(strValue))
-        else capabilities.setCapability(name, strValue)
+      logger.info(s"Setting web capability: $name=$value")
+      capabilities.setCapability(name, value)
     }
   }
 
@@ -396,7 +380,7 @@ class DriverManager() extends LazyLogging {
     new SafariDriver(safariOptions())
   }
 
-  private [eval] def remote(hubUrl: String, capabilities: DesiredCapabilities): WebDriver =
+  private [eval] def remote(hubUrl: String, capabilities: Capabilities): WebDriver =
     new RemoteWebDriver(new HttpCommandExecutor(new URL(hubUrl)), capabilities) tap { driver =>
       if (WebSettings`gwen.web.remote.localFileDetector`) {
         driver.setFileDetector(new LocalFileDetector())

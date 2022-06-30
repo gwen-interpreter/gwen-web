@@ -1,7 +1,13 @@
+3.20.0
+======
+- Add support for capabilities using W3C protocol extensions
+- Configure and access selenoid capabilities using `selenoid:options` protocol key
+  - Deprecated `gwen.web.capability.enableVideo` setting in favor of `gwen.web.capability.selenoid:options.enableVideo`
+
 3.19.0
 ======
 Jun 28, 2022
-- Update Gwen core from v3.17.1 to v[3.18.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.18.0)
+- Update Gwen core from v3.17.1 to v[3.18.1](https://github.com/gwen-interpreter/gwen/releases/tag/v3.18.1)
   - Add DSL for defining bindings by unix system process
     - `<attribute> <is|will be> defined by unix system process "<expression>"`
   - Dropped DSL for executing delimited unix system process

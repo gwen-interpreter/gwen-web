@@ -33,9 +33,11 @@ import gwen.core.state.EnvState
 import org.openqa.selenium.WindowType
 
 import scala.concurrent.duration._
+import scala.jdk.CollectionConverters._
 import scala.util.chaining._
 
 import java.util.concurrent.TimeUnit
+import org.openqa.selenium.Capabilities
 
 /**
   * A web engine that uses the Selenium web driver
@@ -54,9 +56,9 @@ class WebEngine extends EvalEngine[WebContext] {
   override def init(options: GwenOptions, envState: EnvState): WebContext = {
     WebSettings.check()
     if (options.parallel) {
-      WebSettings.`gwen.web.capabilities`.get("enableVideo").filter(_ == "true") foreach { _ =>
+      if (WebSettings.videoEnabled) {
         logger.info("Disabling video in parallel mode")
-        sys.props.put("gwen.web.capability.enableVideo", "false")
+        sys.props.put(WebSettings.enableVideoKey, "false")
       }
     }
     if (WebSettings.`gwen.web.capture.screenshots.highlighting`) {
