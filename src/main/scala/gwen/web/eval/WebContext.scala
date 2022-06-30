@@ -298,7 +298,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     }
     error match {
       case Some(msg) =>
-        assert(assertion = false, message getOrElse msg)
+        Errors.assertWithError(assertion = false, message, msg)
       case None =>
         if (!polled) {
           result = super.compare(name, expected, actualValue, operator, negate).getOrElse(result)
@@ -308,7 +308,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
             getBinding(name)
           }
         ).map(_.toString).getOrElse(name)
-        assert(result, message getOrElse s"Expected $binding to ${if(negate) "not " else ""}$operator '$expected'${if (operator == ComparisonOperator.be && actualValue == expected) "" else s" but got '$actualValue'"}")
+        Errors.assertWithError(result, message, s"Expected $binding to ${if(negate) "not " else ""}$operator '$expected'${if (operator == ComparisonOperator.be && actualValue == expected) "" else s" but got '$actualValue'"}")
     }
 
   }
@@ -618,7 +618,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
   def checkElementState(binding: LocatorBinding, state: ElementState, negate: Boolean, message: Option[String]): Unit = {
     perform {
       val result = isElementState(binding.jsEquivalent, state, negate)
-      assert(result, message getOrElse s"$binding should${if(negate) " not" else ""} be $state")
+      Errors.assertWithError(result, message, s"$binding should${if(negate) " not" else ""} be $state")
     }
   }
 

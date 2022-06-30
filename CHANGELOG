@@ -1,5 +1,12 @@
 3.20.0
 ======
+Jun 30, 2022
+- Update Gwen core from v3.18.1 to v[3.19.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.19.0)
+  - Add optional `required` attribute to `Examples` tag 
+    - If `true`, raise error if no data is found and tag background steps with `NoData` annotation
+    - If `false` (default), no error is raised
+  - Include deep nested attachments in outlines in html reports
+  - Override assertion exceptions with custom messages if specified
 - Add support for capabilities using W3C protocol extensions
 - Configure and access selenoid capabilities using `selenoid:options` protocol key
   - Deprecated `gwen.web.capability.enableVideo` setting in favor of `gwen.web.capability.selenoid:options.enableVideo`
