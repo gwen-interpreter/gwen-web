@@ -13,10 +13,10 @@ Current Status
 
 [![CI](https://github.com/gwen-interpreter/gwen-web/actions/workflows/ci.yml/badge.svg)](https://github.com/gwen-interpreter/gwen-web/actions/workflows/ci.yml)
 
-[<img width="209" alt="he_badge" src="https://user-images.githubusercontent.com/1369994/177189237-ffe39997-7057-4696-b46b-a7272b6946bf.png">](https://www.lambdatest.com/hyperexecute)
-
 - [Latest release](https://github.com/gwen-interpreter/gwen-web/releases/latest)
 - [Change log](CHANGELOG)
+
+[<img width="209" alt="he_badge" src="https://user-images.githubusercontent.com/1369994/177189237-ffe39997-7057-4696-b46b-a7272b6946bf.png">](https://www.lambdatest.com/hyperexecute)
 
 How it Works?
 -------------
