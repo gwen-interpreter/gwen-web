@@ -5,6 +5,8 @@ I navigate to the <page>
 I navigate to "<url>"
 I scroll to the top of <element>
 I scroll to the bottom of <element>
+I scroll to the top of the page
+I scroll to the bottom of the page
 <element> can be located by id "<expression>"
 <element> can be located by name "<expression>"
 <element> can be located by tag name "<expression>"

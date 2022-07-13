@@ -39,7 +39,7 @@ commons-io                               commons-io                             
 dev.failsafe                             failsafe                                      | 3.2.4        | [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 io.cucumber                              gherkin                                       | 23.0.1       | [MIT License](http://www.opensource.org/licenses/mit-license)
 io.cucumber                              messages                                      | 18.0.0       | [MIT License](http://www.opensource.org/licenses/mit-license)
-io.github.bonigarcia.                    webdrivermanager                              | 5.2.0        | [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+io.github.bonigarcia.                    webdrivermanager                              | 5.2.1        | [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 io.netty                                 netty-buffer                                  | 4.1.78-Final | [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 io.netty                                 netty-codec                                   | 4.1.78-Final | [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 io.netty                                 netty-codec-http                              | 4.1.78-Final | [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)

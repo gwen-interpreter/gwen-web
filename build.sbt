@@ -1,8 +1,8 @@
 enablePlugins(GitVersioning)
 
 // gwen core & web versions
-val gwenVersion = "3.19.0"
-val gwenWebVersion = "3.20.0"
+val gwenVersion = "3.19.1"
+val gwenWebVersion = "3.21.0"
 
 git.baseVersion := gwenWebVersion
 git.useGitDescribe := true
@@ -23,7 +23,7 @@ resolvers ++= Seq(
 
 lazy val projectSettings = Seq(
   name := "gwen-web",
-  description := "Web Automation and Robotics for Gherkin",
+  description := "Declarative web automation & robotics for Gherkin",
   organization := "org.gweninterpreter",
   organizationHomepage := Some(url("https://github.com/gwen-interpreter")),
   startYear := Some(2014),
@@ -49,7 +49,7 @@ lazy val projectSettings = Seq(
 
 lazy val mainDependencies = {
   val selenium = "4.3.0"
-  val driverMgr = "5.2.0"
+  val driverMgr = "5.2.1"
 
   Seq(
     "org.seleniumhq.selenium" % "selenium-java" % selenium,
@@ -78,5 +78,3 @@ Compile / packageBin / mappings ++= Seq(
 )
 
 Test / parallelExecution := false
-Test / fork := true
-Test / envVars := Map("SELENIUM_HUB" -> "selenoid")

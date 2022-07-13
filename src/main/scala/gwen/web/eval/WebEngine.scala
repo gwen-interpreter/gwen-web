@@ -142,6 +142,8 @@ class WebEngine extends EvalEngine[WebContext] {
         new NavigateToPageInScope(page)
       case r"""I navigate to "(.+?)"$url""" =>
         new NavigateToUrl(step.orDocString(url))
+      case r"""I scroll to the (top|bottom)$position of the page""" =>
+        new ScrollPage(ScrollTo.valueOf(position))
       case r"""I scroll to the (top|bottom)$position of (.+?)$element""" =>
         new ScrollToElement(element, ScrollTo.valueOf(position))
       case r"""the url will be defined by (?:property|setting) "(.+?)"$name""" =>

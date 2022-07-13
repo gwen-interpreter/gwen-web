@@ -1074,6 +1074,18 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
   }
 
   /**
+   * Scrolls to the top of bottom of the current page.
+   *
+   * @param scrollTo top or bottom
+   */
+  def scrollPage(scrollTo: ScrollTo): Unit = {
+    scrollTo.match {
+      case ScrollTo.top => executeJS(s"window.scrollTo(0, 0)")
+      case _ => executeJS(s"window.scrollTo(0, document.body.scrollHeight || document.documentElement.scrollHeight);")
+    }
+  }
+
+  /**
     * Resizes the browser window to the given dimensions.
     *
     * @param width the width
