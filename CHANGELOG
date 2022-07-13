@@ -1,7 +1,7 @@
 3.22.1
 ======
 Jul 13, 2022
-- Update generated settings to reject self signed certs in prod enviornment and accept in others
+- Update generated settings to reject self signed certs in prod environment and accept in others
 
 3.22.0
 ======
