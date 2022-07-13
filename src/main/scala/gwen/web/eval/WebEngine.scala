@@ -55,9 +55,9 @@ class WebEngine extends EvalEngine[WebContext] {
     */
   override def init(options: GwenOptions, envState: EnvState): WebContext = {
     WebSettings.check()
-    if (options.parallel) {
+    if (options.parallel || !options.batch) {
       if (WebSettings.videoEnabled) {
-        logger.info("Disabling video in parallel mode")
+        logger.info(s"Disabling video in ${if (options.parallel) "parallel" else "interactive"} mode")
         sys.props.put(WebSettings.enableVideoKey, "false")
       }
     }

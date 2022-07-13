@@ -1,3 +1,8 @@
+3.22.0
+======
+- Add Selenoid UI to generated docker-compose.yml file
+- Disable video in interactive (non batch) mode
+
 3.21.0
 ======
 Jul 13, 2022

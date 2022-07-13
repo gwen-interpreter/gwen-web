@@ -29,6 +29,18 @@ services:
     environment:
       - OVERRIDE_VIDEO_OUTPUT_DIR=$PWD/${gwen.initDir}${slash}output/.video
     command: ["-container-network", "gwen-net", "-video-output-dir", "/opt/selenoid/video"]
+  selenoid-ui:
+    depends_on:
+      - selenoid
+      - $GWEN_BROWSER
+    image: aerokube/selenoid-ui:latest
+    environment:
+      - GWEN_BROWSER
+    networks:
+      - gwen-net
+    ports: 
+      - "8999:8999"
+    command: ["--selenoid-uri", "http://selenoid:4444", "--listen", ":8999"]
   gwen:
     depends_on:
       - selenoid
@@ -49,7 +61,7 @@ services:
     volumes:
       - "$PWD:/project"
     working_dir: /project
-    command: bash -c "yarn install && yarn gwen:selenoid"
+    command: bash -c "yarn install && yarn gwen:selenoid -b"
     networks:
       - gwen-net
 networks:
