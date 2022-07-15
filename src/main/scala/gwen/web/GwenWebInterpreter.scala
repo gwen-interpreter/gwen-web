@@ -64,7 +64,7 @@ object GwenWebInterpreter extends GwenInterpreter(new WebEngine()) with WebProje
         if (envDir.exists && options.settingsFiles.filter(_.getPath.startsWith(s"$baseDir${File.separatorChar}env${File.separatorChar}")).isEmpty) {
           val targetEnv = sys.props.get(`gwen.target.env`).getOrElse(conf.getString(`gwen.target.env`))
           List("conf", "json", "properties") map { confType =>
-            new File(envDir, "$targetEnv.$confType")
+            new File(envDir, s"$targetEnv.$confType")
           } find { conf => 
             conf.exists
           } orElse {
