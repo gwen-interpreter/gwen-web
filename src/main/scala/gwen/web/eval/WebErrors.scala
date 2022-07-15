@@ -25,6 +25,8 @@ import gwen.core.Errors.GwenException
 
 import org.openqa.selenium.Keys
 
+import java.io.File
+
 object WebErrors {
   
     def locatorBindingError(msg: String) = throw new LocatorBindingException(msg)
@@ -40,6 +42,7 @@ object WebErrors {
     def invalidContextActionError(action: ElementAction) = throw new InvalidContextActionException(action)
     def invalidActionError(action: ElementAction) = throw new InvalidActionException(action)
     def invalidSelectorTypeError(selectorType: String) = throw new InvalidSelectorTypeException(selectorType)
+    def multipleBrowserSettingsError(settingsFiles: List[File]) = throw new MultipleBrowserSettingsException(settingsFiles)
 
     /** Thrown when a locator binding error is detected . */
     class LocatorBindingException(msg: String) extends GwenException(msg)
@@ -82,5 +85,8 @@ object WebErrors {
 
     /** Thrown when an invalid selector is detected. */
     class InvalidSelectorTypeException(selectorType: String) extends GwenException(s"Invalid selector type: $selectorType")
+
+    /** Thrown when more than one browser setting file is active.*/
+    class MultipleBrowserSettingsException(settingsFiles: List[File]) extends GwenException(s"Multiple browser settings provided (only 1 expected): ${settingsFiles.mkString(", ")}")
 
 }

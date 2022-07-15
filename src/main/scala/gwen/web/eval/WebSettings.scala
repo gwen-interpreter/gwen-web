@@ -102,8 +102,16 @@ object WebSettings extends LazyLogging {
     * Provides access to the `gwen.target.browser` setting used to set the target browser
     * (default value is `chrome`). Valid values include chrome, firefox, safari, ie, and edge
     */
-  def `gwen.target.browser`: String = {
-    Settings.get("gwen.target.browser", Some("gwen.web.browser"))
+  def `gwen.target.browser`: WebBrowser = {
+    WebBrowser.parse(Settings.get("gwen.target.browser", Some("gwen.web.browser")))
+  }
+
+  /**
+    * Provides access to the `gwen.target.env` setting used to set the target environment
+    * (default value is `local`). Valid values include local, dev, test, prod, or other user defined environment.
+    */
+  def `gwen.target.env`: String = {
+    Settings.get("gwen.target.env")
   }
 
   /**

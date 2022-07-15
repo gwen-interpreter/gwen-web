@@ -17,6 +17,7 @@
 package gwen.web.eval.driver
 
 import gwen.web._
+import gwen.web.eval.WebBrowser
 import gwen.web.eval.WebErrors.NoSuchWindowException
 
 import scala.util.chaining._
@@ -51,35 +52,35 @@ class DriverManagerTest extends BaseTest with Matchers with MockitoSugar with Be
   }
 
   "Firefox setting" should "load firefox driver" in {
-    withSetting("gwen.target.browser", "firefox") {
+    withSetting("gwen.target.browser", WebBrowser.firefox.toString) {
       val manager = newDriverManager()
       manager.withWebDriver { _ should be (mockFirefoxDriver) }
     }
   }
 
   "Chrome setting" should "load chrome driver" in {
-    withSetting("gwen.target.browser", "chrome") {
+    withSetting("gwen.target.browser", WebBrowser.chrome.toString) {
       val manager = newDriverManager()
       manager.withWebDriver { _ should be (mockChromeDriver) }
     }
   }
 
   "IE setting" should "load IE driver" in {
-    withSetting("gwen.target.browser", "ie") {
+    withSetting("gwen.target.browser", WebBrowser.ie.toString) {
       val manager = newDriverManager()
       manager.withWebDriver { _ should be (mockIeDriver) }
     }
   }
 
   "Edge setting" should "load Edge driver" in {
-    withSetting("gwen.target.browser", "edge") {
+    withSetting("gwen.target.browser", WebBrowser.edge.toString) {
       val manager = newDriverManager()
       manager.withWebDriver { _ should be (mockEdgeDriver) }
     }
   }
 
   "Safari setting" should "load safari driver" in {
-    withSetting("gwen.target.browser", "safari") {
+    withSetting("gwen.target.browser", WebBrowser.safari.toString) {
       val manager = newDriverManager()
       manager.withWebDriver { _ should be (mockSafariDriver) }
     }
@@ -87,7 +88,7 @@ class DriverManagerTest extends BaseTest with Matchers with MockitoSugar with Be
 
   "Hub URL setting" should "load remote web driver" in {
     withSetting("gwen.web.remote.url", "http://localhost:44466/wd/hub") {
-      withSetting("gwen.target.browser", "chrome") {
+      withSetting("gwen.target.browser", WebBrowser.chrome.toString) {
         val manager = newDriverManager()
         val driver = manager.withWebDriver { _.asInstanceOf[RemoteWebDriver] }
         driver should be (mockRemoteDriver)

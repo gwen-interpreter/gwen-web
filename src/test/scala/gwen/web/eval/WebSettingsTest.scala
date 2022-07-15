@@ -91,7 +91,8 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
 
   "Default Gwen web settings" should "should load" in {
     Settings.exclusively {
-      WebSettings.`gwen.target.browser` should be ("chrome")
+      WebSettings.`gwen.target.browser` should be (WebBrowser.chrome)
+      WebSettings.`gwen.target.env` should be ("local")
       WebSettings.`gwen.web.authorize.plugins` should be (false)
       WebSettings.`gwen.web.browser.size` should be (None)
       WebSettings.`gwen.web.capabilities`.asMap().isEmpty should be (true)
@@ -193,7 +194,8 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
     RPSettings.`gwen.rp.send.tags` should be (true)
     RPSettings.`gwen.rp.testCaseId.keys` should be (TestCaseIdKeys.`nodePath+params`)
 
-    WebSettings.`gwen.target.browser` should be ("chrome")
+    WebSettings.`gwen.target.browser` should be (WebBrowser.chrome)
+    WebSettings.`gwen.target.env` should be ("local")
 
     WebSettings.`gwen.web.authorize.plugins` should be (false)
     WebSettings.`gwen.web.browser.size` should be (None)
@@ -291,7 +293,8 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
     RPSettings.`gwen.rp.send.tags` should be (true)
     RPSettings.`gwen.rp.testCaseId.keys` should be (TestCaseIdKeys.auto)
 
-    WebSettings.`gwen.target.browser` should be ("chrome")
+    WebSettings.`gwen.target.browser` should be (WebBrowser.chrome)
+    WebSettings.`gwen.target.env` should be ("local")
 
     WebSettings.`gwen.web.authorize.plugins` should be (false)
     WebSettings.`gwen.web.browser.size` should be (None)

@@ -16,6 +16,7 @@
 
 package gwen.web.eval.binding
 
+import gwen.web.eval.WebBrowser
 import gwen.web.eval.WebContext
 import gwen.web.eval.WebErrors._
 import gwen.web.eval.WebSettings
@@ -67,7 +68,7 @@ class LocatorBindingResolver(ctx: WebContext) extends LazyLogging {
               val selectorType = Try(SelectorType.parse(boundValue)) getOrElse {
                 locatorBindingError(s"Unsupported selector type defined for: $name")
               }
-              if (selectorType == SelectorType.xpath && WebSettings.`gwen.target.browser` == "ie" ) {
+              if (selectorType == SelectorType.xpath && WebSettings.`gwen.target.browser` == WebBrowser.ie ) {
                 locatorBindingError("IE does not support XPath selectors")
               }
               val selectorKey = ctx.interpolate(LocatorKey.selectorKey(name, selectorType))

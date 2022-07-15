@@ -19,6 +19,7 @@ package gwen.web.eval.driver
 import gwen.core._
 import gwen.core.state.SensitiveData
 
+import gwen.web.eval.WebBrowser
 import gwen.web.eval.WebSettings
 import gwen.web.eval.WebErrors
 import gwen.web.eval.driver.event.WebSessionEventDispatcher
@@ -137,8 +138,7 @@ class DriverManager() extends LazyLogging {
         case Some(addr) =>
           remoteDriver(addr)
         case None =>
-          val driverName = WebSettings.`gwen.target.browser`.toLowerCase
-          localDriver(driverName)
+          localDriver(WebSettings.`gwen.target.browser`)
       }) tap { driver =>
         eventDispatcher.sessionOpened(driver)
         WebSettings.`gwen.web.browser.size` foreach { case (width, height) =>
@@ -155,14 +155,14 @@ class DriverManager() extends LazyLogging {
 
   private def remoteDriver(addr: String): WebDriver = {
     val capSettings = WebSettings.`gwen.web.capabilities`
-    val browser = (capSettings.asMap.asScala.get("browserName").orElse(capSettings.asMap.asScala.get("browser")).orElse(capSettings.asMap.asScala.get("device")).getOrElse(WebSettings.`gwen.target.browser`)).toString
-    val options = browser.trim.toLowerCase match {
-      case "firefox" => firefoxOptions()
-      case "chrome" => chromeOptions()
-      case "ie" => ieOptions()
-      case "edge" => edgeOptions()
-      case "safari" => safariOptions()
-      case _ => WebErrors.unsupportedWebBrowserError(browser)
+    val browserName = capSettings.asMap.asScala.get("browserName").orElse(capSettings.asMap.asScala.get("browser")).orElse(capSettings.asMap.asScala.get("device")).getOrElse(WebSettings.`gwen.target.browser`).toString.toLowerCase
+    val browser = WebBrowser.parse(browserName)
+    val options = browser match {
+      case WebBrowser.firefox => firefoxOptions()
+      case WebBrowser.chrome => chromeOptions()
+      case WebBrowser.ie => ieOptions()
+      case WebBrowser.edge => edgeOptions()
+      case WebBrowser.safari => safariOptions()
     }
     logger.info(s"Starting remote $browser session${ if(session == "primary") "" else s": $session"}")
     remote(addr, options)
@@ -171,19 +171,18 @@ class DriverManager() extends LazyLogging {
   /**
     * Gets the local web driver for the given name.
     *
-    *  @param driverName the name of the driver to get
+    *  @param browser the target browser
     *  @throws gwen.web.WebErrors.UnsupportedWebDriverException if the given
     *          web driver name is unsupported
     */
-  private def localDriver(driverName: String): WebDriver = {
-    logger.info(s"Starting $driverName browser session${ if(session == "primary") "" else s": $session"}")
-    driverName match {
-      case "firefox" => firefox()
-      case "ie" => ie()
-      case "edge" => edge()
-      case "chrome" => chrome()
-      case "safari" => safari()
-      case _ => WebErrors.unsupportedWebDriverError(driverName)
+  private def localDriver(browser: WebBrowser): WebDriver = {
+    logger.info(s"Starting $browser browser session${ if(session == "primary") "" else s": $session"}")
+    browser match {
+      case WebBrowser.chrome => chrome()
+      case WebBrowser.edge => edge()
+      case WebBrowser.firefox => firefox()
+      case WebBrowser.safari => safari()
+      case WebBrowser.ie => ie()
     }
   }
 
@@ -228,11 +227,11 @@ class DriverManager() extends LazyLogging {
       }
   }
 
-  private def chromeOptions() : ChromeOptions = chromiumOptions("chrome", new ChromeOptions())
+  private def chromeOptions() : ChromeOptions = chromiumOptions(WebBrowser.chrome, new ChromeOptions())
 
-  private def edgeOptions() : EdgeOptions = chromiumOptions("edge", new EdgeOptions())
+  private def edgeOptions() : EdgeOptions = chromiumOptions(WebBrowser.edge, new EdgeOptions())
 
-  private def chromiumOptions[T <: ChromiumOptions[T]](browser: String, options: T): T = {
+  private def chromiumOptions[T <: ChromiumOptions[T]](browser: WebBrowser, options: T): T = {
     WebSettings.`gwen.web.useragent` foreach { agent =>
       logger.info(s"Setting $browser argument: --user-agent=$agent")
       options.addArguments(s"--user-agent=$agent")
@@ -243,16 +242,16 @@ class DriverManager() extends LazyLogging {
     }
     options.addArguments("--enable-automation")
     val browserPath = browser match {
-      case "chrome" => WebSettings.`gwen.web.chrome.path`
-      case "edge" => WebSettings.`gwen.web.edge.path`
+      case WebBrowser.chrome => WebSettings.`gwen.web.chrome.path`
+      case _ => WebSettings.`gwen.web.edge.path`
     }
     browserPath foreach { path =>
       logger.info(s"Setting $browser path: $path")
       options.setBinary(path)
     }
     val browserArgs =  browser match {
-      case "chrome" => WebSettings.`gwen.web.chrome.args`
-      case "edge" => WebSettings.`gwen.web.edge.args`
+      case WebBrowser.chrome => WebSettings.`gwen.web.chrome.args`
+      case _ => WebSettings.`gwen.web.edge.args`
     }
     browserArgs foreach { arg =>
       logger.info(s"Setting $browser argument: $arg")
@@ -266,8 +265,8 @@ class DriverManager() extends LazyLogging {
     }
     val prefs = new java.util.HashMap[String, Object]()
     val browserPrefs = browser match {
-      case "chrome" => WebSettings.`gwen.web.chrome.prefs`
-      case "edge" => WebSettings.`gwen.web.edge.prefs`
+      case WebBrowser.chrome => WebSettings.`gwen.web.chrome.prefs`
+      case _ => WebSettings.`gwen.web.edge.prefs`
     }
     browserPrefs foreach { case (name, value) =>
       logger.info(s"Setting $browser preference: $name=$value")
@@ -283,8 +282,8 @@ class DriverManager() extends LazyLogging {
       options.setExperimentalOption("prefs", prefs)
     }
     val browserExensions = browser match {
-      case "chrome" => WebSettings.`gwen.web.chrome.extensions`
-      case "edge" => WebSettings.`gwen.web.edge.extensions`
+      case WebBrowser.chrome => WebSettings.`gwen.web.chrome.extensions`
+      case _ => WebSettings.`gwen.web.edge.extensions`
     }
     browserExensions tap { extensions =>
       if (extensions.nonEmpty) {
@@ -293,8 +292,8 @@ class DriverManager() extends LazyLogging {
       }
     }
     val mobileSettings = browser match {
-      case "chrome" => WebSettings.`gwen.web.chrome.mobile`
-      case "edge" => WebSettings.`gwen.web.edge.mobile`
+      case WebBrowser.chrome => WebSettings.`gwen.web.chrome.mobile`
+      case _ => WebSettings.`gwen.web.edge.mobile`
     }
     if (mobileSettings.nonEmpty) {
       val mobileEmulation = new java.util.HashMap[String, Object]()

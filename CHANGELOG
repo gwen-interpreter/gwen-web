@@ -1,3 +1,16 @@
+3.23.0
+======
+Jul 14, 2022
+- Add ability to override `gwen.target.env` setting with an environment variable:
+  - `GWEN_ENV=local|dev|test|prod|..` to set target environment
+- Add GWEN_ENV variable to generated docker and Jenkins files
+- Do not allow multiple browser settings files
+- Implicity load default browser and environment settings if not explicitly specified on the command line
+- Enumerate supported browsers with type safe enum
+- Update Gwen core from v3.19.1 to v[3.20.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.20.0)
+  - Drop configurable `gwen.cli.options.conf` setting
+  - Give GWEN_XXX environment variables precedence over settings and system properties
+
 3.22.1
 ======
 Jul 13, 2022
@@ -107,16 +120,16 @@ Jun 19, 2022
   - Add total CSV record count to record descriptor suffix to console report output
   - Ignore empty CSV records
   - Add ability to override the `gwen.web.capability.enableVideo` setting with an environment variable:
-  - Add ability to overrdie `gwen.cli.options.dryRun` setting with an environment variable:
+  - Add ability to override `gwen.cli.options.dryRun` setting with an environment variable:
     - `GWEN_DRY_RUN=true|false`
-  - Add ability to overrdie `gwen.cli.options.parallel` setting with an environment variable:
+  - Add ability to override `gwen.cli.options.parallel` setting with an environment variable:
     - `GWEN_PARALLEL=true|false` to set default `--parallel` option
   - Drop `--parallelFeatures` CLI option and `gwen.cli.options.parallelFeatures` setting
     - Feature or scenarios run in parallel based on `--parallel` option and state level only
   - Log scenario worker thread to console report when running scenarios in parallel
-- Add ability to overrdie `gwen.cli.options.parallel` setting with an environment variable:
+- Add ability to override `gwen.cli.target.browser` setting with an environment variable:
   - `GWEN_BROWSER=chrome|firefox|safari|edge|ie` to set default target browser
-- Add ability to overrdie `gwen.web.browser.headless` setting with an environment variable:
+- Add ability to override `gwen.web.browser.headless` setting with an environment variable:
   - `GWEN_HEADLESS=true|false` to set default headless mode
 - Add `--docker` and `jenkins` options to gwen init do generate docker and Jenkins files
 - Disable video capture if parallel execution mode is enabled

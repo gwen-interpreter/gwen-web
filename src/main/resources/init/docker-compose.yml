@@ -52,6 +52,7 @@ services:
     environment:
       - SELENIUM_HUB=selenoid
       - NO_COLOR=1
+      - GWEN_ENV
       - GWEN_BROWSER
       - GWEN_DRY_RUN
       - GWEN_PARALLEL
