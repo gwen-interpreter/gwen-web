@@ -60,6 +60,7 @@ trait WebProjectInitialiser extends ProjectInitialiser {
         FileIO.copyClasspathTextResourceToFile("/init/env/local.conf", dir, allowReplace = force)
         FileIO.copyClasspathTextResourceToFile("/init/env/prod.conf", dir, allowReplace = force)
         FileIO.copyClasspathTextResourceToFile("/init/env/README.md", dir, allowReplace = force)
+        FileIO.copyClasspathTextResourceToFile("/init/env/staging.conf", dir, allowReplace = force)
         FileIO.copyClasspathTextResourceToFile("/init/env/test.conf", dir, allowReplace = force)
       }
 
@@ -112,6 +113,7 @@ trait WebProjectInitialiser extends ProjectInitialiser {
             |$filler│   ├── local.conf
             |$filler│   ├── prod.conf
             |$filler│   ├── README.md
+            |$filler│   ├── staging.conf
             |$filler│   └── test.conf
             |$filler├── /features           # Features and associative meta
             |$filler│   └── README.md

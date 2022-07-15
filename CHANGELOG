@@ -7,6 +7,7 @@ Jul 14, 2022
 - Do not allow multiple browser settings files
 - Implicity load default browser and environment settings if not explicitly specified on the command line
 - Enumerate supported browsers with type safe enum
+- Introduce staging environment properties in gwen init
 - Update Gwen core from v3.19.1 to v[3.20.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.20.0)
   - Drop configurable `gwen.cli.options.conf` setting
   - Give GWEN_XXX environment variables precedence over settings and system properties

@@ -108,7 +108,7 @@ object WebSettings extends LazyLogging {
 
   /**
     * Provides access to the `gwen.target.env` setting used to set the target environment
-    * (default value is `local`). Valid values include local, dev, test, prod, or other user defined environment.
+    * (default value is `local`). Valid values include local, dev, test, staging, prod, or other user defined environment.
     */
   def `gwen.target.env`: String = {
     Settings.get("gwen.target.env")
