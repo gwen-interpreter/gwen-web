@@ -49,7 +49,8 @@ object GwenWebInterpreter extends GwenInterpreter(new WebEngine()) with WebProje
       val conf =  Settings.BootstrapConf
       val baseDir = sys.props.get("gwen.baseDir").getOrElse(conf.getString("gwen.baseDir"))
       val browserConf = {
-        if (WebBrowser.findSettingsFile(options.settingsFiles).isEmpty) {
+        val browsersDir = new File(baseDir, "browsers")
+        if (browsersDir.exists && WebBrowser.findSettingsFile(options.settingsFiles).isEmpty) {
           val targetBrowser = WebBrowser.parse(sys.props.get(`gwen.target.browser`).getOrElse(conf.getString(`gwen.target.browser`)))
           List("conf", "json", "properties") map { confType =>
             new File(s"$baseDir/browsers/$targetBrowser.$confType")
@@ -59,7 +60,8 @@ object GwenWebInterpreter extends GwenInterpreter(new WebEngine()) with WebProje
         } else None
       }
       val envConf = {
-        if (options.settingsFiles.filter(_.getPath.startsWith(s"$baseDir${File.separatorChar}env${File.separatorChar}")).isEmpty) {
+        val envDir = new File(baseDir, "env")
+        if (envDir.exists && options.settingsFiles.filter(_.getPath.startsWith(s"$baseDir${File.separatorChar}env${File.separatorChar}")).isEmpty) {
           val targetEnv = sys.props.get(`gwen.target.env`).getOrElse(conf.getString(`gwen.target.env`))
           List("conf", "json", "properties") map { confType =>
             new File(s"$baseDir/env/$targetEnv.$confType")
