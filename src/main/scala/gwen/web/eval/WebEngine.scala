@@ -58,7 +58,7 @@ class WebEngine extends EvalEngine[WebContext] {
     if (options.parallel || !options.batch) {
       if (WebSettings.videoEnabled) {
         logger.info(s"Disabling video in ${if (options.parallel) "parallel" else "interactive"} mode")
-        sys.props.put(WebSettings.enableVideoKey, "false")
+        sys.props.put(WebSettings.enableVideoKey1, "false")
       }
     }
     if (WebSettings.`gwen.web.capture.screenshots.highlighting`) {

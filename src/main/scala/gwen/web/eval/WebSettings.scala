@@ -460,9 +460,10 @@ object WebSettings extends LazyLogging {
   }
 
   def videoEnabled: Boolean = {
-    Settings.getBooleanOpt(enableVideoKey, Some("gwen.web.capability.enableVideo")).getOrElse(false)
+    Settings.getBooleanOpt(enableVideoKey1).orElse(Settings.getBooleanOpt(enableVideoKey2)).getOrElse(false)
   }
 
-  val enableVideoKey = "gwen.web.capability.selenoid:options.enableVideo"
+  val enableVideoKey1 = "gwen.web.capabilities.selenoid:options.enableVideo"
+  val enableVideoKey2 = "gwen.web.capability.selenoid:options.enableVideo"
 
 }

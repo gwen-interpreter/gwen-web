@@ -42,7 +42,7 @@ object GwenWebInterpreter extends GwenInterpreter(new WebEngine()) with WebProje
         (`gwen.target.env`, "GWEN_ENV"), 
         (`gwen.target.browser`, "GWEN_BROWSER"), 
         ("gwen.web.browser.headless", "GWEN_HEADLESS"),
-        (WebSettings.enableVideoKey, "GWEN_VIDEO")
+        (WebSettings.enableVideoKey1, "GWEN_VIDEO")
       )
     )
     val opts = if (!options.init) {

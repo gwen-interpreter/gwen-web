@@ -1,6 +1,6 @@
 3.23.0
 ======
-Jul 14, 2022
+Jul 18, 2022
 - Add ability to override `gwen.target.env` setting with an environment variable:
   - `GWEN_ENV=local|dev|test|prod|..` to set target environment
 - Add GWEN_ENV variable to generated docker and Jenkins files
@@ -8,9 +8,11 @@ Jul 14, 2022
 - Implicity load default browser and environment settings if not explicitly specified on the command line
 - Enumerate supported browsers with type safe enum
 - Introduce staging environment properties in gwen init
+- `gwen.web.capability` interchangeable with `gwen.web.capabilities` (latter preferred)
 - Update Gwen core from v3.19.1 to v[3.20.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.20.0)
   - Drop configurable `gwen.cli.options.conf` setting
   - Give GWEN_XXX environment variables precedence over settings and system properties
+  - Cater for settings with multi name-value pairs
 
 3.22.1
 ======
