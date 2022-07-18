@@ -19,14 +19,13 @@ package gwen.web.eval
 import gwen.core._
 
 import com.typesafe.scalalogging.LazyLogging
-import org.openqa.selenium.Capabilities
-import org.openqa.selenium.MutableCapabilities
 
 import scala.jdk.CollectionConverters._
 import scala.util.Try
 import scala.util.chaining._
 
 import java.io.File
+import java.util.HashMap
 
 /**
   * Provides access to gwen web settings defined through system properties loaded
@@ -336,12 +335,12 @@ object WebSettings extends LazyLogging {
    * set in the `gwen.web.capabilities` property with all properties that start with `gwen.web.capability.`.
    * See: https://github.com/SeleniumHQ/selenium/wiki/DesiredCapabilities
    */
-  def `gwen.web.capabilities`: Capabilities = {
+  def `gwen.web.capabilities`: HashMap[String, Any] = {
     getCapabilities(Settings.getMap("gwen.web.capabilities", "gwen.web.capability"))
   }
 
-  private def getCapabilities(input: Map[String, Any]): Capabilities = {
-    input.foldLeft(new MutableCapabilities()) { (acc, entry) => 
+  private def getCapabilities(input: Map[String, Any]): HashMap[String, Any] = {
+    input.foldLeft(new HashMap[String, Any]()) { (acc, entry) => 
       val (name, value) = entry
       name.split("""\.""").toList match {
         case head :: tail if tail.nonEmpty => 
@@ -354,20 +353,20 @@ object WebSettings extends LazyLogging {
     }
   }
 
-  private def addExtensionCapability(key: String, name: String, value: Any, capabilities: MutableCapabilities): Unit = {
-    val caps = Option(capabilities.getCapability(key)).map(_.asInstanceOf[MutableCapabilities]).getOrElse(new MutableCapabilities())
+  private def addExtensionCapability(key: String, name: String, value: Any, capabilities: HashMap[String, Any]): Unit = {
+    val caps = Option(capabilities.get(key)).map(_.asInstanceOf[HashMap[String, Any]]).getOrElse(new HashMap[String, Any]())
     addCapability(name, value, caps)
-    capabilities.setCapability(key, getCapabilities(caps.asMap.asScala.toMap))
+    capabilities.put(key, getCapabilities(caps.asScala.toMap))
   }
 
-  private def addCapability(name: String, value: Any, capabilities: MutableCapabilities): Unit = {
+  private def addCapability(name: String, value: Any, capabilities: HashMap[String, Any]): Unit = {
     def strValue = String.valueOf(value).trim
     try {
-      capabilities.setCapability(name, Integer.valueOf(strValue))
+      capabilities.put(name, Integer.valueOf(strValue))
     } catch {
       case _: Throwable =>
-        if (strValue.matches("(true|false)")) capabilities.setCapability(name, java.lang.Boolean.valueOf(strValue))
-        else capabilities.setCapability(name, strValue)
+        if (strValue.matches("(true|false)")) capabilities.put(name, java.lang.Boolean.valueOf(strValue))
+        else capabilities.put(name, strValue)
     }
   }
 

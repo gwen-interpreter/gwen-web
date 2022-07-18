@@ -154,8 +154,8 @@ class DriverManager() extends LazyLogging {
   }
 
   private def remoteDriver(addr: String): WebDriver = {
-    val capSettings = WebSettings.`gwen.web.capabilities`
-    val browserName = capSettings.asMap.asScala.get("browserName").orElse(capSettings.asMap.asScala.get("browser")).orElse(capSettings.asMap.asScala.get("device")).getOrElse(WebSettings.`gwen.target.browser`).toString.toLowerCase
+    val capSettings = WebSettings.`gwen.web.capabilities`.asScala
+    val browserName = capSettings.get("browserName").orElse(capSettings.get("browser")).orElse(capSettings.get("device")).getOrElse(WebSettings.`gwen.target.browser`).toString.toLowerCase
     val browser = WebBrowser.parse(browserName)
     val options = browser match {
       case WebBrowser.firefox => firefoxOptions()
@@ -333,7 +333,7 @@ class DriverManager() extends LazyLogging {
 
   private def setCapabilities(capabilities: MutableCapabilities): Capabilities = {
     capabilities tap { caps =>
-      WebSettings.`gwen.web.capabilities`.asMap.asScala foreach { case (name, value) =>
+      WebSettings.`gwen.web.capabilities`.asScala foreach { case (name, value) =>
         logger.info(s"Setting web capability: $name=$value")
         caps.setCapability(name, value)
       }
