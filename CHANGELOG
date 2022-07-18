@@ -1,7 +1,7 @@
 3.23.1
 ======
 Jul 18, 2022
-- Use HashMap instead of MutableCapabilities for protocl extension options
+- Use HashMap instead of MutableCapabilities for protocol extension options
 
 3.23.0
 ======
