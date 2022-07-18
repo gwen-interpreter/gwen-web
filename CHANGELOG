@@ -5,7 +5,7 @@ Jul 18, 2022
   - `GWEN_ENV=local|dev|test|prod|..` to set target environment
 - Add GWEN_ENV variable to generated docker and Jenkins files
 - Do not allow multiple browser settings files
-- Implicity load default browser and environment settings if not explicitly specified on the command line
+- Implicitly load default browser and environment settings if not explicitly specified on the command line
 - Enumerate supported browsers with type safe enum
 - Introduce staging environment properties in gwen init
 - `gwen.web.capability` interchangeable with `gwen.web.capabilities` (latter preferred)
