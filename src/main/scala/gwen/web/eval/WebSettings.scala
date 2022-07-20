@@ -19,12 +19,15 @@ package gwen.web.eval
 import gwen.core._
 
 import com.typesafe.scalalogging.LazyLogging
+import org.openqa.selenium.Capabilities
+import org.openqa.selenium.MutableCapabilities
 
 import scala.jdk.CollectionConverters._
 import scala.util.Try
 import scala.util.chaining._
 
 import java.io.File
+import java.util.ArrayList
 import java.util.HashMap
 
 /**
@@ -335,38 +338,50 @@ object WebSettings extends LazyLogging {
    * set in the `gwen.web.capabilities` property with all properties that start with `gwen.web.capability.`.
    * See: https://github.com/SeleniumHQ/selenium/wiki/DesiredCapabilities
    */
-  def `gwen.web.capabilities`: HashMap[String, Any] = {
-    getCapabilities(Settings.getMap("gwen.web.capabilities", "gwen.web.capability"))
+  def `gwen.web.capabilities`: Capabilities = {
+    new MutableCapabilities(getCapabilities(Settings.getMap("gwen.web.capabilities", "gwen.web.capability"), new HashMap[String, Any]()))
   }
 
-  private def getCapabilities(input: Map[String, Any]): HashMap[String, Any] = {
-    input.foldLeft(new HashMap[String, Any]()) { (acc, entry) => 
-      val (name, value) = entry
+  private def getCapabilities(input: Map[String, Any], caps: HashMap[String, Any]): HashMap[String, Any] = {
+    input foreach { (name, value) => 
       name.split("""\.""").toList match {
         case head :: tail if tail.nonEmpty => 
           val unqualifiedName = tail.mkString(".")
-          addExtensionCapability(head, unqualifiedName, value, acc)
+          addExtensionCapability(head, unqualifiedName, value, caps)
         case _ => 
-          addCapability(name, value, acc)
+          addCapability(name, value, caps)
       }
-      acc
     }
+    caps
   }
 
-  private def addExtensionCapability(key: String, name: String, value: Any, capabilities: HashMap[String, Any]): Unit = {
-    val caps = Option(capabilities.get(key)).map(_.asInstanceOf[HashMap[String, Any]]).getOrElse(new HashMap[String, Any]())
-    addCapability(name, value, caps)
-    capabilities.put(key, getCapabilities(caps.asScala.toMap))
+  private def addExtensionCapability(key: String, name: String, value: Any, caps: HashMap[String, Any]): Unit = {
+    val extCaps = Option(caps.get(key)).map(_.asInstanceOf[HashMap[String, Any]]).getOrElse(new HashMap[String, Any]())
+    addCapability(name, value, extCaps)
+    caps.put(key, getCapabilities(extCaps.asScala.toMap, extCaps))
+    if (name.contains(".")) extCaps.remove(name)
   }
 
-  private def addCapability(name: String, value: Any, capabilities: HashMap[String, Any]): Unit = {
-    def strValue = String.valueOf(value).trim
-    try {
-      capabilities.put(name, Integer.valueOf(strValue))
-    } catch {
-      case _: Throwable =>
-        if (strValue.matches("(true|false)")) capabilities.put(name, java.lang.Boolean.valueOf(strValue))
-        else capabilities.put(name, strValue)
+  private def addCapability(name: String, value: Any, caps: HashMap[String, Any]): Unit = {
+    val strValue = String.valueOf(value).trim
+    val (entryName, isListEntry) = name match {
+        case r"""(.*)$entryName\.\d+""" => (entryName, true)
+        case _ => (name, false)
+      }
+    if (isListEntry) {
+      val list = Option(caps.get(entryName)).map(_.asInstanceOf[ArrayList[String]]).getOrElse(new ArrayList[String]())
+      list.add(strValue)
+      caps.put(entryName, list)
+    } else {
+      if (!caps.containsKey(entryName)) {
+        try {
+          caps.put(entryName, Integer.valueOf(strValue))
+        } catch {
+          case _: Throwable =>
+            if (strValue.matches("(true|false)")) caps.put(entryName, java.lang.Boolean.valueOf(strValue))
+            else caps.put(entryName, strValue)
+        }
+      }
     }
   }
 

@@ -154,8 +154,8 @@ class DriverManager() extends LazyLogging {
   }
 
   private def remoteDriver(addr: String): WebDriver = {
-    val capSettings = WebSettings.`gwen.web.capabilities`.asScala
-    val browserName = capSettings.get("browserName").orElse(capSettings.get("browser")).orElse(capSettings.get("device")).getOrElse(WebSettings.`gwen.target.browser`).toString.toLowerCase
+    val caps = WebSettings.`gwen.web.capabilities`
+    val browserName = Option(caps.getBrowserName).map(_.trim).filter(_.nonEmpty).getOrElse(WebSettings.`gwen.target.browser`.toString).toLowerCase
     val browser = WebBrowser.parse(browserName)
     val options = browser match {
       case WebBrowser.firefox => firefoxOptions()
@@ -249,7 +249,7 @@ class DriverManager() extends LazyLogging {
       logger.info(s"Setting $browser path: $path")
       options.setBinary(path)
     }
-    val browserArgs =  browser match {
+    val browserArgs = browser match {
       case WebBrowser.chrome => WebSettings.`gwen.web.chrome.args`
       case _ => WebSettings.`gwen.web.edge.args`
     }
@@ -330,21 +330,22 @@ class DriverManager() extends LazyLogging {
   private def safariOptions(): SafariOptions = new SafariOptions() tap { options =>
     setCapabilities(options)
   }
-
-  private def setCapabilities(capabilities: MutableCapabilities): Capabilities = {
-    capabilities tap { caps =>
-      WebSettings.`gwen.web.capabilities`.asScala foreach { case (name, value) =>
-        logger.info(s"Setting web capability: $name=$value")
-        caps.setCapability(name, value)
-      }
+  
+  private def setCapabilities(capabilities: MutableCapabilities): Unit = {
+    WebSettings.`gwen.web.capabilities`.asMap().asScala foreach { case (name, value) =>
+      setCapability(name, value, capabilities)
     }
   }
 
-  private def setDefaultCapability(name: String, value: Any, capabilities: MutableCapabilities): Unit = {
-    if (capabilities.getCapability(name) == null) {
-      logger.info(s"Setting web capability: $name=$value")
-      capabilities.setCapability(name, value)
+  private def setDefaultCapability(name: String, value: Any, caps: MutableCapabilities): Unit = {
+    if (caps.getCapability(name) == null) {
+      setCapability(name, value, caps)
     }
+  }
+
+  private def setCapability(name: String, value: Any, caps: MutableCapabilities): Unit = {
+    logger.info(s"Setting web capability: $name=$value")
+    caps.setCapability(name, value)
   }
 
   private [eval] def chrome(): WebDriver = {
