@@ -318,9 +318,9 @@ class WebEngine extends EvalEngine[WebContext] {
         new ResizeWindow(width.toInt, height.toInt)
       case r"""I maximi(?:z|s)e the window""" =>
         new MaximiseWindow()
-      case r"""I append "(.+?)"$text to (.+?)$element""" =>
+      case r"""I append "(.+?)"$text to (.+?)$element""" if !element.endsWith("file") =>
         new AppendTextToElement(element, text, false)
-      case r"""I append (.+?)$attribute to (.+?)$element""" =>
+      case r"""I append (.+?)$attribute to (.+?)$element""" if !element.endsWith("file") =>
         new AppendTextToElement(element, attribute, true)
       case r"I insert a new line in (.+?)$element" =>
         new AppendNewLineToElement(element)

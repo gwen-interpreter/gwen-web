@@ -63,6 +63,7 @@ class WebDslTest extends BaseTest with Matchers with MockitoSugar {
     envState.scopes.set("<context>/locator", "id")
     envState.scopes.set("<context>/locator/id", "id")
     envState.scopes.set("<filepath>/file", "file.txt")
+    envState.scopes.set("<filepathRef>", "file.txt")
     envState.scopes.set("<elements>/locator", "css selector")
     envState.scopes.set("<elements>/locator/css selector", "expression")
     envState.scopes.set("<textRef>", "source")

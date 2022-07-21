@@ -1,3 +1,15 @@
+3.25.0
+======
+Jul 21, 2022
+- Update Gwen core from v3.21.0 to v[3.22.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.22.0)
+  - Add more DSLs to support writing to files
+    - `I <write|append> "<text>" to "<filepath>" file`
+    - `I <write|append> <textRef> to "<filepath>" file`
+    - `I <write|append> new line to "<filepath>" file`
+    - `I <write|append> "<text>" to <filepathRef> file`
+    - `I <write|append> <textRef> to <filepathRef> file`
+    - `I <write|append> new line to <filepathRef> file`
+    
 3.24.0
 ======
 Jul 20, 2022
