@@ -1,6 +1,14 @@
 3.26.0
 ======
 Jul 26, 2022
+- Add new DSLs to compare blank strings
+  - `the page title should[ not] be blank`
+  - `the <alert|confirmation> popup message should[ not] be blank`
+  - `<textRef> should[ not] be blank`
+  - `<dropdown> <text|value> should[ not] be blank`
+  - `the current URL should[ not] be blank`
+  - `<jsonRef> at json xpath "<path>" should[ not] be blank`
+  - `<xmlRef> at xpath "<path>" should[ not] be blank`
 - Update Gwen core from v3.22.0 to v[3.23.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.23.0)
   - Introduce `gwen.auto.trim.data.csv=true|false` to control whether or not to trim csv data (default is `false`)
 

@@ -52,7 +52,7 @@ class CompareValueOrSelectionToValue(element: String, selection: Option[Dropdown
           result match {
             case Success(assertion) =>
               val binding = ctx.getLocatorBinding(element, optional = true)
-              Errors.assertWithError(assertion, message, s"Expected ${binding.map(_.toString).getOrElse(element)} to ${if(negate) "not " else ""}$operator '$expected'${if (operator == ComparisonOperator.be && actualValue == expected) "" else s" but got '$actualValue'"}")
+              Errors.assertWithError(assertion, message, s"Expected ${binding.map(_.toString).getOrElse(element)} to ${if(negate) "not " else ""}$operator ${if (expected.isEmpty()) "blank" else s"'$expected'"}${if (operator == ComparisonOperator.be && actualValue == expected) "" else s" but got '$actualValue'"}")
             case Failure(error) =>
               Errors.assertWithError(assertion = false, message, error.getMessage)
           }

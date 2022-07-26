@@ -665,6 +665,7 @@ I scroll to the bottom of the page
 <element> can be located at index <index> by partial link text "<expression>"
 <element> can be located at index <index> by javascript "<expression>"
 <element> can be located at index <index> by js "<expression>"
+the page title should be blank
 the page title should be "<expression>"
 the page title should contain "<expression>"
 the page title should start with "<expression>"
@@ -674,6 +675,7 @@ the page title should match xpath "<expression>"
 the page title should match json path "<expression>"
 the page title should match template "<expression>"
 the page title should match template file "<filepath>"
+the page title should not be blank
 the page title should not be "<expression>"
 the page title should not contain "<expression>"
 the page title should not start with "<expression>"
@@ -697,6 +699,7 @@ the page title should not end with <expressionRef>
 the page title should not match regex <expressionRef>
 the page title should not match xpath <expressionRef>
 the page title should not match json path <expressionRef>
+the alert popup message should be blank
 the alert popup message should be "<expression>"
 the alert popup message should contain "<expression>"
 the alert popup message should start with "<expression>"
@@ -706,6 +709,7 @@ the alert popup message should match xpath "<expression>"
 the alert popup message should match json path "<expression>"
 the alert popup message should match template "<expression>"
 the alert popup message should match template file "<filepath>"
+the alert popup message should not be blank
 the alert popup message should not be "<expression>"
 the alert popup message should not contain "<expression>"
 the alert popup message should not start with "<expression>"
@@ -729,6 +733,7 @@ the alert popup message should not end with <expressionRef>
 the alert popup message should not match regex <expressionRef>
 the alert popup message should not match xpath <expressionRef>
 the alert popup message should not match json path <expressionRef>
+the confirmation popup message should be blank
 the confirmation popup message should be "<expression>"
 the confirmation popup message should contain "<expression>"
 the confirmation popup message should start with "<expression>"
@@ -738,6 +743,7 @@ the confirmation popup message should match xpath "<expression>"
 the confirmation popup message should match json path "<expression>"
 the confirmation popup message should match template "<expression>"
 the confirmation popup message should match template file "<filepath>"
+the confirmation popup message should not be blank
 the confirmation popup message should not be "<expression>"
 the confirmation popup message should not contain "<expression>"
 the confirmation popup message should not start with "<expression>"
@@ -777,6 +783,7 @@ the confirmation popup message should not match json path <expressionRef>
 <element> should not be unticked
 <element> should not be enabled
 <element> should not be disabled
+<reference> should be blank
 <reference> should be "<expression>"
 <reference> should contain "<expression>"
 <reference> should start with "<expression>"
@@ -786,6 +793,7 @@ the confirmation popup message should not match json path <expressionRef>
 <reference> should match json path "<expression>"
 <reference> should match template "<expression>"
 <reference> should match template file "<filepath>"
+<reference> should not be blank
 <reference> should not be "<expression>"
 <reference> should not contain "<expression>"
 <reference> should not start with "<expression>"
@@ -809,6 +817,7 @@ the confirmation popup message should not match json path <expressionRef>
 <reference> should not match regex <expressionRef>
 <reference> should not match xpath <expressionRef>
 <reference> should not match json path <expressionRef>
+<dropdown> text should be blank
 <dropdown> text should be "<expression>"
 <dropdown> text should contain "<expression>"
 <dropdown> text should start with "<expression>"
@@ -818,6 +827,7 @@ the confirmation popup message should not match json path <expressionRef>
 <dropdown> text should match json path "<expression>"
 <dropdown> text should match template "<expression>"
 <dropdown> text should match template file "<filepath>"
+<dropdown> text should not be blank
 <dropdown> text should not be "<expression>"
 <dropdown> text should not contain "<expression>"
 <dropdown> text should not start with "<expression>"
@@ -841,6 +851,7 @@ the confirmation popup message should not match json path <expressionRef>
 <dropdown> text should not match regex <expressionRef>
 <dropdown> text should not match xpath <expressionRef>
 <dropdown> text should not match json path <expressionRef>
+<dropdown> value should be blank
 <dropdown> value should be "<expression>"
 <dropdown> value should contain "<expression>"
 <dropdown> value should start with "<expression>"
@@ -850,6 +861,7 @@ the confirmation popup message should not match json path <expressionRef>
 <dropdown> value should match json path "<expression>"
 <dropdown> value should match template "<expression>"
 <dropdown> value should match template file "<filepath>"
+<dropdown> value should not be blank
 <dropdown> value should not be "<expression>"
 <dropdown> value should not contain "<expression>"
 <dropdown> value should not start with "<expression>"
@@ -873,6 +885,7 @@ the confirmation popup message should not match json path <expressionRef>
 <dropdown> value should not match regex <expressionRef>
 <dropdown> value should not match xpath <expressionRef>
 <dropdown> value should not match json path <expressionRef>
+the current URL should be blank
 the current URL should be "<expression>"
 the current URL should contain "<expression>"
 the current URL should start with "<expression>"
@@ -880,6 +893,7 @@ the current URL should end with "<expression>"
 the current URL should match regex "<expression>"
 the current URL should match template "<expression>"
 the current URL should match template file "<filepath>"
+the current URL should not be blank
 the current URL should not be "<expression>"
 the current URL should not contain "<expression>"
 the current URL should not start with "<expression>"
@@ -1355,20 +1369,23 @@ I maximise the window
 <step> for each <element> in <elements>
 <step> for each data record
 <name> should be absent
-<jsonRef> at xpath "<path>" should be "<expression>"
-<jsonRef> at xpath "<path>" should contain "<expression>"
-<jsonRef> at xpath "<path>" should start with "<expression>"
-<jsonRef> at xpath "<path>" should end with "<expression>"
-<jsonRef> at xpath "<path>" should match regex "<expression>"
-<jsonRef> at xpath "<path>" should match template "<expression>"
-<jsonRef> at xpath "<path>" should match template file "<filepath>"
-<jsonRef> at xpath "<path>" should not be "<expression>"
-<jsonRef> at xpath "<path>" should not contain "<expression>"
-<jsonRef> at xpath "<path>" should not start with "<expression>"
-<jsonRef> at xpath "<path>" should not end with "<expression>"
-<jsonRef> at xpath "<path>" should not match regex "<expression>"
-<jsonRef> at xpath "<path>" should not match template "<expression>"
-<jsonRef> at xpath "<path>" should not match template file "<filepath>"
+<jsonRef> at json path "<path>" should be blank
+<jsonRef> at json path "<path>" should be "<expression>"
+<jsonRef> at json path "<path>" should contain "<expression>"
+<jsonRef> at json path "<path>" should start with "<expression>"
+<jsonRef> at json path "<path>" should end with "<expression>"
+<jsonRef> at json path "<path>" should match regex "<expression>"
+<jsonRef> at json path "<path>" should match template "<expression>"
+<jsonRef> at json path "<path>" should match template file "<filepath>"
+<jsonRef> at json path "<path>" should not be blank
+<jsonRef> at json path "<path>" should not be "<expression>"
+<jsonRef> at json path "<path>" should not contain "<expression>"
+<jsonRef> at json path "<path>" should not start with "<expression>"
+<jsonRef> at json path "<path>" should not end with "<expression>"
+<jsonRef> at json path "<path>" should not match regex "<expression>"
+<jsonRef> at json path "<path>" should not match template "<expression>"
+<jsonRef> at json path "<path>" should not match template file "<filepath>"
+<xmlRef> at xpath "<path>" should be blank
 <xmlRef> at xpath "<path>" should be "<expression>"
 <xmlRef> at xpath "<path>" should contain "<expression>"
 <xmlRef> at xpath "<path>" should start with "<expression>"
@@ -1376,6 +1393,7 @@ I maximise the window
 <xmlRef> at xpath "<path>" should match regex "<expression>"
 <xmlRef> at xpath "<path>" should match template "<expression>"
 <xmlRef> at xpath "<path>" should match template file "<filepath>"
+<xmlRef> at xpath "<path>" should not be blank
 <xmlRef> at xpath "<path>" should not be "<expression>"
 <xmlRef> at xpath "<path>" should not contain "<expression>"
 <xmlRef> at xpath "<path>" should not start with "<expression>"
