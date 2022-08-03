@@ -53,11 +53,11 @@ Feature: TodoMVC meta
      Then I switch to session 1
 
   @StepDef
-  @Examples(file="src/test/features-data/TodoItems1.csv",where="Status=pending")
-  @Examples("src/test/features-data/TodoItems2.csv")
+  @Examples(file="src/test/features-data/TodoItems1.csv",prefix="input_",where="'${input_Status}'=='pending'")
+  @Examples(file="src/test/features-data/TodoItems2.csv",prefix="input_")
   @Action
   Scenario Outline: I load items from CSV files
-     When I add a <Status> "<Item>" item
+     When I add a <input_Status> "<input_Item>" item
 
   @StepDef
   @Examples("src/test/features-data/TodoItems3.csv")

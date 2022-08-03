@@ -1,3 +1,10 @@
+3.27.0
+======
+Aug 3, 2022
+- Update Gwen core from v3.23.0 to v[3.24.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.24.0)
+  - Add configurable name `prefix` to `@Examples` annotation
+  - Make `where` filter in `@Examples` annotation a JavaScript expression
+
 3.26.0
 ======
 Jul 26, 2022
