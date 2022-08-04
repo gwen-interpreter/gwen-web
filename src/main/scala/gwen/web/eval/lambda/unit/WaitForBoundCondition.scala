@@ -26,13 +26,14 @@ import gwen.core.node.GwenNode
 import gwen.core.node.gherkin.Step
 
 import scala.util.chaining._
+import gwen.web.eval.WebSettings
 
 class WaitForBoundCondition(condition: String, delayMsecs: Option[Long], timeoutSecs: Option[Long]) extends UnitStep[WebContext] {
 
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     step tap { _ =>
       checkStepRules(step, BehaviorType.Action, ctx)
-      val jsCondition = JSCondition(condition, false, ctx)
+      val jsCondition = JSCondition(condition, false, WebSettings.`gwen.web.wait.seconds`, ctx)
       ctx.waitUntil(delayMsecs, timeoutSecs, s"waiting for true return from JS condition: ${jsCondition.name}") {
         jsCondition.evaluate()
       }

@@ -335,6 +335,8 @@ class WebEngine extends EvalEngine[WebContext] {
     }
   }
   
+  override def defaultConditionTimeoutSecs: Long = WebSettings.`gwen.web.wait.seconds`
+
   override def defaultRepeatDelay: Duration = {
     val waitSecs = WebSettings.`gwen.web.wait.seconds` 
     if (waitSecs > 9 && waitSecs % 10 == 0) Duration(waitSecs / 10, SECONDS) else Duration(waitSecs * 100, MILLISECONDS)

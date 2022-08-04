@@ -252,7 +252,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
 
     // wait for javascript post condition if one is configured for this action
     scopes.getOpt(s"$element/$action/condition") foreach { condition =>
-      val jsCondition = JSCondition(condition, false, this)
+      val jsCondition = JSCondition(condition, false, WebSettings.`gwen.web.wait.seconds`, this)
       logger.info(s"waiting until ${jsCondition.name} (post-$action condition)")
       waitUntil(s"waiting for true return from JS conditioon: ${jsCondition.name}") {
         jsCondition.evaluate()
