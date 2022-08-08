@@ -1,3 +1,9 @@
+3.28.1
+======
+Aug 9, 2022
+- Update Gwen core from v3.25.0 to v[3.25.1](https://github.com/gwen-interpreter/gwen/releases/tag/v3.25.1)
+  - Add breakpoint indicator on REPL prompt
+
 3.28.0
 ======
 Aug 8, 2022
