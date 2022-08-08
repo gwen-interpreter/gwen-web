@@ -1,3 +1,10 @@
+3.27.1
+======
+Aug 8, 2022
+- Update Gwen core from v3.24.1 to v[3.24.2](https://github.com/gwen-interpreter/gwen/releases/tag/v3.24.2)
+  - Preserve table binding name when reporting on `Examples` `where` filter 
+  - Do not interpolate step message with `NoData` annotation
+
 3.27.0
 ======
 Aug 5, 2022
