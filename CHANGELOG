@@ -3,6 +3,8 @@
 Aug 9, 2022
 - Update Gwen core from v3.25.1 to v[3.25.2](https://github.com/gwen-interpreter/gwen/releases/tag/v3.25.2)
   - Resolve parameters when evaluating `where` filters in `Examples` annotations
+- Update webdrivermanager from v5.2.1 to v5.2.3
+
 
 3.28.1
 ======
