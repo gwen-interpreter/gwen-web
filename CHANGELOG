@@ -1,3 +1,9 @@
+3.28.2
+======
+Aug 9, 2022
+- Update Gwen core from v3.25.1 to v[3.25.2](https://github.com/gwen-interpreter/gwen/releases/tag/v3.25.2)
+  - Resolve parameters when evaluating `where` filters in `Examples` annotations
+
 3.28.1
 ======
 Aug 9, 2022
