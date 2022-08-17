@@ -175,7 +175,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
         case Success(value) => value
         case Failure(e) => e match {
           case _: UnboundAttributeException =>
-            Try(getLocatorBinding(name).selectors.map(_.expression).mkString(",")).getOrElse(unboundAttributeError(name))
+            Try(getLocatorBinding(name).selectors.map(_.expression).mkString(",")).getOrElse(unboundAttributeError(name, e))
           case _ => throw e
         }
       }

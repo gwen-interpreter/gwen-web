@@ -1369,6 +1369,8 @@ I maximise the window
 <step> for each <element> in <elements>
 <step> for each data record
 <name> should be absent
+<name> should be defined
+<name> should not be defined
 <jsonRef> at json path "<path>" should be blank
 <jsonRef> at json path "<path>" should be "<expression>"
 <jsonRef> at json path "<path>" should contain "<expression>"

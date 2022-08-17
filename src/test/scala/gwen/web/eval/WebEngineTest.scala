@@ -1811,7 +1811,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
   }
 
   "<attribute> should be absent" should "evaluate" in {
-    doThrow(new Errors.UnboundAttributeException("<attribute>", None)).when(ctx).getBoundReferenceValue("<attribute>")
+    doThrow(new Errors.UnboundAttributeException("<attribute>", None, None)).when(ctx).getBoundReferenceValue("<attribute>")
     evaluate("<attribute> should be absent")
   }
 

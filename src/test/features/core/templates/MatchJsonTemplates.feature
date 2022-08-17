@@ -53,7 +53,9 @@ Feature: Match and extract JSON templates
      When I capture my value as contents
      Then contents should match template "{"id":!{},"category":{"name":"pet"},"name":"@{pet name}","status":"${my pet status}"}"
       And category name should be absent
+      And category name should not be defined
       And pet id should be absent
+      And pet id should not be defined
       And pet name should be "tiger"
 
   Scenario: Match dynamic multi line JSON template (2 extracts, 1 ignore, 1 inject)

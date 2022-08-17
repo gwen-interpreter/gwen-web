@@ -1,3 +1,13 @@
+3.29.0
+======
+Aug 17, 2022
+- Update Gwen core from v3.25.2 to v[3.26.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.26.0)
+  - Include root cause in nested unboud attribute errors
+  - Throw root cause instead of overriding error message when exceptions occur during assertion checks
+   Add new DSLs for checking presence or absence of bindings
+    - `<name> should be defined`
+    - `<name> should not be defined`
+
 3.28.3
 ======
 Aug 10, 2022
