@@ -1,3 +1,9 @@
+3.29.1
+======
+Aug 23, 2022
+- Update Gwen core from v3.26.0 to v[3.26.1](https://github.com/gwen-interpreter/gwen/releases/tag/v3.26.1)
+  - Report Boolean type error if a conditional returns a non boolean value
+
 3.29.0
 ======
 Aug 17, 2022
