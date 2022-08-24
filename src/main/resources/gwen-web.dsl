@@ -1471,3 +1471,7 @@ I capture the similarity score of <textRef> compared to "<text>" ignoring case a
 I capture the similarity score of <textRef1> compared to <textRef2> ignoring case as <name>
 I capture the similarity score of <textRef> compared to "<text>" ignoring case
 I capture the similarity score of <textRef1> compared to <textRef2> ignoring case
+I lookup <name> in the "<csvFilepath>" file where "<predicate>"
+I lookup <name> in <csvFilepathRef> file where "<predicate>"
+I lookup <column> in the "<csvFilepath>" file as <name> where "<predicate>"
+I lookup <column> in <csvFilepathRef> file as <name> where "<predicate>"

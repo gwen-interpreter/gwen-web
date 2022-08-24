@@ -1,3 +1,13 @@
+3.30.0
+======
+Aug 24, 2022
+- Update Gwen core from v3.26.1 to v[3.27.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.27.0)
+  - Introduce CSV lookup DSLs:
+    - `I lookup <name> in the "<filepath>" file where "<predicate>"`
+    - `I lookup <name> in <filepathRef> file where "<predicate>"`
+    - `I lookup <column> in the "<filepath>" file as <name> where "<predicate>"`
+    - `I lookup <column> in <filepathRef> file as <name> where "<predicate>"`
+
 3.29.1
 ======
 Aug 23, 2022
