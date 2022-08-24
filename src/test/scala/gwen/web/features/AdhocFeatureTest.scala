@@ -17,7 +17,7 @@ package gwen.web.features
 
 class AdhocFeatureTest extends BaseFeatureTest {
 
-  val feature = "src/test/features/lookup/CSVLookup.feature"
+  val feature = "src/test/features/lookup/StateCodeLookup.feature"
 
   s"Feature should" should "execute" in {
     evaluate(
