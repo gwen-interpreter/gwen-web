@@ -68,11 +68,11 @@ object WebErrors {
 
     /** Thrown when a web element cannot be interacted with. */
     class WebElementNotInteractableException(binding: LocatorBinding, cause: Throwable)
-      extends NotFoundOrInteractableException(s"Could not interact with element: $binding", cause)
+      extends NotFoundOrInteractableException(s"Could not interact with ${binding.displayName}", cause)
 
     /** Thrown when a web element cannot be located. */
     class WebElementNotFoundException(binding: LocatorBinding, cause: Throwable)
-      extends NotFoundOrInteractableException(s"Could not locate element: $binding", cause)
+      extends NotFoundOrInteractableException(s"Could not locate ${binding.displayName}", cause)
     
     /** Thrown when an invalid click action is detected. */
     class InvalidClickActionException(action: ElementAction) extends GwenException(s"Invalid click action: $action (only ${ElementAction.click}, ${ElementAction.`right click`}, or ${ElementAction.`double click`} supported)")

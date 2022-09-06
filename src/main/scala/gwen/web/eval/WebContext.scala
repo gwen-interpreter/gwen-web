@@ -307,7 +307,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
           getLocatorBinding(name.substring(0, name.length - nameSuffix.map(_.length).getOrElse(0)), optional = true) getOrElse {
             getBinding(name)
           }
-        ).map(_.toString).getOrElse(name)
+        ).map(_.displayName).getOrElse(name)
         Errors.assertWithError(result, message, s"Expected $binding to ${if(negate) "not " else ""}$operator ${if (expected.isEmpty()) "blank" else s"'$expected'"}${if (operator == ComparisonOperator.be && actualValue == expected) "" else s" but got '$actualValue'"}")
     }
 
@@ -352,7 +352,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     * @param binding the locator binding
     */
   def locateAndHighlight(binding: LocatorBinding): Unit = {
-    withDriverAndElement(binding, s"trying to locate $binding") { (driver, webElement) =>
+    withDriverAndElement(binding, s"trying to locate ${binding.displayName}") { (driver, webElement) =>
       createActions(driver).moveToElement(webElement).perform()
     }
   }
@@ -461,7 +461,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
   /** Captures an element screenshot and adds it to the attachments list. */
   def captureElementScreenshot(binding: LocatorBinding, name: String = "Element Screenshot"): Option[File] = {
     evaluate(Option(new File("$[dryRun:elementScreenshotFile]"))) {
-      withWebElement(binding, s"trying to capture element screenshot of $binding") { webElement =>
+      withWebElement(binding, s"trying to capture element screenshot of ${binding.displayName}") { webElement =>
         Thread.sleep(150) // give element time to render
         webElement.getScreenshotAs(OutputType.FILE) tap { elementshot =>
           addAttachment(name, elementshot)
@@ -618,7 +618,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
   def checkElementState(binding: LocatorBinding, state: ElementState, negate: Boolean, message: Option[String]): Unit = {
     perform {
       val result = isElementState(binding.jsEquivalent, state, negate)
-      Errors.assertWithError(result, message, s"$binding should${if(negate) " not" else ""} be $state")
+      Errors.assertWithError(result, message, s"${binding.displayName} should${if(negate) " not" else ""} be $state")
     }
   }
 
@@ -642,7 +642,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
           binding
       }
       try {  
-        withWebElement(parsedBinding, s"waiting for $binding to${if (negate) " not" else ""} be $state") { webElement =>
+        withWebElement(parsedBinding, s"waiting for ${binding.displayName} to${if (negate) " not" else ""} be $state") { webElement =>
           result = state match {
             case ElementState.displayed => 
               if (!negate) isDisplayed(webElement)
@@ -688,7 +688,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     * @param negate whether or not to negate the check
     */
   def waitForElementState(binding: LocatorBinding, state: ElementState, negate: Boolean): Unit =
-    waitUntil(s"waiting for $binding to${if (negate) " not" else""} be $state") {
+    waitUntil(s"waiting for ${binding.displayName} to${if (negate) " not" else""} be $state") {
       isElementState(binding, state, negate)
     }
 
@@ -744,8 +744,8 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     * @param value the value to select
     */
   def selectByVisibleText(binding: LocatorBinding, value: String): Unit = {
-    withWebElement(binding, s"trying to select option in $binding by visible text") { webElement =>
-      logger.debug(s"Selecting '$value' in ${binding.name} by text")
+    withWebElement(binding, s"trying to select option in ${binding.displayName} by visible text") { webElement =>
+      logger.debug(s"Selecting '$value' in $binding by text")
       createSelect(webElement).selectByVisibleText(value)
       bindAndWait(binding.name, ElementAction.select.toString, value)
     }
@@ -758,8 +758,8 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     * @param value the value to select
     */
   def selectByValue(binding: LocatorBinding, value: String): Unit = {
-    withWebElement(binding, s"trying to select option in $binding by value") { webElement =>
-      logger.debug(s"Selecting '$value' in ${binding.name} by value")
+    withWebElement(binding, s"trying to select option in ${binding.displayName} by value") { webElement =>
+      logger.debug(s"Selecting '$value' in $binding by value")
       createSelect(webElement).selectByValue(value)
       bindAndWait(binding.name, ElementAction.select.toString, value)
     }
@@ -772,8 +772,8 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     * @param index the index to select (first index is 0)
     */
   def selectByIndex(binding: LocatorBinding, index: Int): Unit = {
-    withWebElement(binding, s"trying to select option in $binding at index $index") { webElement =>
-      logger.debug(s"Selecting option in ${binding.name} by index: $index")
+    withWebElement(binding, s"trying to select option in ${binding.displayName} at index $index") { webElement =>
+      logger.debug(s"Selecting option in $binding by index: $index")
       val select = createSelect(webElement)
       select.selectByIndex(index)
       bindAndWait(binding.name, ElementAction.select.toString, select.getOptions.get(index).getText)
@@ -787,8 +787,8 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     * @param value the value to select
     */
   def deselectByVisibleText(binding: LocatorBinding, value: String): Unit = {
-    withWebElement(binding, s"trying to deselect option in $binding by visible text") { webElement =>
-      logger.debug(s"Deselecting '$value' in ${binding.name} by text")
+    withWebElement(binding, s"trying to deselect option in ${binding.displayName} by visible text") { webElement =>
+      logger.debug(s"Deselecting '$value' in $binding by text")
       createSelect(webElement).deselectByVisibleText(value)
       bindAndWait(binding.name, ElementAction.deselect.toString, value)
     }
@@ -801,8 +801,8 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     * @param value the value to select
     */
   def deselectByValue(binding: LocatorBinding, value: String): Unit = {
-    withWebElement(binding, s"trying to deselect option in $binding by value") { webElement =>
-      logger.debug(s"Deselecting '$value' in ${binding.name} by value")
+    withWebElement(binding, s"trying to deselect option in ${binding.displayName} by value") { webElement =>
+      logger.debug(s"Deselecting '$value' in $binding by value")
       createSelect(webElement).deselectByValue(value)
       bindAndWait(binding.name, ElementAction.deselect.toString, value)
     }
@@ -815,8 +815,8 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     * @param index the index to select (first index is 0)
     */
   def deselectByIndex(binding: LocatorBinding, index: Int): Unit = {
-    withWebElement(binding, s"trying to deselect option in $binding at index $index") { webElement =>
-      logger.debug(s"Deselecting option in ${binding.name} by index: $index")
+    withWebElement(binding, s"trying to deselect option in ${binding.displayName} at index $index") { webElement =>
+      logger.debug(s"Deselecting option in $binding by index: $index")
       val select = createSelect(webElement)
       select.deselectByIndex(index)
       bindAndWait(binding.name, ElementAction.deselect.toString, select.getOptions.get(index).getText)
@@ -829,9 +829,9 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     val actionBinding = scopes.getOpt(JSBinding.key(s"${binding.name}/action/$action"))
     actionBinding match {
       case Some(javascript) =>
-        performScriptAction(action, javascript, binding, s"trying to $action $binding")
+        performScriptAction(action, javascript, binding, s"trying to $action ${binding.displayName}")
       case None =>
-        withDriverAndElement(binding, s"trying to $action $binding") { (driver, webElement) =>
+        withDriverAndElement(binding, s"trying to $action ${binding.displayName}") { (driver, webElement) =>
           if (action != ElementAction.`move to`) {
             moveToAndCapture(driver, webElement)
           }
@@ -917,7 +917,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
 
   def holdAndClick(modifierKeys: Array[String], clickAction: ElementAction, binding: LocatorBinding): Unit = {
     val keys = modifierKeys.map(_.trim).map(key => Try(Keys.valueOf(key.toUpperCase)).getOrElse(unsupportedModifierKeyError(key)))
-    withDriverAndElement(binding, s"trying to $clickAction $binding") { (driver, webElement) =>
+    withDriverAndElement(binding, s"trying to $clickAction ${binding.displayName}") { (driver, webElement) =>
       moveToAndCapture(driver, webElement)
       var actions = createActions(driver)
       keys.foreach { key => actions = actions.keyDown(key) }
@@ -945,7 +945,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     val keys =  keysToSend.map(_.trim).map(key => Try(Keys.valueOf(key.toUpperCase)).getOrElse(key))
     elementBindingOpt match {
       case Some(binding) =>
-        withDriverAndElement(binding, s"trying to send key(s) to $binding") { (driver, webElement) =>
+        withDriverAndElement(binding, s"trying to send key(s) to ${binding.displayName}") { (driver, webElement) =>
           if (keys.size > 1) {
             webElement.sendKeys(Keys.chord(keys: _*))
           } else {
@@ -1013,7 +1013,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
   }
 
   private def performActionIn(action: ElementAction, binding: LocatorBinding, contextBinding: LocatorBinding): Unit = {
-    val reason = s"trying to $action $binding"
+    val reason = s"trying to $action ${binding.displayName}"
     withWebElement(contextBinding, reason) { contextElement =>
       withWebElement(binding, reason) { webElement =>
         action match {
@@ -1060,7 +1060,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
    * @param scrollTo scroll element into view, options are: top or bottom
    */
   def scrollIntoView(binding: LocatorBinding, scrollTo: ScrollTo): Unit = {
-    withWebElement(binding, s"trying to scroll to $scrollTo of $binding") { scrollIntoView(_, scrollTo) }
+    withWebElement(binding, s"trying to scroll to $scrollTo of ${binding.displayName}") { scrollIntoView(_, scrollTo) }
   }
 
   /**
@@ -1129,7 +1129,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     * @param binding the locator binding
     */
   def getElementText(binding: LocatorBinding): Option[String] =
-    withWebElement(binding, s"trying to get text of $binding") { webElement =>
+    withWebElement(binding, s"trying to get ${binding.displayName} text") { webElement =>
       (Option(webElement.getText) match {
         case None | Some("") =>
           Option(webElement.getAttribute("text")) match {
@@ -1147,7 +1147,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
         bindAndWait(binding.name, BindingType.text.toString, text)
       }
     } tap { value =>
-      logger.debug(s"getElementText(${binding.name})='$value'")
+      logger.debug(s"getElementText($binding)='$value'")
     }
 
   /**
@@ -1159,7 +1159,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     */
   private def getSelectedElementText(name: String): Option[String] = {
     val binding = getLocatorBinding(name)
-    withWebElement(binding, s"trying to get selected text of $binding") { webElement =>
+    withWebElement(binding, s"trying to get selected text of ${binding.displayName}") { webElement =>
       (getElementSelectionByJS(webElement, DropdownSelection.text) match {
         case None =>
           Try(createSelect(webElement)) map { select =>
@@ -1174,7 +1174,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
         bindAndWait(binding.name, "selectedText", text)
       }
     } tap { value =>
-      logger.debug(s"getSelectedElementText(${binding.name})='$value'")
+      logger.debug(s"getSelectedElementText($binding)='$value'")
     }
   }
 
@@ -1187,7 +1187,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     */
   private def getSelectedElementValue(name: String): Option[String] = {
     val binding = getLocatorBinding(name)
-    withWebElement(binding, s"trying to get selected value of $binding") { webElement =>
+    withWebElement(binding, s"trying to get selected value of ${binding.displayName}") { webElement =>
       getElementSelectionByJS(webElement, DropdownSelection.value) match {
         case None =>
           Try(createSelect(webElement)) map { select =>
@@ -1198,7 +1198,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
         case Some(value) => value
       }
     } tap { value =>
-      logger.debug(s"getSelectedElementValue(${binding.name})='$value'")
+      logger.debug(s"getSelectedElementValue($binding)='$value'")
     }
   }
 

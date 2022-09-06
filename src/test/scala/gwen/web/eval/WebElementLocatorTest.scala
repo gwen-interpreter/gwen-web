@@ -93,7 +93,7 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
           throw e
       }
     }
-    e.getMessage should startWith ("Could not locate element: middleName")
+    e.getMessage should startWith ("Could not locate middleName")
   }
 
   "Attempt to locate existing element by id" should "return the element" in {

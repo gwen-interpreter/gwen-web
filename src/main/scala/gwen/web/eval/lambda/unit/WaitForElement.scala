@@ -32,7 +32,7 @@ class WaitForElement(element: String, waitSecs: Option[Long]) extends UnitStep[W
     step tap { _ =>
       checkStepRules(step, BehaviorType.Action, ctx)
       val binding = ctx.getLocatorBinding(element)
-      ctx.waitUntil(waitSecs, s"waiting for $binding to be displayed") {
+      ctx.waitUntil(waitSecs, s"waiting for ${binding.displayName} to be displayed") {
         Try(ctx.locateAndHighlight(binding)).isSuccess
       }
     }
