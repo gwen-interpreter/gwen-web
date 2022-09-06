@@ -4,6 +4,7 @@ Sep 6, 2022
 - Update webdrivermanager from v5.2.3 to v5.3.0
 - Update Gwen core from v3.27.0 to v[3.28.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.28.0)
   - Introduced `gwen.error.messages.inline.locators=true|false` setting to control whether or not to inline locator information next to all named bindings in error messages (default is `false`)
+  - Remove CSV record descriptor suffix from normalised meta spec name
 
 3.30.0
 ======
