@@ -2,7 +2,7 @@
 ======
 Sep 7, 2022
 - Update Gwen core from v3.28.0 to v[3.28.1](https://github.com/gwen-interpreter/gwen/releases/tag/v3.28.1)
-  - Treat failed interplotions as unresolved if the name is not bound otherwise throw underlying error.
+  - Treat failed interpolations as unresolved if the name is not bound otherwise throw underlying error.
 
 3.31.0
 ======
