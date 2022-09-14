@@ -15,7 +15,7 @@ Feature: Repeat while example
   Scenario: Increment counter1
     Given counter1 is "-1"
      When I increment counter1
-      And I increment counter1 while counter1 < 4 using no delay
+      And I increment counter1 while counter1 < 4
      Then counter1 should be "4"
 
   Scenario: Increment counter2 with if condition

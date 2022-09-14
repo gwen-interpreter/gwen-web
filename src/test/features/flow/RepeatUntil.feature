@@ -8,7 +8,7 @@ Feature: Repeat until example
 
   Scenario: Increment counter
     Given counter is "0"
-     When I increment counter until counter > 3 using no delay
+     When I increment counter until counter > 3
      Then counter should be "4"
 
   Scenario: Increment counter with if condition

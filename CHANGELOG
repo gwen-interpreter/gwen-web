@@ -1,3 +1,9 @@
+3.31.2
+======
+Sep 14, 2022
+- Update Gwen core from v3.28.1 to v[3.28.2](https://github.com/gwen-interpreter/gwen/releases/tag/v3.28.2)
+  - Add synthetic delay step between each while and until loop iteration
+
 3.31.1
 ======
 Sep 7, 2022
