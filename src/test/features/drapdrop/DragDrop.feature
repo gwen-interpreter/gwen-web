@@ -1,3 +1,4 @@
+@Ignore
 Feature: Drag Drop
 
   Scenario: Drag box to cell
