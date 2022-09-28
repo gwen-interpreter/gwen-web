@@ -1,3 +1,9 @@
+3.31.3
+======
+Sep 28, 2022
+- Update Gwen core from v3.28.2 to v[3.28.3](https://github.com/gwen-interpreter/gwen/releases/tag/v3.28.3)
+  - Load first record of CSV file passed into `-i/--input-data` option when launching Gwen in REPL mode
+
 3.31.2
 ======
 Sep 14, 2022
