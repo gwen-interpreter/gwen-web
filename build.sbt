@@ -1,7 +1,7 @@
 enablePlugins(GitVersioning)
 
 // gwen core & web versions
-val gwenVersion = "3.28.5"
+val gwenVersion = "3.28.6"
 val gwenWebVersion = "3.31.5"
 
 git.baseVersion := gwenWebVersion
@@ -58,13 +58,13 @@ lazy val mainDependencies = {
 }
 
 lazy val testDependencies = {
-  val scalaTest = "3.2.11"
-  val scalaTestPlusMockito = "3.2.10.0"
-  val mockitoCore = "3.12.4"
+  val scalaTest = "3.2.14"
+  val scalaTestPlusMockito = "3.2.11.0"
+  val mockitoCore = "4.8.0"
 
   Seq(
     "org.scalatest" %% "scalatest" % scalaTest,
-    "org.scalatestplus" %% "mockito-3-4" % scalaTestPlusMockito,
+    "org.scalatestplus" %% "mockito-4-2" % scalaTestPlusMockito,
     "org.mockito" % "mockito-core" % mockitoCore
   ).map(_ % Test)
 }
