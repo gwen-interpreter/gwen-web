@@ -96,7 +96,7 @@ org.fusesource.jansi                     jansi                                  
 org.jdom                                 jdom2                                         | 2.0.6.1      | [Similar to Apache License but with the acknowledgment clause removed](https://raw.githubusercontent.com/hunterhacker/jdom/master/LICENSE.txt)
 org.ow2.asm                              asm                                           | 9.1          | [BSD License](https://asm.ow2.io/license.html)
 org.reactivestreams                      reactive-streams                              | 1.0.3        | [MIT License](https://github.com/reactive-streams/reactive-streams-jvm/blob/master/LICENSE)
-org.scala-lang                           scala-library                                 | 3.1.2        | [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+org.scala-lang                           scala-library                                 | 3.2.0        | [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 org.seleniumhq.selenium                  selenium-api                                  | 4.4.0        | [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 org.seleniumhq.selenium                  selenium-chrome-driver                        | 4.4.0        | [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 org.seleniumhq.selenium                  selenium-chromium-driver                      | 4.4.0        | [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
