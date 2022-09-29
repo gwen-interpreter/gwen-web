@@ -1,3 +1,9 @@
+3.31.4
+======
+Sep 29, 2022
+- Update Gwen core from v3.28.3 to v[3.28.4](https://github.com/gwen-interpreter/gwen/releases/tag/v3.28.4)
+  - Ignore empty CSV records in examples and lookups
+
 3.31.3
 ======
 Sep 28, 2022
