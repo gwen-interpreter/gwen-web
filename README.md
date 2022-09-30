@@ -104,7 +104,7 @@ Maintainers
 Credits
 -------
 
-We thank the following people and projects for helping to make Gwen better.
+We thank the following for helping to make Gwen better.
 
 ### Supporters
 
