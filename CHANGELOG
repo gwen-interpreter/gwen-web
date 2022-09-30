@@ -1,4 +1,11 @@
-3.28.5
+3.31.6
+======
+Sep 30, 2022
+- Update Gwen core from v3.28.7 to v[3.28.8](https://github.com/gwen-interpreter/gwen/releases/tag/v3.28.8)
+  - Escape new line characters from data table cells (issue #96)
+  - Execute windows system processes as single command strings instead of a sequence (issue #97)
+
+3.31.5
 ======
 Sep 29, 2022
 - Update Gwen core from v3.28.4 to v[3.28.7](https://github.com/gwen-interpreter/gwen/releases/tag/v3.28.7)
