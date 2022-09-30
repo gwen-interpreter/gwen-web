@@ -106,12 +106,20 @@ Contributors
 
 We thank the following contributors and active users for helping to make Gwen better.
 
+### Supporters
+
+[Arun Datta](https://github.com/SAINFY) gave us valuable advice before we open sourced.
+
+### Code Contributors
+
 The following [contributors](https://github.com/gwen-interpreter/gwen/graphs/contributors) submitted pull requests that have been merged:
 
 - [Jacob Juric](https://github.com/Sorixelle)
 | [Alexandru Cuciureanu](https://github.com/acuciureanu)
 
-The following users raised issues or requests that have been addressed:
+### Active Users
+
+The following users raised issues or requests that have been addressed or helped:
 
 - [Rebecca Abriam](https://github.com/mairbar)
 | [George Tsihitas](https://github.com/gtsihitas)
@@ -124,7 +132,6 @@ The following users raised issues or requests that have been addressed:
 | [rkevin99](https://github.com/rkevin99)
 | [Sergio Freire](https://github.com/bitcoder)
 | [dfriquet](https://github.com/dfriquet)
-
 
 Credits
 -------
