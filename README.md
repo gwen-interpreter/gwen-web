@@ -101,26 +101,24 @@ Maintainers
 - [Brady Wood](https://github.com/bradywood)
 - [Jacob Juric](https://github.com/Sorixelle)
 
-Contributors
-------------
+Credits
+-------
 
-We thank the following contributors and active users for helping to make Gwen better.
+We thank the following people and projects for helping to make Gwen better.
 
 ### Supporters
 
-- [Arun Datta](https://github.com/SAINFY) for giving us valuable feedback advice
+- [Arun Datta](https://github.com/SAINFY) for giving us valuable feedback and advice
 - [Nascent Creative](https://nascentcreative.com.au/) for developing our [logo](https://gweninterpreter.org/img/gwen-logo.png)
 
-### Code Contributors
+### Code contributors
 
 The following [contributors](https://github.com/gwen-interpreter/gwen/graphs/contributors) submitted pull requests that have been merged:
 
 - [Jacob Juric](https://github.com/Sorixelle)
 | [Alexandru Cuciureanu](https://github.com/acuciureanu)
 
-### Active Users
-
-The following users raised issues or requests that have been addressed or helped:
+### Users who raised issues
 
 - [Rebecca Abriam](https://github.com/mairbar)
 | [George Tsihitas](https://github.com/gtsihitas)
@@ -133,9 +131,10 @@ The following users raised issues or requests that have been addressed or helped
 | [rkevin99](https://github.com/rkevin99)
 | [Sergio Freire](https://github.com/bitcoder)
 | [dfriquet](https://github.com/dfriquet)
+| [sse2ebdd](https://github.com/sse2ebdd)
 
-Credits
--------
-- [Selenium](https://www.selenium.dev/)
+### Projects we heavily rely on
+
 - [Cucumber/Gherkin](https://docs.cucumber.io/gherkin/reference/)
+- [Selenium](https://www.selenium.dev/)
 - [WebDriverManager](https://github.com/bonigarcia/webdrivermanager)
