@@ -113,8 +113,6 @@ We thank the following people and projects for helping to make Gwen better.
 
 ### Code contributors
 
-The following [contributors](https://github.com/gwen-interpreter/gwen/graphs/contributors) submitted pull requests that have been merged:
-
 - [Jacob Juric](https://github.com/Sorixelle)
 | [Alexandru Cuciureanu](https://github.com/acuciureanu)
 
