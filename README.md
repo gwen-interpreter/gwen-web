@@ -106,8 +106,6 @@ Maintainers
 Credits
 -------
 
-We thank the following for helping to make Gwen better.
-
 ### Supporters
 
 - [Arun Datta](https://github.com/SAINFY) for giving us valuable feedback and advice
