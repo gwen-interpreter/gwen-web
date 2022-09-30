@@ -1,3 +1,10 @@
+3.31.7
+======
+Sep 30, 2022
+- Update Gwen core from v3.28.8 to v[3.28.9](https://github.com/gwen-interpreter/gwen/releases/tag/v3.28.9)
+  - Windows fix for escaping new line characters from data table cells (issue gwen-interpreter/gwen-web#96)
+  - Fix spelling of behavior rules setting in error messages
+
 3.31.6
 ======
 Sep 30, 2022
