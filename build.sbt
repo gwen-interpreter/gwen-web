@@ -23,7 +23,7 @@ resolvers ++= Seq(
 
 lazy val projectSettings = Seq(
   name := "gwen-web",
-  description := "Web automation and robotics for Gherkin",
+  description := "Web automation engine for Gwen",
   organization := "org.gweninterpreter",
   organizationHomepage := Some(url("https://github.com/gwen-interpreter")),
   startYear := Some(2014),
