@@ -1,7 +1,7 @@
 Gwen-Web
 ========
 
-[Documentation and home page](https://gweninterpreter.org)
+[Documentation](https://gweninterpreter.org)
 
 A [Gwen](https://github.com/gwen-interpreter/gwen/) interpreter that enables teams to automate web testing and robotic processing with behaviour defined in [Gherkin](https://docs.cucumber.io/gherkin/reference/) feature specifications. Automation is achieved through Gherkin bindings called meta specs, composed with a prescribed DSL and maintained alongside your feature files. An embedded [Selenium](https://www.selenium.dev/) engine executes each step in your features according to your meta to automate operations in browsers for you.
 
