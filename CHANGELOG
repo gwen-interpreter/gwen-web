@@ -1,3 +1,9 @@
+3.31.10
+=======
+Oct 6, 2022
+- Update Gwen core from v3.28.10 to v[3.28.11](https://github.com/gwen-interpreter/gwen/releases/tag/v3.28.11)
+  - Remove scala2 v2.13.9 override which breaks system process on directories with trailing slashes on windows (pick up v2.13.8 instead). Fixes issue #98
+
 3.31.9
 ======
 Oct 1, 2022
