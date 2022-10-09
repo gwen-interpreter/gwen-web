@@ -1,3 +1,9 @@
+3.31.11
+=======
+Oct 9, 2022
+- Update Gwen core from v3.28.11 to v[3.28.12](https://github.com/gwen-interpreter/gwen/releases/tag/v3.28.12)
+  - Update Gwen logo in HTML reports
+
 3.31.10
 =======
 Oct 6, 2022
