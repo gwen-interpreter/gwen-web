@@ -1,3 +1,9 @@
+3.28.12
+=======
+Oct 10, 2022
+- Update Gwen core from v3.28.12 to v[3.28.13](https://github.com/gwen-interpreter/gwen/releases/tag/v3.28.13)
+  - Remove experimental `: "<message>"` syntax for custom assertion messages. Use `@Message("<message>")` annotation instead. Fixes issue #99
+
 3.31.11
 =======
 Oct 9, 2022
