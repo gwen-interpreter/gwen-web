@@ -3,7 +3,7 @@ Gwen-Web
 
 <img src="https://gweninterpreter.org/img/gwen-logo-cw--rc.png" width="170"/> <br />
 
-A [Gwen](https://github.com/gwen-interpreter/gwen/) interpreter that enables teams to automate end to end web testing and robotic processing with behaviour defined in [Gherkin](https://docs.cucumber.io/gherkin/reference/) feature specifications. Automation is achieved through Gherkin bindings called meta specs, composed with a prescribed DSL and maintained alongside your feature files. An embedded [Selenium](https://www.selenium.dev/) engine executes each step in your features according to your meta to automate operations in browsers for you.
+A [Gwen](https://github.com/gwen-interpreter/gwen/) interpreter that enables teams to automate end to end web testing and robotic processing with behaviour defined in [Gherkin](https://docs.cucumber.io/gherkin/reference/) feature specifications. Automation is achieved through Gherkin bindings called meta specs, composed with a prescribed DSL and maintained alongside your feature files. An embedded [Selenium](https://www.selenium.dev/) engine executes scenarios according to the meta you provide to perform operations in browsers for you.
 
 Get Started
 -----------
