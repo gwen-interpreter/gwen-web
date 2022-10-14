@@ -1,3 +1,8 @@
+3.31.14
+=======
+Oct 14, 2022
+- Include colon in reverted locator not found error when `gwen.error.messages.inline.locators=true`
+
 3.31.13
 =======
 Oct 14, 2022
