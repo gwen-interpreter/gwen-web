@@ -15,18 +15,18 @@
  */
 package gwen.web.eval
 
-/**
- * Defines methods for raising various kinds of errors (exceptions).
- */
-
 import gwen.web.eval.binding.LocatorBinding
 
+import gwen.core.GwenSettings
 import gwen.core.Errors.GwenException
 
 import org.openqa.selenium.Keys
 
 import java.io.File
 
+/**
+ * Defines methods for raising various kinds of errors (exceptions).
+ */
 object WebErrors {
   
     def locatorBindingError(msg: String) = throw new LocatorBindingException(msg)
@@ -72,7 +72,7 @@ object WebErrors {
 
     /** Thrown when a web element cannot be located. */
     class WebElementNotFoundException(binding: LocatorBinding, cause: Throwable)
-      extends NotFoundOrInteractableException(s"Could not locate ${binding.displayName}", cause)
+      extends NotFoundOrInteractableException(s"Could not locate${if (GwenSettings.`gwen.error.messages.inline.locators`) " element" else ""} ${binding.displayName}", cause)
     
     /** Thrown when an invalid click action is detected. */
     class InvalidClickActionException(action: ElementAction) extends GwenException(s"Invalid click action: $action (only ${ElementAction.click}, ${ElementAction.`right click`}, or ${ElementAction.`double click`} supported)")

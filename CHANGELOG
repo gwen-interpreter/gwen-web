@@ -1,4 +1,11 @@
-3.28.12
+3.31.13
+=======
+Oct 14, 2022
+- Revert locator not found error when `gwen.error.messages.inline.locators=true`
+- Update Gwen core from v3.28.13 to v[3.28.14](https://github.com/gwen-interpreter/gwen/releases/tag/v3.28.14)
+  - Mintor update to Gwen logo in HTML reports
+
+3.31.12
 =======
 Oct 10, 2022
 - Update Gwen core from v3.28.12 to v[3.28.13](https://github.com/gwen-interpreter/gwen/releases/tag/v3.28.13)
