@@ -133,7 +133,6 @@ Credits
 
 - [Cucumber/Gherkin](https://docs.cucumber.io/gherkin/reference/)
 - [Selenium](https://www.selenium.dev/)
-- [WebDriverManager](https://github.com/bonigarcia/webdrivermanager)
 
 ### Supporters
 

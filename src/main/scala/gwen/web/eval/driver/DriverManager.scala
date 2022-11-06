@@ -30,7 +30,6 @@ import scala.collection.mutable
 import scala.util.chaining._
 
 import com.typesafe.scalalogging.LazyLogging
-import io.github.bonigarcia.wdm.WebDriverManager
 import org.openqa.selenium.{Dimension, Capabilities, MutableCapabilities, WebDriver, WindowType}
 import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.chrome.ChromeDriverService
@@ -71,11 +70,6 @@ object DriverManager extends LazyLogging {
   * Provides and manages access to the web drivers.
   */
 class DriverManager() extends LazyLogging {
-
-  // put drivers downloaded by WebDriverManager in ~.gwen/wdm dir by default
-  if (sys.props.get("wdm.targetPath").isEmpty) {
-    sys.props += (("wdm.targetPath", new File(new File(System.getProperty("user.home")), ".gwen/wdm").getAbsolutePath))
-  }
 
   /** The current web browser session. */
   private var session = "primary"
@@ -349,30 +343,18 @@ class DriverManager() extends LazyLogging {
   }
 
   private [eval] def chrome(): WebDriver = {
-    if (WebSettings.`webdriver.chrome.driver`.isEmpty) {
-      WebDriverManager.chromedriver().setup()
-    }
     new ChromeDriver(chromeOptions())
   }
 
   private [eval] def firefox(): WebDriver = {
-    if (WebSettings.`webdriver.gecko.driver`.isEmpty) {
-      WebDriverManager.firefoxdriver().setup()
-    }
     new FirefoxDriver(firefoxOptions())
   }
 
   private [eval] def ie(): WebDriver = {
-    if (WebSettings.`webdriver.ie.driver`.isEmpty) {
-      WebDriverManager.iedriver().setup()
-    }
     new InternetExplorerDriver(ieOptions())
   }
 
   private [eval] def edge(): WebDriver = {
-    if (WebSettings.`webdriver.edge.driver`.isEmpty) {
-      WebDriverManager.edgedriver().setup()
-    }
     new EdgeDriver(edgeOptions())
   }
 

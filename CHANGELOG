@@ -1,3 +1,15 @@
+3.32.0
+======
+Oct 17, 2022
+- Update selenium from v4.5.0 to v4.6.0
+  - Use embedded web driver manager now provided by Selenium
+  - Removed previous [WebDriverManager](https://github.com/bonigarcia/webdrivermanager) and all `wdm.*` settings
+- Update Gwen core from v3.28.15 to v[3.28.16](https://github.com/gwen-interpreter/gwen/releases/tag/v3.28.16)
+  - Raise error when attempt is made to parse empty feature file
+  - Raise error when attempt is made to process feature with no steps
+  - Fix resolve of nested masked settings
+  - At least one input required for dry run
+
 3.31.15
 =======
 Oct 17, 2022
