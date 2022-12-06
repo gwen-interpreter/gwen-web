@@ -1,8 +1,8 @@
 enablePlugins(GitVersioning)
 
 // gwen core & web versions
-val gwenVersion = "3.28.16"
-val gwenWebVersion = "3.32.0"
+val gwenVersion = "3.28.17"
+val gwenWebVersion = "3.32.1"
 
 git.baseVersion := gwenWebVersion
 git.useGitDescribe := true
@@ -30,7 +30,7 @@ lazy val projectSettings = Seq(
   licenses += "Apache License, Version 2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0.html"),
   homepage := Some(url("https://gweninterpreter.org")),
   versionScheme := Some("semver-spec"),
-  scalaVersion := "3.2.0",
+  scalaVersion := "3.2.1",
   crossPaths := false,
   trapExit := false,
   scalacOptions ++= Seq(
@@ -48,7 +48,7 @@ lazy val projectSettings = Seq(
 )
 
 lazy val mainDependencies = {
-  val selenium = "4.6.0"
+  val selenium = "4.7.0"
 
   Seq(
     "org.seleniumhq.selenium" % "selenium-java" % selenium
@@ -58,7 +58,7 @@ lazy val mainDependencies = {
 lazy val testDependencies = {
   val scalaTest = "3.2.14"
   val scalaTestPlusMockito = "3.2.11.0"
-  val mockitoCore = "4.8.0"
+  val mockitoCore = "4.9.0"
 
   Seq(
     "org.scalatest" %% "scalatest" % scalaTest,
