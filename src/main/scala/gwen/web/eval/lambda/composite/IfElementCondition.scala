@@ -3,6 +3,7 @@ package gwen.web.eval.lambda.composite
 import gwen.core.Errors.UnboundAttributeException
 import gwen.core.eval.EvalContext
 import gwen.core.eval.EvalEngine
+import gwen.core.eval.binding.LoadStrategyBinding
 import gwen.core.eval.engine.StepDefEngine
 import gwen.core.eval.lambda.CompositeStep
 import gwen.core.eval.lambda.composite.IfCondition
@@ -56,6 +57,7 @@ import scala.util.Failure
           val sdCall = () => engine.callStepDef(step, iStepDef, iStep, ctx)
           ctx.evaluate(sdCall()) {
             val satisfied = ctx.isElementState(binding, state, negate)
+            LoadStrategyBinding.bindIfLazy(binding.name, satisfied.toString, ctx)
             if (satisfied) {
               logger.info(s"Processing conditional step ($cond = true): ${step.keyword} $doStep")
               sdCall()

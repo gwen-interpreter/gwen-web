@@ -1420,6 +1420,8 @@ I maximise the window
 <step> if <element> is not unticked
 <step> if <element> is not enabled
 <step> if <element> is not disabled
+<step> if <attribute> is defined
+<step> if <attribute> is not defined
 <step> for each <entry> in <textRef> delimited by "<delimiter>"
 I drag and drop <sourceElement> to <targetElement>
 I append "<text>" to <element>

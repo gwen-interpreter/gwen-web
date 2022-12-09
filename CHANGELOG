@@ -5,6 +5,9 @@ Dec 9, 2022
 - Do not use JS equivalent locator when checking element state
 - Add new DSL for conditionally evaluating steps based on a web element status
   - `<step> if <element> is[ not] <state>`
+- Update Gwen core from v3.28.17 to v[3.29.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.29.0)
+  - Add new DSL for conditionally evaluating steps based on whether or not a binding is defined
+    - `<step> if <attribute> is[ not] defined`
 
 3.32.1
 ======
