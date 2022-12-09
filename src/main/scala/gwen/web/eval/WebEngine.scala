@@ -74,25 +74,30 @@ class WebEngine extends EvalEngine[WebContext] {
     * Translates composite web engine steps.
     */
   override def translateCompositeStep(step: Step): Option[CompositeStep[WebContext]] = {
-    super.translateCompositeStep(step) orElse {
-      step.expression match {
-        case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression in (.+?)$container with no (?:timeout|wait)""" =>
-          Some(new ForEachWebElement(doStep, element, SelectorType.parse(selectorType), expression, Some((RelativeSelectorType.in, container, None)), Some(Duration.Zero), this))
-        case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression in (.+?)$container with (\d+)$timeout second (?:timeout|wait)""" =>
-          Some(new ForEachWebElement(doStep, element, SelectorType.parse(selectorType), expression, Some((RelativeSelectorType.in, container, None)), Some(Duration.create(timeout.toLong, TimeUnit.SECONDS)), this))
-        case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression in (.+?)$container""" =>
-          Some(new ForEachWebElement(doStep, element, SelectorType.parse(selectorType), expression, Some((RelativeSelectorType.in, container, None)), None, this))
-        case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression with no (?:timeout|wait)""" =>
-          Some(new ForEachWebElement(doStep, element, SelectorType.parse(selectorType), expression, None, Some(Duration.Zero), this))
-        case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression with (\d+)$timeout second (?:timeout|wait)""" =>
-          Some(new ForEachWebElement(doStep, element, SelectorType.parse(selectorType), expression, None, Some(Duration.create(timeout.toLong, TimeUnit.SECONDS)), this))
-        case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression""" =>
-          Some(new ForEachWebElement(doStep, element, SelectorType.parse(selectorType), expression, None, None, this))
-        case r"""(.+?)$doStep for each (.+?)$element in (.+?)$iteration""" =>
-          Some(new ForEachWebElementInIteration(doStep, element, iteration, this))
-        case _ => 
-          None
-      }
+    step.expression.match {
+      case r"""(.+)$doStep if(?:(?!\bif\b)) (.+?)$element is( not)?$negation (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$state""" =>
+        Some(new IfElementCondition(doStep, element, ElementState.valueOf(state), Option(negation).isDefined, defaultConditionTimeoutSecs, this))
+      case _ =>
+        super.translateCompositeStep(step) orElse {
+          step.expression match {
+            case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression in (.+?)$container with no (?:timeout|wait)""" =>
+              Some(new ForEachWebElement(doStep, element, SelectorType.parse(selectorType), expression, Some((RelativeSelectorType.in, container, None)), Some(Duration.Zero), this))
+            case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression in (.+?)$container with (\d+)$timeout second (?:timeout|wait)""" =>
+              Some(new ForEachWebElement(doStep, element, SelectorType.parse(selectorType), expression, Some((RelativeSelectorType.in, container, None)), Some(Duration.create(timeout.toLong, TimeUnit.SECONDS)), this))
+            case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression in (.+?)$container""" =>
+              Some(new ForEachWebElement(doStep, element, SelectorType.parse(selectorType), expression, Some((RelativeSelectorType.in, container, None)), None, this))
+            case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression with no (?:timeout|wait)""" =>
+              Some(new ForEachWebElement(doStep, element, SelectorType.parse(selectorType), expression, None, Some(Duration.Zero), this))
+            case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression with (\d+)$timeout second (?:timeout|wait)""" =>
+              Some(new ForEachWebElement(doStep, element, SelectorType.parse(selectorType), expression, None, Some(Duration.create(timeout.toLong, TimeUnit.SECONDS)), this))
+            case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression""" =>
+              Some(new ForEachWebElement(doStep, element, SelectorType.parse(selectorType), expression, None, None, this))
+            case r"""(.+?)$doStep for each (.+?)$element in (.+?)$iteration""" =>
+              Some(new ForEachWebElementInIteration(doStep, element, iteration, this))
+            case _ => 
+              None
+          }
+        }
     }
   }
 

@@ -1,3 +1,11 @@
+3.33.0
+======
+Dec 9, 2022
+- Update selenium from v4.7.0 to v4.7.1
+- Do not use JS equivalent locator when checking element state
+- Add new DSL for conditionally evaluating steps based on a web element status
+  - `<step> if <element> is[ not] <state>`
+
 3.32.1
 ======
 Dec 6, 2022

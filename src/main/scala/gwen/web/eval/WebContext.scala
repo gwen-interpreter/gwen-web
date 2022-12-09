@@ -1371,10 +1371,8 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
           createActions(driver).moveToElement(webElement).perform()
         }
       ) match {
-        case Success(_) => 
-          isDisplayedAndInViewport(webElement)
-        case Failure(_) => 
-          false
+        case Success(_) => isDisplayedAndInViewport(webElement)
+        case Failure(_) => false
       }
     } else {
       true

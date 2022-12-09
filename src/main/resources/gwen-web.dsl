@@ -1404,6 +1404,22 @@ I maximise the window
 <xmlRef> at xpath "<path>" should not match template "<expression>"
 <xmlRef> at xpath "<path>" should not match template file "<filepath>"
 <step> if <condition>
+<step> if <element> is displayed
+<step> if <element> is hidden
+<step> if <element> is checked
+<step> if <element> is ticked
+<step> if <element> is unchecked
+<step> if <element> is unticked
+<step> if <element> is enabled
+<step> if <element> is disabled
+<step> if <element> is not displayed
+<step> if <element> is not hidden
+<step> if <element> is not checked
+<step> if <element> is not ticked
+<step> if <element> is not unchecked
+<step> if <element> is not unticked
+<step> if <element> is not enabled
+<step> if <element> is not disabled
 <step> for each <entry> in <textRef> delimited by "<delimiter>"
 I drag and drop <sourceElement> to <targetElement>
 I append "<text>" to <element>
