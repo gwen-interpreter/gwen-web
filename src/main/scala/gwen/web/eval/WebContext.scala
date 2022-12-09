@@ -617,7 +617,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     */
   def checkElementState(binding: LocatorBinding, state: ElementState, negate: Boolean, message: Option[String]): Unit = {
     perform {
-      val result = isElementState(binding.jsEquivalent, state, negate)
+      val result = isElementState(binding, state, negate)
       Errors.assertWithError(result, message, s"${binding.displayName} should${if(negate) " not" else ""} be $state")
     }
   }
@@ -629,7 +629,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     * @param state the state to check
     * @param negate whether or not to negate the check
     */
-  private def isElementState(binding: LocatorBinding, state: ElementState, negate: Boolean): Boolean = {
+  def isElementState(binding: LocatorBinding, state: ElementState, negate: Boolean): Boolean = {
     var result = false
     perform {
       // use fast binding selector if checking for element absence so we don't have to wait for timeout
@@ -645,8 +645,10 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
         withWebElement(parsedBinding, s"waiting for ${binding.displayName} to${if (negate) " not" else ""} be $state") { webElement =>
           result = state match {
             case ElementState.displayed => 
-              if (!negate) isDisplayed(webElement)
-              else !isDisplayed(webElement)
+              if (!negate) 
+                isDisplayed(webElement)
+              else 
+                !isDisplayed(webElement)
             case ElementState.hidden =>
               if (!negate) !isDisplayed(webElement)
               else isDisplayed(webElement)
@@ -1369,8 +1371,10 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
           createActions(driver).moveToElement(webElement).perform()
         }
       ) match {
-        case Success(_) => isDisplayedAndInViewport(webElement)
-        case Failure(_) => false
+        case Success(_) => 
+          isDisplayedAndInViewport(webElement)
+        case Failure(_) => 
+          false
       }
     } else {
       true

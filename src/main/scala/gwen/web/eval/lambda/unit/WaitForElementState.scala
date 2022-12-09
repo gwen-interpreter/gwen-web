@@ -35,7 +35,7 @@ class WaitForElementState(element: String, state: ElementState, negate: Boolean)
       ctx.scopes.getOpt(JSBinding.key(jsCondition)) match {
         case None =>
           checkStepRules(step, BehaviorType.Action, ctx)
-          val binding = ctx.getLocatorBinding(element).jsEquivalent
+          val binding = ctx.getLocatorBinding(element)
           ctx.waitForElementState(binding, state, negate)
         case Some(javascript) =>
           new WaitForCondition(javascript, None, None).apply(parent, step, ctx)
