@@ -38,15 +38,15 @@ import scala.util.Failure
  * limitations under the License.
  */
 
- class IfElementCondition[T <: EvalContext](doStep: String, element: String, state: ElementState, negate: Boolean, conditionTimeoutSecs: Long, engine: StepDefEngine[WebContext]) extends CompositeStep[WebContext](doStep) {
+ class IfElementCondition[T <: EvalContext](doStep: String, element: String, state: ElementState, negate: Boolean, engine: StepDefEngine[WebContext]) extends CompositeStep[WebContext](doStep) {
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     val cond = s"$element is${if (negate) " not" else ""} $state"
-    val ifCondition = IfCondition(doStep, cond, false, conditionTimeoutSecs, engine)
+    val ifCondition = IfCondition(doStep, cond, false, 0, engine)
     Try(ifCondition.apply(parent, step, ctx)) match {
       case Success(s) => s
       case Failure(e) => 
         if (e.isInstanceOf[UnboundAttributeException] && e.getMessage.contains(cond)) {
-          val binding = ctx.getLocatorBinding(element)
+          val binding = ctx.getLocatorBinding(element).withFastTimeout
           ctx.getStepDef(doStep, None) foreach { stepDef =>
             checkStepDefRules(step.copy(withName = doStep, withStepDef = Some(stepDef)), ctx)
           }

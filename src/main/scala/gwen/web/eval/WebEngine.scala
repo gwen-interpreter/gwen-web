@@ -76,7 +76,7 @@ class WebEngine extends EvalEngine[WebContext] {
   override def translateCompositeStep(step: Step): Option[CompositeStep[WebContext]] = {
     step.expression.match {
       case r"""(.+)$doStep if(?:(?!\bif\b)) (.+?)$element is( not)?$negation (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$state""" =>
-        Some(new IfElementCondition(doStep, element, ElementState.valueOf(state), Option(negation).isDefined, defaultConditionTimeoutSecs, this))
+        Some(new IfElementCondition(doStep, element, ElementState.valueOf(state), Option(negation).isDefined, this))
       case _ =>
         super.translateCompositeStep(step) orElse {
           step.expression match {

@@ -1,3 +1,9 @@
+3.33.2
+======
+Dec 22, 2022
+- Remove timeout on conditional steps depending on element state
+- Scroll elements into view if they're not in view when checking if they're displayed
+
 3.33.1
 ======
 Dec 15, 2022

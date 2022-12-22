@@ -1070,9 +1070,10 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
    *
    * @param webElement the web element to scroll to
    * @param scrollTo scroll element into view, options are: top or bottom
+   * @param offset offset to scroll by (default is zero)
    */
-  def scrollIntoView(webElement: WebElement, scrollTo: ScrollTo): Unit = {
-    executeJS(s"var elem = arguments[0]; if (typeof elem !== 'undefined' && elem != null) { elem.scrollIntoView(${scrollTo == ScrollTo.top}); }", webElement)
+  def scrollIntoView(webElement: WebElement, scrollTo: ScrollTo, offset: Int = 0): Unit = {
+    executeJS(s"var elem = arguments[0]; if (typeof elem !== 'undefined' && elem != null) { elem.scrollIntoView(${scrollTo == ScrollTo.top});${if (offset != 0) s" window.scroll(0, window.scrollY + $offset);" else ""}}", webElement)
   }
 
   /**
@@ -1365,17 +1366,11 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
 
   /** Checks if an element is displayed. */
   def isDisplayed(webElement: WebElement): Boolean = {
-    if (!isDisplayedAndInViewport(webElement)) {
-      Try(
-        withWebDriver { driver =>
-          createActions(driver).moveToElement(webElement).perform()
-        }
-      ) match {
-        case Success(_) => isDisplayedAndInViewport(webElement)
-        case Failure(_) => false
-      }
+    if (!isInViewport(webElement)) {
+      Try(scrollIntoView(webElement, ScrollTo.top, -100))
+      isDisplayedAndInViewport(webElement)
     } else {
-      true
+      webElement.isDisplayed
     }
   }
 
