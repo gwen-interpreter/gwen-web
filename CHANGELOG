@@ -1,3 +1,9 @@
+3.33.3
+======
+Dec 23, 2022
+- Update Gwen core from v3.29.0 to v[3.29.1](https://github.com/gwen-interpreter/gwen/releases/tag/v3.29.1)
+  - Include lapsed time in HTML summaries and remove overhead times
+
 3.33.2
 ======
 Dec 22, 2022
