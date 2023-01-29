@@ -2,7 +2,7 @@ enablePlugins(GitVersioning)
 
 // gwen core & web versions
 val gwenVersion = "3.29.2"
-val gwenWebVersion = "3.33.3"
+val gwenWebVersion = "3.33.4"
 
 git.baseVersion := gwenWebVersion
 git.useGitDescribe := true
@@ -48,7 +48,7 @@ lazy val projectSettings = Seq(
 )
 
 lazy val mainDependencies = {
-  val selenium = "4.7.2"
+  val selenium = "4.8.0"
 
   Seq(
     "org.seleniumhq.selenium" % "selenium-java" % selenium
