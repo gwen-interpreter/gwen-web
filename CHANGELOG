@@ -1,7 +1,12 @@
+3.33.5
+======
+Jan 30, 2023
+- Undo wait for element to be interactable when moving to it
+
 3.33.4
 ======
 Jan 29, 2023
-- Wait for element to be interactible when moving to it
+- Wait for element to be interactable when moving to it
 - Update selenium from v4.7.2 to v4.8.0
 
 3.33.3

@@ -898,9 +898,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
   }
 
   def moveToAndCapture(driver: WebDriver, webElement: WebElement): Unit = {
-    waitUntil(s"wiating for element to be interactable") {
-      Try(createActions(driver).moveToElement(webElement).perform()).isSuccess
-    }
+    createActions(driver).moveToElement(webElement).perform()
     if (WebSettings.`gwen.web.capture.screenshots.enabled`) {
       captureScreenshot(false)
     }
