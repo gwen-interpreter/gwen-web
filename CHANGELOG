@@ -1,3 +1,8 @@
+3.33.4
+======
+Jan 29, 2023
+- Wait for element to be interactible when moving to it
+
 3.33.3
 ======
 Dec 23, 2022
