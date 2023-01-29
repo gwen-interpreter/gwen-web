@@ -71,7 +71,7 @@ System Requirements
 License
 -------
 
-Copyright 2014-2022 Brady Wood, Branko Juric.
+Copyright 2014-2023 Brady Wood, Branko Juric.
 
 This software is open sourced under the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt).
 
