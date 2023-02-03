@@ -1,3 +1,9 @@
+
+3.33.6
+======
+Feb 4, 2023
+- Use new Selenium 4.8 approach of setting chrome headless mode
+
 3.33.5
 ======
 Jan 30, 2023

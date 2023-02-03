@@ -254,8 +254,8 @@ class DriverManager() extends LazyLogging {
       }
     }
     if (WebSettings.`gwen.web.browser.headless`) {
-      logger.info(s"Setting $browser argument: headless")
-      options.addArguments("headless")
+      logger.info(s"Setting $browser argument: --headless=new")
+      options.addArguments("--headless=new")
     }
     val prefs = new java.util.HashMap[String, Object]()
     val browserPrefs = browser match {
