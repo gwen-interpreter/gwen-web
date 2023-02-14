@@ -1,3 +1,7 @@
+3.34.0
+======
+Feb 14, 2023
+- Add new `gwen.web.driver.manager` setting to enable switching web driver manager implementations between `SeleniumManager` and `WebDriverManager` (default is `SeleniumManager`)
 
 3.33.6
 ======

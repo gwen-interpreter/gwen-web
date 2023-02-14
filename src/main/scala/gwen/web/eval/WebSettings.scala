@@ -473,6 +473,14 @@ object WebSettings extends LazyLogging {
     `gwen.web.remote.url`.nonEmpty && Settings.getBoolean("gwen.web.remote.localFileDetector")
   }
 
+  /**
+   * Provides access to the `gwen.web.selenium.manager` setting used to determine the web driver manager
+   * implementation to use (default is `SeleniumManager`). Other option is `WebDriverManager`.
+   */
+  def `gwen.web.driver.manager`: DriverManagerImpl = {
+    DriverManagerImpl.valueOf(Settings.get("gwen.web.driver.manager"))
+  }
+
   def videoEnabled: Boolean = {
     Settings.getBooleanOpt(enableVideoKey1).orElse(Settings.getBooleanOpt(enableVideoKey2)).getOrElse(false)
   }

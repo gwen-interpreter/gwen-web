@@ -19,6 +19,7 @@ package gwen.web.eval.driver
 import gwen.core._
 import gwen.core.state.SensitiveData
 
+import gwen.web.eval.DriverManagerImpl
 import gwen.web.eval.WebBrowser
 import gwen.web.eval.WebSettings
 import gwen.web.eval.WebErrors
@@ -30,6 +31,7 @@ import scala.collection.mutable
 import scala.util.chaining._
 
 import com.typesafe.scalalogging.LazyLogging
+import io.github.bonigarcia.wdm.WebDriverManager
 import org.openqa.selenium.{Dimension, Capabilities, MutableCapabilities, WebDriver, WindowType}
 import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.chrome.ChromeDriverService
@@ -343,18 +345,30 @@ class DriverManager() extends LazyLogging {
   }
 
   private [eval] def chrome(): WebDriver = {
+    if (DriverManagerImpl.isWebDriverManager && WebSettings.`webdriver.chrome.driver`.isEmpty) {
+      WebDriverManager.chromedriver().setup()
+    }
     new ChromeDriver(chromeOptions())
   }
 
   private [eval] def firefox(): WebDriver = {
+    if (DriverManagerImpl.isWebDriverManager && WebSettings.`webdriver.gecko.driver`.isEmpty) {
+      WebDriverManager.firefoxdriver().setup()
+    }
     new FirefoxDriver(firefoxOptions())
   }
 
   private [eval] def ie(): WebDriver = {
+    if (DriverManagerImpl.isWebDriverManager && WebSettings.`webdriver.ie.driver`.isEmpty) {
+      WebDriverManager.iedriver().setup()
+    }
     new InternetExplorerDriver(ieOptions())
   }
 
   private [eval] def edge(): WebDriver = {
+    if (DriverManagerImpl.isWebDriverManager && WebSettings.`webdriver.edge.driver`.isEmpty) {
+      WebDriverManager.edgedriver().setup()
+    }
     new EdgeDriver(edgeOptions())
   }
 

@@ -56,3 +56,11 @@ enum DropdownSelection:
 
 enum PopupAction:
   case accept, dismiss
+
+enum DriverManagerImpl:
+  case SeleniumManager, WebDriverManager
+
+object DriverManagerImpl {
+  def isSeleniumManager = WebSettings.`gwen.web.driver.manager` == SeleniumManager
+  def isWebDriverManager = WebSettings.`gwen.web.driver.manager` == WebDriverManager
+}
