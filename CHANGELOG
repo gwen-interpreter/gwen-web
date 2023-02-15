@@ -1,3 +1,8 @@
+3.34.1
+======
+Feb 15, 2023
+- Restore jul-to-slf4j lib (do not inherit from WebDriverManager)
+
 3.34.0
 ======
 Feb 14, 2023
