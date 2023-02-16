@@ -1,8 +1,8 @@
 enablePlugins(GitVersioning)
 
 // gwen core & web versions
-val gwenVersion = "3.29.2"
-val gwenWebVersion = "3.34.1"
+val gwenVersion = "3.29.3"
+val gwenWebVersion = "3.34.2"
 
 git.baseVersion := gwenWebVersion
 git.useGitDescribe := true
@@ -30,7 +30,7 @@ lazy val projectSettings = Seq(
   licenses += "Apache License, Version 2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0.html"),
   homepage := Some(url("https://gweninterpreter.org")),
   versionScheme := Some("semver-spec"),
-  scalaVersion := "3.2.1",
+  scalaVersion := "3.2.2",
   crossPaths := false,
   trapExit := false,
   scalacOptions ++= Seq(
@@ -56,6 +56,16 @@ lazy val mainDependencies = {
       ExclusionRule(organization = "org.slf4j", name = "jcl-over-slf4j"),
       ExclusionRule(organization = "org.slf4j", name = "slf4j-api")
     )
+  ) ++ mainOverrides
+}
+
+lazy val mainOverrides = {
+  val bc = "1.70"
+  val nettyHandler = "4.1.89.Final"
+  Seq(
+    "org.bouncycastle" % "bcprov-jdk15on" % bc,
+    "org.bouncycastle" % "bcpkix-jdk15on" % bc,
+    "io.netty" % "netty-handler" % nettyHandler
   )
 }
 

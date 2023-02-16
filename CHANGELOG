@@ -1,3 +1,19 @@
+3.34.2
+======
+Feb 16, 2023
+- Update Gwen core from v3.29.2 to v[3.29.3](https://github.com/gwen-interpreter/gwen/releases/tag/v3.29.3)
+- Update dependencies
+  - Update scala from v3.2.1 to v3.2.2
+  - Update gherkin from v25.0.2 to v26.0.3
+  - Update rp-common from v5.3.3 to v5.7.3
+  - Update client-java from v5.0.22 to v5.1.15
+- Update dependency overrides (security updates)
+  - Update jackson-databind from v2.14.1 to 2.14.2
+  - Removed tika-core
+  - Update bcprov-jdk15on from v1.64 to v1.70
+  - Update bcpkix-jdk15on from v1.64 to v1.70
+  - Update netty-handler from v4.1.87.Final to v4.1.89.Final
+
 3.34.1
 ======
 Feb 15, 2023
