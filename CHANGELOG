@@ -1,3 +1,9 @@
+3.34.3
+======
+Feb 17, 2023
+- Update Gwen core from v3.29.3 to v[3.29.4](https://github.com/gwen-interpreter/gwen/releases/tag/v3.29.4)
+  - Defer initialisation of HTML report file resources until needed
+
 3.34.2
 ======
 Feb 16, 2023
