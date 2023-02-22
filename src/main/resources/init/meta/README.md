@@ -1,6 +1,6 @@
-Features
-========
+Meta
+====
 
-Put your common or reusable meta files here.
+Maintain your common or reusable meta files here.
 
-- [Get Started](https://gweninterpreter.org/docs/get-started)
+For help, see the [Gwen documentation](https://gweninterpreter.org/docs).

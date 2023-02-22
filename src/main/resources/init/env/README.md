@@ -1,4 +1,6 @@
 Environments
 ============
 
-Manage your environment configurations and settings here.
+Maintain your environment settings here.
+
+For help, see the [Gwen documentation](https://gweninterpreter.org/docs).

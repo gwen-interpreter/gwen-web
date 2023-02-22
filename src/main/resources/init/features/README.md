@@ -1,6 +1,6 @@
 Features
 ========
 
-Put your Gherkin feature files (and any associative meta) here.
+Maintain your Gherkin feature files (and any associative meta) here.
 
-- [Get Started](https://gweninterpreter.org/docs/get-started)
+For help, see the [Gwen documentation](https://gweninterpreter.org/docs).

@@ -1,4 +1,6 @@
 Browsers
 ========
 
-Manage your browser configurations and settings here.
+Maintain your browser settings here.
+
+For help, see the [Gwen documentation](https://gweninterpreter.org/docs).

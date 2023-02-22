@@ -43,6 +43,8 @@ trait WebProjectInitialiser extends ProjectInitialiser {
     val dir = options.initDir
     val filler = if (flat) "   " else "       "
     val force = options.initOptions.contains(InitOption.force)
+    val copyRootGitIgnore = !flat && !(new File(".gitignore").exists())
+    val copyRootReadme = !flat && !(new File("README.md").exists())
 
     if (isNew || options.initOptions == List(InitOption.force)) {
 
@@ -88,18 +90,30 @@ trait WebProjectInitialiser extends ProjectInitialiser {
         FileIO.copyClasspathTextResourceToFile("/init/samples/README.md", dir, allowReplace = force)
       }
 
-      FileIO.copyClasspathTextResourceToFile("/init/README.md", dir, allowReplace = force)
+      if(copyRootReadme) {
+        FileIO.copyClasspathTextResourceToFile("/init/README.md", new File("."), allowReplace = false)
+      } else {
+        FileIO.copyClasspathTextResourceToFile("/init/README.md", dir, allowReplace = force)
+      }
       FileIO.copyClasspathTextResourceToFile("/init/gitignore", dir, Some(".gitignore"), allowReplace = force)
       copyClasspathResourceAndInject("/init/gwen.conf", dir, flat, allowReplace = force, targetFile = Some(new File("gwen.conf")), targetPath = Some(if (flat) "." else dir.getPath))
+      if(copyRootGitIgnore) {
+        FileIO.copyClasspathTextResourceToFile("/init/gitignore_root", new File("."), Some(".gitignore"), allowReplace = false)
+      }
 
       println(
         s"""|Project directory initialised${if (force) " (forced)" else ""}
             |
-            |  ./            $filler        # Current directory
+            |  ./            $filler        # Current directory${if (!copyRootGitIgnore) "" else {
+        s"""|
+            |   ├── .gitignore$filler       # Git ignore file""".stripMargin}}${if (!copyRootReadme) "" else {
+        s"""|
+            |   ├── README.md""".stripMargin}}
             |   ├── gwen.conf$filler        # Gwen settings file${if (flat) "" else {
         s"""|
-            |   └── /${dir.getPath}""".stripMargin}}
-            |$filler├── README.md
+            |   └── /${dir.getPath}""".stripMargin}}${if (copyRootReadme) "" else {
+        s"""|
+            |$filler├── README.md""".stripMargin}}
             |$filler├── .gitignore          # Git ignore file
             |$filler├── /browsers           # Browser settings
             |$filler│   ├── chrome.conf
@@ -116,8 +130,11 @@ trait WebProjectInitialiser extends ProjectInitialiser {
             |$filler│   ├── staging.conf
             |$filler│   └── test.conf
             |$filler├── /features           # Features and associative meta
+            |$filler│   ├── main.feature
+            |$filler│   ├── main.meta
             |$filler│   └── README.md
             |$filler├── /meta               # Optional common/reusable meta
+            |$filler│   ├── project.meta
             |$filler│   └── README.md
             |$filler└── /samples            # Sample features and meta
             |

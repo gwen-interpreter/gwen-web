@@ -1,4 +1,4 @@
-Gwen Project
-============
+My Gwen Project
+===============
 
-Document your Gwen project here.
+Document your [Gwen](https://gweninterpreter.org) project here.
