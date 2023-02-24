@@ -142,6 +142,7 @@ trait WebProjectInitialiser extends ProjectInitialiser {
       )
     }
     if (options.initOptions.contains(InitOption.docker)) {
+      FileIO.copyClasspathTextResourceToFile("/init/docker_env", dir, Some(".env"), allowReplace = force)
       FileIO.copyClasspathTextResourceToFile("/init/Dockerfile", dir, allowReplace = force)
       copyClasspathResourceAndInject("/init/docker-compose.yml", dir, flat, allowReplace = force)
       new File(dir, "browsers") tap { dir =>
@@ -154,6 +155,7 @@ trait WebProjectInitialiser extends ProjectInitialiser {
             |  ./            $filler        # Current directory${if (flat) "" else {
         s"""|
             |   └── /${dir.getPath}""".stripMargin}}
+            |$filler├── .env                # Docker env file
             |$filler├── docker-compose.yml  # Docker compose file
             |$filler├── Dockerfile          # Docker image file
             |$filler└── /browsers           # Browser settings

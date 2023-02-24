@@ -65,6 +65,18 @@ services:
     command: bash -c "yarn install && yarn gwen:selenoid -b"
     networks:
       - gwen-net
+  gwen-dry-run:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - NO_COLOR=1
+    volumes:
+      - "$PWD:/project"
+    working_dir: /project
+    command: bash -c "yarn install && yarn gwen -bn --parallel gwen/features"
+    networks:
+      - gwen-net
 networks:
   gwen-net:
     name: gwen-net
