@@ -1,3 +1,9 @@
+3.35.2
+======
+Mar 1, 2023
+- Update Gwen core from v3.29.6 to v[3.29.7](https://github.com/gwen-interpreter/gwen/releases/tag/v3.29.7)
+  - Accept meta having no steps
+
 3.35.1
 ======
 Mar 1, 2023
