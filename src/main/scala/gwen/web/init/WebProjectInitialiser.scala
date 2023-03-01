@@ -44,7 +44,7 @@ trait WebProjectInitialiser extends ProjectInitialiser {
     val filler = if (flat) "   " else "       "
     val force = options.initOptions.contains(InitOption.force)
     val copyRootGitIgnore = !flat && !(new File(".gitignore").exists())
-    val copyRootReadme = !flat && !(new File("README.md").exists())
+    val copyRootReadme = !(new File("README.md").exists())
 
     if (isNew || options.initOptions == List(InitOption.force)) {
 
@@ -92,8 +92,6 @@ trait WebProjectInitialiser extends ProjectInitialiser {
 
       if(copyRootReadme) {
         FileIO.copyClasspathTextResourceToFile("/init/README.md", new File("."), allowReplace = false)
-      } else {
-        FileIO.copyClasspathTextResourceToFile("/init/README.md", dir, allowReplace = force)
       }
       FileIO.copyClasspathTextResourceToFile("/init/gitignore", dir, Some(".gitignore"), allowReplace = force)
       copyClasspathResourceAndInject("/init/gwen.conf", dir, flat, allowReplace = force, targetFile = Some(new File("gwen.conf")), targetPath = Some(if (flat) "." else dir.getPath))

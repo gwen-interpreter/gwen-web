@@ -1,3 +1,10 @@
+3.35.1
+======
+Mar 1, 2023
+- Only put README file in root of project if there isn't one when performing init
+- Update Gwen core from v3.29.5 to v[3.29.6](https://github.com/gwen-interpreter/gwen/releases/tag/v3.29.6)
+  - Fix configured CLI input data option to accept single entry only
+
 3.35.0
 ======
 Feb 25, 2023
