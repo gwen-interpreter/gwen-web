@@ -1,1 +1,3 @@
+SELENIUM_HUB=selenoid
+NO_COLOR=1
 GWEN_BROWSER=chrome

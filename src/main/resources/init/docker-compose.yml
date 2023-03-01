@@ -50,8 +50,8 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
-      - SELENIUM_HUB=selenoid
-      - NO_COLOR=1
+      - SELENIUM_HUB
+      - NO_COLOR
       - GWEN_ENV
       - GWEN_BROWSER
       - GWEN_DRY_RUN
@@ -70,7 +70,7 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
-      - NO_COLOR=1
+      - NO_COLOR
     volumes:
       - "$PWD:/project"
     working_dir: /project
