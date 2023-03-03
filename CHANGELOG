@@ -1,3 +1,10 @@
+3.36.0
+======
+Mar 3, 2023
+- New feature request #103
+  - Introduce `load` command in REPL console for reloading changed meta
+- Update Gwen core from v3.29.7 to v[3.30.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.30.0)
+
 3.35.3
 ======
 Mar 2, 2023
