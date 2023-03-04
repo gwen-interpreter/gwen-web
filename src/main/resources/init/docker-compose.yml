@@ -62,7 +62,7 @@ services:
     volumes:
       - "$PWD:/project"
     working_dir: /project
-    command: bash -c "yarn install && yarn gwen:selenoid -b"
+    command: bash -c "yarn install && yarn gwen -b -c gwen/browsers/selenoid.conf gwen/features"
     networks:
       - gwen-net
   gwen-dry-run:

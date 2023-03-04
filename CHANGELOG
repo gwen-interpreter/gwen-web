@@ -1,3 +1,8 @@
+3.36.1
+======
+Mar 4, 2023
+- Remove reliance on package json scripts in docker files genearted by init --docker
+
 3.36.0
 ======
 Mar 3, 2023

@@ -128,11 +128,8 @@ trait WebProjectInitialiser extends ProjectInitialiser {
             |$filler│   ├── staging.conf
             |$filler│   └── test.conf
             |$filler├── /features           # Features and associative meta
-            |$filler│   ├── main.feature
-            |$filler│   ├── main.meta
             |$filler│   └── README.md
             |$filler├── /meta               # Optional common/reusable meta
-            |$filler│   ├── project.meta
             |$filler│   └── README.md
             |$filler└── /samples            # Sample features and meta
             |
