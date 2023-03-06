@@ -1,3 +1,10 @@
+3.36.2
+======
+Mar 6, 2023
+- Update Gwen core from v3.30.0 to v[3.30.1](https://github.com/gwen-interpreter/gwen/releases/tag/v3.30.1)
+  - Fix soft and sustained assertions
+  - List all errors at summary level in HTML report
+
 3.36.1
 ======
 Mar 4, 2023
