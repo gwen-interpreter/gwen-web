@@ -1,3 +1,9 @@
+3.37.1
+======
+Mar 9, 2023
+- Add `--remote-allow-origins=*` to chrome arguments in chrome config to get around the 
+  [Chrome 111 is not compatible with default HTTP Client](https://github.com/SeleniumHQ/selenium/issues/11750) issue.
+
 3.37.0
 ======
 Mar 8, 2023
