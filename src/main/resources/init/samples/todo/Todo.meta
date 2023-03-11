@@ -22,7 +22,8 @@ Feature: Todo Meta
   @StepDef
   Scenario: the list will contain <expected-count> items
     Given the displayed count can be located by css ".todo-count strong"
-     Then the displayed count should be "$<expected-count>"
+     Then my todo list should be displayed
+      And the displayed count should be "$<expected-count>"
 
   @StepDef
   @DataTable
