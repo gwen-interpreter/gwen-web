@@ -1,3 +1,8 @@
+3.37.2
+======
+Mar 12, 2023
+- Set default `gwen.web.locator.wait.seconds` setting value to 1 second (instead of `gwen.web.wait.seconds`)
+
 3.37.1
 ======
 Mar 9, 2023
