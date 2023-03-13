@@ -1,7 +1,6 @@
 3.37.2
 ======
 Mar 14, 2023
-- Set default `gwen.web.locator.wait.seconds` setting value to 1 second (instead of `gwen.web.wait.seconds`)
 - Update Gwen core from v3.31.0 to v[3.31.1](https://github.com/gwen-interpreter/gwen/releases/tag/v3.31.1)
   - Include exception cause in reported javascript errors
   - Reload tab completer when meta is loaded in REPL
