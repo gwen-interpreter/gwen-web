@@ -78,7 +78,6 @@ io.ous                                   jtoml                                  
 io.reactivex.rxjava2                     rxjava                                        | 2.2.10       | [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 io.swagger                               swagger-annotations                           | 1.6.0        | [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 javax.validation                         validation-api                                | 2.0.1.Final  | [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
-jline                                    jline                                         | 2.14.6       | [The BSD License](https://github.com/jline/jline2/blob/master/LICENSE.txt)
 joda-time                                joda-time                                     | 2.12.2       | [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 net.bytebuddy                            byte-buddy                                    | 1.12.22      | [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 net.java.dev.jna                         jna                                           | 5.12.1       | [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
@@ -102,6 +101,7 @@ org.brotli                               dec                                    
 org.checkerframework                     checker-qual                                  | 3.12.0       | [MIT License](http://www.slf4j.org/license.html)
 org.fusesource.jansi                     jansi                                         | 2.4.0        | [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 org.jdom                                 jdom2                                         | 2.0.6.1      | [Similar to Apache License but with the acknowledgment clause removed](https://raw.githubusercontent.com/hunterhacker/jdom/master/LICENSE.txt)
+org.jline                                jline                                         | 3.23.0       | [The BSD License](http://www.opensource.org/licenses/bsd-license.php)
 org.ow2.asm                              asm                                           | 9.1          | [BSD License](https://asm.ow2.io/license.html)
 org.reactivestreams                      reactive-streams                              | 1.0.3        | [MIT License](https://github.com/reactive-streams/reactive-streams-jvm/blob/master/LICENSE)
 org.scala-lang                           scala-library                                 | 2.13.10      | [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
@@ -338,7 +338,7 @@ LICENSES
    limitations under the License.
 ```
 
-# [The BSD License](https://github.com/jline/jline2/blob/master/LICENSE.txt)
+# [The BSD License](https://github.com/jline/jline3/blob/master/LICENSE.txt)
 
 ```
 Copyright (c) 2002-2016, the original author or authors.
