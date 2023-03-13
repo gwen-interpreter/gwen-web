@@ -7,7 +7,6 @@ Mar 14, 2023
   - Disable tab completion in REPL when in paste mode
 - Dependency udpates
   - Update jline from v2.14.6 to v3.23.0
-  - Update jul-to-slf4j from v1.7.36 to v2.0.6
   - Update log4j-slf4j-impl from v2.19.0 to v2.20.0
   - Update scalatest from v3.2.14 to v3.2.15
   - Update mockito-core from v4.9.0 to v4.11.0
