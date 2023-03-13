@@ -4,9 +4,14 @@ Mar 14, 2023
 - Set default `gwen.web.locator.wait.seconds` setting value to 1 second (instead of `gwen.web.wait.seconds`)
 - Update Gwen core from v3.31.0 to v[3.31.1](https://github.com/gwen-interpreter/gwen/releases/tag/v3.31.1)
   - Include exception cause in reported javascript errors
-  - Update jline from v2.14.6 to v3.23.0
   - Reload tab completer when meta is loaded in REPL
   - Disable tab completion in REPL when in paste mode
+- Dependency udpates
+  - Update jline from v2.14.6 to v3.23.0
+  - Update jul-to-slf4j from v1.7.36 to v2.0.6
+  - Update log4j-slf4j-impl from v2.19.0 to v2.20.0
+  - Update scalatest from v3.2.14 to v3.2.15
+  - Update mockito-core from v4.9.0 to v4.11.0
 
 3.37.1
 ======
