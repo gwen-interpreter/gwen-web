@@ -168,8 +168,6 @@ class DriverManager() extends LazyLogging {
     * Gets the local web driver for the given name.
     *
     *  @param browser the target browser
-    *  @throws gwen.web.WebErrors.UnsupportedWebDriverException if the given
-    *          web driver name is unsupported
     */
   private def localDriver(browser: WebBrowser): WebDriver = {
     logger.info(s"Starting $browser browser session${ if(session == "primary") "" else s": $session"}")
