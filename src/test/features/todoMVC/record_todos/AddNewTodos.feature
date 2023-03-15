@@ -1,19 +1,16 @@
-# This is a Gwen executable feature that mimics the Serenity feature test here:
-#   https://github.com/RiverGlide/serenity-web-todomvc-journey/blob/master/src/test/java/net/serenitybdd/demos/todos/features/record_todos/AddNewTodos.java
-
 Feature: Add new todos
-  
+
   Background: Open a new browser
     Given I have no open browser
      When I start a browser for James
      Then I should have 1 open browser
-      
+
   Scenario: I should be able to add the first todo item
     Given I have an open browser
      When I browse to the application home page
       And I add a "Buy some milk" item
      Then the displayed items should contain "Buy some milk"
-       
+
   Scenario: I should be able to add additional todo items
     Given I have an open browser
      When I browse to the application home page

@@ -16,4 +16,4 @@ Feature: XML meta
   @Action
   Scenario: I process XML in <xml>
     Given xml3 is "${$<xml>}"
-     And $<xml> should match xpath "/Test"
+      And $<xml> should match xpath "/Test"

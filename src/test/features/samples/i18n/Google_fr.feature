@@ -1,4 +1,5 @@
 # language: fr
+
 Fonctionnalité: recherche Google
 
   Scénario: recherche Google fructueuse

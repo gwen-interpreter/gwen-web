@@ -1,5 +1,5 @@
 Feature: Lookup state codes from CSV file
-   
+
   Scenario: Lookup file and bind to given name
     Given mapping file is "src/test/features-data/StateCodes.csv"
      When I lookup Code in mapping file as state code where "'${csv.record.Name}' == 'Victoria'"

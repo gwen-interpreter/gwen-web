@@ -1,5 +1,5 @@
 Feature: TodoMVC meta
-  
+
   @StepDef
   @Context
   Scenario: I launch the Todo app

@@ -18,4 +18,3 @@ Feature: Select each user
     Given my selected users is ""
      When I select all users in "user1,user2,user3"
      Then my selected users should be "user1user2user3"
-     

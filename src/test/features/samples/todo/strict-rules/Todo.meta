@@ -20,9 +20,9 @@ Feature: Todo meta
     Given the todo item is "${data[ITEM]}"
      When I enter the todo item in the todo field
      Then the added item can be located by xpath
-           """
-           //label[contains(.,'${the todo item}')]/preceding-sibling::input
-           """
+          """
+          //label[contains(.,'${the todo item}')]/preceding-sibling::input
+          """
       And the added item should be unticked
       And the active item count should be "${record.number}"
 

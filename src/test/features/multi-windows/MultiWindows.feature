@@ -1,4 +1,3 @@
-# website unavailable: http://book.theautomatedtester.co.uk/chapter1
 @Ignore
 Feature: Multi Windows
 

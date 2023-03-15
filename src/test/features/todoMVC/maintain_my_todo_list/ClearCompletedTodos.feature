@@ -1,13 +1,10 @@
-# This is a Gwen executable feature that mimics the Serenity feature test here:
-#   https://github.com/RiverGlide/serenity-web-todomvc-journey/blob/master/src/test/java/net/serenitybdd/demos/todos/features/maintain_my_todo_list/ClearCompletedTodos.java
-
 Feature: Clear completed todos
-  
+
   Background: Open a new browser
     Given I have no open browser
      When I start a browser for James
      Then I should have 1 open browser
-      
+
   Scenario: I should be able to clear completed todos
     Given I have an open browser
      When I browse to the application home page

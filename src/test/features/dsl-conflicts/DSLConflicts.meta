@@ -1,4 +1,3 @@
-# tests gwen-web issue #93
 Feature: DSL conflicts meta
 
   @Context
@@ -44,8 +43,8 @@ Feature: DSL conflicts meta
   @Action
   @StepDef
   Scenario: I enter "<text>" in <elem>
-    When I clear $<elem>
-     And I enter "$<text>" in $<elem>
+     When I clear $<elem>
+      And I enter "$<text>" in $<elem>
 
   @Action
   @StepDef

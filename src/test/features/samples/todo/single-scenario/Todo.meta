@@ -1,5 +1,5 @@
 Feature: Todo meta
-  
+
   @StepDef
   @Context
   Scenario: I launch the Todo app
@@ -57,7 +57,7 @@ Feature: Todo meta
      When I complete the "Feed the cat" item
      Then the number of open items should be "0"
 
-  @StepDef 
+  @StepDef
   @Assertion
   Scenario: I should have no items left
      Then the number of open items should not be displayed

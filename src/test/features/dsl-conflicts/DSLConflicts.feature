@@ -1,4 +1,3 @@
-# tests gwen-web issue #93
 Feature: DSL conflicts
 
   Scenario: Test if keyword conflict 1
@@ -54,7 +53,7 @@ Feature: DSL conflicts
      Then role not added should be "true"
 
   Scenario: Test similar step defs
-   Given listOfSubMenu is "TEST1,TEST3,TEST3"
-    When I select "${submenu}" for each submenu in listOfSubMenu delimited by "," 
-     And I select "Main Menu" "${submenu}" in sidebar for each submenu in listOfSubMenu delimited by "," 
-    Then info should be "GWEN SHOULD run this DSL"
+    Given listOfSubMenu is "TEST1,TEST3,TEST3"
+     When I select "${submenu}" for each submenu in listOfSubMenu delimited by ","
+      And I select "Main Menu" "${submenu}" in sidebar for each submenu in listOfSubMenu delimited by ","
+     Then info should be "GWEN SHOULD run this DSL"

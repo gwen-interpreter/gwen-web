@@ -7,5 +7,5 @@ Feature: Attribute in table
      Then attribute3 should be "1"
 
     Examples:
-      | AttributeValue |
-      | ${attribute1}  |
+        | AttributeValue |
+        | ${attribute1}  |

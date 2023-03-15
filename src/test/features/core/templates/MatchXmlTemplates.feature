@@ -81,7 +81,7 @@ Feature: Match and extract XML templates
               <name>!{}</name>
               <status>${my pet status}</status>
           </result>
-           """
+          """
       And pet id should be "42"
       And category name should be "pet"
       And the pet name should be "tiger"

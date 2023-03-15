@@ -1,14 +1,13 @@
-# website unavailable: https://chercher.tech/practice/relative-locators
 @Ignore
 Feature: Relative locators
 
   Scenario: Locate input fields relative to a button
     Given the button can be located by tag "button"
-      And field 1 can be located by tag name "input" above the button 
-      And field 2 can be located by css "input" to left of the button 
-      And field 3 can be located by xpath "//input" to right of the button 
-      And field 4 can be located by tag "input" below the button 
-      And field 5 can be located by tag "input" near the button 
+      And field 1 can be located by tag name "input" above the button
+      And field 2 can be located by css "input" to left of the button
+      And field 3 can be located by xpath "//input" to right of the button
+      And field 4 can be located by tag "input" below the button
+      And field 5 can be located by tag "input" near the button
       And field 6 can be located by tag "input" near and within 60 pixels of the button
      When I navigate to "https://chercher.tech/practice/relative-locators"
       And I type "above button" in field 1

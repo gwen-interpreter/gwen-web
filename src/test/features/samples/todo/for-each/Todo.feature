@@ -1,6 +1,5 @@
-
 Feature: Add todo items (for each)
-  
+
   Add items to a todo list
 
   Scenario: Create todo list (for each)

@@ -1,24 +1,24 @@
 @floodio
 Feature: floodio meta
-  
+
   Scenario: Initialise
     Given the heading is displayed is defined by javascript "!!$('h2')"
       And the heading can be located by tag name "h2"
       And the next button can be located by class name "btn"
-       
+
   @StepDef
   @Context
   Scenario: I launch the floodio challenge
     Given I navigate to "https://challengers.flood.io/start"
      Then I should be on the start page
-      
+
   @StepDef
   @Context
   Scenario: I am on the <page-name> page
     Given I wait until the heading is displayed
      Then I am on the $<page-name> page
-  
-  @StepDef 
+
+  @StepDef
   @Assertion
   Scenario: I should be on the start page
     Given I am on the start page
@@ -41,13 +41,13 @@ Feature: floodio meta
       And the largest order value is defined by javascript "Math.max.apply(Math, $.map($('.radio'), function(x) { return parseInt($(x).text()); }))"
       And the largest order input field can be located by id "challenger_largest_order"
       And the largest order radio button can be located by javascript "$('.radio:contains(${the largest order value}) input').get(0);"
-      
-  @StepDef  
+
+  @StepDef
   @Assertion
   Scenario: I should be on the step 4 page
     Given I am on the step 4 page
      Then the heading should contain "Step 4"
-        
+
   @StepDef
   @Assertion
   Scenario: I should be on the step 5 page
@@ -55,20 +55,20 @@ Feature: floodio meta
      Then the heading should contain "Step 5"
       And the one time token can be located by javascript "$('.token').get(0)"
       And the one time token field can be located by id "challenger_one_time_token"
-        
+
   @StepDef
   @Assertion
   Scenario: I should be on the challenge completed page
     Given I am on the challenge completed page
      Then the heading should contain "You're Done!"
       And the lead paragraph can be located by class name "lead"
-     
+
   @StepDef
   @Action
   Scenario: I select and enter the largest order value
     Given I type the largest order value in the largest order input field
       And I click the largest order radio button
-  
+
   @StepDef
   @Action
   Scenario: I enter the one time token
@@ -91,7 +91,7 @@ Feature: floodio meta
       And the how old are you dropdown value should be "21"
      When I click the next button
      Then I should be on the step 3 page
-       
+
   @StepDef
   @Action
   Scenario: I complete step 3
@@ -99,7 +99,7 @@ Feature: floodio meta
      When I select and enter the largest order value
       And I click the next button
      Then I should be on the step 4 page
-   
+
   @StepDef
   @Action
   Scenario: I complete step 4

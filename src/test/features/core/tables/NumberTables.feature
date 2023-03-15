@@ -27,8 +27,8 @@ Feature: Number tables
           | square | 1 | 4 | 9  |
           | cube   | 1 | 8 | 27 |
       And each column contains a number in decimal and binary form
-          | 4   | 5    | 6   |
-          | 100 | 101  | 110 |
+          | 4   | 5   | 6   |
+          | 100 | 101 | 110 |
       And the top and left numbers yield the product in the matrix
           | x | 1 | 2 | 3 |
           | 1 | 1 | 2 | 3 |

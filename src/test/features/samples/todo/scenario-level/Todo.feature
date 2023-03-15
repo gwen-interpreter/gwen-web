@@ -13,7 +13,7 @@ Feature: Create and complete Todo items
   Scenario: Complete second item
 
     Complete the 2nd item
-    
+
     Given I am on the Todo page
      When I complete the "Get the milk" item
      Then the number of open items should be "2"

@@ -1,10 +1,10 @@
 Feature: Multi locators
 
   Background: Open browser to google
-    Given the current URL is "" 
+    Given the current URL is ""
      When I navigate to "http://google.com"
      Then the current URL should contain "google"
-   
+
   Scenario: Last locator of three should find the search field
 
     Defines three locators for the search field.

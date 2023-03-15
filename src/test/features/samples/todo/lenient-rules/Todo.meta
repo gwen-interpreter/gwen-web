@@ -1,12 +1,12 @@
 Feature: Todo meta
- 
+
   @StepDef
   Scenario: I should be on the todo page
     Given the heading can be located by tag name "h1"
      Then the heading should be "todos"
       And the todo field can be located by class name "new-todo"
       And the active item count can be located by css selector ".todo-count > strong"
- 
+
   @StepDef
   Scenario: I add a "<todo>" item
      When I enter "$<todo>" in the todo field

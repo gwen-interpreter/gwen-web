@@ -65,7 +65,7 @@ Feature: If Conditionals
       And this condition is defined by toBoolean applied to "true"
      When I perform this if this condition
       And I perform that if not this condition
-     Then the called step should be "this step"  
+     Then the called step should be "this step"
 
   Scenario: Perform this using applied function as conditional (negated)
     Given the target is "this"
@@ -73,4 +73,4 @@ Feature: If Conditionals
       And this condition is defined by toBoolean applied to "false"
      When I perform this if not this condition
       And I perform that if this condition
-     Then the called step should be "this step" 
+     Then the called step should be "this step"

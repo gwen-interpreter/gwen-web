@@ -1,5 +1,5 @@
 Feature: Load Todo items from CSV files
-   
+
   Scenario: Launch the Todo application
     Given I launch the Todo app
      When I load items from CSV files

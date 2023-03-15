@@ -1,11 +1,10 @@
 Feature: Google search
-   
+
   Scenario: Perform a google search
     Given I have Google in my browser
      When I do a search for "gwen-web automation"
      Then the first result should open a Gwen page
 
-  # test fix for issue: https://github.com/gwen-interpreter/gwen-web/issues/65
   Scenario: Perform a google search with append
     Given I have Google in my browser
       And the search field can be located by name "q"
@@ -20,7 +19,7 @@ Feature: Google search
           """
           Gwen automation
           """
-      Then the first result should open a Gwen page
+     Then the first result should open a Gwen page
 
   Scenario: Perform a google search with element guard
     Given I have Google in my browser

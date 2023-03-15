@@ -8,7 +8,6 @@ Feature: Strings rules Meta
   @StepDef
   @Action
   Scenario Template: I join two strings in meta
-
     Given string 1 is "<string 1>"
       And string 2 is "<string 2>"
      When I join the two strings

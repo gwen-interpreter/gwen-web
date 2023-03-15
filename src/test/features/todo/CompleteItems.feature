@@ -17,6 +17,6 @@ Feature: Create and complete Todo items
      Then the number of active items should be "0"
 
   Scenario: Clear my completed items
-   Given I am on the Todo page
-    When I click the clear completed button
-    Then the number of active items should not be displayed
+    Given I am on the Todo page
+     When I click the clear completed button
+     Then the number of active items should not be displayed

@@ -1,20 +1,9 @@
-# Meta features are the automation glue in Gwen and they are defined 
-# in Gherkin too. They define locators and step definitions that are 
-# matched against steps in features to find elements and perform 
-# browser operations. They are loaded into memory before feature 
-# execution commences.
- 
-# @StepDef annotated Scenarios are step definitions in Gwen. The
-# name of the Scenario becomes the name of the step def. Steps
-# in features that match this name are executed by Gwen by 
-# evaluating the sequence of steps defined in that step def.
-
 Feature: Google search meta
 
   @StepDef
   @Context
   Scenario: I have Google in my browser
-          
+
     Gwen will match the name of this step def to the first step
     in the feature above and evaluate the steps that follow. These
     steps are matched against predefined steps in the Gwen Web DSL

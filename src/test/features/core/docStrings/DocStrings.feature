@@ -46,7 +46,7 @@ Feature: DocStrings
           Gwen is a Gherkin interpreter that turns ${my attribute 1} steps into ${my attribute 2} instructions and
           executes them for you so you don't have to do all the programming work. It has an abstracted evaluation
           engine allowing any type of ${my attribute 2} capability to be built and mixed in.
-
+          
           Meta specifications (also expressed in Gherkin) are used to capture ${my attribute 2} bindings and allow
           you to compose step definitions by mapping 'declarative' steps in features to 'imperative' steps in engines
           that perform operations.
@@ -57,7 +57,7 @@ Feature: DocStrings
           Gwen is a Gherkin interpreter that turns Given-When-Then steps into automation instructions and
           executes them for you so you don't have to do all the programming work. It has an abstracted evaluation
           engine allowing any type of automation capability to be built and mixed in.
-
+          
           Meta specifications (also expressed in Gherkin) are used to capture automation bindings and allow
           you to compose step definitions by mapping 'declarative' steps in features to 'imperative' steps in engines
           that perform operations.

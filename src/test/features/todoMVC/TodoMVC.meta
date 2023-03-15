@@ -1,13 +1,5 @@
-# This meta defines all the automation bindings for the features in this suite.
-
-# CSV data feed containing bindings for each JS implementation of the Todo app
-# ----------------------------------------------------------------------------
-# ${placeholers} in this meta resolve to column values defined in the CSV file for each record
-# Each record contains bindings specific to each implementation (since rendering discrepancies unfortunately exist)
-# All features in the suite are executed for each record
-
 Feature: Todos meta
-  
+
   @StepDef
   @Action
   Scenario: I browse to the application home page
@@ -31,54 +23,54 @@ Feature: Todos meta
   @Action
   Scenario: I clear all completed items
     Given I click the clear completed button
-                  
+
   @StepDef
   @Action
   Scenario: I clear all items
     Given I type " " in the toggle all checkbox
      When I clear all completed items
-      Then the number of items left should not be displayed
+     Then the number of items left should not be displayed
 
   @StepDef
   @Action
   Scenario: I add a "<todo>" item
-      When I enter "$<todo>" in the todo field
-      Then the "$<todo>" item can be located by xpath "${xpath-todo-list}//input[@type='checkbox']/following-sibling::label[contains(.,'$<todo>')]"
-       And the "$<todo>" item checkbox can be located by xpath "${xpath-todo-list}//input[@type='checkbox']/following-sibling::label[contains(.,'$<todo>')]/preceding-sibling::input"
+     When I enter "$<todo>" in the todo field
+     Then the "$<todo>" item can be located by xpath "${xpath-todo-list}//input[@type='checkbox']/following-sibling::label[contains(.,'$<todo>')]"
+      And the "$<todo>" item checkbox can be located by xpath "${xpath-todo-list}//input[@type='checkbox']/following-sibling::label[contains(.,'$<todo>')]/preceding-sibling::input"
 
   @StepDef
   @Action
   Scenario: I complete the "<todo>" item
     Given I click the "$<todo>" item checkbox
-     
+
   @StepDef
   @Assertion
   Scenario: the "<todo>" item should be completed
     Given the "$<todo>" item checkbox should be checked
-     
+
   @StepDef
   @Assertion
   Scenario: the "<todo>" item should be active
     Given the "$<todo>" item checkbox should not be checked
-    
+
   @StepDef
   @Action
   Scenario: I delete the "<todo>" item
     Given the delete button can be located by xpath "${xpath-todo-list}//input[@type='checkbox']/following-sibling::label[contains(.,'$<todo>')]/following-sibling::button"
-      And I click the delete button of the "$<todo>" item  
+      And I click the delete button of the "$<todo>" item
 
   @StepDef
   @Assertion
   Scenario: the clear completed items option should be unavailable
     Given the clear completed button should not be displayed
-    
+
   @StepDef
   @Action
   Scenario: I apply the "<filter>" filter
-    Given the filter can be located by link text "$<filter>" 
+    Given the filter can be located by link text "$<filter>"
      When I click the filter
      Then the "$<filter>" filter is selected is defined by javascript "document.querySelector('.selected').textContent == '$<filter>'"
-     
+
   @StepDef
   @Assertion
   Scenario: the "<filter>" filter should be selected

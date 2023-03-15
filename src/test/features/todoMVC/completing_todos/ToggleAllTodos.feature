@@ -1,13 +1,10 @@
-# This is a Gwen executable feature that mimics the Serenity feature test here:
-#   https://github.com/RiverGlide/serenity-web-todomvc-journey/blob/master/src/test/java/net/serenitybdd/demos/todos/features/completing_todos/ToggleAllTodos.java
-
 Feature: Toggle all todos
-  
+
   Background: Open a new browser
     Given I have no open browser
      When I start a browser for James
      Then I should have 1 open browser
-      
+
   Scenario: I should be able to quickly complete all todos
     Given I have an open browser
      When I browse to the application home page
