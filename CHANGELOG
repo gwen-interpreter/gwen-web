@@ -1,3 +1,9 @@
+3.39.0
+======
+Mar 15, 2023
+- Update Gwen core from v3.32.0 to v[3.33.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.33.0)
+  - Bind implicit `gwen.stepDef.name` attribute to the currently executing StepDef name
+
 3.38.0
 ======
 Mar 15, 2023
