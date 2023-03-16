@@ -1,3 +1,9 @@
+3.39.2
+======
+Mar 16, 2023
+- Update Gwen core from v3.33.0 to v[3.33.1](https://github.com/gwen-interpreter/gwen/releases/tag/v3.33.1)
+  - Relax strict and declarative rules when in REPL
+
 3.39.1
 ======
 Mar 16, 2023
