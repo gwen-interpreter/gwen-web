@@ -13,7 +13,7 @@ pipeline {
     booleanParam(name: 'video', defaultValue: true, description: 'Enable video capture (not available with parallel or headless)') 
   }
   environment {
-    GWEN_ENV = ${params.env}
+    GWEN_ENV = "${params.env}"
     GWEN_BROWSER = "${params.browser}"
     GWEN_DRY_RUN = "${params.dry_run}"
     GWEN_PARALLEL = "${params.parallel}"
