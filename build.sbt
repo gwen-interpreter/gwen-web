@@ -1,8 +1,8 @@
 enablePlugins(GitVersioning)
 
 // gwen core & web versions
-val gwenVersion = "3.33.1"
-val gwenWebVersion = "3.39.2"
+val gwenVersion = "3.33.2"
+val gwenWebVersion = "3.39.3"
 
 git.baseVersion := gwenWebVersion
 git.useGitDescribe := true

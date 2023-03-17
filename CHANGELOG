@@ -1,3 +1,9 @@
+3.39.3
+======
+Mar 17, 2023
+- Update Gwen core from v3.33.1 to v[3.33.2](https://github.com/gwen-interpreter/gwen/releases/tag/v3.33.2)
+  - Fix environment variable overrides for Settings
+
 3.39.2
 ======
 Mar 16, 2023
