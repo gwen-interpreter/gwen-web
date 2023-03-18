@@ -24,12 +24,3 @@ Feature: Todo Meta
     Given the displayed count can be located by css ".todo-count strong"
      Then my todo list should be displayed
       And the displayed count should be "$<expected-count>"
-
-  @StepDef
-  @DataTable
-  Scenario: I have the following active items
-    Given the todo field can be located by class "new-todo"
-      And the active count can be located by css ".todo-count strong"
-     When I navigate to "https://todomvc.com/examples/react"
-      And I enter Item in the todo field for each data record
-     Then the active count should be "3"
