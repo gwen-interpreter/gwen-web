@@ -4,7 +4,7 @@ Mar 18, 2023
 - Update Gwen core from v3.33.1 to v[3.33.2](https://github.com/gwen-interpreter/gwen/releases/tag/v3.33.2)
   - Fix environment variable overrides for Settings
   - Do no load Gwen banner a second time when starting REPL and loading meta unless verbose logging is enabled
-  
+  - Use SpecPrinter to print step on breakpoints
 
 3.39.2
 ======
