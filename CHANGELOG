@@ -1,3 +1,9 @@
+3.39.4
+======
+Mar 21, 2023
+- Update Gwen core from v3.33.2 to v[3.33.3](https://github.com/gwen-interpreter/gwen/releases/tag/v3.33.3)
+  - Allow cntl-d to exit REPL quietly
+
 3.39.3
 ======
 Mar 18, 2023
