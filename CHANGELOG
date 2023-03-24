@@ -1,3 +1,11 @@
+3.39.5
+======
+Mar 25, 2023
+- Update Gwen core from v3.33.3 to v[3.33.4](https://github.com/gwen-interpreter/gwen/releases/tag/v3.33.4)
+  - Do not escape inputs in REPL
+  - Smaller StepDef indents in HTML reports
+    - New default of 20 pixels for `gwen.report.stepDef.indent.pixels` setting
+
 3.39.4
 ======
 Mar 21, 2023
