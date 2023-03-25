@@ -65,6 +65,8 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
       GwenSettings.`gwen.console.log.colors` should be (true)
       GwenSettings.`gwen.console.log.depth` should be (1)
       GwenSettings.`gwen.console.log.stepDefs` should be (true)
+      GwenSettings.`gwen.console.repl.autoSuggestions` should be (true)
+      GwenSettings.`gwen.console.repl.tabCompletion` should be (true)
       GwenSettings.`gwen.video.dir`.getPath should be ("output/.video")
       GwenSettings.`gwen.video.timeoutSecs` should be (10)
       GwenSettings.`gwen.dryRun.limit.tableData.outline.examples.records` should be (Integer.MAX_VALUE)
@@ -180,6 +182,8 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
     GwenSettings.`gwen.console.log.colors` should be (true)
     GwenSettings.`gwen.console.log.depth` should be (1)
     GwenSettings.`gwen.console.log.stepDefs` should be (true)
+    GwenSettings.`gwen.console.repl.autoSuggestions` should be (true)
+    GwenSettings.`gwen.console.repl.tabCompletion` should be (true)
 
     CLISettings.`gwen.cli.options.format` should be (Nil)
 
@@ -283,6 +287,8 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
     GwenSettings.`gwen.console.log.colors` should be (true)
     GwenSettings.`gwen.console.log.depth` should be (1)
     GwenSettings.`gwen.console.log.stepDefs` should be (true)
+    GwenSettings.`gwen.console.repl.autoSuggestions` should be (true)
+    GwenSettings.`gwen.console.repl.tabCompletion` should be (true)
 
     RPSettings.`gwen.rp.debug` should be (false)
     RPSettings.`gwen.rp.heartbeat.enabled` should be (true)
