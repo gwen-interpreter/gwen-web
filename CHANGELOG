@@ -1,7 +1,7 @@
 3.40.0
 ======
 Mar 25, 2023
-- Update Gwen core from v3.33.4 to v[3.40.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.40.0)
+- Update Gwen core from v3.33.4 to v[3.34.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.34.0)
   - Introduce auto suggestions in the REPL console
   - Introduce new settings to enable or disable auto suggestions and tab completion
     - `gwen.console.repl.autoSuggestions=true|false` (default is true for enabled)
