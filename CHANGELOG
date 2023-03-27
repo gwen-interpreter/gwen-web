@@ -1,3 +1,9 @@
+3.40.2
+======
+Mar 27, 2023
+- Update Gwen core from v3.34.1 to v[3.34.3](https://github.com/gwen-interpreter/gwen/releases/tag/v3.34.3)
+  - Log warning and return code 1 if context fails to close on exit
+
 3.40.1
 ======
 Mar 27, 2023
