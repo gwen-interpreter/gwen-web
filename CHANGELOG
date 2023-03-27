@@ -1,3 +1,11 @@
+3.40.1
+======
+Mar 27, 2023
+- Update Gwen core from v3.34.0 to v[3.34.1](https://github.com/gwen-interpreter/gwen/releases/tag/v3.34.1)
+  - Only load Gwen banner a second time when starting REPL if in verbose mode or evaluation occured on features
+  - Fix launch issue where no meta or feature files are provided
+  - Allow cntl-c to exit REPL quietly
+
 3.40.0
 ======
 Mar 25, 2023
