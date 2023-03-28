@@ -1,3 +1,9 @@
+3.40.3
+======
+Mar 28, 2023
+- Update Gwen core from v3.34.3 to v[3.34.4](https://github.com/gwen-interpreter/gwen/releases/tag/v3.34.4)
+  - Fix StepDef parameter interpolation checks in dry runs
+
 3.40.2
 ======
 Mar 27, 2023
