@@ -12,7 +12,8 @@ Feature: Lookup state codes from CSV file
 
   Scenario: Lookup file and bind to column name
     Given mapping file is "src/test/features-data/StateCodes.csv"
-     When I lookup Code in mapping file where "'${csv.record.Name}' == 'Queensland'"
+      And target state is "Queensland"
+     When I lookup Code in mapping file where "'${csv.record.Name}' == '${target state}'"
      Then Code should be "QLD"
 
   Scenario: Lookup file reference and bind to column name
