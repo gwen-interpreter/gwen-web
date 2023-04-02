@@ -278,7 +278,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     var actualValue = actual()
     var polled = false
     try {
-      waitUntil(s"waiting for $name to ${if(negate) "not " else ""}$operator '$expected'") {
+      waitUntil(WebSettings.`gwen.web.assertions.wait.seconds`, s"waiting for $name to ${if(negate) "not " else ""}$operator '$expected'") {
         if (polled) {
           actualValue = actual()
         }
