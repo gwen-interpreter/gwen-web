@@ -270,15 +270,17 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     * @param negate true to negate the result
     * @param nameSuffix optional name suffix
     * @param message optional error message to use
+    * @param timeoutSecs the number of seconds to wait before timing out
     * @return true if the actual value matches the expected value
     */
-  def compare(name: String, expected: String, actual: () => String, operator: ComparisonOperator, negate: Boolean, nameSuffix: Option[String], message: Option[String]): Unit = {
+  def compare(name: String, expected: String, actual: () => String, operator: ComparisonOperator, negate: Boolean, nameSuffix: Option[String], message: Option[String], timeoutSecs: Option[Long]): Unit = {
     var result = false
     var error: Option[String] = None
     var actualValue = actual()
     var polled = false
     try {
-      waitUntil(WebSettings.`gwen.web.assertions.wait.seconds`, s"waiting for $name to ${if(negate) "not " else ""}$operator '$expected'") {
+      val waitSecs = timeoutSecs.getOrElse(WebSettings.`gwen.web.assertions.wait.seconds`)
+      waitUntil(waitSecs, s"waiting for $name to ${if(negate) "not " else ""}$operator '$expected'") {
         if (polled) {
           actualValue = actual()
         }

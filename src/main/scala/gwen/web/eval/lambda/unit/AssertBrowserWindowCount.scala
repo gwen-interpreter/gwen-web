@@ -32,7 +32,7 @@ class AssertBrowserWindowCount(expectedCount: Int, message: Option[String]) exte
     step tap { _ =>
       checkStepRules(step, BehaviorType.Assertion, ctx)
       ctx.perform {
-        ctx.compare("open windows/tabs", expectedCount.toString, () => ctx.noOfWindows().toString, ComparisonOperator.be, false, None, message)
+        ctx.compare("open windows/tabs", expectedCount.toString, () => ctx.noOfWindows().toString, ComparisonOperator.be, false, None, message, None)
       }
     }
   }

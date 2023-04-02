@@ -32,7 +32,7 @@ class AssertBrowserCount(expectedCount: Int, message: Option[String]) extends Un
     step tap { _ =>
       checkStepRules(step, BehaviorType.Assertion, ctx)
       ctx.perform {
-        ctx.compare("open browser sessions", expectedCount.toString, () => ctx.noOfSessions().toString, ComparisonOperator.be, false, None, message)
+        ctx.compare("open browser sessions", expectedCount.toString, () => ctx.noOfSessions().toString, ComparisonOperator.be, false, None, message, None)
       }
     }
   }

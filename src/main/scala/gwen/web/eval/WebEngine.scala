@@ -213,26 +213,66 @@ class WebEngine extends EvalEngine[WebContext] {
         new BindMultipleElementLocators(element, None, None, None)
       case r"""(.+?)$element can be (clicked|right clicked|double clicked|submitted|checked|ticked|unchecked|unticked|selected|deselected|typed|entered|tabbed|cleared|moved to)$event by (?:javascript|js) "(.+?)"$expression""" =>
         new BindActionHandler(element, ElementEvent.valueOf(event), step.orDocString(expression))
+      case r"""the page title should( not)?$negation be blank with no (?:timeout|wait)""" =>
+        new CompareTitle("title", "", false, ComparisonOperator.be, Option(negation).isDefined, step.message, Some(Duration.Zero))
+      case r"""the page title should( not)?$negation be blank with (\d+)$timeout second (?:timeout|wait)""" =>
+        new CompareTitle("title", "", false, ComparisonOperator.be, Option(negation).isDefined, step.message, Some(Duration.create(timeout.toLong, TimeUnit.SECONDS)))
       case r"""the page title should( not)?$negation be blank""" =>
-        new CompareTitle("title", "", false, ComparisonOperator.be, Option(negation).isDefined, step.message)
+        new CompareTitle("title", "", false, ComparisonOperator.be, Option(negation).isDefined, step.message, None)
+      case r"""the page title should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file)$operator "(.*?)"$expression with no (?:timeout|wait)""" =>
+        new CompareTitle("title", expression, false, ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message, Some(Duration.Zero))
+      case r"""the page title should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file)$operator "(.*?)"$expression with (\d+)$timeout second (?:timeout|wait)""" =>
+        new CompareTitle("title", expression, false, ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message, Some(Duration.create(timeout.toLong, TimeUnit.SECONDS)))
       case r"""the page title should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file)$operator "(.*?)"$expression""" =>
-        new CompareTitle("title", step.orDocString(expression), false, ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message)
+        new CompareTitle("title", step.orDocString(expression), false, ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message, None)
+      case r"""the page title should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$attribute with no (?:timeout|wait)""" =>
+        new CompareTitle("title", attribute, true, ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message, Some(Duration.Zero))
+      case r"""the page title should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$attribute with (\d+)$timeout second (?:timeout|wait)""" =>
+        new CompareTitle("title", attribute, true, ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message, Some(Duration.create(timeout.toLong, TimeUnit.SECONDS)))
       case r"""the page title should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$attribute""" =>
-        new CompareTitle("title", attribute, true, ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message)
+        new CompareTitle("title", attribute, true, ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message, None)
+      case r"""the (alert|confirmation)$name popup message should( not)?$negation be blank with no (?:timeout|wait)""" =>
+        new ComparePopupMessage(name, "", false, ComparisonOperator.be, Option(negation).isDefined, step.message, Some(Duration.Zero))
+      case r"""the (alert|confirmation)$name popup message should( not)?$negation be blank with (\d+)$timeout second (?:timeout|wait)""" =>
+        new ComparePopupMessage(name, "", false, ComparisonOperator.be, Option(negation).isDefined, step.message, Some(Duration.create(timeout.toLong, TimeUnit.SECONDS)))
       case r"""the (alert|confirmation)$name popup message should( not)?$negation be blank""" =>
-        new ComparePopupMessage(name, "", false, ComparisonOperator.be, Option(negation).isDefined, step.message)
+        new ComparePopupMessage(name, "", false, ComparisonOperator.be, Option(negation).isDefined, step.message, None)
+      case r"""the (alert|confirmation)$name popup message should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file)$operator "(.*?)"$expression with no (?:timeout|wait)""" =>
+        new ComparePopupMessage(name, expression, false, ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message, Some(Duration.Zero))
+      case r"""the (alert|confirmation)$name popup message should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file)$operator "(.*?)"$expression with (\d+)$timeout second (?:timeout|wait)""" =>
+        new ComparePopupMessage(name, expression, false, ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message, Some(Duration.create(timeout.toLong, TimeUnit.SECONDS)))
       case r"""the (alert|confirmation)$name popup message should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file)$operator "(.*?)"$expression""" =>
-        new ComparePopupMessage(name, step.orDocString(expression), false, ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message)
+        new ComparePopupMessage(name, step.orDocString(expression), false, ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message, None)
+      case r"""the (alert|confirmation)$name popup message should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$attribute with no (?:timeout|wait)""" =>
+        new ComparePopupMessage(name, attribute, true, ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message, Some(Duration.Zero))
+      case r"""the (alert|confirmation)$name popup message should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$attribute with (\d+)$timeout second (?:timeout|wait)""" =>
+        new ComparePopupMessage(name, attribute, true, ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message, Some(Duration.create(timeout.toLong, TimeUnit.SECONDS)))
       case r"""the (alert|confirmation)$name popup message should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$attribute""" =>
-        new ComparePopupMessage(name, attribute, true, ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message)
+        new ComparePopupMessage(name, attribute, true, ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message, None)
+      case r"""(.+?)$element should( not)?$negation be (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$state with no (?:timeout|wait)""" =>
+        new CompareElementState(element, ElementState.valueOf(state), Option(negation).nonEmpty, step.message, Some(Duration.Zero))
+      case r"""(.+?)$element should( not)?$negation be (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$state with (\d+)$timeout second (?:timeout|wait)""" =>
+        new CompareElementState(element, ElementState.valueOf(state), Option(negation).nonEmpty, step.message, Some(Duration.create(timeout.toLong, TimeUnit.SECONDS)))
       case r"""(.+?)$element should( not)?$negation be (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$state""" =>
-        new CompareElementState(element, ElementState.valueOf(state), Option(negation).nonEmpty, step.message)
+        new CompareElementState(element, ElementState.valueOf(state), Option(negation).nonEmpty, step.message, None)
+      case r"""(.+?)$element( text| value)?$selection should( not)?$negation be blank with no (?:timeout|wait)""" if !element.matches(".+at (json path|xpath).+") =>
+        new CompareValueOrSelectionToValue(element, Option(selection).map(_.trim).map(DropdownSelection.valueOf), "", ComparisonOperator.be, Option(negation).isDefined, step.message, Some(Duration.Zero))
+      case r"""(.+?)$element( text| value)?$selection should( not)?$negation be blank with (\d+)$timeout second (?:timeout|wait)""" if !element.matches(".+at (json path|xpath).+") =>
+        new CompareValueOrSelectionToValue(element, Option(selection).map(_.trim).map(DropdownSelection.valueOf), "", ComparisonOperator.be, Option(negation).isDefined, step.message, Some(Duration.create(timeout.toLong, TimeUnit.SECONDS)))
       case r"""(.+?)$element( text| value)?$selection should( not)?$negation be blank""" if !element.matches(".+at (json path|xpath).+") =>
-        new CompareValueOrSelectionToValue(element, Option(selection).map(_.trim).map(DropdownSelection.valueOf), "", ComparisonOperator.be, Option(negation).isDefined, step.message)
+        new CompareValueOrSelectionToValue(element, Option(selection).map(_.trim).map(DropdownSelection.valueOf), "", ComparisonOperator.be, Option(negation).isDefined, step.message, None)
+      case r"""(.+?)$element( text| value)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file)$operator "(.*?)"$expression with no (?:timeout|wait)""" if !element.matches(".+at (json path|xpath).+") =>
+        new CompareValueOrSelectionToValue(element, Option(selection).map(_.trim).map(DropdownSelection.valueOf), expression, ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message, Some(Duration.Zero))
+      case r"""(.+?)$element( text| value)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file)$operator "(.*?)"$expression with (\d+)$timeout second (?:timeout|wait)""" if !element.matches(".+at (json path|xpath).+") =>
+        new CompareValueOrSelectionToValue(element, Option(selection).map(_.trim).map(DropdownSelection.valueOf), expression, ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message, Some(Duration.create(timeout.toLong, TimeUnit.SECONDS)))
       case r"""(.+?)$element( text| value)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file)$operator "(.*?)"$expression""" if !element.matches(".+at (json path|xpath).+") =>
-        new CompareValueOrSelectionToValue(element, Option(selection).map(_.trim).map(DropdownSelection.valueOf), step.orDocString(expression), ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message)
+        new CompareValueOrSelectionToValue(element, Option(selection).map(_.trim).map(DropdownSelection.valueOf), step.orDocString(expression), ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message, None)
+      case r"""(.+?)$element( text| value)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$attribute with no (?:timeout|wait)""" if attribute != "absent" && attribute != "defined" && !element.matches(".+at (json path|xpath).+") && !attribute.contains("% similar to ") && !attribute.contains('"') =>
+        new CompareValueOrSelectionToBoundValue(element, Option(selection).map(_.trim).map(DropdownSelection.valueOf), attribute, ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message, Some(Duration.Zero))
+      case r"""(.+?)$element( text| value)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$attribute with (\d+)$timeout second (?:timeout|wait)""" if attribute != "absent" && attribute != "defined" && !element.matches(".+at (json path|xpath).+") && !attribute.contains("% similar to ") && !attribute.contains('"') =>
+        new CompareValueOrSelectionToBoundValue(element, Option(selection).map(_.trim).map(DropdownSelection.valueOf), attribute, ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message, Some(Duration.create(timeout.toLong, TimeUnit.SECONDS)))
       case r"""(.+?)$element( text| value)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$attribute""" if attribute != "absent" && attribute != "defined" && !element.matches(".+at (json path|xpath).+") && !attribute.contains("% similar to ") && !attribute.contains('"') =>
-        new CompareValueOrSelectionToBoundValue(element, Option(selection).map(_.trim).map(DropdownSelection.valueOf), attribute, ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message)
+        new CompareValueOrSelectionToBoundValue(element, Option(selection).map(_.trim).map(DropdownSelection.valueOf), attribute, ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message, None)
       case r"""I capture (.+?)$attribute (?:of|on|in) (.+?)$element by (?:javascript|js) "(.+?)"$expression""" =>
         new CaptureElementAttribute(element, attribute, step.orDocString(expression))
       case r"""I capture the current URL""" =>
