@@ -143,12 +143,13 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     *
     * @param name the name of the bound value to find
     */
-  override def getBoundReferenceValue(name: String): String = {
+  override def getBoundReferenceValue(name: String): String = getBoundReferenceValue(name, None)
+  def getBoundReferenceValue(name: String, timeout: Option[Duration]): String = {
     if (name == "the current URL") {
       val url = captureCurrentUrl
       topScope.set(name, url)
     }
-    (getLocatorBinding(name, optional = true) match {
+    (getLocatorBinding(name, optional = true).map(_.withTimeout(timeout)) match {
       case Some(binding) =>
         Try(getElementText(binding)) match {
           case Success(text) => text.getOrElse(getAttribute(name))
@@ -182,15 +183,16 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     }
   }
 
-  def boundAttributeOrSelection(element: String, selection: Option[DropdownSelection]): () => String = () => {
+  def boundAttributeOrSelection(element: String, selection: Option[DropdownSelection]): String = boundAttributeOrSelection(element, selection, None)
+  def boundAttributeOrSelection(element: String, selection: Option[DropdownSelection], timeout: Option[Duration]): String = {
     selection match {
-      case None => getBoundReferenceValue(element)
+      case None => getBoundReferenceValue(element, timeout)
       case Some(sel) =>
         try {
-          getBoundReferenceValue(s"$element $sel")
+          getBoundReferenceValue(s"$element $sel", timeout)
         } catch {
           case _: UnboundAttributeException =>
-            getElementSelection(element, sel).getOrElse(getBoundReferenceValue(element))
+            getElementSelection(element, sel).getOrElse(getBoundReferenceValue(element, timeout))
           case e: Throwable => throw e
         }
     }
@@ -279,8 +281,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     var actualValue = actual()
     var polled = false
     try {
-      val waitSecs = timeoutSecs.getOrElse(WebSettings.`gwen.web.assertions.wait.seconds`)
-      waitUntil(waitSecs, s"waiting for $name to ${if(negate) "not " else ""}$operator '$expected'") {
+      waitUntil(timeoutSecs, s"waiting for $name to ${if(negate) "not " else ""}$operator '$expected'") {
         if (polled) {
           actualValue = actual()
         }
@@ -619,8 +620,18 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     */
   def checkElementState(binding: LocatorBinding, state: ElementState, negate: Boolean, message: Option[String]): Unit = {
     perform {
-      val result = isElementState(binding, state, negate)
-      Errors.assertWithError(result, message, s"${binding.displayName} should${if(negate) " not" else ""} be $state")
+        var result = false
+        try {
+          waitUntil(binding.timeoutSeconds, s"waiting for ${binding.displayName} to ${if(negate) "not " else ""}be '$state'") {
+            isElementState(binding, state, negate) tap { res => 
+              result = res
+            }
+          }
+        } catch {
+          case _: WaitTimeoutException =>
+            result = false  
+        }
+        Errors.assertWithError(result, message, s"${binding.displayName} should${if(negate) " not" else ""} be $state")
     }
   }
 

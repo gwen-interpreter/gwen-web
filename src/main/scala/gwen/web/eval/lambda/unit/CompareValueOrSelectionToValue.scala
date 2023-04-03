@@ -41,7 +41,7 @@ class CompareValueOrSelectionToValue(element: String, selection: Option[Dropdown
       ctx.topScope.set(element, url)
     }
     val expected = ctx.parseExpression(operator, expression)
-    val actual = ctx.boundAttributeOrSelection(element, selection)
+    val actual = () => ctx.boundAttributeOrSelection(element, selection, timeout)
     step tap { _ =>
       ctx.perform {
         if (ctx.scopes.findEntry { case (n, _) => n.startsWith(element) } forall { case (n, _) => n != element }) {

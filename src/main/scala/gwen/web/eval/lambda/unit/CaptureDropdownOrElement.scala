@@ -33,7 +33,7 @@ class CaptureDropdownOrElement(target: Option[String], element: String, selectio
     checkStepRules(step, BehaviorType.Action, ctx)
     val name = target.getOrElse(element)
     try {
-      val content = ctx.boundAttributeOrSelection(element, Option(selection))()
+      val content = ctx.boundAttributeOrSelection(element, Option(selection))
       ctx.topScope.set(name, content)
       step.addAttachment(name, "txt", content)
     } catch {

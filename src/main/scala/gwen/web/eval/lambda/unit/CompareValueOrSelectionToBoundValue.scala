@@ -38,8 +38,8 @@ class CompareValueOrSelectionToBoundValue(element: String, selection: Option[Dro
       val url = ctx.captureCurrentUrl
       ctx.topScope.set(element, url)
     }
-    val expected = ctx.getBoundReferenceValue(source)
-    val actual = ctx.boundAttributeOrSelection(element, selection)
+    val expected = ctx.getBoundReferenceValue(source, timeout)
+    val actual = () => ctx.boundAttributeOrSelection(element, selection, timeout)
     step tap { _ =>
       ctx.perform {
         val nameSuffix = selection.map(sel => s" $sel")

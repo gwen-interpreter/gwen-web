@@ -570,7 +570,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
   "the page title should <operator> <reference>" should "evaluate" in {
     matchers2.foreach { case (operator, source, expression) =>
       doReturn(source).when(ctx).getTitle
-      doReturn(expression).when(ctx).getBoundReferenceValue("<reference>")
+      doReturn(expression).when(ctx).getBoundReferenceValue("<reference>", None)
       evaluate(s"""the page title should $operator "$expression"""")
       verify(ctx).parseExpression(operator, expression)
     }
@@ -580,7 +580,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     matchers2.foreach { case (operator, src, expression) =>
       val source = src.replaceAll("value", "other")
       doReturn(source).when(ctx).getTitle
-      doReturn(expression).when(ctx).getBoundReferenceValue("<reference>")
+      doReturn(expression).when(ctx).getBoundReferenceValue("<reference>", None)
       evaluate(s"""the page title should not $operator "$expression"""")
       verify(ctx).parseExpression(operator, expression)
     }
@@ -606,7 +606,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
   "the alert popup message should <operator> <reference>" should "evaluate" in {
     matchers2.foreach { case (operator, source, expression) =>
       doReturn(source).when(ctx).getPopupMessage
-      doReturn(expression).when(ctx).getBoundReferenceValue("<reference>")
+      doReturn(expression).when(ctx).getBoundReferenceValue("<reference>", None)
       evaluate(s"""the alert popup message should $operator "$expression"""")
       verify(ctx).parseExpression(operator, expression)
     }
@@ -616,7 +616,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     matchers2.foreach { case (operator, src, expression) =>
       val source = src.replaceAll("value", "other")
       doReturn(source).when(ctx).getPopupMessage
-      doReturn(expression).when(ctx).getBoundReferenceValue("<reference>")
+      doReturn(expression).when(ctx).getBoundReferenceValue("<reference>", None)
       evaluate(s"""the alert popup message should not $operator "$expression"""")
       verify(ctx).parseExpression(operator, expression)
     }
@@ -642,7 +642,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
   "the confirmation popup message should <operator> <reference>" should "evaluate" in {
     matchers2.foreach { case (operator, source, expression) =>
       doReturn(source).when(ctx).getPopupMessage
-      doReturn(expression).when(ctx).getBoundReferenceValue("<reference>")
+      doReturn(expression).when(ctx).getBoundReferenceValue("<reference>", None)
       evaluate(s"""the confirmation popup message should $operator "$expression"""")
       verify(ctx).parseExpression(operator, expression)
     }
@@ -652,7 +652,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     matchers2.foreach { case (operator, src, expression) =>
       val source = src.replaceAll("value", "other")
       doReturn(source).when(ctx).getPopupMessage
-      doReturn(expression).when(ctx).getBoundReferenceValue("<reference>")
+      doReturn(expression).when(ctx).getBoundReferenceValue("<reference>", None)
       evaluate(s"""the confirmation popup message should not $operator "$expression"""")
       verify(ctx).parseExpression(operator, expression)
     }
@@ -685,7 +685,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
   """<reference> should <operator> "<value>"""" should "evaluate" in {
     matchers.foreach { case (operator, source, expression) =>
       doReturn(None).when(mockScopes).findEntry(any())
-      doReturn(() => source).when(ctx).boundAttributeOrSelection("<reference>", None)
+      doReturn(source).when(ctx).boundAttributeOrSelection("<reference>", None, None)
       doReturn(None).when(mockScopes).getOpt("<reference>")
       evaluate(s"""<reference> should $operator "$expression"""")
       verify(ctx).parseExpression(operator, expression)
@@ -696,7 +696,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     matchers.foreach { case (operator, src, expression) =>
       val source = src.replaceAll("value", "other")
       doReturn(None).when(mockScopes).findEntry(any())
-      doReturn(() => source).when(ctx).boundAttributeOrSelection("<reference>", None)
+      doReturn(source).when(ctx).boundAttributeOrSelection("<reference>", None, None)
       doReturn(None).when(mockScopes).getOpt("<reference>")
       evaluate(s"""<reference> should not $operator "$expression"""")
       verify(ctx).parseExpression(operator, expression)
@@ -724,8 +724,8 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
 
   "<reference A> should <operator> <reference B>" should "evaluate" in {
     matchers2.foreach { case (operator, source, expression) =>
-      doReturn(() => source).when(ctx).boundAttributeOrSelection("<reference A>", None)
-      doReturn(expression).when(ctx).getBoundReferenceValue("<reference B>")
+      doReturn(source).when(ctx).boundAttributeOrSelection("<reference A>", None, None)
+      doReturn(expression).when(ctx).getBoundReferenceValue("<reference B>", None)
       doReturn(None).when(mockScopes).getOpt("<reference>")
       evaluate(s"<reference A> should $operator <reference B>")
     }
@@ -734,8 +734,8 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
   "<reference A> should not <operator> <reference B>" should "evaluate" in {
     matchers2.foreach { case (operator, src, expression) =>
       val source = src.replaceAll("value", "other")
-      doReturn(() => source).when(ctx).boundAttributeOrSelection("<reference A>", None)
-      doReturn(expression).when(ctx).getBoundReferenceValue("<reference B>")
+      doReturn(source).when(ctx).boundAttributeOrSelection("<reference A>", None, None)
+      doReturn(expression).when(ctx).getBoundReferenceValue("<reference B>", None)
       doReturn(None).when(mockScopes).getOpt("<reference>")
       evaluate(s"<reference A> should not $operator <reference B>")
     }
@@ -746,7 +746,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     doReturn(Some(mockBinding)).when(ctx).getLocatorBinding("<dropdown>", optional = false)
     matchers.foreach { case (operator, source, expression) =>
       doReturn(None).when(mockScopes).findEntry(any())
-      doReturn(() => source).when(ctx).boundAttributeOrSelection("<dropdown>", Option(DropdownSelection.text))
+      doReturn(source).when(ctx).boundAttributeOrSelection("<dropdown>", Option(DropdownSelection.text), None)
       doReturn(Some("<dropdown>")).when(mockScopes).getOpt("<dropdown>")
       evaluate(s"""<dropdown> text should $operator "$expression"""")
       verify(ctx).parseExpression(operator, expression)
@@ -759,7 +759,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     matchers.foreach { case (operator, src, expression) =>
       val source = src.replaceAll("value", "other")
       doReturn(None).when(mockScopes).findEntry(any())
-      doReturn(() => source).when(ctx).boundAttributeOrSelection("<dropdown>", Option(DropdownSelection.text))
+      doReturn(source).when(ctx).boundAttributeOrSelection("<dropdown>", Option(DropdownSelection.text), None)
       doReturn(Some("<dropdown>")).when(mockScopes).getOpt("<dropdown>")
       evaluate(s"""<dropdown> text should not $operator "$expression"""")
       verify(ctx).parseExpression(operator, expression)
@@ -770,9 +770,9 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     val mockBinding = mock[LocatorBinding]
     doReturn(Some(mockBinding)).when(ctx).getLocatorBinding("<dropdown>", optional = false)
     matchers2.foreach { case (operator, source, expression) =>
-      doReturn(() => source).when(ctx).boundAttributeOrSelection("<dropdown>", Option(DropdownSelection.text))
+      doReturn(source).when(ctx).boundAttributeOrSelection("<dropdown>", Option(DropdownSelection.text), None)
       doReturn(Some("<dropdown>")).when(mockScopes).getOpt("<dropdown>")
-      doReturn(expression).when(ctx).getBoundReferenceValue("<reference>")
+      doReturn(expression).when(ctx).getBoundReferenceValue("<reference>", None)
       evaluate(s"<dropdown> text should $operator <reference>")
     }
   }
@@ -783,9 +783,9 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     matchers2.foreach { case (operator, src, expression) =>
       val source = src.replaceAll("value", "other")
       doReturn(None).when(mockScopes).findEntry(any())
-      doReturn(() => source).when(ctx).boundAttributeOrSelection("<dropdown>", Option(DropdownSelection.text))
+      doReturn(source).when(ctx).boundAttributeOrSelection("<dropdown>", Option(DropdownSelection.text), None)
       doReturn(Some("<dropdown>")).when(mockScopes).getOpt("<dropdown>")
-      doReturn(expression).when(ctx).getBoundReferenceValue("<reference>")
+      doReturn(expression).when(ctx).getBoundReferenceValue("<reference>", None)
       evaluate(s"<dropdown> text should not $operator <reference>")
     }
   }
@@ -795,7 +795,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     doReturn(Some(mockBinding)).when(ctx).getLocatorBinding("<dropdown>", optional = false)
     matchers.foreach { case (operator, source, expression) =>
       doReturn(None).when(mockScopes).findEntry(any())
-      doReturn(() => source).when(ctx).boundAttributeOrSelection("<dropdown>", Option(DropdownSelection.value))
+      doReturn(source).when(ctx).boundAttributeOrSelection("<dropdown>", Option(DropdownSelection.value), None)
       doReturn(Some("<dropdown>")).when(mockScopes).getOpt("<dropdown>")
       evaluate(s"""<dropdown> value should $operator "$expression"""")
       verify(ctx).parseExpression(operator, expression)
@@ -808,7 +808,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     matchers.foreach { case (operator, src, expression) =>
       val source = src.replaceAll("value", "other")
       doReturn(None).when(mockScopes).findEntry(any())
-      doReturn(() => source).when(ctx).boundAttributeOrSelection("<dropdown>", Option(DropdownSelection.value))
+      doReturn(source).when(ctx).boundAttributeOrSelection("<dropdown>", Option(DropdownSelection.value), None)
       doReturn(Some("<dropdown>")).when(mockScopes).getOpt("<dropdown>")
       evaluate(s"""<dropdown> value should not $operator "$expression"""")
       verify(ctx).parseExpression(operator, expression)
@@ -819,9 +819,9 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     val mockBinding = mock[LocatorBinding]
     doReturn(Some(mockBinding)).when(ctx).getLocatorBinding("<dropdown>", optional = false)
     matchers2.foreach { case (operator, source, expression) =>
-      doReturn(() => source).when(ctx).boundAttributeOrSelection("<dropdown>", Option(DropdownSelection.value))
+      doReturn(source).when(ctx).boundAttributeOrSelection("<dropdown>", Option(DropdownSelection.value), None)
       doReturn(Some("<dropdown>")).when(mockScopes).getOpt("<dropdown>")
-      doReturn(expression).when(ctx).getBoundReferenceValue("<reference>")
+      doReturn(expression).when(ctx).getBoundReferenceValue("<reference>", None)
       evaluate(s"<dropdown> value should $operator <reference>")
     }
   }
@@ -832,9 +832,9 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     matchers2.foreach { case (operator, src, expression) =>
       val source = src.replaceAll("value", "other")
       doReturn(None).when(mockScopes).findEntry(any())
-      doReturn(() => source).when(ctx).boundAttributeOrSelection("<dropdown>", Option(DropdownSelection.value))
+      doReturn(source).when(ctx).boundAttributeOrSelection("<dropdown>", Option(DropdownSelection.value), None)
       doReturn(Some("<dropdown>")).when(mockScopes).getOpt("<dropdown>")
-      doReturn(expression).when(ctx).getBoundReferenceValue("<reference>")
+      doReturn(expression).when(ctx).getBoundReferenceValue("<reference>", None)
       evaluate(s"<dropdown> value should not $operator <reference>")
     }
   }
@@ -843,7 +843,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     matchers.foreach { case (operator, source, expression) =>
       doReturn("http://site.com").when(ctx).captureCurrentUrl
       doReturn(None).when(mockScopes).findEntry(any())
-      doReturn(() => source).when(ctx).boundAttributeOrSelection("the current URL", None)
+      doReturn(source).when(ctx).boundAttributeOrSelection("the current URL", None, None)
       doReturn(None).when(mockScopes).getOpt("the current URL")
       evaluate(s"""the current URL should $operator "$expression"""")
       verify(ctx).parseExpression(operator, expression)
@@ -855,7 +855,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
       val source = src.replaceAll("value", "other")
       doReturn("http://site.com").when(ctx).captureCurrentUrl
       doReturn(None).when(mockScopes).findEntry(any())
-      doReturn(() => source).when(ctx).boundAttributeOrSelection("the current URL", None)
+      doReturn(source).when(ctx).boundAttributeOrSelection("the current URL", None, None)
       doReturn(None).when(mockScopes).getOpt("the current URL")
       evaluate(s"""the current URL should not $operator "$expression"""")
       verify(ctx).parseExpression(operator, expression)
@@ -866,9 +866,9 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     matchers2.foreach { case (operator, source, expression) =>
       doReturn("http://site.com").when(ctx).captureCurrentUrl
       doReturn(None).when(mockScopes).findEntry(any())
-      doReturn(() => source).when(ctx).boundAttributeOrSelection("the current URL", None)
+      doReturn(source).when(ctx).boundAttributeOrSelection("the current URL", None, None)
       doReturn(None).when(mockScopes).getOpt("the current URL")
-      doReturn(expression).when(ctx).getBoundReferenceValue("<reference>")
+      doReturn(expression).when(ctx).getBoundReferenceValue("<reference>", None)
       evaluate(s"""the current URL should $operator "$expression"""")
       verify(ctx).parseExpression(operator, expression)
     }
@@ -879,28 +879,28 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
       val source = src.replaceAll("value", "other")
       doReturn("http://site.com").when(ctx).captureCurrentUrl
       doReturn(None).when(mockScopes).findEntry(any())
-      doReturn(() => source).when(ctx).boundAttributeOrSelection("the current URL", None)
+      doReturn(source).when(ctx).boundAttributeOrSelection("the current URL", None, None)
       doReturn(None).when(mockScopes).getOpt("the current URL")
-      doReturn(expression).when(ctx).getBoundReferenceValue("<reference>")
+      doReturn(expression).when(ctx).getBoundReferenceValue("<reference>", None)
       evaluate(s"""the current URL should not $operator "$expression"""")
       verify(ctx).parseExpression(operator, expression)
     }
   }
 
   """I capture the text in <reference A> by xpath "<expression>" as <reference B>""" should "evaluate" in {
-    doReturn("<value>x</value>").when(ctx).getBoundReferenceValue("<reference A>")
+    doReturn("<value>x</value>").when(ctx).getBoundReferenceValue("<reference A>", None)
     evaluate("""I capture the text in <reference A> by xpath "/value" as <reference B>""")
     verify(mockTopScope).set("<reference B>", "x")
   }
 
   """I capture the node in <reference A> by xpath "<expression>" as <reference B>""" should "evaluate" in {
-    doReturn("<value>x</value>").when(ctx).getBoundReferenceValue("<reference A>")
+    doReturn("<value>x</value>").when(ctx).getBoundReferenceValue("<reference A>", None)
     evaluate("""I capture the node in <reference A> by xpath "/value" as <reference B>""")
     verify(mockTopScope).set("<reference B>", "<value>x</value>")
   }
 
   """I capture the nodeset in <reference A> by xpath "<expression>" as <reference B>""" should "evaluate" in {
-    doReturn("<values><value>x</value><value>y</value></values>").when(ctx).getBoundReferenceValue("<reference A>")
+    doReturn("<values><value>x</value><value>y</value></values>").when(ctx).getBoundReferenceValue("<reference A>", None)
     evaluate("""I capture the nodeset in <reference A> by xpath "/values/value" as <reference B>""")
     verify(mockTopScope).set("<reference B>",
       """<value>x</value>
@@ -908,19 +908,19 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
   }
 
   """I capture the text in <referenceA> by regex "<expression>" as <reference B>""" should "evaluate" in {
-    doReturn("""Now get <this>""").when(ctx).getBoundReferenceValue("<reference A>")
+    doReturn("""Now get <this>""").when(ctx).getBoundReferenceValue("<reference A>", None)
     evaluate("""I capture the text in <reference A> by regex "Now get (.+)" as <reference B>""")
     verify(mockTopScope).set("<reference B>", "<this>")
   }
 
   """I capture the content in <reference A> by json path "<expression B>" as <reference>""" should "evaluate" in {
-    doReturn("""{value:"<this>"}""").when(ctx).getBoundReferenceValue("<reference A>")
+    doReturn("""{value:"<this>"}""").when(ctx).getBoundReferenceValue("<reference A>", None)
     evaluate("""I capture the content in <reference A> by json path "$.value" as <reference B>""")
     verify(mockTopScope).set("<reference B>", "<this>")
   }
 
   """I capture the text in the current URL by regex "<expression>" as <reference>""" should "evaluate" in {
-    doReturn("http://site.com?param1=<this>&param2=<that>").when(ctx).getBoundReferenceValue("the current URL")
+    doReturn("http://site.com?param1=<this>&param2=<that>").when(ctx).getBoundReferenceValue("the current URL", None)
     evaluate("""I capture the text in the current URL by regex "param1=(.+)&" as <reference>""")
     verify(mockTopScope).set("<reference>", "<this>")
   }
@@ -932,13 +932,13 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
   }
 
   "I capture <reference> as <attribute>" should "evaluate" in {
-    doReturn("value").when(ctx).getBoundReferenceValue("<reference>")
+    doReturn("value").when(ctx).getBoundReferenceValue("<reference>", None)
     evaluate("I capture <reference> as <attribute>")
     verify(mockTopScope).set("<attribute>", "value")
   }
 
   "I capture <reference>" should "evaluate" in {
-    doReturn("value").when(ctx).getBoundReferenceValue("<reference>")
+    doReturn("value").when(ctx).getBoundReferenceValue("<reference>", None)
     evaluate("I capture <reference>")
     verify(mockTopScope).set("<reference>", "value")
   }
@@ -968,25 +968,25 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
   }
 
   "I capture <dropdown> text as <attribute>" should "evaluate" in {
-    doReturn(() => "value").when(ctx).boundAttributeOrSelection("<dropdown>", Option(DropdownSelection.text))
+    doReturn("value").when(ctx).boundAttributeOrSelection("<dropdown>", Option(DropdownSelection.text), None)
     evaluate("I capture <dropdown> text as <attribute>")
     verify(mockTopScope).set("<attribute>", "value")
   }
 
   "I capture <dropdown> value as <attribute>" should "evaluate" in {
-    doReturn(() => "value").when(ctx).boundAttributeOrSelection("<dropdown>", Option(DropdownSelection.value))
+    doReturn("value").when(ctx).boundAttributeOrSelection("<dropdown>", Option(DropdownSelection.value), None)
     evaluate("I capture <dropdown> value as <attribute>")
     verify(mockTopScope).set("<attribute>", "value")
   }
 
   "I capture <dropdown> text" should "evaluate" in {
-    doReturn(() => "value").when(ctx).boundAttributeOrSelection("<dropdown>", Option(DropdownSelection.text))
+    doReturn("value").when(ctx).boundAttributeOrSelection("<dropdown>", Option(DropdownSelection.text), None)
     evaluate("I capture <dropdown> text")
     verify(mockTopScope).set("<dropdown>", "value")
   }
 
   "I capture <dropdown> value" should "evaluate" in {
-    doReturn(() => "value").when(ctx).boundAttributeOrSelection("<dropdown>", Option(DropdownSelection.value))
+    doReturn("value").when(ctx).boundAttributeOrSelection("<dropdown>", Option(DropdownSelection.value), None)
     evaluate("I capture <dropdown> value")
     verify(mockTopScope).set("<dropdown>", "value")
   }
@@ -1001,8 +1001,10 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     val mockBinding = mock[LocatorBinding]
     val mockElement = mock[WebElement]
     doReturn(mockBinding).when(ctx).getLocatorBinding("<element>")
+    doReturn(mockBinding).when(mockBinding).withTimeout(None)
     doReturn(mockElement).when(mockBinding).resolve()
-    doReturn("value").when(ctx).getBoundReferenceValue("<attribute>")
+    doReturn(0L).when(mockBinding).timeoutSeconds
+    doReturn("value").when(ctx).getBoundReferenceValue("<attribute>", None)
     List("of", "on", "in").foreach { x =>
       evaluate(s"""I capture <attribute> $x <element> by javascript "<expression>"""")
     }
@@ -1204,7 +1206,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
   "I <enter|type> <reference> in <element>" should "evaluate" in {
     val mockBinding = mock[LocatorBinding]
     doReturn(mockBinding).when(ctx).getLocatorBinding("<element>")
-    doReturn("<text>").when(ctx).getBoundReferenceValue("<reference>")
+    doReturn("<text>").when(ctx).getBoundReferenceValue("<reference>", None)
     List("enter", "type").foreach { action =>
       doNothing().when(ctx).sendValue(mockBinding, "<text>", clickFirst = false, clearFirst = false, sendEnterKey = action == "enter")
       evaluate(s"I $action <reference> in <element>")
@@ -1241,7 +1243,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
   """I select <reference> in <element>""" should "evaluate" in {
     val mockBinding = mock[LocatorBinding]
     doReturn(mockBinding).when(ctx).getLocatorBinding("<element>")
-    doReturn("<text>").when(ctx).getBoundReferenceValue("<reference>")
+    doReturn("<text>").when(ctx).getBoundReferenceValue("<reference>", None)
     doNothing().when(ctx).selectByVisibleText(mockBinding, "<text>")
     evaluate("""I select <reference> in <element>""")
     verify(ctx).selectByVisibleText(mockBinding, "<text>")
@@ -1250,7 +1252,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
   """I select <reference> in <element> by value""" should "evaluate" in {
     val mockBinding = mock[LocatorBinding]
     doReturn(mockBinding).when(ctx).getLocatorBinding("<element>")
-    doReturn("<text>").when(ctx).getBoundReferenceValue("<reference>")
+    doReturn("<text>").when(ctx).getBoundReferenceValue("<reference>", None)
     doNothing().when(ctx).selectByValue(mockBinding, "<text>")
     evaluate("""I select <reference> in <element> by value""")
     verify(ctx).selectByValue(mockBinding, "<text>")
@@ -1285,7 +1287,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
   """I deselect <reference> in <element>""" should "evaluate" in {
     val mockBinding = mock[LocatorBinding]
     doReturn(mockBinding).when(ctx).getLocatorBinding("<element>")
-    doReturn("<text>").when(ctx).getBoundReferenceValue("<reference>")
+    doReturn("<text>").when(ctx).getBoundReferenceValue("<reference>", None)
     doNothing().when(ctx).deselectByVisibleText(mockBinding, "<text>")
     evaluate("""I deselect <reference> in <element>""")
     verify(ctx).deselectByVisibleText(mockBinding, "<text>")
@@ -1294,7 +1296,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
   """I deselect <reference> in <element> by value""" should "evaluate" in {
     val mockBinding = mock[LocatorBinding]
     doReturn(mockBinding).when(ctx).getLocatorBinding("<element>")
-    doReturn("<text>").when(ctx).getBoundReferenceValue("<reference>")
+    doReturn("<text>").when(ctx).getBoundReferenceValue("<reference>", None)
     doNothing().when(ctx).deselectByValue(mockBinding, "<text>")
     evaluate("""I deselect <reference> in <element> by value""")
     verify(ctx).deselectByValue(mockBinding, "<text>")
@@ -1419,14 +1421,14 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
   }
 
   "I base64 decode <reference> as <attribute>" should "evaluate" in {
-    doReturn("value").when(ctx).getBoundReferenceValue("<reference>")
+    doReturn("value").when(ctx).getBoundReferenceValue("<reference>", None)
     doReturn("decoded").when(ctx).decodeBase64("value")
     evaluate("I base64 decode <reference> as <attribute>")
     verify(mockTopScope).set("<attribute>", "decoded")
   }
 
   "I base64 decode <reference>" should "evaluate" in {
-    doReturn("value").when(ctx).getBoundReferenceValue("<reference>")
+    doReturn("value").when(ctx).getBoundReferenceValue("<reference>", None)
     doReturn("decoded").when(ctx).decodeBase64("value")
     evaluate("I base64 decode <reference>")
     verify(mockTopScope).set("<reference>", "decoded")
@@ -1791,7 +1793,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
   }
 
   "<attribute> should be absent" should "evaluate" in {
-    doThrow(new Errors.UnboundAttributeException("<attribute>", None, None)).when(ctx).getBoundReferenceValue("<attribute>")
+    doThrow(new Errors.UnboundAttributeException("<attribute>", None, None)).when(ctx).getBoundReferenceValue("<reference>", None)
     evaluate("<attribute> should be absent")
   }
 
@@ -1836,7 +1838,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
   }
 
   """<step> for each <entry> in <source> delimited by "<delimiter>"""" should "evaluate" in {
-    doReturn("").when(ctx).getBoundReferenceValue("<source>")
+    doReturn("").when(ctx).getBoundReferenceValue("<source>", None)
     val step = evaluate("""x is "1" for each <entry> in <source> delimited by ","""")
     step.toString should be (s"""Given x is "1" for each <entry> in <source> delimited by ","""")
   }
@@ -1859,7 +1861,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
   }
 
   """I append <reference> to <element>""" should "evaluate" in {
-    doReturn("<text>").when(ctx).getBoundReferenceValue("<reference>")
+    doReturn("<text>").when(ctx).getBoundReferenceValue("<reference>", None)
     val mockBinding = mock[LocatorBinding]
     doReturn(mockBinding).when(ctx).getLocatorBinding("<element>")
     doNothing().when(ctx).sendValue(mockBinding, "<text>", clickFirst = false, clearFirst = false, sendEnterKey = false)

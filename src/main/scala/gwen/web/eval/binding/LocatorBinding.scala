@@ -18,12 +18,15 @@ package gwen.web.eval.binding
 
 import gwen.web.eval.WebContext
 
+import gwen.core.Wait
 import gwen.core.eval.binding.Binding
 
 import org.apache.commons.text.StringEscapeUtils
 import org.openqa.selenium.WebElement
 
 import scala.concurrent.duration.Duration
+
+import java.util.concurrent.TimeUnit
 
 object LocatorBinding {
 
@@ -72,17 +75,19 @@ class LocatorBinding(val name: String, val selectors: List[Selector], ctx: WebCo
           s"""document.evaluate('//a[contains(text(), "${StringEscapeUtils.escapeEcmaScript(loc.expression)}")]', document, null, XPathResult.${if (isListSelector) "ORDERED_NODE_ITERATOR_TYPE" else "FIRST_ORDERED_NODE_TYPE"}, null)${if (isListSelector) "" else ".singleNodeValue"}"""
         case _ => loc.expression
       }
-      Selector(SelectorType.javascript, jsExpression, loc.relative, loc.timeout, loc.index)
+      Selector(SelectorType.javascript, jsExpression, loc.relative, Some(loc.timeout), loc.index)
     }
     new LocatorBinding(name, jsSelectors, ctx)
   }
 
   def withJSEquivalent = new LocatorBinding(name, selectors ++ List(jsEquivalent.selectors.head), ctx)
 
-  def withFastTimeout: LocatorBinding = {
-    val fastTimeout = Duration("200 ms")
+  def withFastTimeout: LocatorBinding = withTimeout(Wait.Fast)
+
+  def withTimeout(timeout: Option[Duration]): LocatorBinding = timeout.map(withTimeout).getOrElse(this)
+  private def withTimeout(timeout: Duration): LocatorBinding = {
     val newSelectors = selectors map { s => 
-      Selector(s, Some(fastTimeout), s.index)
+      Selector(s, Some(timeout), s.index)
     }
     new LocatorBinding(name, newSelectors, ctx)
   }

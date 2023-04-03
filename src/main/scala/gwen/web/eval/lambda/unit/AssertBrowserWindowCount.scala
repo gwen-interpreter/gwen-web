@@ -16,6 +16,7 @@
 
 package gwen.web.eval.lambda.unit
 
+import gwen.core.Wait
 import gwen.web.eval.WebContext
 
 import gwen.core.behavior.BehaviorType
@@ -32,7 +33,7 @@ class AssertBrowserWindowCount(expectedCount: Int, message: Option[String]) exte
     step tap { _ =>
       checkStepRules(step, BehaviorType.Assertion, ctx)
       ctx.perform {
-        ctx.compare("open windows/tabs", expectedCount.toString, () => ctx.noOfWindows().toString, ComparisonOperator.be, false, None, message, None)
+        ctx.compare("open windows/tabs", expectedCount.toString, () => ctx.noOfWindows().toString, ComparisonOperator.be, false, None, message, Option(Wait.Zero.toSeconds))
       }
     }
   }

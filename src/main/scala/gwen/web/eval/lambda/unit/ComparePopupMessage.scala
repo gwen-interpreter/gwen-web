@@ -33,7 +33,7 @@ class ComparePopupMessage(name: String, value: String, bound: Boolean, operator:
     step tap { _ =>
       checkStepRules(step, BehaviorType.Assertion, ctx)
       val expected = if (bound) {
-        ctx.getBoundReferenceValue(value)
+        ctx.getBoundReferenceValue(value, timeout)
       } else {
         ctx.parseExpression(operator, value)
       }

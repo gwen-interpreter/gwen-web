@@ -112,7 +112,7 @@ class WebElementLocator(ctx: WebContext) extends LazyLogging {
         logger.debug(s"Locating $name by $selector")
         try {
           // override implicit wait for selector if overridden
-          selector.timeout foreach { _ =>
+          if (selector.hasTimeoutOverride) {
             val wait = selector.timeoutMilliseconds
             ctx.withWebDriver { driver =>
               driver.manage().timeouts().implicitlyWait(jt.Duration.ofMillis(if (wait > 0) wait else 200))
@@ -132,9 +132,9 @@ class WebElementLocator(ctx: WebContext) extends LazyLogging {
           }
         } finally {
           // restore default implicit wait if overriden
-          selector.timeout foreach { _ =>
+          if (selector.hasTimeoutOverride) {
             ctx.withWebDriver { driver =>
-              driver.manage().timeouts().implicitlyWait(jt.Duration.ofSeconds(WebSettings.`gwen.web.locator.wait.seconds`))
+              driver.manage().timeouts().implicitlyWait(jt.Duration.ofSeconds(Selector.DefaultTimeout.toSeconds))
             }
           }
         }
@@ -256,7 +256,7 @@ class WebElementLocator(ctx: WebContext) extends LazyLogging {
     val selectorType = selector.selectorType
     try {
       // override implicit wait for selector if overridden
-      selector.timeout foreach { _ =>
+      if (selector.hasTimeoutOverride) {
         val wait = selector.timeoutMilliseconds
         ctx.withWebDriver { driver =>
           driver.manage().timeouts().implicitlyWait(jt.Duration.ofMillis(if (wait > 0) wait else 200))
@@ -275,9 +275,9 @@ class WebElementLocator(ctx: WebContext) extends LazyLogging {
       }
     } finally {
       // restore default implicit wait if overriden
-      selector.timeout foreach { _ =>
+      if (selector.hasTimeoutOverride) {
         ctx.withWebDriver { driver =>
-          driver.manage().timeouts().implicitlyWait(jt.Duration.ofSeconds(WebSettings.`gwen.web.locator.wait.seconds`))
+          driver.manage().timeouts().implicitlyWait(jt.Duration.ofSeconds(Selector.DefaultTimeout.toSeconds))
         }
       }
     }

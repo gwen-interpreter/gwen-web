@@ -157,14 +157,6 @@ object WebSettings extends LazyLogging {
   }
 
   /**
-    * Provides access to the `gwen.web.assertions.wait.seconds` setting used to set the time to wait
-    * for assertions to pass before timing out (default is 1 second).
-    */
-  def `gwen.web.assertions.wait.seconds`: Long = {
-    Settings.getLong("gwen.web.assertions.wait.seconds")
-  }
-
-  /**
     * Provides access to the `gwen.web.maximize` setting used to control whether
     * or not the web driver should maximize the browser window (default value is `false`).
     */
