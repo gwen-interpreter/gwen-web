@@ -16,7 +16,6 @@
 
 package gwen.web.eval.lambda.unit
 
-import gwen.core.Wait
 import gwen.web.eval.WebContext
 
 import gwen.core.behavior.BehaviorType
@@ -25,6 +24,7 @@ import gwen.core.eval.lambda.UnitStep
 import gwen.core.node.GwenNode
 import gwen.core.node.gherkin.Step
 
+import scala.concurrent.duration.Duration
 import scala.util.chaining._
 
 class AssertBrowserCount(expectedCount: Int, message: Option[String]) extends UnitStep[WebContext] {
@@ -33,7 +33,7 @@ class AssertBrowserCount(expectedCount: Int, message: Option[String]) extends Un
     step tap { _ =>
       checkStepRules(step, BehaviorType.Assertion, ctx)
       ctx.perform {
-        ctx.compare("open browser sessions", expectedCount.toString, () => ctx.noOfSessions().toString, ComparisonOperator.be, false, None, message, Option(Wait.Zero.toSeconds))
+        ctx.compare("open browser sessions", expectedCount.toString, () => ctx.noOfSessions().toString, ComparisonOperator.be, false, None, message, Option(Duration.Zero.toSeconds))
       }
     }
   }

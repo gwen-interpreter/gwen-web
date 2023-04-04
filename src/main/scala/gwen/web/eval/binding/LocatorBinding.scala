@@ -82,7 +82,7 @@ class LocatorBinding(val name: String, val selectors: List[Selector], ctx: WebCo
 
   def withJSEquivalent = new LocatorBinding(name, selectors ++ List(jsEquivalent.selectors.head), ctx)
 
-  def withFastTimeout: LocatorBinding = withTimeout(Wait.Fast)
+  def withFastTimeout: LocatorBinding = withTimeout(Duration(200, TimeUnit.MILLISECONDS))
 
   def withTimeout(timeout: Option[Duration]): LocatorBinding = timeout.map(withTimeout).getOrElse(this)
   private def withTimeout(timeout: Duration): LocatorBinding = {
