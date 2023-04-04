@@ -44,6 +44,7 @@ object WebSettings extends LazyLogging {
   def check(): Unit = {
     `gwen.target.browser`
     `gwen.web.authorize.plugins`
+    `gwen.web.asserts.retryOnFail`
     `gwen.web.browser.headless`
     `gwen.web.browser.size`
     `gwen.web.capabilities`
@@ -137,6 +138,14 @@ object WebSettings extends LazyLogging {
     */
   def `gwen.web.authorize.plugins`: Boolean = {
     Settings.getBoolean("gwen.web.authorize.plugins")
+  }
+
+  /**
+    * Provides access to the `gwen.web.asserts.retryOnFail` setting used to control whether or not
+    * to retry failed assertions until the wait timeout period expires.
+    */
+  def `gwen.web.asserts.retryOnFail`: Boolean = {
+    Settings.getBoolean("gwen.web.asserts.retryOnFail")
   }
 
   /**

@@ -294,7 +294,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
               false
           }
         } else false
-        result
+        result || !WebSettings.`gwen.web.asserts.retryOnFail`
       }
     } catch {
       case _: WaitTimeoutException => result = false
@@ -623,9 +623,8 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
         var result = false
         try {
           waitUntil(binding.timeoutSeconds, s"waiting for ${binding.displayName} to ${if(negate) "not " else ""}be '$state'") {
-            isElementState(binding, state, negate) tap { res => 
-              result = res
-            }
+            result = isElementState(binding, state, negate)
+            result || !WebSettings.`gwen.web.asserts.retryOnFail`
           }
         } catch {
           case _: WaitTimeoutException =>
@@ -649,10 +648,8 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
         withWebElement(binding.withFastTimeout, s"waiting for ${binding.displayName} to${if (negate) " not" else ""} be $state") { webElement =>
           result = state match {
             case ElementState.displayed => 
-              if (!negate) 
-                isDisplayed(webElement)
-              else 
-                !isDisplayed(webElement)
+              if (!negate) isDisplayed(webElement)
+              else !isDisplayed(webElement)
             case ElementState.hidden =>
               if (!negate) !isDisplayed(webElement)
               else isDisplayed(webElement)

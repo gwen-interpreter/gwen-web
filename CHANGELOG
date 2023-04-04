@@ -1,6 +1,10 @@
 3.41.0
 ======
-Apr 4, 2023
+Apr 5, 2023
+- Introduced new setting to enable or disable retries on failed assertions
+  - `gwen.web.asserts.retryOnFail=true|false`
+    - `true` to retry failed assertions until they succeed or a timeout occurs
+    - `false` to not retry failed assertions and fail fast before timeout (default)
 - Add support for overriding default assertion timeouts
 - Use fast locators to query element state
 - Default `gwen.target.env` to `test` instead of `local`

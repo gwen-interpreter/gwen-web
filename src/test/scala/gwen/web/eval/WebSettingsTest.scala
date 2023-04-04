@@ -99,6 +99,7 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
       WebSettings.`gwen.target.browser` should be (WebBrowser.chrome)
       WebSettings.`gwen.target.env` should be ("test")
       WebSettings.`gwen.web.authorize.plugins` should be (false)
+      WebSettings.`gwen.web.asserts.retryOnFail` should be (false)
       WebSettings.`gwen.web.browser.size` should be (None)
       WebSettings.`gwen.web.capabilities`.asMap.isEmpty should be (true)
       WebSettings.`gwen.web.capture.screenshots.enabled` should be (false)
@@ -207,6 +208,7 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
     WebSettings.`gwen.target.env` should be ("test")
 
     WebSettings.`gwen.web.authorize.plugins` should be (false)
+    WebSettings.`gwen.web.asserts.retry` retryOnFail be (false)
     WebSettings.`gwen.web.browser.size` should be (None)
     WebSettings.`gwen.web.capabilities`.asMap.isEmpty should be (true)
     WebSettings.`gwen.web.capture.screenshots.enabled` should be (false)
@@ -310,6 +312,7 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
     WebSettings.`gwen.target.env` should be ("test")
 
     WebSettings.`gwen.web.authorize.plugins` should be (false)
+    WebSettings.`gwen.web.asserts.retryOnFail` should be (false)
     WebSettings.`gwen.web.browser.size` should be (None)
     WebSettings.`gwen.web.capabilities`.asMap.isEmpty should be (true)
     WebSettings.`gwen.web.capture.screenshots.enabled` should be (false)
