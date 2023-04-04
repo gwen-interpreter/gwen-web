@@ -2,6 +2,7 @@
 ======
 Apr 4, 2023
 - Add support for overriding default assertion timeouts
+- Use fast locators to query element state
 - Default `gwen.target.env` to `test` instead of `local`
 - Update Gwen core from v3.34.4 to v[3.34.5](https://github.com/gwen-interpreter/gwen/releases/tag/v3.34.5)
   - Refactored string interpolation

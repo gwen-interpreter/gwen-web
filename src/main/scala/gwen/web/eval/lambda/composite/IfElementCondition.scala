@@ -46,7 +46,7 @@ import scala.util.Failure
       case Success(s) => s
       case Failure(e) => 
         if (e.isInstanceOf[UnboundAttributeException] && e.getMessage.contains(cond)) {
-          val binding = ctx.getLocatorBinding(element).withFastTimeout
+          val binding = ctx.getLocatorBinding(element)
           ctx.getStepDef(doStep, None) foreach { stepDef =>
             checkStepDefRules(step.copy(withName = doStep, withStepDef = Some(stepDef)), ctx)
           }
