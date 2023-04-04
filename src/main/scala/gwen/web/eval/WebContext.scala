@@ -280,6 +280,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     var error: Option[String] = None
     var actualValue = actual()
     var polled = false
+    var retries = 0
     try {
       waitUntil(timeoutSecs, s"waiting for $name to ${if(negate) "not " else ""}$operator '$expected'") {
         if (polled) {
@@ -294,7 +295,9 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
               false
           }
         } else false
-        result || !WebSettings.`gwen.web.asserts.retryOnFail`
+        result || !(retries < WebSettings.`gwen.web.assertions.maxRetries`) tap { _ =>
+          retries = retries + 1
+        }
       }
     } catch {
       case _: WaitTimeoutException => result = false
@@ -621,10 +624,13 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
   def checkElementState(binding: LocatorBinding, state: ElementState, negate: Boolean, message: Option[String]): Unit = {
     perform {
         var result = false
+        var retries = 0
         try {
           waitUntil(binding.timeoutSeconds, s"waiting for ${binding.displayName} to ${if(negate) "not " else ""}be '$state'") {
             result = isElementState(binding, state, negate)
-            result || !WebSettings.`gwen.web.asserts.retryOnFail`
+            result || !(retries < WebSettings.`gwen.web.assertions.maxRetries`) tap { _ =>
+              retries = retries + 1
+            }
           }
         } catch {
           case _: WaitTimeoutException =>
