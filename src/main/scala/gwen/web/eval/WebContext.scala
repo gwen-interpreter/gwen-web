@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 Brady Wood, Branko Juric
+ * Copyright 2015-2023 Brady Wood, Branko Juric
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -304,7 +304,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     }
     error match {
       case Some(msg) =>
-        Errors.assertWithError(assertion = false, message, msg)
+        assertWithError(assertion = false, message, msg)
       case None =>
         if (!polled) {
           result = super.compare(name, expected, actualValue, operator, negate).getOrElse(result)
@@ -314,7 +314,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
             getBinding(name)
           }
         ).map(_.displayName).getOrElse(name)
-        Errors.assertWithError(result, message, s"Expected $binding to ${if(negate) "not " else ""}$operator ${if (expected.isEmpty()) "blank" else s"'$expected'"}${if (operator == ComparisonOperator.be && actualValue == expected) "" else s" but got '$actualValue'"}")
+        assertWithError(result, message, s"Expected $binding to ${if(negate) "not " else ""}$operator ${if (expected.isEmpty()) "blank" else s"'$expected'"}${if (operator == ComparisonOperator.be && actualValue == expected) "" else s" but got '$actualValue'"}")
     }
 
   }
@@ -636,7 +636,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
           case _: WaitTimeoutException =>
             result = false  
         }
-        Errors.assertWithError(result, message, s"${binding.displayName} should${if(negate) " not" else ""} be $state")
+        assertWithError(result, message, s"${binding.displayName} should${if(negate) " not" else ""} be $state")
     }
   }
 
