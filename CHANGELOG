@@ -13,6 +13,7 @@ Apr 5, 2023
   - Improved error reporting in CSV lookup DSL
   - Improved Examples annotation CSV processing and error reporting
   - Print Abstained status to standard out for steps that pass but were not executed due to negative if condition
+  - Implicitly log steps to console at inifite depth for dry runs
 
 3.40.3
 ======
