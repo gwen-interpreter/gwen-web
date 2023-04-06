@@ -12,6 +12,7 @@ Apr 5, 2023
   - Refactored string interpolation
   - Improved error reporting in CSV lookup DSL
   - Improved Examples annotation CSV processing and error reporting
+  - Print Abstained status to standard out for steps that pass but were not executed due to negative if condition
 
 3.40.3
 ======
