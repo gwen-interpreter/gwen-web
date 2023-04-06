@@ -44,7 +44,7 @@ object WebSettings extends LazyLogging {
   def check(): Unit = {
     `gwen.target.browser`
     `gwen.web.authorize.plugins`
-    `gwen.web.assertions.maxAttempts`
+    `gwen.web.assertions.maxStrikes`
     `gwen.web.browser.headless`
     `gwen.web.browser.size`
     `gwen.web.capabilities`
@@ -141,18 +141,18 @@ object WebSettings extends LazyLogging {
   }
 
   /**
-    * Provides access to the `gwen.web.assertions.maxAttempts` setting used to control the 
+    * Provides access to the `gwen.web.assertions.maxStrikes` setting used to control the 
     * maximum number of times to retry failed assertions before timing out.
     */
-  def `gwen.web.assertions.maxAttempts`: Int = {
-    val maxAttempts = {
-      if (Settings.getOpt("gwen.web.assertions.maxAttempts").map(_ == "infinity").getOrElse(false)) Int.MaxValue
-      else Settings.getInt("gwen.web.assertions.maxAttempts")
+  def `gwen.web.assertions.maxStrikes`: Int = {
+    val maxStrikes = {
+      if (Settings.getOpt("gwen.web.assertions.maxStrikes").map(_ == "infinity").getOrElse(false)) Int.MaxValue
+      else Settings.getInt("gwen.web.assertions.maxStrikes")
     }
-    if (maxAttempts < 1) {
-      Errors.propertyLoadError("gwen.web.assertions.maxAttempts", "cannot be less than 1")
+    if (maxStrikes < 1) {
+      Errors.propertyLoadError("gwen.web.assertions.maxStrikes", "cannot be less than 1")
     } else {
-      maxAttempts
+      maxStrikes
     }
   }
 

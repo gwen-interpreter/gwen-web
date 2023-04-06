@@ -1,10 +1,10 @@
 3.41.0
 ======
-Apr 5, 2023
-- Introduced new setting to control the maximum number of assertion attempts to perform before raising failure or timing out:
-  - `gwen.web.assertions.maxAttempts=number|infinity`, can be set to either: 
-    - a number greater than zero representing the maximum number of attempts to perfom (default is 3)
-    - `infinity` to continually perform an unlimited number of attempts
+Apr 7, 2023
+- Introduced new setting to configure the maximum number of consecutively failing assertions to permit within a timeout period before striking them out and reporting them as failures.
+  - `gwen.web.assertions.maxStrikes=number|infinity`, can be set to either: 
+    - A number greater than zero denoting the maximum number of consecutively failing assertions to permit within a timeout period (default is 3)
+    - `infinity` to continually retry failed assertions until they pass or the timeout period expires
   Add support for overriding default assertion timeouts
 - Use fast locators to query element state
 - Default `gwen.target.env` to `test` instead of `local`

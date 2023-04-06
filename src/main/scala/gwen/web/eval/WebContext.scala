@@ -296,7 +296,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
           }
         } else false
         attempts = attempts + 1
-        result || !(attempts < WebSettings.`gwen.web.assertions.maxAttempts`)
+        result || !(attempts < WebSettings.`gwen.web.assertions.maxStrikes`)
       }
     } catch {
       case _: WaitTimeoutException => result = false
@@ -628,7 +628,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
           waitUntil(binding.timeoutSeconds, s"waiting for ${binding.displayName} to ${if(negate) "not " else ""}be '$state'") {
             result = isElementState(binding, state, negate)
             attempts = attempts + 1
-            result || !(attempts < WebSettings.`gwen.web.assertions.maxAttempts`)
+            result || !(attempts < WebSettings.`gwen.web.assertions.maxStrikes`)
           }
         } catch {
           case _: WaitTimeoutException =>
