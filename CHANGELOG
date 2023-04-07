@@ -1,6 +1,6 @@
 3.41.0
 ======
-Apr 7, 2023
+Apr 8, 2023
 - Introduced new setting to configure the maximum number of consecutive strikes an assertion can make within a timeout period before it is considered failed and reported.
   - `gwen.web.assertions.maxStrikes=number|infinity`, can be set to either: 
     - A number greater than zero denoting the maximum number of consecutive strikes to permit (default is 3)
