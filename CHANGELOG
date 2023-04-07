@@ -8,6 +8,7 @@ Apr 8, 2023
   Add support for overriding default assertion timeouts
 - Use fast locators to query element state
 - Default `gwen.target.env` to `test` instead of `local`
+- Update selenium from v4.8.0 to v4.8.3
 - Update Gwen core from v3.34.3 to v[3.35.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.35.0)
   - Refactored string interpolation
   - Improved error reporting in CSV lookup DSL
