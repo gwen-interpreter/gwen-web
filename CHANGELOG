@@ -1,3 +1,9 @@
+3.42.0
+======
+Apr 17, 2023
+- Introduced new setting to configure the time to delay each assertion attempt:
+  - `gwen.web.assertions.delayMillisecs=number` (default is 200)
+
 3.41.0
 ======
 Apr 8, 2023

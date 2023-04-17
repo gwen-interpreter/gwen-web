@@ -99,6 +99,7 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
       WebSettings.`gwen.target.browser` should be (WebBrowser.chrome)
       WebSettings.`gwen.target.env` should be ("test")
       WebSettings.`gwen.web.authorize.plugins` should be (false)
+      WebSettings.`gwen.web.assertions.delayMillisecs` should be (200)
       WebSettings.`gwen.web.assertions.maxStrikes` should be (3)
       WebSettings.`gwen.web.browser.size` should be (None)
       WebSettings.`gwen.web.capabilities`.asMap.isEmpty should be (true)
@@ -208,6 +209,7 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
     WebSettings.`gwen.target.env` should be ("test")
 
     WebSettings.`gwen.web.authorize.plugins` should be (false)
+    WebSettings.`gwen.web.assertions.delayMillisecs` should be (200)
     WebSettings.`gwen.web.assertions.maxStrikes` should be (3)
     WebSettings.`gwen.web.browser.size` should be (None)
     WebSettings.`gwen.web.capabilities`.asMap.isEmpty should be (true)
@@ -312,6 +314,7 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
     WebSettings.`gwen.target.env` should be ("test")
 
     WebSettings.`gwen.web.authorize.plugins` should be (false)
+    WebSettings.`gwen.web.assertions.delayMillisecs` should be (200)
     WebSettings.`gwen.web.assertions.maxStrikes` should be (3)
     WebSettings.`gwen.web.browser.size` should be (None)
     WebSettings.`gwen.web.capabilities`.asMap.isEmpty should be (true)

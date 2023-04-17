@@ -44,6 +44,7 @@ object WebSettings extends LazyLogging {
   def check(): Unit = {
     `gwen.target.browser`
     `gwen.web.authorize.plugins`
+    `gwen.web.assertions.delayMillisecs`
     `gwen.web.assertions.maxStrikes`
     `gwen.web.browser.headless`
     `gwen.web.browser.size`
@@ -138,6 +139,19 @@ object WebSettings extends LazyLogging {
     */
   def `gwen.web.authorize.plugins`: Boolean = {
     Settings.getBoolean("gwen.web.authorize.plugins")
+  }
+
+  /**
+    * Provides access to the `gwen.web.assertions.delayMillisecs` setting used to control the 
+    * delay time between initial and consecutive assertion attempts.
+    */
+  def `gwen.web.assertions.delayMillisecs`: Int = {
+    val delay = Settings.getInt("gwen.web.assertions.delayMillisecs")
+    if (delay < 0) {
+      Errors.propertyLoadError("gwen.web.assertions.delayMillisecs", "cannot be less than 0")
+    } else {
+      delay
+    }
   }
 
   /**

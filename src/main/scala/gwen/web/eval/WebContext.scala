@@ -276,6 +276,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     * @return true if the actual value matches the expected value
     */
   def compare(name: String, expected: String, actual: () => String, operator: ComparisonOperator, negate: Boolean, nameSuffix: Option[String], message: Option[String], timeoutSecs: Option[Long]): Unit = {
+    Thread.sleep(WebSettings.`gwen.web.assertions.delayMillisecs`)
     var result = false
     var error: Option[String] = None
     var actualValue = actual()
@@ -284,6 +285,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     try {
       waitUntil(timeoutSecs, s"waiting for $name to ${if(negate) "not " else ""}$operator '$expected'") {
         if (polled) {
+          Thread.sleep(WebSettings.`gwen.web.assertions.delayMillisecs`)
           actualValue = actual()
         }
         polled = true
@@ -648,6 +650,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
   def isElementState(binding: LocatorBinding, state: ElementState, negate: Boolean): Boolean = {
     var result = false
     perform {
+      Thread.sleep(WebSettings.`gwen.web.assertions.delayMillisecs`)
       try {  
         withWebElement(binding.withFastTimeout, s"waiting for ${binding.displayName} to${if (negate) " not" else ""} be $state") { webElement =>
           result = state match {
