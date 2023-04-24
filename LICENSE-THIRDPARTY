@@ -213,7 +213,7 @@ io.reactivex.rxjava2
   +-rxjava:2.2.10
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
 net.bytebuddy
-  +-byte-buddy:1.14.2
+  +-byte-buddy:1.14.4
   | +-no license specified
   +-byte-buddy-agent:1.12.16
   | +-no license specified
@@ -233,39 +233,39 @@ com.google.j2objc
   +-j2objc-annotations:1.3
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
 org.seleniumhq.selenium
-  +-selenium-json:4.8.3
+  +-selenium-json:4.9.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-devtools-v110:4.8.3
+  +-selenium-devtools-v110:4.9.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-remote-driver:4.8.3
+  +-selenium-remote-driver:4.9.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-firefox-driver:4.8.3
+  +-selenium-firefox-driver:4.9.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-edge-driver:4.8.3
+  +-selenium-edge-driver:4.9.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-ie-driver:4.8.3
+  +-selenium-ie-driver:4.9.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-devtools-v109:4.8.3
+  +-selenium-safari-driver:4.9.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-safari-driver:4.8.3
+  +-selenium-http:4.9.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-http:4.8.3
+  +-selenium-java:4.9.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-java:4.8.3
+  +-selenium-api:4.9.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-api:4.8.3
+  +-selenium-devtools-v85:4.9.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-devtools-v85:4.8.3
+  +-selenium-chrome-driver:4.9.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-chrome-driver:4.8.3
+  +-selenium-devtools-v112:4.9.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-chromium-driver:4.8.3
+  +-selenium-chromium-driver:4.9.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-manager:4.8.3
+  +-selenium-manager:4.9.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-devtools-v111:4.8.3
+  +-selenium-devtools-v111:4.9.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-support:4.8.3
+  +-selenium-support:4.9.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
 javax.validation
   +-validation-api:2.0.1.Final
@@ -310,31 +310,31 @@ org.scalatest
   +-scalatest-shouldmatchers_3:3.2.14
   | +-the Apache License, ASL Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0
 io.opentelemetry
-  +-opentelemetry-api-events:1.24.0-alpha
+  +-opentelemetry-api-events:1.25.0-alpha
   | +-The Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-opentelemetry-exporter-logging:1.24.0
+  +-opentelemetry-exporter-logging:1.25.0
   | +-The Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-opentelemetry-sdk-logs:1.24.0-alpha
+  +-opentelemetry-sdk-logs:1.25.0-alpha
   | +-The Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-opentelemetry-sdk-common:1.24.0
+  +-opentelemetry-sdk-common:1.25.0
   | +-The Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-opentelemetry-sdk-extension-autoconfigure:1.24.0-alpha
+  +-opentelemetry-sdk-extension-autoconfigure:1.25.0-alpha
   | +-The Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-opentelemetry-api:1.24.0
+  +-opentelemetry-api:1.25.0
   | +-The Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-opentelemetry-sdk-trace:1.24.0
+  +-opentelemetry-sdk-trace:1.25.0
   | +-The Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-opentelemetry-sdk-extension-autoconfigure-spi:1.24.0
+  +-opentelemetry-sdk-extension-autoconfigure-spi:1.25.0
   | +-The Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-opentelemetry-context:1.24.0
+  +-opentelemetry-context:1.25.0
   | +-The Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-opentelemetry-semconv:1.24.0-alpha
+  +-opentelemetry-semconv:1.25.0-alpha
   | +-The Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-opentelemetry-sdk:1.24.0
+  +-opentelemetry-sdk:1.25.0
   | +-The Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-opentelemetry-sdk-metrics:1.24.0
+  +-opentelemetry-sdk-metrics:1.25.0
   | +-The Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-opentelemetry-api-logs:1.24.0-alpha
+  +-opentelemetry-api-logs:1.25.0-alpha
   | +-The Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
 io.swagger
   +-swagger-annotations:1.6.0
@@ -379,9 +379,6 @@ com.google.guava
   | +-no license specified
   +-failureaccess:1.0.1
   | +-no license specified
-org.gweninterpreter
-  +-gwen:3.34.4-18-g5c11b65
-  | +-no license specified
 commons-io
   +-commons-io:2.6
   | +-no license specified
@@ -397,31 +394,31 @@ ua.co.k
   +-strftime4j:1.0.5
   | +-MIT License - http://www.opensource.org/licenses/mit-license.php
 io.netty
-  +-netty-resolver:4.1.90.Final
+  +-netty-resolver:4.1.91.Final
   | +-no license specified
-  +-netty-transport:4.1.90.Final
+  +-netty-transport:4.1.91.Final
   | +-no license specified
-  +-netty-transport-native-kqueue:4.1.90.Final
+  +-netty-transport-native-kqueue:4.1.91.Final
   | +-no license specified
-  +-netty-codec:4.1.90.Final
+  +-netty-codec:4.1.91.Final
   | +-no license specified
   +-netty-codec-socks:4.1.60.Final
   | +-no license specified
-  +-netty-common:4.1.90.Final
+  +-netty-common:4.1.91.Final
   | +-no license specified
-  +-netty-transport-native-epoll:4.1.90.Final
+  +-netty-transport-native-epoll:4.1.91.Final
   | +-no license specified
-  +-netty-transport-classes-epoll:4.1.90.Final
+  +-netty-transport-classes-epoll:4.1.91.Final
   | +-no license specified
-  +-netty-transport-native-unix-common:4.1.90.Final
+  +-netty-transport-native-unix-common:4.1.91.Final
   | +-no license specified
-  +-netty-handler:4.1.90.Final
+  +-netty-handler:4.1.91.Final
   | +-no license specified
-  +-netty-codec-http:4.1.90.Final
+  +-netty-codec-http:4.1.91.Final
   | +-no license specified
-  +-netty-buffer:4.1.90.Final
+  +-netty-buffer:4.1.91.Final
   | +-no license specified
-  +-netty-transport-classes-kqueue:4.1.90.Final
+  +-netty-transport-classes-kqueue:4.1.91.Final
   | +-no license specified
   +-netty-handler-proxy:4.1.60.Final
   | +-no license specified
