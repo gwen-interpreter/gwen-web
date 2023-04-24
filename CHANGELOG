@@ -1,3 +1,9 @@
+3.42.1
+======
+Apr 24, 2023
+- Update Gwen core from v3.53.0 to v[3.35.1](https://github.com/gwen-interpreter/gwen/releases/tag/v3.35.1)
+  - Evaluate multiple steps in REPL when copy pasted
+
 3.42.0
 ======
 Apr 17, 2023
