@@ -91,7 +91,7 @@ class WebEngine extends EvalEngine[WebContext] {
             case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression with (\d+)$timeout second (?:timeout|wait)""" =>
               Some(new ForEachWebElement(doStep, element, SelectorType.parse(selectorType), expression, None, Some(Duration.create(timeout.toLong, TimeUnit.SECONDS)), this))
             case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression""" =>
-              Some(new ForEachWebElement(doStep, element, SelectorType.parse(selectorType), expression, None, None, this))
+              Some(new ForEachWebElement(doStep, element, SelectorType.parse(selectorType), step.orDocString(expression), None, None, this))
             case r"""(.+?)$doStep for each (.+?)$element in (.+?)$iteration""" =>
               Some(new ForEachWebElementInIteration(doStep, element, iteration, this))
             case _ => 

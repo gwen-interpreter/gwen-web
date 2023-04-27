@@ -1,3 +1,8 @@
+3.42.2
+======
+Apr 27, 2023
+- Add support for DocString expression in for-each DSL
+
 3.42.1
 ======
 Apr 24, 2023
