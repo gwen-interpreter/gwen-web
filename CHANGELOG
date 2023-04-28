@@ -1,3 +1,9 @@
+3.42.4
+======
+Apr 28, 2023
+- Update Gwen core from v3.35.2 to v[3.35.3](https://github.com/gwen-interpreter/gwen/releases/tag/v3.35.3)
+  - Fix new line issue in REPL paste mode: dont print noop
+
 3.42.3
 ======
 Apr 27, 2023
