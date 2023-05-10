@@ -1,3 +1,9 @@
+3.42.5
+======
+May 10, 2023
+- Update Gwen core from v3.35.3 to v[3.35.4](https://github.com/gwen-interpreter/gwen/releases/tag/v3.35.4)
+  - Trim headers from CSV data feeds
+
 3.42.4
 ======
 Apr 28, 2023
