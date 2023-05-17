@@ -1,3 +1,9 @@
+3.42.7
+======
+May 17, 2023
+- Update Gwen core from v3.35.5 to v[3.35.6](https://github.com/gwen-interpreter/gwen/releases/tag/v3.35.6)
+  - Check that functions applied to values in DSL steps have been defined
+
 3.42.6
 ======
 May 12, 2023
