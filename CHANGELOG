@@ -3,6 +3,7 @@
 June 4, 2023
 - Remove remote-allow-origins capability setting from chrome conf (this is now added implicitly by chromedriver for non Java 11 clients)
 - Change default value of `gwen.web.assertions.maxStrikes` from 3 to 5
+- Remove floodio challenge samples
 
 3.42.8
 ======
