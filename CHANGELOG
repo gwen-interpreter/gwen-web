@@ -1,3 +1,8 @@
+3.42.9
+======
+June 4, 2023
+- Remove remote-allow-origins capability setting from chrome conf (this is now added implicitly by chromedriver for non Java 11 clients)
+
 3.42.8
 ======
 May 29, 2023
