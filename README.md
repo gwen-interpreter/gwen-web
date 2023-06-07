@@ -26,8 +26,9 @@ How it Works?
 1. Declare [feature specs](https://docs.cucumber.io/gherkin/reference/) to describe scenarios in the language of your domain.
 
 ```gherkin
-  Feature: Todo
- Scenario: Create todo list
+ Feature: Todo
+   
+   Scenario: Create todo list
      Given a new todo list
       When the following items are added
            | Get the milk  |
@@ -38,21 +39,23 @@ How it Works?
 2. Compose [meta specs](https://gweninterpreter.org/docs/meta) to describe how steps will execute to automate scenarios.
 
 ```gherkin
-  Feature: Todo Meta (automation glue)
+ Feature: Todo Meta (automation glue)
                         
- @StepDef
- Scenario: a new todo list
+   @StepDef
+   Scenario: a new todo list
       When I navigate to "http://todomvc.com/examples/react"
       Then the todo field can be located by class "new-todo"
        And count can be located by css ".todo-count strong"
- @StepDef
- @ForEach
- @DataTable(horizontal="item")
- Scenario: the following items are added
+
+   @StepDef
+   @ForEach
+   @DataTable(horizontal="item")
+   Scenario: the following items are added
       When I enter item in the todo field
       Then count should be record.number
- @StepDef
- Scenario: the list will contain <expected> items
+
+   @StepDef
+   Scenario: the list will contain <expected> items
       Then count should be "$<expected>"
  ```
 
