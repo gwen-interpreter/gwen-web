@@ -1,5 +1,11 @@
-3.42.10
+3.43.0
 ======
+June 10, 2023
+- Update Gwen core from v3.35.6 to v[3.36.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.36.0)
+  - Add Hard, Soft, and Sustained annotations for overriding the default assertion mode at the step level
+
+3.42.10
+=======
 June 8, 2023
 - Update selenium from v4.9.1 to v4.10.0
 

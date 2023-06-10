@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Branko Juric, Brady Wood
+ * Copyright 2021-2023 Branko Juric, Brady Wood
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ class ComparePopupMessage(name: String, value: String, bound: Boolean, operator:
         ctx.parseExpression(operator, value)
       }
       ctx.perform {
-        ctx.compare(name, expected, () => ctx.getPopupMessage, operator, negate, None, message, timeout.map(_.toSeconds))
+        ctx.compare(name, expected, () => ctx.getPopupMessage, operator, negate, None, message, timeout.map(_.toSeconds), step.assertionMode)
       }
     }
   }

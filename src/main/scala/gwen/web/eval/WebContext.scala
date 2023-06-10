@@ -273,9 +273,10 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     * @param nameSuffix optional name suffix
     * @param message optional error message to use
     * @param timeoutSecs the number of seconds to wait before timing out
+    * @param mode the assertion mode
     * @return true if the actual value matches the expected value
     */
-  def compare(name: String, expected: String, actual: () => String, operator: ComparisonOperator, negate: Boolean, nameSuffix: Option[String], message: Option[String], timeoutSecs: Option[Long]): Unit = {
+  def compare(name: String, expected: String, actual: () => String, operator: ComparisonOperator, negate: Boolean, nameSuffix: Option[String], message: Option[String], timeoutSecs: Option[Long], mode: AssertionMode): Unit = {
     Thread.sleep(WebSettings.`gwen.web.assertions.delayMillisecs`)
     var result = false
     var error: Option[String] = None
@@ -305,7 +306,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     }
     error match {
       case Some(msg) =>
-        assertWithError(assertion = false, message, msg)
+        assertWithError(assertion = false, message, msg, mode)
       case None =>
         if (!polled) {
           result = super.compare(name, expected, actualValue, operator, negate).getOrElse(result)
@@ -315,7 +316,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
             getBinding(name)
           }
         ).map(_.displayName).getOrElse(name)
-        assertWithError(result, message, s"Expected $binding to ${if(negate) "not " else ""}$operator ${if (expected.isEmpty()) "blank" else s"'$expected'"}${if (operator == ComparisonOperator.be && actualValue == expected) "" else s" but got '$actualValue'"}")
+        assertWithError(result, message, s"Expected $binding to ${if(negate) "not " else ""}$operator ${if (expected.isEmpty()) "blank" else s"'$expected'"}${if (operator == ComparisonOperator.be && actualValue == expected) "" else s" but got '$actualValue'"}", mode)
     }
 
   }
@@ -621,8 +622,9 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     * @param state the state to check
     * @param negate whether or not to negate the check
     * @param message optional assertion error message
+    * @param mode the assertion mode
     */
-  def checkElementState(binding: LocatorBinding, state: ElementState, negate: Boolean, message: Option[String]): Unit = {
+  def checkElementState(binding: LocatorBinding, state: ElementState, negate: Boolean, message: Option[String], mode: AssertionMode): Unit = {
     perform {
         var result = false
         var attempts = 0
@@ -636,7 +638,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
           case _: WaitTimeoutException =>
             result = false  
         }
-        assertWithError(result, message, s"${binding.displayName} should${if(negate) " not" else ""} be $state")
+        assertWithError(result, message, s"${binding.displayName} should${if(negate) " not" else ""} be $state", mode)
     }
   }
 

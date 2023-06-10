@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Branko Juric, Brady Wood
+ * Copyright 2021-2023 Branko Juric, Brady Wood
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ class AssertBrowserCount(expectedCount: Int, message: Option[String]) extends Un
     step tap { _ =>
       checkStepRules(step, BehaviorType.Assertion, ctx)
       ctx.perform {
-        ctx.compare("open browser sessions", expectedCount.toString, () => ctx.noOfSessions().toString, ComparisonOperator.be, false, None, message, Option(Duration.Zero.toSeconds))
+        ctx.compare("open browser sessions", expectedCount.toString, () => ctx.noOfSessions().toString, ComparisonOperator.be, false, None, message, Option(Duration.Zero.toSeconds), step.assertionMode)
       }
     }
   }

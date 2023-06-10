@@ -46,16 +46,20 @@ class CompareValueOrSelectionToValue(element: String, selection: Option[Dropdown
       ctx.perform {
         if (ctx.scopes.findEntry { case (n, _) => n.startsWith(element) } forall { case (n, _) => n != element }) {
           val nameSuffix = selection.map(sel => s" $sel")
-          ctx.compare(s"$element${nameSuffix.getOrElse("")}", expected, actual, operator, negate, nameSuffix, message, timeout.map(_.toSeconds))
+          ctx.compare(s"$element${nameSuffix.getOrElse("")}", expected, actual, operator, negate, nameSuffix, message, timeout.map(_.toSeconds), step.assertionMode)
         } else {
           val actualValue = ctx.scopes.getOpt(element).getOrElse(actual())
           val result = ctx.compare(element, expected, actualValue, operator, negate)
           result match {
             case Success(assertion) =>
               val binding = ctx.getLocatorBinding(element, optional = true)
-              ctx.assertWithError(assertion, message, s"Expected ${binding.map(_.toString).getOrElse(element)} to ${if(negate) "not " else ""}$operator ${if (expected.isEmpty()) "blank" else s"'$expected'"}${if (operator == ComparisonOperator.be && actualValue == expected) "" else s" but got '$actualValue'"}")
+              ctx.assertWithError(
+                assertion, 
+                message, 
+                s"Expected ${binding.map(_.toString).getOrElse(element)} to ${if(negate) "not " else ""}$operator ${if (expected.isEmpty()) "blank" else s"'$expected'"}${if (operator == ComparisonOperator.be && actualValue == expected) "" else s" but got '$actualValue'"}",
+                step.assertionMode)
             case Failure(error) =>
-              ctx.assertWithError(assertion = false, message, error.getMessage)
+              ctx.assertWithError(assertion = false, message, error.getMessage, step.assertionMode)
           }
         }
       } getOrElse {

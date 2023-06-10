@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2021 Brady Wood, Branko Juric
+ * Copyright 2014-2023 Brady Wood, Branko Juric
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import gwen.web._
 import gwen.web.eval.WebErrors
 import gwen.web.eval.driver.DriverManager
 
+import gwen.core.AssertionMode
 import gwen.core.GwenOptions
 import gwen.core.eval.ComparisonOperator
 import gwen.core.state.EnvState
@@ -173,14 +174,14 @@ class WebEnvironmentTest extends BaseTest with Matchers with MockitoSugar {
   "Timeout on compare" should "result in assertion error" in {
     val ctx = newCtx()
     intercept[AssertionError] {
-      ctx.compare("a", "2", () => "1", ComparisonOperator.be, negate = false, None, None, None)
+      ctx.compare("a", "2", () => "1", ComparisonOperator.be, negate = false, None, None, None, AssertionMode.hard)
     }
   }
 
   "Timeout on negated compare" should "result in assertion error" in {
     val ctx = newCtx()
     intercept[AssertionError] {
-      ctx.compare("a", "2", () => "2", ComparisonOperator.be, negate = true, None, None, None)
+      ctx.compare("a", "2", () => "2", ComparisonOperator.be, negate = true, None, None, None, AssertionMode.hard)
     }
   }
 

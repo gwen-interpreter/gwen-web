@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Branko Juric, Brady Wood
+ * Copyright 2021-2023 Branko Juric, Brady Wood
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ class CompareElementState(element: String, state: ElementState, negate: Boolean,
     step tap { _ =>
       checkStepRules(step, BehaviorType.Assertion, ctx)
       val binding = ctx.getLocatorBinding(element).withTimeout(timeout)
-      ctx.checkElementState(binding, state, negate, message)
+      ctx.checkElementState(binding, state, negate, message, step.assertionMode)
     }
   }
 
