@@ -1,3 +1,11 @@
+3.44.0
+======
+June 10, 2023
+- Add new DSL for executing a step until or while a web element is in a given state
+  - `<step> <until|while> <element> is[ not] <state>`
+- Update Gwen core from v3.36.0 to v[3.37.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.37.0)
+  - Abstract condition out of Repeat class
+
 3.43.0
 ======
 June 10, 2023

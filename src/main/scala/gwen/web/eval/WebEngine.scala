@@ -37,7 +37,6 @@ import scala.jdk.CollectionConverters._
 import scala.util.chaining._
 
 import java.util.concurrent.TimeUnit
-import org.openqa.selenium.Capabilities
 
 /**
   * A web engine that uses the Selenium web driver
@@ -77,6 +76,19 @@ class WebEngine extends EvalEngine[WebContext] {
     step.expression.match {
       case r"""(.+)$doStep if(?:(?!\bif\b)) (.+?)$element is( not)?$negation (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$state""" =>
         Some(new IfElementCondition(doStep, element, ElementState.valueOf(state), Option(negation).isDefined, this))
+      case r"""(.+?)$doStep (until|while)$operation (.+?)$element is( not)?$negation (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$state using no delay and (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit (?:timeout|wait)""" =>
+        Some(new RepeatElementState(doStep, operation, element, ElementState.valueOf(state), Option(negation).isDefined, Duration.Zero, Duration(timeoutPeriod.toLong, timeoutUnit), defaultConditionTimeoutSecs, this))
+      case r"""(.+?)$doStep (until|while)$operation (.+?)$element is( not)?$negation (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$state using no delay""" =>
+        Some(new RepeatElementState(doStep, operation, element, ElementState.valueOf(state), Option(negation).isDefined, Duration.Zero, defaultRepeatTimeout(defaultRepeatDelay), defaultConditionTimeoutSecs, this))
+      case r"""(.+?)$doStep (until|while)$operation (.+?)$element is( not)?$negation (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$state using (.+?)$delayPeriod (second|millisecond)$delayUnit delay and (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit (?:timeout|wait)""" if doStep != "I wait" =>
+        Some(new RepeatElementState(doStep, operation, element, ElementState.valueOf(state), Option(negation).isDefined, Duration(delayPeriod.toLong, delayUnit), Duration(timeoutPeriod.toLong, timeoutUnit), defaultConditionTimeoutSecs, this))
+      case r"""(.+?)$doStep (until|while)$operation (.+?)$element is( not)?$negation (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$state using (.+?)$delayPeriod (second|millisecond)$delayUnit delay""" if doStep != "I wait" =>
+        val delayDuration = Duration(delayPeriod.toLong, delayUnit)
+        Some(new RepeatElementState(doStep, operation, element, ElementState.valueOf(state), Option(negation).isDefined, delayDuration, defaultRepeatTimeout(delayDuration), defaultConditionTimeoutSecs, this))
+      case r"""(.+?)$doStep (until|while)$operation (.+?)$element is( not)?$negation (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$state using (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit (?:timeout|wait)""" if doStep != "I wait" =>
+        Some(new RepeatElementState(doStep, operation, element, ElementState.valueOf(state), Option(negation).isDefined, defaultRepeatDelay, Duration(timeoutPeriod.toLong, timeoutUnit), defaultConditionTimeoutSecs, this))
+      case r"""(.+?)$doStep (until|while)$operation (.+?)$element is( not)?$negation (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$state""" if (doStep != "I wait" && !step.expression.matches(""".*".*(until|while).*".*""")) =>
+        Some(new RepeatElementState(doStep, operation, element, ElementState.valueOf(state), Option(negation).isDefined, defaultRepeatDelay, defaultRepeatTimeout(defaultRepeatDelay), defaultConditionTimeoutSecs, this))
       case _ =>
         super.translateCompositeStep(step) orElse {
           step.expression match {
