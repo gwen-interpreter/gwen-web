@@ -77,18 +77,18 @@ class WebEngine extends EvalEngine[WebContext] {
       case r"""(.+)$doStep if(?:(?!\bif\b)) (.+?)$element is( not)?$negation (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$state""" =>
         Some(new IfElementCondition(doStep, element, ElementState.valueOf(state), Option(negation).isDefined, this))
       case r"""(.+?)$doStep (until|while)$operation (.+?)$element is( not)?$negation (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$state using no delay and (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit (?:timeout|wait)""" =>
-        Some(new RepeatElementState(doStep, operation, element, ElementState.valueOf(state), Option(negation).isDefined, Duration.Zero, Duration(timeoutPeriod.toLong, timeoutUnit), defaultConditionTimeoutSecs, this))
+        Some(new RepeatElementState(doStep, operation, element, ElementState.valueOf(state), Option(negation).isDefined, Duration.Zero, Duration(timeoutPeriod.toLong, timeoutUnit), this))
       case r"""(.+?)$doStep (until|while)$operation (.+?)$element is( not)?$negation (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$state using no delay""" =>
-        Some(new RepeatElementState(doStep, operation, element, ElementState.valueOf(state), Option(negation).isDefined, Duration.Zero, defaultRepeatTimeout(defaultRepeatDelay), defaultConditionTimeoutSecs, this))
+        Some(new RepeatElementState(doStep, operation, element, ElementState.valueOf(state), Option(negation).isDefined, Duration.Zero, Duration(1, TimeUnit.MINUTES), this))
       case r"""(.+?)$doStep (until|while)$operation (.+?)$element is( not)?$negation (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$state using (.+?)$delayPeriod (second|millisecond)$delayUnit delay and (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit (?:timeout|wait)""" if doStep != "I wait" =>
-        Some(new RepeatElementState(doStep, operation, element, ElementState.valueOf(state), Option(negation).isDefined, Duration(delayPeriod.toLong, delayUnit), Duration(timeoutPeriod.toLong, timeoutUnit), defaultConditionTimeoutSecs, this))
+        Some(new RepeatElementState(doStep, operation, element, ElementState.valueOf(state), Option(negation).isDefined, Duration(delayPeriod.toLong, delayUnit), Duration(timeoutPeriod.toLong, timeoutUnit), this))
       case r"""(.+?)$doStep (until|while)$operation (.+?)$element is( not)?$negation (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$state using (.+?)$delayPeriod (second|millisecond)$delayUnit delay""" if doStep != "I wait" =>
         val delayDuration = Duration(delayPeriod.toLong, delayUnit)
-        Some(new RepeatElementState(doStep, operation, element, ElementState.valueOf(state), Option(negation).isDefined, delayDuration, defaultRepeatTimeout(delayDuration), defaultConditionTimeoutSecs, this))
+        Some(new RepeatElementState(doStep, operation, element, ElementState.valueOf(state), Option(negation).isDefined, delayDuration,Duration(1, TimeUnit.MINUTES), this))
       case r"""(.+?)$doStep (until|while)$operation (.+?)$element is( not)?$negation (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$state using (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit (?:timeout|wait)""" if doStep != "I wait" =>
-        Some(new RepeatElementState(doStep, operation, element, ElementState.valueOf(state), Option(negation).isDefined, defaultRepeatDelay, Duration(timeoutPeriod.toLong, timeoutUnit), defaultConditionTimeoutSecs, this))
+        Some(new RepeatElementState(doStep, operation, element, ElementState.valueOf(state), Option(negation).isDefined, Duration(1, TimeUnit.SECONDS), Duration(timeoutPeriod.toLong, timeoutUnit), this))
       case r"""(.+?)$doStep (until|while)$operation (.+?)$element is( not)?$negation (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$state""" if (doStep != "I wait" && !step.expression.matches(""".*".*(until|while).*".*""")) =>
-        Some(new RepeatElementState(doStep, operation, element, ElementState.valueOf(state), Option(negation).isDefined, defaultRepeatDelay, defaultRepeatTimeout(defaultRepeatDelay), defaultConditionTimeoutSecs, this))
+        Some(new RepeatElementState(doStep, operation, element, ElementState.valueOf(state), Option(negation).isDefined, Duration(1, TimeUnit.SECONDS), Duration(1, TimeUnit.MINUTES), this))
       case _ =>
         super.translateCompositeStep(step) orElse {
           step.expression match {

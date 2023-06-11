@@ -17,13 +17,13 @@ package gwen.web.features
 
 class AdhocFeatureTest extends BaseFeatureTest {
 
-  val feature = "src/test/features/lookup/StateCodeLookup.feature"
+  val feature = "src/test/features/flow/RepeatUntil.feature"
 
   s"Feature should" should "execute" in {
     evaluate(
         List(feature), 
         parallel = false, 
-        dryRun = false, 
+        dryRun = true, 
         "ad-hoc",
         None)
         

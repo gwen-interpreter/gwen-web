@@ -24,8 +24,8 @@ import gwen.core.eval.lambda.composite.Repeat
 
 import scala.concurrent.duration.Duration
 
-class RepeatElementState(doStep: String, operation: String, element: String, state: ElementState, negate: Boolean, delay: Duration, timeout: Duration, conditionTimeoutSecs: Long, engine: WebEngine)
-    extends Repeat[WebContext](doStep, operation, s"$element is${if (negate) " not" else ""} $state", delay, timeout, conditionTimeoutSecs, engine) {
+class RepeatElementState(doStep: String, operation: String, element: String, state: ElementState, negate: Boolean, delay: Duration, timeout: Duration, engine: WebEngine)
+    extends Repeat[WebContext](doStep, operation, s"$element is${if (negate) " not" else ""} $state", delay, timeout, engine) {
 
   override def evaluteCondition(ctx: WebContext): Boolean = {
     val binding = ctx.getLocatorBinding(element)
