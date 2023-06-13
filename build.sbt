@@ -30,7 +30,7 @@ lazy val projectSettings = Seq(
   licenses += "Apache License, Version 2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0.html"),
   homepage := Some(url("https://gweninterpreter.org")),
   versionScheme := Some("semver-spec"),
-  scalaVersion := "3.2.2",
+  scalaVersion := "3.3.0",
   crossPaths := false,
   trapExit := false,
   scalacOptions ++= Seq(
@@ -49,7 +49,7 @@ lazy val projectSettings = Seq(
 
 lazy val mainDependencies = {
   val selenium = "4.10.0"
-  val driverMgr = "5.3.2"
+  val driverMgr = "5.3.3"
   Seq(
     "org.seleniumhq.selenium" % "selenium-java" % selenium,
     "io.github.bonigarcia" % "webdrivermanager" % driverMgr excludeAll(
@@ -70,7 +70,7 @@ lazy val mainOverrides = {
 }
 
 lazy val testDependencies = {
-  val scalaTest = "3.2.14"
+  val scalaTest = "3.2.16"
   val scalaTestPlusMockito = "3.2.11.0"
   val mockitoCore = "4.9.0"
 
