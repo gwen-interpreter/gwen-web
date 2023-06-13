@@ -49,7 +49,7 @@ object WebErrors {
 
      /** Thrown when an unsupported browser is detected. */
     class UnsupportedWebBrowserException(browser: String)
-      extends GwenException(s"Unsupported web brower: $browser")
+      extends GwenException(s"Unsupported web browser: $browser")
 
     /** Thrown when an unsupported web driver is detected. */
     class UnsupportedWebDriverException(driverName: String)
