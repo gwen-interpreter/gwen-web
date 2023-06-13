@@ -1,10 +1,15 @@
+3.44.3
+======
+June 13, 2023
+- Update Gwen core from v3.37.2 to v[3.37.3](https://github.com/gwen-interpreter/gwen/releases/tag/v3.37.3)
+  - Remove zero char from custom message
+
 3.44.2
 ======
 June 13, 2023
 - Fix browser spelling in error msg
 - Update Gwen core from v3.37.1 to v[3.37.2](https://github.com/gwen-interpreter/gwen/releases/tag/v3.37.2)
   - Honor assertion mode in custom assertion errors
-
 
 3.44.1
 ======
