@@ -66,7 +66,7 @@ System Requirements
 
 - Linux, Mac or Windows OS
 - Chrome, Firefox, Safari, Edge or IE web browser
-- Java 8 (version 1.8) or higher
+- Java 11 or higher
 
 License
 -------
