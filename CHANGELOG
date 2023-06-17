@@ -1,3 +1,9 @@
+3.46.0
+======
+June 17, 2023
+- Update Gwen core from v3.38.2 to v[3.39.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.39.0)
+  - Use checkmark icon ✔ for passed evaluation status when logging steps
+
 3.45.1
 ======
 June 16, 2023
