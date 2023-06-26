@@ -1,0 +1,5 @@
+[
+  { "<name>": "Walk the dog",   "<column>": "pending" },
+  { "<name>": "Get the milk",   "<column>": "done" },
+  { "<name>": "Take out trash", "<column>": "pending" }
+]

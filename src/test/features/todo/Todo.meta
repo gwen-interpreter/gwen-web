@@ -60,9 +60,22 @@ Feature: TodoMVC meta
      When I add a <todo.Status> "<todo.Item>" item
 
   @StepDef
+  @Examples(file="src/test/features-data/TodoItems1.json",prefix="todo.",where="'${todo.Status}'=='pending'")
+  @Examples(file="src/test/features-data/TodoItems2.json",prefix="todo.")
+  @Action
+  Scenario Outline: I load items from JSON files
+     When I add a <todo.Status> "<todo.Item>" item
+
+  @StepDef
   @Examples("src/test/features-data/TodoItems3.csv")
   @Action
   Scenario Outline: I load items from empty CSV file
+     When I add a <Status> "<Item>" item
+
+  @StepDef
+  @Examples("src/test/features-data/TodoItems3.json")
+  @Action
+  Scenario Outline: I load items from empty JSON file
      When I add a <Status> "<Item>" item
 
   @StepDef

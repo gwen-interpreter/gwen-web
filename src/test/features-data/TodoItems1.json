@@ -1,0 +1,5 @@
+[
+  { "Item": "Walk the dog",   "Status": "pending" },
+  { "Item": "Get the milk",   "Status": "done" },
+  { "Item": "Take out trash", "Status": "pending" }
+]

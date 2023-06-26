@@ -1,0 +1,10 @@
+[
+  { "Code": "ACT", "Name": "Australian Capital Territory" },
+  { "Code": "NSW", "Name": "New South Wales" },
+  { "Code": "NT",  "Name": "Northern Territory" },
+  { "Code": "QLD", "Name": "Queensland" },
+  { "Code": "SA",  "Name": "South Australia" },
+  { "Code": "TAS", "Name": "Tasmania" },
+  { "Code": "VIC", "Name": "Victoria" },
+  { "Code": "WA",  "Name": "Western Australia" }
+]
