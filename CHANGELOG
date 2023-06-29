@@ -1,3 +1,14 @@
+3.48.0
+======
+June 29, 2023
+- Update Gwen core from v3.40.0 to v[3.41.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.41.0)
+- Add the following implicit attributes for accessing the number and index of the current input data record being processed
+  - `data.record.number` = the current record number starting at 1
+  - `data.record.index` = the current record index starting at 0
+- Add the following implicit attributes for accessing the number and index of the current while, until, or forEach iteration
+  - `iteration.number` = the current iteration number starting at 1
+  - `iteration.index` = the current iteration index starting at 0
+
 3.47.0
 ======
 June 26, 2023
