@@ -1,3 +1,10 @@
+3.49.0
+======
+June 30, 2023
+- Update Gwen core from v3.41.0 to v[3.42.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.42.0)
+- Add implicit attribute for accessing the name of the feature file currently being executed (excluding file extension)
+  - `gwen.feature.file.simpleName`
+
 3.48.0
 ======
 June 29, 2023
