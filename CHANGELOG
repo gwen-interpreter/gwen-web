@@ -1,3 +1,10 @@
+3.49.1
+======
+June 30, 2023
+- Update Gwen core from v3.42.0 to v[3.42.1](https://github.com/gwen-interpreter/gwen/releases/tag/v3.42.1)
+- Use checkmark icon ✘ for failed steps in console and REPL output
+- Fix event dispatching of examples with empty tables
+
 3.49.0
 ======
 June 30, 2023
