@@ -113,10 +113,12 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     mockLocator = mock[WebElementLocator]
     doReturn(mockScopes).when(envState).scopes
     doReturn(mockTopScope).when(mockScopes).topScope
+    doReturn(mockTopScope).when(ctx).topScope
     doReturn(mockParamScope).when(mockScopes).paramScope
     doReturn(mockLocator).when(ctx).locator
     doReturn(false).when(ctx).isEvaluatingTopLevelStep
     doReturn(SpecType.Meta).when(ctx).specType
+    doNothing().when(mockTopScope).setImplicitAtts(any(), any())
     when(mockTopScope.getOpt("gwen.feature.file.path")).thenReturn(Some("file.feature"))
   }
 
