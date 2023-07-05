@@ -1,8 +1,18 @@
+3.50.0
+======
+July 5, 2023
+- Update Gwen core from v3.42.1 to v[3.43.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.43.0)
+- Introduced new impilict attributes:
+  - `gwen.eval.status.message.escaped` = Java escaped equivalent of `gwen.eval.status.message`
+  - `gwen.eval.status.isFailed` = `true` if current feature evaluation is in error, `false` otherwise
+  - `gwen.eval.status.isPassed` = `true` if current feature evaluation is not in error, `false` otherwise
+- Add support for boolean literals in place of javascript expressions as conditions in DSLs
+
 3.49.1
 ======
 June 30, 2023
 - Update Gwen core from v3.42.0 to v[3.42.1](https://github.com/gwen-interpreter/gwen/releases/tag/v3.42.1)
-- Use checkmark icon ✘ for failed steps in console and REPL output
+- Use ✘ icon for failed steps in console and REPL output
 - Fix event dispatching of examples with empty tables
 
 3.49.0

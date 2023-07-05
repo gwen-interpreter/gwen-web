@@ -21,7 +21,7 @@ import gwen.web.eval.WebContext
 import gwen.core.behavior.BehaviorType
 import gwen.core.eval.binding.JSBinding
 import gwen.core.eval.lambda.UnitStep
-import gwen.core.eval.support.JSCondition
+import gwen.core.eval.support.BooleanCondition
 import gwen.core.node.GwenNode
 import gwen.core.node.gherkin.Step
 
@@ -33,9 +33,9 @@ class WaitForBoundCondition(condition: String, delayMsecs: Option[Long], timeout
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     step tap { _ =>
       checkStepRules(step, BehaviorType.Action, ctx)
-      val jsCondition = JSCondition(condition, false, WebSettings.`gwen.web.wait.seconds`, ctx)
-      ctx.waitUntil(delayMsecs, timeoutSecs, s"waiting for true return from JS condition: ${jsCondition.name}") {
-        jsCondition.evaluate()
+      val bCondition = BooleanCondition(condition, false, WebSettings.`gwen.web.wait.seconds`, ctx)
+      ctx.waitUntil(delayMsecs, timeoutSecs, s"waiting for true return from JS condition: ${bCondition.name}") {
+        bCondition.evaluate()
       }
     }
   }

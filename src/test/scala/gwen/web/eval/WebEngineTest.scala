@@ -1378,8 +1378,14 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     evaluate("""I wait until "<javascript>"""")
   }
 
-  "I wait until <condition>" should "evaluate" in {
+  "I wait until <condition> with JS" should "evaluate" in {
+    doReturn(None).when(mockScopes).getOpt("<condition>")
     doReturn("(function(){return true;})()").when(mockScopes).get("<condition>/javascript")
+    evaluate("I wait until <condition>")
+  }
+
+  "I wait until <condition> with literal" should "evaluate" in {
+    doReturn(Some("true")).when(mockScopes).getOpt("<condition>")
     evaluate("I wait until <condition>")
   }
 
@@ -1793,7 +1799,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
   }
 
   "<attribute> should be absent" should "evaluate" in {
-    doThrow(new Errors.UnboundAttributeException("<attribute>", None, None)).when(ctx).getBoundReferenceValue("<reference>", None)
+    doThrow(new Errors.UnboundReferenceException("<attribute>", None, None)).when(ctx).getBoundReferenceValue("<reference>", None)
     evaluate("<attribute> should be absent")
   }
 

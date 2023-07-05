@@ -28,7 +28,7 @@ import gwen.core.eval.EvalContext
 import gwen.core.eval.binding.BindingType
 import gwen.core.eval.binding.JSBinding
 import gwen.core.eval.binding.TextBinding
-import gwen.core.eval.support.JSCondition
+import gwen.core.eval.support.BooleanCondition
 import gwen.core.node.gherkin.Step
 import gwen.core.state.StateLevel
 import gwen.core.state.EnvState
@@ -254,10 +254,10 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
 
     // wait for javascript post condition if one is configured for this action
     scopes.getOpt(s"$element/$action/condition") foreach { condition =>
-      val jsCondition = JSCondition(condition, false, WebSettings.`gwen.web.wait.seconds`, this)
-      logger.info(s"waiting until ${jsCondition.name} (post-$action condition)")
-      waitUntil(s"waiting for true return from JS conditioon: ${jsCondition.name}") {
-        jsCondition.evaluate()
+      val bCondition = BooleanCondition(condition, false, WebSettings.`gwen.web.wait.seconds`, this)
+      logger.info(s"waiting until ${bCondition.name} (post-$action condition)")
+      waitUntil(s"waiting for true return from JS conditioon: ${bCondition.name}") {
+        bCondition.evaluate()
       }
     }
   }
