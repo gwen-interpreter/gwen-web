@@ -1,7 +1,8 @@
 3.51.1
 ======
 July 5, 2023
-- Fixed implicit `gwen.eval.status.keyword` and `gwen.eval.status.message` for StepDefs called with Try annotation
+- Update Gwen core from v3.44.0 to v[3.44.2](https://github.com/gwen-interpreter/gwen/releases/tag/v3.44.2)
+- Preserve previous implicit `gwen.eval.status.keyword` and `gwen.eval.status.message` state for steps and StepDefs called with Try annotation
 
 3.51.0
 ======
