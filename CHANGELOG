@@ -1,3 +1,9 @@
+3.51.2
+======
+July 6, 2023
+- Update Gwen core from v3.44.2 to v[3.44.3](https://github.com/gwen-interpreter/gwen/releases/tag/v3.44.3)
+- Fix dry run for literal boolean conditions used in while-until DSLs
+
 3.51.1
 ======
 July 5, 2023
