@@ -1,3 +1,9 @@
+3.52.0
+======
+July 6, 2023
+- Introdocue new and default `auto` option for the `gwen.web.assertions.maxStrikes` setting and set it equal to `gwen.web.wait.seconds` when set to that value.
+ - For example, if youre timeout is configured to 10 seconds, then your max strike count for assertions will be 10 if when set to `auto`.
+
 3.51.2
 ======
 July 6, 2023

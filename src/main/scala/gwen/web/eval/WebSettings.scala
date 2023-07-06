@@ -160,7 +160,9 @@ object WebSettings extends LazyLogging {
     */
   def `gwen.web.assertions.maxStrikes`: Int = {
     val maxStrikes = {
-      if (Settings.getOpt("gwen.web.assertions.maxStrikes").map(_ == "infinity").getOrElse(false)) Int.MaxValue
+      val valueOpt = Settings.getOpt("gwen.web.assertions.maxStrikes")
+      if (valueOpt.map(_ == "infinity").getOrElse(false)) Int.MaxValue
+      else if (valueOpt.map(_ == "auto").getOrElse(false)) `gwen.web.wait.seconds`.toInt
       else Settings.getInt("gwen.web.assertions.maxStrikes")
     }
     if (maxStrikes < 1) {

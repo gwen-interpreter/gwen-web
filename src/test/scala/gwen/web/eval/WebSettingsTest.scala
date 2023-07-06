@@ -103,7 +103,7 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
       WebSettings.`gwen.target.env` should be ("test")
       WebSettings.`gwen.web.authorize.plugins` should be (false)
       WebSettings.`gwen.web.assertions.delayMillisecs` should be (200)
-      WebSettings.`gwen.web.assertions.maxStrikes` should be (5)
+      WebSettings.`gwen.web.assertions.maxStrikes` should be (10)
       WebSettings.`gwen.web.browser.size` should be (None)
       WebSettings.`gwen.web.capabilities`.asMap.isEmpty should be (true)
       WebSettings.`gwen.web.capture.screenshots.enabled` should be (false)
@@ -139,7 +139,7 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
     }
   }
 
-  "Standalone project init" should "should override .conf defaults" in {
+  "Standalone project init" should "override .conf defaults" in {
     Settings.exclusively {
       withSetting("gwen.initDir", ".") {
         Settings.init(
@@ -216,7 +216,7 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
 
     WebSettings.`gwen.web.authorize.plugins` should be (false)
     WebSettings.`gwen.web.assertions.delayMillisecs` should be (200)
-    WebSettings.`gwen.web.assertions.maxStrikes` should be (5)
+    WebSettings.`gwen.web.assertions.maxStrikes` should be (10)
     WebSettings.`gwen.web.browser.size` should be (None)
     WebSettings.`gwen.web.capabilities`.asMap.isEmpty should be (true)
     WebSettings.`gwen.web.capture.screenshots.enabled` should be (false)
@@ -324,7 +324,7 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
 
     WebSettings.`gwen.web.authorize.plugins` should be (false)
     WebSettings.`gwen.web.assertions.delayMillisecs` should be (200)
-    WebSettings.`gwen.web.assertions.maxStrikes` should be (5)
+    WebSettings.`gwen.web.assertions.maxStrikes` should be (9)
     WebSettings.`gwen.web.browser.size` should be (None)
     WebSettings.`gwen.web.capabilities`.asMap.isEmpty should be (true)
     WebSettings.`gwen.web.capture.screenshots.enabled` should be (false)
