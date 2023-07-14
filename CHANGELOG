@@ -1,3 +1,9 @@
+3.52.1
+======
+July 14, 2023
+- Fix typo in exception message
+- Update Gwen core from v3.44.3 to v[3.44.4](https://github.com/gwen-interpreter/gwen/releases/tag/v3.44.4)
+
 3.52.0
 ======
 July 6, 2023
