@@ -1,8 +1,14 @@
+3.52.2
+======
+July 24, 2023
+- Update Gwen core from v3.44.4 to v[3.44.5](https://github.com/gwen-interpreter/gwen/releases/tag/v3.44.5)
+  - Check that arguments[index] placeholders are defined for all parameters passed to JS function bindings
+
 3.52.1
 ======
 July 14, 2023
-- Fix typo in exception message
 - Update Gwen core from v3.44.3 to v[3.44.4](https://github.com/gwen-interpreter/gwen/releases/tag/v3.44.4)
+  - Fix typo in exception message
 
 3.52.0
 ======
@@ -14,63 +20,63 @@ July 6, 2023
 ======
 July 6, 2023
 - Update Gwen core from v3.44.2 to v[3.44.3](https://github.com/gwen-interpreter/gwen/releases/tag/v3.44.3)
-- Fix dry run for literal boolean conditions used in while-until DSLs
+  - Fix dry run for literal boolean conditions used in while-until DSLs
 
 3.51.1
 ======
 July 5, 2023
 - Update Gwen core from v3.44.0 to v[3.44.2](https://github.com/gwen-interpreter/gwen/releases/tag/v3.44.2)
-- Preserve previous implicit `gwen.eval.status.keyword` and `gwen.eval.status.message` state for steps and StepDefs called with Try annotation
+  - Preserve previous implicit `gwen.eval.status.keyword` and `gwen.eval.status.message` state for steps and StepDefs called with Try annotation
 
 3.51.0
 ======
 July 5, 2023
 - Update Gwen core from v3.43.0 to v[3.44.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.44.0)
-- Fixed implicit `gwen.eval.status.keyword` and `gwen.eval.status.message` for steps having Try annotation
-- Introduced new implicit attributes:
-  - `gwen.eval.status.keyword.upperCased` = Value of `gwen.eval.status.keyword` in upper case
-  - `gwen.eval.status.keyword.lowerCased` = Value of `gwen.eval.status.keyword` in lower case
+  - Fixed implicit `gwen.eval.status.keyword` and `gwen.eval.status.message` for steps having Try annotation
+  - Introduced new implicit attributes:
+    - `gwen.eval.status.keyword.upperCased` = Value of `gwen.eval.status.keyword` in upper case
+    - `gwen.eval.status.keyword.lowerCased` = Value of `gwen.eval.status.keyword` in lower case
 
 3.50.0
 ======
 July 5, 2023
 - Update Gwen core from v3.42.1 to v[3.43.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.43.0)
-- Introduced new implicit attributes:
-  - `gwen.eval.status.message.escaped` = Java escaped equivalent of `gwen.eval.status.message`
-  - `gwen.eval.status.isFailed` = `true` if current feature evaluation is in error, `false` otherwise
-  - `gwen.eval.status.isPassed` = `true` if current feature evaluation is not in error, `false` otherwise
-- Add support for boolean literals in place of javascript expressions as conditions in DSLs
+  - Introduced new implicit attributes:
+    - `gwen.eval.status.message.escaped` = Java escaped equivalent of `gwen.eval.status.message`
+    - `gwen.eval.status.isFailed` = `true` if current feature evaluation is in error, `false` otherwise
+    - `gwen.eval.status.isPassed` = `true` if current feature evaluation is not in error, `false` otherwise
+  - Add support for boolean literals in place of javascript expressions as conditions in DSLs
 
 3.49.1
 ======
 June 30, 2023
 - Update Gwen core from v3.42.0 to v[3.42.1](https://github.com/gwen-interpreter/gwen/releases/tag/v3.42.1)
-- Use ✘ icon for failed steps in console and REPL output
-- Fix event dispatching of examples with empty tables
+  - Use ✘ icon for failed steps in console and REPL output
+  - Fix event dispatching of examples with empty tables
 
 3.49.0
 ======
 June 30, 2023
 - Update Gwen core from v3.41.0 to v[3.42.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.42.0)
-- Add implicit attribute for accessing the name of the feature file currently being executed (excluding file extension)
-  - `gwen.feature.file.simpleName`
+  - Add implicit attribute for accessing the name of the feature file currently being executed (excluding file extension)
+    - `gwen.feature.file.simpleName`
 
 3.48.0
 ======
 June 29, 2023
 - Update Gwen core from v3.40.0 to v[3.41.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.41.0)
-- Add the following implicit attributes for accessing the number and index of the current input data record being processed
-  - `data.record.number` = the current record number starting at 1
-  - `data.record.index` = the current record index starting at 0
-- Add the following implicit attributes for accessing the number and index of the current while, until, or forEach iteration
-  - `iteration.number` = the current iteration number starting at 1
-  - `iteration.index` = the current iteration index starting at 0
+  - Add the following implicit attributes for accessing the number and index of the current input data record being processed
+    - `data.record.number` = the current record number starting at 1
+    - `data.record.index` = the current record index starting at 0
+  - Add the following implicit attributes for accessing the number and index of the current while, until, or forEach iteration
+    - `iteration.number` = the current iteration number starting at 1
+    - `iteration.index` = the current iteration index starting at 0
 
 3.47.0
 ======
 June 26, 2023
-- Add support for JSON data feeds and lookups
 - Update Gwen core from v3.39.0 to v[3.40.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.40.0)
+  - Add support for JSON data feeds and lookups
 
 3.46.0
 ======
