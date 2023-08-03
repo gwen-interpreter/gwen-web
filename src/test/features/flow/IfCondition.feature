@@ -43,8 +43,9 @@ Feature: If Conditionals
   Scenario: Do not perform this
     Given the target is "that"
       And the called step is "none"
-      And this condition is defined by javascript ""${the target}" === "this""
-     When I perform this if this condition
+      And js condition is defined by js "'${the target}' === 'this'"
+      And cond is "${js condition}"
+     When I perform this if cond
      Then the called step should be "none"
 
   Scenario: Do perform this (negated)

@@ -1,3 +1,9 @@
+3.52.4
+======
+Aug 3, 2023
+- Update Gwen core from v3.44.5 to v[3.44.6](https://github.com/gwen-interpreter/gwen/releases/tag/v3.44.6)
+  - Fix dry run checks for boolean JS references
+
 3.52.3
 ======
 Aug 1, 2023
