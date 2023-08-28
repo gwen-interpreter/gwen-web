@@ -1,3 +1,15 @@
+3.52.6
+======
+Sep 28, 2023
+- Update Gwen core from v3.44.6 to v[3.44.7](https://github.com/gwen-interpreter/gwen/releases/tag/v3.44.7)
+  - Runtime library updates
+    - Update htmlcleaner from v2.28 to v2.29
+    - Update commons-codec from v1.15 to v1.16.0
+    - Update commons-model from v5.8.0 to v5.8.1
+    - Update client-java from v5.1.20 to v5.1.22
+  - Test library updates
+    - Update h2 from v2.1.214 to v2.2.220
+
 3.52.5
 ======
 Aug 28, 2023
