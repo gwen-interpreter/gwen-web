@@ -1,3 +1,8 @@
+3.52.5
+======
+Aug 28, 2023
+- Fix dry run for web element text capture
+
 3.52.4
 ======
 Aug 3, 2023
