@@ -151,7 +151,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     }
     (getLocatorBinding(name, optional = true).map(_.withTimeout(timeout)) match {
       case Some(binding) =>
-        evaluate("$[dryRun:webElement]") {
+        evaluate("$[dryRun:webElementText]") {
           Try(getElementText(binding)) match {
             case Success(text) => text.getOrElse(getAttribute(name))
             case Failure(e) => throw e
