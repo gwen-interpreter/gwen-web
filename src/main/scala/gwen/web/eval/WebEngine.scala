@@ -299,9 +299,13 @@ class WebEngine extends EvalEngine[WebContext] {
         new CaptureElementScreenshot(element, Some(attribute))
       case r"""I capture element screenshot of (.+?)$element""" =>
         new CaptureElementScreenshot(element, None)
-      case r"""I capture (.+?)$element( value| text)$selection as (.+?)$attribute""" =>
+      case r"""I capture the PDF text from the current URL as (.+?)$name""" =>
+        new CaptureCurrentUrlPDF(name)
+      case r"""I capture the PDF text from the current URL""" =>
+        new CaptureCurrentUrlPDF("the PDF text")
+      case r"""I capture (.+?)$element( value| text)$selection as (.+?)$attribute""" if !element.startsWith("the PDF text from") =>
         new CaptureDropdownOrElement(Some(attribute), element, DropdownSelection.valueOf(selection.trim))
-      case r"""I capture (.+?)$element( value| text)$selection""" =>
+      case r"""I capture (.+?)$element( value| text)$selection""" if !element.startsWith("the PDF text from") =>
         new CaptureDropdownOrElement(None, element, DropdownSelection.valueOf(selection.trim))
       case r"I capture the (alert|confirmation)$name popup message" =>
         new CapturePopupMessage(s"the $name popup message")

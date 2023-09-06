@@ -333,6 +333,7 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
     WebSettings.`gwen.web.chrome.args`.contains("--ignore-certificate-errors") should be (true)
     WebSettings.`gwen.web.chrome.args`.contains("--window-size=1920,1080") should be (true)
     WebSettings.`gwen.web.chrome.args`.contains("--remote-allow-origins=*") should be (false)
+    println("@@@@@@" + Settings.get("gwen.web.chrome.args:JSONArray"))
     Settings.get("gwen.web.chrome.args:JSONArray") should be ("""["--ignore-certificate-errors","--window-size=1920,1080"]""")
     WebSettings.`gwen.web.chrome.extensions` should be (Nil)
     WebSettings.`gwen.web.chrome.mobile` should be (Map())

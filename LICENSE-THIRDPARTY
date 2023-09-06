@@ -303,6 +303,9 @@ org.scalatest
   | +-the Apache License, ASL Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0
   +-scalatest-shouldmatchers_3:3.2.16
   | +-the Apache License, ASL Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0
+commons-logging
+  +-commons-logging:1.2
+  | +-no license specified
 io.opentelemetry
   +-opentelemetry-api-events:1.28.0-alpha
   | +-The Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
@@ -384,6 +387,13 @@ org.scala-lang.modules
 ua.co.k
   +-strftime4j:1.0.5
   | +-MIT License - http://www.opensource.org/licenses/mit-license.php
+org.apache.pdfbox
+  +-pdfbox-io:3.0.0
+  | +-no license specified
+  +-fontbox:3.0.0
+  | +-no license specified
+  +-pdfbox:3.0.0
+  | +-no license specified
 io.netty
   +-netty-resolver:4.1.96.Final
   | +-no license specified

@@ -3045,6 +3045,12 @@ I capture the similarity score of <textRef> compared to "<text>" ignoring case a
 I capture the similarity score of <textRef1> compared to <textRef2> ignoring case as <name>
 I capture the similarity score of <textRef> compared to "<text>" ignoring case
 I capture the similarity score of <textRef1> compared to <textRef2> ignoring case
+I capture the PDF text from the current URL
+I capture the PDF text from the current URL as <name>
+I capture the PDF text from url "<url>"
+I capture the PDF text from url "<url>" as <name>
+I capture the PDF text from file "<filepath>"
+I capture the PDF text from file "<filepath>" as <name>
 I lookup <name> in the "<csvFilepath>" file where "<predicate>"
 I lookup <name> in <csvFilepathRef> file where "<predicate>"
 I lookup <column> in the "<csvFilepath>" file as <name> where "<predicate>"
