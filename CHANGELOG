@@ -1,3 +1,19 @@
+3.53.0
+======
+Aug 6, 2023
+- Update Gwen core from v3.44.7 to v[3.45.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.45.0)
+  - Introduce JSONArray notation for accessing multi valued settings as a JSON array literal.
+    - Example: Given the following setting, then `${my.list:JSONArray}` will resolve to `["one", "two", "three"]` in features and meta
+      ```
+      my {
+        list = [ 
+          "one", 
+          "two", 
+          "three" 
+        ]
+      }
+      ```
+
 3.52.8
 ======
 Aug 6, 2023
