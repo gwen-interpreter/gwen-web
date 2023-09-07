@@ -22,7 +22,9 @@ import gwen.web.eval.driver.DriverManager
 
 import gwen.core._
 import gwen.core.Errors
+import gwen.core.eval.binding.SimpleBinding
 import gwen.core.eval.ComparisonOperator
+import gwen.core.eval.binding.JSBinding
 import gwen.core.node.Root
 import gwen.core.node.gherkin.SpecType
 import gwen.core.node.gherkin.Step
@@ -36,14 +38,13 @@ import scala.util.chaining._
 import org.apache.commons.text.StringEscapeUtils
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
-import org.scalatest.BeforeAndAfterEach
-import org.scalatestplus.mockito.MockitoSugar
-
 import org.openqa.selenium.WindowType
 import org.openqa.selenium.WebElement
+import org.scalatest.BeforeAndAfterEach
+import org.scalatestplus.mockito.MockitoSugar
+import org.scalatest.matchers.should.Matchers
 
 import java.io.File
-import org.scalatest.matchers.should.Matchers
 
 class WebEngineTest extends BaseTest with Matchers with MockitoSugar with BeforeAndAfterEach {
 
@@ -1381,12 +1382,15 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
   }
 
   "I wait until <condition> with JS" should "evaluate" in {
-    doReturn(None).when(mockScopes).getOpt("<condition>")
+    val binding = JSBinding("<condition>", Nil, ctx)
+    doReturn(binding).when(ctx).getBinding("<condition>")
     doReturn("(function(){return true;})()").when(mockScopes).get("<condition>/javascript")
     evaluate("I wait until <condition>")
   }
 
   "I wait until <condition> with literal" should "evaluate" in {
+    val binding = SimpleBinding("<condition>", ctx)
+    doReturn(binding).when(ctx).getBinding("<condition>")
     doReturn(Some("true")).when(mockScopes).getOpt("<condition>")
     evaluate("I wait until <condition>")
   }

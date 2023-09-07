@@ -1,3 +1,9 @@
+3.54.0
+======
+Aug 7, 2023
+- Update Gwen core from v3.45.0 to v[3.46.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.46.0)
+  - Any type of binding can now be used as a boolean condition throughout the DSLs (in prior versions only JS or simple bindings were accepted).
+
 3.53.0
 ======
 Aug 7, 2023
