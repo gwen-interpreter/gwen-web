@@ -34,7 +34,7 @@ class WaitForBoundCondition(condition: String, delayMsecs: Option[Long], timeout
     step tap { _ =>
       checkStepRules(step, BehaviorType.Action, ctx)
       val bCondition = BooleanCondition(condition, false, WebSettings.`gwen.web.wait.seconds`, ctx)
-      ctx.waitUntil(delayMsecs, timeoutSecs, s"waiting for true return from JS condition: ${bCondition.name}") {
+      ctx.waitUntil(delayMsecs, timeoutSecs, s"waiting for true return from condition: ${bCondition.name}") {
         bCondition.evaluate()
       }
     }

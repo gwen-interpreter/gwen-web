@@ -258,7 +258,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     scopes.getOpt(s"$element/$action/condition") foreach { condition =>
       val bCondition = BooleanCondition(condition, false, WebSettings.`gwen.web.wait.seconds`, this)
       logger.info(s"waiting until ${bCondition.name} (post-$action condition)")
-      waitUntil(s"waiting for true return from JS conditioon: ${bCondition.name}") {
+      waitUntil(s"waiting for true return from condition: ${bCondition.name}") {
         bCondition.evaluate()
       }
     }
