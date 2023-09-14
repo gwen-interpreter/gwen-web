@@ -20,6 +20,7 @@ import gwen.web.eval.WebContext
 
 import gwen.core._
 import gwen.core.behavior.BehaviorType
+import gwen.core.eval.binding.DryValueBinding
 import gwen.core.eval.lambda.UnitStep
 import gwen.core.eval.lambda.unit.CapturePDF
 import gwen.core.node.GwenNode
@@ -29,7 +30,7 @@ class CaptureCurrentUrlPDF(target: String) extends UnitStep[WebContext] {
 
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     checkStepRules(step, BehaviorType.Action, ctx)
-    val content = ctx.evaluate("$[dryRun:pdfText]") {
+    val content = ctx.evaluate(step.dryValue(target).getOrElse(DryValueBinding.unresolved("pdfText"))) {
       ctx.capturePDFText(LocationType.url, ctx.captureCurrentUrl)
     }
     ctx.topScope.set(target, content)

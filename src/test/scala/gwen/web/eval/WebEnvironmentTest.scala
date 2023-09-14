@@ -79,7 +79,7 @@ class WebEnvironmentTest extends BaseTest with Matchers with MockitoSugar {
   "Attribute with javascript binding on dry run" should "not resolve" in {
     val ctx = newCtx(true)
     ctx.scopes.set("username/javascript", "$('#username').val()")
-    ctx.getAttribute("username") should be ("$[dryRun:javascript]")
+    ctx.getAttribute("username") should be ("$[dryValue:javascript]")
   }
   
   "Attribute with xpath binding" should "resolve" in {
@@ -99,9 +99,9 @@ class WebEnvironmentTest extends BaseTest with Matchers with MockitoSugar {
     ctx.scopes.set("username/xpath/source", "xml")
     ctx.scopes.set("username/xpath/targetType", "text")
     ctx.scopes.set("username/xpath/expression", "users/user")
-    ctx.getAttribute("username") should be ("$[dryRun:xpath]")
+    ctx.getAttribute("username") should be ("$[dryValue:xpath]")
     ctx.scopes.set("username/xpath/expression", "users/user[2]")
-    ctx.getAttribute("username") should be ("$[dryRun:xpath]")
+    ctx.getAttribute("username") should be ("$[dryValue:xpath]")
   }
   
   "Attribute with regex binding" should "resolve" in {
@@ -120,10 +120,10 @@ class WebEnvironmentTest extends BaseTest with Matchers with MockitoSugar {
     ctx.scopes.set("url", "http://www.domain.com?param1=one&param2=two")
     ctx.scopes.set("param1/regex/source", "url")
     ctx.scopes.set("param1/regex/expression", "param1=(.+)&")
-    ctx.getAttribute("param1") should be ("$[dryRun:regex]")
+    ctx.getAttribute("param1") should be ("$[dryValue:regex]")
     ctx.scopes.set("param2/regex/source", "url")
     ctx.scopes.set("param2/regex/expression", "param2=(.+)")
-    ctx.getAttribute("param2") should be ("$[dryRun:regex]")
+    ctx.getAttribute("param2") should be ("$[dryValue:regex]")
   }
   
   "Attribute with json path binding" should "resolve" in {
@@ -139,7 +139,7 @@ class WebEnvironmentTest extends BaseTest with Matchers with MockitoSugar {
     ctx.scopes.set("ctx", """{"scopes":[{"scope":"login","atts":[{"username":"Gwen"}]}]}""")
     ctx.scopes.set("username/json path/source", "ctx")
     ctx.scopes.set("username/json path/expression", "$.scopes[0].atts[0].username")
-    ctx.getAttribute("username") should be ("$[dryRun:json path]")
+    ctx.getAttribute("username") should be ("$[dryValue:json path]")
   }
   
   "Attribute with sysproc binding" should "resolve" in {
@@ -151,13 +151,13 @@ class WebEnvironmentTest extends BaseTest with Matchers with MockitoSugar {
   "Attribute with sysproc binding on dry run" should "not resolve" in {
     val ctx = newCtx(true)
     ctx.scopes.set("hostname/sysproc", "local command")
-    ctx.getAttribute("hostname") should be ("$[dryRun:sysproc]")
+    ctx.getAttribute("hostname") should be ("$[dryValue:sysproc]")
   }
   
   "Attribute with file binding on dry run" should "not resolve" in {
     val ctx = newCtx(true)
     ctx.scopes.set("xml/file", "path-to/file.xml")
-    ctx.getAttribute("xml") should be ("$[dryRun:file]")
+    ctx.getAttribute("xml") should be ("$[dryValue:file]")
   }
   
   "Attribute with sql binding on dry run" should "not resolve" in {
@@ -166,7 +166,7 @@ class WebEnvironmentTest extends BaseTest with Matchers with MockitoSugar {
         val ctx = newCtx(true)
         ctx.scopes.set("username/sql/selectStmt", "select username from users")
         ctx.scopes.set("username/sql/dbName", "subscribers")
-        ctx.getAttribute("username") should be ("$[dryRun:sql]")
+        ctx.getAttribute("username") should be ("$[dryValue:sql]")
       }
     }
   }

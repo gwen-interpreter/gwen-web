@@ -22,6 +22,7 @@ import gwen.web.eval.binding.RelativeSelectorType
 import gwen.web.eval.binding.SelectorType
 
 import gwen.core.eval.EvalEngine
+import gwen.core.eval.binding.DryValueBinding
 import gwen.core.eval.lambda.composite.ForEach
 import gwen.core.node.GwenNode
 import gwen.core.node.gherkin.Step
@@ -33,7 +34,7 @@ class ForEachWebElement(doStep: String, element: String, selectorType: SelectorT
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     val relativeSelectorAndBinding = relative.map((s, b, p) => (s, ctx.getLocatorBinding(b), p))
     val binding = LocatorBinding(s"$element/list", selectorType, lookupExpr, relativeSelectorAndBinding, timeout, None, ctx)
-    ctx.evaluate(evaluateForEach(() => List("$[dryRun:webElements]"), element, parent, step, ctx)) {
+    ctx.evaluate(evaluateForEach(() => List(DryValueBinding.unresolved("webElements")), element, parent, step, ctx)) {
       evaluateForEach(() => binding.resolveAll(), element, parent, step, ctx)
     }
     

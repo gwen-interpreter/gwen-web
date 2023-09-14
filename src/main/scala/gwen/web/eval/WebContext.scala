@@ -26,6 +26,7 @@ import gwen.core.Errors._
 import gwen.core.eval.ComparisonOperator
 import gwen.core.eval.EvalContext
 import gwen.core.eval.binding.BindingType
+import gwen.core.eval.binding.DryValueBinding
 import gwen.core.eval.binding.JSBinding
 import gwen.core.eval.binding.TextBinding
 import gwen.core.eval.support.BooleanCondition
@@ -151,7 +152,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     }
     (getLocatorBinding(name, optional = true).map(_.withTimeout(timeout)) match {
       case Some(binding) =>
-        evaluate("$[dryRun:webElementText]") {
+        evaluate(new DryValueBinding(binding.name, "webElementText", this).resolve()) {
           Try(getElementText(binding)) match {
             case Success(text) => text.getOrElse(getAttribute(name))
             case Failure(e) => throw e
@@ -447,7 +448,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
 
   /** Captures the current screenshot and adds it to the attachments list. */
   def captureScreenshot(unconditional: Boolean, name: String = "Screenshot"): Option[File] = {
-    evaluate(Option(new File("$[dryRun:screenshotFile]"))) {
+    evaluate(Option(new File(DryValueBinding.unresolved("screenshotFile")))) {
       Try(
         driverManager.withWebDriver { driver =>
           Thread.sleep(150) // give browser time to render
@@ -470,7 +471,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
 
   /** Captures an element screenshot and adds it to the attachments list. */
   def captureElementScreenshot(binding: LocatorBinding, name: String = "Element Screenshot"): Option[File] = {
-    evaluate(Option(new File("$[dryRun:elementScreenshotFile]"))) {
+    evaluate(Option(new File(DryValueBinding.unresolved("elementScreenshotFile")))) {
       withWebElement(binding, s"trying to capture element screenshot of ${binding.displayName}") { webElement =>
         Thread.sleep(150) // give element time to render
         webElement.getScreenshotAs(OutputType.FILE) tap { elementshot =>
@@ -712,7 +713,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
       driver.getTitle tap { title =>
         bindAndWait("page", "title", title)
       }
-    }.getOrElse("$[dryRun:title]")
+    }.getOrElse(DryValueBinding.unresolved("title"))
 
   /**
     * Sends a value to a web element.
@@ -1127,7 +1128,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     withWebDriver { driver =>
       driver.getCurrentUrl
     } getOrElse {
-      "$[dryRun:currentUrl]"
+      DryValueBinding.unresolved("currentUrl")
     }
   }
 
@@ -1373,7 +1374,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     withWebDriver { driver =>
       waitUntil("waiting for alert popup", ExpectedConditions.alertIsPresent())
       driver.switchTo().alert().getText
-    } getOrElse "$[dryRun:popupMessage]"
+    } getOrElse DryValueBinding.unresolved("popupMessage")
   }
 
   /** Checks if an element is displayed. */

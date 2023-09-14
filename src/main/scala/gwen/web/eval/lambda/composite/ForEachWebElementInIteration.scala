@@ -19,6 +19,7 @@ package gwen.web.eval.lambda.composite
 import gwen.web.eval.WebContext
 
 import gwen.core.eval.EvalEngine
+import gwen.core.eval.binding.DryValueBinding
 import gwen.core.eval.lambda.composite.ForEach
 import gwen.core.node.GwenNode
 import gwen.core.node.gherkin.Step
@@ -27,7 +28,7 @@ class ForEachWebElementInIteration(doStep: String, element: String, iteration: S
 
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     val binding = ctx.getLocatorBinding(iteration)
-    ctx.evaluate(evaluateForEach(() => List("$[dryRun:webElements]"), element, parent, step, ctx)) {
+    ctx.evaluate(evaluateForEach(() => List(DryValueBinding.unresolved("webElements")), element, parent, step, ctx)) {
       evaluateForEach(() => binding.resolveAll(), element, parent, step, ctx)
     }
     
