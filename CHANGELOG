@@ -1,3 +1,10 @@
+3.55.1
+======
+Sep 16, 2023
+- Update Gwen core from v3.47.0 to v[3.47.1](https://github.com/gwen-interpreter/gwen/releases/tag/v3.47.1)
+  - Fix dry run annotation logic in for-each loop
+  - Remove pre-existing same named loop var check and restore value when for-each finishes
+
 3.55.0
 ======
 Sep 15, 2023
@@ -18,13 +25,13 @@ Sep 8, 2023
 
 3.54.0
 ======
-Aug 7, 2023
+Sep 7, 2023
 - Update Gwen core from v3.45.0 to v[3.46.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.46.0)
   - Any type of binding can now be used as a boolean condition throughout the DSLs (in prior versions only JS or simple bindings were accepted).
 
 3.53.0
 ======
-Aug 7, 2023
+Sep 7, 2023
 - Update Gwen core from v3.44.7 to v[3.45.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.45.0)
 - Add DSLs to capture PDF text content
   - `I capture the PDF text from the current URL`
@@ -37,17 +44,17 @@ Aug 7, 2023
 
 3.52.8
 ======
-Aug 6, 2023
+Sep 6, 2023
 - Update selenium from v4.12.0 to v4.12.1
 
 3.52.7
 ======
-Aug 2, 2023
+Sep 2, 2023
 - Update selenium from v4.11.0 to v4.12.0
 
 3.52.6
 ======
-Sep 28, 2023
+Aug 28, 2023
 - Update Gwen core from v3.44.6 to v[3.44.7](https://github.com/gwen-interpreter/gwen/releases/tag/v3.44.7)
   - Runtime library updates
     - Update htmlcleaner from v2.28 to v2.29
