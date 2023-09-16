@@ -1,3 +1,9 @@
+3.55.2
+======
+Sep 16, 2023
+- Update Gwen core from v3.47.1 to v[3.47.2](https://github.com/gwen-interpreter/gwen/releases/tag/v3.47.2)
+  - Use And keyword in trailing expanded dry run value steps
+
 3.55.1
 ======
 Sep 16, 2023

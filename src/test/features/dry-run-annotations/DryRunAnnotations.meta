@@ -1,0 +1,22 @@
+Feature: Dry Run Annotations Meta
+
+  Scenario: Init sequence
+    Given sequence is ""
+    
+  @StepDef
+  @Action
+  Scenario: I perform step 1
+    Given sequence is "${sequence}1${number}"
+     Then number should be "1"
+
+  @StepDef
+  @Action
+  Scenario: I perform step 2
+    Given sequence is "${sequence}2${number}"
+     Then number should not be "1"
+
+  @StepDef
+  @Action
+  Scenario: I perform step 3
+    Given sequence is "${sequence}3${number}"
+     Then number should be "3"
