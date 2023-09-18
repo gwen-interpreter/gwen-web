@@ -1,3 +1,12 @@
+3.55.4
+======
+Sepp 19, 2023
+- Update Gwen core from v3.47.3 to v[3.47.4](https://github.com/gwen-interpreter/gwen/releases/tag/v3.47.4)
+- Override transitive libararies to pick up vulnerability fixes
+  - Update guava from v32.0.1-jre to v32.1.2-jre
+  - Update okio from v1.172. to v1.17.5
+  - Update commons-io from v2.6. to v2.13.0
+
 3.55.3
 ======
 Sep 18, 2023

@@ -183,7 +183,7 @@ nl.big-o
   +-liqp:0.8.2
   | +-MIT License - http://www.opensource.org/licenses/mit-license.php
 com.squareup.okio
-  +-okio:1.17.2
+  +-okio:1.17.5
   | +-no license specified
 com.squareup.okhttp3
   +-logging-interceptor:3.14.9
@@ -396,7 +396,7 @@ com.google.guava
   +-failureaccess:1.0.1
   | +-no license specified
 commons-io
-  +-commons-io:2.6
+  +-commons-io:2.13.0
   | +-no license specified
 org.scala-lang.modules
   +-scala-asm:9.5.0-scala-1

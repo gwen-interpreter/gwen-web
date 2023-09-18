@@ -1,8 +1,8 @@
 enablePlugins(GitVersioning)
 
 // gwen core & web versions
-val gwenVersion = "3.47.3"
-val gwenWebVersion = "3.55.3"
+val gwenVersion = "3.47.4"
+val gwenWebVersion = "3.55.4"
 
 git.baseVersion := gwenWebVersion
 git.useGitDescribe := true
@@ -60,11 +60,11 @@ lazy val mainDependencies = {
 
 lazy val mainOverrides = {
   val bc = "1.70"
-  val nettyHandler = "4.1.89.Final"
+  val io = "2.13.0"
   Seq(
     "org.bouncycastle" % "bcprov-jdk15on" % bc,
     "org.bouncycastle" % "bcpkix-jdk15on" % bc,
-    "io.netty" % "netty-handler" % nettyHandler
+    "commons-io" % "commons-io" % io
   )
 }
 
