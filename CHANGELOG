@@ -1,3 +1,9 @@
+3.55.5
+======
+Sep 19, 2023
+- Update Gwen core from v3.47.4 to v[3.47.5](https://github.com/gwen-interpreter/gwen/releases/tag/v3.47.5)
+  - Improved syntax error reporting for annotations
+
 3.55.4
 ======
 Sep 19, 2023
