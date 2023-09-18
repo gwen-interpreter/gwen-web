@@ -24,17 +24,17 @@ org.brotli
 org.scala-lang
   +-scala-library:2.13.10
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0
-  +-scala3-library_3:3.3.0
+  +-scala3-library_3:3.3.1
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0
-  +-scaladoc_3:3.3.0
+  +-scaladoc_3:3.3.1
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0
-  +-tasty-core_3:3.3.0
+  +-tasty-core_3:3.3.1
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0
-  +-scala3-compiler_3:3.3.0
+  +-scala3-compiler_3:3.3.1
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0
-  +-scala3-interfaces:3.3.0
+  +-scala3-interfaces:3.3.1
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0
-  +-scala3-tasty-inspector_3:3.3.0
+  +-scala3-tasty-inspector_3:3.3.1
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0
 com.typesafe.netty
   +-netty-reactive-streams:2.0.4
@@ -92,6 +92,9 @@ org.apache.httpcomponents.client5
 org.jsoup
   +-jsoup:1.14.3
   | +-The MIT License - https://jsoup.org/license
+org.jetbrains
+  +-annotations:15.0
+  | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
 com.sun.activation
   +-jakarta.activation:1.2.2
   | +-no license specified
@@ -144,12 +147,12 @@ com.fasterxml.jackson.core
   | +-The Apache Software License, Version 2.0 - https://www.apache.org/licenses/LICENSE-2.0.txt
   +-jackson-databind:2.15.2
   | +-The Apache Software License, Version 2.0 - https://www.apache.org/licenses/LICENSE-2.0.txt
-  +-jackson-annotations:2.13.3
-  | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-jackson-core:2.13.3
-  | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-jackson-databind:2.13.3
-  | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
+  +-jackson-annotations:2.15.1
+  | +-The Apache Software License, Version 2.0 - https://www.apache.org/licenses/LICENSE-2.0.txt
+  +-jackson-core:2.15.1
+  | +-The Apache Software License, Version 2.0 - https://www.apache.org/licenses/LICENSE-2.0.txt
+  +-jackson-databind:2.15.1
+  | +-The Apache Software License, Version 2.0 - https://www.apache.org/licenses/LICENSE-2.0.txt
 dev.failsafe
   +-failsafe:3.3.2
   | +-no license specified
@@ -174,7 +177,7 @@ joda-time
   +-joda-time:2.12.5
   | +-Apache License, Version 2.0 - https://www.apache.org/licenses/LICENSE-2.0.txt
 org.yaml
-  +-snakeyaml:1.30
+  +-snakeyaml:2.0
   | +-Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
 nl.big-o
   +-liqp:0.8.2
@@ -212,7 +215,7 @@ net.bytebuddy
   +-byte-buddy-agent:1.12.16
   | +-no license specified
 com.fasterxml.jackson.dataformat
-  +-jackson-dataformat-yaml:2.13.3
+  +-jackson-dataformat-yaml:2.15.1
   | +-no license specified
 org.apache.commons
   +-commons-exec:1.3
@@ -337,37 +340,53 @@ io.swagger
   +-swagger-annotations:1.6.0
   | +-no license specified
 com.vladsch.flexmark
-  +-flexmark-ext-superscript:0.42.12
+  +-flexmark-util-options:0.62.2
   | +-no license specified
-  +-flexmark-jira-converter:0.42.12
+  +-flexmark-ext-superscript:0.62.2
   | +-no license specified
-  +-flexmark-util:0.42.12
+  +-flexmark-util-misc:0.62.2
   | +-no license specified
-  +-flexmark-ext-yaml-front-matter:0.42.12
+  +-flexmark-jira-converter:0.62.2
   | +-no license specified
-  +-flexmark-ext-emoji:0.42.12
+  +-flexmark-util:0.62.2
   | +-no license specified
-  +-flexmark-html-parser:0.42.12
+  +-flexmark-util-format:0.62.2
   | +-no license specified
-  +-flexmark-ext-autolink:0.42.12
+  +-flexmark-ext-yaml-front-matter:0.62.2
   | +-no license specified
-  +-flexmark-ext-wikilink:0.42.12
+  +-flexmark-ext-emoji:0.62.2
   | +-no license specified
-  +-flexmark-ext-ins:0.42.12
+  +-flexmark-util-builder:0.62.2
   | +-no license specified
-  +-flexmark-ext-gfm-strikethrough:0.42.12
+  +-flexmark-util-html:0.62.2
   | +-no license specified
-  +-flexmark:0.42.12
+  +-flexmark-ext-autolink:0.62.2
   | +-no license specified
-  +-flexmark-ext-gfm-tasklist:0.42.12
+  +-flexmark-util-dependency:0.62.2
   | +-no license specified
-  +-flexmark-formatter:0.42.12
+  +-flexmark-util-ast:0.62.2
   | +-no license specified
-  +-flexmark-ext-anchorlink:0.42.12
+  +-flexmark-ext-wikilink:0.62.2
   | +-no license specified
-  +-flexmark-ext-tables:0.42.12
+  +-flexmark-ext-ins:0.62.2
   | +-no license specified
-  +-flexmark-ext-gfm-tables:0.42.12
+  +-flexmark-ext-gfm-strikethrough:0.62.2
+  | +-no license specified
+  +-flexmark:0.62.2
+  | +-no license specified
+  +-flexmark-util-sequence:0.62.2
+  | +-no license specified
+  +-flexmark-util-collection:0.62.2
+  | +-no license specified
+  +-flexmark-ext-gfm-tasklist:0.62.2
+  | +-no license specified
+  +-flexmark-util-data:0.62.2
+  | +-no license specified
+  +-flexmark-ext-anchorlink:0.62.2
+  | +-no license specified
+  +-flexmark-ext-tables:0.62.2
+  | +-no license specified
+  +-flexmark-util-visitor:0.62.2
   | +-no license specified
 com.google.guava
   +-listenablefuture:9999.0-empty-to-avoid-conflict-with-guava
@@ -380,7 +399,7 @@ commons-io
   +-commons-io:2.6
   | +-no license specified
 org.scala-lang.modules
-  +-scala-asm:9.4.0-scala-1
+  +-scala-asm:9.5.0-scala-1
   | +-BSD 3-clause - http://opensource.org/licenses/BSD-3-Clause
   +-scala-xml_3:2.1.0
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0

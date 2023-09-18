@@ -1,2 +1,2 @@
-@Import("src/test/features/google/Google.meta")
+@Import('src/test/features/google/Google.meta')
 Feature: Associative Google search meta
