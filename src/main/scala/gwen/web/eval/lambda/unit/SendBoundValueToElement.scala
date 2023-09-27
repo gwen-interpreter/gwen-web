@@ -32,7 +32,7 @@ class SendBoundValueToElement(element: String, source: String, sendEnterKey: Boo
     step tap { _ =>
       checkStepRules(step, BehaviorType.Action, ctx)
       val binding = ctx.getLocatorBinding(element)
-      val value = ctx.getBoundReferenceValue(source)
+      val value = ctx.getBoundValue(source)
       val clickFirst = WebSettings.`gwen.web.sendKeys.clickFirst`
       val clearFirst = WebSettings.`gwen.web.sendKeys.clearFirst`
       ctx.sendValue(binding, value, clickFirst, clearFirst, sendEnterKey)

@@ -19,7 +19,7 @@ package gwen.web.eval
 import WebErrors._
 import gwen.web.eval.binding._
 
-import gwen.core.Errors.ScriptException
+import gwen.core.Errors.FunctionException
 import gwen.core.Errors.WaitTimeoutException
 
 import com.typesafe.scalalogging.LazyLogging
@@ -123,7 +123,7 @@ class WebElementLocator(ctx: WebContext) extends LazyLogging {
               try {
                 getElementByJavaScript(s"$expression", selector)
               } catch {
-                case e: ScriptException =>
+                case e: FunctionException =>
                   elementNotFoundError(new LocatorBinding(name, List(selector), ctx))
               }
             case SelectorType.cache => ctx.getCachedWebElement(name)
@@ -230,13 +230,13 @@ class WebElementLocator(ctx: WebContext) extends LazyLogging {
   private def getElementByJavaScript(javascript: String, selector: Selector): Option[WebElement] = {
     val result = selector.relative match {
       case None =>
-        ctx.executeJS(s"return $javascript")
+        ctx.executeJS(javascript)
       case Some((_, rBinding, _)) =>
         getContainerElement(rBinding) match {
           case Some(containerElem) =>
-            ctx.executeJS(s"return (function(containerElem) { return $javascript })(arguments[0])", containerElem)
+            ctx.applyJS(s"(function(containerElem) { return ${ctx.parseJS(javascript)} })(arguments[0])", containerElem)
           case _ =>
-            ctx.executeJS(s"return $javascript")
+            ctx.executeJS(javascript)
         }
     }
     result match {
@@ -320,7 +320,7 @@ class WebElementLocator(ctx: WebContext) extends LazyLogging {
   private def getAllElementsByJavaScript(javascript: String, selector: Selector): List[WebElement] = {
     var elements: List[WebElement] = Nil
     ctx.waitUntil(selector.timeoutSeconds, s"trying to locate elements by javascript: $javascript") {
-      elements = ctx.executeJS(s"return $javascript") match {
+      elements = ctx.executeJS(javascript) match {
         case elems: ArrayList[_] =>
           elems.asScala.toList.map(_.asInstanceOf[WebElement])
         case elem => Option(elem) match {

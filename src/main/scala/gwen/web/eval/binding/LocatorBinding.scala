@@ -48,8 +48,8 @@ class LocatorBinding(val name: String, val selectors: List[Selector], ctx: WebCo
   
   lazy val timeoutSeconds: Long = selectors.map(_.timeoutSeconds).sum
 
-  override def resolve(): WebElement = ctx.locator.locate(this)
-  def resolveAll(): List[WebElement] = ctx.locator.locateAll(this)
+  override def resolve(): WebElement = ctx.webElementlocator.locate(this)
+  def resolveAll(): List[WebElement] = ctx.webElementlocator.locateAll(this)
   
   /** Gets the javascript equivalent of this locator binding (used as fallback on stale element reference). */
   def jsEquivalent: LocatorBinding = {

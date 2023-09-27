@@ -38,6 +38,7 @@ import gwen.core.status.Failed
 
 
 import scala.concurrent.duration.Duration
+import scala.collection.SeqView
 import scala.io.Source
 import scala.jdk.CollectionConverters._
 import scala.util.{Failure, Success, Try}
@@ -74,7 +75,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     }
   }
 
-  def locator = new WebElementLocator(this)
+  def webElementlocator = new WebElementLocator(this)
 
   /** Resets the driver context. */
   def reset(): Unit = {
@@ -126,13 +127,64 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
   override def formatJSReturn(javascript: String) = s"return $javascript"
 
   /**
-    * Executes a javascript expression on the current page through the web driver.
+    * Executes a javascript function on the current page through the web driver.
     *
-    * @param javascript the script expression to execute
-    * @param params optional parameters to the script
+    * @param javascript the script function to execute
+    * @param params optional parameters to the web driver
     */
-  override def evaluateJS(javascript: String, params: Any*): Any =
-    executeJS(javascript, params.map(_.asInstanceOf[AnyRef])*)
+  override def evaluateJS(javascript: String, params: List[Any]): Any = {
+    evaluateJSWeb(javascript, params)
+  }
+
+  /**
+    * Injects and executes a javascript function on the current page through web driver.
+    *
+    * @param javascript the function to apply
+    * @param takeScreenShot true to take screenshot after execting the function
+    */
+  def executeJS(javascript: String)(implicit takeScreenShot: Boolean = false): Any = {
+    evaluateJSWeb(javascript, Nil)
+  }
+
+  /**
+    * Injects and applies a javascript function to a web element on the current page through web driver.
+    *
+    * @param javascript the function to apply
+    * @param webElement the web element to apply the function to
+    * @param takeScreenShot true to take screenshot after execting the function
+    */
+  def applyJS(javascript: String, webElement: WebElement)(implicit takeScreenShot: Boolean = false): Any = {
+    evaluateJSWeb(javascript, List(webElement))
+  }
+
+  /**
+    * Injects and executes a javascript function on the current page through web driver.
+    *
+    * @param javascript the function to execute
+    * @param params optional objects to apply the function to
+    * @param takeScreenShot true to take screenshot after execting the function
+    */
+  private def evaluateJSWeb(javascript: String, params: List[Any])(implicit takeScreenShot: Boolean = false): Any = {
+    withWebDriver { webDriver =>
+      try {
+        webDriver.asInstanceOf[JavascriptExecutor].executeScript(formatJSReturn(parseJS(javascript)), params.map(_.asInstanceOf[AnyRef])*) tap { result =>
+          if (takeScreenShot && WebSettings.`gwen.web.capture.screenshots.enabled`) {
+            captureScreenshot(false)
+          }
+          logger.debug(s"Evaluated javascript: $javascript, result='$result'")
+          if (result.isInstanceOf[Boolean] && result.asInstanceOf[Boolean]) {
+            Thread.sleep(150) // observed volatile results for booleans without wait
+          }
+        }
+      } catch {
+        case e: GwenException => throw e
+        case e: Throwable => functionError(javascript, e)
+      }
+    } getOrElse {
+      if (options.dryRun) s"$$[${BindingType.javascript}:$javascript]"
+      else null  //js returned null
+    }
+  }
 
   /**
     * Gets a bound value from memory. A search for the value is made in
@@ -144,8 +196,8 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     *
     * @param name the name of the bound value to find
     */
-  override def getBoundReferenceValue(name: String): String = getBoundReferenceValue(name, None)
-  def getBoundReferenceValue(name: String, timeout: Option[Duration]): String = {
+  override def getBoundValue(name: String): String = getBoundValue(name.trim, None)
+  def getBoundValue(name: String, timeout: Option[Duration]): String = {
     if (name == "the current URL") {
       val url = captureCurrentUrl
       topScope.set(name, url)
@@ -154,13 +206,14 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
       case Some(binding) =>
         evaluate(new DryValueBinding(binding.name, "webElementText", this).resolve()) {
           Try(getElementText(binding)) match {
-            case Success(text) => text.getOrElse(getAttribute(name))
+            case Success(text) => 
+              text.getOrElse(getCachedOrBoundValue(name))
             case Failure(e) => throw e
           }
         }
-      case _ => getAttribute(name)
+      case _ => getCachedOrBoundValue(name)
     }) tap { value =>
-      logger.debug(s"getBoundReferenceValue($name)='$value'")
+      logger.debug(s"getBoundValue($name)='$value'")
     }
   }
 
@@ -169,33 +222,26 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     *
     * @param name the name of the bound attribute to find
     */
-  def getAttribute(name: String): String = {
+  def getCachedOrBoundValue(name: String): String = {
     getCachedWebElement(s"${JSBinding.key(name)}/param/webElement") map { webElement =>
       val javascript = interpolate(scopes.get(JSBinding.key(name)))
-      val jsFunction = s"return (function(element) { return $javascript })(arguments[0])"
-      Option(executeJS(jsFunction, webElement)).map(_.toString).getOrElse("")
+      val jsFunction = jsFunctionWrapper("element", "arguments[0]", s"return $javascript")
+      Option(applyJS(jsFunction, webElement)).map(_.toString).getOrElse("")
     } getOrElse {
-      Try(super.getBoundReferenceValue(name)) match {
-        case Success(value) => value
-        case Failure(e) => e match {
-          case _: UnboundAttributeException =>
-            Try(getLocatorBinding(name).selectors.map(_.expression).mkString(",")).getOrElse(unboundAttributeError(name, e))
-          case _ => throw e
-        }
-      }
+      super.getBoundValue(name)
     }
   }
 
   def boundAttributeOrSelection(element: String, selection: Option[DropdownSelection]): String = boundAttributeOrSelection(element, selection, None)
   def boundAttributeOrSelection(element: String, selection: Option[DropdownSelection], timeout: Option[Duration]): String = {
     selection match {
-      case None => getBoundReferenceValue(element, timeout)
+      case None => getBoundValue(element, timeout)
       case Some(sel) =>
         try {
-          getBoundReferenceValue(s"$element $sel", timeout)
+          getBoundValue(s"$element $sel", timeout)
         } catch {
           case _: UnboundAttributeException =>
-            getElementSelection(element, sel).getOrElse(getBoundReferenceValue(element, timeout))
+            getElementSelection(element, sel).getOrElse(getBoundValue(element, timeout))
           case e: Throwable => throw e
         }
     }
@@ -319,7 +365,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
             getBinding(name)
           }
         ).map(_.displayName).getOrElse(name)
-        assertWithError(result, message, s"Expected $binding to ${if(negate) "not " else ""}$operator ${if (expected.isEmpty()) "blank" else s"'$expected'"}${if (operator == ComparisonOperator.be && actualValue == expected) "" else s" but got '$actualValue'"}", mode)
+        assertWithError(result, message, s"Expected $binding to ${if(negate) "not " else ""}$operator ${ValueLiteral.orQuotedValue(expected)}${if (operator == ComparisonOperator.be && actualValue == expected) "" else s" but got ${ValueLiteral.orQuotedValue(actualValue)}"}", mode)
     }
 
   }
@@ -459,7 +505,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
           val keep = unconditional || WebSettings.`gwen.web.capture.screenshots.duplicates` || lastScreenshotSize.fold(true) { _ != screenshot.length}
           if (keep) {
             if (!WebSettings.`gwen.web.capture.screenshots.duplicates`) lastScreenshotSize = Some(screenshot.length())
-            addAttachment(name, screenshot)
+            addAttachmentFile(name, screenshot)
             Some(screenshot)
           } else {
             None
@@ -475,37 +521,9 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
       withWebElement(binding, s"trying to capture element screenshot of ${binding.displayName}") { webElement =>
         Thread.sleep(150) // give element time to render
         webElement.getScreenshotAs(OutputType.FILE) tap { elementshot =>
-          addAttachment(name, elementshot)
+          addAttachmentFile(name, elementshot)
         }
       }
-    }
-  }
-
-  /**
-    * Injects and executes a javascript on the current page through web driver.
-    *
-    * @param javascript the script expression to execute
-    * @param params optional parameters to the script
-    * @param takeScreenShot true to take screenshot after performing the function
-    */
-  def executeJS(javascript: String, params: Any*)(implicit takeScreenShot: Boolean = false): Any = {
-    withWebDriver { webDriver =>
-      try {
-        webDriver.asInstanceOf[JavascriptExecutor].executeScript(javascript, params.map(_.asInstanceOf[AnyRef])*) tap { result =>
-          if (takeScreenShot && WebSettings.`gwen.web.capture.screenshots.enabled`) {
-            captureScreenshot(false)
-          }
-          logger.debug(s"Evaluated javascript: $javascript, result='$result'")
-          if (result.isInstanceOf[Boolean] && result.asInstanceOf[Boolean]) {
-            Thread.sleep(150) // observed volatile results for booleans without wait
-          }
-        }
-      } catch {
-        case e: Throwable => javaScriptError(javascript, e)
-      }
-    } getOrElse {
-      if (options.dryRun) s"$$[${BindingType.javascript}:$javascript]"
-      else null  //js returned null
     }
   }
 
@@ -606,13 +624,14 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
       val msecs = WebSettings`gwen.web.throttle.msecs`; // need semi-colon (compiler bug?)
       if (msecs > 0) {
         val style = WebSettings.`gwen.web.highlight.style`
-        val origStyle = executeJS(s"element = arguments[0]; type = element.getAttribute('type'); if (('radio' == type || 'checkbox' == type) && element.parentElement.getElementsByTagName('input').length == 1) { element = element.parentElement; } original_style = element.getAttribute('style'); element.setAttribute('style', original_style + '; $style'); return original_style;", element)(WebSettings.`gwen.web.capture.screenshots.highlighting`)
+        val origStyle = applyJS(
+          jsFunctionWrapper("element", "arguments[0]", s"type = element.getAttribute('type'); if (('radio' == type || 'checkbox' == type) && element.parentElement.getElementsByTagName('input').length == 1) { element = element.parentElement; } original_style = element.getAttribute('style'); element.setAttribute('style', original_style + '; $style'); return original_style;"), element)(WebSettings.`gwen.web.capture.screenshots.highlighting`)
         try {
           if (!WebSettings.`gwen.web.capture.screenshots.highlighting` || !WebSettings.`gwen.web.capture.screenshots.enabled`) {
             Thread.sleep(msecs)
           }
         } finally {
-          executeJS(s"element = arguments[0]; type = element.getAttribute('type'); if (('radio' == type || 'checkbox' == type) && element.parentElement.getElementsByTagName('input').length == 1) { element = element.parentElement; } element.setAttribute('style', '$origStyle');", element)(false)
+          applyJS(jsFunctionWrapper("element", "arguments[0]", s"type = element.getAttribute('type'); if (('radio' == type || 'checkbox' == type) && element.parentElement.getElementsByTagName('input').length == 1) { element = element.parentElement; } element.setAttribute('style', '$origStyle');"), element)(false)
         }
       }
     }
@@ -907,7 +926,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
   }
 
   private def jsClick(webElement: WebElement): Unit = {
-    executeJS("(function(element){element.click();})(arguments[0]);", webElement)
+    applyJS(jsFunctionWrapper("element", "arguments[0]", "element.click()"), webElement)
   }
 
   def moveToAndCapture(driver: WebDriver, webElement: WebElement): Unit = {
@@ -986,7 +1005,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     withWebDriver { driver =>
       withWebElement(binding, reason) { webElement =>
         if (WebSettings.`gwen.web.implicit.element.focus`) {
-          executeJS("(function(element){element.focus();})(arguments[0]);", webElement)
+          applyJS(jsFunctionWrapper("element", "arguments[0]", "element.focus()"), webElement)
         }
         doActions(driver, webElement)
       }
@@ -998,7 +1017,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
       if (action != ElementAction.`move to`) {
         moveToAndCapture(driver, webElement)
       }
-      executeJS(s"(function(element) { $javascript })(arguments[0])", webElement)
+      applyJS(jsFunctionWrapper("element", "arguments[0]", javascript), webElement)
       bindAndWait(binding.name, action.toString, "true")
     }
   }
@@ -1086,7 +1105,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
    * @param offset offset to scroll by (default is zero)
    */
   def scrollIntoView(webElement: WebElement, scrollTo: ScrollTo, offset: Int = 0): Unit = {
-    executeJS(s"var elem = arguments[0]; if (typeof elem !== 'undefined' && elem != null) { elem.scrollIntoView(${scrollTo == ScrollTo.top});${if (offset != 0) s" window.scroll(0, window.scrollY + $offset);" else ""}}", webElement)
+    applyJS(jsFunctionWrapper("elem", "arguments[0]", s"if (typeof elem !== 'undefined' && elem != null) { elem.scrollIntoView(${scrollTo == ScrollTo.top});${if (offset != 0) s" window.scroll(0, window.scrollY + $offset);" else ""}}"), webElement)
   }
 
   /**
@@ -1152,7 +1171,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
             case None | Some("") =>
               Option(webElement.getAttribute("value")) match {
                 case None | Some("") =>
-                  val value = executeJS("return (function(element){return element.innerText || element.textContent || ''})(arguments[0]);", webElement).asInstanceOf[String]
+                  val value = applyJS(jsFunctionWrapper("element", "arguments[0]", "return element.innerText || element.textContent || ''"), webElement).asInstanceOf[String]
                   if (value != null) value else ""
                 case Some(value) => value
               }
@@ -1194,6 +1213,14 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     }
   }
 
+  def getElementAttribute(binding: LocatorBinding, name: String): String = {
+    evaluate(Some(DryValueBinding.unresolved(s"WebElementAttribute"))) {
+      withWebElement(binding, s"trying to get $name attribute of ${binding.displayName}") { webElement => 
+        Option(webElement.getAttribute(name)) getOrElse ""
+      }
+    } getOrElse ""
+  }
+
    /**
     * Gets the selected value of a dropdown web element on the current page.
     * If a value is found, its value is bound to the current page
@@ -1219,7 +1246,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
   }
 
   private def getElementSelectionByJS(webElement: WebElement, by: DropdownSelection): Option[String] = {
-    Option(executeJS(s"""return (function(select){try{var byText=${by == DropdownSelection.text};var result='';var options=select && select.options;if(!!options){var opt;for(var i=0,iLen=options.length;i<iLen;i++){opt=options[i];if(opt.selected){if(result.length>0){result=result+',';}if(byText){result=result+opt.text;}else{result=result+opt.value;}}}return result;}else{return null;}}catch(e){return null;}})(arguments[0])""", webElement).asInstanceOf[String])
+    Option(applyJS(jsFunctionWrapper("select", "arguments[0]", s"try{var byText=${by == DropdownSelection.text};var result='';var options=select && select.options;if(!!options){var opt;for(var i=0,iLen=options.length;i<iLen;i++){opt=options[i];if(opt.selected){if(result.length>0){result=result+',';}if(byText){result=result+opt.text;}else{result=result+opt.value;}}}return result;}else{return null;}}catch(e){return null;}"), webElement).asInstanceOf[String])
   }
 
   /**
@@ -1393,7 +1420,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
 
   /** Checks if an element is not in the view port. */
   private def isInViewport(webElement: WebElement): Boolean = {
-    executeJS("return (function(elem){var b=elem.getBoundingClientRect(); return b.top>=0 && b.left>=0 && b.bottom<=(window.innerHeight || document.documentElement.clientHeight) && b.right<=(window.innerWidth || document.documentElement.clientWidth);})(arguments[0])", webElement).asInstanceOf[Boolean]
+    applyJS(jsFunctionWrapper("elem", "arguments[0]", "var b=elem.getBoundingClientRect(); return b.top>=0 && b.left>=0 && b.bottom<=(window.innerHeight || document.documentElement.clientHeight) && b.right<=(window.innerWidth || document.documentElement.clientWidth);"), webElement).asInstanceOf[Boolean]
   }
 
 }

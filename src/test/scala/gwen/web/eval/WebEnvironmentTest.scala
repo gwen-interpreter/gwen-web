@@ -70,103 +70,103 @@ class WebEnvironmentTest extends BaseTest with Matchers with MockitoSugar {
                                       
   }
 
-  "Attribute with text binding" should "be resolved" in {
+  "Text binding" should "be resolved" in {
     val ctx = newCtx()
     ctx.scopes.set("username/text", "Gwen")
-    ctx.getAttribute("username") should be ("Gwen")
+    ctx.getCachedOrBoundValue("username") should be ("Gwen")
   }
   
-  "Attribute with javascript binding on dry run" should "not resolve" in {
+  "JavaScript binding on dry run" should "not resolve" in {
     val ctx = newCtx(true)
     ctx.scopes.set("username/javascript", "$('#username').val()")
-    ctx.getAttribute("username") should be ("$[dryValue:javascript]")
+    ctx.getCachedOrBoundValue("username") should be ("$[dryValue:javascript]")
   }
   
-  "Attribute with xpath binding" should "resolve" in {
+  "XPath binding" should "resolve" in {
     val ctx = newCtx()
     ctx.scopes.set("xml", "<users><user>Gwen</user><user>Stacey</user></users>")
     ctx.scopes.set("username/xpath/source", "xml")
     ctx.scopes.set("username/xpath/targetType", "text")
     ctx.scopes.set("username/xpath/expression", "users/user")
-    ctx.getAttribute("username") should be ("Gwen")
+    ctx.getCachedOrBoundValue("username") should be ("Gwen")
     ctx.scopes.set("username/xpath/expression", "users/user[2]")
-    ctx.getAttribute("username") should be ("Stacey")
+    ctx.getCachedOrBoundValue("username") should be ("Stacey")
   }
 
-  "Attribute with xpath binding on dry run" should "not resolve" in {
+  "XPath binding on dry run" should "not resolve" in {
     val ctx = newCtx(true)
     ctx.scopes.set("xml", "<users><user>Gwen</user><user>Stacey</user></users>")
     ctx.scopes.set("username/xpath/source", "xml")
     ctx.scopes.set("username/xpath/targetType", "text")
     ctx.scopes.set("username/xpath/expression", "users/user")
-    ctx.getAttribute("username") should be ("$[dryValue:xpath]")
+    ctx.getCachedOrBoundValue("username") should be ("$[dryValue:xpath]")
     ctx.scopes.set("username/xpath/expression", "users/user[2]")
-    ctx.getAttribute("username") should be ("$[dryValue:xpath]")
+    ctx.getCachedOrBoundValue("username") should be ("$[dryValue:xpath]")
   }
   
-  "Attribute with regex binding" should "resolve" in {
+  "Regex binding" should "resolve" in {
     val ctx = newCtx()
     ctx.scopes.set("url", "http://www.domain.com?param1=one&param2=two")
     ctx.scopes.set("param1/regex/source", "url")
     ctx.scopes.set("param1/regex/expression", "param1=(.+)&")
-    ctx.getAttribute("param1") should be ("one")
+    ctx.getCachedOrBoundValue("param1") should be ("one")
     ctx.scopes.set("param2/regex/source", "url")
     ctx.scopes.set("param2/regex/expression", "param2=(.+)")
-    ctx.getAttribute("param2") should be ("two")
+    ctx.getCachedOrBoundValue("param2") should be ("two")
   }
 
-  "Attribute with regex binding on dry run" should "not resolve" in {
+  "Regex binding on dry run" should "not resolve" in {
     val ctx = newCtx(true)
     ctx.scopes.set("url", "http://www.domain.com?param1=one&param2=two")
     ctx.scopes.set("param1/regex/source", "url")
     ctx.scopes.set("param1/regex/expression", "param1=(.+)&")
-    ctx.getAttribute("param1") should be ("$[dryValue:regex]")
+    ctx.getCachedOrBoundValue("param1") should be ("$[dryValue:regex]")
     ctx.scopes.set("param2/regex/source", "url")
     ctx.scopes.set("param2/regex/expression", "param2=(.+)")
-    ctx.getAttribute("param2") should be ("$[dryValue:regex]")
+    ctx.getCachedOrBoundValue("param2") should be ("$[dryValue:regex]")
   }
   
-  "Attribute with json path binding" should "resolve" in {
+  "Json path binding" should "resolve" in {
     val ctx = newCtx()
     ctx.scopes.set("ctx", """{"scopes":[{"scope":"login","atts":[{"username":"Gwen"}]}]}""")
     ctx.scopes.set("username/json path/source", "ctx")
     ctx.scopes.set("username/json path/expression", "$.scopes[0].atts[0].username")
-    ctx.getAttribute("username") should be ("Gwen")
+    ctx.getCachedOrBoundValue("username") should be ("Gwen")
   }
 
-  "Attribute with json path binding on dry run" should "not resolve" in {
+  "Json path binding on dry run" should "not resolve" in {
     val ctx = newCtx(true)
     ctx.scopes.set("ctx", """{"scopes":[{"scope":"login","atts":[{"username":"Gwen"}]}]}""")
     ctx.scopes.set("username/json path/source", "ctx")
     ctx.scopes.set("username/json path/expression", "$.scopes[0].atts[0].username")
-    ctx.getAttribute("username") should be ("$[dryValue:json path]")
+    ctx.getCachedOrBoundValue("username") should be ("$[dryValue:json path]")
   }
   
-  "Attribute with sysproc binding" should "resolve" in {
+  "Sysproc binding" should "resolve" in {
     val ctx = newCtx()
     ctx.scopes.set("hostname/sysproc", "hostname")
-    ctx.getAttribute("hostname") should not be ("")
+    ctx.getCachedOrBoundValue("hostname") should not be ("")
   }
 
-  "Attribute with sysproc binding on dry run" should "not resolve" in {
+  "Sysproc binding on dry run" should "not resolve" in {
     val ctx = newCtx(true)
     ctx.scopes.set("hostname/sysproc", "local command")
-    ctx.getAttribute("hostname") should be ("$[dryValue:sysproc]")
+    ctx.getCachedOrBoundValue("hostname") should be ("$[dryValue:sysproc]")
   }
   
-  "Attribute with file binding on dry run" should "not resolve" in {
+  "File binding on dry run" should "not resolve" in {
     val ctx = newCtx(true)
     ctx.scopes.set("xml/file", "path-to/file.xml")
-    ctx.getAttribute("xml") should be ("$[dryValue:file]")
+    ctx.getCachedOrBoundValue("xml") should be ("$[dryValue:file]")
   }
   
-  "Attribute with sql binding on dry run" should "not resolve" in {
+  "Sql binding on dry run" should "not resolve" in {
     withSetting("gwen.db.subscribers.driver", "jdbc.driver.class") {
       withSetting("gwen.db.subscribers.url", "db:url") {
         val ctx = newCtx(true)
         ctx.scopes.set("username/sql/selectStmt", "select username from users")
         ctx.scopes.set("username/sql/dbName", "subscribers")
-        ctx.getAttribute("username") should be ("$[dryValue:sql]")
+        ctx.getCachedOrBoundValue("username") should be ("$[dryValue:sql]")
       }
     }
   }

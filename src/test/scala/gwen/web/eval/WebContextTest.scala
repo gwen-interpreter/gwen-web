@@ -58,7 +58,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     driverManager = spy(new MockDriverManager(mockWebDriver))
     ctx = spy(new WebContext(GwenOptions(), EnvState(), driverManager))
     doNothing().when(ctx).tryMoveTo(any[WebElement])
-    doReturn(mockLocator).when(ctx).locator
+    doReturn(mockLocator).when(ctx).webElementlocator
   }
 
   "WebContext.reset" should "reset driver manager" in {
@@ -108,20 +108,20 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     mockScreenshot.deleteOnExit()
     when(mockWebDriver.getScreenshotAs(OutputType.FILE)).thenReturn(mockScreenshot)
     ctx.captureScreenshot(true)
-    verify(ctx).addAttachment(same("Screenshot"), any[File])
+    verify(ctx).addAttachmentFile(same("Screenshot"), any[File])
   }
 
-  "WebContext.executeJS with arg" should "invoke javascript with arg" in {
+  "WebContext.evaluateJS with arg" should "invoke javascript with arg" in {
     val script = "(function(arg){return arg;})(arg)"
     val param = "true"
-    ctx.executeJS(script, param)
-    verify(mockWebDriver).executeScript(same(script), any())
+    ctx.evaluateJS(script, List(param))
+    verify(mockWebDriver).executeScript(s"return $script", "true")
   }
 
-  "WebContext.executeJS without args" should "invoke javascript without args" in {
+  "WebContext.evaluateJS without args" should "invoke javascript without args" in {
     val script = "(function(){return true;})()"
-    ctx.executeJS(script)
-    verify(mockWebDriver).executeScript(script)
+    ctx.evaluateJS(script, Nil)
+    verify(mockWebDriver).executeScript(s"return $script")
   }
 
   "WebContext.waitUntil" should "return when predicate returns true" in {
@@ -138,17 +138,17 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val mockElement = mock[WebElement]
     val hStyle = WebSettings.`gwen.web.highlight.style`
     val oStyle = ""
-    val js1 = s"element = arguments[0]; type = element.getAttribute('type'); if (('radio' == type || 'checkbox' == type) && element.parentElement.getElementsByTagName('input').length == 1) { element = element.parentElement; } original_style = element.getAttribute('style'); element.setAttribute('style', original_style + '; $hStyle'); return original_style;"
-    val js2 = s"element = arguments[0]; type = element.getAttribute('type'); if (('radio' == type || 'checkbox' == type) && element.parentElement.getElementsByTagName('input').length == 1) { element = element.parentElement; } element.setAttribute('style', '$oStyle');"
-    doReturn(oStyle).when(ctx).executeJS(js1, mockElement)(WebSettings.`gwen.web.capture.screenshots.highlighting`)
+    val js1 = s"(function(element) { type = element.getAttribute('type'); if (('radio' == type || 'checkbox' == type) && element.parentElement.getElementsByTagName('input').length == 1) { element = element.parentElement; } original_style = element.getAttribute('style'); element.setAttribute('style', original_style + '; $hStyle'); return original_style; })(arguments[0])"
+    val js2 = s"(function(element) { type = element.getAttribute('type'); if (('radio' == type || 'checkbox' == type) && element.parentElement.getElementsByTagName('input').length == 1) { element = element.parentElement; } element.setAttribute('style', '$oStyle'); })(arguments[0])"
+    doReturn(oStyle).when(ctx).applyJS(js1, mockElement)(WebSettings.`gwen.web.capture.screenshots.highlighting`)
     ctx.highlightElement(mockElement)
     val msecs = WebSettings`gwen.web.throttle.msecs`;
     if (msecs > 0) {
-      verify(ctx).executeJS(js1, mockElement)(WebSettings.`gwen.web.capture.screenshots.highlighting`)
-      verify(ctx).executeJS(js2, mockElement)(WebSettings.`gwen.web.capture.screenshots.highlighting`)
+      verify(ctx).applyJS(js1, mockElement)(WebSettings.`gwen.web.capture.screenshots.highlighting`)
+      verify(ctx).applyJS(js2,mockElement)(WebSettings.`gwen.web.capture.screenshots.highlighting`)
     } else {
-      verify(ctx, never()).executeJS(js1, mockElement)(WebSettings.`gwen.web.capture.screenshots.highlighting`)
-      verify(ctx, never()).executeJS(js2, mockElement)(WebSettings.`gwen.web.capture.screenshots.highlighting`)
+      verify(ctx, never()).applyJS(js1, mockElement)(WebSettings.`gwen.web.capture.screenshots.highlighting`)
+      verify(ctx, never()).applyJS(js2, mockElement)(WebSettings.`gwen.web.capture.screenshots.highlighting`)
     }
   }
 
@@ -826,7 +826,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val mockActions = mock[Actions]
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     doReturn(mockActions).when(ctx).createActions(mockWebDriver)
-    doReturn(true).when(ctx).executeJS("(function(element){element.click();})(arguments[0]);", mockElement)
+    doReturn(true).when(ctx).applyJS("(function(element) { element.click() })(arguments[0])", mockElement)
     when(mockElement.isSelected).thenReturn(false).thenReturn(false).thenReturn(true)
     when(mockActions.moveToElement(mockElement)).thenReturn(mockActions)
     ctx.performAction(ElementAction.check, elemBinding)
@@ -841,7 +841,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val mockActions = mock[Actions]
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     doReturn(mockActions).when(ctx).createActions(mockWebDriver)
-    doReturn(false).when(ctx).executeJS("(function(element){element.click();})(arguments[0]);", mockElement)
+    doReturn(false).when(ctx).applyJS("(function(element) { element.click() })(arguments[0])", mockElement)
     doReturn(mockActions).when(mockActions).sendKeys(mockElement, Keys.SPACE)
     when(mockElement.isSelected).thenReturn(false).thenReturn(false).thenReturn(false)
     when(mockActions.moveToElement(mockElement)).thenReturn(mockActions)
@@ -884,7 +884,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val mockActions = mock[Actions]
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     doReturn(mockActions).when(ctx).createActions(mockWebDriver)
-    doReturn(false).when(ctx).executeJS("(function(element){element.click();})(arguments[0]);", mockElement)
+    doReturn(false).when(ctx).applyJS("(function(element) { element.click() })(arguments[0])", mockElement)
     when(mockElement.isSelected).thenReturn(false).thenReturn(false).thenReturn(true)
     when(mockActions.moveToElement(mockElement)).thenReturn(mockActions)
     ctx.performAction(ElementAction.tick, elemBinding)
@@ -899,7 +899,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val mockActions = mock[Actions]
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     doReturn(mockActions).when(ctx).createActions(mockWebDriver)
-    doReturn(false).when(ctx).executeJS("(function(element){element.click();})(arguments[0]);", mockElement)
+    doReturn(false).when(ctx).applyJS("(function(element) { element.click() })(arguments[0])",  mockElement)
     doReturn(mockActions).when(mockActions).sendKeys(mockElement, Keys.SPACE)
     when(mockElement.isSelected).thenReturn(false).thenReturn(false).thenReturn(false)
     when(mockActions.moveToElement(mockElement)).thenReturn(mockActions)
@@ -915,7 +915,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val mockActions = mock[Actions]
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     doReturn(mockActions).when(ctx).createActions(mockWebDriver)
-    doReturn(false).when(ctx).executeJS("(function(element){element.click();})(arguments[0]);", mockElement)
+    doReturn(false).when(ctx).applyJS("(function(element) { element.click() })(arguments[0])", mockElement)
     doReturn(mockActions).when(mockActions).sendKeys(mockElement, Keys.SPACE)
     when(mockElement.isSelected).thenReturn(false).thenReturn(false).thenReturn(false)
     when(mockActions.moveToElement(mockElement)).thenReturn(mockActions)
@@ -944,7 +944,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val mockActions = mock[Actions]
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     doReturn(mockActions).when(ctx).createActions(mockWebDriver)
-    doReturn(true).when(ctx).executeJS("(function(element){element.click();})(arguments[0]);", mockElement)
+    doReturn(true).when(ctx).applyJS("(function(element) { element.click() })(arguments[0])", mockElement)
     when(mockElement.isSelected).thenReturn(true).thenReturn(true).thenReturn(false)
     when(mockActions.moveToElement(mockElement)).thenReturn(mockActions)
     ctx.performAction(ElementAction.uncheck, elemBinding)
@@ -959,7 +959,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val mockActions = mock[Actions]
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     doReturn(mockActions).when(ctx).createActions(mockWebDriver)
-    doReturn(false).when(ctx).executeJS("(function(element){element.click();})(arguments[0]);", mockElement)
+    doReturn(false).when(ctx).applyJS("(function(element) { element.click() })(arguments[0])", mockElement)
     doReturn(mockActions).when(mockActions).sendKeys(mockElement, Keys.SPACE)
     when(mockElement.isSelected).thenReturn(true).thenReturn(true).thenReturn(true)
     when(mockActions.moveToElement(mockElement)).thenReturn(mockActions)
@@ -1004,7 +1004,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val mockActions = mock[Actions]
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     doReturn(mockActions).when(ctx).createActions(mockWebDriver)
-    doReturn(false).when(ctx).executeJS("(function(element){element.click();})(arguments[0]);", mockElement)
+    doReturn(false).when(ctx).applyJS("(function(element) { element.click() })(arguments[0])", mockElement)
     doReturn(mockActions).when(mockActions).sendKeys(mockElement, Keys.SPACE)
     when(mockElement.isSelected).thenReturn(true).thenReturn(true).thenReturn(true)
     when(mockActions.moveToElement(mockElement)).thenReturn(mockActions)
@@ -1020,7 +1020,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val mockActions = mock[Actions]
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     doReturn(mockActions).when(ctx).createActions(mockWebDriver)
-    doReturn(false).when(ctx).executeJS("(function(element){element.click();})(arguments[0]);", mockElement)
+    doReturn(false).when(ctx).applyJS("(function(element) { element.click() })(arguments[0])", mockElement)
     doReturn(mockActions).when(mockActions).sendKeys(mockElement, Keys.SPACE)
     doReturn(false).when(mockElement).isSelected
     when(mockElement.isSelected).thenReturn(true).thenReturn(true).thenReturn(true)
@@ -1067,7 +1067,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     ctx.scopes.set(JSBinding.key("element/action/click"), "element.click()")
     ctx.performAction(ElementAction.click, elemBinding)
     verify(mockElement, never()).clear()
-    verify(ctx).executeJS("(function(element) { element.click() })(arguments[0])", mockElement)(WebSettings.`gwen.web.capture.screenshots.highlighting`)
+    verify(ctx).applyJS("(function(element) { element.click() })(arguments[0])", mockElement)(WebSettings.`gwen.web.capture.screenshots.highlighting`)
     ctx.scopes.get("element/click") should be ("true")
   }
 
@@ -1575,7 +1575,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val mockElement = mock[WebElement]
     doReturn(elemBinding).when(ctx).getLocatorBinding("element")
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
-    doReturn(null).when(ctx).executeJS(s"var elem = arguments[0]; if (typeof elem !== 'undefined' && elem != null) { elem.scrollIntoView(true); }", mockElement)(takeScreenShot = false)
+    doReturn(null).when(ctx).applyJS(s"var elem = arguments[0]; if (typeof elem !== 'undefined' && elem != null) { elem.scrollIntoView(true); }", mockElement)(takeScreenShot = false)
     ctx.scrollIntoView(elemBinding, ScrollTo.top)
   }
 
@@ -1584,7 +1584,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val mockElement = mock[WebElement]
     doReturn(elemBinding).when(ctx).getLocatorBinding("element")
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
-    doReturn(null).when(ctx).executeJS(s"var elem = arguments[0]; if (typeof elem !== 'undefined' && elem != null) { elem.scrollIntoView(false); }", mockElement)(takeScreenShot = false)
+    doReturn(null).when(ctx).applyJS(s"var elem = arguments[0]; if (typeof elem !== 'undefined' && elem != null) { elem.scrollIntoView(false); }", mockElement)(takeScreenShot = false)
     ctx.scrollIntoView(elemBinding, ScrollTo.bottom)
   }
 
@@ -1620,7 +1620,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     when(mockElement.getText).thenReturn(null)
     when(mockElement.getAttribute("text")).thenReturn(null)
     when(mockElement.getAttribute("value")).thenReturn(null)
-    doReturn(null).when(ctx).executeJS("(function(element){return element.innerText || element.textContent || ''})(arguments[0]);", mockElement)(takeScreenShot = false)
+    doReturn(null).when(ctx).applyJS("(function(element) { return element.innerText || element.textContent || '' })(arguments[0])", mockElement)(takeScreenShot = false)
     ctx.getElementText(elemBinding) should be (Some(""))
     ctx.scopes.get("element/text") should be ("")
   }
@@ -1633,7 +1633,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     when(mockElement.getText).thenReturn("")
     when(mockElement.getAttribute("text")).thenReturn("")
     when(mockElement.getAttribute("value")).thenReturn("")
-    doReturn("").when(ctx).executeJS("return (function(element){return element.innerText || element.textContent || ''})(arguments[0]);", mockElement)(takeScreenShot = false)
+    doReturn("").when(ctx).applyJS("return (function(element) { return element.innerText || element.textContent || '' })(arguments[0])", mockElement)(takeScreenShot = false)
     ctx.getElementText(elemBinding) should be (Some(""))
     ctx.scopes.get("element/text") should be ("")
   }
@@ -1646,7 +1646,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     when(mockElement.getText).thenReturn(null)
     when(mockElement.getAttribute("text")).thenReturn(null)
     when(mockElement.getAttribute("value")).thenReturn(null)
-    doReturn("JSValue").when(ctx).executeJS("return (function(element){return element.innerText || element.textContent || ''})(arguments[0]);", mockElement)(takeScreenShot = false)
+    doReturn("JSValue").when(ctx).applyJS("(function(element) { return element.innerText || element.textContent || '' })(arguments[0])", mockElement)(takeScreenShot = false)
     ctx.getElementText(elemBinding) should be (Some("JSValue"))
     ctx.scopes.get("element/text") should be ("JSValue")
   }

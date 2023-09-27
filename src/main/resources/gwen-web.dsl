@@ -666,6 +666,8 @@ I scroll to the bottom of the page
 <element> can be located at index <index> by javascript "<expression>"
 <element> can be located at index <index> by js "<expression>"
 the page title should be blank
+the page title should be true
+the page title should be false
 the page title should be "<expression>"
 the page title should contain "<expression>"
 the page title should start with "<expression>"
@@ -676,6 +678,8 @@ the page title should match json path "<expression>"
 the page title should match template "<expression>"
 the page title should match template file "<filepath>"
 the page title should not be blank
+the page title should not be true
+the page title should not be false
 the page title should not be "<expression>"
 the page title should not contain "<expression>"
 the page title should not start with "<expression>"
@@ -700,6 +704,8 @@ the page title should not match regex <expressionRef>
 the page title should not match xpath <expressionRef>
 the page title should not match json path <expressionRef>
 the page title should be blank with no timeout
+the page title should be true with no timeout
+the page title should be false with no timeout
 the page title should be "<expression>" with no timeout
 the page title should contain "<expression>" with no timeout
 the page title should start with "<expression>" with no timeout
@@ -710,6 +716,8 @@ the page title should match json path "<expression>" with no timeout
 the page title should match template "<expression>" with no timeout
 the page title should match template file "<filepath>" with no timeout
 the page title should not be blank with no timeout
+the page title should not be true with no timeout
+the page title should not be false with no timeout
 the page title should not be "<expression>" with no timeout
 the page title should not contain "<expression>" with no timeout
 the page title should not start with "<expression>" with no timeout
@@ -734,6 +742,8 @@ the page title should not match regex <expressionRef> with no timeout
 the page title should not match xpath <expressionRef> with no timeout
 the page title should not match json path <expressionRef> with no timeout
 the page title should be blank with <timeoutPeriod> second timeout
+the page title should be true with <timeoutPeriod> second timeout
+the page title should be false with <timeoutPeriod> second timeout
 the page title should be "<expression>" with <timeoutPeriod> second timeout
 the page title should contain "<expression>" with <timeoutPeriod> second timeout
 the page title should start with "<expression>" with <timeoutPeriod> second timeout
@@ -744,6 +754,8 @@ the page title should match json path "<expression>" with <timeoutPeriod> second
 the page title should match template "<expression>" with <timeoutPeriod> second timeout
 the page title should match template file "<filepath>" with <timeoutPeriod> second timeout
 the page title should not be blank with <timeoutPeriod> second timeout
+the page title should not be true with <timeoutPeriod> second timeout
+the page title should not be false with <timeoutPeriod> second timeout
 the page title should not be "<expression>" with <timeoutPeriod> second timeout
 the page title should not contain "<expression>" with <timeoutPeriod> second timeout
 the page title should not start with "<expression>" with <timeoutPeriod> second timeout
@@ -768,6 +780,8 @@ the page title should not match regex <expressionRef> with <timeoutPeriod> secon
 the page title should not match xpath <expressionRef> with <timeoutPeriod> second timeout
 the page title should not match json path <expressionRef> with <timeoutPeriod> second timeout
 the page title should be blank with <timeoutPeriod> second wait
+the page title should be true with <timeoutPeriod> second wait
+the page title should be false with <timeoutPeriod> second wait
 the page title should be "<expression>" with <timeoutPeriod> second wait
 the page title should contain "<expression>" with <timeoutPeriod> second wait
 the page title should start with "<expression>" with <timeoutPeriod> second wait
@@ -778,6 +792,8 @@ the page title should match json path "<expression>" with <timeoutPeriod> second
 the page title should match template "<expression>" with <timeoutPeriod> second wait
 the page title should match template file "<filepath>" with <timeoutPeriod> second wait
 the page title should not be blank with <timeoutPeriod> second wait
+the page title should not be true with <timeoutPeriod> second wait
+the page title should not be false with <timeoutPeriod> second wait
 the page title should not be "<expression>" with <timeoutPeriod> second wait
 the page title should not contain "<expression>" with <timeoutPeriod> second wait
 the page title should not start with "<expression>" with <timeoutPeriod> second wait
@@ -802,6 +818,8 @@ the page title should not match regex <expressionRef> with <timeoutPeriod> secon
 the page title should not match xpath <expressionRef> with <timeoutPeriod> second wait
 the page title should not match json path <expressionRef> with <timeoutPeriod> second wait
 the alert popup message should be blank
+the alert popup message should be true
+the alert popup message should be false
 the alert popup message should be "<expression>"
 the alert popup message should contain "<expression>"
 the alert popup message should start with "<expression>"
@@ -812,6 +830,8 @@ the alert popup message should match json path "<expression>"
 the alert popup message should match template "<expression>"
 the alert popup message should match template file "<filepath>"
 the alert popup message should not be blank
+the alert popup message should not be true
+the alert popup message should not be false
 the alert popup message should not be "<expression>"
 the alert popup message should not contain "<expression>"
 the alert popup message should not start with "<expression>"
@@ -836,6 +856,8 @@ the alert popup message should not match regex <expressionRef>
 the alert popup message should not match xpath <expressionRef>
 the alert popup message should not match json path <expressionRef>
 the confirmation popup message should be blank
+the confirmation popup message should be true
+the confirmation popup message should be false
 the confirmation popup message should be "<expression>"
 the confirmation popup message should contain "<expression>"
 the confirmation popup message should start with "<expression>"
@@ -846,6 +868,8 @@ the confirmation popup message should match json path "<expression>"
 the confirmation popup message should match template "<expression>"
 the confirmation popup message should match template file "<filepath>"
 the confirmation popup message should not be blank
+the confirmation popup message should not be true
+the confirmation popup message should not be false
 the confirmation popup message should not be "<expression>"
 the confirmation popup message should not contain "<expression>"
 the confirmation popup message should not start with "<expression>"
@@ -870,6 +894,8 @@ the confirmation popup message should not match regex <expressionRef>
 the confirmation popup message should not match xpath <expressionRef>
 the confirmation popup message should not match json path <expressionRef>
 the alert popup message should be blank with no timeout
+the alert popup message should be true with no timeout
+the alert popup message should be false with no timeout
 the alert popup message should be "<expression>" with no timeout
 the alert popup message should contain "<expression>" with no timeout
 the alert popup message should start with "<expression>" with no timeout
@@ -880,6 +906,8 @@ the alert popup message should match json path "<expression>" with no timeout
 the alert popup message should match template "<expression>" with no timeout
 the alert popup message should match template file "<filepath>" with no timeout
 the alert popup message should not be blank with no timeout
+the alert popup message should not be true with no timeout
+the alert popup message should not be false with no timeout
 the alert popup message should not be "<expression>" with no timeout
 the alert popup message should not contain "<expression>" with no timeout
 the alert popup message should not start with "<expression>" with no timeout
@@ -904,6 +932,8 @@ the alert popup message should not match regex <expressionRef> with no timeout
 the alert popup message should not match xpath <expressionRef> with no timeout
 the alert popup message should not match json path <expressionRef> with no timeout
 the confirmation popup message should be blank with no timeout
+the confirmation popup message should be true with no timeout
+the confirmation popup message should be false with no timeout
 the confirmation popup message should be "<expression>" with no timeout
 the confirmation popup message should contain "<expression>" with no timeout
 the confirmation popup message should start with "<expression>" with no timeout
@@ -914,6 +944,8 @@ the confirmation popup message should match json path "<expression>" with no tim
 the confirmation popup message should match template "<expression>" with no timeout
 the confirmation popup message should match template file "<filepath>" with no timeout
 the confirmation popup message should not be blank with no timeout
+the confirmation popup message should not be true with no timeout
+the confirmation popup message should not be false with no timeout
 the confirmation popup message should not be "<expression>" with no timeout
 the confirmation popup message should not contain "<expression>" with no timeout
 the confirmation popup message should not start with "<expression>" with no timeout
@@ -938,6 +970,8 @@ the confirmation popup message should not match regex <expressionRef> with no ti
 the confirmation popup message should not match xpath <expressionRef> with no timeout
 the confirmation popup message should not match json path <expressionRef> with no timeout
 the alert popup message should be blank with <timeoutPeriod> second timeout
+the alert popup message should be true with <timeoutPeriod> second timeout
+the alert popup message should be false with <timeoutPeriod> second timeout
 the alert popup message should be "<expression>" with <timeoutPeriod> second timeout
 the alert popup message should contain "<expression>" with <timeoutPeriod> second timeout
 the alert popup message should start with "<expression>" with <timeoutPeriod> second timeout
@@ -948,6 +982,8 @@ the alert popup message should match json path "<expression>" with <timeoutPerio
 the alert popup message should match template "<expression>" with <timeoutPeriod> second timeout
 the alert popup message should match template file "<filepath>" with <timeoutPeriod> second timeout
 the alert popup message should not be blank with <timeoutPeriod> second timeout
+the alert popup message should not be true with <timeoutPeriod> second timeout
+the alert popup message should not be false with <timeoutPeriod> second timeout
 the alert popup message should not be "<expression>" with <timeoutPeriod> second timeout
 the alert popup message should not contain "<expression>" with <timeoutPeriod> second timeout
 the alert popup message should not start with "<expression>" with <timeoutPeriod> second timeout
@@ -972,6 +1008,8 @@ the alert popup message should not match regex <expressionRef> with <timeoutPeri
 the alert popup message should not match xpath <expressionRef> with <timeoutPeriod> second timeout
 the alert popup message should not match json path <expressionRef> with <timeoutPeriod> second timeout
 the confirmation popup message should be blank with <timeoutPeriod> second timeout
+the confirmation popup message should be true with <timeoutPeriod> second timeout
+the confirmation popup message should be false with <timeoutPeriod> second timeout
 the confirmation popup message should be "<expression>" with <timeoutPeriod> second timeout
 the confirmation popup message should contain "<expression>" with <timeoutPeriod> second timeout
 the confirmation popup message should start with "<expression>" with <timeoutPeriod> second timeout
@@ -982,6 +1020,8 @@ the confirmation popup message should match json path "<expression>" with <timeo
 the confirmation popup message should match template "<expression>" with <timeoutPeriod> second timeout
 the confirmation popup message should match template file "<filepath>" with <timeoutPeriod> second timeout
 the confirmation popup message should not be blank with <timeoutPeriod> second timeout
+the confirmation popup message should not be true with <timeoutPeriod> second timeout
+the confirmation popup message should not be false with <timeoutPeriod> second timeout
 the confirmation popup message should not be "<expression>" with <timeoutPeriod> second timeout
 the confirmation popup message should not contain "<expression>" with <timeoutPeriod> second timeout
 the confirmation popup message should not start with "<expression>" with <timeoutPeriod> second timeout
@@ -1006,6 +1046,8 @@ the confirmation popup message should not match regex <expressionRef> with <time
 the confirmation popup message should not match xpath <expressionRef> with <timeoutPeriod> second timeout
 the confirmation popup message should not match json path <expressionRef> with <timeoutPeriod> second timeout
 the alert popup message should be blank with <timeoutPeriod> second wait
+the alert popup message should be true with <timeoutPeriod> second wait
+the alert popup message should be false with <timeoutPeriod> second wait
 the alert popup message should be "<expression>" with <timeoutPeriod> second wait
 the alert popup message should contain "<expression>" with <timeoutPeriod> second wait
 the alert popup message should start with "<expression>" with <timeoutPeriod> second wait
@@ -1016,6 +1058,8 @@ the alert popup message should match json path "<expression>" with <timeoutPerio
 the alert popup message should match template "<expression>" with <timeoutPeriod> second wait
 the alert popup message should match template file "<filepath>" with <timeoutPeriod> second wait
 the alert popup message should not be blank with <timeoutPeriod> second wait
+the alert popup message should not be true with <timeoutPeriod> second wait
+the alert popup message should not be false with <timeoutPeriod> second wait
 the alert popup message should not be "<expression>" with <timeoutPeriod> second wait
 the alert popup message should not contain "<expression>" with <timeoutPeriod> second wait
 the alert popup message should not start with "<expression>" with <timeoutPeriod> second wait
@@ -1040,6 +1084,8 @@ the alert popup message should not match regex <expressionRef> with <timeoutPeri
 the alert popup message should not match xpath <expressionRef> with <timeoutPeriod> second wait
 the alert popup message should not match json path <expressionRef> with <timeoutPeriod> second wait
 the confirmation popup message should be blank with <timeoutPeriod> second wait
+the confirmation popup message should be true with <timeoutPeriod> second wait
+the confirmation popup message should be false with <timeoutPeriod> second wait
 the confirmation popup message should be "<expression>" with <timeoutPeriod> second wait
 the confirmation popup message should contain "<expression>" with <timeoutPeriod> second wait
 the confirmation popup message should start with "<expression>" with <timeoutPeriod> second wait
@@ -1050,6 +1096,8 @@ the confirmation popup message should match json path "<expression>" with <timeo
 the confirmation popup message should match template "<expression>" with <timeoutPeriod> second wait
 the confirmation popup message should match template file "<filepath>" with <timeoutPeriod> second wait
 the confirmation popup message should not be blank with <timeoutPeriod> second wait
+the confirmation popup message should not be true with <timeoutPeriod> second wait
+the confirmation popup message should not be false with <timeoutPeriod> second wait
 the confirmation popup message should not be "<expression>" with <timeoutPeriod> second wait
 the confirmation popup message should not contain "<expression>" with <timeoutPeriod> second wait
 the confirmation popup message should not start with "<expression>" with <timeoutPeriod> second wait
@@ -1138,6 +1186,8 @@ the confirmation popup message should not match json path <expressionRef> with <
 <element> should not be enabled with <timeoutPeriod> second wait
 <element> should not be disabled with <timeoutPeriod> second wait
 <reference> should be blank
+<reference> should be true
+<reference> should be false
 <reference> should be "<expression>"
 <reference> should contain "<expression>"
 <reference> should start with "<expression>"
@@ -1148,6 +1198,8 @@ the confirmation popup message should not match json path <expressionRef> with <
 <reference> should match template "<expression>"
 <reference> should match template file "<filepath>"
 <reference> should not be blank
+<reference> should not be true
+<reference> should not be false
 <reference> should not be "<expression>"
 <reference> should not contain "<expression>"
 <reference> should not start with "<expression>"
@@ -1172,6 +1224,8 @@ the confirmation popup message should not match json path <expressionRef> with <
 <reference> should not match xpath <expressionRef>
 <reference> should not match json path <expressionRef>
 <reference> should be blank with no timeout
+<reference> should be true with no timeout
+<reference> should be false with no timeout
 <reference> should be "<expression>" with no timeout
 <reference> should contain "<expression>" with no timeout
 <reference> should start with "<expression>" with no timeout
@@ -1182,6 +1236,8 @@ the confirmation popup message should not match json path <expressionRef> with <
 <reference> should match template "<expression>" with no timeout
 <reference> should match template file "<filepath>" with no timeout
 <reference> should not be blank with no timeout
+<reference> should not be true with no timeout
+<reference> should not be false with no timeout
 <reference> should not be "<expression>" with no timeout
 <reference> should not contain "<expression>" with no timeout
 <reference> should not start with "<expression>" with no timeout
@@ -1206,6 +1262,8 @@ the confirmation popup message should not match json path <expressionRef> with <
 <reference> should not match xpath <expressionRef> with no timeout
 <reference> should not match json path <expressionRef> with no timeout
 <reference> should be blank with <timeoutPeriod> second timeout
+<reference> should be true with <timeoutPeriod> second timeout
+<reference> should be false with <timeoutPeriod> second timeout
 <reference> should be "<expression>" with <timeoutPeriod> second timeout
 <reference> should contain "<expression>" with <timeoutPeriod> second timeout
 <reference> should start with "<expression>" with <timeoutPeriod> second timeout
@@ -1216,6 +1274,8 @@ the confirmation popup message should not match json path <expressionRef> with <
 <reference> should match template "<expression>" with <timeoutPeriod> second timeout
 <reference> should match template file "<filepath>" with <timeoutPeriod> second timeout
 <reference> should not be blank with <timeoutPeriod> second timeout
+<reference> should not be true with <timeoutPeriod> second timeout
+<reference> should not be false with <timeoutPeriod> second timeout
 <reference> should not be "<expression>" with <timeoutPeriod> second timeout
 <reference> should not contain "<expression>" with <timeoutPeriod> second timeout
 <reference> should not start with "<expression>" with <timeoutPeriod> second timeout
@@ -1240,6 +1300,8 @@ the confirmation popup message should not match json path <expressionRef> with <
 <reference> should not match xpath <expressionRef> with <timeoutPeriod> second timeout
 <reference> should not match json path <expressionRef> with <timeoutPeriod> second timeout
 <reference> should be blank with <timeoutPeriod> second wait
+<reference> should be true with <timeoutPeriod> second wait
+<reference> should be false with <timeoutPeriod> second wait
 <reference> should be "<expression>" with <timeoutPeriod> second wait
 <reference> should contain "<expression>" with <timeoutPeriod> second wait
 <reference> should start with "<expression>" with <timeoutPeriod> second wait
@@ -1250,6 +1312,8 @@ the confirmation popup message should not match json path <expressionRef> with <
 <reference> should match template "<expression>" with <timeoutPeriod> second wait
 <reference> should match template file "<filepath>" with <timeoutPeriod> second wait
 <reference> should not be blank with <timeoutPeriod> second wait
+<reference> should not be true with <timeoutPeriod> second wait
+<reference> should not be false with <timeoutPeriod> second wait
 <reference> should not be "<expression>" with <timeoutPeriod> second wait
 <reference> should not contain "<expression>" with <timeoutPeriod> second wait
 <reference> should not start with "<expression>" with <timeoutPeriod> second wait
@@ -1274,6 +1338,8 @@ the confirmation popup message should not match json path <expressionRef> with <
 <reference> should not match xpath <expressionRef> with <timeoutPeriod> second wait
 <reference> should not match json path <expressionRef> with <timeoutPeriod> second wait
 <dropdown> text should be blank
+<dropdown> text should be true
+<dropdown> text should be false
 <dropdown> text should be "<expression>"
 <dropdown> text should contain "<expression>"
 <dropdown> text should start with "<expression>"
@@ -1284,6 +1350,8 @@ the confirmation popup message should not match json path <expressionRef> with <
 <dropdown> text should match template "<expression>"
 <dropdown> text should match template file "<filepath>"
 <dropdown> text should not be blank
+<dropdown> text should not be true
+<dropdown> text should not be false
 <dropdown> text should not be "<expression>"
 <dropdown> text should not contain "<expression>"
 <dropdown> text should not start with "<expression>"
@@ -1308,6 +1376,8 @@ the confirmation popup message should not match json path <expressionRef> with <
 <dropdown> text should not match xpath <expressionRef>
 <dropdown> text should not match json path <expressionRef>
 <dropdown> value should be blank
+<dropdown> value should be true
+<dropdown> value should be false
 <dropdown> value should be "<expression>"
 <dropdown> value should contain "<expression>"
 <dropdown> value should start with "<expression>"
@@ -1318,6 +1388,8 @@ the confirmation popup message should not match json path <expressionRef> with <
 <dropdown> value should match template "<expression>"
 <dropdown> value should match template file "<filepath>"
 <dropdown> value should not be blank
+<dropdown> value should not be true
+<dropdown> value should not be false
 <dropdown> value should not be "<expression>"
 <dropdown> value should not contain "<expression>"
 <dropdown> value should not start with "<expression>"
@@ -1342,6 +1414,8 @@ the confirmation popup message should not match json path <expressionRef> with <
 <dropdown> value should not match xpath <expressionRef>
 <dropdown> value should not match json path <expressionRef>
 <dropdown> text should be blank with no timeout
+<dropdown> text should be true with no timeout
+<dropdown> text should be false with no timeout
 <dropdown> text should be "<expression>" with no timeout
 <dropdown> text should contain "<expression>" with no timeout
 <dropdown> text should start with "<expression>" with no timeout
@@ -1352,6 +1426,8 @@ the confirmation popup message should not match json path <expressionRef> with <
 <dropdown> text should match template "<expression>" with no timeout
 <dropdown> text should match template file "<filepath>" with no timeout
 <dropdown> text should not be blank with no timeout
+<dropdown> text should not be true with no timeout
+<dropdown> text should not be false with no timeout
 <dropdown> text should not be "<expression>" with no timeout
 <dropdown> text should not contain "<expression>" with no timeout
 <dropdown> text should not start with "<expression>" with no timeout
@@ -1376,6 +1452,8 @@ the confirmation popup message should not match json path <expressionRef> with <
 <dropdown> text should not match xpath <expressionRef> with no timeout
 <dropdown> text should not match json path <expressionRef> with no timeout
 <dropdown> value should be blank with no timeout
+<dropdown> value should be true with no timeout
+<dropdown> value should be false with no timeout
 <dropdown> value should be "<expression>" with no timeout
 <dropdown> value should contain "<expression>" with no timeout
 <dropdown> value should start with "<expression>" with no timeout
@@ -1386,6 +1464,8 @@ the confirmation popup message should not match json path <expressionRef> with <
 <dropdown> value should match template "<expression>" with no timeout
 <dropdown> value should match template file "<filepath>" with no timeout
 <dropdown> value should not be blank with no timeout
+<dropdown> value should not be true with no timeout
+<dropdown> value should not be false with no timeout
 <dropdown> value should not be "<expression>" with no timeout
 <dropdown> value should not contain "<expression>" with no timeout
 <dropdown> value should not start with "<expression>" with no timeout
@@ -1410,6 +1490,8 @@ the confirmation popup message should not match json path <expressionRef> with <
 <dropdown> value should not match xpath <expressionRef> with no timeout
 <dropdown> value should not match json path <expressionRef> with no timeout
 <dropdown> text should be blank with <timeoutPeriod> second timeout
+<dropdown> text should be true with <timeoutPeriod> second timeout
+<dropdown> text should be false with <timeoutPeriod> second timeout
 <dropdown> text should be "<expression>" with <timeoutPeriod> second timeout
 <dropdown> text should contain "<expression>" with <timeoutPeriod> second timeout
 <dropdown> text should start with "<expression>" with <timeoutPeriod> second timeout
@@ -1420,6 +1502,8 @@ the confirmation popup message should not match json path <expressionRef> with <
 <dropdown> text should match template "<expression>" with <timeoutPeriod> second timeout
 <dropdown> text should match template file "<filepath>" with <timeoutPeriod> second timeout
 <dropdown> text should not be blank with <timeoutPeriod> second timeout
+<dropdown> text should not be true with <timeoutPeriod> second timeout
+<dropdown> text should not be false with <timeoutPeriod> second timeout
 <dropdown> text should not be "<expression>" with <timeoutPeriod> second timeout
 <dropdown> text should not contain "<expression>" with <timeoutPeriod> second timeout
 <dropdown> text should not start with "<expression>" with <timeoutPeriod> second timeout
@@ -1444,6 +1528,8 @@ the confirmation popup message should not match json path <expressionRef> with <
 <dropdown> text should not match xpath <expressionRef> with <timeoutPeriod> second timeout
 <dropdown> text should not match json path <expressionRef> with <timeoutPeriod> second timeout
 <dropdown> value should be blank with <timeoutPeriod> second timeout
+<dropdown> value should be true with <timeoutPeriod> second timeout
+<dropdown> value should be false with <timeoutPeriod> second timeout
 <dropdown> value should be "<expression>" with <timeoutPeriod> second timeout
 <dropdown> value should contain "<expression>" with <timeoutPeriod> second timeout
 <dropdown> value should start with "<expression>" with <timeoutPeriod> second timeout
@@ -1454,6 +1540,8 @@ the confirmation popup message should not match json path <expressionRef> with <
 <dropdown> value should match template "<expression>" with <timeoutPeriod> second timeout
 <dropdown> value should match template file "<filepath>" with <timeoutPeriod> second timeout
 <dropdown> value should not be blank with <timeoutPeriod> second timeout
+<dropdown> value should not be true with <timeoutPeriod> second timeout
+<dropdown> value should not be false with <timeoutPeriod> second timeout
 <dropdown> value should not be "<expression>" with <timeoutPeriod> second timeout
 <dropdown> value should not contain "<expression>" with <timeoutPeriod> second timeout
 <dropdown> value should not start with "<expression>" with <timeoutPeriod> second timeout
@@ -1478,6 +1566,8 @@ the confirmation popup message should not match json path <expressionRef> with <
 <dropdown> value should not match xpath <expressionRef> with <timeoutPeriod> second timeout
 <dropdown> value should not match json path <expressionRef> with <timeoutPeriod> second timeout
 <dropdown> text should be blank with <timeoutPeriod> second wait
+<dropdown> text should be true with <timeoutPeriod> second wait
+<dropdown> text should be false with <timeoutPeriod> second wait
 <dropdown> text should be "<expression>" with <timeoutPeriod> second wait
 <dropdown> text should contain "<expression>" with <timeoutPeriod> second wait
 <dropdown> text should start with "<expression>" with <timeoutPeriod> second wait
@@ -1488,6 +1578,8 @@ the confirmation popup message should not match json path <expressionRef> with <
 <dropdown> text should match template "<expression>" with <timeoutPeriod> second wait
 <dropdown> text should match template file "<filepath>" with <timeoutPeriod> second wait
 <dropdown> text should not be blank with <timeoutPeriod> second wait
+<dropdown> text should not be true with <timeoutPeriod> second wait
+<dropdown> text should not be false with <timeoutPeriod> second wait
 <dropdown> text should not be "<expression>" with <timeoutPeriod> second wait
 <dropdown> text should not contain "<expression>" with <timeoutPeriod> second wait
 <dropdown> text should not start with "<expression>" with <timeoutPeriod> second wait
@@ -1512,6 +1604,8 @@ the confirmation popup message should not match json path <expressionRef> with <
 <dropdown> text should not match xpath <expressionRef> with <timeoutPeriod> second wait
 <dropdown> text should not match json path <expressionRef> with <timeoutPeriod> second wait
 <dropdown> value should be blank with <timeoutPeriod> second wait
+<dropdown> value should be true with <timeoutPeriod> second wait
+<dropdown> value should be false with <timeoutPeriod> second wait
 <dropdown> value should be "<expression>" with <timeoutPeriod> second wait
 <dropdown> value should contain "<expression>" with <timeoutPeriod> second wait
 <dropdown> value should start with "<expression>" with <timeoutPeriod> second wait
@@ -1522,6 +1616,8 @@ the confirmation popup message should not match json path <expressionRef> with <
 <dropdown> value should match template "<expression>" with <timeoutPeriod> second wait
 <dropdown> value should match template file "<filepath>" with <timeoutPeriod> second wait
 <dropdown> value should not be blank with <timeoutPeriod> second wait
+<dropdown> value should not be true with <timeoutPeriod> second wait
+<dropdown> value should not be false with <timeoutPeriod> second wait
 <dropdown> value should not be "<expression>" with <timeoutPeriod> second wait
 <dropdown> value should not contain "<expression>" with <timeoutPeriod> second wait
 <dropdown> value should not start with "<expression>" with <timeoutPeriod> second wait
@@ -2928,6 +3024,8 @@ I maximise the window
 <name> should be defined
 <name> should not be defined
 <jsonRef> at json path "<path>" should be blank
+<jsonRef> at json path "<path>" should be true
+<jsonRef> at json path "<path>" should be false
 <jsonRef> at json path "<path>" should be "<expression>"
 <jsonRef> at json path "<path>" should contain "<expression>"
 <jsonRef> at json path "<path>" should start with "<expression>"
@@ -2936,6 +3034,8 @@ I maximise the window
 <jsonRef> at json path "<path>" should match template "<expression>"
 <jsonRef> at json path "<path>" should match template file "<filepath>"
 <jsonRef> at json path "<path>" should not be blank
+<jsonRef> at json path "<path>" should not be true
+<jsonRef> at json path "<path>" should not be false
 <jsonRef> at json path "<path>" should not be "<expression>"
 <jsonRef> at json path "<path>" should not contain "<expression>"
 <jsonRef> at json path "<path>" should not start with "<expression>"
@@ -2944,6 +3044,8 @@ I maximise the window
 <jsonRef> at json path "<path>" should not match template "<expression>"
 <jsonRef> at json path "<path>" should not match template file "<filepath>"
 <xmlRef> at xpath "<path>" should be blank
+<xmlRef> at xpath "<path>" should be true
+<xmlRef> at xpath "<path>" should be false
 <xmlRef> at xpath "<path>" should be "<expression>"
 <xmlRef> at xpath "<path>" should contain "<expression>"
 <xmlRef> at xpath "<path>" should start with "<expression>"
@@ -2952,6 +3054,8 @@ I maximise the window
 <xmlRef> at xpath "<path>" should match template "<expression>"
 <xmlRef> at xpath "<path>" should match template file "<filepath>"
 <xmlRef> at xpath "<path>" should not be blank
+<xmlRef> at xpath "<path>" should not be true
+<xmlRef> at xpath "<path>" should not be false
 <xmlRef> at xpath "<path>" should not be "<expression>"
 <xmlRef> at xpath "<path>" should not contain "<expression>"
 <xmlRef> at xpath "<path>" should not start with "<expression>"

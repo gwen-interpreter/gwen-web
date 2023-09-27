@@ -31,7 +31,7 @@ class NavigateToPageInScope(name: String) extends UnitStep[WebContext] {
     step tap { _ =>
       checkStepRules(step, BehaviorType.Action, ctx)
       ctx.scopes.addScope(name)
-      val url = ctx.getAttribute("url")
+      val url = ctx.getCachedOrBoundValue("url")
       ctx.navigateTo(url)
     }
   }

@@ -173,9 +173,6 @@ com.squareup.retrofit2
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
   +-converter-jackson:2.9.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-joda-time
-  +-joda-time:2.12.5
-  | +-Apache License, Version 2.0 - https://www.apache.org/licenses/LICENSE-2.0.txt
 org.yaml
   +-snakeyaml:2.0
   | +-Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt

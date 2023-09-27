@@ -1,3 +1,17 @@
+3.56.0
+======
+Oct 4, 2023
+- Update selenium from v4.12.1 to v4.13.0
+- Update Gwen core from v3.47.5 to v[3.48.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.48.0)
+  - Add JS arrow functions
+    - Syntax: `(args) => body`
+    - Add arrow function evaluation to REPL
+    - Add new `gwen.report.attach.functions` setting to control whether or not to attach functions to steps (default is `true`)
+  - Introduce boolean `true` and `false` literals
+  - Annotation attributes can now be surrounded by back-ticks, in addition to single or double quotes
+  - Include messages and location of errors at end of console report
+  - Remove joda-time dependency and use java.time package instead
+
 3.55.5
 ======
 Sep 19, 2023

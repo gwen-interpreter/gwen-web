@@ -34,7 +34,7 @@ class CompareTitle(name: String, value: String, bound: Boolean, operator: Compar
     step tap { _ =>
       checkStepRules(step, BehaviorType.Assertion, ctx)
       val expected = if (bound) {
-        ctx.getBoundReferenceValue(value, timeout)
+        ctx.getBoundValue(value, timeout)
       } else {
         ctx.parseExpression(operator, value)
       }

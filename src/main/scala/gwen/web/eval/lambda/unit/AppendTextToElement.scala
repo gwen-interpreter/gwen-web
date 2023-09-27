@@ -33,7 +33,7 @@ class AppendTextToElement(element: String, value: String, bound: Boolean) extend
       checkStepRules(step, BehaviorType.Action, ctx)
       val binding = ctx.getLocatorBinding(element)
       val clickFirst = WebSettings.`gwen.web.sendKeys.clickFirst`
-      val text = if (bound) ctx.getBoundReferenceValue(value) else value
+      val text = if (bound) ctx.getBoundValue(value) else value
       ctx.sendValue(binding, text, clickFirst, false, sendEnterKey = false)
     }
   }

@@ -34,7 +34,7 @@ class CaptureElementAttribute(element: String, attribute: String, javascript: St
       ctx.perform {
         ctx.topScope.pushObject(s"${JSBinding.key(attribute)}/param/webElement", binding.resolve())
       }
-      val content = ctx.getBoundReferenceValue(attribute)
+      val content = ctx.getBoundValue(attribute)
       ctx.topScope.set(attribute, content)
       step.addAttachment(attribute, "txt", content)
     } finally {

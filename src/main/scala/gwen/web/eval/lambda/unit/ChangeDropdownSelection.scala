@@ -39,10 +39,10 @@ class ChangeDropdownSelection(element: String, by: DropdownSelection, value: Str
             case DropdownSelection.index =>
               ctx.selectByIndex(binding, value.toInt - 1)
             case DropdownSelection.text =>
-              val optionText = if (bound) ctx.getBoundReferenceValue(value) else value
+              val optionText = if (bound) ctx.getBoundValue(value) else value
               ctx.selectByVisibleText(binding, optionText)
             case DropdownSelection.value =>
-              val optionValue = if (bound) ctx.getBoundReferenceValue(value) else value
+              val optionValue = if (bound) ctx.getBoundValue(value) else value
               ctx.selectByValue(binding, optionValue)
           }
         case ElementAction.deselect =>
@@ -50,10 +50,10 @@ class ChangeDropdownSelection(element: String, by: DropdownSelection, value: Str
             case DropdownSelection.index =>
               ctx.deselectByIndex(binding, value.toInt - 1)
             case DropdownSelection.text =>
-              val optionText = if (bound) ctx.getBoundReferenceValue(value) else value
+              val optionText = if (bound) ctx.getBoundValue(value) else value
               ctx.deselectByVisibleText(binding, optionText)
             case DropdownSelection.value =>
-              val optionValue = if (bound) ctx.getBoundReferenceValue(value) else value
+              val optionValue = if (bound) ctx.getBoundValue(value) else value
               ctx.deselectByValue(binding, optionValue)
           }
         case _ => // noop
