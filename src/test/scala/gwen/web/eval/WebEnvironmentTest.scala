@@ -69,12 +69,6 @@ class WebEnvironmentTest extends BaseTest with Matchers with MockitoSugar {
           |}""".stripMargin.replace("\r", ""))
                                       
   }
-
-  "Text binding" should "be resolved" in {
-    val ctx = newCtx()
-    ctx.scopes.set("username/text", "Gwen")
-    ctx.getCachedOrBoundValue("username") should be ("Gwen")
-  }
   
   "JavaScript binding on dry run" should "not resolve" in {
     val ctx = newCtx(true)

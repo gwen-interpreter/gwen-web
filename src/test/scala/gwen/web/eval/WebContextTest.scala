@@ -580,7 +580,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
   "WebContext.getTitle" should "return the title" in {
     when(mockWebDriver.getTitle).thenReturn("Gwen")
     ctx.getTitle should be ("Gwen")
-    ctx.scopes.get("page/title") should be ("Gwen")
   }
 
   "WebContext.sendValue without enter" should "send value to element" in {
@@ -595,9 +594,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     verify(mockElement, never()).clear()
     ctx.scopes.getOpt("name/clear") should be (None)
     verify(mockActions).perform()
-    ctx.scopes.get("name/type") should be ("Gwen")
     verify(mockElement, never()).sendKeys(Keys.RETURN)
-    ctx.scopes.getOpt("name/enter") should be (None)
   }
 
   "WebContext.sendValue with clear and without enter" should "clear field and send value to element" in {
@@ -611,9 +608,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     ctx.sendValue(elemBinding, "Gwen", clickFirst = false, clearFirst = true, sendEnterKey = false)
     verify(mockElement).clear()
     verify(mockActions).perform()
-    ctx.scopes.get("name/type") should be ("Gwen")
     verify(mockElement, never()).sendKeys(Keys.RETURN)
-    ctx.scopes.getOpt("name/enter") should be (None)
   }
 
   "WebContext.sendValue with click, clear and without enter" should "clear field and send value to element" in {
@@ -628,9 +623,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     verify(mockElement).click()
     verify(mockElement).clear()
     verify(mockActions).perform()
-    ctx.scopes.get("name/type") should be ("Gwen")
     verify(mockElement, never()).sendKeys(Keys.RETURN)
-    ctx.scopes.getOpt("name/enter") should be (None)
   }
 
   "WebContext.sendValue with send enter" should "send value to element" in {
@@ -646,8 +639,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     verify(mockElement, never()).clear()
     verify(mockActions, times(2)).perform()
     ctx.scopes.getOpt("name/clear") should be (None)
-    ctx.scopes.get("name/type") should be ("Gwen")
-    ctx.scopes.get("name/enter") should be ("true")
   }
 
   "WebContext.sendValue with clear and send enter" should "clear and send value to element" in {
@@ -663,8 +654,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
       ctx.sendValue(elemBinding, "Gwen", clickFirst = false, clearFirst = true, sendEnterKey = true)
       verify(mockElement).clear()
       verify(mockActions, times(2)).perform()
-      ctx.scopes.get("name/type") should be ("Gwen")
-      ctx.scopes.get("name/enter") should be ("true")
     }
   }
 
@@ -682,7 +671,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
       verify(mockElement).click()
       verify(mockElement).clear()
       verify(mockActions, times(2)).perform()
-      ctx.scopes.get("name/enter") should be ("true")
     }
   }
 
@@ -694,7 +682,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     doReturn(mockSelect).when(ctx).createSelect(mockElement)
     ctx.selectByVisibleText(elemBinding, "Gwen")
     verify(mockSelect).selectByVisibleText("Gwen")
-    ctx.scopes.get("names/select") should be ("Gwen")
   }
 
   "WebContext.selectByValue" should "select value provided" in {
@@ -705,7 +692,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     doReturn(mockSelect).when(ctx).createSelect(mockElement)
     ctx.selectByValue(elemBinding, "G")
     verify(mockSelect).selectByValue("G")
-    ctx.scopes.get("names/select") should be ("G")
   }
 
   "WebContext.selectByIndex" should "select value at index provided" in {
@@ -719,7 +705,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     when(mockOption.getText).thenReturn("Gwen")
     ctx.selectByIndex(elemBinding, 0)
     verify(mockSelect).selectByIndex(0)
-    ctx.scopes.get("names/select") should be ("Gwen")
   }
 
   "WebContext.deselectByVisibleText" should "deselect value provided" in {
@@ -730,7 +715,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     doReturn(mockSelect).when(ctx).createSelect(mockElement)
     ctx.deselectByVisibleText(elemBinding, "Gwen")
     verify(mockSelect).deselectByVisibleText("Gwen")
-    ctx.scopes.get("names/deselect") should be ("Gwen")
   }
 
   "WebContext.deselectByValue" should "deselect value provided" in {
@@ -741,7 +725,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     doReturn(mockSelect).when(ctx).createSelect(mockElement)
     ctx.deselectByValue(elemBinding, "G")
     verify(mockSelect).deselectByValue("G")
-    ctx.scopes.get("names/deselect") should be ("G")
   }
 
   "WebContext.deselectByIndex" should "deselect value at index provided" in {
@@ -755,7 +738,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     when(mockOption.getText).thenReturn("Gwen")
     ctx.deselectByIndex(elemBinding, 0)
     verify(mockSelect).deselectByIndex(0)
-    ctx.scopes.get("names/deselect") should be ("Gwen")
   }
 
   "WebContext.performAction" should "click element" in {
@@ -767,7 +749,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     when(mockActions.moveToElement(mockElement)).thenReturn(mockActions)
     ctx.performAction(ElementAction.click, elemBinding)
     verify(mockElement).click()
-    ctx.scopes.get("element/click") should be ("true")
   }
 
   "WebContext.performAction" should "right click element" in {
@@ -780,7 +761,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     when(mockActions.contextClick(mockElement)).thenReturn(mockActions)
     ctx.performAction(ElementAction.`right click`, elemBinding)
     verify(mockActions, times(2)).perform()
-    ctx.scopes.get("element/right click") should be ("true")
   }
 
   "WebContext.performAction" should "double click element" in {
@@ -793,7 +773,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     when(mockActions.doubleClick(mockElement)).thenReturn(mockActions)
     ctx.performAction(ElementAction.`double click`, elemBinding)
     verify(mockActions, times(2)).perform()
-    ctx.scopes.get("element/double click") should be ("true")
   }
 
   "WebContext.performAction" should "move to element" in {
@@ -805,7 +784,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     when(mockActions.moveToElement(mockElement)).thenReturn(mockActions)
     ctx.performAction(ElementAction.`move to`, elemBinding)
     verify(mockActions).perform()
-    ctx.scopes.get("element/move to") should be ("true")
   }
 
   "WebContext.performAction" should "submit element" in {
@@ -817,7 +795,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     when(mockActions.moveToElement(mockElement)).thenReturn(mockActions)
     ctx.performAction(ElementAction.submit, elemBinding)
     verify(mockElement).submit()
-    ctx.scopes.get("element/submit") should be ("true")
   }
 
   "WebContext.performAction" should "check element by javascript" in {
@@ -832,7 +809,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     ctx.performAction(ElementAction.check, elemBinding)
     verify(mockActions, times(2)).perform()
     verify(mockElement).click()
-    ctx.scopes.get("element/check") should be ("true")
   }
 
   "WebContext.performAction" should "check element by sending space char" in {
@@ -848,7 +824,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     ctx.performAction(ElementAction.check, elemBinding)
     verify(mockActions, times(1)).perform()
     verify(mockElement).click()
-    ctx.scopes.get("element/check") should be ("true")
   }
 
   "WebContext.performAction" should "check element by clicking it" in {
@@ -862,7 +837,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     ctx.performAction(ElementAction.check, elemBinding)
     verify(mockActions).perform()
     verify(mockElement).click()
-    ctx.scopes.get("element/check") should be ("true")
   }
 
   "WebContext.performAction" should "not check element that is already checked" in {
@@ -875,7 +849,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     when(mockElement.isSelected).thenReturn(true).thenReturn(true)
     ctx.performAction(ElementAction.check, elemBinding)
     verify(mockElement, never()).click()
-    ctx.scopes.get("element/check") should be ("true")
   }
 
   "WebContext.performAction" should "tick element by javascript" in {
@@ -890,7 +863,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     ctx.performAction(ElementAction.tick, elemBinding)
     verify(mockActions, times(1)).perform()
     verify(mockElement).click()
-    ctx.scopes.get("element/tick") should be ("true")
   }
 
   "WebContext.performAction" should "tick element by sending space char" in {
@@ -906,7 +878,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     ctx.performAction(ElementAction.tick, elemBinding)
     verify(mockActions, times(1)).perform()
     verify(mockElement).click()
-    ctx.scopes.get("element/tick") should be ("true")
   }
 
   "WebContext.performAction" should "tick element by clicking it" in {
@@ -922,7 +893,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     ctx.performAction(ElementAction.tick, elemBinding)
     verify(mockActions, times(1)).perform()
     verify(mockElement).click()
-    ctx.scopes.get("element/tick") should be ("true")
   }
 
   "WebContext.performAction" should "not tick element that is already ticked" in {
@@ -935,7 +905,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     when(mockElement.isSelected).thenReturn(true).thenReturn(true).thenReturn(true)
     ctx.performAction(ElementAction.tick, elemBinding)
     verify(mockElement, never()).click()
-    ctx.scopes.get("element/tick") should be ("true")
   }
 
   "WebContext.performAction" should "uncheck element by javascript" in {
@@ -950,7 +919,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     ctx.performAction(ElementAction.uncheck, elemBinding)
     verify(mockActions, times(2)).perform()
     verify(mockElement).click()
-    ctx.scopes.get("element/uncheck") should be ("true")
   }
 
   "WebContext.performAction" should "uncheck element by sending space char" in {
@@ -966,7 +934,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     ctx.performAction(ElementAction.uncheck, elemBinding)
     verify(mockActions, times(1)).perform()
     verify(mockElement).click()
-    ctx.scopes.get("element/uncheck") should be ("true")
   }
 
   "WebContext.performAction" should "uncheck element by clicking it" in {
@@ -980,7 +947,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     ctx.performAction(ElementAction.uncheck, elemBinding)
     verify(mockActions).perform()
     verify(mockElement).click()
-    ctx.scopes.get("element/uncheck") should be ("true")
   }
 
   "WebContext.performAction" should "not uncheck element that is already unchecked" in {
@@ -995,7 +961,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     verify(mockActions).perform()
     verify(mockElement, never()).sendKeys(Keys.SPACE)
     verify(mockElement, never()).click()
-    ctx.scopes.get("element/uncheck") should be ("true")
   }
 
   "WebContext.performAction" should "untick element by sending space char" in {
@@ -1011,7 +976,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     ctx.performAction(ElementAction.untick, elemBinding)
     verify(mockActions, times(1)).perform()
     verify(mockElement).click()
-    ctx.scopes.get("element/untick") should be ("true")
   }
 
   "WebContext.performAction" should "untick element by clicking it" in {
@@ -1028,7 +992,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     ctx.performAction(ElementAction.untick, elemBinding)
     verify(mockActions, times(1)).perform()
     verify(mockElement).click()
-    ctx.scopes.get("element/untick") should be ("true")
   }
 
    "WebContext.performAction" should "not untick element that is already unticked" in {
@@ -1042,7 +1005,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     ctx.performAction(ElementAction.untick, elemBinding)
     verify(mockElement, never()).sendKeys(Keys.SPACE)
     verify(mockElement, never()).click()
-    ctx.scopes.get("element/untick") should be ("true")
   }
 
   "WebContext.performAction" should "clear element" in {
@@ -1054,7 +1016,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     when(mockActions.moveToElement(mockElement)).thenReturn(mockActions)
     ctx.performAction(ElementAction.clear, elemBinding)
     verify(mockElement).clear()
-    ctx.scopes.get("element/clear") should be ("true")
   }
 
   "WebContext.performAction" should "perform javascript action on element" in {
@@ -1068,7 +1029,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     ctx.performAction(ElementAction.click, elemBinding)
     verify(mockElement, never()).clear()
     verify(ctx).applyJS("(function(element) { element.click() })(arguments[0])", mockElement)(WebSettings.`gwen.web.capture.screenshots.highlighting`)
-    ctx.scopes.get("element/click") should be ("true")
   }
 
   "WebContext.dragAndDrop" should "drag source to target" in {
@@ -1106,7 +1066,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     when(mockActions.build()).thenReturn(mockAction)
     ctx.holdAndClick(modifierKeys, ElementAction.click, elemBinding)
     verify(mockAction).perform()
-    ctx.scopes.get("element/click") should be ("true")
   }
 
   "WebContext.holdAndClick" should "command double click element" in {
@@ -1124,7 +1083,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     when(mockActions.build()).thenReturn(mockAction)
     ctx.holdAndClick(modifierKeys, ElementAction.`double click`, elemBinding)
     verify(mockAction).perform()
-    ctx.scopes.get("element/double click") should be ("true")
   }
 
   "WebContext.holdAndClick" should "command-shift right click element" in {
@@ -1144,7 +1102,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     when(mockActions.build()).thenReturn(mockAction)
     ctx.holdAndClick(modifierKeys, ElementAction.`right click`, elemBinding)
     verify(mockAction).perform()
-    ctx.scopes.get("element/right click") should be ("true")
   }
 
   "WebContext.holdAndClick" should "error when given unknown modifier key" in {
@@ -1194,7 +1151,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     when(mockActions.build()).thenReturn(mockAction)
     ctx.performActionInContext(ElementAction.click, "element", "context")
     verify(mockAction).perform()
-    ctx.scopes.get("element/click") should be ("true")
   }
 
   "WebContext.performActionInContext" should "right click element in context of another element" in {
@@ -1215,7 +1171,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     when(mockActions.build()).thenReturn(mockAction)
     ctx.performActionInContext(ElementAction.`right click`, "element", "context")
     verify(mockAction).perform()
-    ctx.scopes.get("element/right click") should be ("true")
   }
 
   "WebContext.performActionInContext" should "double click element in context of another element" in {
@@ -1236,7 +1191,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     when(mockActions.build()).thenReturn(mockAction)
     ctx.performActionInContext(ElementAction.`double click`, "element", "context")
     verify(mockAction).perform()
-    ctx.scopes.get("element/double click") should be ("true")
   }
 
   "WebContext.performActionInContext" should "check element in context of another element by sending a space char" in {
@@ -1260,7 +1214,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     ctx.performActionInContext(ElementAction.check, "element", "context")
     verify(mockActions).click()
     verify(mockAction, times(2)).perform()
-    ctx.scopes.get("element/check") should be ("true")
   }
 
   "WebContext.performActionInContext" should "check element in context of another element by clicking it" in {
@@ -1283,7 +1236,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     ctx.performActionInContext(ElementAction.check, "element", "context")
     verify(mockActions).click()
     verify(mockAction, times(1)).perform()
-    ctx.scopes.get("element/check") should be ("true")
   }
 
   "WebContext.performActionInContext" should "not check element in context of another element when it is already checked" in {
@@ -1304,7 +1256,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     when(mockActions.build()).thenReturn(mockAction)
     ctx.performActionInContext(ElementAction.check, "element", "context")
     verify(mockAction, never).perform()
-    ctx.scopes.get("element/check") should be ("true")
   }
 
   "WebContext.performActionInContext" should "tick element in context of another element by sending a space char" in {
@@ -1328,7 +1279,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     ctx.performActionInContext(ElementAction.tick, "element", "context")
     verify(mockActions).click()
     verify(mockAction, times(2)).perform()
-    ctx.scopes.get("element/tick") should be ("true")
   }
 
   "WebContext.performActionInContext" should "tick element in context of another element by clicking it" in {
@@ -1350,7 +1300,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     when(mockActions.build()).thenReturn(mockAction)
     ctx.performActionInContext(ElementAction.tick, "element", "context")
     verify(mockAction, times(1)).perform()
-    ctx.scopes.get("element/tick") should be ("true")
   }
 
   "WebContext.performActionInContext" should "not tick element in context of another element when it is already ticked" in {
@@ -1371,7 +1320,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     when(mockActions.build()).thenReturn(mockAction)
     ctx.performActionInContext(ElementAction.tick, "element", "context")
     verify(mockAction, never).perform()
-    ctx.scopes.get("element/tick") should be ("true")
   }
 
   "WebContext.performActionInContext" should "uncheck element in context of another element by sending a space char" in {
@@ -1395,7 +1343,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     ctx.performActionInContext(ElementAction.uncheck, "element", "context")
     verify(mockActions).click()
     verify(mockAction, times(2)).perform()
-    ctx.scopes.get("element/uncheck") should be ("true")
   }
 
   "WebContext.performActionInContext" should "uncheck element in context of another element by clicking it" in {
@@ -1418,7 +1365,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     when(mockActions.build()).thenReturn(mockAction)
     ctx.performActionInContext(ElementAction.uncheck, "element", "context")
     verify(mockAction, times(2)).perform()
-    ctx.scopes.get("element/uncheck") should be ("true")
   }
 
   "WebContext.performActionInContext" should "not uncheck element in context of another element when it is already unchecked" in {
@@ -1439,7 +1385,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     when(mockActions.build()).thenReturn(mockAction)
     ctx.performActionInContext(ElementAction.uncheck, "element", "context")
     verify(mockAction, never).perform()
-    ctx.scopes.get("element/uncheck") should be ("true")
   }
 
   "WebContext.performActionInContext" should "untick element in context of another element by sending a space char" in {
@@ -1463,7 +1408,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     ctx.performActionInContext(ElementAction.untick, "element", "context")
     verify(mockActions).click()
     verify(mockAction, times(2)).perform()
-    ctx.scopes.get("element/untick") should be ("true")
   }
 
   "WebContext.performActionInContext" should "untick element in context of another element by clicking it" in {
@@ -1486,7 +1430,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     when(mockActions.build()).thenReturn(mockAction)
     ctx.performActionInContext(ElementAction.untick, "element", "context")
     verify(mockAction, times(2)).perform()
-    ctx.scopes.get("element/untick") should be ("true")
   }
 
   "WebContext.performActionInContext" should "not untick element in context of another element when it is already unticked" in {
@@ -1507,7 +1450,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     when(mockActions.build()).thenReturn(mockAction)
     ctx.performActionInContext(ElementAction.untick, "element", "context")
     verify(mockAction, never).perform()
-    ctx.scopes.get("element/untick") should be ("true")
   }
 
   "WebContext.performActionInContext" should "move to element in context of another element" in {
@@ -1527,7 +1469,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     when(mockActions.build()).thenReturn(mockAction)
     ctx.performActionInContext(ElementAction.`move to`, "element", "context")
     verify(mockAction).perform()
-    ctx.scopes.get("element/move to") should be ("true")
   }
 
   "WebContext.performActionInContext" should "fall back to non context action when element name contains 'of' literal" in {
@@ -1541,7 +1482,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     when(mockActions.moveToElement(mockElement)).thenReturn(mockActions)
     ctx.performActionInContext(ElementAction.`move to`, "element", "context")
     verify(mockActions).perform()
-    ctx.scopes.get("element/move to") should be ("true")
   }
 
   "WebContext.performActionInContext" should "fail when elmenet cannot be located" in {
@@ -1622,7 +1562,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     when(mockElement.getAttribute("value")).thenReturn(null)
     doReturn(null).when(ctx).applyJS("(function(element) { return element.innerText || element.textContent || '' })(arguments[0])", mockElement)(takeScreenShot = false)
     ctx.getElementText(elemBinding) should be (Some(""))
-    ctx.scopes.get("element/text") should be ("")
   }
 
   "WebContext.getElementText" should "return blank on element with blank text value, blank text attribute, blank value attribute, and blank JS value" in {
@@ -1635,7 +1574,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     when(mockElement.getAttribute("value")).thenReturn("")
     doReturn("").when(ctx).applyJS("return (function(element) { return element.innerText || element.textContent || '' })(arguments[0])", mockElement)(takeScreenShot = false)
     ctx.getElementText(elemBinding) should be (Some(""))
-    ctx.scopes.get("element/text") should be ("")
   }
 
   "WebContext.getElementText" should "return JS value on element with null text value, null text attribute, null value attribute, and non null JS value" in {
@@ -1648,7 +1586,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     when(mockElement.getAttribute("value")).thenReturn(null)
     doReturn("JSValue").when(ctx).applyJS("(function(element) { return element.innerText || element.textContent || '' })(arguments[0])", mockElement)(takeScreenShot = false)
     ctx.getElementText(elemBinding) should be (Some("JSValue"))
-    ctx.scopes.get("element/text") should be ("JSValue")
   }
 
   "WebContext.getElementText" should "return value attribute on element with null text value, null text attribute, and non null value attribute" in {
@@ -1660,7 +1597,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     when(mockElement.getAttribute("text")).thenReturn(null)
     when(mockElement.getAttribute("value")).thenReturn("valueAttr")
     ctx.getElementText(elemBinding) should be (Some("valueAttr"))
-    ctx.scopes.get("element/text") should be ("valueAttr")
   }
 
   "WebContext.getElementText" should "return text attribute on element with null text value, and non null text attribute" in {
@@ -1671,7 +1607,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     when(mockElement.getText).thenReturn(null)
     when(mockElement.getAttribute("text")).thenReturn("textAttr")
     ctx.getElementText(elemBinding) should be (Some("textAttr"))
-    ctx.scopes.get("element/text") should be ("textAttr")
   }
 
   "WebContext.getElementText" should "return text on element with non null text value" in {
@@ -1681,7 +1616,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     when(mockElement.getText).thenReturn("text")
     ctx.getElementText(elemBinding) should be (Some("text"))
-    ctx.scopes.get("element/text") should be ("text")
   }
 
   "WebContext.getElementSelection by text" should "return blank when no options are selected" in {
@@ -1693,7 +1627,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     doReturn(mockSelect).when(ctx).createSelect(mockElement)
     when(mockSelect.getAllSelectedOptions).thenReturn(List[WebElement]().asJava).thenReturn(List[WebElement]().asJava)
     ctx.getElementSelection("element", DropdownSelection.text) should be (Some(""))
-    ctx.scopes.get("element/selectedText") should be ("")
   }
 
   "WebContext.getElementSelection by text" should "return text attribute of selected options" in {
@@ -1709,7 +1642,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     when(mockOptionElement1.getAttribute("text")).thenReturn("one")
     when(mockOptionElement2.getAttribute("text")).thenReturn("two")
     ctx.getElementSelection("element", DropdownSelection.text) should be (Some("one,two"))
-    ctx.scopes.get("element/selectedText") should be ("one,two")
   }
 
   "WebContext.getElementSelection by text" should "return text value of selected options" in {
@@ -1725,7 +1657,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     when(mockOptionElement1.getText).thenReturn("one")
     when(mockOptionElement2.getText).thenReturn("two")
     ctx.getElementSelection("element", DropdownSelection.text) should be (Some("one,two"))
-    ctx.scopes.get("element/selectedText") should be ("one,two")
   }
 
   "WebContext.getElementSelection by value" should "return blank when no options are selected" in {
@@ -1737,7 +1668,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     doReturn(mockSelect).when(ctx).createSelect(mockElement)
     when(mockSelect.getAllSelectedOptions).thenReturn(List[WebElement]().asJava)
     ctx.getElementSelection("element", DropdownSelection.value) should be (Some(""))
-    ctx.scopes.get("element/selectedValue") should be ("")
   }
 
   "WebContext.getElementSelection by value" should "return value attribute of selected options" in {
@@ -1753,7 +1683,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     when(mockOptionElement1.getAttribute("value")).thenReturn("one")
     when(mockOptionElement2.getAttribute("value")).thenReturn("two")
     ctx.getElementSelection("element", DropdownSelection.value) should be (Some("one,two"))
-    ctx.scopes.get("element/selectedValue") should be ("one,two")
   }
 
   "WebContext.switchToSession" should "switch to given session" in {

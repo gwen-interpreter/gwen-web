@@ -202,19 +202,24 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
       val url = captureCurrentUrl
       topScope.set(name, url)
     }
-    (getLocatorBinding(name, optional = true).map(_.withTimeout(timeout)) match {
-      case Some(binding) =>
-        evaluate(new DryValueBinding(binding.name, "webElementText", this).resolve()) {
-          Try(getElementText(binding)) match {
-            case Success(text) => 
-              text.getOrElse(getCachedOrBoundValue(name))
-            case Failure(e) => throw e
+    
+    val locatorEntry = scopes.visibleEntry(name) { _ => true } map { (n, _) => n.startsWith(LocatorKey.baseKey(name)) }
+    if (locatorEntry.exists(_ == true) || locatorEntry.isEmpty) {
+      getLocatorBinding(name, optional = true).map(_.withTimeout(timeout)) match {
+        case Some(binding) =>
+          evaluate(new DryValueBinding(binding.name, "webElementText", this).resolve()) {
+            Try(getElementText(binding)) match {
+              case Success(text) => 
+                text.getOrElse(getCachedOrBoundValue(name))
+              case Failure(e) => throw e
+            }
           }
-        }
-      case _ => getCachedOrBoundValue(name)
-    }) tap { value =>
-      logger.debug(s"getBoundValue($name)='$value'")
+        case _ => getCachedOrBoundValue(name)
+      }
+    } else {
+      getCachedOrBoundValue(name)
     }
+
   }
 
   /**
@@ -285,15 +290,12 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
   }
 
     /**
-    * Binds the given element and value to a given action (element/action=value)
-    * and then waits for any bound post conditions to be satisfied.
+    * Waits for any bound post conditions to be satisfied.
     *
     * @param element the element to bind the value to
     * @param action the action to bind the value to
-    * @param value the value to bind
     */
-  def bindAndWait(element: String, action: String, value: String): Unit = {
-    scopes.set(s"$element/$action", value)
+  def evaluatePostAction(element: String, action: String): Unit = {
 
     // sleep if wait time is configured for this action
     scopes.getOpt(s"$element/$action/wait") foreach { secs =>
@@ -730,7 +732,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
   def getTitle: String =
     withWebDriver { driver =>
       driver.getTitle tap { title =>
-        bindAndWait("page", "title", title)
+        evaluatePostAction("page", "title")
       }
     }.getOrElse(DryValueBinding.unresolved("title"))
 
@@ -761,10 +763,10 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
         createActions(driver).moveToElement(webElement).sendKeys(plainValue).perform()
         }
       }
-      bindAndWait(element, ElementAction.`type`.toString, value)
+      evaluatePostAction(element, ElementAction.`type`.toString)
       if (sendEnterKey) {
         createActions(driver).sendKeys(webElement, Keys.RETURN).perform()
-        bindAndWait(element, ElementAction.enter.toString, "true")
+        evaluatePostAction(element, ElementAction.enter.toString)
       }
     }
   }
@@ -781,7 +783,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     withWebElement(binding, s"trying to select option in ${binding.displayName} by visible text") { webElement =>
       logger.debug(s"Selecting '$value' in $binding by text")
       createSelect(webElement).selectByVisibleText(value)
-      bindAndWait(binding.name, ElementAction.select.toString, value)
+      evaluatePostAction(binding.name, ElementAction.select.toString)
     }
   }
 
@@ -795,7 +797,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     withWebElement(binding, s"trying to select option in ${binding.displayName} by value") { webElement =>
       logger.debug(s"Selecting '$value' in $binding by value")
       createSelect(webElement).selectByValue(value)
-      bindAndWait(binding.name, ElementAction.select.toString, value)
+      evaluatePostAction(binding.name, ElementAction.select.toString)
     }
   }
 
@@ -810,7 +812,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
       logger.debug(s"Selecting option in $binding by index: $index")
       val select = createSelect(webElement)
       select.selectByIndex(index)
-      bindAndWait(binding.name, ElementAction.select.toString, select.getOptions.get(index).getText)
+      evaluatePostAction(binding.name, ElementAction.select.toString)
     }
   }
 
@@ -824,7 +826,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     withWebElement(binding, s"trying to deselect option in ${binding.displayName} by visible text") { webElement =>
       logger.debug(s"Deselecting '$value' in $binding by text")
       createSelect(webElement).deselectByVisibleText(value)
-      bindAndWait(binding.name, ElementAction.deselect.toString, value)
+      evaluatePostAction(binding.name, ElementAction.deselect.toString)
     }
   }
 
@@ -838,7 +840,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     withWebElement(binding, s"trying to deselect option in ${binding.displayName} by value") { webElement =>
       logger.debug(s"Deselecting '$value' in $binding by value")
       createSelect(webElement).deselectByValue(value)
-      bindAndWait(binding.name, ElementAction.deselect.toString, value)
+      evaluatePostAction(binding.name, ElementAction.deselect.toString)
     }
   }
 
@@ -853,7 +855,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
       logger.debug(s"Deselecting option in $binding by index: $index")
       val select = createSelect(webElement)
       select.deselectByIndex(index)
-      bindAndWait(binding.name, ElementAction.deselect.toString, select.getOptions.get(index).getText)
+      evaluatePostAction(binding.name, ElementAction.deselect.toString)
     }
   }
 
@@ -889,7 +891,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
             case _ => WebErrors.invalidActionError(action)
           }
         }
-        bindAndWait(binding.name, action.toString, "true")
+        evaluatePostAction(binding.name, action. toString)
     }
   }
 
@@ -964,7 +966,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
       keys.reverse.foreach { key => actions = actions.keyUp(key) }
       actions.build().perform()
     }
-    bindAndWait(binding.name, clickAction.toString, "true")
+    evaluatePostAction(binding.name, clickAction.toString)
   }
 
   def sendKeys(keysToSend: Array[String]): Unit = {
@@ -1018,7 +1020,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
         moveToAndCapture(driver, webElement)
       }
       applyJS(jsFunctionWrapper("element", "arguments[0]", javascript), webElement)
-      bindAndWait(binding.name, action.toString, "true")
+      evaluatePostAction(binding.name, action.toString)
     }
   }
 
@@ -1061,7 +1063,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
           case ElementAction.`move to` => perform(webElement, contextElement) { action => action }
           case _ => WebErrors.invalidContextActionError(action)
         }
-        bindAndWait(binding.name, action.toString, "true")
+        evaluatePostAction(binding.name, action.toString)
       }
     }
   }
@@ -1082,10 +1084,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     * @param binding the locator binding
     */
   def waitForText(binding: LocatorBinding): Boolean =
-    getElementText(binding).map(_.length()).getOrElse {
-      scopes.set(TextBinding.key(binding.name), BindingType.text.toString)
-      0
-    } > 0
+    getElementText(binding).map(_.length() > 0).getOrElse(false)
 
   /**
    * Scrolls an element into view.
@@ -1158,14 +1157,12 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     *  - Web element text
     *  - Web element text attribute
     *  - Web element value attribute
-    * If a value is found, its value is bound to the current page
-    * scope as `name/text`.
     *
     * @param binding the locator binding
     */
   def getElementText(binding: LocatorBinding): Option[String] =
     withWebElement(binding, s"trying to get ${binding.displayName} text") { webElement =>
-      (Option(webElement.getText) match {
+      Option(webElement.getText) match {
         case None | Some("") =>
           Option(webElement.getAttribute("text")) match {
             case None | Some("") =>
@@ -1178,8 +1175,6 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
             case Some(value) => value
           }
         case Some(value) => value
-      }) tap { text =>
-        bindAndWait(binding.name, BindingType.text.toString, text)
       }
     } tap { value =>
       logger.debug(s"getElementText($binding)='$value'")
@@ -1206,7 +1201,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
           } getOrElse null
         case Some(value) => value
       }) tap { text =>
-        bindAndWait(binding.name, "selectedText", text)
+        evaluatePostAction(binding.name, "selectedText")
       }
     } tap { value =>
       logger.debug(s"getSelectedElementText($binding)='$value'")
@@ -1235,7 +1230,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
         case None =>
           Try(createSelect(webElement)) map { select =>
             select.getAllSelectedOptions.asScala.map(_.getAttribute("value")).mkString(",") tap { value =>
-              bindAndWait(binding.name, "selectedValue", value)
+              evaluatePostAction(binding.name, "selectedValue")
             }
           } getOrElse null
         case Some(value) => value

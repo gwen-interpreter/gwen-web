@@ -1,6 +1,6 @@
 3.56.0
 ======
-Oct 4, 2023
+Oct 7, 2023
 - Update selenium from v4.12.1 to v4.13.0
 - Update Gwen core from v3.47.5 to v[3.48.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.48.0)
   - Add JS arrow functions
@@ -11,6 +11,7 @@ Oct 4, 2023
   - Annotation attributes can now be surrounded by back-ticks, in addition to single or double quotes
   - Include messages and location of errors at end of console report
   - Remove joda-time dependency and use java.time package instead
+  - Only override bindings if their values differ to current ones
 
 3.55.5
 ======
