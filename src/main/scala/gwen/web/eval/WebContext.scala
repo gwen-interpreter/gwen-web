@@ -28,7 +28,6 @@ import gwen.core.eval.EvalContext
 import gwen.core.eval.binding.BindingType
 import gwen.core.eval.binding.DryValueBinding
 import gwen.core.eval.binding.JSBinding
-import gwen.core.eval.binding.TextBinding
 import gwen.core.eval.support.BooleanCondition
 import gwen.core.node.gherkin.Step
 import gwen.core.state.StateLevel

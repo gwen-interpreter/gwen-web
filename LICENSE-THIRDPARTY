@@ -36,9 +36,6 @@ org.scala-lang
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0
   +-scala3-tasty-inspector_3:3.3.1
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0
-com.typesafe.netty
-  +-netty-reactive-streams:2.0.4
-  | +-no license specified
 com.google.code.gson
   +-gson:2.10.1
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0.txt
@@ -56,11 +53,6 @@ com.typesafe
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0
 com.google.protobuf
   +-protobuf-java:3.7.0
-  | +-no license specified
-org.asynchttpclient
-  +-async-http-client-netty-utils:2.12.3
-  | +-no license specified
-  +-async-http-client:2.12.3
   | +-no license specified
 com.github.tototoshi
   +-scala-csv_3:1.3.10
@@ -95,9 +87,6 @@ org.jsoup
 org.jetbrains
   +-annotations:15.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-com.sun.activation
-  +-jakarta.activation:1.2.2
-  | +-no license specified
 org.apache.httpcomponents.core5
   +-httpcore5-h2:5.2
   | +-no license specified
@@ -227,41 +216,41 @@ com.google.j2objc
   +-j2objc-annotations:2.8
   | +-Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
 org.seleniumhq.selenium
-  +-selenium-json:4.12.1
+  +-selenium-json:4.14.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-os:4.12.1
+  +-selenium-os:4.14.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-remote-driver:4.12.1
+  +-selenium-remote-driver:4.14.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-firefox-driver:4.12.1
+  +-selenium-firefox-driver:4.14.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-edge-driver:4.12.1
+  +-selenium-edge-driver:4.14.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-ie-driver:4.12.1
+  +-selenium-ie-driver:4.14.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-devtools-v116:4.12.1
+  +-selenium-devtools-v116:4.14.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-safari-driver:4.12.1
+  +-selenium-safari-driver:4.14.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-http:4.12.1
+  +-selenium-http:4.14.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-java:4.12.1
+  +-selenium-java:4.14.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-devtools-v114:4.12.1
+  +-selenium-api:4.14.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-api:4.12.1
+  +-selenium-devtools-v85:4.14.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-devtools-v85:4.12.1
+  +-selenium-chrome-driver:4.14.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-chrome-driver:4.12.1
+  +-selenium-chromium-driver:4.14.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-chromium-driver:4.12.1
+  +-selenium-manager:4.14.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-manager:4.12.1
+  +-selenium-support:4.14.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-devtools-v115:4.12.1
+  +-selenium-devtools-v117:4.14.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-support:4.12.1
+  +-selenium-devtools-v118:4.14.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
 javax.validation
   +-validation-api:2.0.1.Final
@@ -392,6 +381,9 @@ com.google.guava
   | +-no license specified
   +-failureaccess:1.0.1
   | +-no license specified
+org.gweninterpreter
+  +-gwen:3.47.5-2-gf475c5a
+  | +-no license specified
 commons-io
   +-commons-io:2.13.0
   | +-no license specified
@@ -409,35 +401,6 @@ org.apache.pdfbox
   +-fontbox:3.0.0
   | +-no license specified
   +-pdfbox:3.0.0
-  | +-no license specified
-io.netty
-  +-netty-resolver:4.1.96.Final
-  | +-no license specified
-  +-netty-transport:4.1.96.Final
-  | +-no license specified
-  +-netty-transport-native-kqueue:4.1.96.Final
-  | +-no license specified
-  +-netty-codec:4.1.96.Final
-  | +-no license specified
-  +-netty-codec-socks:4.1.60.Final
-  | +-no license specified
-  +-netty-common:4.1.96.Final
-  | +-no license specified
-  +-netty-transport-native-epoll:4.1.96.Final
-  | +-no license specified
-  +-netty-transport-classes-epoll:4.1.96.Final
-  | +-no license specified
-  +-netty-transport-native-unix-common:4.1.96.Final
-  | +-no license specified
-  +-netty-handler:4.1.96.Final
-  | +-no license specified
-  +-netty-codec-http:4.1.96.Final
-  | +-no license specified
-  +-netty-buffer:4.1.96.Final
-  | +-no license specified
-  +-netty-transport-classes-kqueue:4.1.96.Final
-  | +-no license specified
-  +-netty-handler-proxy:4.1.60.Final
   | +-no license specified
 org.mockito
   +-mockito-core:4.9.0

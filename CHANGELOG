@@ -1,7 +1,7 @@
 3.56.0
 ======
-Oct 7, 2023
-- Update selenium from v4.12.1 to v4.13.0
+Oct 10, 2023
+- Update selenium from v4.12.1 to v4.14.0
 - Update Gwen core from v3.47.5 to v[3.48.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.48.0)
   - Add JS arrow functions
     - Syntax: `(args) => body`
