@@ -1,3 +1,10 @@
+3.56.1
+======
+Oct 11, 2023
+======
+- Update Gwen core from v3.48.0 to v[3.48.1](https://github.com/gwen-interpreter/gwen/releases/tag/v3.48.1)
+  - Fix arrow function parser to skip over standard js functions
+
 3.56.0
 ======
 Oct 10, 2023

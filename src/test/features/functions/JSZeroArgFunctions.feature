@@ -47,6 +47,15 @@ Feature: Zero Argument Functions
           """
      Then today should not be "${tomorrow}"
 
+  @StepDef
+  @Assertion
+  Scenario: Standard JS arrows should not be impacted
+    Given result is defined by js
+          """
+          ['gwen'].some(n => n == 'gwen')
+          """
+     Then result should be true
+
   Scenario: Invoke the zero argument functions
     Given name is "Gwen"
       And desc is "Gwen Automation"
@@ -54,3 +63,4 @@ Feature: Zero Argument Functions
      Then Zero argument functions should work
       And Zero argument functions in DocStrings should work
       And Zero argument functions in documented examples should work
+      And Standard JS arrows should not be impacted
