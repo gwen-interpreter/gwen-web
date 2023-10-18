@@ -67,11 +67,16 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
   driverManager.addWebSessionEventListener(this)
 
   override def sessionOpened(event: WebSessionEvent): Unit = { 
-    if (WebSettings.videoEnabled) {
-      driverManager.getSessionId(event.driver) foreach { sessionId =>
+    driverManager.getSessionId(event.driver) foreach { sessionId =>
+      if (WebSettings.videoEnabled) {
         addVideo(new File(GwenSettings.`gwen.video.dir`, s"$sessionId.mp4"))
       }
+      envState.scopes.topScope.set("gwen.web.sessionId", sessionId)
     }
+  }
+
+  override def sessionClosed(event: WebSessionEvent): Unit = { 
+    envState.scopes.topScope.set("gwen.web.sessionId", null)
   }
 
   def webElementlocator = new WebElementLocator(this)
@@ -380,7 +385,10 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     * @param takeScreenShot true to take screenshot after performing the function
     */
   def withWebDriver[T](function: WebDriver => T)(implicit takeScreenShot: Boolean = false): Option[T] = {
-    evaluate(None.asInstanceOf[Option[T]]) {
+    evaluate { 
+      topScope.set("gwen.web.sessionId", DryValueBinding.unresolved("gwen.web.sessionId"))
+      None.asInstanceOf[Option[T]] 
+    } {
       driverManager.withWebDriver { driver =>
         Option(function(driver)) tap { _ =>
           if (takeScreenShot) {
