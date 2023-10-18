@@ -1918,6 +1918,118 @@ I base64 decode <reference>
 <step> while <condition> using no delay and <timeoutPeriod> millisecond wait
 <step> while <condition> using no delay
 <step> while <condition>
+<step> until <attribute> is defined using <delayPeriod> second delay and <timeoutPeriod> minute timeout
+<step> until <attribute> is defined using <delayPeriod> second delay and <timeoutPeriod> second timeout
+<step> until <attribute> is defined using <delayPeriod> second delay and <timeoutPeriod> millisecond timeout
+<step> until <attribute> is defined using <delayPeriod> millisecond delay and <timeoutPeriod> minute timeout
+<step> until <attribute> is defined using <delayPeriod> millisecond delay and <timeoutPeriod> second timeout
+<step> until <attribute> is defined using <delayPeriod> millisecond delay and <timeoutPeriod> millisecond timeout
+<step> until <attribute> is defined using <delayPeriod> second delay and <timeoutPeriod> minute wait
+<step> until <attribute> is defined using <delayPeriod> second delay and <timeoutPeriod> second wait
+<step> until <attribute> is defined using <delayPeriod> second delay and <timeoutPeriod> millisecond wait
+<step> until <attribute> is defined using <delayPeriod> millisecond delay and <timeoutPeriod> minute wait
+<step> until <attribute> is defined using <delayPeriod> millisecond delay and <timeoutPeriod> second wait
+<step> until <attribute> is defined using <delayPeriod> millisecond delay and <timeoutPeriod> millisecond wait
+<step> until <attribute> is defined using <delayPeriod> second delay
+<step> until <attribute> is defined using <delayPeriod> millisecond delay
+<step> until <attribute> is defined using <timeoutPeriod> minute timeout
+<step> until <attribute> is defined using <timeoutPeriod> second timeout
+<step> until <attribute> is defined using <timeoutPeriod> millisecond timeout
+<step> until <attribute> is defined using no delay and <timeoutPeriod> minute timeout
+<step> until <attribute> is defined using no delay and <timeoutPeriod> second timeout
+<step> until <attribute> is defined using no delay and <timeoutPeriod> millisecond timeout
+<step> until <attribute> is defined using <timeoutPeriod> minute wait
+<step> until <attribute> is defined using <timeoutPeriod> second wait
+<step> until <attribute> is defined using <timeoutPeriod> millisecond wait
+<step> until <attribute> is defined using no delay and <timeoutPeriod> minute wait
+<step> until <attribute> is defined using no delay and <timeoutPeriod> second wait
+<step> until <attribute> is defined using no delay and <timeoutPeriod> millisecond wait
+<step> until <attribute> is defined using no delay
+<step> until <attribute> is defined
+<step> while <attribute> is defined using <delayPeriod> second delay and <timeoutPeriod> minute timeout
+<step> while <attribute> is defined using <delayPeriod> second delay and <timeoutPeriod> second timeout
+<step> while <attribute> is defined using <delayPeriod> second delay and <timeoutPeriod> millisecond timeout
+<step> while <attribute> is defined using <delayPeriod> millisecond delay and <timeoutPeriod> minute timeout
+<step> while <attribute> is defined using <delayPeriod> millisecond delay and <timeoutPeriod> second timeout
+<step> while <attribute> is defined using <delayPeriod> millisecond delay and <timeoutPeriod> millisecond timeout
+<step> while <attribute> is defined using <delayPeriod> second delay and <timeoutPeriod> minute wait
+<step> while <attribute> is defined using <delayPeriod> second delay and <timeoutPeriod> second wait
+<step> while <attribute> is defined using <delayPeriod> second delay and <timeoutPeriod> millisecond wait
+<step> while <attribute> is defined using <delayPeriod> millisecond delay and <timeoutPeriod> minute wait
+<step> while <attribute> is defined using <delayPeriod> millisecond delay and <timeoutPeriod> second wait
+<step> while <attribute> is defined using <delayPeriod> millisecond delay and <timeoutPeriod> millisecond wait
+<step> while <attribute> is defined using <delayPeriod> second delay
+<step> while <attribute> is defined using <delayPeriod> millisecond delay
+<step> while <attribute> is defined using <timeoutPeriod> minute timeout
+<step> while <attribute> is defined using <timeoutPeriod> second timeout
+<step> while <attribute> is defined using <timeoutPeriod> millisecond timeout
+<step> while <attribute> is defined using no delay and <timeoutPeriod> minute timeout
+<step> while <attribute> is defined using no delay and <timeoutPeriod> second timeout
+<step> while <attribute> is defined using no delay and <timeoutPeriod> millisecond timeout
+<step> while <attribute> is defined using <timeoutPeriod> minute wait
+<step> while <attribute> is defined using <timeoutPeriod> second wait
+<step> while <attribute> is defined using <timeoutPeriod> millisecond wait
+<step> while <attribute> is defined using no delay and <timeoutPeriod> minute wait
+<step> while <attribute> is defined using no delay and <timeoutPeriod> second wait
+<step> while <attribute> is defined using no delay and <timeoutPeriod> millisecond wait
+<step> while <attribute> is defined using no delay
+<step> while <attribute> is defined
+<step> until <attribute> is not defined using <delayPeriod> second delay and <timeoutPeriod> minute timeout
+<step> until <attribute> is not defined using <delayPeriod> second delay and <timeoutPeriod> second timeout
+<step> until <attribute> is not defined using <delayPeriod> second delay and <timeoutPeriod> millisecond timeout
+<step> until <attribute> is not defined using <delayPeriod> millisecond delay and <timeoutPeriod> minute timeout
+<step> until <attribute> is not defined using <delayPeriod> millisecond delay and <timeoutPeriod> second timeout
+<step> until <attribute> is not defined using <delayPeriod> millisecond delay and <timeoutPeriod> millisecond timeout
+<step> until <attribute> is not defined using <delayPeriod> second delay and <timeoutPeriod> minute wait
+<step> until <attribute> is not defined using <delayPeriod> second delay and <timeoutPeriod> second wait
+<step> until <attribute> is not defined using <delayPeriod> second delay and <timeoutPeriod> millisecond wait
+<step> until <attribute> is not defined using <delayPeriod> millisecond delay and <timeoutPeriod> minute wait
+<step> until <attribute> is not defined using <delayPeriod> millisecond delay and <timeoutPeriod> second wait
+<step> until <attribute> is not defined using <delayPeriod> millisecond delay and <timeoutPeriod> millisecond wait
+<step> until <attribute> is not defined using <delayPeriod> second delay
+<step> until <attribute> is not defined using <delayPeriod> millisecond delay
+<step> until <attribute> is not defined using <timeoutPeriod> minute timeout
+<step> until <attribute> is not defined using <timeoutPeriod> second timeout
+<step> until <attribute> is not defined using <timeoutPeriod> millisecond timeout
+<step> until <attribute> is not defined using no delay and <timeoutPeriod> minute timeout
+<step> until <attribute> is not defined using no delay and <timeoutPeriod> second timeout
+<step> until <attribute> is not defined using no delay and <timeoutPeriod> millisecond timeout
+<step> until <attribute> is not defined using <timeoutPeriod> minute wait
+<step> until <attribute> is not defined using <timeoutPeriod> second wait
+<step> until <attribute> is not defined using <timeoutPeriod> millisecond wait
+<step> until <attribute> is not defined using no delay and <timeoutPeriod> minute wait
+<step> until <attribute> is not defined using no delay and <timeoutPeriod> second wait
+<step> until <attribute> is not defined using no delay and <timeoutPeriod> millisecond wait
+<step> until <attribute> is not defined using no delay
+<step> until <attribute> is not defined
+<step> while <attribute> is not defined using <delayPeriod> second delay and <timeoutPeriod> minute timeout
+<step> while <attribute> is not defined using <delayPeriod> second delay and <timeoutPeriod> second timeout
+<step> while <attribute> is not defined using <delayPeriod> second delay and <timeoutPeriod> millisecond timeout
+<step> while <attribute> is not defined using <delayPeriod> millisecond delay and <timeoutPeriod> minute timeout
+<step> while <attribute> is not defined using <delayPeriod> millisecond delay and <timeoutPeriod> second timeout
+<step> while <attribute> is not defined using <delayPeriod> millisecond delay and <timeoutPeriod> millisecond timeout
+<step> while <attribute> is not defined using <delayPeriod> second delay and <timeoutPeriod> minute wait
+<step> while <attribute> is not defined using <delayPeriod> second delay and <timeoutPeriod> second wait
+<step> while <attribute> is not defined using <delayPeriod> second delay and <timeoutPeriod> millisecond wait
+<step> while <attribute> is not defined using <delayPeriod> millisecond delay and <timeoutPeriod> minute wait
+<step> while <attribute> is not defined using <delayPeriod> millisecond delay and <timeoutPeriod> second wait
+<step> while <attribute> is not defined using <delayPeriod> millisecond delay and <timeoutPeriod> millisecond wait
+<step> while <attribute> is not defined using <delayPeriod> second delay
+<step> while <attribute> is not defined using <delayPeriod> millisecond delay
+<step> while <attribute> is not defined using <timeoutPeriod> minute timeout
+<step> while <attribute> is not defined using <timeoutPeriod> second timeout
+<step> while <attribute> is not defined using <timeoutPeriod> millisecond timeout
+<step> while <attribute> is not defined using no delay and <timeoutPeriod> minute timeout
+<step> while <attribute> is not defined using no delay and <timeoutPeriod> second timeout
+<step> while <attribute> is not defined using no delay and <timeoutPeriod> millisecond timeout
+<step> while <attribute> is not defined using <timeoutPeriod> minute wait
+<step> while <attribute> is not defined using <timeoutPeriod> second wait
+<step> while <attribute> is not defined using <timeoutPeriod> millisecond wait
+<step> while <attribute> is not defined using no delay and <timeoutPeriod> minute wait
+<step> while <attribute> is not defined using no delay and <timeoutPeriod> second wait
+<step> while <attribute> is not defined using no delay and <timeoutPeriod> millisecond wait
+<step> while <attribute> is not defined using no delay
+<step> while <attribute> is not defined
 <step> until <element> is displayed using <delayPeriod> second delay and <timeoutPeriod> minute timeout
 <step> until <element> is displayed using <delayPeriod> second delay and <timeoutPeriod> second timeout
 <step> until <element> is displayed using <delayPeriod> second delay and <timeoutPeriod> millisecond timeout
