@@ -1,3 +1,9 @@
+3.57.1
+======
+Sep 19, 2023
+- Update Gwen core from v3.49.0 to v[3.49.1](https://github.com/gwen-interpreter/gwen/releases/tag/v3.49.1)
+  - Retry PDF text capture until timeout
+
 3.57.0
 ======
 Oct 18, 2023
