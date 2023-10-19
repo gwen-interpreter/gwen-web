@@ -1,3 +1,9 @@
+3.49.2
+======
+Sep 19, 2023
+- Update Gwen core from v3.49.1 to v[3.49.2](https://github.com/gwen-interpreter/gwen/releases/tag/v3.49.2)
+  - Fix issue with negated if conditions when using data tables
+
 3.57.1
 ======
 Sep 19, 2023
