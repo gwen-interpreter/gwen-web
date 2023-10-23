@@ -392,6 +392,11 @@ class WebEngine extends EvalEngine[WebContext] {
         new AppendTextToElement(element, attribute, true)
       case r"I insert a new line in (.+?)$element" =>
         new AppendNewLineToElement(element)
+      case r"""I download the current URL to "(.+?)"$filepath""" =>
+        new DownloadCurrentUrlToFile(Some(filepath), None, defaultConditionTimeoutSecs)
+      case r"""I download the current URL to (.+?)$filepathRef""" =>
+        new DownloadCurrentUrlToFile(None, Some(filepathRef), defaultConditionTimeoutSecs)
+      
       case _ => 
         super.translateStep(step)
     }

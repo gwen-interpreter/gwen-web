@@ -1,12 +1,22 @@
-3.49.2
+3.58.0
 ======
-Sep 19, 2023
+Oct 24, 2023
+- Add DSLs for downloading files from a URL
+  - `I download "<url>" to "<filepath>"`
+  - `I download "<url>" to <filepathRef>`
+  - `I download the current URL to "<filepath>"`
+  - `I download the current URL to <filepathRef>`
+- Update Gwen core from v3.49.2 to v[3.50.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.50.0)
+
+3.57.2
+======
+Oct 19, 2023
 - Update Gwen core from v3.49.1 to v[3.49.2](https://github.com/gwen-interpreter/gwen/releases/tag/v3.49.2)
   - Fix issue with negated if conditions when using data tables
 
 3.57.1
 ======
-Sep 19, 2023
+Oct 19, 2023
 - Update Gwen core from v3.49.0 to v[3.49.1](https://github.com/gwen-interpreter/gwen/releases/tag/v3.49.1)
   - Retry PDF text capture until timeout
 

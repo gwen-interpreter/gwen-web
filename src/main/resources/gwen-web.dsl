@@ -3213,6 +3213,10 @@ I append new line to "<filepath>" file
 I append "<text>" to <filepathRef> file
 I append <reference> to <filepathRef> file
 I append new line to <filepathRef> file
+I download "<url>" to "<filepath>"
+I download "<url>" to <filepathRef>
+I download the current URL to "<filepath>"
+I download the current URL to <filepathRef>
 <textRef> should be <percentage>% similar to "<text>"
 <textRef> should be less than <percentage>% similar to "<text>"
 <textRef> should be at most <percentage>% similar to "<text>"
