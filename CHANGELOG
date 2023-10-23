@@ -6,6 +6,7 @@ Oct 24, 2023
   - `I download "<url>" to <filepathRef>`
   - `I download the current URL to "<filepath>"`
   - `I download the current URL to <filepathRef>`
+- Update selenium from v4.14.0 to v4.14.1
 - Update Gwen core from v3.49.2 to v[3.50.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.50.0)
 
 3.57.2
