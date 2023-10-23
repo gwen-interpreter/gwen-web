@@ -18,7 +18,6 @@ Feature: PDF Capture
       And the PDF text is ""
      When I capture the PDF text from url "${the pdf URL}"
       And I capture the PDF text from url "${the pdf URL}" as pdf text 2
-      And I download "https://gweninterpreter.org/assets/docs/gwen-reportportal-userguide.pdf" to "target/download/gwen-reportportal-userguide.pdf"
      Then pdf text 2 should contain "Gwen"
       And the PDF text should not be blank
       And pdf text 2 should be
