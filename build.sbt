@@ -48,7 +48,7 @@ lazy val projectSettings = Seq(
 
 lazy val mainDependencies = {
   val selenium = "4.14.1"
-  val driverMgr = "5.3.3"
+  val driverMgr = "5.5.3"
   Seq(
     "org.seleniumhq.selenium" % "selenium-java" % selenium,
     "io.github.bonigarcia" % "webdrivermanager" % driverMgr excludeAll(
@@ -59,11 +59,8 @@ lazy val mainDependencies = {
 }
 
 lazy val mainOverrides = {
-  val bc = "1.70"
-  val io = "2.13.0"
+  val io = "2.15.0"
   Seq(
-    "org.bouncycastle" % "bcprov-jdk15on" % bc,
-    "org.bouncycastle" % "bcpkix-jdk15on" % bc,
     "commons-io" % "commons-io" % io
   )
 }

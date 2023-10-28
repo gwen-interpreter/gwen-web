@@ -24,6 +24,7 @@ import gwen.core.node.GwenNode
 import gwen.core.node.gherkin.Step
 import gwen.core.node.gherkin.table.FlatTable
 import gwen.core.node.gherkin.StepKeyword
+import gwen.core.node.gherkin.table.TableType
 import gwen.core.state.EnvState
 import gwen.core.status._
 
@@ -74,7 +75,7 @@ class WebDslTest extends BaseTest with Matchers with MockitoSugar {
     envState.scopes.set("<textRef2>", "source")
     envState.scopes.set("<xmlRef>", "xml")
     envState.scopes.set("<jsonRef>", "json")
-    envState.scopes.topScope.pushObject("table", new FlatTable(List(List("1", "2")), List("a", "b")))
+    envState.scopes.topScope.pushObject("table", new FlatTable(TableType.horizontal, List(List("1", "2")), List("a", "b")))
 
     val engine = new WebEngine()
     val ctx = new WebContext(options, envState, mock[DriverManager])
