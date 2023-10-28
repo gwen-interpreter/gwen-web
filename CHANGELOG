@@ -1,3 +1,9 @@
+3.58.1
+======
+Oct 28, 2023
+- Update Gwen core from v3.50.0 to v[3.50.1](https://github.com/gwen-interpreter/gwen/releases/tag/v3.50.1)
+  - Hyperlink each data table row in HTML reports to associated StepDef
+
 3.58.0
 ======
 Oct 24, 2023
