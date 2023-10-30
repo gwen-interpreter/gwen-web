@@ -1,3 +1,9 @@
+3.58.2
+======
+Oct 30, 2023
+- Update Gwen core from v3.50.1 to v[3.50.2](https://github.com/gwen-interpreter/gwen/releases/tag/v3.50.2)
+  - Fix dry run for file write DSLs
+
 3.58.1
 ======
 Oct 28, 2023

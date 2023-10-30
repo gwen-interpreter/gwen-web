@@ -3204,15 +3204,15 @@ I attach "<filepath>" as <name>
 I write "<text>" to "<filepath>" file
 I write <reference> to "<filepath>" file
 I write new line to "<filepath>" file
-I write "<text>" to <filepathRef> file
-I write <reference> to <filepathRef> file
-I write new line to <filepathRef> file
+I write "<text>" to <filePathRef> file
+I write <reference> to <filePathRef> file
+I write new line to <filePathRef> file
 I append "<text>" to "<filepath>" file
 I append <reference> to "<filepath>" file
 I append new line to "<filepath>" file
-I append "<text>" to <filepathRef> file
-I append <reference> to <filepathRef> file
-I append new line to <filepathRef> file
+I append "<text>" to <filePathRef> file
+I append <reference> to <filePathRef> file
+I append new line to <filePathRef> file
 I download "<url>" to "<filepath>"
 I download "<url>" to <filepathRef>
 I download the current URL to "<filepath>"
