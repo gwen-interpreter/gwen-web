@@ -216,41 +216,41 @@ com.google.j2objc
   +-j2objc-annotations:2.8
   | +-Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
 org.seleniumhq.selenium
-  +-selenium-json:4.14.1
+  +-selenium-json:4.15.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-os:4.14.1
+  +-selenium-os:4.15.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-remote-driver:4.14.1
+  +-selenium-remote-driver:4.15.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-firefox-driver:4.14.1
+  +-selenium-firefox-driver:4.15.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-edge-driver:4.14.1
+  +-selenium-edge-driver:4.15.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-ie-driver:4.14.1
+  +-selenium-ie-driver:4.15.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-devtools-v116:4.14.1
+  +-selenium-safari-driver:4.15.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-safari-driver:4.14.1
+  +-selenium-http:4.15.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-http:4.14.1
+  +-selenium-java:4.15.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-java:4.14.1
+  +-selenium-api:4.15.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-api:4.14.1
+  +-selenium-devtools-v85:4.15.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-devtools-v85:4.14.1
+  +-selenium-chrome-driver:4.15.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-chrome-driver:4.14.1
+  +-selenium-chromium-driver:4.15.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-chromium-driver:4.14.1
+  +-selenium-manager:4.15.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-manager:4.14.1
+  +-selenium-devtools-v119:4.15.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-support:4.14.1
+  +-selenium-support:4.15.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-devtools-v117:4.14.1
+  +-selenium-devtools-v117:4.15.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-devtools-v118:4.14.1
+  +-selenium-devtools-v118:4.15.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
 javax.validation
   +-validation-api:2.0.1.Final
