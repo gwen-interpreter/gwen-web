@@ -3194,6 +3194,26 @@ I maximise the window
 <step> if <element> is not disabled
 <step> if <attribute> is defined
 <step> if <attribute> is not defined
+<step> if <element> is blank
+<step> if <element> iss "<expression>"
+<step> if <element> contains "<expression>"
+<step> if <element> starts with "<expression>"
+<step> if <element> ends with "<expression>"
+<step> if <element> matches regex "<expression>"
+<step> if <element> matches xpath "<expression>"
+<step> if <element> matches json path "<expression>"
+<step> if <element> matches template "<expression>"
+<step> if <element> matches template file "<filepath>"
+<step> if <element> is not blank
+<step> if <element> is not "<expression>"
+<step> if <element> does not contain "<expression>"
+<step> if <element> does not start with "<expression>"
+<step> if <element> does not end with "<expression>"
+<step> if <element> does not match regex "<expression>"
+<step> if <element> does not match xpath "<expression>"
+<step> if <element> does not match json path "<expression>"
+<step> if <element> does not match template "<expression>"
+<step> if <element> does not match template file "<filepath>"
 <step> for each <entry> in <textRef> delimited by "<delimiter>"
 I drag and drop <sourceElement> to <targetElement>
 I append "<text>" to <element>
