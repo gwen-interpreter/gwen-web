@@ -1,4 +1,7 @@
 <name> is "<value>"
+<name> is blank
+<name> is true
+<name> is false
 I am on the <page>
 the <page> url is "<url>"
 I navigate to the <page>

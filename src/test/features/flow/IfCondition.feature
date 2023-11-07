@@ -75,3 +75,33 @@ Feature: If Conditionals
      When I perform this if not this condition
       And I perform that if this condition
      Then the called step should be "this step"
+
+  Scenario: If condition with blank check
+     Given the state code is blank
+      When I navigate to "https://example.com/" if the state code is blank
+      Then the current URL should be "https://example.com/"
+
+  Scenario: If condition with non blank check
+     Given the state code is "state"
+      When I navigate to "https://example.com/?state=${the state code}" if the state code is not blank
+      Then the current URL should be "https://example.com/?state=${the state code}"
+
+  Scenario: If condition with equal value
+      Given the state code is "VIC"
+       When I navigate to "https://example.com/?state=Victoria" if the state code is "VIC"
+       Then the current URL should be "https://example.com/?state=Victoria"
+
+  Scenario: If condition with non equal value
+      Given the state code is "NSW"
+       When I navigate to "https://example.com/" if the state code is not "VIC"
+       Then the current URL should be "https://example.com/"
+
+  Scenario: If condition with non matching value
+      Given the state code is "VIC"
+       When I navigate to "https://example.com/?state=Victoria" if the state code matches regex "(VIC|NSW)"
+       Then the current URL should be "https://example.com/?state=Victoria"
+
+  Scenario: If condition with non matching value
+      Given the state code is "QLD"
+       When I navigate to "https://example.com/?state=Other" if the state code does not match regex "(VIC|NSW)"
+       Then the current URL should be "https://example.com/?state=Other"
