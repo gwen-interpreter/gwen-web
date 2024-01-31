@@ -4,7 +4,7 @@ Jan 31, 2024
 - Set`auto` as the new default for `gwen.web.remote.localFileDetector` setting
 - Implicitly set `gwen.web.remote.localFileDetector` setting to `true` if it's set to `auto` and the `gwen.remote.url` setting is provided
 - Update selenium from v4.16.1 to v4.17.0
-- Update Gwen core from v3.51.0 to v[3.51.1](https://github.com/gwen-interpreter/gwen/releases/tag/v3.51.1)
+- Update Gwen core from v3.51.0 to v[3.51.2](https://github.com/gwen-interpreter/gwen/releases/tag/v3.51.2)
   - Update library dependencies
     - Update jline from v3.23.0 to v3.25.1
     - Update commons-codec from v1.10.0 to v1.11.0

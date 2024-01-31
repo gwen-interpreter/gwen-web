@@ -2,7 +2,7 @@ enablePlugins(GitVersioning)
 
 // gwen core & web versions
 val gwenVersion = "3.60.0"
-val gwenWebVersion = "3.51.1"
+val gwenWebVersion = "3.51.2"
 
 git.baseVersion := gwenWebVersion
 git.useGitDescribe := true
@@ -52,6 +52,16 @@ lazy val mainDependencies = {
     "io.github.bonigarcia" % "webdrivermanager" % "5.6.3" excludeAll(
       ExclusionRule(organization = "org.slf4j")
     )
+  ) ++ mainOverrides
+}
+
+lazy val mainOverrides = {
+  Seq(
+    "org.slf4j" % "slf4j-api" % "1.7.36",
+    "com.fasterxml.jackson.core" %  "jackson-databind" % "2.16.1",
+    "com.google.guava" % "guava" % "33.0.0-jre",
+    "org.reactivestreams" % "reactive-streams" % "1.0.4",
+    "commons-io" % "commons-io" % "2.15.0"
   )
 }
 
@@ -62,6 +72,8 @@ dependencyOverrides ++= Seq(
   "org.reactivestreams" % "reactive-streams" % "1.0.4",
   "commons-io" % "commons-io" % "2.15.0"
 )
+
+
 
 lazy val testDependencies = {
   Seq(
