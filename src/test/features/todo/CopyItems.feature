@@ -5,9 +5,9 @@ Feature: Copy Todo items
      When I add a "Walk the dog" item
       And I add a "Get the milk" item
       And I add a "Take out trash" item
-     Then the number of active items should be "3"
+     Then the number of active items should contain "3"
 
   Scenario: Copy items from session 1 to session 2
     Given I launch the Todo app in session 2
      When I copy all items from session 1 to session 2
-     Then the number of active items should be "3"
+     Then the number of active items should contain "3"

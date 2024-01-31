@@ -4,7 +4,7 @@ Feature: Google search meta
   @Context
   Scenario: I have Google in my browser
     Given I start a new browser
-     When I navigate to "http://www.google.com"
+     When I navigate to "https://www.google.com"
      Then the page title should be "Google"
       And no results should be displayed
 

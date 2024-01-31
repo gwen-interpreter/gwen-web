@@ -5,7 +5,7 @@ Feature: Todo Meta
   @StepDef
   Scenario: a new todo list
     Given my todo list can be located by css ".todo-list"
-     When I navigate to "https://todomvc.com/examples/react"
+     When I navigate to "https://todomvc.com/examples/react/dist/"
      Then the page title should contain "TodoMVC"
       And my todo list should not be displayed
 
@@ -21,6 +21,6 @@ Feature: Todo Meta
   @Assertion
   @StepDef
   Scenario: the list will contain <expected-count> items
-    Given the displayed count can be located by css ".todo-count strong"
+    Given the displayed count can be located by css ".todo-count"
      Then my todo list should be displayed
-      And the displayed count should be "$<expected-count>"
+      And the displayed count should contain "$<expected-count>"

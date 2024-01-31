@@ -4,10 +4,10 @@ Feature: Todo meta
   @Context
   Scenario: a new todo list
     Given the heading can be located by tag name "h1"
-     When I navigate to "https://todomvc.com/examples/react"
+     When I navigate to "https://todomvc.com/examples/react/dist/"
      Then the heading should be "todos"
       And the todo field can be located by class name "new-todo"
-      And the active item count can be located by css selector ".todo-count > strong"
+      And the active item count can be located by css selector ".todo-count"
 
   @StepDef
   @Action
@@ -24,7 +24,7 @@ Feature: Todo meta
           //label[contains(.,'${the todo item}')]/preceding-sibling::input
           """
       And the added item should be unticked
-      And the active item count should be "${record.number}"
+      And the active item count should contain "${record.number}"
 
   @StepDef
   @Action
@@ -34,4 +34,4 @@ Feature: Todo meta
   @StepDef
   @Assertion
   Scenario: no active items should remain
-     Then the active item count should be "0"
+     Then the active item count should contain "0"

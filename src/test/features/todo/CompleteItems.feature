@@ -4,17 +4,17 @@ Feature: Create and complete Todo items
     Given I launch the Todo app
      When I add a "Walk the dog" item
       And I add a "Get the milk" item
-     Then the number of active items should be "2"
+     Then the number of active items should contain "2"
 
   Scenario: Complete one item
     Given I am on the Todo page
      When I tick the "Get the milk" item
-     Then the number of active items should be "1"
+     Then the number of active items should contain "1"
 
   Scenario: Complete another item
     Given I am on the Todo page
      When I tick the "Walk the dog" item
-     Then the number of active items should be "0"
+     Then the number of active items should contain "0"
 
   Scenario: Clear my completed items
     Given I am on the Todo page

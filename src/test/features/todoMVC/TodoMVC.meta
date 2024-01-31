@@ -3,7 +3,7 @@ Feature: Todos meta
   @StepDef
   @Action
   Scenario: I browse to the application home page
-    Given I navigate to "https://todomvc.com/examples/${js-framework}"
+    Given I navigate to "https://todomvc.com/examples/${js-framework}/dist"
      Then the heading can be located by tag name "h1"
       And the info panel can be located by ${locator-info} "info"
       And the todo field can be located by ${locator-todo} "new-todo"

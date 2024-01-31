@@ -1,2 +1,2 @@
 js-framework,locator-info,locator-todo,locator-placeholder-js,locator-todo-count-js,locator-toggle-all,locator-clear-completed,locator-todo-list-items,xpath-todo-list
-angularjs,class name,class name,getElementsByClassName('new-todo')[0],document.getElementsByClassName('todo-count')[0].children[0],class name,class name,document.getElementsByClassName('todo-list')[0].getElementsByTagName('li'),//ul[@class='todo-list']
+react,class name,class name,getElementsByClassName('new-todo')[0],document.getElementsByClassName('todo-count')[0],class name,class name,document.getElementsByClassName('todo-list')[0].getElementsByTagName('li'),//ul[@class='todo-list']

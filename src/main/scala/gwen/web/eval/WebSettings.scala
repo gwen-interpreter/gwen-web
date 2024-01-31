@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2021 Brady Wood, Branko Juric
+ * Copyright 2015-2024 Brady Wood, Branko Juric
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -500,10 +500,11 @@ object WebSettings extends LazyLogging {
   }
     
   /**
-   * If set, enables the local file detector on remote webdriver if `gwen.web.remote.url` is set (default is disabled).
+   * If set, enables the local file detector on remote webdriver if `gwen.web.remote.url` is set (default is auto).
    */
   def `gwen.web.remote.localFileDetector`: Boolean = {
-    `gwen.web.remote.url`.nonEmpty && Settings.getBoolean("gwen.web.remote.localFileDetector")
+    `gwen.web.remote.url`.nonEmpty && 
+    (Settings.getOpt("gwen.web.remote.localFileDetector").exists(_ == "auto") || Settings.getBoolean("gwen.web.remote.localFileDetector"))
   }
 
   /**

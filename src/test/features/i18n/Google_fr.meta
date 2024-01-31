@@ -5,7 +5,7 @@ Feature: Google search meta (French dialect)
   @Context
   Scenario: mon navigateur ouvert sur Google
     Given I start a new browser
-     When I navigate to "http://www.google.com"
+     When I navigate to "https://www.google.com"
      Then the page title should be "Google"
 
   @StepDef

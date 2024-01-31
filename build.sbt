@@ -1,8 +1,8 @@
 enablePlugins(GitVersioning)
 
 // gwen core & web versions
-val gwenVersion = "3.51.0"
-val gwenWebVersion = "3.59.1"
+val gwenVersion = "3.60.0"
+val gwenWebVersion = "3.51.1"
 
 git.baseVersion := gwenWebVersion
 git.useGitDescribe := true
@@ -47,33 +47,27 @@ lazy val projectSettings = Seq(
 )
 
 lazy val mainDependencies = {
-  val selenium = "4.16.1"
-  val driverMgr = "5.5.3"
   Seq(
-    "org.seleniumhq.selenium" % "selenium-java" % selenium,
-    "io.github.bonigarcia" % "webdrivermanager" % driverMgr excludeAll(
-      ExclusionRule(organization = "org.slf4j", name = "jcl-over-slf4j"),
-      ExclusionRule(organization = "org.slf4j", name = "slf4j-api")
+    "org.seleniumhq.selenium" % "selenium-java" % "4.17.0",
+    "io.github.bonigarcia" % "webdrivermanager" % "5.6.3" excludeAll(
+      ExclusionRule(organization = "org.slf4j")
     )
-  ) ++ mainOverrides
-}
-
-lazy val mainOverrides = {
-  val io = "2.15.0"
-  Seq(
-    "commons-io" % "commons-io" % io
   )
 }
 
-lazy val testDependencies = {
-  val scalaTest = "3.2.16"
-  val scalaTestPlusMockito = "3.2.11.0"
-  val mockitoCore = "4.9.0"
+dependencyOverrides ++= Seq(
+  "org.slf4j" % "slf4j-api" % "1.7.36",
+  "com.fasterxml.jackson.core" %  "jackson-databind" % "2.16.1",
+  "com.google.guava" % "guava" % "33.0.0-jre",
+  "org.reactivestreams" % "reactive-streams" % "1.0.4",
+  "commons-io" % "commons-io" % "2.15.0"
+)
 
+lazy val testDependencies = {
   Seq(
-    "org.scalatest" %% "scalatest" % scalaTest,
-    "org.scalatestplus" %% "mockito-4-2" % scalaTestPlusMockito,
-    "org.mockito" % "mockito-core" % mockitoCore
+    "org.scalatest" %% "scalatest" % "3.2.17",
+    "org.scalatestplus" %% "mockito-4-2" % "3.2.11.0",
+    "org.mockito" % "mockito-core" % "4.9.0"
   ).map(_ % Test)
 }
 

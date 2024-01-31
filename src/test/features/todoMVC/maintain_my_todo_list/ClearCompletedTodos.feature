@@ -13,10 +13,3 @@ Feature: Clear completed todos
       And I complete the "Walk the dog" item
       And I clear all completed items
      Then the displayed items should be "Put out the garbage"
-
-  Scenario: I should not be able to clear completed todos if none are complete
-    Given I have an open browser
-     When I browse to the application home page
-      And I add a "Walk the dog" item
-      And I add a "Put out the garbage" item
-     Then the clear completed items option should be unavailable

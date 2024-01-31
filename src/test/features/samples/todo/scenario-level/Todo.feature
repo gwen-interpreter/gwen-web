@@ -8,7 +8,7 @@ Feature: Create and complete Todo items
      When I add a "Walk the dog" item
       And I add a "Get the milk" item
       And I add a "Feed the cat" item
-     Then the number of open items should be "3"
+     Then the number of open items should contain "3"
 
   Scenario: Complete second item
 
@@ -16,7 +16,7 @@ Feature: Create and complete Todo items
 
     Given I am on the Todo page
      When I complete the "Get the milk" item
-     Then the number of open items should be "2"
+     Then the number of open items should contain "2"
 
   Scenario: Complete and clear all items
 

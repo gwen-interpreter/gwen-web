@@ -8,6 +8,6 @@ Feature: Add todo items (for each)
           | Walk the dog |
           | Get the milk |
           | Feed the cat |
-      And the active count can be located by css ".todo-count strong"
+      And the active count can be located by css ".todo-count"
      When I capture the active count as count
-     Then count should be "3"
+     Then count should contain "3"
