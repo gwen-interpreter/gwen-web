@@ -58,11 +58,11 @@ com.github.tototoshi
   +-scala-csv_3:1.3.10
   | +-Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.html
 org.apache.logging.log4j
-  +-log4j-slf4j-impl:2.21.1
+  +-log4j-slf4j-impl:2.22.1
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0.txt
-  +-log4j-core:2.21.1
+  +-log4j-core:2.22.1
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0.txt
-  +-log4j-api:2.21.1
+  +-log4j-api:2.22.1
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0.txt
 com.github.scopt
   +-scopt_3:4.1.0
@@ -148,7 +148,7 @@ net.java.dev.jna
   +-jna:5.3.1
   | +-Apache License v2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
 org.scalactic
-  +-scalactic_3:3.2.16
+  +-scalactic_3:3.2.17
   | +-the Apache License, ASL Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0
 com.squareup.retrofit2
   +-adapter-rxjava2:2.9.0
@@ -261,35 +261,35 @@ io.github.bonigarcia
   +-webdrivermanager:5.6.3
   | +-Apache 2.0 - https://www.apache.org/licenses/LICENSE-2.0
 org.scalatest
-  +-scalatest-refspec_3:3.2.16
+  +-scalatest-refspec_3:3.2.17
   | +-the Apache License, ASL Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0
-  +-scalatest-funsuite_3:3.2.16
+  +-scalatest-funsuite_3:3.2.17
   | +-the Apache License, ASL Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0
-  +-scalatest-diagrams_3:3.2.16
+  +-scalatest-diagrams_3:3.2.17
   | +-the Apache License, ASL Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0
-  +-scalatest-funspec_3:3.2.16
+  +-scalatest-funspec_3:3.2.17
   | +-the Apache License, ASL Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0
-  +-scalatest-propspec_3:3.2.16
+  +-scalatest-propspec_3:3.2.17
   | +-the Apache License, ASL Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0
-  +-scalatest-compatible:3.2.16
+  +-scalatest-compatible:3.2.17
   | +-the Apache License, ASL Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0
-  +-scalatest-flatspec_3:3.2.16
+  +-scalatest-flatspec_3:3.2.17
   | +-the Apache License, ASL Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0
-  +-scalatest-mustmatchers_3:3.2.16
+  +-scalatest-mustmatchers_3:3.2.17
   | +-the Apache License, ASL Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0
-  +-scalatest-core_3:3.2.16
+  +-scalatest-core_3:3.2.17
   | +-the Apache License, ASL Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0
-  +-scalatest-featurespec_3:3.2.16
+  +-scalatest-featurespec_3:3.2.17
   | +-the Apache License, ASL Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0
-  +-scalatest-freespec_3:3.2.16
+  +-scalatest-freespec_3:3.2.17
   | +-the Apache License, ASL Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0
-  +-scalatest-matchers-core_3:3.2.16
+  +-scalatest-matchers-core_3:3.2.17
   | +-the Apache License, ASL Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0
-  +-scalatest-wordspec_3:3.2.16
+  +-scalatest-wordspec_3:3.2.17
   | +-the Apache License, ASL Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0
-  +-scalatest_3:3.2.16
+  +-scalatest_3:3.2.17
   | +-the Apache License, ASL Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0
-  +-scalatest-shouldmatchers_3:3.2.16
+  +-scalatest-shouldmatchers_3:3.2.17
   | +-the Apache License, ASL Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0
 commons-logging
   +-commons-logging:1.2
@@ -377,8 +377,6 @@ com.google.guava
   +-guava:33.0.0-jre
   | +-no license specified
   +-failureaccess:1.0.2
-  | +-no license specified
-  +-failureaccess:1.0.1
   | +-no license specified
 commons-io
   +-commons-io:2.15.0
