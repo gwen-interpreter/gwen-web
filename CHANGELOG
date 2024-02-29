@@ -1,3 +1,9 @@
+3.60.3
+======
+Feb 29, 2023
+- Update Gwen core from v3.51.3 to v[3.51.4](https://github.com/gwen-interpreter/gwen/releases/tag/v3.51.4)
+  - Change assertion error messages to be more fluent
+
 3.60.2
 ======
 Feb 21, 2024
@@ -1615,7 +1621,7 @@ Nov 16, 2021
 - Gwen 3 release
   - Refactor and migrate codebase to Scala 3
   - Update Gherkin parser and all dependencies
-  - Introduce [Gwen-Web npm package]([gwen-web-npm](https://github.com/gwen-interpreter/gwen-web-npm)
+  - Introduce [gwen-web-npm](https://github.com/gwen-interpreter/gwen-web-npm) package
   - Introduce pretty console logger ( supports [NO_COLOR](https://no-color.org/) )
   - Deprecate gwen-gpm in favor of npm
   - Deprecate Gwen workspaces in favor of JS projects
