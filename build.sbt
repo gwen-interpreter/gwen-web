@@ -49,7 +49,7 @@ lazy val projectSettings = Seq(
 lazy val mainDependencies = {
   Seq(
     "org.seleniumhq.selenium" % "selenium-java" % "4.18.1",
-    "io.github.bonigarcia" % "webdrivermanager" % "5.6.3" excludeAll(
+    "io.github.bonigarcia" % "webdrivermanager" % "5.7.0" excludeAll(
       ExclusionRule(organization = "org.slf4j")
     )
   ) ++ mainOverrides
