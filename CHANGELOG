@@ -1,4 +1,10 @@
-3.60.3
+3.60.5
+======
+Mar 04, 2024
+- Update Gwen core from v3.51.4 to v[3.51.5](https://github.com/gwen-interpreter/gwen/releases/tag/v3.51.5)
+  - Remove `assertion failed:` prefix from assertion errors
+
+3.60.4
 ======
 Mar 01, 2024
 - Fix GWEN_VIDEO override
