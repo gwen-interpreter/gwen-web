@@ -55,11 +55,10 @@ class WebEngine extends EvalEngine[WebContext] {
     */
   override def init(options: GwenOptions, envState: EnvState): WebContext = {
     WebSettings.check()
-    if (options.parallel || !options.batch) {
-      if (WebSettings.videoEnabled) {
-        logger.info(s"Disabling video in ${if (options.parallel) "parallel" else "interactive"} mode")
-        sys.props.put(WebSettings.enableVideoKey1, "false")
-      }
+    val disableVideo = sys.env.get("GWEN_VIDEO").map(v => v.trim != "true").getOrElse(false)
+    if (disableVideo || ((options.parallel || !options.batch) && WebSettings.videoEnabled)) {
+      logger.info(s"Disabling video in ${if (options.parallel) "parallel" else "interactive"} mode")
+      sys.props.put(WebSettings.enableVideoKey1, "false")
     }
     if (WebSettings.`gwen.web.capture.screenshots.highlighting`) {
       val fps = GwenSettings.`gwen.report.slideshow.framespersecond`

@@ -1,5 +1,10 @@
 3.60.3
 ======
+Mar 01, 2024
+- Fix GWEN_VIDEO override
+
+3.60.3
+======
 Feb 29, 2024
 - Update library dependencies
   - Update webdrivermanager from v5.6.3 to v5.7.0
@@ -1039,7 +1044,7 @@ Jun 26, 2022
 - Removed all references to deprecated `acceptSslCerts` and `javascriptEnabled` capabilities
 - Dropped `gwen.web.accept.untrusted.certs` setting in favor of standard W3C `acceptInsecureCerts` capability
 - Add ability to override the `gwen.web.capability.enableVideo` setting with an environment variable:
-  - `GWEN_VIDEO=true|fakse` to enable or disable Selenoid video recordig in Docker
+  - `GWEN_VIDEO=true|false` to enable or disable Selenoid video recordig in Docker
 - Enable selenoid video recording by default
 - Run as non root user in docker containers
 
