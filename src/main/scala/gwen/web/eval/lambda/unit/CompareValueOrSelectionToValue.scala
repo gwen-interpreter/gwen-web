@@ -19,6 +19,7 @@ package gwen.web.eval.lambda.unit
 import gwen.web.eval.DropdownSelection
 import gwen.web.eval.WebContext
 
+import gwen.core.Assert
 import gwen.core.Errors
 import gwen.core.ValueLiteral
 import gwen.core.behavior.BehaviorType
@@ -57,7 +58,7 @@ class CompareValueOrSelectionToValue(element: String, selection: Option[Dropdown
               ctx.assertWithError(
                 assertion, 
                 message, 
-                s"Expected ${binding.map(_.toString).getOrElse(element)} to ${if(negate) "not " else ""}$operator ${ValueLiteral.orQuotedValue(expected)}${if (operator == ComparisonOperator.be && actualValue == expected) "" else s" but got ${ValueLiteral.orQuotedValue(actualValue)}"}",
+                Assert.formatFailed(binding.map(_.toString).getOrElse(element), expected, actualValue, negate, operator),
                 step.assertionMode)
             case Failure(error) =>
               ctx.assertWithError(assertion = false, message, error.getMessage, step.assertionMode)
