@@ -34,18 +34,19 @@ import org.openqa.selenium.remote.RemoteWebDriver
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
 
+import scala.compiletime.uninitialized
 import scala.collection.mutable
 import scala.jdk.CollectionConverters._
 import org.scalatest.matchers.should.Matchers
 
 class DriverManagerTest extends BaseTest with Matchers with MockitoSugar with BeforeAndAfterEach {
 
-  var mockChromeDriver: WebDriver = _
-  var mockFirefoxDriver: WebDriver = _
-  var mockIeDriver: WebDriver = _
-  var mockEdgeDriver: WebDriver = _
-  var mockSafariDriver: WebDriver = _
-  var mockRemoteDriver: RemoteWebDriver = _
+  var mockChromeDriver: WebDriver = uninitialized
+  var mockFirefoxDriver: WebDriver = uninitialized
+  var mockIeDriver: WebDriver = uninitialized
+  var mockEdgeDriver: WebDriver = uninitialized
+  var mockSafariDriver: WebDriver = uninitialized
+  var mockRemoteDriver: RemoteWebDriver = uninitialized
 
   override def afterEach(): Unit = {
     DriverManager.releaseDriverPermit()

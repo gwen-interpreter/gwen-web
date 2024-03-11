@@ -33,6 +33,7 @@ import gwen.core.node.gherkin.table.FlatTable
 import gwen.core.state._
 import gwen.core.status.Pending
 
+import scala.compiletime.uninitialized
 import scala.util.chaining._
 
 import org.apache.commons.text.StringEscapeUtils
@@ -98,12 +99,12 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
   private val timeUnits2= List("minute", "second", "millisecond")
   private val waits = List("wait", "timeout")
 
-  private var envState: EnvState = _
-  private var ctx: WebContext = _
-  private var mockScopes: ScopedDataStack = _
-  private var mockTopScope: TopScope = _
-  private var mockParamScope: ParameterStack = _
-  private var mockLocator: WebElementLocator = _
+  private var envState: EnvState = uninitialized
+  private var ctx: WebContext = uninitialized
+  private var mockScopes: ScopedDataStack = uninitialized
+  private var mockTopScope: TopScope = uninitialized
+  private var mockParamScope: ParameterStack = uninitialized
+  private var mockLocator: WebElementLocator = uninitialized
 
   override def beforeEach(): Unit = {
     envState = spy(EnvState())

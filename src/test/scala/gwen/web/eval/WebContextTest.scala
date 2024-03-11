@@ -39,18 +39,19 @@ import org.mockito.ArgumentMatchers.same
 import org.openqa.selenium.interactions.{Action, Actions}
 import org.openqa.selenium.support.ui.Select
 
-import scala.jdk.CollectionConverters._
+import scala.compiletime.uninitialized
 import scala.concurrent.duration.Duration
+import scala.jdk.CollectionConverters._
 
 import java.io.File
 import org.scalatest.matchers.should.Matchers
 
 class WebContextTest extends BaseTest with Matchers with MockitoSugar with BeforeAndAfterEach {
 
-  private var ctx: WebContext = _
-  private var driverManager: DriverManager = _
-  private var mockWebDriver: MockWebDriver = _
-  private var mockLocator: WebElementLocator = _
+  private var ctx: WebContext = uninitialized
+  private var driverManager: DriverManager = uninitialized
+  private var mockWebDriver: MockWebDriver = uninitialized
+  private var mockLocator: WebElementLocator = uninitialized
 
   override def beforeEach(): Unit = {
     mockWebDriver = mock[MockWebDriver]

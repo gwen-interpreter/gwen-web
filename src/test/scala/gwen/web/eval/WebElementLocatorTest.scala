@@ -41,8 +41,9 @@ import org.scalatestplus.mockito.MockitoSugar
 import org.openqa.selenium.WebDriver.{Options, TargetLocator, Timeouts}
 import org.mockito.ArgumentMatchers.{any, same}
 
-import scala.jdk.CollectionConverters._
+import scala.compiletime.uninitialized
 import scala.concurrent.duration.Duration
+import scala.jdk.CollectionConverters._
 
 import java.{time => jt}
 import java.util
@@ -54,14 +55,14 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
   // disable implicit js locators for unit test
   Settings.set("gwen.web.implicit.js.locators", "false")
 
-  private var mockWebElement: WebElement = _
-  private var mockWebElements: List[WebElement] = _
-  private var mockContainerElement: WebElement = _
-  private var mockIFrameElement: WebElement = _
-  private var mockFrameElement: WebElement = _
-  private var mockTargetLocator: TargetLocator = _
-  private var mockWebDriverOptions: Options = _
-  private var mockWebDriverTimeouts: Timeouts = _
+  private var mockWebElement: WebElement = uninitialized
+  private var mockWebElements: List[WebElement] = uninitialized
+  private var mockContainerElement: WebElement = uninitialized
+  private var mockIFrameElement: WebElement = uninitialized
+  private var mockFrameElement: WebElement = uninitialized
+  private var mockTargetLocator: TargetLocator = uninitialized
+  private var mockWebDriverOptions: Options = uninitialized
+  private var mockWebDriverTimeouts: Timeouts = uninitialized
 
   override def beforeEach(): Unit = {
     mockWebElement = mock[WebElement]

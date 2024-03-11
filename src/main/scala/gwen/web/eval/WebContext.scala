@@ -994,7 +994,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
       case Some(binding) =>
         withDriverAndElement(binding, s"trying to send key(s) to ${binding.displayName}") { (driver, webElement) =>
           if (keys.size > 1) {
-            webElement.sendKeys(Keys.chord(keys: _*))
+            webElement.sendKeys(Keys.chord(keys*))
           } else {
             var actions = createActions(driver).moveToElement(webElement)
             keys.foreach { key => actions = actions.sendKeys(webElement, key) }
@@ -1005,7 +1005,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
         withWebDriver { driver =>
           var actions = createActions(driver)
           if (keys.size > 1) {
-            actions = actions.sendKeys(Keys.chord(keys: _*))
+            actions = actions.sendKeys(Keys.chord(keys*))
           } else {
             keys.foreach { key => actions = actions.sendKeys(key) }
           }

@@ -22,19 +22,19 @@ org.brotli
   +-dec:0.1.2
   | +-no license specified
 org.scala-lang
-  +-scala-library:2.13.10
+  +-scala-library:2.13.12
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0
-  +-scala3-library_3:3.3.1
+  +-scala3-library_3:3.4.0
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0
-  +-scaladoc_3:3.3.1
+  +-scaladoc_3:3.4.0
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0
-  +-tasty-core_3:3.3.1
+  +-tasty-core_3:3.4.0
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0
-  +-scala3-compiler_3:3.3.1
+  +-scala3-compiler_3:3.4.0
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0
-  +-scala3-interfaces:3.3.1
+  +-scala3-interfaces:3.4.0
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0
-  +-scala3-tasty-inspector_3:3.3.1
+  +-scala3-tasty-inspector_3:3.4.0
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0
 com.google.code.gson
   +-gson:2.10.1
@@ -51,18 +51,15 @@ org.fusesource.jansi
 com.typesafe
   +-config:1.4.3
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0
-com.google.protobuf
-  +-protobuf-java:3.7.0
-  | +-no license specified
 com.github.tototoshi
   +-scala-csv_3:1.3.10
   | +-Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.html
 org.apache.logging.log4j
-  +-log4j-slf4j-impl:2.22.1
+  +-log4j-slf4j-impl:2.23.0
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0.txt
-  +-log4j-core:2.22.1
+  +-log4j-core:2.23.0
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0.txt
-  +-log4j-api:2.22.1
+  +-log4j-api:2.23.0
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0.txt
 com.github.scopt
   +-scopt_3:4.1.0
@@ -82,7 +79,7 @@ org.apache.httpcomponents.client5
   +-httpclient5:5.2.1
   | +-no license specified
 org.jsoup
-  +-jsoup:1.14.3
+  +-jsoup:1.17.2
   | +-The MIT License - https://jsoup.org/license
 org.jetbrains
   +-annotations:15.0
@@ -99,9 +96,9 @@ io.opentelemetry.semconv
   +-opentelemetry-semconv:1.23.1-alpha
   | +-The Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
 com.epam.reportportal
-  +-commons-model:5.11.0
+  +-commons-model:5.11.1
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-client-java:5.2.2
+  +-client-java:5.2.5
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
 org.objenesis
   +-objenesis:3.3
@@ -128,9 +125,9 @@ net.minidev
   +-accessors-smart:2.5.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
 org.scala-sbt
-  +-util-interface:1.3.0
-  | +-BSD New - https://github.com/sbt/sbt/blob/0.13/LICENSE
-  +-compiler-interface:1.3.5
+  +-util-interface:1.9.2
+  | +-Apache-2.0 - https://github.com/sbt/sbt/blob/develop/LICENSE
+  +-compiler-interface:1.9.3
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0
 com.fasterxml.jackson.core
   +-jackson-annotations:2.16.1
@@ -379,10 +376,10 @@ com.google.guava
   +-failureaccess:1.0.2
   | +-no license specified
 commons-io
-  +-commons-io:2.15.0
+  +-commons-io:2.15.1
   | +-no license specified
 org.scala-lang.modules
-  +-scala-asm:9.5.0-scala-1
+  +-scala-asm:9.6.0-scala-1
   | +-BSD 3-clause - http://opensource.org/licenses/BSD-3-Clause
   +-scala-xml_3:2.1.0
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0
@@ -400,15 +397,15 @@ org.mockito
   +-mockito-core:4.9.0
   | +-The MIT License - https://github.com/mockito/mockito/blob/main/LICENSE
 io.cucumber
-  +-gherkin:27.0.0
+  +-gherkin:28.0.0
   | +-no license specified
-  +-messages:22.0.0
+  +-messages:24.0.1
   | +-no license specified
 org.reactivestreams
   +-reactive-streams:1.0.4
   | +-MIT-0 - https://spdx.org/licenses/MIT-0.html
 commons-codec
-  +-commons-codec:1.16.0
+  +-commons-codec:1.16.1
   | +-no license specified
 com.typesafe.scala-logging
   +-scala-logging_3:3.9.5
