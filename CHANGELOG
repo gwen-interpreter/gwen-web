@@ -1,3 +1,8 @@
+3.60.11
+=======
+Mar 27, 2024
+- Update node to v21 in bundled DockerFile
+
 3.60.10
 =======
 Mar 22, 2024
