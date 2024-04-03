@@ -1,3 +1,10 @@
+3.60.12
+=======
+Apr 3, 2024
+- Update selenium from v4.18.0 to v4.19.1
+- Update Gwen core from v3.51.10 to v[3.51.10](https://github.com/gwen-interpreter/gwen/releases/tag/v3.51.11)
+  - Bind first record of input data file when launching Gwen in REPL mode
+
 3.60.11
 =======
 Mar 27, 2024
@@ -6,7 +13,7 @@ Mar 27, 2024
 3.60.10
 =======
 Mar 22, 2024
-- Update Gwen core from v3.51.0 to v[3.51.10](https://github.com/gwen-interpreter/gwen/releases/tag/v3.51.10)
+- Update Gwen core from v3.51.9 to v[3.51.10](https://github.com/gwen-interpreter/gwen/releases/tag/v3.51.10)
   - Fix data feeds to cater for multiline data
 
 3.60.9

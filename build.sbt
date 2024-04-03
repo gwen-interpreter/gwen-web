@@ -1,8 +1,8 @@
 enablePlugins(GitVersioning)
 
 // gwen core & web versions
-val gwenVersion = "3.60.10"
-val gwenWebVersion = "3.51.11"
+val gwenVersion = "3.51.11"
+val gwenWebVersion = "3.60.12"
 
 git.baseVersion := gwenWebVersion
 git.useGitDescribe := true
@@ -48,7 +48,7 @@ lazy val projectSettings = Seq(
 
 lazy val mainDependencies = {
   Seq(
-    "org.seleniumhq.selenium" % "selenium-java" % "4.18.1",
+    "org.seleniumhq.selenium" % "selenium-java" % "4.19.1",
     "io.github.bonigarcia" % "webdrivermanager" % "5.7.0" excludeAll(
       ExclusionRule(organization = "org.slf4j")
     )

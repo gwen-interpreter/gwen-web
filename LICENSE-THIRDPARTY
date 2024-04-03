@@ -212,41 +212,41 @@ com.google.j2objc
   +-j2objc-annotations:2.8
   | +-Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
 org.seleniumhq.selenium
-  +-selenium-json:4.18.1
+  +-selenium-json:4.19.1
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-os:4.18.1
+  +-selenium-os:4.19.1
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-remote-driver:4.18.1
+  +-selenium-remote-driver:4.19.1
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-firefox-driver:4.18.1
+  +-selenium-firefox-driver:4.19.1
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-edge-driver:4.18.1
+  +-selenium-edge-driver:4.19.1
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-ie-driver:4.18.1
+  +-selenium-ie-driver:4.19.1
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-devtools-v120:4.18.1
+  +-selenium-safari-driver:4.19.1
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-safari-driver:4.18.1
+  +-selenium-devtools-v122:4.19.1
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-devtools-v122:4.18.1
+  +-selenium-devtools-v121:4.19.1
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-devtools-v121:4.18.1
+  +-selenium-http:4.19.1
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-http:4.18.1
+  +-selenium-java:4.19.1
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-java:4.18.1
+  +-selenium-devtools-v123:4.19.1
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-api:4.18.1
+  +-selenium-api:4.19.1
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-devtools-v85:4.18.1
+  +-selenium-devtools-v85:4.19.1
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-chrome-driver:4.18.1
+  +-selenium-chrome-driver:4.19.1
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-chromium-driver:4.18.1
+  +-selenium-chromium-driver:4.19.1
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-manager:4.18.1
+  +-selenium-manager:4.19.1
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-support:4.18.1
+  +-selenium-support:4.19.1
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
 javax.validation
   +-validation-api:2.0.1.Final
@@ -292,29 +292,29 @@ commons-logging
   +-commons-logging:1.2
   | +-no license specified
 io.opentelemetry
-  +-opentelemetry-api-events:1.35.0-alpha
+  +-opentelemetry-api-events:1.36.0-alpha
   | +-The Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-opentelemetry-exporter-logging:1.35.0
+  +-opentelemetry-exporter-logging:1.36.0
   | +-The Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-opentelemetry-sdk-logs:1.35.0
+  +-opentelemetry-sdk-logs:1.36.0
   | +-The Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-opentelemetry-sdk-common:1.35.0
+  +-opentelemetry-sdk-common:1.36.0
   | +-The Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-opentelemetry-sdk-extension-autoconfigure:1.35.0
+  +-opentelemetry-sdk-extension-autoconfigure:1.36.0
   | +-The Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-opentelemetry-api:1.35.0
+  +-opentelemetry-api:1.36.0
   | +-The Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-opentelemetry-sdk-trace:1.35.0
+  +-opentelemetry-sdk-trace:1.36.0
   | +-The Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-opentelemetry-sdk-extension-autoconfigure-spi:1.35.0
+  +-opentelemetry-sdk-extension-autoconfigure-spi:1.36.0
   | +-The Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-opentelemetry-context:1.35.0
+  +-opentelemetry-context:1.36.0
   | +-The Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-opentelemetry-sdk:1.35.0
+  +-opentelemetry-sdk:1.36.0
   | +-The Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-opentelemetry-sdk-metrics:1.35.0
+  +-opentelemetry-sdk-metrics:1.36.0
   | +-The Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-opentelemetry-extension-incubator:1.35.0-alpha
+  +-opentelemetry-extension-incubator:1.36.0-alpha
   | +-The Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
 io.swagger
   +-swagger-annotations:1.6.0
@@ -399,7 +399,7 @@ org.mockito
 io.cucumber
   +-gherkin:28.0.0
   | +-no license specified
-  +-messages:24.0.1
+  +-messages:24.1.0
   | +-no license specified
 org.reactivestreams
   +-reactive-streams:1.0.4
