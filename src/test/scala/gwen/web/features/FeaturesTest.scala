@@ -35,6 +35,7 @@ class FeaturesTest extends BaseFeatureTest {
       evaluate(
         List(
           "src/test/features/bindings/ScopedBindings2.feature",
+          "src/test/features/errors",
           "src/test/features/samples/todo/scenario-level", 
           "src/test/features/samples/todo/single-scenario"), 
         parallel = true,

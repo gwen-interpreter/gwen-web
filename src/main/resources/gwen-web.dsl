@@ -3302,3 +3302,5 @@ I lookup <name> in the "<jsonFilepath>" file where "<predicate>"
 I lookup <name> in <jsonFilepathRef> file where "<predicate>"
 I lookup <column> in the "<jsonFilepath>" file as <name> where "<predicate>"
 I lookup <column> in <csvFilepathRef> file as <name> where "<predicate>"
+I reset accumulated errors
+there should be no accumulated errors

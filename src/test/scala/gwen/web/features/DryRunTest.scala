@@ -78,6 +78,7 @@ class DryRunTest extends BaseFeatureTest {
         withSetting("gwen.state.level", "scenario") {
           evaluate(
             List(
+              "src/test/features/errors",
               "src/test/features/flow",
               "src/test/features/locators",
               "src/test/features/functions",
