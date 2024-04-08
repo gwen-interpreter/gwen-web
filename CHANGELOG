@@ -1,7 +1,13 @@
+3.61.2
+======
+Apr 8, 2024
+- Update Gwen core from v3.52.1 to v[3.52.2](https://github.com/gwen-interpreter/gwen/releases/tag/v3.51.2)
+  - Do not accumulate errors raised in an active `@Try` scope or a disabled step
+
 3.61.1
 ======
 Apr 8, 2024
-- Update Gwen core from v3.52.0 to v[3.52.1](https://github.com/gwen-interpreter/gwen/releases/tag/v3.51.0)
+- Update Gwen core from v3.52.0 to v[3.52.1](https://github.com/gwen-interpreter/gwen/releases/tag/v3.51.1)
   - Do not accumulate errors raised in `@Try` steps
 
 3.61.0
