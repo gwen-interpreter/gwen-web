@@ -1,3 +1,9 @@
+3.61.1
+======
+Apr 8, 2024
+- Update Gwen core from v3.52.0 to v[3.52.1](https://github.com/gwen-interpreter/gwen/releases/tag/v3.51.0)
+  - Do not accumulate errors raised in `@Try` steps
+
 3.61.0
 ======
 Apr 6, 2024
