@@ -1,9 +1,14 @@
+3.62.1
+======
+Apr 15, 2024
+- Update Gwen core from v3.53.0 to v[3.53.1](https://github.com/gwen-interpreter/gwen/releases/tag/v3.53.1)
+  - Fix alignment of Message annotations in formatter to cater for step level tags
+
 3.62.0
 ======
 Apr 14, 2024
-- Update Gwen core from v3.53.2 to v[3.53.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.53.0)
+- Update Gwen core from v3.52.2 to v[3.53.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.53.0)
   - Add Trim and IgnoreCase annotations to support trimming and ignoring case in match DSLs 
-  - Fix alignment of Message annotations in formatter to cater for step level tags
 
 3.61.2
 ======
