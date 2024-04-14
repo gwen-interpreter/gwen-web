@@ -1,3 +1,9 @@
+3.61.3
+======
+Apr 12, 2024
+- Update Gwen core from v3.52.2 to v[3.52.3](https://github.com/gwen-interpreter/gwen/releases/tag/v3.51.3)
+  - Fix alignment of Message annotations in formatter to cater for step level tags
+
 3.61.2
 ======
 Apr 8, 2024
