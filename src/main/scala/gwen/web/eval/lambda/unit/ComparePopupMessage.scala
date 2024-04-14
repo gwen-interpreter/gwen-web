@@ -18,6 +18,7 @@ package gwen.web.eval.lambda.unit
 
 import gwen.web.eval.WebContext
 
+import gwen.core.Formatting
 import gwen.core.behavior.BehaviorType
 import gwen.core.eval.ComparisonOperator
 import gwen.core.eval.lambda.UnitStep
@@ -27,7 +28,7 @@ import gwen.core.node.gherkin.Step
 import scala.concurrent.duration.Duration
 import scala.util.chaining._
 
-class ComparePopupMessage(name: String, value: String, bound: Boolean, operator: ComparisonOperator, negate: Boolean, message: Option[String], timeout: Option[Duration]) extends UnitStep[WebContext] {
+class ComparePopupMessage(name: String, value: String, bound: Boolean, operator: ComparisonOperator, negate: Boolean, message: Option[String], timeout: Option[Duration], trim: Boolean, ignoreCase: Boolean) extends UnitStep[WebContext] {
 
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     step tap { _ =>
@@ -38,7 +39,7 @@ class ComparePopupMessage(name: String, value: String, bound: Boolean, operator:
         ctx.parseExpression(operator, value)
       }
       ctx.perform {
-        ctx.compare(name, expected, () => ctx.getPopupMessage, operator, negate, None, message, timeout.map(_.toSeconds), step.assertionMode)
+        ctx.compare(name, Formatting.format(expected, trim, ignoreCase), () => Formatting.format(ctx.getPopupMessage, trim, ignoreCase), operator, negate, None, message, timeout.map(_.toSeconds), step.assertionMode)
       }
     }
   }

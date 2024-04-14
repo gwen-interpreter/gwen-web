@@ -21,6 +21,7 @@ import gwen.web.eval.WebContext
 
 import gwen.core.Assert
 import gwen.core.Errors
+import gwen.core.Formatting
 import gwen.core.ValueLiteral
 import gwen.core.behavior.BehaviorType
 import gwen.core.eval.ComparisonOperator
@@ -33,7 +34,7 @@ import scala.util.Failure
 import scala.util.Success
 import scala.util.chaining._
 
-class CompareValueOrSelectionToValue(element: String, selection: Option[DropdownSelection], expression: String, operator: ComparisonOperator, negate: Boolean, message: Option[String], timeout: Option[Duration]) extends UnitStep[WebContext] {
+class CompareValueOrSelectionToValue(element: String, selection: Option[DropdownSelection], expression: String, operator: ComparisonOperator, negate: Boolean, message: Option[String], timeout: Option[Duration], trim: Boolean, ignoreCase: Boolean) extends UnitStep[WebContext] {
 
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     checkStepRules(step, BehaviorType.Assertion, ctx)
@@ -44,14 +45,15 @@ class CompareValueOrSelectionToValue(element: String, selection: Option[Dropdown
     }
     val expected = ctx.parseExpression(operator, expression)
     val actual = () => ctx.boundAttributeOrSelection(element, selection, timeout)
+    val formattedActual = () => Formatting.format(ctx.boundAttributeOrSelection(element, selection, timeout), trim, ignoreCase)
     step tap { _ =>
       ctx.perform {
         if (ctx.scopes.findEntry { case (n, _) => n.startsWith(element) } forall { case (n, _) => n != element }) {
           val nameSuffix = selection.map(sel => s" $sel")
-          ctx.compare(s"$element${nameSuffix.getOrElse("")}", expected, actual, operator, negate, nameSuffix, message, timeout.map(_.toSeconds), step.assertionMode)
+          ctx.compare(s"$element${nameSuffix.getOrElse("")}", Formatting.format(expected, trim, ignoreCase), formattedActual, operator, negate, nameSuffix, message, timeout.map(_.toSeconds), step.assertionMode)
         } else {
           val actualValue = ctx.scopes.getOpt(element).getOrElse(actual())
-          val result = ctx.compare(element, expected, actualValue, operator, negate)
+          val result = ctx.compare(element, Formatting.format(expected, trim, ignoreCase), Formatting.format(actualValue, trim, ignoreCase), operator, negate)
           result match {
             case Success(assertion) =>
               val binding = ctx.getLocatorBinding(element, optional = true)

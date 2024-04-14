@@ -20,6 +20,7 @@ import gwen.web.eval.DropdownSelection
 import gwen.web.eval.WebContext
 
 import gwen.core.Errors
+import gwen.core.Formatting
 import gwen.core.behavior.BehaviorType
 import gwen.core.eval.ComparisonOperator
 import gwen.core.eval.lambda.UnitStep
@@ -29,7 +30,7 @@ import gwen.core.node.gherkin.Step
 import scala.concurrent.duration.Duration
 import scala.util.chaining._
 
-class CompareValueOrSelectionToBoundValue(element: String, selection: Option[DropdownSelection], source: String, operator: ComparisonOperator, negate: Boolean, message: Option[String], timeout: Option[Duration]) extends UnitStep[WebContext] {
+class CompareValueOrSelectionToBoundValue(element: String, selection: Option[DropdownSelection], source: String, operator: ComparisonOperator, negate: Boolean, message: Option[String], timeout: Option[Duration], trim: Boolean, ignoreCase: Boolean) extends UnitStep[WebContext] {
 
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     checkStepRules(step, BehaviorType.Assertion, ctx)
@@ -40,10 +41,11 @@ class CompareValueOrSelectionToBoundValue(element: String, selection: Option[Dro
     }
     val expected = ctx.getBoundValue(source, timeout)
     val actual = () => ctx.boundAttributeOrSelection(element, selection, timeout)
+    val formattedActual = () => Formatting.format(ctx.boundAttributeOrSelection(element, selection, timeout), trim, ignoreCase)
     step tap { _ =>
       ctx.perform {
         val nameSuffix = selection.map(sel => s" $sel")
-        ctx.compare(s"$element${nameSuffix.getOrElse("")}", expected, actual, operator, negate, nameSuffix, message, timeout.map(_.toSeconds), step.assertionMode)
+        ctx.compare(s"$element${nameSuffix.getOrElse("")}", Formatting.format(expected, trim, ignoreCase), formattedActual, operator, negate, nameSuffix, message, timeout.map(_.toSeconds), step.assertionMode)
       } getOrElse  {
         actual()
       }

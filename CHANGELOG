@@ -1,7 +1,8 @@
-3.61.3
+3.62.0
 ======
-Apr 12, 2024
-- Update Gwen core from v3.52.2 to v[3.52.3](https://github.com/gwen-interpreter/gwen/releases/tag/v3.51.3)
+Apr 14, 2024
+- Update Gwen core from v3.53.2 to v[3.53.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.53.0)
+  - Add Trim and IgnoreCase annotations to support trimming and ignoring case in match DSLs 
   - Fix alignment of Message annotations in formatter to cater for step level tags
 
 3.61.2
@@ -1395,12 +1396,12 @@ Apr 20, 2022
 Apr 19, 2022
 - Update Gwen core from v3.10.2 to v[3.11.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.11.0)
   - Add DSL's to support text similarity checks using the DSC (Dice Similarity Coefficient) algorithm:
-    - `<textRef> should[ not] <be|be less than|be at most|be more than|be at least> <percentage>% similar to "<text>"[ ignoring case]`
-    - `<textRef1> should[ not] <be|be less than|be at most|be more than|be at least> <percentage>% similar to <textRef2>[ ignoring case]`
-    - `I capture the similarity score of <textRef> compared to "<text>"[ ignoring case] as <name>`
-    - `I capture the similarity score of <textRef1> compared to <textRef2>[ ignoring case] as <name>`
-    - `I capture the similarity score of <textRef> compared to "<text>"[ ignoring case]`
-    - `I capture the similarity score of <textRef1> compared to <textRef2>[ ignoring case]`
+    - `<textRef> should[ not] <be|be less than|be at most|be more than|be at least> <percentage>% similar to "<text>"`
+    - `<textRef1> should[ not] <be|be less than|be at most|be more than|be at least> <percentage>% similar to <textRef2>`
+    - `I capture the similarity score of <textRef> compared to "<text>" as <name>`
+    - `I capture the similarity score of <textRef1> compared to <textRef2> as <name>`
+    - `I capture the similarity score of <textRef> compared to "<text>"`
+    - `I capture the similarity score of <textRef1> compared to <textRef2>`
 
 3.11.2
 ======
