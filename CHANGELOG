@@ -1,3 +1,9 @@
+3.62.2
+======
+Apr 26, 2024
+- Update selenium from v4.19.1 to v4.20.0
+- Default `gwen.web.remote.localFileDetector` to `auto` so it is automatically enabled for remote driver sessions
+
 3.62.1
 ======
 Apr 15, 2024
