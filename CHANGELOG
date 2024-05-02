@@ -1,3 +1,9 @@
+3.62.3
+======
+May 2, 2024
+- Update Gwen core from v3.53.1 to v[3.53.2](https://github.com/gwen-interpreter/gwen/releases/tag/v3.53.2)
+  - Fix parameters delimiter in JS function resolver to accept blanks
+
 3.62.2
 ======
 Apr 26, 2024
