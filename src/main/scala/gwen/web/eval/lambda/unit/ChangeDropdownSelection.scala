@@ -56,7 +56,7 @@ class ChangeDropdownSelection(element: String, by: DropdownSelection, value: Str
               val optionValue = if (bound) ctx.getBoundValue(value) else value
               ctx.deselectByValue(binding, optionValue)
           }
-        case _ => // noop
+        case _ => // No-op
       }
     }
   }

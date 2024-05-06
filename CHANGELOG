@@ -1,3 +1,9 @@
+3.62.4
+======
+May 7, 2024
+- Update Gwen core from v3.53.2 to v[3.53.3](https://github.com/gwen-interpreter/gwen/releases/tag/v3.53.3)
+  - Generate No-op HTML report when no input data is provided
+
 3.62.3
 ======
 May 2, 2024
@@ -544,7 +550,7 @@ May 10, 2023
 ======
 Apr 28, 2023
 - Update Gwen core from v3.35.2 to v[3.35.3](https://github.com/gwen-interpreter/gwen/releases/tag/v3.35.3)
-  - Fix new line issue in REPL paste mode: dont print noop
+  - Fix new line issue in REPL paste mode: dont print No-op
 
 3.42.3
 ======
