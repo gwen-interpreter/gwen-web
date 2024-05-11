@@ -1,8 +1,8 @@
 enablePlugins(GitVersioning)
 
 // gwen core & web versions
-val gwenVersion = "3.53.3"
-val gwenWebVersion = "3.62.4"
+val gwenVersion = "3.53.4"
+val gwenWebVersion = "3.62.5"
 
 git.baseVersion := gwenWebVersion
 git.useGitDescribe := true
@@ -30,7 +30,7 @@ lazy val projectSettings = Seq(
   licenses += "Apache License, Version 2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0.html"),
   homepage := Some(url("https://gweninterpreter.org")),
   versionScheme := Some("semver-spec"),
-  scalaVersion := "3.4.0",
+  scalaVersion := "3.4.1",
   crossPaths := false,
   trapExit := false,
   scalacOptions ++= Seq(
@@ -49,7 +49,7 @@ lazy val projectSettings = Seq(
 lazy val mainDependencies = {
   Seq(
     "org.seleniumhq.selenium" % "selenium-java" % "4.20.0",
-    "io.github.bonigarcia" % "webdrivermanager" % "5.7.0" excludeAll(
+    "io.github.bonigarcia" % "webdrivermanager" % "5.8.0" excludeAll(
       ExclusionRule(organization = "org.slf4j")
     )
   ) ++ mainOverrides
@@ -57,25 +57,25 @@ lazy val mainDependencies = {
 
 lazy val mainOverrides = {
   Seq(
-    "org.slf4j" % "slf4j-api" % "1.7.36",
-    "com.fasterxml.jackson.core" %  "jackson-databind" % "2.16.1",
-    "com.google.guava" % "guava" % "33.0.0-jre",
-    "org.reactivestreams" % "reactive-streams" % "1.0.4"
+    "com.fasterxml.jackson.core" %  "jackson-databind" % "2.17.1",
+    "com.google.guava" % "guava" % "33.2.0-jre",
+    "org.reactivestreams" % "reactive-streams" % "1.0.4",
+    "org.slf4j" % "slf4j-api" % "1.7.36"
   )
 }
 
 dependencyOverrides ++= Seq(
-  "org.slf4j" % "slf4j-api" % "1.7.36",
-  "com.fasterxml.jackson.core" %  "jackson-databind" % "2.16.1",
-  "com.google.guava" % "guava" % "33.0.0-jre",
-  "org.reactivestreams" % "reactive-streams" % "1.0.4"
+  "com.fasterxml.jackson.core" %  "jackson-databind" % "2.17.1",
+  "com.google.guava" % "guava" % "33.2.0-jre",
+  "org.reactivestreams" % "reactive-streams" % "1.0.4",
+  "org.slf4j" % "slf4j-api" % "1.7.36"
 )
 
 lazy val testDependencies = {
   Seq(
-    "org.scalatest" %% "scalatest" % "3.2.17",
+    "org.scalatest" %% "scalatest" % "3.2.18",
     "org.scalatestplus" %% "mockito-4-2" % "3.2.11.0",
-    "org.mockito" % "mockito-core" % "4.9.0"
+    "org.mockito" % "mockito-core" % "4.11.0"
   ).map(_ % Test)
 }
 
