@@ -1,6 +1,10 @@
+3.62.6
+======
+- Update selenium from v4.20.0 to v4.21.0
+
 3.62.5
 ======
-May 11, 2024
+May 11, 2024 =OR(B3>=TODAY(),MONTH(TODAY())=MONTH(B3))
 - Update dependencies
   - Update webdrivermanager from v5.7.0 to v5.8.0
 - Update Gwen core from v3.53.3 to v[3.53.4](https://github.com/gwen-interpreter/gwen/releases/tag/v3.53.4)
