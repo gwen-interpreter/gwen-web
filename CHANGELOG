@@ -1,3 +1,9 @@
+3.62.8
+======
+27 May 2024
+- Update Gwen core from v3.53.5 to v[3.53.6](https://github.com/gwen-interpreter/gwen/releases/tag/v3.53.6)
+  - Use fixed thread pool executor (instead of work stealing thread pool) for parallel excecution
+
 3.62.7
 ======
 May 20, 2024
