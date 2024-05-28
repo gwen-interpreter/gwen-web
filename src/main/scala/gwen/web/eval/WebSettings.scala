@@ -508,6 +508,14 @@ object WebSettings extends LazyLogging {
   }
 
   /**
+   * If set, enables remote webdriver session retries if `gwen.web.remote.url` is set (default is auto).
+   */
+  def `gwen.web.remote.sessionRetries`: Boolean = {
+    val auto = Settings.getOpt("gwen.web.remote.sessionRetries").exists(_ == "auto")
+    (auto && `gwen.web.remote.url`.nonEmpty) || (!auto && Settings.getBoolean("gwen.web.remote.sessionRetries"))
+  }
+
+  /**
    * Provides access to the `gwen.web.selenium.manager` setting used to determine the web driver manager
    * implementation to use (default is `SeleniumManager`). Other option is `WebDriverManager`.
    */
@@ -521,5 +529,7 @@ object WebSettings extends LazyLogging {
 
   val enableVideoKey1 = "gwen.web.capabilities.selenoid:options.enableVideo"
   val enableVideoKey2 = "gwen.web.capability.selenoid:options.enableVideo"
+
+  lazy val maxRetries: Int = GwenSettings.availableProcessors / 4
 
 }

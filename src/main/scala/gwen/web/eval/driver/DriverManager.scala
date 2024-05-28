@@ -87,9 +87,11 @@ class DriverManager() extends LazyLogging {
 
   /** Provides private access to the web driver */
   private def webDriver: WebDriver = drivers.getOrElse(session, {
-      loadWebDriver tap { driver =>
-        drivers += (session -> driver)
+      val driver = retry {
+        loadWebDriver
       }
+      drivers += (session -> driver)
+      driver
     })
 
   /** Resets the driver manager. */
@@ -104,17 +106,29 @@ class DriverManager() extends LazyLogging {
 
   /** Quits a named browser and associated web driver instance. */
   def quit(name: String): Unit = {
-    drivers.get(name) foreach { driver =>
+    drivers.remove(name) foreach { driver =>
       try {
         logger.info(s"Closing browser session${ if(name == "primary") "" else s": $name"}")
         driver.quit()
-        drivers.remove(name)
         eventDispatcher.sessionClosed(driver)
       } finally {
         DriverManager.releaseDriverPermit()
       }
     }
     session = "primary"
+  }
+
+  def retry[T](body: => T): T = {
+    def retry(attempts: Int): T = {
+      try {
+        body
+      } catch {
+        case e: Exception if attempts > 0 =>
+          Thread.sleep((WebSettings.maxRetries + 1 - attempts) * 1000)
+          retry(attempts - 1)
+      }
+    }
+    retry(if (WebSettings.`gwen.web.remote.sessionRetries`) WebSettings.maxRetries else 0)
   }
 
    /**

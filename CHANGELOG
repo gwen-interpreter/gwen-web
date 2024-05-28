@@ -1,3 +1,11 @@
+3.63.0
+======
+28 May 2024
+- Introduce new `gwen.web.remote.sessionRetries` setting:
+  - Valid values are `true`, `false`, or `auto`
+  - Default is `auto` to enable session retries whenenver `gwen.web.remote.url` is set
+  - When enabled, the number of retry attempts is determined by the number of available CPU cores divided by 4. The first attempt waits 1 second, the next 2 seconds, the next 3 seconds and so on until all attempts are exausted.
+
 3.62.8
 ======
 27 May 2024
