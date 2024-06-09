@@ -1,10 +1,16 @@
+3.64.0
+======
+9 Jun 2024
+- Update Gwen core from v3.53.6 to v[3.54.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.54.0)
+  - Add support for structured JSON input data
+
 3.63.0
 ======
 28 May 2024
 - Introduce new `gwen.web.remote.sessionRetries` setting:
   - Valid values are `true`, `false`, or `auto`
   - Default is `auto` to enable session retries whenenver `gwen.web.remote.url` is set
-  - When enabled, the number of retry attempts is determined by the number of available CPU cores divided by 4. The first attempt waits 1 second, the next 2 seconds, the next 3 seconds and so on until all attempts are exausted.
+  - When enabled, the number of retry attempts is determined by the number of available CPU cores divided by 4. The first failed attempt waits 1 second, the next 2 seconds, the next 3 seconds and so on until all attempts are exhausted.
 
 3.62.8
 ======

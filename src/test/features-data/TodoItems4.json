@@ -1,0 +1,20 @@
+[
+  {
+    "Item": {
+      "Name": "Mow the lawn",
+      "Status": "pending"
+    }
+  },
+  {
+    "Item": {
+      "Name": "Do the washing",
+      "Status": "done"
+    }
+  },
+  {
+    "Item": {
+      "Name": "Take a break",
+      "Status": "pending"
+    }
+  }
+]

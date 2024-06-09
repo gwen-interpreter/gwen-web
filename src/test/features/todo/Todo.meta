@@ -79,6 +79,20 @@ Feature: TodoMVC meta
      When I add a <Status> "<Item>" item
 
   @StepDef
+  @Examples(file="src/test/features-data/TodoItems4.json",prefix="todo.")
+  @Action
+  Scenario Outline: I load items from deep JSON file
+     When I add a <todo.Item.Status> "<todo.Item.Name>" item
+
+  @StepDef
+  @Examples("src/test/features-data/TodoItems5.json")
+  @Action
+  Scenario Outline: I load items from deep JSON array
+     When I add a <item.1.Status> "<item.0.Name>" item
+      And @Eager status history count is defined by js "${item.1.StatusHistory}.length"
+      And I capture status history count as count
+
+  @StepDef
   @Action
   Scenario: I add a pending "<todo>" item
      When I add a "$<todo>" item

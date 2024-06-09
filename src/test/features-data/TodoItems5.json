@@ -1,0 +1,33 @@
+[
+  {
+    "item": [
+      { "Name": "Bake a cake" },
+      { "Status": "pending",
+        "StatusHistory": [
+          "pending"
+        ]
+      }
+    ]
+  },
+  {
+    "item": [
+      { "Name": "Grab a coffee" },
+      { "Status": "done",
+        "StatusHistory": [
+          "pending",
+          "done"
+        ]
+      }
+    ]
+  },
+  {
+    "item": [
+      { "Name": "Watch a movie" },
+      { "Status": "pending",
+        "StatusHistory": [
+          "pending"
+        ]
+      }
+    ]
+  }
+]
