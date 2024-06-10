@@ -74,6 +74,7 @@ class WebDslTest extends BaseTest with Matchers with MockitoSugar {
     envState.scopes.set("<textRef>", "source")
     envState.scopes.set("<textRef1>", "source")
     envState.scopes.set("<textRef2>", "source")
+    envState.scopes.set("<arrayRef>", """ [ "source "] """)
     envState.scopes.set("<xmlRef>", "xml")
     envState.scopes.set("<jsonRef>", "json")
     envState.scopes.topScope.pushObject("table", new FlatTable(TableType.horizontal, List(List("1", "2")), List("a", "b")))

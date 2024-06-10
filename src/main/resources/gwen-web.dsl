@@ -3218,6 +3218,8 @@ I maximise the window
 <step> if <element> does not match template "<expression>"
 <step> if <element> does not match template file "<filepath>"
 <step> for each <entry> in <textRef> delimited by "<delimiter>"
+<step> for each <entry> in json array <arrayRef>
+<step> for each <entry> in JSON array <arrayRef>
 I drag and drop <sourceElement> to <targetElement>
 I append "<text>" to <element>
 I append <reference> to <element>
