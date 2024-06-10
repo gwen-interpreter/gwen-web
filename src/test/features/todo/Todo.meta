@@ -88,8 +88,8 @@ Feature: TodoMVC meta
   @Examples("src/test/features-data/TodoItems5.json")
   @Action
   Scenario Outline: I load items from deep JSON array
-     When I add a <item.1.Status> "<item.0.Name>" item
-      And @Eager status history count is defined by js "${item.1.StatusHistory}.length"
+     When I add a ${item[1].Status} "${item[0].Name}" item
+      And status history count is defined by js "${item[1].StatusHistory}.length"
       And I capture status history count as count
 
   @StepDef
