@@ -1,3 +1,11 @@
+3.64.1
+======
+10 Jun 2024
+- Update Gwen core from v3.54.0 to v[3.54.1](https://github.com/gwen-interpreter/gwen/releases/tag/v3.54.1)
+  - Support single top level object in JSON input data (in addition to array)
+  - Sort JSON input data by key names
+  - Convert nulls to blank when reading JSON properties
+
 3.64.0
 ======
 9 Jun 2024
