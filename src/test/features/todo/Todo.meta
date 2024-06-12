@@ -93,6 +93,21 @@ Feature: TodoMVC meta
       And I capture status history count as count
 
   @StepDef
+  @Examples("src/test/features-data/TodoItems6.json")
+  @Action
+  Scenario Outline: I load items by loopoing over nested JSON array
+    When I add nested item for each item in todo.items array
+     
+  @StepDef
+  Scenario: I add nested item
+     When I add a ${item.Status} "${item.Name}" item
+      And I bind history for each history in item.StatusHistory array
+
+  @StepDef
+  Scenario: I bind history
+    Given history item is "${history}"
+
+  @StepDef
   @Action
   Scenario: I add a pending "<todo>" item
      When I add a "$<todo>" item

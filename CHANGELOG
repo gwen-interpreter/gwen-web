@@ -1,3 +1,11 @@
+3.66.0
+======
+13 Jun 2024
+- Update Gwen core from v3.55.0 to v[3.56.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.56.0)
+  - Json data bindings for nested array loops
+  - Simplified DSL for looping over JSON arrays
+    - `<step> for each <entry> in <arrayRef> array`
+
 3.65.0
 ======
 12 Jun 2024

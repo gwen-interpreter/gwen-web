@@ -1,0 +1,28 @@
+{
+  "todo": {
+    "items": [
+      { 
+        "Name": "Fly a kite",
+        "Status": "pending",
+        "StatusHistory": [
+          "pending"
+        ]
+      },
+      { 
+        "Name": "Have a meal",
+        "Status": "done",
+        "StatusHistory": [
+          "pending",
+          "done"
+        ]
+      },
+      { 
+        "Name": "Go to bed",
+        "Status": "pending",
+        "StatusHistory": [
+          "pending"
+        ]
+      }
+    ]
+  }
+}
