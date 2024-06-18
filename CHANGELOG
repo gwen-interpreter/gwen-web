@@ -1,3 +1,19 @@
+3.67.0
+======
+18 Jun 2024
+- Update Gwen core from v3.56.0 to v[3.57.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.57.0)
+  - Add `@Masked` annotation to mask dynamically evaluated data bound by the follwing binding DSLs. If specified, then returned data will be masked in all logs and outputs.
+    - `<name> is defined by <javascript|js> "<expression>"`
+    - `<name> is defined by <javascriptRef> applied to "<argument>"`
+    - `<name> is defined by <javascriptRef> applied to "<arguments>" delimited by "<delimiter>"`
+    - `<name> is defined by system process "<process>"`
+    - `<name> is defined by system process "<process>" delimited by "<delimiter>"`
+    - `<name> is defined by unix system process "<process>"`
+    - `<name> is defined by the <text|node|nodeset> in <xmlRef> by xpath "<expression>"`
+    - `<name> is defined in <textRef> by regex "<expression>"`
+    - `<name> is defined in <jsonRef> by json path "<expression>"`
+    - `<name> is defined in the <dbName> database by sql "<selectStmt>"`
+
 3.66.0
 ======
 13 Jun 2024
