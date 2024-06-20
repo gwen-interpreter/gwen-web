@@ -168,10 +168,10 @@ class DriverManager() extends LazyLogging {
     val browserName = Option(caps.getBrowserName).map(_.trim).filter(_.nonEmpty).getOrElse(WebSettings.`gwen.target.browser`.toString).toLowerCase
     val browser = WebBrowser.parse(browserName)
     val options = browser match {
-      case WebBrowser.firefox => firefoxOptions()
-      case WebBrowser.chrome => chromeOptions()
+      case WebBrowser.firefox => firefoxOptions(true)
+      case WebBrowser.chrome => chromeOptions(true)
       case WebBrowser.ie => ieOptions()
-      case WebBrowser.edge => edgeOptions()
+      case WebBrowser.edge => edgeOptions(true)
       case WebBrowser.safari => safariOptions()
     }
     logger.info(s"Starting remote $browser session${ if(session == "primary") "" else s": $session"}")
@@ -194,16 +194,18 @@ class DriverManager() extends LazyLogging {
     }
   }
 
-  private def firefoxOptions() : FirefoxOptions = {
+  private def firefoxOptions(remote: Boolean) : FirefoxOptions = {
     val firefoxProfile = new FirefoxProfile() tap { profile =>
-      WebSettings.`gwen.web.firefox.prefs` foreach { case (name, value) =>
-        try {
-          logger.info(s"Setting firefox preference: $name=$value")
-          profile.setPreference(name, Integer.valueOf(value.trim))
-        } catch {
-          case _: Throwable =>
-            if (value.matches("(true|false)")) profile.setPreference(name, java.lang.Boolean.valueOf(value.trim))
-            else profile.setPreference(name, value)
+      if (!remote) {
+        WebSettings.`gwen.web.firefox.prefs` foreach { case (name, value) =>
+          try {
+            logger.info(s"Setting firefox preference: $name=$value")
+            profile.setPreference(name, Integer.valueOf(value.trim))
+          } catch {
+            case _: Throwable =>
+              if (value.matches("(true|false)")) profile.setPreference(name, java.lang.Boolean.valueOf(value.trim))
+              else profile.setPreference(name, value)
+          }
         }
       }
       WebSettings.`gwen.web.useragent` foreach { agent =>
@@ -235,11 +237,11 @@ class DriverManager() extends LazyLogging {
       }
   }
 
-  private def chromeOptions() : ChromeOptions = chromiumOptions(WebBrowser.chrome, new ChromeOptions())
+  private def chromeOptions(remote: Boolean) : ChromeOptions = chromiumOptions(WebBrowser.chrome, remote, new ChromeOptions())
 
-  private def edgeOptions() : EdgeOptions = chromiumOptions(WebBrowser.edge, new EdgeOptions())
+  private def edgeOptions(remote: Boolean) : EdgeOptions = chromiumOptions(WebBrowser.edge, remote, new EdgeOptions())
 
-  private def chromiumOptions[T <: ChromiumOptions[T]](browser: WebBrowser, options: T): T = {
+  private def chromiumOptions[T <: ChromiumOptions[T]](browser: WebBrowser, remote: Boolean, options: T): T = {
     WebSettings.`gwen.web.useragent` foreach { agent =>
       logger.info(s"Setting $browser argument: --user-agent=$agent")
       options.addArguments(s"--user-agent=$agent")
@@ -271,23 +273,25 @@ class DriverManager() extends LazyLogging {
       logger.info(s"Setting $browser argument: --headless=new")
       options.addArguments("--headless=new")
     }
-    val prefs = new java.util.HashMap[String, Object]()
-    val browserPrefs = browser match {
-      case WebBrowser.chrome => WebSettings.`gwen.web.chrome.prefs`
-      case _ => WebSettings.`gwen.web.edge.prefs`
-    }
-    browserPrefs foreach { case (name, value) =>
-      logger.info(s"Setting $browser preference: $name=$value")
-      try {
-        prefs.put(name, Integer.valueOf(value.trim))
-      } catch {
-        case _: Throwable =>
-          if (value.matches("(true|false)")) prefs.put(name, java.lang.Boolean.valueOf(value.trim))
-          else prefs.put(name, value)
+    if (!remote) {
+      val prefs = new java.util.HashMap[String, Object]()
+      val browserPrefs = browser match {
+        case WebBrowser.chrome => WebSettings.`gwen.web.chrome.prefs`
+        case _ => WebSettings.`gwen.web.edge.prefs`
       }
-    }
-    if (!prefs.isEmpty) {
-      options.setExperimentalOption("prefs", prefs)
+      browserPrefs foreach { case (name, value) =>
+        logger.info(s"Setting $browser preference: $name=$value")
+        try {
+          prefs.put(name, Integer.valueOf(value.trim))
+        } catch {
+          case _: Throwable =>
+            if (value.matches("(true|false)")) prefs.put(name, java.lang.Boolean.valueOf(value.trim))
+            else prefs.put(name, value)
+        }
+      }
+      if (!prefs.isEmpty) {
+        options.setExperimentalOption("prefs", prefs)
+      }
     }
     val browserExensions = browser match {
       case WebBrowser.chrome => WebSettings.`gwen.web.chrome.extensions`
@@ -360,14 +364,14 @@ class DriverManager() extends LazyLogging {
     if (DriverManagerImpl.isWebDriverManager && WebSettings.`webdriver.chrome.driver`.isEmpty) {
       WebDriverManager.chromedriver().setup()
     }
-    new ChromeDriver(chromeOptions())
+    new ChromeDriver(chromeOptions(false))
   }
 
   private [eval] def firefox(): WebDriver = {
     if (DriverManagerImpl.isWebDriverManager && WebSettings.`webdriver.gecko.driver`.isEmpty) {
       WebDriverManager.firefoxdriver().setup()
     }
-    new FirefoxDriver(firefoxOptions())
+    new FirefoxDriver(firefoxOptions(false))
   }
 
   private [eval] def ie(): WebDriver = {
@@ -381,7 +385,7 @@ class DriverManager() extends LazyLogging {
     if (DriverManagerImpl.isWebDriverManager && WebSettings.`webdriver.edge.driver`.isEmpty) {
       WebDriverManager.edgedriver().setup()
     }
-    new EdgeDriver(edgeOptions())
+    new EdgeDriver(edgeOptions(false))
   }
 
   private [eval] def safari(): WebDriver = {
