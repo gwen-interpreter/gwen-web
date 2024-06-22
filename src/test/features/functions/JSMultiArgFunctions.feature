@@ -221,3 +221,5 @@ Feature: Multi Argument Functions
      Then Multi argument functions should work
       And Multi argument functions in DocStrings should work
       And Multi argument functions in documented examples should work
+      And text1 should not be "${gwen.eval.duration}"
+      And text2 should not be "${gwen.eval.duration.msecs}"

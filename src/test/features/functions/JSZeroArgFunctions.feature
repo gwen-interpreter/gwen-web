@@ -64,3 +64,5 @@ Feature: Zero Argument Functions
       And Zero argument functions in DocStrings should work
       And Zero argument functions in documented examples should work
       And Standard JS arrows should not be impacted
+      And name should not be "${gwen.eval.duration}"
+      And desc should not be "${gwen.eval.duration.msecs}"

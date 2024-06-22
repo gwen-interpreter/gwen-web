@@ -7,6 +7,8 @@ Feature: String rules
         And string 2 is ""
        When I join the two strings
        Then the result should be ""
+        And string 1 should not be "${gwen.eval.duration}"
+        And string 2 should not be "${gwen.eval.duration.msecs}"
 
     Scenario Template: Joining <string 1> and <string 2> should yield <result>
 
@@ -16,6 +18,8 @@ Feature: String rules
         And string 2 is "<string 2>"
        When I join the two strings
        Then the result should be "<result>"
+        And string 1 should not be "${gwen.eval.duration}"
+        And string 2 should not be "${gwen.eval.duration.msecs}"
 
       Examples: Basic string concatenation
 
@@ -30,6 +34,7 @@ Feature: String rules
       Given the result is ""
        When I join two strings in meta
        Then the result should not be ""
+        And the result should not be "${gwen.eval.duration}"
 
   Rule: Replacing a substring in a string should result in substitution of the substring
 
@@ -39,6 +44,8 @@ Feature: String rules
         And string 3 is ""
        When I substitute string 1 for string 2 in string 3
        Then the result should be ""
+        And string 1 should not be "${gwen.eval.duration}"
+        And string 2 should not be "${gwen.eval.duration.msecs}"
 
     Scenario Template: Substituting <string 1> for <string 2> in <string 3> should yield <result>
 
@@ -49,6 +56,8 @@ Feature: String rules
         And string 3 is "<string 3>"
        When I substitute string 1 for string 2 in string 3
        Then the result should be "<result>"
+        And string 1 should not be "${gwen.eval.duration}"
+        And string 2 should not be "${gwen.eval.duration.msecs}"
 
       Examples: Basic string concatenation
 
