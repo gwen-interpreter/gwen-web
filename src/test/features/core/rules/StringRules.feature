@@ -9,6 +9,7 @@ Feature: String rules
        Then the result should be ""
         And string 1 should not be "${gwen.eval.duration}"
         And string 2 should not be "${gwen.eval.duration.msecs}"
+        And string 2 should not be "${gwen.eval.duration.secs}"
 
     Scenario Template: Joining <string 1> and <string 2> should yield <result>
 
@@ -20,6 +21,7 @@ Feature: String rules
        Then the result should be "<result>"
         And string 1 should not be "${gwen.eval.duration}"
         And string 2 should not be "${gwen.eval.duration.msecs}"
+        And string 2 should not be "${gwen.eval.duration.secs}"
 
       Examples: Basic string concatenation
 
@@ -46,6 +48,7 @@ Feature: String rules
        Then the result should be ""
         And string 1 should not be "${gwen.eval.duration}"
         And string 2 should not be "${gwen.eval.duration.msecs}"
+        And string 2 should not be "${gwen.eval.duration.secs}"
 
     Scenario Template: Substituting <string 1> for <string 2> in <string 3> should yield <result>
 
@@ -58,6 +61,7 @@ Feature: String rules
        Then the result should be "<result>"
         And string 1 should not be "${gwen.eval.duration}"
         And string 2 should not be "${gwen.eval.duration.msecs}"
+        And string 2 should not be "${gwen.eval.duration.secs}"
 
       Examples: Basic string concatenation
 

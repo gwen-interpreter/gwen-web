@@ -1,3 +1,10 @@
+3.68.1
+======
+24 Jun 2024
+- Update Gwen core from v3.58.1 to v[3.58.2](https://github.com/gwen-interpreter/gwen/releases/tag/v3.58.2)
+  - Add implicit values for capturing evaluation duration in seconds
+    - `gwen.eval.duration.secs` - the formatted duration (eg: 23.5)
+
 3.68.0
 ======
 22 Jun 2024

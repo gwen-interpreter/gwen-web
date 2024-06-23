@@ -66,3 +66,4 @@ Feature: Zero Argument Functions
       And Standard JS arrows should not be impacted
       And name should not be "${gwen.eval.duration}"
       And desc should not be "${gwen.eval.duration.msecs}"
+      And desc should not be "${gwen.eval.duration.secs}"
