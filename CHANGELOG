@@ -1,3 +1,12 @@
+3.69.0
+======
+3 Jul 2024
+- Update Gwen core from v3.58.2 to v[3.59.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.59.0)
+  - Introduce `Parallel` annotation on outline examples
+    - Cannot be used in a nested manner (an error will be raised on any such detection)
+    - Effective only when Gwen is invoked without the `--parallel` option (i.e: when no other parallel execution is taking place). It will be implicitly removed otherwise.
+  - Added implicit value `gwen.feature.language` 
+
 3.68.2
 ======
 1 Jul 2024
