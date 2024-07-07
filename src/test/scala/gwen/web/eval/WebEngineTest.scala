@@ -103,7 +103,10 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
   private var ctx: WebContext = uninitialized
   private var mockScopes: ScopedDataStack = uninitialized
   private var mockTopScope: TopScope = uninitialized
-  private var mockParamScope: ParameterStack = uninitialized
+  private var mockParamScope: TransientStack = uninitialized
+  private var mockRuleScope: TransientStack = uninitialized
+  private var mockScenarioScope: TransientStack = uninitialized
+  private var mockStepDefScope: TransientStack = uninitialized
   private var mockLocator: WebElementLocator = uninitialized
 
   override def beforeEach(): Unit = {
@@ -111,12 +114,21 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     ctx = spy(new WebContext(GwenOptions(), envState, mock[DriverManager]))
     mockScopes = mock[ScopedDataStack]
     mockTopScope = mock[TopScope]
-    mockParamScope = mock[ParameterStack]
+    mockParamScope = mock[TransientStack]
+    mockRuleScope = mock[TransientStack]
+    mockScenarioScope = mock[TransientStack]
+    mockStepDefScope = mock[TransientStack]
     mockLocator = mock[WebElementLocator]
     doReturn(mockScopes).when(envState).scopes
     doReturn(mockTopScope).when(mockScopes).topScope
     doReturn(mockTopScope).when(ctx).topScope
     doReturn(mockParamScope).when(mockScopes).paramScope
+    doReturn(mockRuleScope).when(mockTopScope).ruleScope
+    doReturn(None).when(mockRuleScope).getOpt(any())
+    doReturn(mockScenarioScope).when(mockTopScope).scenarioScope
+    doReturn(None).when(mockScenarioScope).getOpt(any())
+    doReturn(mockStepDefScope).when(mockTopScope).stepDefScope
+    doReturn(None).when(mockStepDefScope).getOpt(any())
     doReturn(mockLocator).when(ctx).webElementlocator
     doReturn(false).when(ctx).isEvaluatingTopLevelStep
     doReturn(SpecType.Meta).when(ctx).specType

@@ -1,10 +1,11 @@
-3.69.1
+3.70.0
 ======
-7 July 2024
-- Update Gwen core from v3.59.0 to v[3.59.1](https://github.com/gwen-interpreter/gwen/releases/tag/v3.59.1)
+8 July 2024
+- Update Gwen core from v3.59.0 to v[3.60.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.60.0)
   - Fix context cloning and Synchronized StepDefs for parallel outline examples
   - Replace flash scope with scope reference
   - Set transparent background on HTML report dropdowns
+  - Introduce implicit feature, rule, scenario and StepDef level scopes
 
 3.69.0
 ======
