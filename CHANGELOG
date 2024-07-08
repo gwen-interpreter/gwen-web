@@ -1,3 +1,9 @@
+3.70.1
+======
+9 July 2024
+- Update Gwen core from v3.60.0 to v[3.60.1](https://github.com/gwen-interpreter/gwen/releases/tag/v3.60.1)
+  - Fix `gwen.eval.status.message` implicit
+
 3.70.0
 ======
 8 July 2024
