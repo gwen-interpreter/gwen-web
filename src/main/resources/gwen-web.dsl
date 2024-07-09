@@ -1710,6 +1710,7 @@ I reset my <name> setting
 <name> is defined by property "<name>"
 <name> is defined by setting "<name>"
 <name> is defined by file "<filepath>"
+<name> is defined by <encoding> file "<filepath>"
 <name> is defined by the text in <xmlRef> by xpath "<expression>"
 <name> is defined by the node in <xmlRef> by xpath "<expression>"
 <name> is defined by the nodeset in <xmlRef> by xpath "<expression>"

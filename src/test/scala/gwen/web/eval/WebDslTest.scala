@@ -77,6 +77,7 @@ class WebDslTest extends BaseTest with Matchers with MockitoSugar {
     envState.scopes.set("<arrayRef>", """ [ "source "] """)
     envState.scopes.set("<xmlRef>", "xml")
     envState.scopes.set("<jsonRef>", "json")
+    envState.scopes.set("<encoding>", "utf8")
     envState.scopes.topScope.pushObject("table", new FlatTable(TableType.horizontal, List(List("1", "2")), List("a", "b")))
 
     val engine = new WebEngine()
