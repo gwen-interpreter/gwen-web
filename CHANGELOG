@@ -1,9 +1,15 @@
+3.71.1
+======
+9 July 2024
+- Update Gwen core from v3.61.0 to v[3.61.1](https://github.com/gwen-interpreter/gwen/releases/tag/v3.61.1)
+  - Use `ISO-8859-1` encoding if text files cannot be read using `UTF-8`
+
 3.71.0
 ======
 9 July 2024
 - Update Gwen core from v3.60.1 to v[3.61.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.61.0)
   - Add DSL to read in file using a given character encoding
-    - <name> is defined by <encoding> file "<filepath>"
+    - `<name> is defined by <encoding> file "<filepath>"`
 
 3.70.1
 ======
