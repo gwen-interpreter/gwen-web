@@ -154,19 +154,21 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.checkElementState" should "return when the state matches 'displayed'" in {
-    val elemBinding = LocatorBinding("name", SelectorType.id, "name", None, Some(Duration.Zero), None, ctx)
+    val elemBinding = spy(LocatorBinding("name", SelectorType.id, "name", None, Some(Duration.Zero), None, ctx))
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
-    doReturn(true).when(ctx).isDisplayed(mockElement)
+    doReturn(elemBinding).when(elemBinding).withFastTimeout
+    doReturn(true).when(ctx).isDisplayed(elemBinding)
     ctx.checkElementState(elemBinding, ElementState.displayed, negate = false, None, AssertionMode.hard)
     ctx.waitForElementState(elemBinding, ElementState.displayed, negate = false)
   }
 
   "WebContext.checkElementState" should "return when the state matches 'hidden'" in {
-    val elemBinding = LocatorBinding("name", SelectorType.id, "name", None, Some(Duration.Zero), None, ctx)
+    val elemBinding = spy(LocatorBinding("name", SelectorType.id, "name", None, Some(Duration.Zero), None, ctx))
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
-    doReturn(false).when(ctx).isDisplayed(mockElement)
+    doReturn(elemBinding).when(elemBinding).withFastTimeout
+    doReturn(false).when(ctx).isDisplayed(elemBinding)
     ctx.checkElementState(elemBinding, ElementState.hidden, negate = false, None, AssertionMode.hard)
     ctx.waitForElementState(elemBinding, ElementState.hidden, negate = false)
   }
@@ -226,19 +228,21 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.checkElementState" should "return when the state should not match 'displayed'" in {
-    val elemBinding = LocatorBinding("name", SelectorType.id, "name", None, Some(Duration.Zero), None, ctx)
+    val elemBinding = spy(LocatorBinding("name", SelectorType.id, "name", None, Some(Duration.Zero), None, ctx))
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
-    doReturn(false).when(ctx).isDisplayed(mockElement)
+    doReturn(elemBinding).when(elemBinding).withFastTimeout
+    doReturn(false).when(ctx).isDisplayed(elemBinding)
     ctx.checkElementState(elemBinding, ElementState.displayed, negate = true, None, AssertionMode.hard)
     ctx.waitForElementState(elemBinding, ElementState.displayed, negate = true)
   }
 
   "WebContext.checkElementState" should "return when the state should not match 'hidden'" in {
-    val elemBinding = LocatorBinding("name", SelectorType.id, "name", None, Some(Duration.Zero), None, ctx)
+    val elemBinding = spy(LocatorBinding("name", SelectorType.id, "name", None, Some(Duration.Zero), None, ctx))
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
-    doReturn(true).when(ctx).isDisplayed(mockElement)
+    doReturn(elemBinding).when(elemBinding).withFastTimeout
+    doReturn(true).when(ctx).isDisplayed(elemBinding)
     ctx.checkElementState(elemBinding, ElementState.hidden, negate = true, None, AssertionMode.hard)
     ctx.waitForElementState(elemBinding, ElementState.hidden, negate = true)
   }
@@ -299,10 +303,11 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.checkElementState" should "fail when the state does not match 'displayed'" in {
-    val elemBinding = LocatorBinding("name", SelectorType.id, "name", None, Some(Duration.Zero), None, ctx)
+    val elemBinding = spy(LocatorBinding("name", SelectorType.id, "name", None, Some(Duration.Zero), None, ctx))
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
-    doReturn(false).when(ctx).isDisplayed(mockElement)
+    doReturn(elemBinding).when(elemBinding).withFastTimeout
+    doReturn(false).when(ctx).isDisplayed(elemBinding)
     withSetting("gwen.web.wait.seconds", "1") {
       intercept[AssertionError] {
         ctx.checkElementState(elemBinding, ElementState.displayed, negate = false, None, AssertionMode.hard)
@@ -314,10 +319,11 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.checkElementState" should "fail when the state does not match 'hidden'" in {
-    val elemBinding = LocatorBinding("name", SelectorType.id, "name", None, Some(Duration.Zero), None, ctx)
+    val elemBinding = spy(LocatorBinding("name", SelectorType.id, "name", None, Some(Duration.Zero), None, ctx))
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
-    doReturn(true).when(ctx).isDisplayed(mockElement)
+    doReturn(elemBinding).when(elemBinding).withFastTimeout
+    doReturn(true).when(ctx).isDisplayed(elemBinding)
     withSetting("gwen.web.wait.seconds", "1") {
       intercept[AssertionError] {
         ctx.checkElementState(elemBinding, ElementState.hidden, negate = false, None, AssertionMode.hard)
@@ -419,10 +425,11 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
   }
 
   "WebContext.checkElementState" should "fail when the state should not but does match 'displayed'" in {
-    val elemBinding = LocatorBinding("name", SelectorType.id, "name", None, Some(Duration.Zero), None, ctx)
+    val elemBinding = spy(LocatorBinding("name", SelectorType.id, "name", None, Some(Duration.Zero), None, ctx))
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
-    doReturn(true).when(ctx).isDisplayed(mockElement)
+    doReturn(elemBinding).when(elemBinding).withFastTimeout
+    doReturn(true).when(ctx).isDisplayed(elemBinding)
     withSetting("gwen.web.wait.seconds", "1") {
       intercept[AssertionError] {
         ctx.checkElementState(elemBinding, ElementState.displayed, negate = true, None, AssertionMode.hard)
@@ -437,7 +444,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("name", SelectorType.id, "name", None, Some(Duration.Zero), None, ctx)
     val mockElement = mock[WebElement]
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
-    doReturn(false).when(ctx).isDisplayed(mockElement)
+    doReturn(false).when(ctx).isDisplayed(elemBinding)
     withSetting("gwen.web.wait.seconds", "1") {
       intercept[AssertionError] {
         ctx.checkElementState(elemBinding, ElementState.hidden, negate = true, None, AssertionMode.hard)

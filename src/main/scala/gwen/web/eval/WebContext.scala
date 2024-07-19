@@ -688,41 +688,44 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     var result = false
     perform {
       Thread.sleep(WebSettings.`gwen.web.assertions.delayMillisecs`)
-      try {  
-        withWebElement(binding.withFastTimeout, s"waiting for ${binding.displayName} to${if (negate) " not" else ""} be $state") { webElement =>
-          result = state match {
-            case ElementState.displayed => 
-              if (!negate) isDisplayed(webElement)
-              else !isDisplayed(webElement)
-            case ElementState.hidden =>
-              if (!negate) !isDisplayed(webElement)
-              else isDisplayed(webElement)
-            case ElementState.checked =>
-              if (!negate) webElement.isSelected
-              else !webElement.isSelected
-            case ElementState.ticked =>
-              if (!negate) webElement.isSelected
-              else !webElement.isSelected
-            case ElementState.unchecked =>
-              if (!negate) !webElement.isSelected
-              else webElement.isSelected
-            case ElementState.unticked =>
-              if (!negate) !webElement.isSelected
-              else webElement.isSelected
-            case ElementState.enabled =>
-              if (!negate) webElement.isEnabled
-              else!webElement.isEnabled
-            case ElementState.disabled =>
-              if (!negate) !webElement.isEnabled
-              else webElement.isEnabled
+      val fastBinding = binding.withFastTimeout
+      state match {
+        case ElementState.displayed => 
+          result = if (!negate) isDisplayed(fastBinding) else !isDisplayed(fastBinding)
+        case ElementState.hidden =>
+          result = if (!negate) !isDisplayed(fastBinding) else isDisplayed(fastBinding)
+        case _ =>
+          try {  
+            withWebElement(fastBinding, s"waiting for ${binding.displayName} to${if (negate) " not" else ""} be $state") { webElement =>
+              result = state match {
+                case ElementState.checked =>
+                  if (!negate) webElement.isSelected
+                  else !webElement.isSelected
+                case ElementState.ticked =>
+                  if (!negate) webElement.isSelected
+                  else !webElement.isSelected
+                case ElementState.unchecked =>
+                  if (!negate) !webElement.isSelected
+                  else webElement.isSelected
+                case ElementState.unticked =>
+                  if (!negate) !webElement.isSelected
+                  else webElement.isSelected
+                case ElementState.enabled =>
+                  if (!negate) webElement.isEnabled
+                  else!webElement.isEnabled
+                case ElementState.disabled =>
+                  if (!negate) !webElement.isEnabled
+                  else webElement.isEnabled
+                case _ => false //never
+              }
+            }
+          } catch {
+            case e @ (_ :  NoSuchElementException | _ : NotFoundOrInteractableException | _ : WaitTimeoutException) =>
+              if (state == ElementState.displayed) result = negate
+              else if (state == ElementState.hidden) result = !negate
+              else throw e
           }
         }
-      } catch {
-        case e @ (_ :  NoSuchElementException | _ : NotFoundOrInteractableException | _ : WaitTimeoutException) =>
-          if (state == ElementState.displayed) result = negate
-          else if (state == ElementState.hidden) result = !negate
-          else throw e
-      }
     }
     result
   }
@@ -1411,13 +1414,15 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
   }
 
   /** Checks if an element is displayed. */
-  def isDisplayed(webElement: WebElement): Boolean = {
-    if (!isInViewport(webElement)) {
-      Try(scrollIntoView(webElement, ScrollTo.top, -100))
-      isDisplayedAndInViewport(webElement)
-    } else {
-      webElement.isDisplayed
-    }
+  def isDisplayed(binding: LocatorBinding): Boolean = {
+    Try {
+      withDriverAndElement(binding, s"trying to locate ${binding.displayName}") { (driver, webElement) =>
+        createActions(driver).moveToElement(webElement).perform()
+        if (!isInViewport(webElement)) {
+          Try(scrollIntoView(webElement, ScrollTo.top, -100))
+        }
+      }
+    } isSuccess
   }
 
   private def isDisplayedAndInViewport(webElement: WebElement): Boolean = {
