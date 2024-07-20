@@ -2,6 +2,7 @@
 ======
 20 July 2024
 - Fix wait until element is displayed DSL
+- Remove version from docker compose file
 
 3.71.1
 ======

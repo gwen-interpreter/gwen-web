@@ -1,4 +1,3 @@
-version: '3.5'
 services:
   chrome:
     image: selenoid/chrome:latest
