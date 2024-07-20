@@ -3,6 +3,15 @@
 20 July 2024
 - Fix wait until element is displayed DSL
 - Remove version from docker compose file
+- Update Gwen core from v3.61.1 to v[3.61.2](https://github.com/gwen-interpreter/gwen/releases/tag/v3.61.2)
+  - Update dependencies
+    - Update scala from v3.4.1 to v3.4.2
+    - Update jline from v3.26.1 to v3.26.3
+    - Update commons-codec from v1.17.0 to v1.17.1
+    - Update commons-text from v1.11.0 to v1.12.0
+    - Update scala-csv from v1.3.10 to v1.4.1
+    - Update jackson-databind from v2.17.1 to v2.17.2
+    - Update guava from v33.2.0-jre to v33.2.1-jre
 
 3.71.1
 ======

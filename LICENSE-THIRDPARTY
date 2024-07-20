@@ -24,17 +24,17 @@ org.brotli
 org.scala-lang
   +-scala-library:2.13.12
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0
-  +-scala3-library_3:3.4.1
+  +-scala3-library_3:3.4.2
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0
-  +-scaladoc_3:3.4.1
+  +-scaladoc_3:3.4.2
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0
-  +-tasty-core_3:3.4.1
+  +-tasty-core_3:3.4.2
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0
-  +-scala3-compiler_3:3.4.1
+  +-scala3-compiler_3:3.4.2
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0
-  +-scala3-interfaces:3.4.1
+  +-scala3-interfaces:3.4.2
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0
-  +-scala3-tasty-inspector_3:3.4.1
+  +-scala3-tasty-inspector_3:3.4.2
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0
 com.google.code.gson
   +-gson:2.11.0
@@ -52,7 +52,7 @@ com.typesafe
   +-config:1.4.3
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0
 com.github.tototoshi
-  +-scala-csv_3:1.3.10
+  +-scala-csv_3:1.4.1
   | +-Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.html
 org.apache.logging.log4j
   +-log4j-slf4j-impl:2.23.1
@@ -104,13 +104,15 @@ org.objenesis
   +-objenesis:3.3
   | +-no license specified
 org.jline
-  +-jline:3.26.1
+  +-jline:3.26.3
   | +-The BSD License - https://opensource.org/licenses/BSD-3-Clause
-  +-jline-terminal-jna:3.19.0
+  +-jline-terminal-jna:3.25.1
   | +-no license specified
-  +-jline-terminal:3.19.0
+  +-jline-native:3.25.1
   | +-no license specified
-  +-jline-reader:3.19.0
+  +-jline-terminal:3.25.1
+  | +-no license specified
+  +-jline-reader:3.25.1
   | +-no license specified
 net.minidev
   +-json-smart:2.5.0
@@ -123,11 +125,11 @@ org.scala-sbt
   +-compiler-interface:1.9.6
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0
 com.fasterxml.jackson.core
-  +-jackson-annotations:2.17.1
+  +-jackson-annotations:2.17.2
   | +-The Apache Software License, Version 2.0 - https://www.apache.org/licenses/LICENSE-2.0.txt
-  +-jackson-core:2.17.1
+  +-jackson-core:2.17.2
   | +-The Apache Software License, Version 2.0 - https://www.apache.org/licenses/LICENSE-2.0.txt
-  +-jackson-databind:2.17.1
+  +-jackson-databind:2.17.2
   | +-The Apache Software License, Version 2.0 - https://www.apache.org/licenses/LICENSE-2.0.txt
 dev.failsafe
   +-failsafe:3.3.2
@@ -135,8 +137,8 @@ dev.failsafe
 net.java.dev.jna
   +-jna:5.13.0
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0.txt
-  +-jna:5.3.1
-  | +-Apache License v2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
+  +-jna:5.14.0
+  | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0.txt
 org.scalactic
   +-scalactic_3:3.2.18
   | +-the Apache License, ASL Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0
@@ -199,7 +201,7 @@ org.apache.commons
   | +-no license specified
   +-commons-lang3:3.14.0
   | +-no license specified
-  +-commons-text:1.11.0
+  +-commons-text:1.12.0
   | +-no license specified
 com.google.j2objc
   +-j2objc-annotations:3.0.0
@@ -331,7 +333,7 @@ com.vladsch.flexmark
 com.google.guava
   +-listenablefuture:9999.0-empty-to-avoid-conflict-with-guava
   | +-no license specified
-  +-guava:33.2.0-jre
+  +-guava:33.2.1-jre
   | +-no license specified
   +-failureaccess:1.0.2
   | +-no license specified
@@ -362,7 +364,7 @@ org.reactivestreams
   +-reactive-streams:1.0.4
   | +-MIT-0 - https://spdx.org/licenses/MIT-0.html
 commons-codec
-  +-commons-codec:1.17.0
+  +-commons-codec:1.17.1
   | +-no license specified
 com.typesafe.scala-logging
   +-scala-logging_3:3.9.5

@@ -1,7 +1,7 @@
 enablePlugins(GitVersioning)
 
 // gwen core & web versions
-val gwenVersion = "3.61.1"
+val gwenVersion = "3.61.2"
 val gwenWebVersion = "3.71.2"
 
 git.baseVersion := gwenWebVersion
@@ -30,7 +30,7 @@ lazy val projectSettings = Seq(
   licenses += "Apache License, Version 2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0.html"),
   homepage := Some(url("https://gweninterpreter.org")),
   versionScheme := Some("semver-spec"),
-  scalaVersion := "3.4.1",
+  scalaVersion := "3.4.2",
   crossPaths := false,
   trapExit := false,
   scalacOptions ++= Seq(
@@ -57,16 +57,16 @@ lazy val mainDependencies = {
 
 lazy val mainOverrides = {
   Seq(
-    "com.fasterxml.jackson.core" %  "jackson-databind" % "2.17.1",
-    "com.google.guava" % "guava" % "33.2.0-jre",
+    "com.fasterxml.jackson.core" %  "jackson-databind" % "2.17.2",
+    "com.google.guava" % "guava" % "33.2.1-jre",
     "org.reactivestreams" % "reactive-streams" % "1.0.4",
     "org.slf4j" % "slf4j-api" % "1.7.36"
   )
 }
 
 dependencyOverrides ++= Seq(
-  "com.fasterxml.jackson.core" %  "jackson-databind" % "2.17.1",
-  "com.google.guava" % "guava" % "33.2.0-jre",
+  "com.fasterxml.jackson.core" %  "jackson-databind" % "2.17.2",
+  "com.google.guava" % "guava" % "33.2.1-jre",
   "org.reactivestreams" % "reactive-streams" % "1.0.4",
   "org.slf4j" % "slf4j-api" % "1.7.36"
 )
