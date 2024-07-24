@@ -1,3 +1,9 @@
+3.71.3
+======
+25 July 2024
+- Pass GWEN_WEB_VERSION env var through to docker
+- Update selenium from v4.22.0 to v4.23.0
+
 3.71.2
 ======
 20 July 2024
