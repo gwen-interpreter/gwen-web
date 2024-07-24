@@ -58,6 +58,7 @@ services:
       - GWEN_THREADS
       - GWEN_HEADLESS
       - GWEN_VIDEO
+      - GWEN_WEB_VERSION
     volumes:
       - "$PWD:/project"
     working_dir: /project
@@ -70,6 +71,7 @@ services:
       dockerfile: Dockerfile
     environment:
       - NO_COLOR
+      - GWEN_WEB_VERSION
     volumes:
       - "$PWD:/project"
     working_dir: /project
