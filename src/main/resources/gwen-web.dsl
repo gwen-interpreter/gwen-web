@@ -2962,6 +2962,7 @@ I switch to the parent tab
 I switch to the root window
 I switch to the root tab
 I switch to the default content
+I switch to <frame> content
 I should have 1 open window
 I should have <count> open windows
 I should have 1 open tab

@@ -377,6 +377,8 @@ class WebEngine extends EvalEngine[WebContext] {
         new SwitchToRootWindow()
       case """I switch to the default content""" =>
         new SwitchToDefaultContent()
+      case r"""I switch to (.+?)$frame content""" =>
+        new SwitchToFrame(frame)
       case r"""I switch to (.+?)$session""" =>
         new SwitchToBrowserSession(session)
       case r"I (accept|dismiss)$action the (?:alert|confirmation) popup" =>

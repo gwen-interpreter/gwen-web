@@ -1365,6 +1365,13 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     }
   }
 
+   /** Switches to the top window / first frame */
+  def switchToFrame(binding: LocatorBinding): Unit = {
+    withDriverAndElement(binding, s"trying to switch to ${binding.displayName} content (frame)") { (driver, frame) =>
+      driver.switchTo().frame(frame)
+    }
+  }
+
   /** Refreshes the current page.*/
   def refreshPage(): Unit = {
     withWebDriver { driver =>
