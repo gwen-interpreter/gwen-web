@@ -25,30 +25,47 @@ pipeline {
     stage("Prepare") {
       steps {
         script {
-          // Create output dir to avoid potential permission issues in docker
+          // Prepare output dir
           sh 'mkdir -p ${gwen.initDir}${slash}output'
+          sh 'rm -rf ${gwen.initDir}${slash}output/**'
         }
       }
     }
     stage("Gwen") {
       steps {
         script {
-          // Spin up environment and execute Gwen in docker
-          sh 'docker-compose${docker.compose.options} run gwen'
+          try {
+            // Spin up environment and execute Gwen in docker
+            sh "docker-compose -p ${env.BUILD_TAG.toLowerCase()}${docker.compose.options} run gwen"
+            if (!fileExists('${gwen.initDir}${slash}output/reports/html/index.html')) {
+              error 'Evaluation report not generated'
+            }
+          } catch(err) {
+            if (fileExists('${gwen.initDir}${slash}output/reports/html/index.html')) {
+              unstable 'Gwen completed with failure(s) reported.'
+            } else {
+              error "Gwen failed to execute or complete: ${err.getMessage()}"
+            }
+          }
         }
       }
       post {
         always {
-          sh 'docker-compose${docker.compose.options} down'
+          sh "docker-compose -p ${env.BUILD_TAG.toLowerCase()}${docker.compose.options} down || true"
           archiveArtifacts artifacts: '${gwen.initDir}${slash}output/reports/**'
           publishHTML(target: [
-                        allowMissing          : false,
-                        alwaysLinkToLastBuild : true,
+                        allowMissing          : true,
+                        alwaysLinkToLastBuild : false,
                         keepAll               : true,
                         reportDir             : '${gwen.initDir}${slash}output/reports/html',
                         reportFiles           : 'index.html',
                         reportName            : "Gwen-Report"
           ])
+        }
+        failure {
+          script {
+            // something went wrong, raise alert here
+          }
         }
       }
     }

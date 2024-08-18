@@ -1,3 +1,13 @@
+3.72.1
+======
+18 August 2024
+- Set project name to BUILD_TAG when calling docker-compose in Jenkinsfile template
+- Set publishHTML.allowMissing to true in generated Jenkinsfile
+- Set publishHTML.alwaysLinkToLastBuild to false in generated Jenkinsfile
+- Improved error handling in Jenkins template
+- Update Gwen core from v3.61.3 to v[3.61.4](https://github.com/gwen-interpreter/gwen/releases/tag/v3.61.4)
+  - Deprecate report portal integration
+
 3.72.0
 ======
 15 August 2024
