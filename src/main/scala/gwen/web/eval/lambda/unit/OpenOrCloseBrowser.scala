@@ -17,6 +17,7 @@
 package gwen.web.eval.lambda.unit
 
 import gwen.web.eval.WebContext
+import gwen.web.eval.WebErrors
 
 import gwen.core.behavior.BehaviorType
 import gwen.core.eval.lambda.UnitStep
@@ -28,6 +29,9 @@ import scala.util.chaining._
 class OpenOrCloseBrowser(open: Boolean, name: Option[String], behaviorType: BehaviorType) extends UnitStep[WebContext] {
 
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
+    name.filter(_.matches("child (window|tab)")) foreach { n => 
+      WebErrors.illegalSessionNameError(n, None)
+    }
     step tap { _ =>
       checkStepRules(step, behaviorType, ctx)
       if (open) {

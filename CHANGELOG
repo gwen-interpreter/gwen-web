@@ -1,3 +1,11 @@
+3.72.2
+======
+20 August 2024
+- Restrict the following DSLs to prevent sessions named "child window" or "child tab"
+  - `I start a browser for <name>`
+  - `I switch to <name>`
+  - `I close the browser for <name>`
+
 3.72.1
 ======
 18 August 2024

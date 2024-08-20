@@ -43,6 +43,7 @@ object WebErrors {
     def invalidActionError(action: ElementAction) = throw new InvalidActionException(action)
     def invalidSelectorTypeError(selectorType: String) = throw new InvalidSelectorTypeException(selectorType)
     def multipleBrowserSettingsError(settingsFiles: List[File]) = throw new MultipleBrowserSettingsException(settingsFiles)
+    def illegalSessionNameError(name: String, msg: Option[String]) = throw new IllegalSessionNameException(name, msg)
 
     /** Thrown when a locator binding error is detected . */
     class LocatorBindingException(msg: String) extends GwenException(msg)
@@ -88,5 +89,9 @@ object WebErrors {
 
     /** Thrown when more than one browser setting file is active.*/
     class MultipleBrowserSettingsException(settingsFiles: List[File]) extends GwenException(s"Multiple browser settings provided (only 1 expected): ${settingsFiles.mkString(", ")}")
+
+    /** Thrown when an unsupported web driver is detected. */
+    class IllegalSessionNameException(name: String, msg: Option[String])
+      extends GwenException(s"Illegal (reserved) browser session name: $name${msg.map(m => s". $m").getOrElse("")}")
 
 }
