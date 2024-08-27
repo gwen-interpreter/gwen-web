@@ -1,3 +1,9 @@
+3.72.4
+======
+28 August 2024
+- Update Gwen core from v3.61.5 to v[3.61.6](https://github.com/gwen-interpreter/gwen/releases/tag/v3.61.6)
+  - Report malformed data file error when an input data file fails to parse
+
 3.72.3
 ======
 27 August 2024
