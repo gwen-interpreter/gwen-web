@@ -1,3 +1,9 @@
+3.72.3
+======
+27 August 2024
+- Update Gwen core from v3.61.4 to v[3.61.5](https://github.com/gwen-interpreter/gwen/releases/tag/v3.61.5)
+  - Fix JS function calls with multiline string arguments
+
 3.72.2
 ======
 20 August 2024
