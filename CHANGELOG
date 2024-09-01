@@ -1,3 +1,9 @@
+3.72.5
+======
+2 September 2024
+- Update selenium from v4.23.1 to v4.24.0
+- Update webdrivermanager from v5.9.1 to v5.9.2
+
 3.72.4
 ======
 28 August 2024
