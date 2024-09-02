@@ -1,3 +1,9 @@
+3.72.6
+======
+2 September 2024
+- Update Gwen core from v3.61.6 to v[3.61.7](https://github.com/gwen-interpreter/gwen/releases/tag/v3.61.7)
+  - Detect and report multi-line input data field names as errors
+
 3.72.5
 ======
 2 September 2024
