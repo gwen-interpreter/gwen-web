@@ -436,6 +436,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     */
   private def withWebElement[T](binding: LocatorBinding, reason: String)(operation: WebElement => T): Option[T] =
     evaluate(None.asInstanceOf[Option[T]]) {
+      val timeoutSecs = binding.timeoutSeconds
       val selector = binding.selectors.head
       val wHandle = selector.relative.flatMap(_ => withWebDriver(_.getWindowHandle))
       try {
@@ -443,7 +444,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
         val start = System.nanoTime()
         try {
           var lapsed = 0L
-          waitUntil(reason) {
+          waitUntil(timeoutSecs, reason) {
             try {
               val webElement = binding.resolve()
               tryMoveTo(webElement)
@@ -457,7 +458,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
               case e: Throwable =>
                 lapsed = Duration.fromNanos(System.nanoTime() - start).toSeconds
                 if (e.isInstanceOf[InvalidElementStateException] || e.isInstanceOf[NoSuchElementException] || e.isInstanceOf[NotFoundOrInteractableException]) {
-                  if (lapsed >= binding.timeoutSeconds) {
+                  if (lapsed >= timeoutSecs) {
                     result =  if (e.isInstanceOf[WebElementNotFoundException]) {
                       Some(Failure(e))
                     } else {

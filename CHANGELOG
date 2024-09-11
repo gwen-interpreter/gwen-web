@@ -1,3 +1,8 @@
+3.72.7
+======
+11 September 2024
+  - Honor timeout overrides on guards involving web elements
+
 3.72.6
 ======
 2 September 2024
