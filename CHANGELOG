@@ -1,9 +1,18 @@
 3.73.0
 ======
 18 September 2024
-- Introduce `@Wait` and `@Delay` annotations for overriding timeouts and delays on wait, until/while, for-each and element assertion DSLs
+- Introduce `@Timeout` and `@Delay` annotations for overriding timeouts and delays on wait, until/while, for-each and element assertion DSLs
 - Deprecate all DSLs that specify delay or timeout in favor of new Wait and Delay annotations
 - Update Gwen core from v3.61.7 to v[3.62.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.62.0)
+  - Update dependencies
+    - Update scala from v3.4.2 to v3.5.0
+    - Update gherkin from v28.0.0 to v29.0.0
+    - Update log4j-slf4j-impl from v2.23.1 to v2.24.0
+    - Update scala-csv from v1.4.1 to v2.0.0
+    - Update commons-model from v5.11.1 to v5.12.0
+    - Update pdfbox from v3.0.2 to v3.0.3
+    - Update pdfbox-io from v3.0.2 to v3.0.3
+    - Update guava from v33.2.1-jre to v33.3.0-jre
 
 3.72.7
 ======
