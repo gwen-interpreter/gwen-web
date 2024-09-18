@@ -36,6 +36,7 @@ import org.scalatest.matchers.should.Matchers
 import org.scalatestplus.mockito.MockitoSugar
 
 import java.io.File
+import java.util.logging.Level
 
 class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
 
@@ -75,6 +76,7 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
       GwenSettings.`gwen.video.timeoutSecs` should be (10)
       GwenSettings.`gwen.dryRun.limit.tableData.outline.examples.records` should be (Integer.MAX_VALUE)
       GwenSettings.`gwen.error.messages.inline.locators` should be (false)
+      GwenSettings.`gwen.logLevel.deprecations` should be (Level.WARNING)
     }
   }
 
@@ -195,6 +197,7 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
     GwenSettings.`gwen.console.log.stepDefs` should be (true)
     GwenSettings.`gwen.console.repl.autoSuggestions` should be (true)
     GwenSettings.`gwen.console.repl.tabCompletion` should be (true)
+    GwenSettings.`gwen.logLevel.deprecations` should be (Level.WARNING)
 
     CLISettings.`gwen.cli.options.format` should be (Nil)
 
@@ -307,6 +310,7 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
     GwenSettings.`gwen.console.log.stepDefs` should be (true)
     GwenSettings.`gwen.console.repl.autoSuggestions` should be (true)
     GwenSettings.`gwen.console.repl.tabCompletion` should be (true)
+    GwenSettings.`gwen.logLevel.deprecations` should be (Level.WARNING)
 
     RPSettings.`gwen.rp.debug` should be (false)
     RPSettings.`gwen.rp.heartbeat.enabled` should be (true)

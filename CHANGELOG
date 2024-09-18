@@ -1,3 +1,13 @@
+3.74.0
+======
+19 September 2024
+- Update Gwen core from v3.62.0 to v[3.63.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.63.0)
+  - Introduce `gwen.logLevel.deprecations` to control how deprecations are reported.
+    - Supported values include:
+      - `warn` to log deprecations as warnings (default)
+      - `error` to raise and report deprecations as errors
+      - `none` to suppress logging or reporting of deprecation messages (no operation)
+
 3.73.0
 ======
 18 September 2024
