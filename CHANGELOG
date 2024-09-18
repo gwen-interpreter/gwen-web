@@ -1,3 +1,10 @@
+3.73.0
+======
+18 September 2024
+- Introduce `@Wait` and `@Delay` annotations for overriding timeouts and delays on wait, until/while, for-each and element assertion DSLs
+- Deprecate all DSLs that specify delay or timeout in favor of new Wait and Delay annotations
+- Update Gwen core from v3.61.7 to v[3.62.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.62.0)
+
 3.72.7
 ======
 11 September 2024

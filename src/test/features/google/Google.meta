@@ -25,5 +25,5 @@ Feature: Google search meta
   @StepDef
   @Assertion
   Scenario: no results should be displayed
-    Given the results can be located by class name "r" with no wait
+    Given @Timeout('0s') the results can be located by class name "r"
      Then the results should not be displayed

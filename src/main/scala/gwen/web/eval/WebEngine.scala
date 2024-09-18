@@ -76,34 +76,42 @@ class WebEngine extends EvalEngine[WebContext] {
     step.expression.match {
       case r"""(.+)$doStep if(?:(?!\bif\b)) (.+?)$element is( not)?$negation (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$state""" =>
         Some(new IfElementCondition(doStep, element, ElementState.valueOf(state), Option(negation).isDefined, this))
-      case r"""(.+?)$doStep (until|while)$operation (.+?)$element is( not)?$negation (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$state using no delay and (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit (?:timeout|wait)""" =>
+      case r"""(.+?)$doStep (until|while)$operation (.+?)$element is( not)?$negation (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$state using no delay and (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit (timeout|wait)$timeoutLiteral""" =>
+        Deprecation.warn("Step variant", s"using no delay and $timeoutPeriod $timeoutUnit $timeoutLiteral", Some(s"@Delay('0s') @Timeout('$timeoutPeriod${Map("minute" -> "m", "second" -> "s", "millisecond" -> "ms")(timeoutUnit)}') annotations"))
         Some(new RepeatElementState(doStep, operation, element, ElementState.valueOf(state), Option(negation).isDefined, Duration.Zero, Duration(timeoutPeriod.toLong, timeoutUnit), this))
       case r"""(.+?)$doStep (until|while)$operation (.+?)$element is( not)?$negation (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$state using no delay""" =>
-        Some(new RepeatElementState(doStep, operation, element, ElementState.valueOf(state), Option(negation).isDefined, Duration.Zero, Duration(1, TimeUnit.MINUTES), this))
-      case r"""(.+?)$doStep (until|while)$operation (.+?)$element is( not)?$negation (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$state using (.+?)$delayPeriod (second|millisecond)$delayUnit delay and (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit (?:timeout|wait)""" if doStep != "I wait" =>
+        Deprecation.warn("Step variant", s"using no delay", Some(s"@Delay('0s') annotation"))
+        Some(new RepeatElementState(doStep, operation, element, ElementState.valueOf(state), Option(negation).isDefined, Duration.Zero, step.timeoutOpt.getOrElse(Duration(1, TimeUnit.MINUTES)), this))
+      case r"""(.+?)$doStep (until|while)$operation (.+?)$element is( not)?$negation (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$state using (.+?)$delayPeriod (second|millisecond)$delayUnit delay and (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit (timeout|wait)$timeoutLiteral""" if doStep != "I wait" =>
+        Deprecation.warn("Step variant", s"using $delayPeriod $delayUnit delay and $timeoutPeriod $timeoutUnit $timeoutLiteral", Some(s"@Delay('$delayPeriod${Map("second" -> "s", "millisecond" -> "ms")(delayUnit)}') @Timeout('$timeoutPeriod${Map("minute" -> "m", "second" -> "s", "millisecond" -> "ms")(timeoutUnit)}') annotations"))
         Some(new RepeatElementState(doStep, operation, element, ElementState.valueOf(state), Option(negation).isDefined, Duration(delayPeriod.toLong, delayUnit), Duration(timeoutPeriod.toLong, timeoutUnit), this))
       case r"""(.+?)$doStep (until|while)$operation (.+?)$element is( not)?$negation (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$state using (.+?)$delayPeriod (second|millisecond)$delayUnit delay""" if doStep != "I wait" =>
-        val delayDuration = Duration(delayPeriod.toLong, delayUnit)
-        Some(new RepeatElementState(doStep, operation, element, ElementState.valueOf(state), Option(negation).isDefined, delayDuration,Duration(1, TimeUnit.MINUTES), this))
-      case r"""(.+?)$doStep (until|while)$operation (.+?)$element is( not)?$negation (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$state using (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit (?:timeout|wait)""" if doStep != "I wait" =>
-        Some(new RepeatElementState(doStep, operation, element, ElementState.valueOf(state), Option(negation).isDefined, Duration(1, TimeUnit.SECONDS), Duration(timeoutPeriod.toLong, timeoutUnit), this))
+        Deprecation.warn("Step variant", s"using $delayPeriod $delayUnit delay", Some(s"@Delay('$delayPeriod${Map("second" -> "s", "millisecond" -> "ms")(delayUnit)}') annotation"))
+        Some(new RepeatElementState(doStep, operation, element, ElementState.valueOf(state), Option(negation).isDefined, Duration(delayPeriod.toLong, delayUnit),step.timeoutOpt.getOrElse(Duration(1, TimeUnit.MINUTES)), this))
+      case r"""(.+?)$doStep (until|while)$operation (.+?)$element is( not)?$negation (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$state using (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit (timeout|wait)$timeoutLiteral""" if doStep != "I wait" =>
+        Deprecation.warn("Step variant", s"using $timeoutPeriod $timeoutUnit $timeoutLiteral", Some(s" @Timeout('$timeoutPeriod${Map("minute" -> "m", "second" -> "s", "millisecond" -> "ms")(timeoutUnit)}') annotation"))
+        Some(new RepeatElementState(doStep, operation, element, ElementState.valueOf(state), Option(negation).isDefined, step.delayOpt.getOrElse(Duration(1, TimeUnit.SECONDS)), Duration(timeoutPeriod.toLong, timeoutUnit), this))
       case r"""(.+?)$doStep (until|while)$operation (.+?)$element is( not)?$negation (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$state""" if (doStep != "I wait" && !step.expression.matches(""".*".*(until|while).*".*""")) =>
-        Some(new RepeatElementState(doStep, operation, element, ElementState.valueOf(state), Option(negation).isDefined, Duration(1, TimeUnit.SECONDS), Duration(1, TimeUnit.MINUTES), this))
+        Some(new RepeatElementState(doStep, operation, element, ElementState.valueOf(state), Option(negation).isDefined, step.delayOpt.getOrElse(Duration(1, TimeUnit.SECONDS)), step.timeoutOpt.getOrElse(Duration(1, TimeUnit.MINUTES)), this))
       case _ =>
         super.translateCompositeStep(step) orElse {
           step.expression match {
-            case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression in (.+?)$container with no (?:timeout|wait)""" =>
+            case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression in (.+?)$container with no (timeout|wait)$timeoutLiteral""" =>
+              Deprecation.warn("Step variant", s"with no $timeoutLiteral", Some("@Timeout('0s') annotation"))
               Some(new ForEachWebElement(doStep, element, SelectorType.parse(selectorType), expression, Some((RelativeSelectorType.in, container, None)), Some(Duration.Zero), this))
-            case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression in (.+?)$container with (\d+)$timeout second (?:timeout|wait)""" =>
+            case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression in (.+?)$container with (\d+)$timeout second (timeout|wait)$timeoutLiteral""" =>
+              Deprecation.warn("Step variant", s"with $timeout second $timeoutLiteral", Some(s"@Timeout('${timeout}s') annotation"))
               Some(new ForEachWebElement(doStep, element, SelectorType.parse(selectorType), expression, Some((RelativeSelectorType.in, container, None)), Some(Duration.create(timeout.toLong, TimeUnit.SECONDS)), this))
             case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression in (.+?)$container""" =>
-              Some(new ForEachWebElement(doStep, element, SelectorType.parse(selectorType), expression, Some((RelativeSelectorType.in, container, None)), None, this))
-            case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression with no (?:timeout|wait)""" =>
+              Some(new ForEachWebElement(doStep, element, SelectorType.parse(selectorType), expression, Some((RelativeSelectorType.in, container, None)), step.timeoutOpt, this))
+            case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression with no (timeout|wait)$timeoutLiteral""" =>
+              Deprecation.warn("Step variant", s"with no $timeoutLiteral", Some("@Timeout('0s') annotation"))
               Some(new ForEachWebElement(doStep, element, SelectorType.parse(selectorType), expression, None, Some(Duration.Zero), this))
-            case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression with (\d+)$timeout second (?:timeout|wait)""" =>
+            case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression with (\d+)$timeout second (timeout|wait)$timeoutLiteral""" =>
+              Deprecation.warn("Step variant", s"with $timeout second $timeoutLiteral", Some(s"@Timeout('${timeout}s') annotation"))
               Some(new ForEachWebElement(doStep, element, SelectorType.parse(selectorType), expression, None, Some(Duration.create(timeout.toLong, TimeUnit.SECONDS)), this))
             case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression""" =>
-              Some(new ForEachWebElement(doStep, element, SelectorType.parse(selectorType), step.orDocString(expression), None, None, this))
+              Some(new ForEachWebElement(doStep, element, SelectorType.parse(selectorType), step.orDocString(expression), None, step.timeoutOpt, this))
             case r"""(.+?)$doStep for each (.+?)$element in (.+?)$iteration""" =>
               Some(new ForEachWebElementInIteration(doStep, element, iteration, this))
             case _ => 
@@ -123,12 +131,14 @@ class WebEngine extends EvalEngine[WebContext] {
     */
   override def translateStep(step: Step): UnitStep[WebContext] = {
     step.expression match {
-      case r"""I wait for (.+?)$element text for (\d+)$seconds second(?:s?)""" =>
-        new WaitForText(element, Some(seconds.toInt))
+      case r"""I wait for (.+?)$element text for (\d+)$seconds (second(?:s?))$secondsLiteral""" =>
+        Deprecation.warn("Step variant", s"for $seconds $secondsLiteral", Some(s"@Timeout('${seconds}s')"))
+        new WaitForText(element, step.timeoutOpt.map(_.toSeconds).orElse(Some(seconds.toInt)))
       case r"""I wait for (.+?)$element text""" =>
         new WaitForText(element, None)
-      case r"""I wait for (.+?)$element for (\d+)$seconds second(?:s?)""" =>
-        new WaitForElement(element, Some(seconds.toInt))
+      case r"""I wait for (.+?)$element for (\d+)$seconds (second(?:s?))$secondsLiteral""" =>
+        Deprecation.warn("Step variant", s"for $seconds $secondsLiteral", Some(s"@Timeout('${seconds}s')"))
+        new WaitForElement(element, step.timeoutOpt.map(_.toSeconds).orElse(Some(seconds.toInt)))
       case r"""I wait for (.+?)$element""" =>
         new WaitForElement(element, None)
       case r"""I wait ([0-9]+?)$duration second(?:s?) when (.+?)$element is (clicked|right clicked|double clicked|submitted|checked|ticked|unchecked|unticked|selected|deselected|typed|entered|tabbed|cleared|moved to)$event""" =>
@@ -136,23 +146,29 @@ class WebEngine extends EvalEngine[WebContext] {
       case r"""I wait until (.+?)$condition when (.+?)$element is (clicked|right clicked|double clicked||submitted|checked|ticked|unchecked|unticked|selected|deselected|typed|entered|tabbed|cleared|moved to)$event""" =>
         new WaitForConditionOnEvent(element, ElementEvent.valueOf(event), condition)
       case r"""I wait until "(.+?)$javascript" using (.+?)$delayPeriod (second|millisecond)$delayUnit delay and (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit timeout""" => 
+        Deprecation.warn("Step variant", s"using $delayPeriod $delayUnit delay and $timeoutPeriod $timeoutUnit timeout", Some(s"@Delay('$delayPeriod${Map("second" -> "s", "millisecond" -> "ms")(delayUnit)}') @Timeout('$timeoutPeriod${Map("minute" -> "m", "second" -> "s", "millisecond" -> "ms")(timeoutUnit)}') annotations"))
         new WaitForCondition(javascript, Some(Duration(delayPeriod.toLong, delayUnit).toMillis), Some(Duration(timeoutPeriod.toLong, timeoutUnit).toSeconds))
       case r"""I wait until "(.+?)$javascript" using (.+?)$delayPeriod (second|millisecond)$delayUnit delay""" => 
-        new WaitForCondition(javascript, Some(Duration(delayPeriod.toLong, delayUnit).toMillis), None)
+        Deprecation.warn("Step variant", s"using $delayPeriod $delayUnit delay", Some(s"@Delay('$delayPeriod${Map("second" -> "s", "millisecond" -> "ms")(delayUnit)}') annotation"))
+        new WaitForCondition(javascript, Some(Duration(delayPeriod.toLong, delayUnit).toMillis), step.timeoutOpt.map(_.toSeconds))
       case r"""I wait until "(.+?)$javascript" using (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit timeout""" =>
-        new WaitForCondition(javascript, None, Some(Duration(timeoutPeriod.toLong, timeoutUnit).toSeconds))
+        Deprecation.warn("Step variant", s"using $timeoutPeriod $timeoutUnit timeout", Some(s"@Timeout('$timeoutPeriod${Map("minute" -> "m", "second" -> "s", "millisecond" -> "ms")(timeoutUnit)}') annotation"))
+        new WaitForCondition(javascript, step.delayOpt.map(_.toMillis), Some(Duration(timeoutPeriod.toLong, timeoutUnit).toSeconds))
       case r"""I wait until "(.+?)$javascript"""" =>
-        new WaitForCondition(step.orDocString(javascript), None, None)
+        new WaitForCondition(step.orDocString(javascript), step.delayOpt.map(_.toMillis), step.timeoutOpt.map(_.toSeconds))
       case r"""I wait until (.+?)$element is( not)?$negation (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$state""" =>
         new WaitForElementState(element, ElementState.valueOf(state), Option(negation).isDefined)
       case r"""I wait until (.+?)$condition using (.+?)$delayPeriod (second|millisecond)$delayUnit delay and (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit timeout""" =>
+        Deprecation.warn("Step variant", s"using $delayPeriod $delayUnit delay and $timeoutPeriod $timeoutUnit timeout", Some(s"@Delay('$delayPeriod${Map("second" -> "s", "millisecond" -> "ms")(delayUnit)}') @Timeout('$timeoutPeriod${Map("minute" -> "m", "second" -> "s", "millisecond" -> "ms")(timeoutUnit)}') annotations"))
         new WaitForBoundCondition(condition, Some(Duration(delayPeriod.toLong, delayUnit).toMillis), Some(Duration(timeoutPeriod.toLong, timeoutUnit).toSeconds))
       case r"""I wait until (.+?)$condition using (.+?)$delayPeriod (second|millisecond)$delayUnit delay""" =>
-        new WaitForBoundCondition(condition, Some(Duration(delayPeriod.toLong, delayUnit).toMillis), None)
+        Deprecation.warn("Step variant", s"using $delayPeriod $delayUnit delay", Some(s"@Delay('$delayPeriod${Map("second" -> "s", "millisecond" -> "ms")(delayUnit)}') annotation"))
+        new WaitForBoundCondition(condition, Some(Duration(delayPeriod.toLong, delayUnit).toMillis), step.timeoutOpt.map(_.toSeconds))
       case r"""I wait until (.+?)$condition using (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit timeout""" =>
-        new WaitForBoundCondition(condition, None, Some(Duration(timeoutPeriod.toLong, timeoutUnit).toSeconds))
+        Deprecation.warn("Step variant", s"using $timeoutPeriod $timeoutUnit timeout", Some(s"@Timeout('$timeoutPeriod${Map("minute" -> "m", "second" -> "s", "millisecond" -> "ms")(timeoutUnit)}') annotation"))
+        new WaitForBoundCondition(condition, step.delayOpt.map(_.toMillis), Some(Duration(timeoutPeriod.toLong, timeoutUnit).toSeconds))
       case r"""I wait until (.+?)$condition""" =>
-        new WaitForBoundCondition(condition, None, None)
+        new WaitForBoundCondition(condition, step.delayOpt.map(_.toMillis), step.timeoutOpt.map(_.toSeconds))
       case r"""I am on the (.+?)$page""" =>
         new CreatePageScope(page)
       case r"""I navigate to the (.+?)$page""" =>
@@ -169,122 +185,158 @@ class WebEngine extends EvalEngine[WebContext] {
         new BindUrl(step.orDocString(url), None)
       case r"""the (.+?)$page url is "(.+?)"$url""" =>
         new BindUrl(step.orDocString(url), Some(page))
-      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression at index (\d+)$index in (.+?)$container with no (?:timeout|wait)""" =>
+      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression at index (\d+)$index in (.+?)$container with no (timeout|wait)$timeoutLiteral""" =>
+        Deprecation.warn("Step variant", s"with no $timeoutLiteral", Some("@Timeout('0s') annotation"))
         new BindElementLocator(element, SelectorType.parse(selectorType), expression, Some((RelativeSelectorType.in, container, None)), Some(0), Some(index.toInt))
-      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression in (.+?)$container with no (?:timeout|wait)""" =>
+      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression in (.+?)$container with no (timeout|wait)$timeoutLiteral""" =>
+        Deprecation.warn("Step variant", s"with no $timeoutLiteral", Some("@Timeout('0s') annotation"))
         new BindElementLocator(element, SelectorType.parse(selectorType), expression, Some((RelativeSelectorType.in, container, None)), Some(0), None)
-      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression at index (\d+)$index in (.+?)$container with (\d+)$timeout second (?:timeout|wait)""" =>
+      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression at index (\d+)$index in (.+?)$container with (\d+)$timeout second (timeout|wait)$timeoutLiteral""" =>
+        Deprecation.warn("Step variant", s"with $timeout second $timeoutLiteral", Some(s"@Timeout('${timeout}s') annotation"))
         new BindElementLocator(element, SelectorType.parse(selectorType), expression, Some((RelativeSelectorType.in, container, None)), Some(timeout.toInt), Some(index.toInt))
-      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression in (.+?)$container with (\d+)$timeout second (?:timeout|wait)""" =>
+      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression in (.+?)$container with (\d+)$timeout second (timeout|wait)$timeoutLiteral""" =>
+        Deprecation.warn("Step variant", s"with $timeout second $timeoutLiteral", Some(s"@Timeout('${timeout}s') annotation"))
         new BindElementLocator(element, SelectorType.parse(selectorType), expression, Some((RelativeSelectorType.in, container, None)), Some(timeout.toInt), None)
       case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression at index (\d+)$index in (.+?)$container""" =>
-        new BindElementLocator(element, SelectorType.parse(selectorType), expression, Some((RelativeSelectorType.in, container, None)), None, Some(index.toInt))
+        new BindElementLocator(element, SelectorType.parse(selectorType), expression, Some((RelativeSelectorType.in, container, None)), step.timeoutOpt.map(_.toSeconds), Some(index.toInt))
       case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression in (.+?)$container""" =>
-        new BindElementLocator(element, SelectorType.parse(selectorType), expression, Some((RelativeSelectorType.in, container, None)), None, None)
-      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text)$selectorType "(.+?)"$expression near and within (\d+)$pixels pixel(?:s?) of (.+?)$rElement with no (?:timeout|wait)""" =>
+        new BindElementLocator(element, SelectorType.parse(selectorType), expression, Some((RelativeSelectorType.in, container, None)), step.timeoutOpt.map(_.toSeconds), None)
+      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text)$selectorType "(.+?)"$expression near and within (\d+)$pixels pixel(?:s?) of (.+?)$rElement with no (timeout|wait)$timeoutLiteral""" =>
+        Deprecation.warn("Step variant", s"with no $timeoutLiteral", Some("@Timeout('0s') annotation"))
         new BindElementLocator(element, SelectorType.parse(selectorType), expression, Some((RelativeSelectorType.near, rElement, Some(pixels.toInt))), Some(0), None)
-      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text)$selectorType "(.+?)"$expression near and within (\d+)$pixels pixel(?:s?) of (.+?)$rElement with (\d+)$timeout second (?:timeout|wait)""" =>
+      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text)$selectorType "(.+?)"$expression near and within (\d+)$pixels pixel(?:s?) of (.+?)$rElement with (\d+)$timeout second (timeout|wait)$timeoutLiteral""" =>
+        Deprecation.warn("Step variant", s"with $timeout second $timeoutLiteral", Some(s"@Timeout('${timeout}s') annotation"))
         new BindElementLocator(element, SelectorType.parse(selectorType), expression, Some((RelativeSelectorType.near, rElement, Some(pixels.toInt))), Some(timeout.toInt), None)
       case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text)$selectorType "(.+?)"$expression near and within (\d+)$pixels pixel(?:s?) of (.+?)$rElement""" =>
-        new BindElementLocator(element, SelectorType.parse(selectorType), expression, Some((RelativeSelectorType.near, rElement, Some(pixels.toInt))), None, None)
-      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text)$selectorType "(.+?)"$expression (above|below|near|to left of|to right of)$rSelectorType (.+?)$rElement with no (?:timeout|wait)""" =>
+        new BindElementLocator(element, SelectorType.parse(selectorType), expression, Some((RelativeSelectorType.near, rElement, Some(pixels.toInt))), step.timeoutOpt.map(_.toSeconds), None)
+      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text)$selectorType "(.+?)"$expression (above|below|near|to left of|to right of)$rSelectorType (.+?)$rElement with no (timeout|wait)$timeoutLiteral""" =>
+        Deprecation.warn("Step variant", s"with no $timeoutLiteral", Some("@Timeout('0s') annotation"))
         new BindElementLocator(element, SelectorType.parse(selectorType), expression, Some((RelativeSelectorType.valueOf(rSelectorType), rElement, None)), Some(0), None)
-      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text)$selectorType "(.+?)"$expression (above|below|near|to left of|to right of)$rSelectorType (.+?)$rElement with (\d+)$timeout second (?:timeout|wait)""" =>
+      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text)$selectorType "(.+?)"$expression (above|below|near|to left of|to right of)$rSelectorType (.+?)$rElement with (\d+)$timeout second (timeout|wait)$timeoutLiteral""" =>
+        Deprecation.warn("Step variant", s"with $timeout second $timeoutLiteral", Some(s"@Timeout('${timeout}s') annotation"))
         new BindElementLocator(element, SelectorType.parse(selectorType), expression, Some((RelativeSelectorType.valueOf(rSelectorType), rElement, None)), Some(timeout.toInt), None)
       case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text)$selectorType "(.+?)"$expression (above|below|near|to left of|to right of)$rSelectorType (.+?)$rElement""" =>
-        new BindElementLocator(element, SelectorType.parse(selectorType), expression, Some((RelativeSelectorType.valueOf(rSelectorType), rElement, None)), None, None)
-      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression at index (\d+)$index with no (?:timeout|wait)""" =>
+        new BindElementLocator(element, SelectorType.parse(selectorType), expression, Some((RelativeSelectorType.valueOf(rSelectorType), rElement, None)), step.timeoutOpt.map(_.toSeconds), None)
+      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression at index (\d+)$index with no (timeout|wait)$timeoutLiteral""" =>
+        Deprecation.warn("Step variant", s"with no $timeoutLiteral", Some("@Timeout('0s') annotation"))
         new BindElementLocator(element, SelectorType.parse(selectorType), expression, None, Some(0), Some(index.toInt))
-      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression with no (?:timeout|wait)""" =>
+      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression with no (timeout|wait)$timeoutLiteral""" =>
+        Deprecation.warn("Step variant", s"with no $timeoutLiteral", Some("@Timeout('0s') annotation"))
         new BindElementLocator(element, SelectorType.parse(selectorType), expression, None, Some(0), None)
-      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression at index (\d+)$index with (\d+)$timeout second (?:timeout|wait)""" =>
+      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression at index (\d+)$index with (\d+)$timeout second (timeout|wait)$timeoutLiteral""" =>
+        Deprecation.warn("Step variant", s"with $timeout second $timeoutLiteral", Some(s"@Timeout('${timeout}s') annotation"))
         new BindElementLocator(element, SelectorType.parse(selectorType), expression, None, Some(timeout.toInt), Some(index.toInt))
-      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression with (\d+)$timeout second (?:timeout|wait)""" =>
+      case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression with (\d+)$timeout second (timeout|wait)$timeoutLiteral""" =>
+        Deprecation.warn("Step variant", s"with $timeout second $timeoutLiteral", Some(s"@Timeout('${timeout}s') annotation"))
         new BindElementLocator(element, SelectorType.parse(selectorType), expression, None, Some(timeout.toInt), None)
       case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression at index (\d+)$index""" =>
-        new BindElementLocator(element, SelectorType.parse(selectorType), expression, None, None, Some(index.toInt))
+        new BindElementLocator(element, SelectorType.parse(selectorType), expression, None, step.timeoutOpt.map(_.toSeconds), Some(index.toInt))
       case r"""(.+?)$element can be located at index (\d+)$index by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression""" =>
-        new BindElementLocator(element, SelectorType.parse(selectorType), step.orDocString(expression), None, None, Some(index.toInt))
+        new BindElementLocator(element, SelectorType.parse(selectorType), step.orDocString(expression), None, step.timeoutOpt.map(_.toSeconds), Some(index.toInt))
       case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression""" =>
-        new BindElementLocator(element, SelectorType.parse(selectorType), step.orDocString(expression), None, None, None)
+        new BindElementLocator(element, SelectorType.parse(selectorType), step.orDocString(expression), None, step.timeoutOpt.map(_.toSeconds), None)
       case r"""(.+?)$element can be located at index (\d+)$index in (.+?)$container by""" if step.hasDualColumnTable =>
-        new BindMultipleElementLocators(element, Some(container), None, Some(index.toInt))
+        new BindMultipleElementLocators(element, Some(container), step.timeoutOpt.map(_.toSeconds), Some(index.toInt))
       case r"""(.+?)$element can be located in (.+?)$container by""" if step.hasDualColumnTable =>
-        new BindMultipleElementLocators(element, Some(container), None, None)
-      case r"""(.+?)$element can be located at index (\d+)$index with no (?:timeout|wait) by""" if step.hasDualColumnTable =>
+        new BindMultipleElementLocators(element, Some(container), step.timeoutOpt.map(_.toSeconds), None)
+      case r"""(.+?)$element can be located at index (\d+)$index with no (timeout|wait)$timeoutLiteral by""" if step.hasDualColumnTable =>
+        Deprecation.warn("Step variant", s"with no $timeoutLiteral", Some("@Timeout('0s') annotation"))
         new BindMultipleElementLocators(element, None, Some(0), Some(index.toInt))
-      case r"""(.+?)$element can be located with no (?:timeout|wait) by""" if step.hasDualColumnTable =>
+      case r"""(.+?)$element can be located with no (timeout|wait)$timeoutLiteral by""" if step.hasDualColumnTable =>
+        Deprecation.warn("Step variant", s"with no $timeoutLiteral", Some("@Timeout('0s') annotation"))
         new BindMultipleElementLocators(element, None, Some(0), None)
-      case r"""(.+?)$element can be located at index (\d+)$index with (\d+)$timeout second (?:timeout|wait) by""" if step.hasDualColumnTable =>
+      case r"""(.+?)$element can be located at index (\d+)$index with (\d+)$timeout second (timeout|wait)$timeoutLiteral by""" if step.hasDualColumnTable =>
+        Deprecation.warn("Step variant", s"with $timeout second $timeoutLiteral", Some(s"@Timeout('${timeout}s') annotation"))
         new BindMultipleElementLocators(element, None, Some(timeout.toInt), Some(index.toInt))
-      case r"""(.+?)$element can be located with (\d+)$timeout second (?:timeout|wait) by""" if step.hasDualColumnTable =>
+      case r"""(.+?)$element can be located with (\d+)$timeout second (timeout|wait)$timeoutLiteral by""" if step.hasDualColumnTable =>
+        Deprecation.warn("Step variant", s"with $timeout second $timeoutLiteral", Some(s"@Timeout('${timeout}s') annotation"))
         new BindMultipleElementLocators(element, None, Some(timeout.toInt), None)
       case r"""(.+?)$element can be located at index (\d+)$index by""" if step.hasDualColumnTable =>
-        new BindMultipleElementLocators(element, None, None, Some(index.toInt))
+        new BindMultipleElementLocators(element, None, step.timeoutOpt.map(_.toSeconds), Some(index.toInt))
       case r"""(.+?)$element can be located by""" if step.hasDualColumnTable =>
-        new BindMultipleElementLocators(element, None, None, None)
+        new BindMultipleElementLocators(element, None, step.timeoutOpt.map(_.toSeconds), None)
       case r"""(.+?)$element can be (clicked|right clicked|double clicked|submitted|checked|ticked|unchecked|unticked|selected|deselected|typed|entered|tabbed|cleared|moved to)$event by (?:javascript|js) "(.+?)"$expression""" =>
         new BindActionHandler(element, ElementEvent.valueOf(event), step.orDocString(expression))
-      case r"""the page title should( not)?$negation be (blank|true|false)$literal with no (?:timeout|wait)""" =>
+      case r"""the page title should( not)?$negation be (blank|true|false)$literal with no (timeout|wait)$timeoutLiteral""" =>
+        Deprecation.warn("Step variant", s"with no $timeoutLiteral", Some("@Timeout('0s') annotation"))
         new CompareTitle("title", ValueLiteral.valueOf(literal).value, false, ComparisonOperator.be, Option(negation).isDefined, step.message, Some(Duration.Zero), step.isTrim, step.isIgnoreCase)
-      case r"""the page title should( not)?$negation be (blank|true|false)$literal with (\d+)$timeout second (?:timeout|wait)""" =>
+      case r"""the page title should( not)?$negation be (blank|true|false)$literal with (\d+)$timeout second (timeout|wait)$timeoutLiteral""" =>
+        Deprecation.warn("Step variant", s"with $timeout second $timeoutLiteral", Some(s"@Timeout('${timeout}s') annotation"))
         new CompareTitle("title", ValueLiteral.valueOf(literal).value, false, ComparisonOperator.be, Option(negation).isDefined, step.message, Some(Duration.create(timeout.toLong, TimeUnit.SECONDS)), step.isTrim, step.isIgnoreCase)
       case r"""the page title should( not)?$negation be (blank|true|false)$literal""" =>
-        new CompareTitle("title", ValueLiteral.valueOf(literal).value, false, ComparisonOperator.be, Option(negation).isDefined, step.message, None, step.isTrim, step.isIgnoreCase)
-      case r"""the page title should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file)$operator "(.*?)"$expression with no (?:timeout|wait)""" =>
+        new CompareTitle("title", ValueLiteral.valueOf(literal).value, false, ComparisonOperator.be, Option(negation).isDefined, step.message, step.timeoutOpt, step.isTrim, step.isIgnoreCase)
+      case r"""the page title should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file)$operator "(.*?)"$expression with no (timeout|wait)$timeoutLiteral""" =>
+        Deprecation.warn("Step variant", s"with no $timeoutLiteral", Some("@Timeout('0s') annotation"))
         new CompareTitle("title", expression, false, ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message, Some(Duration.Zero), step.isTrim, step.isIgnoreCase)
-      case r"""the page title should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file)$operator "(.*?)"$expression with (\d+)$timeout second (?:timeout|wait)""" =>
+      case r"""the page title should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file)$operator "(.*?)"$expression with (\d+)$timeout second (timeout|wait)$timeoutLiteral""" =>
+        Deprecation.warn("Step variant", s"with $timeout second $timeoutLiteral", Some(s"@Timeout('${timeout}s') annotation"))
         new CompareTitle("title", expression, false, ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message, Some(Duration.create(timeout.toLong, TimeUnit.SECONDS)), step.isTrim, step.isIgnoreCase)
       case r"""the page title should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file)$operator "(.*?)"$expression""" =>
-        new CompareTitle("title", step.orDocString(expression), false, ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message, None, step.isTrim, step.isIgnoreCase)
-      case r"""the page title should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$attribute with no (?:timeout|wait)""" =>
+        new CompareTitle("title", step.orDocString(expression), false, ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message, step.timeoutOpt, step.isTrim, step.isIgnoreCase)
+      case r"""the page title should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$attribute with no (timeout|wait)$timeoutLiteral""" =>
+        Deprecation.warn("Step variant", s"with no $timeoutLiteral", Some("@Timeout('0s') annotation"))
         new CompareTitle("title", attribute, true, ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message, Some(Duration.Zero), step.isTrim, step.isIgnoreCase)
-      case r"""the page title should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$attribute with (\d+)$timeout second (?:timeout|wait)""" =>
+      case r"""the page title should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$attribute with (\d+)$timeout second (timeout|wait)$timeoutLiteral""" =>
+        Deprecation.warn("Step variant", s"with $timeout second $timeoutLiteral", Some(s"@Timeout('${timeout}s') annotation"))
         new CompareTitle("title", attribute, true, ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message, Some(Duration.create(timeout.toLong, TimeUnit.SECONDS)), step.isTrim, step.isIgnoreCase)
       case r"""the page title should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$attribute""" =>
-        new CompareTitle("title", attribute, true, ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message, None, step.isTrim, step.isIgnoreCase)
-      case r"""the (alert|confirmation)$name popup message should( not)?$negation be (blank|true|false)$literal with no (?:timeout|wait)""" =>
+        new CompareTitle("title", attribute, true, ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message, step.timeoutOpt, step.isTrim, step.isIgnoreCase)
+      case r"""the (alert|confirmation)$name popup message should( not)?$negation be (blank|true|false)$literal with no (timeout|wait)$timeoutLiteral""" =>
+        Deprecation.warn("Step variant", s"with no $timeoutLiteral", Some("@Timeout('0s') annotation"))
         new ComparePopupMessage(name, ValueLiteral.valueOf(literal).value, false, ComparisonOperator.be, Option(negation).isDefined, step.message, Some(Duration.Zero), step.isTrim, step.isIgnoreCase)
-      case r"""the (alert|confirmation)$name popup message should( not)?$negation be (blank|true|false)$literal with (\d+)$timeout second (?:timeout|wait)""" =>
+      case r"""the (alert|confirmation)$name popup message should( not)?$negation be (blank|true|false)$literal with (\d+)$timeout second (timeout|wait)$timeoutLiteral""" =>
+        Deprecation.warn("Step variant", s"with $timeout second $timeoutLiteral", Some(s"@Timeout('${timeout}s') annotation"))
         new ComparePopupMessage(name, ValueLiteral.valueOf(literal).value, false, ComparisonOperator.be, Option(negation).isDefined, step.message, Some(Duration.create(timeout.toLong, TimeUnit.SECONDS)), step.isTrim, step.isIgnoreCase)
       case r"""the (alert|confirmation)$name popup message should( not)?$negation be (blank|true|false)$literal""" =>
-        new ComparePopupMessage(name, ValueLiteral.valueOf(literal).value, false, ComparisonOperator.be, Option(negation).isDefined, step.message, None, step.isTrim, step.isIgnoreCase)
-      case r"""the (alert|confirmation)$name popup message should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file)$operator "(.*?)"$expression with no (?:timeout|wait)""" =>
+        new ComparePopupMessage(name, ValueLiteral.valueOf(literal).value, false, ComparisonOperator.be, Option(negation).isDefined, step.message, step.timeoutOpt, step.isTrim, step.isIgnoreCase)
+      case r"""the (alert|confirmation)$name popup message should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file)$operator "(.*?)"$expression with no (timeout|wait)$timeoutLiteral""" =>
+        Deprecation.warn("Step variant", s"with no $timeoutLiteral", Some("@Timeout('0s') annotation"))
         new ComparePopupMessage(name, expression, false, ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message, Some(Duration.Zero), step.isTrim, step.isIgnoreCase)
-      case r"""the (alert|confirmation)$name popup message should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file)$operator "(.*?)"$expression with (\d+)$timeout second (?:timeout|wait)""" =>
+      case r"""the (alert|confirmation)$name popup message should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file)$operator "(.*?)"$expression with (\d+)$timeout second (timeout|wait)$timeoutLiteral""" =>
+        Deprecation.warn("Step variant", s"with $timeout second $timeoutLiteral", Some(s"@Timeout('${timeout}s') annotation"))
         new ComparePopupMessage(name, expression, false, ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message, Some(Duration.create(timeout.toLong, TimeUnit.SECONDS)), step.isTrim, step.isIgnoreCase)
       case r"""the (alert|confirmation)$name popup message should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file)$operator "(.*?)"$expression""" =>
-        new ComparePopupMessage(name, step.orDocString(expression), false, ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message, None, step.isTrim, step.isIgnoreCase)
-      case r"""the (alert|confirmation)$name popup message should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$attribute with no (?:timeout|wait)""" =>
+        new ComparePopupMessage(name, step.orDocString(expression), false, ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message, step.timeoutOpt, step.isTrim, step.isIgnoreCase)
+      case r"""the (alert|confirmation)$name popup message should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$attribute with no (timeout|wait)$timeoutLiteral""" =>
+        Deprecation.warn("Step variant", s"with no $timeoutLiteral", Some("@Timeout('0s') annotation"))
         new ComparePopupMessage(name, attribute, true, ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message, Some(Duration.Zero), step.isTrim, step.isIgnoreCase)
-      case r"""the (alert|confirmation)$name popup message should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$attribute with (\d+)$timeout second (?:timeout|wait)""" =>
+      case r"""the (alert|confirmation)$name popup message should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$attribute with (\d+)$timeout second (timeout|wait)$timeoutLiteral""" =>
+        Deprecation.warn("Step variant", s"with $timeout second $timeoutLiteral", Some(s"@Timeout('${timeout}s') annotation"))
         new ComparePopupMessage(name, attribute, true, ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message, Some(Duration.create(timeout.toLong, TimeUnit.SECONDS)), step.isTrim, step.isIgnoreCase)
       case r"""the (alert|confirmation)$name popup message should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$attribute""" =>
-        new ComparePopupMessage(name, attribute, true, ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message, None, step.isTrim, step.isIgnoreCase)
-      case r"""(.+?)$element should( not)?$negation be (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$state with no (?:timeout|wait)""" =>
+        new ComparePopupMessage(name, attribute, true, ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message, step.timeoutOpt, step.isTrim, step.isIgnoreCase)
+      case r"""(.+?)$element should( not)?$negation be (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$state with no (timeout|wait)$timeoutLiteral""" =>
+        Deprecation.warn("Step variant", s"with no $timeoutLiteral", Some("@Timeout('0s') annotation"))
         new CompareElementState(element, ElementState.valueOf(state), Option(negation).nonEmpty, step.message, Some(Duration.Zero))
-      case r"""(.+?)$element should( not)?$negation be (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$state with (\d+)$timeout second (?:timeout|wait)""" =>
+      case r"""(.+?)$element should( not)?$negation be (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$state with (\d+)$timeout second (timeout|wait)$timeoutLiteral""" =>
+        Deprecation.warn("Step variant", s"with $timeout second $timeoutLiteral", Some(s"@Timeout('${timeout}s') annotation"))
         new CompareElementState(element, ElementState.valueOf(state), Option(negation).nonEmpty, step.message, Some(Duration.create(timeout.toLong, TimeUnit.SECONDS)))
       case r"""(.+?)$element should( not)?$negation be (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$state""" =>
-        new CompareElementState(element, ElementState.valueOf(state), Option(negation).nonEmpty, step.message, None)
-      case r"""(.+?)$element( text| value)?$selection should( not)?$negation be (blank|true|false)$literal with no (?:timeout|wait)""" if !element.matches(".+at (json path|xpath).+") =>
+        new CompareElementState(element, ElementState.valueOf(state), Option(negation).nonEmpty, step.message, step.timeoutOpt)
+      case r"""(.+?)$element( text| value)?$selection should( not)?$negation be (blank|true|false)$literal with no (timeout|wait)$timeoutLiteral""" if !element.matches(".+at (json path|xpath).+") =>
+        Deprecation.warn("Step variant", s"with no $timeoutLiteral", Some("@Timeout('0s') annotation"))
         new CompareValueOrSelectionToValue(element, Option(selection).map(_.trim).map(DropdownSelection.valueOf), ValueLiteral.valueOf(literal).value, ComparisonOperator.be, Option(negation).isDefined, step.message, Some(Duration.Zero), step.isTrim, step.isIgnoreCase)
-      case r"""(.+?)$element( text| value)?$selection should( not)?$negation be (blank|true|false)$literal with (\d+)$timeout second (?:timeout|wait)""" if !element.matches(".+at (json path|xpath).+") =>
+      case r"""(.+?)$element( text| value)?$selection should( not)?$negation be (blank|true|false)$literal with (\d+)$timeout second (timeout|wait)$timeoutLiteral""" if !element.matches(".+at (json path|xpath).+") =>
+        Deprecation.warn("Step variant", s"with $timeout second $timeoutLiteral", Some(s"@Timeout('${timeout}s') annotation"))
         new CompareValueOrSelectionToValue(element, Option(selection).map(_.trim).map(DropdownSelection.valueOf), ValueLiteral.valueOf(literal).value, ComparisonOperator.be, Option(negation).isDefined, step.message, Some(Duration.create(timeout.toLong, TimeUnit.SECONDS)), step.isTrim, step.isIgnoreCase)
       case r"""(.+?)$element( text| value)?$selection should( not)?$negation be (blank|true|false)$literal""" if !element.matches(".+at (json path|xpath).+") =>
-        new CompareValueOrSelectionToValue(element, Option(selection).map(_.trim).map(DropdownSelection.valueOf), ValueLiteral.valueOf(literal).value, ComparisonOperator.be, Option(negation).isDefined, step.message, None, step.isTrim, step.isIgnoreCase)
-      case r"""(.+?)$element( text| value)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file)$operator "(.*?)"$expression with no (?:timeout|wait)""" if !element.matches(".+at (json path|xpath).+") =>
+        new CompareValueOrSelectionToValue(element, Option(selection).map(_.trim).map(DropdownSelection.valueOf), ValueLiteral.valueOf(literal).value, ComparisonOperator.be, Option(negation).isDefined, step.message, step.timeoutOpt, step.isTrim, step.isIgnoreCase)
+      case r"""(.+?)$element( text| value)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file)$operator "(.*?)"$expression with no (timeout|wait)$timeoutLiteral""" if !element.matches(".+at (json path|xpath).+") =>
+        Deprecation.warn("Step variant", s"with no $timeoutLiteral", Some("@Timeout('0s') annotation"))
         new CompareValueOrSelectionToValue(element, Option(selection).map(_.trim).map(DropdownSelection.valueOf), expression, ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message, Some(Duration.Zero), step.isTrim, step.isIgnoreCase)
-      case r"""(.+?)$element( text| value)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file)$operator "(.*?)"$expression with (\d+)$timeout second (?:timeout|wait)""" if !element.matches(".+at (json path|xpath).+") =>
+      case r"""(.+?)$element( text| value)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file)$operator "(.*?)"$expression with (\d+)$timeout second (timeout|wait)$timeoutLiteral""" if !element.matches(".+at (json path|xpath).+") =>
+        Deprecation.warn("Step variant", s"with $timeout second $timeoutLiteral", Some(s"@Timeout('${timeout}s') annotation"))
         new CompareValueOrSelectionToValue(element, Option(selection).map(_.trim).map(DropdownSelection.valueOf), expression, ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message, Some(Duration.create(timeout.toLong, TimeUnit.SECONDS)), step.isTrim, step.isIgnoreCase)
       case r"""(.+?)$element( text| value)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file)$operator "(.*?)"$expression""" if !element.matches(".+at (json path|xpath).+") =>
-        new CompareValueOrSelectionToValue(element, Option(selection).map(_.trim).map(DropdownSelection.valueOf), step.orDocString(expression), ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message, None, step.isTrim, step.isIgnoreCase)
-      case r"""(.+?)$element( text| value)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$attribute with no (?:timeout|wait)""" if attribute != "absent" && attribute != "defined" && !element.matches(".+at (json path|xpath).+") && !attribute.contains("% similar to ") && attribute != "no accumulated errors" && !attribute.contains('"') =>
+        new CompareValueOrSelectionToValue(element, Option(selection).map(_.trim).map(DropdownSelection.valueOf), step.orDocString(expression), ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message, step.timeoutOpt, step.isTrim, step.isIgnoreCase)
+      case r"""(.+?)$element( text| value)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$attribute with no (timeout|wait)$timeoutLiteral""" if attribute != "absent" && attribute != "defined" && !element.matches(".+at (json path|xpath).+") && !attribute.contains("% similar to ") && attribute != "no accumulated errors" && !attribute.contains('"') =>
+        Deprecation.warn("Step variant", s"with no $timeoutLiteral", Some("@Timeout('0s') annotation"))
         new CompareValueOrSelectionToBoundValue(element, Option(selection).map(_.trim).map(DropdownSelection.valueOf), attribute, ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message, Some(Duration.Zero), step.isTrim, step.isIgnoreCase)
-      case r"""(.+?)$element( text| value)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$attribute with (\d+)$timeout second (?:timeout|wait)""" if attribute != "absent" && attribute != "defined" && !element.matches(".+at (json path|xpath).+") && !attribute.contains("% similar to ") && attribute != "no accumulated errors" && !attribute.contains('"') =>
+      case r"""(.+?)$element( text| value)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$attribute with (\d+)$timeout second (timeout|wait)$timeoutLiteral""" if attribute != "absent" && attribute != "defined" && !element.matches(".+at (json path|xpath).+") && !attribute.contains("% similar to ") && attribute != "no accumulated errors" && !attribute.contains('"') =>
+        Deprecation.warn("Step variant", s"with $timeout second $timeoutLiteral", Some(s"@Timeout('${timeout}s') annotation"))
         new CompareValueOrSelectionToBoundValue(element, Option(selection).map(_.trim).map(DropdownSelection.valueOf), attribute, ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message, Some(Duration.create(timeout.toLong, TimeUnit.SECONDS)), step.isTrim, step.isIgnoreCase)
       case r"""(.+?)$element( text| value)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$attribute""" if attribute != "absent" && attribute != "defined" && !element.matches(".+at (json path|xpath).+") && !attribute.contains("% similar to ") && attribute != "no accumulated errors" && !attribute.contains('"') =>
-        new CompareValueOrSelectionToBoundValue(element, Option(selection).map(_.trim).map(DropdownSelection.valueOf), attribute, ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message, None, step.isTrim, step.isIgnoreCase)
+        new CompareValueOrSelectionToBoundValue(element, Option(selection).map(_.trim).map(DropdownSelection.valueOf), attribute, ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message, step.timeoutOpt, step.isTrim, step.isIgnoreCase)
       case r"""I capture (.+?)$attribute (?:of|on|in) (.+?)$element by (?:javascript|js) "(.+?)"$expression""" =>
         new CaptureElementAttribute(element, attribute, step.orDocString(expression))
       case r"""I capture the current URL""" =>

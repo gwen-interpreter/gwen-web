@@ -92,8 +92,6 @@ class WebDslTest extends BaseTest with Matchers with MockitoSugar {
               .replace("<position>", "1")
               .replace("<occurrence>", "1")
               .replace("<duration>", "2")
-              .replace("<delayPeriod>", "20")
-              .replace("<timeoutPeriod>", "3000000")
               .replace("<w>", "375")
               .replace("<h>", "667")
               .replace("<modifiers>", "Command+Shift")

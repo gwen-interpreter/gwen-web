@@ -15,5 +15,5 @@ Feature: Repeat until example
     Given counter is "-1"
       And condition is defined by javascript "true"
      When I increment counter
-      And I increment counter until counter > 3 using no delay if condition
+      And @Delay('100ms') @Timeout('2s') I increment counter until counter > 3 if condition
      Then counter should be "4"

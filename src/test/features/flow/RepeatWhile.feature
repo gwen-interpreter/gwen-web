@@ -22,5 +22,5 @@ Feature: Repeat while example
     Given counter2 is "-1"
       And condition is defined by javascript "true"
      When I increment counter2
-      And I increment counter2 while counter2 < 4 using no delay if condition
+      And @Delay('0s') I increment counter2 while counter2 < 4 if condition
      Then counter2 should be "4"
