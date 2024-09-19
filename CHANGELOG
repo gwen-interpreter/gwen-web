@@ -1,3 +1,9 @@
+3.74.1
+======
+19 September 2024
+- Update Gwen core from v3.63.0 to v[3.63.1](https://github.com/gwen-interpreter/gwen/releases/tag/v3.63.1)
+  - Fix deprecation msg
+
 3.74.0
 ======
 19 September 2024
