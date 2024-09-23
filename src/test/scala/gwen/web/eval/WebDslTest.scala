@@ -67,8 +67,7 @@ class WebDslTest extends BaseTest with Matchers with MockitoSugar {
     envState.scopes.set("<frame>/locator", "id")
     envState.scopes.set("<frame>/locator/id", "id")
     envState.scopes.set("<filepath>/file", "file.txt")
-    envState.scopes.set("<filepathRef>", "file.txt")
-    envState.scopes.set("<filePathRef> file", "file.txt")
+    envState.scopes.set("<filepathRef> file", "file.txt")
     envState.scopes.set("<csvFilepathRef> file", "src/test/features-data/TodoItems0.csv")
     envState.scopes.set("<jsonFilepathRef> file", "src/test/features-data/TodoItems0.json")
     envState.scopes.set("<elements>/locator", "css selector")
@@ -106,6 +105,7 @@ class WebDslTest extends BaseTest with Matchers with MockitoSugar {
               .replace("<count>", "2")
               .replace("<pixels>", "100")
               .replace("<percentage>", "80")
+              .replace("<filepathRef file>", "<filepathRef> file")
           } foreach { dsl =>
             val iStep = Step(None, StepKeyword.Given.toString, dsl.replaceAll("<step>", """a is "b""""), Nil, None, Nil, None, Pending, Nil, Nil, Nil, None, Nil)
             engine.evaluateStep(parent, iStep, ctx).evalStatus match {

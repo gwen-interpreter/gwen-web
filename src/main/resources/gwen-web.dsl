@@ -516,51 +516,6 @@ I untick <element> of <context>
 I move to <element> of <context>
 I send "<keys>"
 I send "<keys>" to <element>
-I wait 1 second when <element> is clicked
-I wait 1 second when <element> is right clicked
-I wait 1 second when <element> is double clicked
-I wait 1 second when <element> is moved to
-I wait 1 second when <element> is submitted
-I wait 1 second when <element> is checked
-I wait 1 second when <element> is ticked
-I wait 1 second when <element> is unchecked
-I wait 1 second when <element> is unticked
-I wait 1 second when <element> is selected
-I wait 1 second when <element> is deselected
-I wait 1 second when <element> is typed
-I wait 1 second when <element> is entered
-I wait 1 second when <element> is tabbed
-I wait 1 second when <element> is cleared
-I wait <duration> seconds when <element> is clicked
-I wait <duration> seconds when <element> is right clicked
-I wait <duration> seconds when <element> is double clicked
-I wait <duration> seconds when <element> is moved to
-I wait <duration> seconds when <element> is submitted
-I wait <duration> seconds when <element> is checked
-I wait <duration> seconds when <element> is ticked
-I wait <duration> seconds when <element> is unchecked
-I wait <duration> seconds when <element> is unticked
-I wait <duration> seconds when <element> is selected
-I wait <duration> seconds when <element> is deselected
-I wait <duration> seconds when <element> is typed
-I wait <duration> seconds when <element> is entered
-I wait <duration> seconds when <element> is tabbed
-I wait <duration> seconds when <element> is cleared
-I wait until <condition> when <element> is clicked
-I wait until <condition> when <element> is right clicked
-I wait until <condition> when <element> is double clicked
-I wait until <condition> when <element> is moved to
-I wait until <condition> when <element> is submitted
-I wait until <condition> when <element> is checked
-I wait until <condition> when <element> is ticked
-I wait until <condition> when <element> is unchecked
-I wait until <condition> when <element> is unticked
-I wait until <condition> when <element> is selected
-I wait until <condition> when <element> is deselected
-I wait until <condition> when <element> is typed
-I wait until <condition> when <element> is entered
-I wait until <condition> when <element> is tabbed
-I wait until <condition> when <element> is cleared
 I wait until "<javascript>"
 I wait until <condition>
 I wait until <element> is displayed
@@ -579,6 +534,16 @@ I wait until <element> is not unchecked
 I wait until <element> is not unticked
 I wait until <element> is not enabled
 I wait until <element> is not disabled
+I wait until "<filepath>" file exists
+I wait until <filepathRef file> exists
+I wait until "<filepath>" file not exists
+I wait until <filepathRef file> not exists
+I wait until "<filepath>" file does not exist
+I wait until <filepathRef file> does not exist
+I wait until "<filepath>" file is empty
+I wait until <filepathRef file> is empty
+I wait until "<filepath>" file is not empty
+I wait until <filepathRef file> is not empty
 I wait 1 second
 I wait <duration> seconds
 I highlight <element>
@@ -630,6 +595,16 @@ I base64 decode <reference>
 <step> while <element> is not enabled
 <step> until <element> is not disabled
 <step> while <element> is not disabled
+<step> while "<filepath>" file exists
+<step> until <filepathRef file> exists
+<step> while "<filepath>" file not exists
+<step> until <filepathRef file> not exists
+<step> while "<filepath>" file does not exist
+<step> until <filepathRef file> does not exist
+<step> while "<filepath>" file is empty
+<step> until <filepathRef file> is empty
+<step> while "<filepath>" file is not empty
+<step> until <filepathRef file> is not empty
 I close the current browser
 I close the browser
 I start a new browser
@@ -815,6 +790,16 @@ I maximise the window
 <step> if <element> does not match json path "<expression>"
 <step> if <element> does not match template "<expression>"
 <step> if <element> does not match template file "<filepath>"
+<step> if "<filepath>" file exists
+<step> if "<filepath>" file not exists
+<step> if "<filepath>" file does not exist
+<step> if "<filepath>" file is empty
+<step> if "<filepath>" file is not empty
+<step> if <filepathRef file> exists
+<step> if <filepathRef file> not exists
+<step> if <filepathRef file> does not exist
+<step> if <filepathRef file> is empty
+<step> if <filepathRef file> is not empty
 <step> for each <entry> in <textRef> delimited by "<delimiter>"
 <step> for each <entry> in <arrayRef> array
 I drag and drop <sourceElement> to <targetElement>
@@ -826,19 +811,19 @@ I attach "<filepath>" as <name>
 I write "<text>" to "<filepath>" file
 I write <reference> to "<filepath>" file
 I write new line to "<filepath>" file
-I write "<text>" to <filePathRef> file
-I write <reference> to <filePathRef> file
-I write new line to <filePathRef> file
+I write "<text>" to <filepathRef file>
+I write <reference> to <filepathRef file>
+I write new line to <filepathRef file>
 I append "<text>" to "<filepath>" file
 I append <reference> to "<filepath>" file
 I append new line to "<filepath>" file
-I append "<text>" to <filePathRef> file
-I append <reference> to <filePathRef> file
-I append new line to <filePathRef> file
+I append "<text>" to <filepathRef file>
+I append <reference> to <filepathRef file>
+I append new line to <filepathRef file>
 I download "<url>" to "<filepath>"
-I download "<url>" to <filepathRef>
+I download "<url>" to <filepathRef file>
 I download the current URL to "<filepath>"
-I download the current URL to <filepathRef>
+I download the current URL to <filepathRef file>
 <textRef> should be <percentage>% similar to "<text>"
 <textRef> should be less than <percentage>% similar to "<text>"
 <textRef> should be at most <percentage>% similar to "<text>"

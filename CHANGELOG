@@ -1,3 +1,34 @@
+3.75.0
+======
+23 September 2024
+- Deprecated DSL steps:
+  - `I wait <duration> second[s] when <element> is <actioned>`
+  - `I wait until <condition> when <element> is <actioned>`
+- Update Gwen core from v3.63.2 to v[3.64.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.64.0)
+  - Add file based DSL steps
+    - `<step> if "<filepath>" file[ not] exists`
+    - `<step> if "<filepath>" file does not exist`
+    - `<step> if <filepathRef file>[ not] exists`
+    - `<step> if <filepathRef file> does not exist`
+    - `<step> if "<filepath>" file is[ not] empty`
+    - `<step> if <filepathRef file> is[ not] empty`
+    - `<step> <until|while> "<filepath>" file[ not] exists`
+    - `<step> <until|while> "<filepath>" file does not exist`
+    - `<step> <until|while> <filepathRef file>[ not] exists`
+    - `<step> <until|while> <filepathRef file> does not exist`
+    - `<step> <until|while> "<filepath>" file is[ not] empty`
+    - `<step> <until|while> <filepathRef file> is[ not] empty`
+    - `I wait until "<filepath>" file[ not] exists`
+    - `I wait until "<filepath>" file does not exist`
+    - `I wait until <filepathRef file>[ not] exists`
+    - `I wait until <filepathRef file> does not exist`
+    - `I wait until "<filepath>" file is[ not] empty`
+    - `I wait until <filepathRef file> is[ not] empty`
+    - `"<filepath>" file should[ not] exist`
+    - `<filepathRef file> should[ not] exist`
+    - `"<filepath>" file should[ not] be empty`
+    - `<filepathRef file> should[ not] be empty`
+
 3.74.3
 ======
 21 September 2024
@@ -487,9 +518,9 @@ Oct 28, 2023
 Oct 24, 2023
 - Add DSLs for downloading files from a URL
   - `I download "<url>" to "<filepath>"`
-  - `I download "<url>" to <filepathRef>`
+  - `I download "<url>" to <filepathRef file>`
   - `I download the current URL to "<filepath>"`
-  - `I download the current URL to <filepathRef>`
+  - `I download the current URL to <filepathRef file>`
 - Update selenium from v4.14.0 to v4.14.1
 - Update Gwen core from v3.49.2 to v[3.50.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.50.0)
 
@@ -1256,9 +1287,9 @@ Aug 24, 2022
 - Update Gwen core from v3.26.1 to v[3.27.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.27.0)
   - Introduce CSV lookup DSLs:
     - `I lookup <name> in the "<filepath>" file where "<predicate>"`
-    - `I lookup <name> in <filepathRef> file where "<predicate>"`
+    - `I lookup <name> in <filepathRef file> file where "<predicate>"`
     - `I lookup <column> in the "<filepath>" file as <name> where "<predicate>"`
-    - `I lookup <column> in <filepathRef> file as <name> where "<predicate>"`
+    - `I lookup <column> in <filepathRef file> file as <name> where "<predicate>"`
 
 3.29.1
 ======
@@ -1339,9 +1370,9 @@ Jul 21, 2022
     - `I <write|append> "<text>" to "<filepath>" file`
     - `I <write|append> <textRef> to "<filepath>" file`
     - `I <write|append> new line to "<filepath>" file`
-    - `I <write|append> "<text>" to <filepathRef> file`
-    - `I <write|append> <textRef> to <filepathRef> file`
-    - `I <write|append> new line to <filepathRef> file`
+    - `I <write|append> "<text>" to <filepathRef file> file`
+    - `I <write|append> <textRef> to <filepathRef file> file`
+    - `I <write|append> new line to <filepathRef file> file`
     
 3.24.0
 ======

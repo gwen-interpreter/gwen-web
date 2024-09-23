@@ -105,3 +105,33 @@ Feature: If Conditionals
       Given the state code is "QLD"
        When I navigate to "https://example.com/?state=Other" if the state code does not match regex "(VIC|NSW)"
        Then the current URL should be "https://example.com/?state=Other"
+
+  Scenario: Perform this if filepath exists
+    Given the target is "this"
+     When I perform this if "gwen.conf" file exists
+      And I perform that if "gwen.conf" file does not exist
+     Then the called step should be "this step"
+      And the called step should not be "that step"
+
+  Scenario: Perform this if fileref exists
+    Given the target is "that"
+      And the file is "gwen.conf"
+     When I perform that if the file exists
+      And I perform this if the file not exists
+     Then the called step should be "that step"
+      And the called step should not be "this step"
+
+  Scenario: Perform this if file empty or not
+    Given the target is "this"
+     When I perform this if "gwen.conf" file is not empty
+      And I perform that if "gwen.conf" file is empty
+     Then the called step should be "this step"
+      And the called step should not be "that step"
+
+  Scenario: Perform this if fileref emtpy or not
+    Given the target is "that"
+      And the file is "gwen.conf"
+     When I perform that if the file is not empty
+      And I perform this if the file is empty
+     Then the called step should be "that step"
+      And the called step should not be "this step"

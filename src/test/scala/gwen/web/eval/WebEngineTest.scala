@@ -1342,34 +1342,6 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     verify(ctx, times(2)).sendKeys(Array("CONTROL", "C"))
   }
 
-  "I wait 1 second when <element> is <clicked|right clicked|double clicked|submitted|checked|ticked|unchecked|unticked|selected|deselected|typed|entered|tabbed|cleared|moved to>" should "evaluate" in {
-    val mockBinding = mock[LocatorBinding]
-    doReturn(mockBinding).when(ctx).getLocatorBinding("<element>")
-    events.foreach { event =>
-      evaluate(s"I wait 1 second when <element> is $event")
-      verify(mockScopes).set(s"<element>/${ElementEvent.actionOf(event)}/wait", "1")
-    }
-  }
-
-  "I wait <duration> seconds when <element> is <clicked|right clicked|double clicked|submitted|checked|ticked|unchecked|unticked|selected|deselected|typed|entered|tabbed|cleared|moved to>" should "evaluate" in {
-    val mockBinding = mock[LocatorBinding]
-    doReturn(mockBinding).when(ctx).getLocatorBinding("<element>")
-    events.foreach { event =>
-      evaluate(s"I wait 2 seconds when <element> is $event")
-      verify(mockScopes).set(s"<element>/${ElementEvent.actionOf(event)}/wait", "2")
-    }
-  }
-
-  "I wait until <condition> when <element> is <clicked|right clicked|double clicked|submitted|checked|ticked|unchecked|unticked|selected|deselected|typed|entered|tabbed|cleared|moved to>" should "evaluate" in {
-    val mockBinding = mock[LocatorBinding]
-    doReturn(mockBinding).when(ctx).getLocatorBinding("<element>")
-    events.foreach { event =>
-      evaluate(s"I wait until <condition> when <element> is $event")
-      verify(mockScopes).set(s"<element>/${ElementEvent.actionOf(event)}/condition", "<condition>")
-    }
-    verify(mockScopes, times(events.size)).get("<condition>/javascript")
-  }
-
   """I wait until "<javascript>"""" should "evaluate" in {
     evaluate("""I wait until "<javascript>"""")
   }

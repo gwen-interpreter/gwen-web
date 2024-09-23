@@ -142,8 +142,10 @@ class WebEngine extends EvalEngine[WebContext] {
       case r"""I wait for (.+?)$element""" =>
         new WaitForElement(element, None)
       case r"""I wait ([0-9]+?)$duration second(?:s?) when (.+?)$element is (clicked|right clicked|double clicked|submitted|checked|ticked|unchecked|unticked|selected|deselected|typed|entered|tabbed|cleared|moved to)$event""" =>
+        Deprecation.log("DSL step", "I wait <duration> second[s] when <element> is <actioned>", None)
         new WaitForElementOnEvent(element, ElementEvent.valueOf(event), duration.toLong)
       case r"""I wait until (.+?)$condition when (.+?)$element is (clicked|right clicked|double clicked||submitted|checked|ticked|unchecked|unticked|selected|deselected|typed|entered|tabbed|cleared|moved to)$event""" =>
+        Deprecation.log("DSL step", "I wait until <condition> when <element> is <actioned>", None)
         new WaitForConditionOnEvent(element, ElementEvent.valueOf(event), condition)
       case r"""I wait until "(.+?)$javascript" using (.+?)$delayPeriod (second|millisecond)$delayUnit delay and (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit timeout""" => 
         Deprecation.log("Overloaded step", s"using $delayPeriod $delayUnit delay and $timeoutPeriod $timeoutUnit timeout", Some(s"@Delay('$delayPeriod${Map("second" -> "s", "millisecond" -> "ms")(delayUnit)}') @Timeout('$timeoutPeriod${Map("minute" -> "m", "second" -> "s", "millisecond" -> "ms")(timeoutUnit)}') annotations"))
@@ -167,7 +169,7 @@ class WebEngine extends EvalEngine[WebContext] {
       case r"""I wait until (.+?)$condition using (.+?)$timeoutPeriod (minute|second|millisecond)$timeoutUnit timeout""" =>
         Deprecation.log("Overloaded step", s"using $timeoutPeriod $timeoutUnit timeout", Some(s"@Timeout('$timeoutPeriod${Map("minute" -> "m", "second" -> "s", "millisecond" -> "ms")(timeoutUnit)}') annotation"))
         new WaitForBoundCondition(condition, step.delayOpt.map(_.toMillis), Some(Duration(timeoutPeriod.toLong, timeoutUnit).toSeconds))
-      case r"""I wait until (.+?)$condition""" =>
+      case r"""I wait until (.+?)$condition""" if !condition.matches(".+ file (exists|not exists|does not exist|is empty|is not empty)") =>
         new WaitForBoundCondition(condition, step.delayOpt.map(_.toMillis), step.timeoutOpt.map(_.toSeconds))
       case r"""I am on the (.+?)$page""" =>
         new CreatePageScope(page)
@@ -329,13 +331,13 @@ class WebEngine extends EvalEngine[WebContext] {
         new CompareValueOrSelectionToValue(element, Option(selection).map(_.trim).map(DropdownSelection.valueOf), expression, ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message, Some(Duration.create(timeout.toLong, TimeUnit.SECONDS)), step.isTrim, step.isIgnoreCase)
       case r"""(.+?)$element( text| value)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file)$operator "(.*?)"$expression""" if !element.matches(".+at (json path|xpath).+") =>
         new CompareValueOrSelectionToValue(element, Option(selection).map(_.trim).map(DropdownSelection.valueOf), step.orDocString(expression), ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message, step.timeoutOpt, step.isTrim, step.isIgnoreCase)
-      case r"""(.+?)$element( text| value)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$attribute with no (timeout|wait)$timeoutLiteral""" if attribute != "absent" && attribute != "defined" && !element.matches(".+at (json path|xpath).+") && !attribute.contains("% similar to ") && attribute != "no accumulated errors" && !attribute.contains('"') =>
+      case r"""(.+?)$element( text| value)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$attribute with no (timeout|wait)$timeoutLiteral""" if !attribute.matches("(absent|defined|empty|no accumulated errors)") && !attribute.contains("% similar to ") && !attribute.contains('"') && !element.matches(".+at (json path|xpath).+") =>
         Deprecation.log("Overloaded step", s"with no $timeoutLiteral", Some("@Timeout('0s') annotation"))
         new CompareValueOrSelectionToBoundValue(element, Option(selection).map(_.trim).map(DropdownSelection.valueOf), attribute, ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message, Some(Duration.Zero), step.isTrim, step.isIgnoreCase)
-      case r"""(.+?)$element( text| value)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$attribute with (\d+)$timeout second (timeout|wait)$timeoutLiteral""" if attribute != "absent" && attribute != "defined" && !element.matches(".+at (json path|xpath).+") && !attribute.contains("% similar to ") && attribute != "no accumulated errors" && !attribute.contains('"') =>
+      case r"""(.+?)$element( text| value)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$attribute with (\d+)$timeout second (timeout|wait)$timeoutLiteral""" if !attribute.matches("(absent|defined|empty|no accumulated errors)") && !attribute.contains("% similar to ") && !attribute.contains('"') && !element.matches(".+at (json path|xpath).+") =>
         Deprecation.log("Overloaded step", s"with $timeout second $timeoutLiteral", Some(s"@Timeout('${timeout}s') annotation"))
         new CompareValueOrSelectionToBoundValue(element, Option(selection).map(_.trim).map(DropdownSelection.valueOf), attribute, ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message, Some(Duration.create(timeout.toLong, TimeUnit.SECONDS)), step.isTrim, step.isIgnoreCase)
-      case r"""(.+?)$element( text| value)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$attribute""" if attribute != "absent" && attribute != "defined" && !element.matches(".+at (json path|xpath).+") && !attribute.contains("% similar to ") && attribute != "no accumulated errors" && !attribute.contains('"') =>
+      case r"""(.+?)$element( text| value)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$attribute""" if !attribute.matches("(absent|defined|empty|no accumulated errors)") && !attribute.contains("% similar to ") && !attribute.contains('"') && !element.matches(".+at (json path|xpath).+") =>
         new CompareValueOrSelectionToBoundValue(element, Option(selection).map(_.trim).map(DropdownSelection.valueOf), attribute, ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message, step.timeoutOpt, step.isTrim, step.isIgnoreCase)
       case r"""I capture (.+?)$attribute (?:of|on|in) (.+?)$element by (?:javascript|js) "(.+?)"$expression""" =>
         new CaptureElementAttribute(element, attribute, step.orDocString(expression))
@@ -447,7 +449,7 @@ class WebEngine extends EvalEngine[WebContext] {
         new AppendNewLineToElement(element)
       case r"""I download the current URL to "(.+?)"$filepath""" =>
         new DownloadCurrentUrlToFile(Some(filepath), None, defaultConditionTimeoutSecs)
-      case r"""I download the current URL to (.+?)$filepathRef""" =>
+      case r"""I download the current URL to (.+? file)$filepathRef""" =>
         new DownloadCurrentUrlToFile(None, Some(filepathRef), defaultConditionTimeoutSecs)
       
       case _ => 
