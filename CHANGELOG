@@ -1,3 +1,11 @@
+3.76.0
+======
+26 September 2024
+- Update Gwen core from v3.64.0 to v[3.65.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.65.0)
+  - Surround filename in file compare error messages with single quotes instead of double quotes
+  - Introduce new implicit attribute:
+    - `gwen.eval.status.message.csvEscaped` = CSV escaped equivalent of `gwen.eval.status.message`
+
 3.75.0
 ======
 23 September 2024
