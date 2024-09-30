@@ -32,7 +32,7 @@ abstract class BaseFeatureTest extends BaseTest {
       val reportPath = s"${this.getClass.getSimpleName}${if (dryRun) "-dryRun" else ""}"
       val execModePath = if (parallel) "parallel" else "sequential"
       val runRP = !dryRun && Settings.getOpt("rp").map(_.toBoolean).getOrElse(false)
-      var args = Array("-b", "-r", s"target/reports/$reportPath/$execModePath/$reportDir", "-f", s"junit,html,json${if (runRP) ",rp" else ""}")
+      var args = Array("-b", "-r", s"target/reports/$reportPath/$execModePath/$reportDir", "-f", s"html,results,junit,json${if (runRP) ",rp" else ""}")
       if (parallel) args = args ++ Array("--parallel")
       if (dryRun) args = args ++ Array("-n")
       if (dataFile.nonEmpty) args = args ++ Array("-i", dataFile.get)
