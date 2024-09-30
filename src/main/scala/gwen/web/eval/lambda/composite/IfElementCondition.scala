@@ -53,7 +53,7 @@ import scala.util.Failure
           val iStep = step.copy(withEvalStatus = Pending)
           val ifTag = Tag(Annotations.If)
           val tags = List(Tag(Annotations.Synthetic), ifTag, Tag(Annotations.StepDef))
-          val iStepDef = Scenario(None, tags, ifTag.toString, cond, Nil, None, List(step.copy(withName = doStep)), Nil, Nil, Nil)
+          val iStepDef = Scenario(None, tags, ifTag.toString, cond, None, Nil, None, List(step.copy(withName = doStep)), Nil, Nil, Nil)
           val sdCall = () => engine.callStepDef(step, iStepDef, iStep, ctx)
           ctx.evaluate(sdCall()) {
             val satisfied = ctx.isElementState(binding, state, negate)

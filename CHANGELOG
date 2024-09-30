@@ -1,3 +1,28 @@
+3.77.0
+======
+9 October 2024
+- Update Gwen core from v3.65.0 to v[3.66.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.66.0)
+  - Add `results` report format option for declarative CSV reporting
+  - Introduce `@Results` annotation to support logging CSV results at any node level
+  - Improved error report handling and reporting
+  - Add impicit variables:
+    - `gwen.feature.displayName`
+    - `gwen.feature.eval.started`
+    - `gwen.feature.eval.finished`
+    - `gwen.rule.eval.started`
+    - `gwen.rule.eval.finished`
+    - `gwen.scenario.displayName`
+    - `gwen.scenario.eval.started`
+    - `gwen.scenario.eval.finished`
+    - `gwen.stepDef.displayName`
+    - `gwen.stepDef.eval.started`  
+    - `gwen.stepDef.eval.finished`
+    - `gwen.examples.name`
+    - `gwen.examples.eval.start.msecs`
+    - `gwen.examples.eval.started`
+    - `gwen.examples.eval.finished`
+    - `gwen.examples.eval.status.keyword`
+
 3.76.0
 ======
 26 September 2024

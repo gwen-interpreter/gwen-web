@@ -56,7 +56,7 @@ import java.io.File
 /**
   * The web evaluatioin context.
   */
-class WebContext(options: GwenOptions, envState: EnvState, driverManager: DriverManager) extends EvalContext(options, envState) with LazyLogging with WebSessionEventListener {
+class WebContext(options: GwenOptions, envState: EnvState, driverManager: DriverManager) extends EvalContext(options, envState) with LazyLogging with WebSessionEventListener with ImplicitWebValueKeys {
 
   Try(logger.info(s"GWEN_CLASSPATH = ${sys.env("GWEN_CLASSPATH")}"))
   Try(logger.info(s"SELENIUM_HOME = ${sys.env("SELENIUM_HOME")}"))
@@ -71,12 +71,12 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
       if (WebSettings.videoEnabled) {
         addVideo(new File(GwenSettings.`gwen.video.dir`, s"$sessionId.mp4"))
       }
-      envState.scopes.topScope.set("gwen.web.sessionId", sessionId)
+      envState.scopes.topScope.set(`gwen.web.sessionId`, sessionId)
     }
   }
 
   override def sessionClosed(event: WebSessionEvent): Unit = { 
-    envState.scopes.topScope.set("gwen.web.sessionId", null)
+    envState.scopes.topScope.set(`gwen.web.sessionId`, null)
   }
 
   def webElementlocator = new WebElementLocator(this)
@@ -390,7 +390,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     */
   def withWebDriver[T](function: WebDriver => T)(implicit takeScreenShot: Boolean = false): Option[T] = {
     evaluate { 
-      topScope.set("gwen.web.sessionId", DryValueBinding.unresolved("gwen.web.sessionId"))
+      topScope.set(`gwen.web.sessionId`, DryValueBinding.unresolved(`gwen.web.sessionId`))
       None.asInstanceOf[Option[T]] 
     } {
       driverManager.withWebDriver { driver =>
