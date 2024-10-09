@@ -4,8 +4,8 @@
 - Update Gwen core from v3.65.0 to v[3.66.0](https://github.com/gwen-interpreter/gwen/releases/tag/v3.66.0)
   - Add `results` report format option for declarative CSV reporting
   - Introduce `@Results` annotation to support logging CSV results at any node level
-  - Improved error report handling and reporting
-  - Add impicit variables:
+  - Improved error handling and reporting
+  - Add implicit variables:
     - `gwen.feature.displayName`
     - `gwen.feature.eval.started`
     - `gwen.feature.eval.finished`
