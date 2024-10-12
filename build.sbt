@@ -56,18 +56,8 @@ lazy val mainDependencies = {
     "io.github.bonigarcia" % "webdrivermanager" % "5.9.2" excludeAll(
       ExclusionRule(organization = "org.slf4j")
     )
-  ) ++ mainOverrides
-}
-
-lazy val mainOverrides = {
-  Seq(
-    "org.slf4j" % "slf4j-api" % "1.7.36"
   )
 }
-
-dependencyOverrides ++= Seq(
-  "org.slf4j" % "slf4j-api" % "1.7.36"
-)
 
 lazy val testDependencies = {
   Seq(

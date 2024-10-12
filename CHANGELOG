@@ -4,8 +4,7 @@
 - Introduce Gwen processes to support multiple launch configurations
   - `-p|--process` option
 - Require Java 17+ instead of Java 11+
-- Use GraalVM instead of Nashorn for JS evaluation
-- Use logback instead of log4j for logging
+- Use logback-classic instead of log4j for logging
 - Remove settings:
   - `gwen.target.browser`
   - `gwen.target.env`
