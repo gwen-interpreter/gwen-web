@@ -14,7 +14,11 @@ val gwenWeb = (project in file("."))
   .sourceDependency(gwenSrc, gwenLib)
   .settings(
     projectSettings,
-    libraryDependencies ++= mainDependencies ++ testDependencies
+    libraryDependencies ++= mainDependencies ++ testDependencies,
+    excludeDependencies ++= Seq(
+      ExclusionRule("org.graalvm.js", "js-scriptengine"),
+      ExclusionRule("org.graalvm.js", "js")
+    )
   )
 
 resolvers ++= Seq(
@@ -41,8 +45,8 @@ lazy val projectSettings = Seq(
   initialize := {
     val _ = initialize.value
     val javaVersion = sys.props("java.specification.version")
-    if (javaVersion != "11")
-      sys.error(s"JDK 11 is required to build this project. Found $javaVersion instead")
+    if (javaVersion != "17")
+      sys.error(s"Java 17 is required to build this project. Found $javaVersion instead")
   }
 )
 
