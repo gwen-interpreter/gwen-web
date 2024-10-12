@@ -24,7 +24,7 @@ Feature: Todo meta
           //label[contains(.,'${the todo item}')]/preceding-sibling::input
           """
       And the added item should be unticked
-      And the active item count should contain "${record.number}"
+      And the active item count should contain "${gwen.table.record.number}"
 
   @StepDef
   @Action

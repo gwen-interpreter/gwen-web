@@ -1,13 +1,13 @@
 Feature: Strings rules Meta
 
   Scenario: Init
-    Given start duration is "${gwen.eval.duration}"
+    Given start duration is "${gwen.feature.eval.duration}"
 
   @StepDef
   @Action
   Scenario: I join the two strings
     Given the result is "${string 1}${string 2}"
-      And gwen.eval.duration should not be "${start duration}"
+      And gwen.feature.eval.duration should not be "${start duration}"
 
   @StepDef
   @Action
@@ -16,7 +16,7 @@ Feature: Strings rules Meta
       And string 2 is "<string 2>"
      When I join the two strings
      Then the result should be "<result>"
-      And gwen.eval.duration should not be "${start duration}"
+      And gwen.feature.eval.duration should not be "${start duration}"
 
     Examples:
 
@@ -31,4 +31,4 @@ Feature: Strings rules Meta
   @Action
   Scenario: I substitute string 1 for string 2 in string 3
     Given the result is defined by javascript "'${string 3}'.replace('${string 1}', '${string 2}')"
-      And gwen.eval.duration should not be "${start duration}"
+      And gwen.feature.eval.duration should not be "${start duration}"

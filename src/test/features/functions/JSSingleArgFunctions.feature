@@ -224,6 +224,6 @@ Feature: Single Argument Functions
       And Single argument functions should work with multi word name binding
       And Single argument functions in DocStrings should work with multi word name binding
       And Single argument functions in documented examples should work
-      And name should not be "${gwen.eval.duration}"
-      And desc should not be "${gwen.eval.duration.msecs}"
-      And desc should not be "${gwen.eval.duration.secs}"
+      And name should not be "${gwen.feature.eval.duration}"
+      And desc should not be "${gwen.feature.eval.duration.msecs}"
+      And desc should not be "${gwen.feature.eval.duration.secs}"

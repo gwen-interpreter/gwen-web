@@ -48,7 +48,7 @@ Feature: Number tables meta (for each)
      Then the result should be "${$<binary>}"
       And name[1] should be "decimal"
       And name[2] should be "binary"
-      And record.number should match regex "\d+"
+      And gwen.table.record.number should match regex "\d+"
 
   @StepDef
   @ForEach
@@ -73,7 +73,7 @@ Feature: Number tables meta (for each)
       And name[1] should be "number"
       And name[2] should be "square"
       And name[3] should be "cube"
-      And record.number should match regex "\d+"
+      And gwen.table.record.number should match regex "\d+"
 
   @StepDef
   @ForEach

@@ -13,7 +13,7 @@ Feature: Todo Meta (automation glue)     # file: todo.meta
   @DataTable
   Scenario: the following items are added
      When I enter item in the todo field
-     Then count should contain record.number
+     Then count should contain gwen.table.record.number
 
   @Assertion
   @StepDef

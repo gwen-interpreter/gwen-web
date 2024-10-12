@@ -52,7 +52,7 @@ How it Works?
    @DataTable(horizontal="item")
    Scenario: the following items are added
       When I enter item in the todo field
-      Then count should be record.number
+      Then count should be gwen.table.record.number
 
    @StepDef
    Scenario: the list will contain <expected> items
