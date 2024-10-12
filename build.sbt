@@ -1,8 +1,8 @@
 enablePlugins(GitVersioning)
 
 // gwen core & web versions
-val gwenVersion = "3.66.0"
-val gwenWebVersion = "3.77.0"
+val gwenVersion = "4.0.0"
+val gwenWebVersion = "4.0.0"
 
 git.baseVersion := gwenWebVersion
 git.useGitDescribe := true
@@ -57,17 +57,11 @@ lazy val mainDependencies = {
 
 lazy val mainOverrides = {
   Seq(
-    "com.fasterxml.jackson.core" %  "jackson-databind" % "2.17.2",
-    "com.google.guava" % "guava" % "33.3.0-jre",
-    "org.reactivestreams" % "reactive-streams" % "1.0.4",
     "org.slf4j" % "slf4j-api" % "1.7.36"
   )
 }
 
 dependencyOverrides ++= Seq(
-  "com.fasterxml.jackson.core" %  "jackson-databind" % "2.17.2",
-  "com.google.guava" % "guava" % "33.3.0-jre",
-  "org.reactivestreams" % "reactive-streams" % "1.0.4",
   "org.slf4j" % "slf4j-api" % "1.7.36"
 )
 

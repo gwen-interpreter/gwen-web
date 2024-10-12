@@ -27,11 +27,6 @@ import gwen.core.behavior.BehaviorMode
 import gwen.core.behavior.FeatureMode
 import gwen.core.node.NodeType
 import gwen.core.report.ReportFormat
-import gwen.core.report.rp.RPConfig.ErrorBlocks
-import gwen.core.report.rp.RPConfig.ErrorReportingMode
-import gwen.core.report.rp.RPConfig.StepDefFormat
-import gwen.core.report.rp.RPConfig.TestCaseIdKeys
-import gwen.core.report.rp.RPSettings
 import gwen.core.report.results.ResultField
 import gwen.core.state.StateLevel
 import gwen.core.status.StatusKeyword
@@ -81,26 +76,6 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
       GwenSettings.`gwen.dryRun.limit.tableData.outline.examples.records` should be (Integer.MAX_VALUE)
       GwenSettings.`gwen.error.messages.inline.locators` should be (false)
       GwenSettings.`gwen.logLevel.deprecations` should be (Level.WARNING)
-    }
-  }
-
-  "Default Gwen RP settings" should "should load" in {
-    Settings.exclusively {
-      RPSettings.`gwen.rp.debug` should be (false)
-      RPSettings.`gwen.rp.heartbeat.enabled` should be (true)
-      RPSettings.`gwen.rp.heartbeat.timeoutSecs` should be (3)
-      RPSettings.`gwen.rp.send.annotations` should be (false)
-      RPSettings.`gwen.rp.send.breadcrumbs` should be (false)
-      RPSettings.`gwen.rp.send.failed.envTrace` should be (ErrorReportingMode.none)
-      RPSettings.`gwen.rp.send.failed.errorBlocks` should be (ErrorBlocks.none)
-      RPSettings.`gwen.rp.send.failed.errorTrace` should be (ErrorReportingMode.none)
-      RPSettings.`gwen.rp.send.failed.hierarchy` should be (ErrorReportingMode.inlined)
-      RPSettings.`gwen.rp.send.failed.stepDefs` should be (StepDefFormat.inlined)
-      RPSettings.`gwen.rp.send.markdownBlocks` should be (true)
-      RPSettings.`gwen.rp.send.meta` should be (false)
-      RPSettings.`gwen.rp.send.stepDefs` should be (StepDefFormat.none)
-      RPSettings.`gwen.rp.send.tags` should be (true)
-      RPSettings.`gwen.rp.testCaseId.keys` should be (TestCaseIdKeys.`nodePath+params`)
     }
   }
 
@@ -205,22 +180,6 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
 
     CLISettings.`gwen.cli.options.format` should be (List(ReportFormat.html, ReportFormat.results))
 
-    RPSettings.`gwen.rp.debug` should be (false)
-    RPSettings.`gwen.rp.heartbeat.enabled` should be (true)
-    RPSettings.`gwen.rp.heartbeat.timeoutSecs` should be (3)
-    RPSettings.`gwen.rp.send.annotations` should be (false)
-    RPSettings.`gwen.rp.send.breadcrumbs` should be (false)
-    RPSettings.`gwen.rp.send.failed.envTrace` should be (ErrorReportingMode.none)
-    RPSettings.`gwen.rp.send.failed.errorBlocks` should be (ErrorBlocks.none)
-    RPSettings.`gwen.rp.send.failed.errorTrace` should be (ErrorReportingMode.none)
-    RPSettings.`gwen.rp.send.failed.hierarchy` should be (ErrorReportingMode.inlined)
-    RPSettings.`gwen.rp.send.failed.stepDefs` should be (StepDefFormat.inlined)
-    RPSettings.`gwen.rp.send.markdownBlocks` should be (true)
-    RPSettings.`gwen.rp.send.meta` should be (false)
-    RPSettings.`gwen.rp.send.stepDefs` should be (StepDefFormat.none)
-    RPSettings.`gwen.rp.send.tags` should be (true)
-    RPSettings.`gwen.rp.testCaseId.keys` should be (TestCaseIdKeys.`nodePath+params`)
-
     WebSettings.`gwen.target.browser` should be (WebBrowser.chrome)
     WebSettings.`gwen.target.env` should be ("test")
 
@@ -315,22 +274,6 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
     GwenSettings.`gwen.console.repl.autoSuggestions` should be (true)
     GwenSettings.`gwen.console.repl.tabCompletion` should be (true)
     GwenSettings.`gwen.logLevel.deprecations` should be (Level.WARNING)
-    
-    RPSettings.`gwen.rp.debug` should be (false)
-    RPSettings.`gwen.rp.heartbeat.enabled` should be (true)
-    RPSettings.`gwen.rp.heartbeat.timeoutSecs` should be (5)
-    RPSettings.`gwen.rp.send.annotations` should be (false)
-    RPSettings.`gwen.rp.send.breadcrumbs` should be (false)
-    RPSettings.`gwen.rp.send.failed.envTrace` should be (ErrorReportingMode.none)
-    RPSettings.`gwen.rp.send.failed.errorBlocks` should be (ErrorBlocks.leaf)
-    RPSettings.`gwen.rp.send.failed.errorTrace` should be (ErrorReportingMode.none)
-    RPSettings.`gwen.rp.send.failed.hierarchy` should be (ErrorReportingMode.inlined)
-    RPSettings.`gwen.rp.send.failed.stepDefs` should be (StepDefFormat.none)
-    RPSettings.`gwen.rp.send.markdownBlocks` should be (true)
-    RPSettings.`gwen.rp.send.meta` should be (false)
-    RPSettings.`gwen.rp.send.stepDefs` should be (StepDefFormat.inlined)
-    RPSettings.`gwen.rp.send.tags` should be (true)
-    RPSettings.`gwen.rp.testCaseId.keys` should be (TestCaseIdKeys.auto)
 
     WebSettings.`gwen.target.browser` should be (WebBrowser.chrome)
     WebSettings.`gwen.target.env` should be ("test")

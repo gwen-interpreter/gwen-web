@@ -98,11 +98,6 @@ com.google.errorprone
 io.opentelemetry.semconv
   +-opentelemetry-semconv:1.25.0-alpha
   | +-The Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-com.epam.reportportal
-  +-commons-model:5.12.0
-  | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-client-java:5.2.14
-  | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
 org.objenesis
   +-objenesis:3.3
   | +-no license specified
@@ -134,6 +129,12 @@ com.fasterxml.jackson.core
   | +-The Apache Software License, Version 2.0 - https://www.apache.org/licenses/LICENSE-2.0.txt
   +-jackson-databind:2.17.2
   | +-The Apache Software License, Version 2.0 - https://www.apache.org/licenses/LICENSE-2.0.txt
+  +-jackson-annotations:2.15.1
+  | +-The Apache Software License, Version 2.0 - https://www.apache.org/licenses/LICENSE-2.0.txt
+  +-jackson-core:2.15.1
+  | +-The Apache Software License, Version 2.0 - https://www.apache.org/licenses/LICENSE-2.0.txt
+  +-jackson-databind:2.15.1
+  | +-The Apache Software License, Version 2.0 - https://www.apache.org/licenses/LICENSE-2.0.txt
 dev.failsafe
   +-failsafe:3.3.2
   | +-no license specified
@@ -145,31 +146,12 @@ net.java.dev.jna
 org.scalactic
   +-scalactic_3:3.2.18
   | +-the Apache License, ASL Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0
-com.squareup.retrofit2
-  +-adapter-rxjava2:2.9.0
-  | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-retrofit:2.9.0
-  | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-converter-scalars:2.9.0
-  | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-converter-jackson:2.9.0
-  | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
 org.yaml
   +-snakeyaml:2.0
   | +-Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
 nl.big-o
   +-liqp:0.8.2
   | +-MIT License - http://www.opensource.org/licenses/mit-license.php
-com.squareup.okio
-  +-okio-jvm:3.6.0
-  | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-okio:3.6.0
-  | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-com.squareup.okhttp3
-  +-logging-interceptor:4.12.0
-  | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-okhttp:4.12.0
-  | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
 com.lihaoyi
   +-scalatags_3:0.13.1
   | +-MIT - https://spdx.org/licenses/MIT.html
@@ -186,9 +168,6 @@ org.jdom
 org.scalatestplus
   +-mockito-4-2_3:3.2.11.0
   | +-Apache-2.0 - http://www.apache.org/licenses/LICENSE-2.0
-io.reactivex.rxjava2
-  +-rxjava:2.2.10
-  | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
 net.bytebuddy
   +-byte-buddy:1.15.1
   | +-no license specified
@@ -246,9 +225,6 @@ org.seleniumhq.selenium
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
   +-selenium-support:4.25.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-javax.validation
-  +-validation-api:2.0.1.Final
-  | +-Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
 com.google.auto.service
   +-auto-service-annotations:1.1.1
   | +-no license specified
@@ -281,9 +257,6 @@ io.opentelemetry
   | +-The Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
   +-opentelemetry-api-incubator:1.42.1-alpha
   | +-The Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-io.swagger
-  +-swagger-annotations:1.6.0
-  | +-no license specified
 com.vladsch.flexmark
   +-flexmark-util-options:0.62.2
   | +-no license specified
@@ -363,9 +336,6 @@ io.cucumber
   | +-no license specified
   +-messages:25.0.1
   | +-no license specified
-org.reactivestreams
-  +-reactive-streams:1.0.4
-  | +-MIT-0 - https://spdx.org/licenses/MIT-0.html
 commons-codec
   +-commons-codec:1.17.1
   | +-no license specified
