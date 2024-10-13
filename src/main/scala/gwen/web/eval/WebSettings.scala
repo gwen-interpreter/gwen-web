@@ -43,6 +43,7 @@ object WebSettings extends LazyLogging {
     */
   def check(): Unit = {
     `gwen.target.browser`
+    `gwen.target.env`
     `gwen.web.authorize.plugins`
     `gwen.web.assertions.delayMillisecs`
     `gwen.web.assertions.maxStrikes`

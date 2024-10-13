@@ -5,33 +5,41 @@
   - `-p|--process` option
 - Require Java 17+ instead of Java 11+
 - Use logback-classic instead of log4j for logging
-- Remove settings:
-  - `gwen.target.browser`
-  - `gwen.target.env`
 - Remove deprecated features
   - Gwen Workspaces warning
   - `-p|--properties` option
   - Report portal integration
-  - User level settings and meta
-- Renamed implicit values 
-  - `gwen.eval.status.keyword` to `gwen.feature.eval.status.keyword`
-  - `gwen.eval.status.keyword.upperCased` to `gwen.feature.eval.status.keyword.upperCased`
-  - `gwen.eval.status.keyword.lowerCased` to `gwen.feature.eval.status.keyword.lowerCased`
-  - `gwen.eval.status.keyword.isPassed` to `gwen.feature.eval.status.keyword.isPassed`
-  - `gwen.eval.status.keyword.isFailed` to `gwen.feature.eval.status.keyword.isFailed`
-  - `gwen.eval.status.message` to `gwen.feature.eval.status.message`
-  - `gwen.eval.status.message.escaped` to `gwen.feature.eval.status.message.escaped`
-  - `gwen.eval.status.message.csvEscaped` to `gwen.feature.eval.status.message.csvEscaped`
-  - `gwen.eval.duration` to `gwen.feature.eval.duration`
-  - `gwen.eval.duration.msecs` to `gwen.feature.eval.duration.msecs`
-  - `gwen.eval.duration.secs` to `gwen.feature.eval.duration.secs`
-  - `data record number` to `gwen.data.record.number`
-  - `data.record.number` to `gwen.data.record.number`
-  - `data.record.index` to `gwen.data.record.index`
-  - `record.number` to `gwen.table.record.number`
-  - `record.index` to `gwen.table.record.index`
-  - `iteration.number` to `gwen.iteration.number`
-  - `iteration.index` to `gwen.iteration.index`
+- | Deprecated Settings          | Use this instead               |
+  | :--------------------------- | :----------------------------- |
+  | `gwen.cli.options.batch`     | `gwen.launch.options.batch`    |
+  | `gwen.cli.options.format`    | `gwen.launch.options.format`   |
+  | `gwen.cli.options.inputData` | `gwen.launch.options.inputData`|
+  | `gwen.cli.options.dryRun`    | `gwen.launch.options.dryRun`   |
+  | `gwen.cli.options.features`  | `gwen.launch.options.features` |
+  | `gwen.cli.options.parallel`  | `gwen.launch.options.parallel` |
+  | `gwen.cli.options.meta`      | `gwen.launch.options.meta`     |
+  | `gwen.cli.options.report`    | `gwen.launch.options.report`   |
+  | `gwen.cli.options.tags`      | `gwen.launch.options.tags`     |
+- | Deprecated Implicit values            | Use this instead                              |
+  | :------------------------------------ | :-------------------------------------------- |
+  | `gwen.eval.status.keyword`            | `gwen.feature.eval.status.keyword`            |
+  | `gwen.eval.status.keyword.upperCased` | `gwen.feature.eval.status.keyword.upperCased` |
+  | `gwen.eval.status.keyword.lowerCased` | `gwen.feature.eval.status.keyword.lowerCased` |
+  | `gwen.eval.status.keyword.isPassed`   | `gwen.feature.eval.status.keyword.isPassed`   |
+  | `gwen.eval.status.keyword.isFailed`   | `gwen.feature.eval.status.keyword.isFailed`   |
+  | `gwen.eval.status.message`            | `gwen.feature.eval.status.message`            |
+  | `gwen.eval.status.message.escaped`    | `gwen.feature.eval.status.message.escaped`    |
+  | `gwen.eval.status.message.csvEscaped` | `gwen.feature.eval.status.message.csvEscaped` |
+  | `gwen.eval.duration`                  | `gwen.feature.eval.duration`                  |
+  | `gwen.eval.duration.msecs`            | `gwen.feature.eval.duration.msecs`            |
+  | `gwen.eval.duration.secs`             | `gwen.feature.eval.duration.secs`             |
+  | `data record number`                  | `gwen.data.record.number`                     |
+  | `data.record.number`                  | `gwen.data.record.number`                     |
+  | `data.record.index`                   | `gwen.data.record.index`                      |
+  | `record.number`                       | `gwen.table.record.number`                    |
+  | `record.index`                        | `gwen.table.record.index`                     |
+  | `iteration.number`                    | `gwen.iteration.number`                       |
+  | `iteration.index`                     | `gwen.iteration.index`                        |
 - Update Gwen core from v3.66.0 to v[4.0.0](https://github.com/gwen-interpreter/gwen/releases/tag/v4.0.0)
 
 3.77.0
