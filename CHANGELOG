@@ -5,10 +5,14 @@
   - `-p|--process` option
 - Require Java 17+ instead of Java 11+
 - Use logback-classic instead of log4j for logging
-- Remove deprecated features
+- Drop deprecated features
   - Gwen Workspaces warning
   - `-p|--properties` option
   - Report portal integration
+- Raise deprecations as errors by default instead of logging them as warnings
+  | Setting                     | Old default | New default |
+  | :-------------------------- | :---------: | :---------: |
+  | `gwen.logLevel.deprecations`|   `warn`    |   `error`   |
 - | Deprecated Settings          | Use this instead               |
   | :--------------------------- | :----------------------------- |
   | `gwen.cli.options.batch`     | `gwen.launch.options.batch`    |

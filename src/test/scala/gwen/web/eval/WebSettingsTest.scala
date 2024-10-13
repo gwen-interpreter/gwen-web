@@ -75,7 +75,7 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
       GwenSettings.`gwen.video.timeoutSecs` should be (10)
       GwenSettings.`gwen.dryRun.limit.tableData.outline.examples.records` should be (Integer.MAX_VALUE)
       GwenSettings.`gwen.error.messages.inline.locators` should be (false)
-      GwenSettings.`gwen.logLevel.deprecations` should be (Level.WARNING)
+      GwenSettings.`gwen.logLevel.deprecations` should be (Level.SEVERE)
     }
   }
 
@@ -176,7 +176,7 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
     GwenSettings.`gwen.console.log.stepDefs` should be (true)
     GwenSettings.`gwen.console.repl.autoSuggestions` should be (true)
     GwenSettings.`gwen.console.repl.tabCompletion` should be (true)
-    GwenSettings.`gwen.logLevel.deprecations` should be (Level.WARNING)
+    GwenSettings.`gwen.logLevel.deprecations` should be (Level.SEVERE)
 
     LaunchSettings.`gwen.launch.options.format` should be (List(ReportFormat.html, ReportFormat.results))
 
@@ -273,7 +273,7 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
     GwenSettings.`gwen.console.log.stepDefs` should be (true)
     GwenSettings.`gwen.console.repl.autoSuggestions` should be (true)
     GwenSettings.`gwen.console.repl.tabCompletion` should be (true)
-    GwenSettings.`gwen.logLevel.deprecations` should be (Level.WARNING)
+    GwenSettings.`gwen.logLevel.deprecations` should be (Level.SEVERE)
 
     WebSettings.`gwen.target.browser` should be (WebBrowser.chrome)
     WebSettings.`gwen.target.env` should be ("test")
