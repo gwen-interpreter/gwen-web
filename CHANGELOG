@@ -5,10 +5,67 @@
   - `-p|--process` option
 - Require Java 17+ instead of Java 11+
 - Use logback-classic instead of log4j for logging
-- Drop deprecated features
+- Drop deprecated features:
   - Gwen Workspaces warning
   - `-p|--properties` option
   - Report portal integration
+  - Core DSL steps
+    - `I wait <duration> second[s] when <element> is <actioned>`
+    - `I wait until <condition> when <element> is <actioned>`
+  - Core DSL steps in favour of base step with `@Timeout` and `@Delay` annotations
+    - `<step> <until|while> <condition> using <delay> <delayUnit> delay`
+    - `<step> <until|while> <condition> using <timeout> <timeoutUnit> timeout`
+    - `<step> <until|while> <condition> using <delay> <delayUnit> delay and <timeout> <timeoutUnit> timeout`
+    - `<step> <until|while> <condition> using no delay and <timeout> <timeoutUnit> timeout`
+    - `<step> <until|while> <condition> using no delay`
+    - `<step> <until|while> <condition> using no delay and <timeout> <timeoutUnit> timeout`
+  - Web DSL steps in favour of base step with `@Timeout` and `@Delay` annotations:
+    - `I wait for <element> for <duration> second[s]`
+    - `I wait for <element> text for <duration> second[s]`
+    - `I wait until "<javascript>" using <delay> <delayUnit> delay`
+    - `I wait until "<javascript>" using <timeout> <timeoutUnit> timeout`
+    - `I wait until "<javascript>" using <delay> <delayUnit> delay and <timeout> <timeoutUnit> timeout`
+    - `I wait until <condition> using <delay> <delayUnit> delay`
+    - `I wait until <condition> using <timeout> <timeoutUnit> timeout`
+    - `I wait until <condition> using <delay> <delayUnit> delay and <timeout> <timeoutUnit> timeout`
+    - `<step> for each <element> located by <selector> "<expression>" with no <wait|timeout>`
+    - `<step> for each <element> located by <selector> "<expression>" with <timeoutSecs> second <wait|timeout>`
+    - `<step> for each <element> located by <selector> "<expression>" in <containerElement> with no <wait|timeout>`
+    - `<step> for each <element> located by <selector> "<expression>" in <containerElement> with <timeoutSecs> second <wait|timeout>`
+    - `<step> <until|while> <element> is[ not] <state> using <delay> <delayUnit> delay`
+    - `<step> <until|while> <element> is[ not] <state> using <timeout> <timeoutUnit> timeout`
+    - `<step> <until|while> <element> is[ not] <state> using <delay> <delayUnit> delay and <timeout> <timeoutUnit> timeout`
+    - `<step> <until|while> <element> is[ not] <state> using no delay and <timeout> <timeoutUnit> timeout`
+    - `<element> can be located by <selector> "<expression>" with no <wait|timeout>`
+    - `<step> <until|while> <element> is[ not] <state> using no delay`
+    - `<step> <until|while> <name> is[ not] defined using <delay> <delayUnit> delay`
+    - `<step> <until|while> <name> is[ not] defined using <timeout> <timeoutUnit> timeout`
+    - `<step> <until|while> <name> is[ not] defined using <delay> <delayUnit> delay and <timeout> <timeoutUnit> timeout`
+    - `<step> <until|while> <name> is[ not] defined using no delay and <timeout> <timeoutUnit> timeout`
+    - `<step> <until|while> <name> is[ not] defined using no delay`
+    - `<element> can be located by <selector> "<expression>" with <timeoutSecs> second <wait|timeout>`
+    - `<element> can be located by <selector> "<expression>" at index <index> with no <wait|timeout>`
+    - `<element> can be located by <selector> "<expression>" at index <index> with <timeoutSecs> second <wait|timeout>`
+    - `<element> can be located by <selector> "<expression>" at index <index> in <otherElement> with no <wait|timeout>`
+    - `<element> can be located by <selector> "<expression>" at index <index> in <otherElement>  with <timeoutSecs> second <wait|timeout>`
+    - `<element> can be located by <selector> "<expression>" <relativeTo> <otherElement> with no <wait|timeout>`
+    - `<element> can be located by <selector> "<expression>" <relativeTo> <otherElement>  with <timeoutSecs> second <wait|timeout>`
+    - ```
+      <element> can be located at index <index> with no <wait|timeout> by
+        | selector     | expression     |
+        | <selector 1> | <expression 1> |
+        | <selector 2> | <expression 2> |
+        |      ..      |       ..       |
+        | <selector n> | <expression n> |
+      ```
+    - ```
+      <element> can be located at index <index> with <timeoutSecs> second <wait|timeout> by
+        | selector     | expression     |
+        | <selector 1> | <expression 1> |
+        | <selector 2> | <expression 2> |
+        |      ..      |       ..       |
+        | <selector n> | <expression n> |
+      ```
 - Raise deprecations as errors by default instead of logging them as warnings
   | Setting                     | Old default | New default |
   | :-------------------------- | :---------: | :---------: |
