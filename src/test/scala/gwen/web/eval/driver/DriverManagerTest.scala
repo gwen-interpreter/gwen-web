@@ -66,13 +66,6 @@ class DriverManagerTest extends BaseTest with Matchers with MockitoSugar with Be
     }
   }
 
-  "IE setting" should "load IE driver" in {
-    withSetting("gwen.target.browser", WebBrowser.ie.toString) {
-      val manager = newDriverManager()
-      manager.withWebDriver { _ should be (mockIeDriver) }
-    }
-  }
-
   "Edge setting" should "load Edge driver" in {
     withSetting("gwen.target.browser", WebBrowser.edge.toString) {
       val manager = newDriverManager()
@@ -214,9 +207,6 @@ class DriverManagerTest extends BaseTest with Matchers with MockitoSugar with Be
       }
       override private [eval] def firefox(): WebDriver = createMockLocalDriver() tap { driver =>
         mockFirefoxDriver = driver
-      }
-      override private [eval] def ie(): WebDriver = createMockLocalDriver() tap { driver =>
-        mockIeDriver = driver
       }
       override private [eval] def edge(): WebDriver = createMockLocalDriver() tap { driver =>
         mockEdgeDriver = driver

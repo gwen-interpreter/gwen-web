@@ -65,7 +65,7 @@ System Requirements
 -------------------
 
 - Linux, Mac or Windows OS
-- Chrome, Firefox, Safari, Edge or IE web browser
+- Chrome, Firefox, Safari, or Edge browser
 - Java 17 or higher
 
 License

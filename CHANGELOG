@@ -9,6 +9,8 @@
   - Gwen Workspaces warning
   - `-p|--properties` option
   - Report portal integration
+  - IE browser integration
+  - `gwen-web-accept-untrusted-certs` setting (use `acceptInsecureCerts` capability instead)
   - Core DSL steps
     - `I wait <duration> second[s] when <element> is <actioned>`
     - `I wait until <condition> when <element> is <actioned>`

@@ -93,11 +93,6 @@ object WebSettings extends LazyLogging {
     Settings.getOpt("webdriver.gecko.driver")
   }
 
-  /** IE driver setting. */
-  def `webdriver.ie.driver`: Option[String] = {
-    Settings.getOpt("webdriver.ie.driver")
-  }
-
   /** Edge driver setting. */
   def `webdriver.edge.driver`: Option[String] = {
     Settings.getOpt("webdriver.edge.driver")
@@ -105,7 +100,7 @@ object WebSettings extends LazyLogging {
 
   /**
     * Provides access to the `gwen.target.browser` setting used to set the target browser
-    * (default value is `chrome`). Valid values include chrome, firefox, safari, ie, and edge
+    * (default value is `chrome`). Valid values include chrome, firefox, safari and edge
     */
   def `gwen.target.browser`: WebBrowser = {
     WebBrowser.parse(Settings.get("gwen.target.browser", Some("gwen.web.browser")))

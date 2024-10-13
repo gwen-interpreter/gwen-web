@@ -40,7 +40,6 @@ import org.openqa.selenium.chromium.ChromiumOptions
 import org.openqa.selenium.edge.EdgeDriver
 import org.openqa.selenium.edge.EdgeOptions
 import org.openqa.selenium.firefox.{FirefoxDriver, FirefoxOptions, FirefoxProfile}
-import org.openqa.selenium.ie.{InternetExplorerDriver, InternetExplorerOptions}
 import org.openqa.selenium.remote.HttpCommandExecutor
 import org.openqa.selenium.remote.LocalFileDetector
 import org.openqa.selenium.remote.RemoteWebDriver
@@ -170,7 +169,6 @@ class DriverManager() extends LazyLogging {
     val options = browser match {
       case WebBrowser.firefox => firefoxOptions(true)
       case WebBrowser.chrome => chromeOptions(true)
-      case WebBrowser.ie => ieOptions()
       case WebBrowser.edge => edgeOptions(true)
       case WebBrowser.safari => safariOptions()
     }
@@ -190,7 +188,6 @@ class DriverManager() extends LazyLogging {
       case WebBrowser.edge => edge()
       case WebBrowser.firefox => firefox()
       case WebBrowser.safari => safari()
-      case WebBrowser.ie => ie()
     }
   }
 
@@ -330,15 +327,6 @@ class DriverManager() extends LazyLogging {
     options
   }
 
-  private def ieOptions(): InternetExplorerOptions = new InternetExplorerOptions() tap { options =>
-    setDefaultCapability("requireWindowFocus", java.lang.Boolean.TRUE, options)
-    setDefaultCapability("nativeEvents", java.lang.Boolean.TRUE, options);
-    setDefaultCapability("unexpectedAlertBehavior", "accept", options);
-    setDefaultCapability("ignoreProtectedModeSettings", java.lang.Boolean.TRUE, options);
-    setDefaultCapability("disable-popup-blocking", java.lang.Boolean.TRUE, options);
-    setDefaultCapability("enablePersistentHover", java.lang.Boolean.TRUE, options);
-  }
-
   private def safariOptions(): SafariOptions = new SafariOptions() tap { options =>
     setCapabilities(options)
   }
@@ -372,13 +360,6 @@ class DriverManager() extends LazyLogging {
       WebDriverManager.firefoxdriver().setup()
     }
     new FirefoxDriver(firefoxOptions(false))
-  }
-
-  private [eval] def ie(): WebDriver = {
-    if (DriverManagerImpl.isWebDriverManager && WebSettings.`webdriver.ie.driver`.isEmpty) {
-      WebDriverManager.iedriver().setup()
-    }
-    new InternetExplorerDriver(ieOptions())
   }
 
   private [eval] def edge(): WebDriver = {

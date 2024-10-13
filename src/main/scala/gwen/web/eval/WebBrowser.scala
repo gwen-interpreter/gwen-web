@@ -23,7 +23,7 @@ import scala.util.Try
 import java.io.File
 
 enum WebBrowser:
-  case chrome, edge, firefox, safari, ie
+  case chrome, edge, firefox, safari
 
 object WebBrowser {
 

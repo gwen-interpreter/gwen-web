@@ -192,8 +192,6 @@ org.seleniumhq.selenium
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
   +-selenium-edge-driver:4.25.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-ie-driver:4.25.0
-  | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
   +-selenium-safari-driver:4.25.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
   +-selenium-devtools-v127:4.25.0
