@@ -20,8 +20,8 @@ jobs:
     - name: Setup JDK
       uses: actions/setup-java@v3
       with:
-        distribution: temurin
-        java-version: 11
+        distribution: adopt
+        java-version: 17
         cache: sbt
     - name: Setup Chrome
       uses: browser-actions/setup-chrome@latest
