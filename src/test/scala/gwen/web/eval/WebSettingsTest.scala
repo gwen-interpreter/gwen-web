@@ -127,7 +127,7 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
       withSetting("gwen.initDir", ".") {
         Settings.init(
           new File("src/main/resources/init/gwen.conf"),
-          new File("src/main/resources/init/browsers/chrome.conf"))
+          new File("src/main/resources/init/conf/browsers/chrome.conf"))
         assertInitConf(".", "target")
       }
     }
@@ -138,7 +138,7 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
       withSetting("gwen.initDir", "gwen") {
         Settings.init(
           new File("src/main/resources/init/gwen.conf"),
-          new File("src/main/resources/init/browsers/chrome.conf"))
+          new File("src/main/resources/init/conf/browsers/chrome.conf"))
         assertInitConf("gwen", "target")
       }
     }
@@ -324,7 +324,7 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
     Settings.exclusively {
       withSetting("gwen.initDir", "gwen") {
         Settings.init(new File("src/main/resources/init/gwen.conf"))
-          val resDir = "output/reports/results"
+          val resDir = "target/reports/results"
           val resFiles = GwenSettings.`gwen.report.results.files`(GwenOptions())
           resFiles.size should be (7)
           val fPassed = resFiles.find(_.id == "feature.passed").get

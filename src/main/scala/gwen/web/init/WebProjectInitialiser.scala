@@ -41,6 +41,7 @@ trait WebProjectInitialiser extends ProjectInitialiser {
   override def init(isNew: Boolean, flat: Boolean, options: GwenOptions): Unit = {
     
     val dir = options.initDir
+    val confDir = new File(dir, "conf")
     val filler = if (flat) "   " else "       "
     val force = options.initOptions.contains(InitOption.force)
     val copyRootGitIgnore = !flat && !(new File(".gitignore").exists())
@@ -48,22 +49,27 @@ trait WebProjectInitialiser extends ProjectInitialiser {
 
     if (isNew || options.initOptions == List(InitOption.force)) {
 
-      new File(dir, "browsers") tap { dir =>
-        FileIO.copyClasspathTextResourceToFile("/init/browsers/chrome.conf", dir, allowReplace = force)
-        FileIO.copyClasspathTextResourceToFile("/init/browsers/edge.conf", dir, allowReplace = force)
-        FileIO.copyClasspathTextResourceToFile("/init/browsers/firefox.conf", dir, allowReplace = force)
-        FileIO.copyClasspathTextResourceToFile("/init/browsers/README.md", dir, allowReplace = force)
-        FileIO.copyClasspathTextResourceToFile("/init/browsers/safari.conf", dir, allowReplace = force)
+      new File(confDir, "browsers") tap { dir =>
+        FileIO.copyClasspathTextResourceToFile("/init/conf/browsers/chrome.conf", dir, allowReplace = force)
+        FileIO.copyClasspathTextResourceToFile("/init/conf/browsers/edge.conf", dir, allowReplace = force)
+        FileIO.copyClasspathTextResourceToFile("/init/conf/browsers/firefox.conf", dir, allowReplace = force)
+        FileIO.copyClasspathTextResourceToFile("/init/conf/browsers/README.md", dir, allowReplace = force)
+        FileIO.copyClasspathTextResourceToFile("/init/conf/browsers/safari.conf", dir, allowReplace = force)
       }
 
-      new File(dir, "env") tap { dir =>
-        FileIO.copyClasspathTextResourceToFile("/init/env/dev.conf", dir, allowReplace = force)
-        FileIO.copyClasspathTextResourceToFile("/init/env/local.conf", dir, allowReplace = force)
-        FileIO.copyClasspathTextResourceToFile("/init/env/prod.conf", dir, allowReplace = force)
-        FileIO.copyClasspathTextResourceToFile("/init/env/README.md", dir, allowReplace = force)
-        FileIO.copyClasspathTextResourceToFile("/init/env/staging.conf", dir, allowReplace = force)
-        FileIO.copyClasspathTextResourceToFile("/init/env/test.conf", dir, allowReplace = force)
+      new File(confDir, "env") tap { dir =>
+        FileIO.copyClasspathTextResourceToFile("/init/conf/env/dev.conf", dir, allowReplace = force)
+        FileIO.copyClasspathTextResourceToFile("/init/conf/env/local.conf", dir, allowReplace = force)
+        FileIO.copyClasspathTextResourceToFile("/init/conf/env/prod.conf", dir, allowReplace = force)
+        FileIO.copyClasspathTextResourceToFile("/init/conf/env/README.md", dir, allowReplace = force)
+        FileIO.copyClasspathTextResourceToFile("/init/conf/env/staging.conf", dir, allowReplace = force)
+        FileIO.copyClasspathTextResourceToFile("/init/conf/env/test.conf", dir, allowReplace = force)
       }
+
+      new File(confDir, "process") tap { dir =>
+        FileIO.copyClasspathTextResourceToFile("/init/conf/process/samples.conf", dir, allowReplace = force)
+        FileIO.copyClasspathTextResourceToFile("/init/conf/process/README.md", dir, allowReplace = force)
+      }  
 
       new File(dir, "features") tap { dir =>
         FileIO.copyClasspathTextResourceToFile("/init/features/README.md", dir, allowReplace = force)
@@ -97,35 +103,39 @@ trait WebProjectInitialiser extends ProjectInitialiser {
       println(
         s"""|Project directory initialised${if (force) " (forced)" else ""}
             |
-            |  ./            $filler        # Current directory${if (!copyRootGitIgnore) "" else {
+            |  ./            $filler           # Project root${if (!copyRootGitIgnore) "" else {
         s"""|
-            |   ├── .gitignore$filler       # Git ignore file""".stripMargin}}${if (!copyRootReadme) "" else {
+            |   ├── .gitignore$filler          # Git ignore file""".stripMargin}}${if (!copyRootReadme) "" else {
         s"""|
             |   ├── README.md""".stripMargin}}
-            |   ├── gwen.conf$filler        # Gwen settings file${if (flat) "" else {
+            |   ├── gwen.conf$filler           # Common settings${if (flat) "" else {
         s"""|
             |   └── /${dir.getPath}""".stripMargin}}${if (copyRootReadme) "" else {
         s"""|
             |$filler├── README.md""".stripMargin}}
-            |$filler├── .gitignore          # Git ignore file
-            |$filler├── /browsers           # Browser settings
-            |$filler│   ├── chrome.conf
-            |$filler│   ├── edge.conf
-            |$filler│   ├── firefox.conf
-            |$filler│   ├── README.md
-            |$filler│   └── safari.conf
-            |$filler├── /env                # Environment settings
-            |$filler│   ├── dev.conf
-            |$filler│   ├── local.conf
-            |$filler│   ├── prod.conf
-            |$filler│   ├── README.md
-            |$filler│   ├── staging.conf
-            |$filler│   └── test.conf
-            |$filler├── /features           # Features and associative meta
+            |$filler├── .gitignore             # Git ignore file
+            |$filler├── /conf
+            |$filler│   ├── /browsers          # Browser settings
+            |$filler│   |   ├── chrome.conf
+            |$filler│   |   ├── edge.conf
+            |$filler│   |   ├── firefox.conf
+            |$filler│   |   ├── README.md
+            |$filler│   |   └── safari.conf
+            |$filler│   ├──/env                # Environment settings
+            |$filler│   |  ├── dev.conf
+            |$filler│   |  ├── local.conf
+            |$filler│   |  ├── prod.conf
+            |$filler│   |  ├── README.md
+            |$filler│   |  ├── staging.conf
+            |$filler│   |  └── test.conf
+            |$filler│   └──/process            # Process settings
+            |$filler│      ├── README.md
+            |$filler│      └── samples.conf
+            |$filler├── /features              # Features (and associative meta)
             |$filler│   └── README.md
-            |$filler├── /meta               # Optional common/reusable meta
+            |$filler├── /meta                  # Common meta
             |$filler│   └── README.md
-            |$filler└── /samples            # Sample features and meta
+            |$filler└── /samples               # Sample features and meta
             |
             |""".stripMargin
       )
@@ -134,22 +144,23 @@ trait WebProjectInitialiser extends ProjectInitialiser {
       FileIO.copyClasspathTextResourceToFile("/init/docker_env", dir, Some(".env"), allowReplace = force)
       FileIO.copyClasspathTextResourceToFile("/init/Dockerfile", dir, allowReplace = force)
       copyClasspathResourceAndInject("/init/docker-compose.yml", dir, flat, allowReplace = force)
-      new File(dir, "browsers") tap { dir =>
-        FileIO.copyClasspathTextResourceToFile("/init/browsers/browsers.json", dir, allowReplace = force)
-        FileIO.copyClasspathTextResourceToFile("/init/browsers/selenoid.conf", dir, allowReplace = force)
+      new File(confDir, "browsers") tap { dir =>
+        FileIO.copyClasspathTextResourceToFile("/init/conf/browsers/browsers.json", dir, allowReplace = force)
+        FileIO.copyClasspathTextResourceToFile("/init/conf/browsers/selenoid.conf", dir, allowReplace = force)
       }
       println(
         s"""|Docker files initialised${if (force) " (forced)" else ""}
             |
-            |  ./            $filler        # Current directory${if (flat) "" else {
+            |  ./            $filler            # Project root${if (flat) "" else {
         s"""|
             |   └── /${dir.getPath}""".stripMargin}}
-            |$filler├── .env                # Docker env file
-            |$filler├── docker-compose.yml  # Docker compose file
-            |$filler├── Dockerfile          # Docker image file
-            |$filler└── /browsers           # Browser settings
-            |$filler    ├── browsers.json   # Selenoid browsers file
-            |$filler    └── selenoid.conf   # Selenoid settings
+            |$filler├── .env                    # Docker env file
+            |$filler├── docker-compose.yml      # Docker compose file
+            |$filler├── Dockerfile              # Docker image file
+            |$filler└── /conf
+            |$filler    └── /browsers           # Browser settings
+            |$filler        ├── browsers.json   # Selenoid browsers file
+            |$filler        └── selenoid.conf   # Selenoid settings
             |
             |""".stripMargin
       )
@@ -159,10 +170,10 @@ trait WebProjectInitialiser extends ProjectInitialiser {
       println(
         s"""|Jenkinsfile initialised${if (force) " (forced)" else ""}
             |
-            |  ./            $filler        # Current directory${if (flat) "" else {
+            |  ./            $filler            # Project root${if (flat) "" else {
         s"""|
             |   └── /${dir.getPath}""".stripMargin}}
-            |$filler└── Jenkinsfile         # Jenkins pipeline file
+            |$filler└── Jenkinsfile             # Jenkins pipeline file
             |
             |""".stripMargin
       )

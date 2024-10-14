@@ -154,13 +154,13 @@ class WebEngine extends EvalEngine[WebContext] {
         new BindMultipleElementLocators(element, None, step.timeoutOpt.map(_.toSeconds), None)
       case r"""(.+?)$element can be (clicked|right clicked|double clicked|submitted|checked|ticked|unchecked|unticked|selected|deselected|typed|entered|tabbed|cleared|moved to)$event by (?:javascript|js) "(.+?)"$expression""" =>
         new BindActionHandler(element, ElementEvent.valueOf(event), step.orDocString(expression))
-      case r"""the page title should( not)?$negation be (blank|true|false)$literal""" =>
+      case r"""the page title should( not)?$negation be (blank|empty|true|false)$literal""" =>
         new CompareTitle("title", ValueLiteral.valueOf(literal).value, false, ComparisonOperator.be, Option(negation).isDefined, step.message, step.timeoutOpt, step.isTrim, step.isIgnoreCase)
       case r"""the page title should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file)$operator "(.*?)"$expression""" =>
         new CompareTitle("title", step.orDocString(expression), false, ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message, step.timeoutOpt, step.isTrim, step.isIgnoreCase)
       case r"""the page title should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$attribute""" =>
         new CompareTitle("title", attribute, true, ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message, step.timeoutOpt, step.isTrim, step.isIgnoreCase)
-      case r"""the (alert|confirmation)$name popup message should( not)?$negation be (blank|true|false)$literal""" =>
+      case r"""the (alert|confirmation)$name popup message should( not)?$negation be (blank|empty|true|false)$literal""" =>
         new ComparePopupMessage(name, ValueLiteral.valueOf(literal).value, false, ComparisonOperator.be, Option(negation).isDefined, step.message, step.timeoutOpt, step.isTrim, step.isIgnoreCase)
       case r"""the (alert|confirmation)$name popup message should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file)$operator "(.*?)"$expression""" =>
         new ComparePopupMessage(name, step.orDocString(expression), false, ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message, step.timeoutOpt, step.isTrim, step.isIgnoreCase)
@@ -168,7 +168,7 @@ class WebEngine extends EvalEngine[WebContext] {
         new ComparePopupMessage(name, attribute, true, ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message, step.timeoutOpt, step.isTrim, step.isIgnoreCase)
       case r"""(.+?)$element should( not)?$negation be (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$state""" =>
         new CompareElementState(element, ElementState.valueOf(state), Option(negation).nonEmpty, step.message, step.timeoutOpt)
-      case r"""(.+?)$element( text| value)?$selection should( not)?$negation be (blank|true|false)$literal""" if !element.matches(".+at (json path|xpath).+") =>
+      case r"""(.+?)$element( text| value)?$selection should( not)?$negation be (blank|empty|true|false)$literal""" if !element.matches(".+at (json path|xpath).+") && !element.matches(".+? file") =>
         new CompareValueOrSelectionToValue(element, Option(selection).map(_.trim).map(DropdownSelection.valueOf), ValueLiteral.valueOf(literal).value, ComparisonOperator.be, Option(negation).isDefined, step.message, step.timeoutOpt, step.isTrim, step.isIgnoreCase)
       case r"""(.+?)$element( text| value)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file)$operator "(.*?)"$expression""" if !element.matches(".+at (json path|xpath).+") =>
         new CompareValueOrSelectionToValue(element, Option(selection).map(_.trim).map(DropdownSelection.valueOf), step.orDocString(expression), ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message, step.timeoutOpt, step.isTrim, step.isIgnoreCase)

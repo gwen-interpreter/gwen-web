@@ -5,6 +5,11 @@
   - `-p|--process` option
 - Require Java 17+ instead of Java 11+
 - Use logback-classic instead of log4j for logging
+- Support `empty` literal in DSLs wherever `blank` is accepted
+- Add implicit variable(s):
+  - `gwen.process.name`
+- Add environment variable(s)
+  - `GWEN_PROCESS`
 - Drop deprecated features:
   - Gwen Workspaces warning
   - `-p|--properties` option

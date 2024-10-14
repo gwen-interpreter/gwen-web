@@ -5,6 +5,7 @@ pipeline {
   }
   parameters { 
     choice(name: 'env', choices: ['dev', 'test', 'staging', 'prod'], description: 'Target environment')
+    choice(name: 'process', choices: [''], description: 'Target process')
     choice(name: 'browser', choices: ['chrome', 'firefox', 'edge'], description: 'Target web browser')
     booleanParam(name: 'dry_run', defaultValue: false, description: 'Validate without executing')
     booleanParam(name: 'parallel', defaultValue: false, description: 'Enable parallel execution')
@@ -14,6 +15,7 @@ pipeline {
   }
   environment {
     GWEN_ENV = "${params.env}"
+    GWEN_PROCESS = "${params.process}"
     GWEN_BROWSER = "${params.browser}"
     GWEN_DRY_RUN = "${params.dry_run}"
     GWEN_PARALLEL = "${params.parallel}"

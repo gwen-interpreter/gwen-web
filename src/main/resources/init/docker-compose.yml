@@ -52,6 +52,7 @@ services:
       - SELENIUM_HUB
       - NO_COLOR
       - GWEN_ENV
+      - GWEN_PROCESS
       - GWEN_BROWSER
       - GWEN_DRY_RUN
       - GWEN_PARALLEL
@@ -62,7 +63,7 @@ services:
     volumes:
       - "$PWD:/project"
     working_dir: /project
-    command: bash -c "yarn install && yarn gwen -b -c gwen/browsers/selenoid.conf gwen/features"
+    command: bash -c "yarn install && yarn gwen -b -c gwen/conf/browsers/selenoid.conf gwen/features"
     networks:
       - gwen-net
   gwen-dry-run:

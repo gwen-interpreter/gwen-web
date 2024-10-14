@@ -13,14 +13,14 @@ Feature: Data Load Meta
       And @Soft website should not be blank
       And @Soft website should be "<website>"
       And @Soft match should be true
-      And @Soft gwen.scenario.eval.status.message should be blank
+      And @Soft gwen.scenario.eval.status.message should be empty
       And @Soft gwen.scenario.eval.status.message.escaped should be blank
       And @Soft gwen.scenario.eval.status.keyword should be "Passed"
       And @Soft gwen.scenario.eval.status.keyword.upperCased should be "PASSED"
       And @Soft gwen.scenario.eval.status.keyword.lowerCased should be "passed"
       And @Soft gwen.scenario.eval.status.isPassed should be true
       And @Soft gwen.scenario.eval.status.isFailed should be false
-      And @Soft gwen.scenario.eval.duration should not be blank
+      And @Soft gwen.scenario.eval.duration should not be empty
       And @Soft gwen.scenario.eval.duration.msecs should not be blank
       And @Soft gwen.scenario.eval.duration.secs should not be blank
       And @Soft website should not be "${gwen.scenario.eval.duration}"
