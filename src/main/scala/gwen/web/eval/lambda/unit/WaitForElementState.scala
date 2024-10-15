@@ -32,7 +32,7 @@ class WaitForElementState(element: String, state: ElementState, negate: Boolean)
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     step tap { _ =>
       val bCondition = s"$element is${if (negate) " not" else ""} $state"
-      ctx.scopes.getOpt(JSBinding.key(bCondition)) match {
+      ctx.topScope.getOpt(JSBinding.key(bCondition)) match {
         case None =>
           checkStepRules(step, BehaviorType.Action, ctx)
           val binding = ctx.getLocatorBinding(element)

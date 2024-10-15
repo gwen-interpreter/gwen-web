@@ -33,7 +33,7 @@ class CaptureScreenshot(target: Option[String]) extends UnitStep[WebContext] {
       target match {
         case Some(name) =>
           ctx.captureScreenshot(true, name) foreach { file =>
-            ctx.scopes.set(name, file.getAbsolutePath)
+            ctx.topScope.set(name, file.getAbsolutePath)
           }
         case None =>
           ctx.captureScreenshot(true)

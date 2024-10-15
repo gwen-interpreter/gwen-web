@@ -1,11 +1,12 @@
 4.0.0
 =====
-12 October 2024
+15 October 2024
 - Introduce Gwen processes to support multiple launch configurations
   - `-p|--process` option
 - Require Java 17+ instead of Java 11+
 - Use logback instead of log4j for logging
 - Support `empty` literal in DSLs wherever `blank` is accepted
+- Replace internal stack of data caches with a single data cache (internal enhancement)
 - Add implicit variable(s):
   - `gwen.process.name`
 - Add environment variable(s)
@@ -16,9 +17,14 @@
   - Report portal integration
   - IE browser integration
   - `gwen-web-accept-untrusted-certs` setting (use `acceptInsecureCerts` capability instead)
-  - Core DSL steps
+  - DSL steps
     - `I wait <duration> second[s] when <element> is <actioned>`
     - `I wait until <condition> when <element> is <actioned>`
+    - `I navigate to the <page>`
+    - `I am on the <page>`
+    - `the <page> url is "<url>"`
+    - `the url will be "<url>`
+    - `the url will be defined by <property|setting> "<name>"`
   - Core DSL steps in favour of base step with `@Timeout` and `@Delay` annotations
     - `<step> <until|while> <condition> using <delay> <delayUnit> delay`
     - `<step> <until|while> <condition> using <timeout> <timeoutUnit> timeout`

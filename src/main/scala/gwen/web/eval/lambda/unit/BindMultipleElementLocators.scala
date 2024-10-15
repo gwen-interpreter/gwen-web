@@ -50,7 +50,7 @@ class BindMultipleElementLocators(name: String, container: Option[String], timeo
         }
       }
       if (selectors.nonEmpty) {
-        ctx.scopes.set(LocatorKey.baseKey(name), selectors.mkString(","))
+        ctx.topScope.set(LocatorKey.baseKey(name), selectors.mkString(","))
       }
     }
   }

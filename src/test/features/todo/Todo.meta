@@ -24,7 +24,6 @@ Feature: TodoMVC meta
   Scenario: I should be on the Todo page
     Given the heading can be located by tag name "h1"
      Then the heading should be "todos"
-      And I am on the Todo page
       And the todo field can be located by class name "new-todo"
       And the number of active items can be located by css selector ".todo-count"
       And the clear completed button can be located by class name "clear-completed"

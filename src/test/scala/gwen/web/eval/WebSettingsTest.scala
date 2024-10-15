@@ -21,7 +21,7 @@ import gwen.web._
 import gwen.core.AssertionMode
 import gwen.core.GwenOptions
 import gwen.core.GwenSettings
-import gwen.core.LaunchSettings
+import gwen.core.BootstrapSettings
 import gwen.core.Settings
 import gwen.core.behavior.BehaviorMode
 import gwen.core.behavior.FeatureMode
@@ -178,7 +178,7 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
     GwenSettings.`gwen.console.repl.tabCompletion` should be (true)
     GwenSettings.`gwen.logLevel.deprecations` should be (Level.SEVERE)
 
-    LaunchSettings.`gwen.launch.options.format` should be (List(ReportFormat.html, ReportFormat.results))
+    BootstrapSettings.`gwen.launch.options.format` should be (List(ReportFormat.html, ReportFormat.results))
 
     WebSettings.`gwen.target.browser` should be (WebBrowser.chrome)
     WebSettings.`gwen.target.env` should be ("test")

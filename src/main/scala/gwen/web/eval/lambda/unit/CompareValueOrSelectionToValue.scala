@@ -48,11 +48,11 @@ class CompareValueOrSelectionToValue(element: String, selection: Option[Dropdown
     val formattedActual = () => Formatting.format(ctx.boundAttributeOrSelection(element, selection, timeout), trim, ignoreCase)
     step tap { _ =>
       ctx.perform {
-        if (ctx.scopes.findEntry { case (n, _) => n.startsWith(element) } forall { case (n, _) => n != element }) {
+        if (ctx.topScope.findEntry { case (n, _) => n.startsWith(element) } forall { case (n, _) => n != element }) {
           val nameSuffix = selection.map(sel => s" $sel")
           ctx.compare(s"$element${nameSuffix.getOrElse("")}", Formatting.format(expected, trim, ignoreCase), formattedActual, operator, negate, nameSuffix, message, timeout.map(_.toSeconds), step.assertionMode)
         } else {
-          val actualValue = ctx.scopes.getOpt(element).getOrElse(actual())
+          val actualValue = ctx.topScope.getOpt(element).getOrElse(actual())
           val result = ctx.compare(element, Formatting.format(expected, trim, ignoreCase), Formatting.format(actualValue, trim, ignoreCase), operator, negate)
           result match {
             case Success(assertion) =>

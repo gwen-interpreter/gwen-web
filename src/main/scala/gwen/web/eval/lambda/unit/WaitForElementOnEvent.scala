@@ -32,7 +32,7 @@ class WaitForElementOnEvent(element: String, event: ElementEvent, waitSecs: Long
     step tap { _ =>
       checkStepRules(step, BehaviorType.Context, ctx)
       ctx.getLocatorBinding(element)
-      ctx.scopes.set(s"$element/${ElementEvent.actionOf(event)}/wait", waitSecs.toString)
+      ctx.topScope.set(s"$element/${ElementEvent.actionOf(event)}/wait", waitSecs.toString)
     }
   }
 

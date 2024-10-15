@@ -280,7 +280,6 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     when(mockElement.isSelected).thenReturn(true)
     ctx.checkElementState(elemBinding, ElementState.unticked, negate = true, None, AssertionMode.hard)
-    ctx.scopes.allEntries.isEmpty should be (true)
     ctx.waitForElementState(elemBinding, ElementState.unticked, negate = true)
   }
 
@@ -600,7 +599,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     doReturn(mockActions).when(mockActions).sendKeys("Gwen")
     ctx.sendValue(elemBinding, "Gwen", clickFirst = false, clearFirst = false, sendEnterKey = false)
     verify(mockElement, never()).clear()
-    ctx.scopes.getOpt("name/clear") should be (None)
+    ctx.topScope.getOpt("name/clear") should be (None)
     verify(mockActions).perform()
     verify(mockElement, never()).sendKeys(Keys.RETURN)
   }
@@ -646,7 +645,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     ctx.sendValue(elemBinding, "Gwen", clickFirst = false, clearFirst = false, sendEnterKey = true)
     verify(mockElement, never()).clear()
     verify(mockActions, times(2)).perform()
-    ctx.scopes.getOpt("name/clear") should be (None)
+    ctx.topScope.getOpt("name/clear") should be (None)
   }
 
   "WebContext.sendValue with clear and send enter" should "clear and send value to element" in {
@@ -1033,7 +1032,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     doReturn(mockActions).when(ctx).createActions(mockWebDriver)
     when(mockActions.moveToElement(mockElement)).thenReturn(mockActions)
-    ctx.scopes.set(JSBinding.key("element/action/click"), "element.click()")
+    ctx.topScope.set(JSBinding.key("element/action/click"), "element.click()")
     ctx.performAction(ElementAction.click, elemBinding)
     verify(mockElement, never()).clear()
     verify(ctx).applyJS("(function(element) { element.click() })(arguments[0])", mockElement)(WebSettings.`gwen.web.capture.screenshots.highlighting`)

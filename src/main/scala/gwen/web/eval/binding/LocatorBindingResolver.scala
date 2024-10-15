@@ -62,21 +62,21 @@ class LocatorBindingResolver(ctx: WebContext) extends LazyLogging {
     ctx.topScope.getObject(name) match {
       case None =>
         val locatorKey = LocatorKey.baseKey(name)
-        ctx.scopes.getOpt(locatorKey) match {
+        ctx.topScope.getOpt(locatorKey) match {
           case Some(boundValue) =>
             val selectors = boundValue.split(",") flatMap { boundValue =>
               val selectorType = Try(SelectorType.parse(boundValue)) getOrElse {
                 locatorBindingError(s"Unsupported selector type defined for: $name")
               }
               val selectorKey = ctx.interpolate(LocatorKey.selectorKey(name, selectorType))
-              ctx.scopes.getOpt(selectorKey) match {
+              ctx.topScope.getOpt(selectorKey) match {
                 case Some(expression) =>
                   val selector = ctx.interpolate(expression)
                   val rKeys = RelativeSelectorType.values map { rSelector => 
                     LocatorKey.relativeKey(name, selectorType, rSelector)
                   }
                   val rKeyAndElement: Option[(String, String)] = (rKeys flatMap { rKey => 
-                    ctx.scopes.getOpt(ctx.interpolate(rKey)) map { rElement => 
+                    ctx.topScope.getOpt(ctx.interpolate(rKey)) map { rElement => 
                       (rKey, rElement)
                     }
                   }).headOption
@@ -87,13 +87,13 @@ class LocatorBindingResolver(ctx: WebContext) extends LazyLogging {
                     val rSelector = RelativeSelectorType.valueOf(rKey.substring(rKey.lastIndexOf("/") + 1))
                     val rBinding = getBinding(rElement, false).get
                     val rKeyWithinPixels = LocatorKey.relativeKeyWithinPixels(name, selectorType, rSelector)
-                    val withinPixels = ctx.scopes.getOpt(ctx.interpolate(rKeyWithinPixels)).map(_.toInt)
+                    val withinPixels = ctx.topScope.getOpt(ctx.interpolate(rKeyWithinPixels)).map(_.toInt)
                     (rSelector, rBinding, withinPixels)
                   }
-                  val timeout = ctx.scopes.getOpt(ctx.interpolate(LocatorKey.timeoutSecsKey(name, selectorType))).map { timeoutSecs =>
+                  val timeout = ctx.topScope.getOpt(ctx.interpolate(LocatorKey.timeoutSecsKey(name, selectorType))).map { timeoutSecs =>
                     Duration.create(timeoutSecs.toLong, TimeUnit.SECONDS)
                   }
-                  val index = ctx.scopes.getOpt(ctx.interpolate(LocatorKey.indexKey(name, selectorType))).map(_.toInt)
+                  val index = ctx.topScope.getOpt(ctx.interpolate(LocatorKey.indexKey(name, selectorType))).map(_.toInt)
                   Some(Selector(selectorType, selector, relative, timeout, index))
                 case None =>
                   if (optional) None else locatorBindingError(s"Undefined selector for: $name")

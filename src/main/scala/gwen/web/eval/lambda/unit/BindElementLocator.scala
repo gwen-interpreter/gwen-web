@@ -39,52 +39,52 @@ class BindElementLocator(name: String, selectorType: SelectorType, expression: S
         ctx.getLocatorBinding(rElement)
       }
 
-      ctx.scopes.set(LocatorKey.baseKey(name), selectorType.toString)
-      ctx.scopes.set(LocatorKey.selectorKey(name, selectorType), expression)
+      ctx.topScope.set(LocatorKey.baseKey(name), selectorType.toString)
+      ctx.topScope.set(LocatorKey.selectorKey(name, selectorType), expression)
 
       if (relative.isEmpty) {
         RelativeSelectorType.values foreach { rSelectorType =>
           val rKey = LocatorKey.relativeKey(name, selectorType, rSelectorType)
-          ctx.scopes.getOpt(rKey) foreach { _ =>
-            ctx.scopes.set(rKey, null)
+          ctx.topScope.getOpt(rKey) foreach { _ =>
+            ctx.topScope.set(rKey, null)
           }
           if (rSelectorType == RelativeSelectorType.near) {
             val rKeyWithinPixels = LocatorKey.relativeKeyWithinPixels(name, selectorType, rSelectorType)
-            ctx.scopes.getOpt(rKeyWithinPixels) foreach { _ =>
-              ctx.scopes.set(rKeyWithinPixels, null)
+            ctx.topScope.getOpt(rKeyWithinPixels) foreach { _ =>
+              ctx.topScope.set(rKeyWithinPixels, null)
             }
           }
         }
       } else {
         relative foreach { (rSelectorType, rElement, rPixels) =>
           val rKey = LocatorKey.relativeKey(name, selectorType, rSelectorType)
-          ctx.scopes.set(rKey, rElement)
+          ctx.topScope.set(rKey, rElement)
           rPixels foreach { withinPixels =>
             val rKeyWithinPixels = LocatorKey.relativeKeyWithinPixels(name, selectorType, rSelectorType)
-            ctx.scopes.set(rKeyWithinPixels, withinPixels.toString)
+            ctx.topScope.set(rKeyWithinPixels, withinPixels.toString)
           }
         }
       }
 
       val iKey = LocatorKey.indexKey(name, selectorType)
       if (index.isEmpty) {
-        ctx.scopes.getOpt(iKey) foreach { _ =>
-          ctx.scopes.set(iKey, null)
+        ctx.topScope.getOpt(iKey) foreach { _ =>
+          ctx.topScope.set(iKey, null)
         }
       } else {
         index foreach { idx =>
-          ctx.scopes.set(iKey, idx.toString)
+          ctx.topScope.set(iKey, idx.toString)
         }
       }
 
       val tKey = LocatorKey.timeoutSecsKey(name, selectorType)
       if (timeoutSecs.isEmpty) {
-        ctx.scopes.getOpt(tKey) foreach { _ =>
-          ctx.scopes.set(tKey, null)
+        ctx.topScope.getOpt(tKey) foreach { _ =>
+          ctx.topScope.set(tKey, null)
         }
       } else {
         timeoutSecs foreach { secs =>
-          ctx.scopes.set(tKey, secs.toString)
+          ctx.topScope.set(tKey, secs.toString)
         }
       }
 

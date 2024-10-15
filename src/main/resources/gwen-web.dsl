@@ -2,9 +2,6 @@
 <name> is blank
 <name> is true
 <name> is false
-I am on the <page>
-the <page> url is "<url>"
-I navigate to the <page>
 I navigate to "<url>"
 I scroll to the top of <element>
 I scroll to the bottom of <element>

@@ -20,7 +20,7 @@ import gwen.web.BaseTest
 import gwen.web.GwenWebInterpreter
 
 import gwen.core.GwenOptions
-import gwen.core.LaunchSettings
+import gwen.core.BootstrapSettings
 import gwen.core.Settings
 import gwen.core.behavior.BehaviorMode
 import gwen.core.status.Passed
@@ -39,7 +39,7 @@ abstract class BaseFeatureTest extends BaseTest {
       if (dataFile.nonEmpty) args = args ++ Array("-i", dataFile.get)
       if (BehaviorMode.isStrict) args = args ++ Array("-t", "~@Lenient")
       args = args ++ features.toArray.asInstanceOf[Array[String]]
-      val options = GwenOptions(args, LaunchSettings.`gwen.baseDir`)
+      val options = GwenOptions(args, BootstrapSettings.`gwen.baseDir`)
       val interpreter = GwenWebInterpreter
       interpreter.run(options, None) match {
         case _: Passed => // woo hoo

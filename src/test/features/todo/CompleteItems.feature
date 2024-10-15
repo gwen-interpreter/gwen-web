@@ -7,16 +7,16 @@ Feature: Create and complete Todo items
      Then the number of active items should contain "2"
 
   Scenario: Complete one item
-    Given I am on the Todo page
+    Given item count is "1"
      When I tick the "Get the milk" item
-     Then the number of active items should contain "1"
+     Then the number of active items should contain item count
 
   Scenario: Complete another item
-    Given I am on the Todo page
+    Given item count is "0"
      When I tick the "Walk the dog" item
-     Then the number of active items should contain "0"
+     Then the number of active items should contain item count
 
   Scenario: Clear my completed items
-    Given I am on the Todo page
+    Given item count is blank
      When I click the clear completed button
      Then the number of active items should not be displayed

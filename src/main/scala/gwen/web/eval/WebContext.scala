@@ -71,12 +71,12 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
       if (WebSettings.videoEnabled) {
         addVideo(new File(GwenSettings.`gwen.video.dir`, s"$sessionId.mp4"))
       }
-      envState.scopes.topScope.set(`gwen.web.sessionId`, sessionId)
+      envState.topScope.set(`gwen.web.sessionId`, sessionId)
     }
   }
 
   override def sessionClosed(event: WebSessionEvent): Unit = { 
-    envState.scopes.topScope.set(`gwen.web.sessionId`, null)
+    envState.topScope.set(`gwen.web.sessionId`, null)
   }
 
   def webElementlocator = new WebElementLocator(this)
@@ -207,7 +207,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
       topScope.set(name, url)
     }
     
-    val locatorEntry = scopes.visibleEntry(name) { _ => true } map { (n, _) => n.startsWith(LocatorKey.baseKey(name)) }
+    val locatorEntry = topScope.namedEntry(name) { _ => true } map { (n, _) => n.startsWith(LocatorKey.baseKey(name)) }
     if (locatorEntry.exists(_ == true) || locatorEntry.isEmpty) {
       getLocatorBinding(name, optional = true).map(_.withTimeout(timeout)) match {
         case Some(binding) =>
@@ -233,7 +233,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     */
   def getCachedOrBoundValue(name: String): String = {
     getCachedWebElement(s"${JSBinding.key(name)}/param/webElement") map { webElement =>
-      val javascript = interpolate(scopes.get(JSBinding.key(name)))
+      val javascript = interpolate(topScope.get(JSBinding.key(name)))
       val jsFunction = jsFunctionWrapper("element", "arguments[0]", s"return $javascript")
       Option(applyJS(jsFunction, webElement)).map(_.toString).getOrElse("")
     } getOrElse {
@@ -302,13 +302,13 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
   def evaluatePostAction(element: String, action: String): Unit = {
 
     // sleep if wait time is configured for this action
-    scopes.getOpt(s"$element/$action/wait") foreach { secs =>
+    topScope.getOpt(s"$element/$action/wait") foreach { secs =>
       logger.info(s"Waiting for $secs second(s) (post-$action wait)")
       Thread.sleep(secs.toLong * 1000)
     }
 
     // wait for javascript post condition if one is configured for this action
-    scopes.getOpt(s"$element/$action/condition") foreach { condition =>
+    topScope.getOpt(s"$element/$action/condition") foreach { condition =>
       val bCondition = BooleanCondition(condition, false, WebSettings.`gwen.web.wait.seconds`, this)
       logger.info(s"waiting until ${bCondition.name} (post-$action condition)")
       waitUntil(s"waiting for true return from condition: ${bCondition.name}") {
@@ -877,7 +877,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
   private [web] def createActions(driver: WebDriver): Actions = new Actions(driver)
 
   def performAction(action: ElementAction, binding: LocatorBinding): Unit = {
-    val actionBinding = scopes.getOpt(JSBinding.key(s"${binding.name}/action/$action"))
+    val actionBinding = topScope.getOpt(JSBinding.key(s"${binding.name}/action/$action"))
     actionBinding match {
       case Some(javascript) =>
         performScriptAction(action, javascript, binding, s"trying to $action ${binding.displayName}")

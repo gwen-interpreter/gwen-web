@@ -29,7 +29,7 @@ class CaptureElementAttribute(element: String, attribute: String, javascript: St
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     checkStepRules(step, BehaviorType.Action, ctx)
     val binding = ctx.getLocatorBinding(element)
-    ctx.scopes.set(JSBinding.key(attribute), javascript)
+    ctx.topScope.set(JSBinding.key(attribute), javascript)
     try {
       ctx.perform {
         ctx.topScope.pushObject(s"${JSBinding.key(attribute)}/param/webElement", binding.resolve())

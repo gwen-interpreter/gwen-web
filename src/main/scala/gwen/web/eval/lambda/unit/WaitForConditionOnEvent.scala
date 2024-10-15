@@ -32,9 +32,9 @@ class WaitForConditionOnEvent(element: String, event: ElementEvent, condition: S
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     step tap { _ =>
       checkStepRules(step, BehaviorType.Context, ctx)
-      ctx.scopes.get(JSBinding.key(condition))
+      ctx.topScope.get(JSBinding.key(condition))
       ctx.getLocatorBinding(element)
-      ctx.scopes.set(s"$element/${ElementEvent.actionOf(event)}/condition", condition)
+      ctx.topScope.set(s"$element/${ElementEvent.actionOf(event)}/condition", condition)
     }
   }
 

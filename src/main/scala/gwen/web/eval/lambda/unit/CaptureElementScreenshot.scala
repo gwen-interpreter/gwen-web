@@ -34,7 +34,7 @@ class CaptureElementScreenshot(element: String, target: Option[String]) extends 
       target match {
         case Some(name) =>
           ctx.captureElementScreenshot(binding, name) foreach { file =>
-            ctx.scopes.set(name, file.getAbsolutePath)
+            ctx.topScope.set(name, file.getAbsolutePath)
           }
         case None =>
           ctx.captureElementScreenshot(binding)

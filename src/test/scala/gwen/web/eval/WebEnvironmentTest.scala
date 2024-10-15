@@ -33,124 +33,95 @@ class WebEnvironmentTest extends BaseTest with Matchers with MockitoSugar {
   
   "New web ctx context" should "have 'top' scope" in {
     val ctx = newCtx()
-    ctx.scopes.current.isTopScope should be (true)
-  }
-  
-  "Bound scope attribute" should "be recreated after reset" in {
-    val ctx = newCtx()
-    ctx.scopes.addScope("login")
-    ctx.scopes.set("username", "Gwen")
-    ctx.scopes.get("username") should be ("Gwen")
-    ctx.reset(StateLevel.feature)
-    ctx.scopes.current.isTopScope should be (true)
-    ctx.scopes.getOpt("username") should be (None)
+    ctx.topScope.isTopScope should be (true)
   }
   
   "json on new ctx context" should "be empty" in {
     val ctx = newCtx()
-    ctx.scopes.asString.replace("\r", "") should be (
-      """|{
-          |  scopes { }
-          |}""".stripMargin.replace("\r", ""))
-  }
-  
-  "Bound scope attribute" should "show up in JSON string" in {
-    val ctx = newCtx()
-    ctx.scopes.addScope("login")
-    ctx.scopes.set("username", "Gwen")
-    ctx.scopes.get("username") should be ("Gwen")
-    ctx.scopes.asString.replace("\r", "") should be (
-      """|{
-          |  scopes {
-          |    scope : "login" {
-          |      username : "Gwen"
-          |    }
-          |  }
-          |}""".stripMargin.replace("\r", ""))
-                                      
+    ctx.topScope.asString.replace("\r", "") should be ("""scope : "feature" { }""")
   }
   
   "JavaScript binding on dry run" should "not resolve" in {
     val ctx = newCtx(true)
-    ctx.scopes.set("username/javascript", "$('#username').val()")
+    ctx.topScope.set("username/javascript", "$('#username').val()")
     ctx.getCachedOrBoundValue("username") should be ("$[dryValue:javascript]")
   }
   
   "XPath binding" should "resolve" in {
     val ctx = newCtx()
-    ctx.scopes.set("xml", "<users><user>Gwen</user><user>Stacey</user></users>")
-    ctx.scopes.set("username/xpath/source", "xml")
-    ctx.scopes.set("username/xpath/targetType", "text")
-    ctx.scopes.set("username/xpath/expression", "users/user")
+    ctx.topScope.set("xml", "<users><user>Gwen</user><user>Stacey</user></users>")
+    ctx.topScope.set("username/xpath/source", "xml")
+    ctx.topScope.set("username/xpath/targetType", "text")
+    ctx.topScope.set("username/xpath/expression", "users/user")
     ctx.getCachedOrBoundValue("username") should be ("Gwen")
-    ctx.scopes.set("username/xpath/expression", "users/user[2]")
+    ctx.topScope.set("username/xpath/expression", "users/user[2]")
     ctx.getCachedOrBoundValue("username") should be ("Stacey")
   }
 
   "XPath binding on dry run" should "not resolve" in {
     val ctx = newCtx(true)
-    ctx.scopes.set("xml", "<users><user>Gwen</user><user>Stacey</user></users>")
-    ctx.scopes.set("username/xpath/source", "xml")
-    ctx.scopes.set("username/xpath/targetType", "text")
-    ctx.scopes.set("username/xpath/expression", "users/user")
+    ctx.topScope.set("xml", "<users><user>Gwen</user><user>Stacey</user></users>")
+    ctx.topScope.set("username/xpath/source", "xml")
+    ctx.topScope.set("username/xpath/targetType", "text")
+    ctx.topScope.set("username/xpath/expression", "users/user")
     ctx.getCachedOrBoundValue("username") should be ("$[dryValue:xpath]")
-    ctx.scopes.set("username/xpath/expression", "users/user[2]")
+    ctx.topScope.set("username/xpath/expression", "users/user[2]")
     ctx.getCachedOrBoundValue("username") should be ("$[dryValue:xpath]")
   }
   
   "Regex binding" should "resolve" in {
     val ctx = newCtx()
-    ctx.scopes.set("url", "http://www.domain.com?param1=one&param2=two")
-    ctx.scopes.set("param1/regex/source", "url")
-    ctx.scopes.set("param1/regex/expression", "param1=(.+)&")
+    ctx.topScope.set("url", "http://www.domain.com?param1=one&param2=two")
+    ctx.topScope.set("param1/regex/source", "url")
+    ctx.topScope.set("param1/regex/expression", "param1=(.+)&")
     ctx.getCachedOrBoundValue("param1") should be ("one")
-    ctx.scopes.set("param2/regex/source", "url")
-    ctx.scopes.set("param2/regex/expression", "param2=(.+)")
+    ctx.topScope.set("param2/regex/source", "url")
+    ctx.topScope.set("param2/regex/expression", "param2=(.+)")
     ctx.getCachedOrBoundValue("param2") should be ("two")
   }
 
   "Regex binding on dry run" should "not resolve" in {
     val ctx = newCtx(true)
-    ctx.scopes.set("url", "http://www.domain.com?param1=one&param2=two")
-    ctx.scopes.set("param1/regex/source", "url")
-    ctx.scopes.set("param1/regex/expression", "param1=(.+)&")
+    ctx.topScope.set("url", "http://www.domain.com?param1=one&param2=two")
+    ctx.topScope.set("param1/regex/source", "url")
+    ctx.topScope.set("param1/regex/expression", "param1=(.+)&")
     ctx.getCachedOrBoundValue("param1") should be ("$[dryValue:regex]")
-    ctx.scopes.set("param2/regex/source", "url")
-    ctx.scopes.set("param2/regex/expression", "param2=(.+)")
+    ctx.topScope.set("param2/regex/source", "url")
+    ctx.topScope.set("param2/regex/expression", "param2=(.+)")
     ctx.getCachedOrBoundValue("param2") should be ("$[dryValue:regex]")
   }
   
   "Json path binding" should "resolve" in {
     val ctx = newCtx()
-    ctx.scopes.set("ctx", """{"scopes":[{"scope":"login","atts":[{"username":"Gwen"}]}]}""")
-    ctx.scopes.set("username/json path/source", "ctx")
-    ctx.scopes.set("username/json path/expression", "$.scopes[0].atts[0].username")
+    ctx.topScope.set("ctx", """{"scopes":[{"scope":"login","atts":[{"username":"Gwen"}]}]}""")
+    ctx.topScope.set("username/json path/source", "ctx")
+    ctx.topScope.set("username/json path/expression", "$.scopes[0].atts[0].username")
     ctx.getCachedOrBoundValue("username") should be ("Gwen")
   }
 
   "Json path binding on dry run" should "not resolve" in {
     val ctx = newCtx(true)
-    ctx.scopes.set("ctx", """{"scopes":[{"scope":"login","atts":[{"username":"Gwen"}]}]}""")
-    ctx.scopes.set("username/json path/source", "ctx")
-    ctx.scopes.set("username/json path/expression", "$.scopes[0].atts[0].username")
+    ctx.topScope.set("ctx", """{"scopes":[{"scope":"login","atts":[{"username":"Gwen"}]}]}""")
+    ctx.topScope.set("username/json path/source", "ctx")
+    ctx.topScope.set("username/json path/expression", "$.scopes[0].atts[0].username")
     ctx.getCachedOrBoundValue("username") should be ("$[dryValue:json path]")
   }
   
   "Sysproc binding" should "resolve" in {
     val ctx = newCtx()
-    ctx.scopes.set("hostname/sysproc", "hostname")
+    ctx.topScope.set("hostname/sysproc", "hostname")
     ctx.getCachedOrBoundValue("hostname") should not be ("")
   }
 
   "Sysproc binding on dry run" should "not resolve" in {
     val ctx = newCtx(true)
-    ctx.scopes.set("hostname/sysproc", "local command")
+    ctx.topScope.set("hostname/sysproc", "local command")
     ctx.getCachedOrBoundValue("hostname") should be ("$[dryValue:sysproc]")
   }
   
   "File binding on dry run" should "not resolve" in {
     val ctx = newCtx(true)
-    ctx.scopes.set("xml/file", "path-to/file.xml")
+    ctx.topScope.set("xml/file", "path-to/file.xml")
     ctx.getCachedOrBoundValue("xml") should be ("$[dryValue:file]")
   }
   
@@ -158,8 +129,8 @@ class WebEnvironmentTest extends BaseTest with Matchers with MockitoSugar {
     withSetting("gwen.db.subscribers.driver", "jdbc.driver.class") {
       withSetting("gwen.db.subscribers.url", "db:url") {
         val ctx = newCtx(true)
-        ctx.scopes.set("username/sql/selectStmt", "select username from users")
-        ctx.scopes.set("username/sql/dbName", "subscribers")
+        ctx.topScope.set("username/sql/selectStmt", "select username from users")
+        ctx.topScope.set("username/sql/dbName", "subscribers")
         ctx.getCachedOrBoundValue("username") should be ("$[dryValue:sql]")
       }
     }
@@ -181,12 +152,6 @@ class WebEnvironmentTest extends BaseTest with Matchers with MockitoSugar {
 
   "Attempt to locate unbound element "should "throw locator bindingerror" in {
     val ctx = newCtx()
-    shouldFailWithLocatorBindingError("username", ctx, "Undefined selector for: username")
-  }
-
-  "Attempt to locate element with unbound locator" should "throw locator binding error" in {
-    val ctx = newCtx()
-    ctx.scopes.addScope("login").set("username/locator", "id")
     shouldFailWithLocatorBindingError("username", ctx, "Undefined selector for: username")
   }
 

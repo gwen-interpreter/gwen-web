@@ -33,7 +33,7 @@ class BindActionHandler(element: String, event: ElementEvent, javascript: String
     step tap { _ =>
       checkStepRules(step, BehaviorType.Context, ctx)
       ctx.getLocatorBinding(element)
-      ctx.scopes.set(JSBinding.key(s"$element/action/${ElementEvent.actionOf(event)}"), javascript)
+      ctx.topScope.set(JSBinding.key(s"$element/action/${ElementEvent.actionOf(event)}"), javascript)
     }
   }
 

@@ -114,22 +114,12 @@ class WebEngine extends EvalEngine[WebContext] {
         new WaitForElementState(element, ElementState.valueOf(state), Option(negation).isDefined)
       case r"""I wait until (.+?)$condition""" if !condition.matches(".+ file (exists|not exists|does not exist|is empty|is not empty)") =>
         new WaitForBoundCondition(condition, step.delayOpt.map(_.toMillis), step.timeoutOpt.map(_.toSeconds))
-      case r"""I am on the (.+?)$page""" =>
-        new CreatePageScope(page)
-      case r"""I navigate to the (.+?)$page""" =>
-        new NavigateToPageInScope(page)
       case r"""I navigate to "(.+?)"$url""" =>
         new NavigateToUrl(step.orDocString(url))
       case r"""I scroll to the (top|bottom)$position of the page""" =>
         new ScrollPage(ScrollTo.valueOf(position))
       case r"""I scroll to the (top|bottom)$position of (.+?)$element""" =>
         new ScrollToElement(element, ScrollTo.valueOf(position))
-      case r"""the url will be defined by (?:property|setting) "(.+?)"$name""" =>
-        new BindUrl(Settings.get(step.orDocString(name)), None)
-      case r"""the url will be "(.+?)"$url""" =>
-        new BindUrl(step.orDocString(url), None)
-      case r"""the (.+?)$page url is "(.+?)"$url""" =>
-        new BindUrl(step.orDocString(url), Some(page))
       case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression at index (\d+)$index in (.+?)$container""" =>
         new BindElementLocator(element, SelectorType.parse(selectorType), expression, Some((RelativeSelectorType.in, container, None)), step.timeoutOpt.map(_.toSeconds), Some(index.toInt))
       case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression in (.+?)$container""" =>
