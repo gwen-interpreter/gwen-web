@@ -1,31 +1,10 @@
 {
-  "rp": {
-    "endpoint": "http://<host>:<port>",
-    "uuid": "28b262e7-8a9d-4928-b2a3-649562d5c63d",
-    "project": "default_personal",
-    "launch": "Gwen"
-  },
   "gwen": {
     "behavior": {
       "rules": "strict"
     },
     "report": {
       "overwrite": false
-    },
-    "rp": {
-      "heartbeat": {
-        "timeoutSecs": 5
-      },
-      "send": {
-        "failed": {
-          "errorBlocks": "leaf",
-          "stepDefs": "none"
-        },
-        "stepDefs": "inlined"
-      },
-      "testCaseId": {
-        "keys": "auto"
-      }
     },
     "web": {
       "sendKeys": {

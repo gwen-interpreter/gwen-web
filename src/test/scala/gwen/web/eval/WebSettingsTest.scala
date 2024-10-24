@@ -21,7 +21,6 @@ import gwen.web._
 import gwen.core.AssertionMode
 import gwen.core.GwenOptions
 import gwen.core.GwenSettings
-import gwen.core.BootstrapSettings
 import gwen.core.Settings
 import gwen.core.behavior.BehaviorMode
 import gwen.core.behavior.FeatureMode
@@ -76,6 +75,7 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
       GwenSettings.`gwen.dryRun.limit.tableData.outline.examples.records` should be (Integer.MAX_VALUE)
       GwenSettings.`gwen.error.messages.inline.locators` should be (false)
       GwenSettings.`gwen.logLevel.deprecations` should be (Level.SEVERE)
+      GwenSettings.`gwen.launch.options.format` should be (List(ReportFormat.html, ReportFormat.results))
     }
   }
 
@@ -126,9 +126,17 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
     Settings.exclusively {
       withSetting("gwen.initDir", ".") {
         Settings.init(
-          new File("src/main/resources/init/gwen.conf"),
-          new File("src/main/resources/init/conf/browsers/chrome.conf"))
-        assertInitConf(".", "target")
+          List(
+            new File("src/main/resources/init/gwen.conf"),
+            new File("src/main/resources/init/conf/browsers/chrome.conf")
+          )
+        )
+        assertInitConf()
+        GwenSettings.`gwen.auto.discover.data.csv` should be (false)
+        GwenSettings.`gwen.behavior.rules` should be (BehaviorMode.strict)
+        GwenSettings.`gwen.feature.mode` should be (FeatureMode.declarative)
+        GwenSettings.`gwen.baseDir`.getPath should be (".")
+        GwenSettings.`gwen.outDir`.getPath should be ("output")
       }
     }
   }
@@ -137,31 +145,34 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
     Settings.exclusively {
       withSetting("gwen.initDir", "gwen") {
         Settings.init(
-          new File("src/main/resources/init/gwen.conf"),
-          new File("src/main/resources/init/conf/browsers/chrome.conf"))
-        assertInitConf("gwen", "target")
+          List(
+            new File("src/main/resources/init/gwen.conf"),
+            new File("src/main/resources/init/conf/browsers/chrome.conf")
+          )
+        )
+        assertInitConf()
+        GwenSettings.`gwen.auto.discover.data.csv` should be (false)
+        GwenSettings.`gwen.behavior.rules` should be (BehaviorMode.strict)
+        GwenSettings.`gwen.feature.mode` should be (FeatureMode.declarative)
+        GwenSettings.`gwen.baseDir`.getPath should be ("gwen")
+        GwenSettings.`gwen.outDir`.getPath should be ("gwen/output")
       }
     }
   }
 
-  private def assertInitConf(expectedBaseDir: String, expectedOutDir: String): Unit = {
+  private def assertInitConf(): Unit = {
 
     GwenSettings.`gwen.assertion.mode` should be (AssertionMode.hard)
     GwenSettings.`gwen.associative.meta` should be (true)
     GwenSettings.`gwen.auto.bind.tableData.outline.examples` should be (true)
-    GwenSettings.`gwen.auto.discover.data.csv` should be (true)
     GwenSettings.`gwen.auto.discover.data.json` should be (false)
     GwenSettings.`gwen.auto.discover.meta` should be (true)
     GwenSettings.`gwen.auto.trim.data.csv` should be (false)
     GwenSettings.`gwen.auto.trim.data.json` should be (false)
-    GwenSettings.`gwen.behavior.rules` should be (BehaviorMode.lenient)
     GwenSettings.`gwen.feature.dialect` should be ("en")
     GwenSettings.`gwen.feature.failfast.enabled` should be (true)
     GwenSettings.`gwen.feature.failfast.exit` should be (false)
-    GwenSettings.`gwen.feature.mode` should be (FeatureMode.imperative)
     GwenSettings.`gwen.mask.char` should be ('*')
-    GwenSettings.`gwen.baseDir`.getPath should be (expectedBaseDir)
-    GwenSettings.`gwen.outDir`.getPath should be (expectedOutDir)
     GwenSettings.`gwen.parallel.maxThreads` should be (GwenSettings.availableProcessors)
     GwenSettings.`gwen.rampup.interval.seconds` should be (None)
     GwenSettings.`gwen.report.overwrite` should be (false)
@@ -178,7 +189,7 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
     GwenSettings.`gwen.console.repl.tabCompletion` should be (true)
     GwenSettings.`gwen.logLevel.deprecations` should be (Level.SEVERE)
 
-    BootstrapSettings.`gwen.launch.options.format` should be (List(ReportFormat.html, ReportFormat.results))
+    GwenSettings.`gwen.launch.options.format` should be (List(ReportFormat.html))
 
     WebSettings.`gwen.target.browser` should be (WebBrowser.chrome)
     WebSettings.`gwen.target.env` should be ("test")
@@ -223,21 +234,21 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
 
   "Sample migration .conf" should "should override defaults" in {
     Settings.exclusively {
-      Settings.init(new File("src/test/resources/sample/settings/sample.conf"))
+      Settings.init(List(new File("src/test/resources/sample/settings/sample.conf")))
       assertMigrationSample()
     }
   }
 
   "Sample migration .json" should "should override defaults" in {
     Settings.exclusively {
-      Settings.init(new File("src/test/resources/sample/settings/sample.json"))
+      Settings.init(List(new File("src/test/resources/sample/settings/sample.json")))
       assertMigrationSample()
     }
   }
 
   "Sample migration .properties" should "should override defaults" in {
     Settings.exclusively {
-      Settings.init(new File("src/test/resources/sample/settings/sample.properties"))
+      Settings.init(List(new File("src/test/resources/sample/settings/sample.properties")))
       assertMigrationSample()
     }
   }
@@ -251,7 +262,7 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
     GwenSettings.`gwen.auto.discover.meta` should be (true)
     GwenSettings.`gwen.auto.trim.data.csv` should be (false)
     GwenSettings.`gwen.auto.trim.data.json` should be (false)
-    GwenSettings.`gwen.behavior.rules` should be (BehaviorMode.lenient)
+    GwenSettings.`gwen.behavior.rules` should be (BehaviorMode.strict)
     GwenSettings.`gwen.feature.dialect` should be ("en")
     GwenSettings.`gwen.feature.failfast.enabled` should be (true)
     GwenSettings.`gwen.feature.failfast.exit` should be (false)
@@ -323,8 +334,8 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
   "Results files in gwen init conf" should "resolve" in {
     Settings.exclusively {
       withSetting("gwen.initDir", "gwen") {
-        Settings.init(new File("src/main/resources/init/gwen.conf"))
-          val resDir = "target/reports/results"
+        Settings.init(List(new File("src/main/resources/init/gwen.conf")))
+          val resDir = "gwen/output/reports/results"
           val resFiles = GwenSettings.`gwen.report.results.files`(GwenOptions())
           resFiles.size should be (7)
           val fPassed = resFiles.find(_.id == "feature.passed").get

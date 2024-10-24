@@ -35,11 +35,12 @@ abstract class BaseTest extends AnyFlatSpec {
     Settings.exclusively {
       val original = Settings.getOpt(name)
       try {
-        Settings.set(name, value)
+        sys.props += ((name, value))
+        Settings.init()
         body
       } finally {
-        original.fold(Settings.clear(name)) { v =>
-          Settings.set(name, v)
+        original.fold(sys.props -= name) { v =>
+          sys.props += ((name, v))
         }
       }
     }

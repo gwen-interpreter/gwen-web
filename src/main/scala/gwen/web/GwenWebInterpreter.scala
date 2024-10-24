@@ -18,12 +18,13 @@ package gwen.web
 
 import gwen.GwenInterpreter
 import gwen.core.Settings
+import gwen.core.GwenOptions
+import gwen.core.GwenSettings
 
 import gwen.web.init.WebProjectInitialiser
 import gwen.web.eval.WebBrowser
 import gwen.web.eval.WebEngine
 import gwen.web.eval.WebSettings
-import gwen.core.GwenOptions
 
 import java.io.File
 
@@ -44,12 +45,11 @@ object GwenWebInterpreter extends GwenInterpreter(new WebEngine()) with WebProje
   
   override def init(options: GwenOptions): GwenOptions = {
     val opts = if (!options.init) {
-      val conf = Some(Settings.BootstrapConf)
-      val baseDir = Settings.get("gwen.baseDir", None, conf)
+      val baseDir = GwenSettings.`gwen.baseDir`
       val browserConf = {
         val browsersDir = new File(new File(baseDir, "conf"), "browsers")
         if (browsersDir.exists && WebBrowser.findSettingsFile(options.settingsFiles).isEmpty) {
-          val targetBrowser = Settings.get(`gwen.target.browser`, None, conf)
+          val targetBrowser = Settings.get(`gwen.target.browser`)
           List("conf", "json", "properties") map { confType =>
             new File(browsersDir, s"$targetBrowser.$confType")
           } find { conf => 
@@ -60,7 +60,7 @@ object GwenWebInterpreter extends GwenInterpreter(new WebEngine()) with WebProje
       val envConf = {
         val envDir = new File(new File(baseDir, "conf"), "env")
         if (envDir.exists && options.settingsFiles.filter(_.getPath.startsWith(s"$baseDir${File.separatorChar}env${File.separatorChar}")).isEmpty) {
-          val targetEnv = Settings.get(`gwen.target.env`, None, conf)
+          val targetEnv = Settings.get(`gwen.target.env`)
           List("conf", "json", "properties") map { confType =>
             new File(envDir, s"$targetEnv.$confType")
           } find { conf => 

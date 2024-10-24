@@ -1000,17 +1000,19 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
 
   """<attribute> <is|will> be defined by property "<name>"""" should "evaluate" in {
     List("is", "will be").zipWithIndex.foreach { case (x, i) =>
-      Settings.set(s"name-$i", s"$i")
-      evaluate(s"""attribute-$i $x defined by property "name-$i"""")
-      verify(mockTopScope).set(s"attribute-$i", s"$i")
+      withSetting(s"name-$i", s"$i") {
+        evaluate(s"""attribute-$i $x defined by property "name-$i"""")
+        verify(mockTopScope).set(s"attribute-$i", s"$i")
+      }
     }
   }
 
   """<attribute> <is|will> be defined by setting "<name>"""" should "evaluate" in {
     List("is", "will be").zipWithIndex.foreach { case (x, i) =>
-      Settings.set(s"name-$i", s"$i")
-      evaluate(s"""attribute-$i $x defined by setting "name-$i"""")
-      verify(mockTopScope).set(s"attribute-$i", s"$i")
+      withSetting(s"name-$i", s"$i") {
+        evaluate(s"""attribute-$i $x defined by setting "name-$i"""")
+        verify(mockTopScope).set(s"attribute-$i", s"$i")
+      }
     }
   }
 

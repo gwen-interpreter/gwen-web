@@ -53,7 +53,7 @@ import org.scalatest.matchers.should.Matchers
 class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar with BeforeAndAfterEach {
 
   // disable implicit js locators for unit test
-  Settings.set("gwen.web.implicit.js.locators", "false")
+  sys.props += (("gwen.web.implicit.js.locators", "false"))
 
   private var mockWebElement: WebElement = uninitialized
   private var mockWebElements: List[WebElement] = uninitialized
