@@ -12,11 +12,11 @@ Feature: Join Strings Meta
     This scenario is loaded into memory and evaluated whenever
     the outline is referenced by a step in a feature
 
-    Given string 1 is "<string 1>"
-      And string 2 is "<string 2>"
+    Given the result is blank
      When I join the two strings
      Then the result should be "<result>"
 
+    @Parallel
     Examples:
 
       The header row contains the placeholder names. The body rows that

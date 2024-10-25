@@ -128,7 +128,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     doReturn(mockLocator).when(ctx).webElementlocator
     doReturn(false).when(ctx).isEvaluatingTopLevelStep
     doReturn(SpecType.Meta).when(ctx).specType
-    doNothing().when(mockTopScope).setImplicitAtts(any(), any(), any())
+    doNothing().when(mockTopScope).setStatus(any(), any())
     when(mockTopScope.getOpt("gwen.feature.file.path")).thenReturn(Some("file.feature"))
   }
 
@@ -963,7 +963,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     List("of", "on", "in").foreach { x =>
       evaluate(s"""I capture <attribute> $x <element> by javascript "<expression>"""")
     }
-    verify(mockTopScope, times(3)).set("<attribute>", "value")
+    verify(mockTopScope, times(3)).set("<attribute>", "value", false)
   }
 
   """my <name> property <is|will be> "<value>"""" should "evaluate" in {
@@ -994,7 +994,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     doReturn(mockTopScope).when(envState).topScope
     List("is", "will be").zipWithIndex.foreach { case (x, i) =>
       evaluate(s"""attribute-$i $x defined by javascript "expression-$i"""")
-      verify(mockTopScope).set(s"attribute-$i/javascript", s"expression-$i")
+      verify(mockTopScope).set(s"attribute-$i/javascript", s"expression-$i", false)
     }
   }
 
@@ -1002,7 +1002,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     List("is", "will be").zipWithIndex.foreach { case (x, i) =>
       withSetting(s"name-$i", s"$i") {
         evaluate(s"""attribute-$i $x defined by property "name-$i"""")
-        verify(mockTopScope).set(s"attribute-$i", s"$i")
+        verify(mockTopScope).set(s"attribute-$i", s"$i", false)
       }
     }
   }
@@ -1011,7 +1011,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     List("is", "will be").zipWithIndex.foreach { case (x, i) =>
       withSetting(s"name-$i", s"$i") {
         evaluate(s"""attribute-$i $x defined by setting "name-$i"""")
-        verify(mockTopScope).set(s"attribute-$i", s"$i")
+        verify(mockTopScope).set(s"attribute-$i", s"$i", false)
       }
     }
   }
@@ -1020,7 +1020,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     doReturn(mockTopScope).when(envState).topScope
     List("is", "will be").zipWithIndex.foreach { case (x, i) =>
       evaluate(s"""attribute-$i $x defined by system process "process-$i"""")
-      verify(mockTopScope).set(s"attribute-$i/sysproc", s"process-$i")
+      verify(mockTopScope).set(s"attribute-$i/sysproc", s"process-$i", false)
     }
   }
 
@@ -1028,8 +1028,8 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
       doReturn(mockTopScope).when(envState).topScope
       List("is", "will be").zipWithIndex.foreach { case (x, i) =>
         evaluate(s"""attribute-$i $x defined by system process "process-$i" delimited by ","""")
-        verify(mockTopScope).set(s"attribute-$i/sysproc", s"process-$i")
-        verify(mockTopScope).set(s"attribute-$i/delimiter", s",")
+        verify(mockTopScope).set(s"attribute-$i/sysproc", s"process-$i", false)
+        verify(mockTopScope).set(s"attribute-$i/delimiter", s",", false)
       }
     }
 
@@ -1037,7 +1037,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     doReturn(mockTopScope).when(envState).topScope
     List("is", "will be").zipWithIndex.foreach { case (x, i) =>
       evaluate(s"""attribute-$i $x defined by file "filepath-$i"""")
-      verify(mockTopScope).set(s"attribute-$i/file", s"filepath-$i")
+      verify(mockTopScope).set(s"attribute-$i/file", s"filepath-$i", false)
     }
   }
 
@@ -1045,9 +1045,9 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     doReturn(mockTopScope).when(envState).topScope
     List("text", "node", "nodeset").zipWithIndex.foreach { case (x, i) =>
       evaluate(s"""<attribute> is defined by the $x in <reference-$i> by xpath "<expression-$i>"""")
-      verify(mockTopScope).set("<attribute>/xpath/source", s"<reference-$i>")
-      verify(mockTopScope).set("<attribute>/xpath/targetType", x)
-      verify(mockTopScope).set("<attribute>/xpath/expression", s"<expression-$i>")
+      verify(mockTopScope).set("<attribute>/xpath/source", s"<reference-$i>", false)
+      verify(mockTopScope).set("<attribute>/xpath/targetType", x, false)
+      verify(mockTopScope).set("<attribute>/xpath/expression", s"<expression-$i>", false)
     }
   }
 
@@ -1055,9 +1055,9 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     doReturn(mockTopScope).when(envState).topScope
     List("text", "node", "nodeset").zipWithIndex.foreach { case (x, i) =>
       evaluate(s"""<attribute> will be defined by the $x in <reference-$i> by xpath "<expression-$i>"""")
-      verify(mockTopScope).set("<attribute>/xpath/source", s"<reference-$i>")
-      verify(mockTopScope).set("<attribute>/xpath/targetType", x)
-      verify(mockTopScope).set("<attribute>/xpath/expression", s"<expression-$i>")
+      verify(mockTopScope).set("<attribute>/xpath/source", s"<reference-$i>", false)
+      verify(mockTopScope).set("<attribute>/xpath/targetType", x, false)
+      verify(mockTopScope).set("<attribute>/xpath/expression", s"<expression-$i>", false)
     }
   }
 
@@ -1065,8 +1065,8 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     doReturn(mockTopScope).when(envState).topScope
     List("is", "will be").zipWithIndex.foreach { case (x, i) =>
       evaluate(s"""<attribute> $x defined in <reference-$i> by regex "<expression-$i>"""")
-      verify(mockTopScope).set(s"<attribute>/regex/source", s"<reference-$i>")
-      verify(mockTopScope).set(s"<attribute>/regex/expression", s"<expression-$i>")
+      verify(mockTopScope).set(s"<attribute>/regex/source", s"<reference-$i>", false)
+      verify(mockTopScope).set(s"<attribute>/regex/expression", s"<expression-$i>", false)
     }
   }
 
@@ -1074,15 +1074,15 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     doReturn(mockTopScope).when(envState).topScope
     List("is", "will be").zipWithIndex.foreach { case (x, i) =>
       evaluate(s"""<attribute> $x defined in <reference-$i> by json path "<expression-$i>"""")
-      verify(mockTopScope).set(s"<attribute>/json path/source", s"<reference-$i>")
-      verify(mockTopScope).set(s"<attribute>/json path/expression", s"<expression-$i>")
+      verify(mockTopScope).set(s"<attribute>/json path/source", s"<reference-$i>", false)
+      verify(mockTopScope).set(s"<attribute>/json path/expression", s"<expression-$i>", false)
     }
   }
 
   """<attribute> <is|will be> "<value>"""" should "evaluate" in {
     List("is", "will be").zipWithIndex.foreach { case (x, i) =>
       evaluate(s"""<attribute-$i> $x "<value-$i>"""")
-      verify(mockTopScope).set(s"<attribute-$i>", s"<value-$i>")
+      verify(mockTopScope).set(s"<attribute-$i>", s"<value-$i>", false)
     }
   }
 
@@ -1600,7 +1600,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     doReturn(mockBinding).when(ctx).getLocatorBinding("<element>")
     events.foreach { event =>
       evaluate(s"""<element> can be $event by javascript "<javascript>"""")
-      verify(mockTopScope).set(s"<element>/action/${ElementEvent.actionOf(event)}/javascript", "<javascript>")
+      verify(mockTopScope).set(s"<element>/action/${ElementEvent.actionOf(event)}/javascript", "<javascript>", false)
     }
   }
 
@@ -1611,8 +1611,8 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
         List("is", "will be").foreach { x =>
           evaluate(s"""<reference> $x defined by sql "<selectStmt>" in the <dbName> database""")
         }
-        verify(mockTopScope, times(2)).set(s"<reference>/sql/selectStmt", "<selectStmt>")
-        verify(mockTopScope, times(2)).set(s"<reference>/sql/dbName", "<dbName>")
+        verify(mockTopScope, times(2)).set(s"<reference>/sql/selectStmt", "<selectStmt>", false)
+        verify(mockTopScope, times(2)).set(s"<reference>/sql/dbName", "<dbName>", false)
       }
     }
   }
@@ -1624,8 +1624,8 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
         List("is", "will be").foreach { x =>
           evaluate(s"""<reference> $x defined in the <dbName> database by sql "<selectStmt>"""")
         }
-        verify(mockTopScope, times(2)).set(s"<reference>/sql/selectStmt", "<selectStmt>")
-        verify(mockTopScope, times(2)).set(s"<reference>/sql/dbName", "<dbName>")
+        verify(mockTopScope, times(2)).set(s"<reference>/sql/selectStmt", "<selectStmt>", false)
+        verify(mockTopScope, times(2)).set(s"<reference>/sql/dbName", "<dbName>", false)
       }
     }
   }

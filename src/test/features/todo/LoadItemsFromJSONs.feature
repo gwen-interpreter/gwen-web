@@ -5,7 +5,7 @@ Feature: Load Todo items from JSON files
      When I load items from JSON files
       And I load items from deep JSON file
       And I load items from deep JSON array
-      And I load items by loopoing over nested JSON array
+      And I load items by looping over nested JSON array
       And I load items from empty JSON file
      Then the "Walk the dog" item should be unticked
       And the "Get the milk" item should not be displayed

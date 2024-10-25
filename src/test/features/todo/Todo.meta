@@ -94,7 +94,7 @@ Feature: TodoMVC meta
   @StepDef
   @Examples("src/test/features-data/TodoItems6.json")
   @Action
-  Scenario Outline: I load items by loopoing over nested JSON array
+  Scenario Outline: I load items by looping over nested JSON array
     When I add nested item for each item in todo.items array
      
   @StepDef

@@ -75,9 +75,9 @@ class WebEngine extends EvalEngine[WebContext] {
   override def translateCompositeStep(step: Step): Option[CompositeStep[WebContext]] = {
     step.expression.match {
       case r"""(.+)$doStep if(?:(?!\bif\b)) (.+?)$element is( not)?$negation (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$state""" =>
-        Some(new IfElementCondition(doStep, element, ElementState.valueOf(state), Option(negation).isDefined, this))
+        Some(new IfElementCondition(doStep, element, ElementState.valueOf(state), Option(negation).nonEmpty, this))
       case r"""(.+?)$doStep (until|while)$operation (.+?)$element is( not)?$negation (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$state""" if (doStep != "I wait" && !step.expression.matches(""".*".*(until|while).*".*""")) =>
-        Some(new RepeatElementState(doStep, operation, element, ElementState.valueOf(state), Option(negation).isDefined, step.delayOpt.getOrElse(Duration(1, TimeUnit.SECONDS)), step.timeoutOpt.getOrElse(Duration(1, TimeUnit.MINUTES)), this))
+        Some(new RepeatElementState(doStep, operation, element, ElementState.valueOf(state), Option(negation).nonEmpty, step.delayOpt.getOrElse(Duration(1, TimeUnit.SECONDS)), step.timeoutOpt.getOrElse(Duration(1, TimeUnit.MINUTES)), this))
       case _ =>
         super.translateCompositeStep(step) orElse {
           step.expression match {
@@ -111,7 +111,7 @@ class WebEngine extends EvalEngine[WebContext] {
       case r"""I wait until "(.+?)$javascript"""" =>
         new WaitForCondition(step.orDocString(javascript), step.delayOpt.map(_.toMillis), step.timeoutOpt.map(_.toSeconds))
       case r"""I wait until (.+?)$element is( not)?$negation (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$state""" =>
-        new WaitForElementState(element, ElementState.valueOf(state), Option(negation).isDefined)
+        new WaitForElementState(element, ElementState.valueOf(state), Option(negation).nonEmpty)
       case r"""I wait until (.+?)$condition""" if !condition.matches(".+ file (exists|not exists|does not exist|is empty|is not empty)") =>
         new WaitForBoundCondition(condition, step.delayOpt.map(_.toMillis), step.timeoutOpt.map(_.toSeconds))
       case r"""I navigate to "(.+?)"$url""" =>
@@ -145,25 +145,25 @@ class WebEngine extends EvalEngine[WebContext] {
       case r"""(.+?)$element can be (clicked|right clicked|double clicked|submitted|checked|ticked|unchecked|unticked|selected|deselected|typed|entered|tabbed|cleared|moved to)$event by (?:javascript|js) "(.+?)"$expression""" =>
         new BindActionHandler(element, ElementEvent.valueOf(event), step.orDocString(expression))
       case r"""the page title should( not)?$negation be (blank|empty|true|false)$literal""" =>
-        new CompareTitle("title", ValueLiteral.valueOf(literal).value, false, ComparisonOperator.be, Option(negation).isDefined, step.message, step.timeoutOpt, step.isTrim, step.isIgnoreCase)
+        new CompareTitle("title", ValueLiteral.valueOf(literal).value, false, ComparisonOperator.be, Option(negation).nonEmpty, step.message, step.timeoutOpt, step.isTrim, step.isIgnoreCase)
       case r"""the page title should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file)$operator "(.*?)"$expression""" =>
-        new CompareTitle("title", step.orDocString(expression), false, ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message, step.timeoutOpt, step.isTrim, step.isIgnoreCase)
+        new CompareTitle("title", step.orDocString(expression), false, ComparisonOperator.valueOf(operator), Option(negation).nonEmpty, step.message, step.timeoutOpt, step.isTrim, step.isIgnoreCase)
       case r"""the page title should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$attribute""" =>
-        new CompareTitle("title", attribute, true, ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message, step.timeoutOpt, step.isTrim, step.isIgnoreCase)
+        new CompareTitle("title", attribute, true, ComparisonOperator.valueOf(operator), Option(negation).nonEmpty, step.message, step.timeoutOpt, step.isTrim, step.isIgnoreCase)
       case r"""the (alert|confirmation)$name popup message should( not)?$negation be (blank|empty|true|false)$literal""" =>
-        new ComparePopupMessage(name, ValueLiteral.valueOf(literal).value, false, ComparisonOperator.be, Option(negation).isDefined, step.message, step.timeoutOpt, step.isTrim, step.isIgnoreCase)
+        new ComparePopupMessage(name, ValueLiteral.valueOf(literal).value, false, ComparisonOperator.be, Option(negation).nonEmpty, step.message, step.timeoutOpt, step.isTrim, step.isIgnoreCase)
       case r"""the (alert|confirmation)$name popup message should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file)$operator "(.*?)"$expression""" =>
-        new ComparePopupMessage(name, step.orDocString(expression), false, ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message, step.timeoutOpt, step.isTrim, step.isIgnoreCase)
+        new ComparePopupMessage(name, step.orDocString(expression), false, ComparisonOperator.valueOf(operator), Option(negation).nonEmpty, step.message, step.timeoutOpt, step.isTrim, step.isIgnoreCase)
       case r"""the (alert|confirmation)$name popup message should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$attribute""" =>
-        new ComparePopupMessage(name, attribute, true, ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message, step.timeoutOpt, step.isTrim, step.isIgnoreCase)
+        new ComparePopupMessage(name, attribute, true, ComparisonOperator.valueOf(operator), Option(negation).nonEmpty, step.message, step.timeoutOpt, step.isTrim, step.isIgnoreCase)
       case r"""(.+?)$element should( not)?$negation be (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$state""" =>
         new CompareElementState(element, ElementState.valueOf(state), Option(negation).nonEmpty, step.message, step.timeoutOpt)
       case r"""(.+?)$element( text| value)?$selection should( not)?$negation be (blank|empty|true|false)$literal""" if !element.matches(".+at (json path|xpath).+") && !element.matches(".+? file") =>
-        new CompareValueOrSelectionToValue(element, Option(selection).map(_.trim).map(DropdownSelection.valueOf), ValueLiteral.valueOf(literal).value, ComparisonOperator.be, Option(negation).isDefined, step.message, step.timeoutOpt, step.isTrim, step.isIgnoreCase)
+        new CompareValueOrSelectionToValue(element, Option(selection).map(_.trim).map(DropdownSelection.valueOf), ValueLiteral.valueOf(literal).value, ComparisonOperator.be, Option(negation).nonEmpty, step.message, step.timeoutOpt, step.isTrim, step.isIgnoreCase)
       case r"""(.+?)$element( text| value)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file)$operator "(.*?)"$expression""" if !element.matches(".+at (json path|xpath).+") =>
-        new CompareValueOrSelectionToValue(element, Option(selection).map(_.trim).map(DropdownSelection.valueOf), step.orDocString(expression), ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message, step.timeoutOpt, step.isTrim, step.isIgnoreCase)
+        new CompareValueOrSelectionToValue(element, Option(selection).map(_.trim).map(DropdownSelection.valueOf), step.orDocString(expression), ComparisonOperator.valueOf(operator), Option(negation).nonEmpty, step.message, step.timeoutOpt, step.isTrim, step.isIgnoreCase)
       case r"""(.+?)$element( text| value)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$attribute""" if !attribute.matches("(absent|defined|empty|no accumulated errors)") && !attribute.contains("% similar to ") && !attribute.contains('"') && !element.matches(".+at (json path|xpath).+") =>
-        new CompareValueOrSelectionToBoundValue(element, Option(selection).map(_.trim).map(DropdownSelection.valueOf), attribute, ComparisonOperator.valueOf(operator), Option(negation).isDefined, step.message, step.timeoutOpt, step.isTrim, step.isIgnoreCase)
+        new CompareValueOrSelectionToBoundValue(element, Option(selection).map(_.trim).map(DropdownSelection.valueOf), attribute, ComparisonOperator.valueOf(operator), Option(negation).nonEmpty, step.message, step.timeoutOpt, step.isTrim, step.isIgnoreCase)
       case r"""I capture (.+?)$attribute (?:of|on|in) (.+?)$element by (?:javascript|js) "(.+?)"$expression""" =>
         new CaptureElementAttribute(element, attribute, step.orDocString(expression))
       case r"""I capture the current URL""" =>
