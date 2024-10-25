@@ -1,6 +1,6 @@
 4.0.0
 =====
-25 October 2024
+26 October 2024
 - Introduce Gwen processes to support multiple launch configurations
   - `-p|--process` option
 - Require Java 17+ instead of Java 11+
@@ -20,6 +20,7 @@
   - Gwen Workspaces warning
   - `-p|--properties` option
   - Report portal integration
+  - Matrix tables
   - IE browser integration
   - `gwen-web-accept-untrusted-certs` setting (use `acceptInsecureCerts` capability instead)
   - DSL steps

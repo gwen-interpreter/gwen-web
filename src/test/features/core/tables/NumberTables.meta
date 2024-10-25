@@ -80,21 +80,7 @@ Feature: Number tables meta
   @DataTable
   @Context
   Scenario: each row contains a number and its square and cube
-    Given name[1] should be "number"
-      And name[2] should be "square"
-      And name[3] should be "cube"
-      And data[1][number] should be "1"
-      And data[2][number] should be "2"
-      And data[3][number] should be "3"
-      And data[1][square] should be "1"
-      And data[2][square] should be "4"
-      And data[3][square] should be "9"
-      And data[1][cube] should be "1"
-      And data[2][cube] should be "8"
-      And data[3][cube] should be "27"
-      And number ^ 2 = square of number for each data record
-      And number ^ 3 = cube of number for each data record
-      And condition is defined by javascript "true"
+    Given condition is defined by javascript "true"
       And the number is "${number}" for each data record if condition
 
   @StepDef
@@ -124,36 +110,6 @@ Feature: Number tables meta
       And name[2] should be "square"
       And name[3] should be "cube"
       And gwen.table.record.number should match regex "\d+"
-
-  @StepDef
-  @DataTable(type="matrix")
-  @Context
-  Scenario: the top and left numbers yield the product in the matrix
-    Given vertex.name should be "x"
-      And top.name[1] should be "1"
-      And top.name[2] should be "2"
-      And top.name[3] should be "3"
-      And left.name[1] should be "1"
-      And left.name[2] should be "2"
-      And left.name[3] should be "3"
-      And data[1][1] should be "1"
-      And data[1][2] should be "2"
-      And data[1][3] should be "3"
-      And data[2][1] should be "2"
-      And data[2][2] should be "4"
-      And data[2][3] should be "6"
-      And data[3][1] should be "3"
-      And data[3][2] should be "6"
-      And data[3][3] should be "9"
-      And top.name[1] x left.name[1] = data[1][1]
-      And top.name[2] x left.name[1] = data[2][1]
-      And top.name[3] x left.name[1] = data[3][1]
-      And top.name[1] x left.name[2] = data[1][2]
-      And top.name[2] x left.name[2] = data[2][2]
-      And top.name[3] x left.name[2] = data[3][2]
-      And top.name[1] x left.name[3] = data[1][3]
-      And top.name[2] x left.name[3] = data[2][3]
-      And top.name[3] x left.name[3] = data[3][3]
 
   @StepDef
   Scenario: <a> x <b> = <c>
@@ -197,3 +153,9 @@ Feature: Number tables meta
           | 4   | 5   | 6   |
           | 100 | 101 | 110 |
      Then everything is "ok"
+
+  @StepDef
+  @DataTable
+  @Assertion
+  Scenario: empty number table should do nothing
+    Given z is "${number}" for each data record

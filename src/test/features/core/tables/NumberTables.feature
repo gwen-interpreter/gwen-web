@@ -29,11 +29,6 @@ Feature: Number tables
       And each column contains a number in decimal and binary form
           | 4   | 5   | 6   |
           | 100 | 101 | 110 |
-      And the top and left numbers yield the product in the matrix
-          | x | 1 | 2 | 3 |
-          | 1 | 1 | 2 | 3 |
-          | 2 | 2 | 4 | 6 |
-          | 3 | 3 | 6 | 9 |
       And each row contains two numbers that sum to a Fibonacci number in the third
           | 0 | 1 | 1 |
           | 1 | 1 | 2 |
@@ -51,3 +46,5 @@ Feature: Number tables
           | ${four in binary}  | ${five in binary}  | ${six in binary}  |
      When tables are nested in stepdefs
      Then everything should be "ok"
+      And empty number table should do nothing
+          | number |
