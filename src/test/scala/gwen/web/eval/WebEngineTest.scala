@@ -30,7 +30,7 @@ import gwen.core.node.gherkin.SpecType
 import gwen.core.node.gherkin.Step
 import gwen.core.node.gherkin.StepKeyword
 import gwen.core.node.gherkin.Tag
-import gwen.core.node.gherkin.table.FlatTable
+import gwen.core.node.gherkin.table.DataTable
 import gwen.core.state._
 import gwen.core.status.Pending
 
@@ -1710,7 +1710,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
   }
 
   "<step> for each data record" should "evaluate" in {
-    val mockTable = mock[FlatTable]
+    val mockTable = mock[DataTable]
     doReturn(Some(mockTable)).when(mockTopScope).getObject("table")
     doReturn(Nil).when(mockTable).records
     val step = evaluate("""x is "1" for each data record""")

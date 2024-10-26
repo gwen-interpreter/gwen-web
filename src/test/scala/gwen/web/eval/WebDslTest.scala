@@ -22,9 +22,9 @@ import gwen.web.eval.driver.DriverManager
 import gwen.core.GwenOptions
 import gwen.core.node.GwenNode
 import gwen.core.node.gherkin.Step
-import gwen.core.node.gherkin.table.FlatTable
+import gwen.core.node.gherkin.table.DataTable
 import gwen.core.node.gherkin.StepKeyword
-import gwen.core.node.gherkin.table.TableType
+import gwen.core.node.gherkin.table.TableOrientation
 import gwen.core.state.EnvState
 import gwen.core.status._
 
@@ -79,7 +79,7 @@ class WebDslTest extends BaseTest with Matchers with MockitoSugar {
     envState.topScope.set("<xmlRef>", "xml")
     envState.topScope.set("<jsonRef>", "json")
     envState.topScope.set("<encoding>", "utf8")
-    envState.topScope.pushObject("table", new FlatTable(TableType.horizontal, List(List("1", "2")), List("a", "b")))
+    envState.topScope.pushObject("table", new DataTable(TableOrientation.horizontal, List(List("1", "2")), List("a", "b")))
 
     val engine = new WebEngine()
     val ctx = new WebContext(options, envState, mock[DriverManager])
