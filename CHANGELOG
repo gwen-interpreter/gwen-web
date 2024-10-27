@@ -1,6 +1,6 @@
 4.0.0
 =====
-26 October 2024
+27 October 2024
 - Introduce Gwen processes to support multiple launch configurations
   - `-p|--process` option
 - Require Java 17+ instead of Java 11+
@@ -12,6 +12,7 @@
   - Replace internal stack of data caches with a single data cache
   - Manage settings internally without exposing them as system properties
   - Implicits managed at lifecycle level
+  - Improved scope boundaries
 - Add implicit variable(s):
   - `gwen.process.name`
 - Add environment variable(s)
