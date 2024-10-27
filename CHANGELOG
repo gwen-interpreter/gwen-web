@@ -7,12 +7,14 @@
 - Use logback instead of log4j for logging
 - Support `empty` literal in DSLs wherever `blank` is accepted
 - Replace internal stack of data caches with a single data cache (internal enhancement)
-- Make all input data read only
+- Make all input data read only by default
 - Internal engine enhancements
   - Replace internal stack of data caches with a single data cache
   - Manage settings internally without exposing them as system properties
   - Implicits managed at lifecycle level
   - Improved scope boundaries
+- Add settings(s):
+  - `gwen.input.data.readOnly`
 - Add implicit variable(s):
   - `gwen.process.name`
 - Add environment variable(s)

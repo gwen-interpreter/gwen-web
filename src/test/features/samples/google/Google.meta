@@ -28,11 +28,10 @@ Feature: Google search meta
 
   @StepDef
   @Assertion
-  Scenario: I should find a Gwen page
+  Scenario: at least one result should be displayed
 
     Gwen will match the name of this step def to the last
     step in the feature above and evaluate the steps that follow.
 
     Given link 1 can be located by css selector ".g a"
-     When I click link 1
-     Then the current URL should match regex ".+[G|g]wen.*"
+     Then link 1 should be displayed

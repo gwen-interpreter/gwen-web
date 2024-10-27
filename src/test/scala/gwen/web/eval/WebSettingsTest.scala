@@ -76,6 +76,7 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
       GwenSettings.`gwen.error.messages.inline.locators` should be (false)
       GwenSettings.`gwen.logLevel.deprecations` should be (Level.SEVERE)
       GwenSettings.`gwen.launch.options.format` should be (List(ReportFormat.html, ReportFormat.results))
+      GwenSettings.`gwen.input.data.readOnly` should be (true)
     }
   }
 
@@ -188,6 +189,7 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
     GwenSettings.`gwen.console.repl.autoSuggestions` should be (true)
     GwenSettings.`gwen.console.repl.tabCompletion` should be (true)
     GwenSettings.`gwen.logLevel.deprecations` should be (Level.SEVERE)
+    GwenSettings.`gwen.input.data.readOnly` should be (true)
 
     GwenSettings.`gwen.launch.options.format` should be (List(ReportFormat.html))
 
@@ -285,6 +287,7 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
     GwenSettings.`gwen.console.repl.autoSuggestions` should be (true)
     GwenSettings.`gwen.console.repl.tabCompletion` should be (true)
     GwenSettings.`gwen.logLevel.deprecations` should be (Level.SEVERE)
+    GwenSettings.`gwen.input.data.readOnly` should be (true)
 
     WebSettings.`gwen.target.browser` should be (WebBrowser.chrome)
     WebSettings.`gwen.target.env` should be ("test")

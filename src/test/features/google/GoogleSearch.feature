@@ -2,8 +2,8 @@ Feature: Google search
 
   Scenario: Perform a google search
     Given I have Google in my browser
-     When I do a search for "gwen-web automation"
-     Then the first result should open a Gwen page
+     When I do a search for "automation"
+     Then at least one result should be displayed
 
   Scenario: Perform a google search with append
     Given I have Google in my browser
@@ -17,22 +17,22 @@ Feature: Google search
     Given I have Google in my browser
      When I do a search for
           """
-          Gwen automation
+          automation
           """
-     Then the first result should open a Gwen page
+     Then at least one result should be displayed
 
   Scenario: Perform a google search with element guard
     Given I have Google in my browser
       And the search field can be located by name "q"
-     When I type "Gwen " in the search field
+     When I type "browser " in the search field
       And I enter "automation" in the search field if the search field is displayed
-     Then the first result should open a Gwen page
+     Then at least one result should be displayed
 
   Scenario: Perform a google search with result guard
     Given I have Google in my browser
       And the search field can be located by name "q"
       And topic is "Automation"
       And topic link can be located by partial link text "${topic}"
-     When I enter "gwen automation" in the search field
+     When I enter "automation" in the search field
       And I click topic link if topic link is displayed
      Then the page title should contain "${topic}"

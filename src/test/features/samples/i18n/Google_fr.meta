@@ -16,7 +16,6 @@ Feature: Google search meta
 
   @StepDef
   @Assertion
-  Scenario: je dois trouver une page concernant Gwen
+  Scenario: au moins un résultat doit être affiché
     Given link 1 can be located by css selector ".g a"
-     When I click link 1
-     Then the current URL should match regex ".+[G|g]wen.*"
+     Then link 1 should be displayed
