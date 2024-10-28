@@ -1,6 +1,6 @@
 4.0.0
 =====
-27 October 2024
+28 October 2024
 - Introduce Gwen processes to support multiple launch configurations
   - `-p|--process` option
 - Require Java 17+ instead of Java 11+

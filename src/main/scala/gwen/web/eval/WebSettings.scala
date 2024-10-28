@@ -219,7 +219,7 @@ object WebSettings extends LazyLogging {
     */
   def `gwen.web.capture.screenshots.enabled`: Boolean = {
     Settings.getBoolean("gwen.web.capture.screenshots.enabled", Some("gwen.web.capture.screenshots")) tap { isSet =>
-      if (isSet) sys.props += (("gwen.report.slideshow.create", true.toString))
+      if (isSet) Settings.set("gwen.report.slideshow.create", true.toString)
     }
   }
 
@@ -233,7 +233,7 @@ object WebSettings extends LazyLogging {
     */
   def `gwen.web.capture.screenshots.highlighting`: Boolean = {
     Settings.getBoolean("gwen.web.capture.screenshots.highlighting") tap { isSet =>
-      if (isSet) sys.props += (("gwen.report.slideshow.create", true.toString))
+      if (isSet) Settings.set("gwen.report.slideshow.create", true.toString)
     }
   }
 

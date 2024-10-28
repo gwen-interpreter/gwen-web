@@ -33,6 +33,8 @@ import gwen.core.status.StatusKeyword
 import org.scalatest.matchers.should.Matchers
 import org.scalatestplus.mockito.MockitoSugar
 
+import scala.jdk.CollectionConverters._
+
 import java.io.File
 import java.util.logging.Level
 
@@ -332,6 +334,26 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
     WebSettings.`gwen.web.useragent` should be (None)
     WebSettings.`gwen.web.wait.seconds` should be (9L)
 
+  }
+
+  "Selenoid capabilties" should "load" in {
+    Settings.exclusively {
+      withSetting("gwen.initDir", ".") {
+        Settings.init(
+          List(
+            new File("src/main/resources/init/gwen.conf"),
+            new File("src/main/resources/init/conf/browsers/chrome.conf"),
+            new File("src/main/resources/init/conf/browsers/selenoid.conf")
+          )
+        )
+        val caps = WebSettings.`gwen.web.capabilities`.asMap.asScala
+        caps.size should be (1)
+        val options = caps("selenoid:options").asInstanceOf[java.util.HashMap[String, Object]]
+        options.get("enableVNC").toString should be ("true")
+        options.get("enableVideo").toString should be ("true")
+        caps.get("\"selenoid:options\"") should be (None)
+      }
+    }
   }
 
   "Results files in gwen init conf" should "resolve" in {
