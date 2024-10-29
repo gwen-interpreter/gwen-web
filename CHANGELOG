@@ -8,6 +8,7 @@
 - Support `empty` literal in DSLs wherever `blank` is accepted
 - Replace internal stack of data caches with a single data cache (internal enhancement)
 - Make all input data read only by default
+- Added `--repl` option to force open REPL even if batch was specified
 - Internal engine enhancements
   - Replace internal stack of data caches with a single data cache
   - Manage settings internally without exposing them as system properties
