@@ -1,6 +1,6 @@
 4.0.0
 =====
-28 October 2024
+30 October 2024
 - Introduce Gwen processes to support multiple launch configurations
   - `-p|--process` option
 - Require Java 17+ instead of Java 11+
@@ -8,7 +8,8 @@
 - Support `empty` literal in DSLs wherever `blank` is accepted
 - Replace internal stack of data caches with a single data cache (internal enhancement)
 - Make all input data read only by default
-- Added `--repl` option to force open REPL even if batch was specified
+- Add `--repl` option to open REPL regardless of batch and feature options
+- Put samples in features/samples when initialising new project
 - Internal engine enhancements
   - Replace internal stack of data caches with a single data cache
   - Manage settings internally without exposing them as system properties

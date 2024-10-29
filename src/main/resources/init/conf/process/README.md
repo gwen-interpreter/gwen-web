@@ -1,6 +1,6 @@
-Environments
-============
+Processes
+=========
 
 Maintain your process settings here.
 
-For help, see the [Gwen documentation](https://gweninterpreter.org/docs).
+For help, see [Gwen processes](https://gweninterpreter.org/docs/processes)

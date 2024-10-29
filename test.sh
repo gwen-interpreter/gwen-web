@@ -1,3 +1,5 @@
+#!/bin/sh
+
 sbt universal:stage
 cd target
 rm -rf project
@@ -6,8 +8,11 @@ cd project
 ../universal/stage/bin/gwen init --docker --jenkins
 ../universal/stage/bin/gwen -p samples --parallel -b
 ../universal/stage/bin/gwen --process samples --dry-run --batch
-../universal/stage/bin/gwen gwen/samples --parallel --dry-run
+../universal/stage/bin/gwen gwen/features/samples --parallel --dry-run
 GWEN_PROCESS=samples ../universal/stage/bin/gwen -bn
 cd ..
-rm -rf project
+if [ $# -eq 0 ]
+  then
+    rm -rf project
+fi
 cd ..

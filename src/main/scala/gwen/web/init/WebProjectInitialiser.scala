@@ -73,22 +73,21 @@ trait WebProjectInitialiser extends ProjectInitialiser {
 
       new File(dir, "features") tap { dir =>
         FileIO.copyClasspathTextResourceToFile("/init/features/README.md", dir, allowReplace = force)
+        new File(dir, "samples") tap { dir =>
+          FileIO.copyClasspathTextResourceToFile("/init/features/samples/README.md", dir, allowReplace = force)
+          new File(dir, "google") tap { dir =>
+            FileIO.copyClasspathTextResourceToFile("/init/features/samples/google/Google.feature", dir, allowReplace = force)
+            FileIO.copyClasspathTextResourceToFile("/init/features/samples/google/Google.meta", dir, allowReplace = force)
+          }
+          new File(dir, "todo") tap { dir =>
+            FileIO.copyClasspathTextResourceToFile("/init/features/samples/todo/Todo.feature", dir, allowReplace = force)
+            FileIO.copyClasspathTextResourceToFile("/init/features/samples/todo/Todo.meta", dir, allowReplace = force)
+          }
+        }
       }
 
       new File(dir, "meta") tap { dir =>
         FileIO.copyClasspathTextResourceToFile("/init/meta/README.md", dir, allowReplace = force)
-      }
-
-      new File(dir, "samples/google") tap { dir =>
-        FileIO.copyClasspathTextResourceToFile("/init/samples/google/Google.feature", dir, allowReplace = force)
-        FileIO.copyClasspathTextResourceToFile("/init/samples/google/Google.meta", dir, allowReplace = force)
-      }
-      new File(dir, "samples/todo") tap { dir =>
-        FileIO.copyClasspathTextResourceToFile("/init/samples/todo/Todo.feature", dir, allowReplace = force)
-        FileIO.copyClasspathTextResourceToFile("/init/samples/todo/Todo.meta", dir, allowReplace = force)
-      }
-      new File(dir, "samples") tap { dir =>
-        FileIO.copyClasspathTextResourceToFile("/init/samples/README.md", dir, allowReplace = force)
       }
 
       if(copyRootReadme) {
@@ -132,10 +131,10 @@ trait WebProjectInitialiser extends ProjectInitialiser {
             |$filler│      ├── README.md
             |$filler│      └── samples.conf
             |$filler├── /features              # Features (and associative meta)
-            |$filler│   └── README.md
-            |$filler├── /meta                  # Common meta
-            |$filler│   └── README.md
-            |$filler└── /samples               # Sample features and meta
+            |$filler│   ├── README.md
+            |$filler│   └── /samples           # Samples
+            |$filler└── /meta                  # Common meta
+            |$filler    └── README.md
             |
             |""".stripMargin
       )
