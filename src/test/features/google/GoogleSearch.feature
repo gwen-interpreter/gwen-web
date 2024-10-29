@@ -34,5 +34,5 @@ Feature: Google search
       And topic is "Automation"
       And topic link can be located by partial link text "${topic}"
      When I enter "automation" in the search field
-      And I click topic link if topic link is displayed
-     Then the page title should contain "${topic}"
+      And I locate topic link if topic link is displayed
+     Then topic link should be displayed

@@ -38,7 +38,7 @@ class WebEnvironmentTest extends BaseTest with Matchers with MockitoSugar {
   
   "json on new ctx context" should "be empty" in {
     val ctx = newCtx()
-    ctx.topScope.asString.replace("\r", "") should be ("""scope : "feature" { }""")
+    ctx.topScope.asString(all = false, env = false).replace("\r", "") should be ("""scope : "feature" { }""")
   }
   
   "JavaScript binding on dry run" should "not resolve" in {
