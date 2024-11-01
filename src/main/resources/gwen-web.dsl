@@ -825,6 +825,7 @@ I append <reference> to <element>
 I insert a new line in <element>
 I attach "<filepath>" as "<name>"
 I attach "<filepath>" as <name>
+I attach "<filepath>"
 I write "<text>" to "<filepath>" file
 I write <reference> to "<filepath>" file
 I write new line to "<filepath>" file

@@ -21,6 +21,9 @@
   - `gwen.process.name`
 - Add environment variable(s)
   - `GWEN_PROCESS`
+- Add DSL step(s):
+   -`I attach "<filepath>"`
+     - For attaching files to Gwen reports (where the name of the attachment will be the name of the file)
 - Drop deprecated features:
   - Gwen Workspaces warning
   - `-p|--properties` option
