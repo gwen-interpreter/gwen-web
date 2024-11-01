@@ -39,13 +39,20 @@ class CompareValueOrSelectionToBoundValue(element: String, selection: Option[Dro
       val url = ctx.captureCurrentUrl
       ctx.topScope.set(element, url)
     }
+    val timeoutOverride = {
+      if (ctx.getLocatorBindingOpt(source).nonEmpty || ctx.getLocatorBindingOpt(element).nonEmpty) {
+        timeout
+      } else {
+        Some(Duration.Zero)
+      }
+    }
     val expected = ctx.getBoundValue(source, timeout)
     val actual = () => ctx.boundAttributeOrSelection(element, selection, timeout)
     val formattedActual = () => Formatting.format(ctx.boundAttributeOrSelection(element, selection, timeout), trim, ignoreCase)
     step tap { _ =>
       ctx.perform {
         val nameSuffix = selection.map(sel => s" $sel")
-        ctx.compare(s"$element${nameSuffix.getOrElse("")}", Formatting.format(expected, trim, ignoreCase), formattedActual, operator, negate, nameSuffix, message, timeout.map(_.toSeconds), step.assertionMode)
+        ctx.compare(s"$element${nameSuffix.getOrElse("")}", Formatting.format(expected, trim, ignoreCase), formattedActual, operator, negate, nameSuffix, message, timeoutOverride.map(_.toSeconds), step.assertionMode)
       } getOrElse  {
         actual()
       }

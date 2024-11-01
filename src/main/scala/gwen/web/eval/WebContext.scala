@@ -206,7 +206,6 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
       val url = captureCurrentUrl
       topScope.set(name, url)
     }
-    
     val locatorEntry = topScope.namedEntry(name) { _ => true } map { (n, _) => n.startsWith(LocatorKey.baseKey(name)) }
     if (locatorEntry.exists(_ == true) || locatorEntry.isEmpty) {
       getLocatorBinding(name, optional = true).map(_.withTimeout(timeout)) match {
@@ -263,6 +262,15 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     */
   def getLocatorBinding(name: String): LocatorBinding = {
     locatorBindingResolver.getBinding(name, optional = false).get
+  }
+
+  /**
+    * Gets a named locator binding.
+    *
+    * @param name the name of the web element
+    */
+  def getLocatorBindingOpt(name: String): Option[LocatorBinding] = {
+    locatorBindingResolver.getBinding(name, optional = true)
   }
 
   /**
