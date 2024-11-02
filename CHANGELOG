@@ -10,13 +10,12 @@
 - Make all input data read only by default
 - Add `--repl` option to open REPL regardless of batch and feature options
 - Change ignore placeholder syntax in template matcher from `!{}` to `@{*}`
-- Fix mutiple ignored lines in template matcher
+- Add `@{**}` placeholder to template matcher to support ignoring multiple lines
 - Put samples in features/samples when initialising new project
 - Internal engine enhancements
   - Replace internal stack of data caches with a single data cache
   - Manage settings internally without exposing them as system properties
-  - Implicits managed at lifecycle level
-  - Improved scope boundaries
+  - Manage implicits at lifecycle level and use scoped boundaries
 - Add settings(s):
   - `gwen.input.data.readOnly`
 - Add implicit variable(s):
