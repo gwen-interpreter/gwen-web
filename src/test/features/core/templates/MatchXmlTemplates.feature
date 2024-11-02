@@ -51,7 +51,7 @@ Feature: Match and extract XML templates
           <result><id>42</id><category><name>pet</name></category><name>tiger</name><status>available</status></result>
           """
      When I capture my value
-     Then my value should match template "<result><id>!{}</id><category><name>pet</name></category><name>@{pet name}</name><status>${my pet status}</status></result>"
+     Then my value should match template "<result><id>@{*}</id><category><name>pet</name></category><name>@{pet name}</name><status>${my pet status}</status></result>"
       And category name should be absent
       And pet id should be absent
       And pet name should be "tiger"
@@ -78,7 +78,7 @@ Feature: Match and extract XML templates
               <category>
                   <name>@{category name}</name>
               </category>
-              <name>!{}</name>
+              <name>@{*}</name>
               <status>${my pet status}</status>
           </result>
           """

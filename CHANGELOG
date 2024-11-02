@@ -9,6 +9,7 @@
 - Replace internal stack of data caches with a single data cache (internal enhancement)
 - Make all input data read only by default
 - Add `--repl` option to open REPL regardless of batch and feature options
+- Change ignore placeholder syntax in template matcher from `!{}` to `@{*}`
 - Put samples in features/samples when initialising new project
 - Internal engine enhancements
   - Replace internal stack of data caches with a single data cache

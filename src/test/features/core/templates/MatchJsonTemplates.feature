@@ -51,7 +51,7 @@ Feature: Match and extract JSON templates
           {"id":42,"category":{"name":"pet"},"name":"tiger","status":"available"}
           """
      When I capture my value as contents
-     Then contents should match template "{"id":!{},"category":{"name":"pet"},"name":"@{pet name}","status":"${my pet status}"}"
+     Then contents should match template "{"id":@{*},"category":{"name":"pet"},"name":"@{pet name}","status":"${my pet status}"}"
       And category name should be absent
       And category name should not be defined
       And pet id should be absent
@@ -80,7 +80,7 @@ Feature: Match and extract JSON templates
             "category": {
               "name": "@{category name}"
             },
-            "name": "!{}",
+            "name": "@{*}",
             "status": "${my pet status}"
           }
           """
