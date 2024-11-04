@@ -7,9 +7,9 @@ mkdir project
 cd project
 ../universal/stage/bin/gwen init --docker --jenkins
 ../universal/stage/bin/gwen -p samples --parallel -b
-../universal/stage/bin/gwen --process samples --dry-run --batch
+../universal/stage/bin/gwen --profile samples --dry-run --batch
 ../universal/stage/bin/gwen gwen/features/samples --parallel --dry-run
-GWEN_PROCESS=samples ../universal/stage/bin/gwen -bn
+GWEN_PROFILE=samples ../universal/stage/bin/gwen -bn
 cd ..
 if [ $# -eq 0 ]
   then

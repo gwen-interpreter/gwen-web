@@ -15,7 +15,7 @@ pipeline {
   }
   environment {
     GWEN_ENV = "${params.env}"
-    GWEN_PROCESS = "${params.process}"
+    GWEN_PROFILE = "${params.process}"
     GWEN_BROWSER = "${params.browser}"
     GWEN_DRY_RUN = "${params.dry_run}"
     GWEN_PARALLEL = "${params.parallel}"

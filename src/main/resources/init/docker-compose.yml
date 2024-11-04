@@ -52,7 +52,7 @@ services:
       - SELENIUM_HUB
       - NO_COLOR
       - GWEN_ENV
-      - GWEN_PROCESS
+      - GWEN_PROFILE
       - GWEN_BROWSER
       - GWEN_DRY_RUN
       - GWEN_PARALLEL

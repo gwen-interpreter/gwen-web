@@ -66,9 +66,9 @@ trait WebProjectInitialiser extends ProjectInitialiser {
         FileIO.copyClasspathTextResourceToFile("/init/conf/env/test.conf", dir, allowReplace = force)
       }
 
-      new File(confDir, "process") tap { dir =>
-        FileIO.copyClasspathTextResourceToFile("/init/conf/process/samples.conf", dir, allowReplace = force)
-        FileIO.copyClasspathTextResourceToFile("/init/conf/process/README.md", dir, allowReplace = force)
+      new File(confDir, "profiles") tap { dir =>
+        FileIO.copyClasspathTextResourceToFile("/init/conf/profiles/samples.conf", dir, allowReplace = force)
+        FileIO.copyClasspathTextResourceToFile("/init/conf/profiles/README.md", dir, allowReplace = force)
       }  
 
       new File(dir, "features") tap { dir =>
@@ -127,7 +127,7 @@ trait WebProjectInitialiser extends ProjectInitialiser {
             |$filler│   |  ├── README.md
             |$filler│   |  ├── staging.conf
             |$filler│   |  └── test.conf
-            |$filler│   └──/process            # Process settings
+            |$filler│   └──/profiles           # Profile settings
             |$filler│      ├── README.md
             |$filler│      └── samples.conf
             |$filler├── /features              # Features (and associative meta)

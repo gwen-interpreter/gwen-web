@@ -1,8 +1,8 @@
 4.0.0
 =====
-4 November 2024
-- Introduce Gwen processes to support multiple launch configurations
-  - `-p|--process` option
+5 November 2024
+- Introduce profiles to support multiple launch configurations
+  - `-p|--profile` option
 - Require Java 17+ instead of Java 11+
 - Use logback instead of log4j for logging
 - Support `empty` literal in DSLs wherever `blank` is accepted
@@ -27,9 +27,9 @@
 - Add settings(s):
   - `gwen.input.data.readOnly`
 - Add implicit variable(s):
-  - `gwen.process.name`
+  - `gwen.profile.name`
 - Add environment variable(s)
-  - `GWEN_PROCESS`
+  - `GWEN_PROFILE`
 - Add DSL step(s):
    -`I attach "<filepath>"`
      - For attaching files to Gwen reports (where the name of the attachment will be the name of the file)
