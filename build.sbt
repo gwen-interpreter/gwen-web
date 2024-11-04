@@ -14,11 +14,7 @@ val gwenWeb = (project in file("."))
   .sourceDependency(gwenSrc, gwenLib)
   .settings(
     projectSettings,
-    libraryDependencies ++= mainDependencies ++ testDependencies,
-    excludeDependencies ++= Seq(
-      ExclusionRule("org.graalvm.js", "js-scriptengine"),
-      ExclusionRule("org.graalvm.js", "js")
-    )
+    libraryDependencies ++= mainDependencies ++ testDependencies
   )
 
 resolvers ++= Seq(
