@@ -138,6 +138,11 @@
   | `iteration.index`                     | `gwen.iteration.index`                        |
 - Update Gwen core from v3.66.0 to v[4.0.0](https://github.com/gwen-interpreter/gwen/releases/tag/v4.0.0)
 
+3.77.1
+======
+4 November 2024
+- Update selenium from v4.25.0 to v4.26.0
+
 3.77.0
 ======
 9 October 2024
