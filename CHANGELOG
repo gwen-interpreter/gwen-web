@@ -16,6 +16,7 @@
   - Replace internal stack of data caches with a single data cache
   - Manage settings internally without exposing them as system properties
   - Manage implicits at lifecycle level and use scoped boundaries
+- Update selenium from v4.25.0 to v4.26.0
 - Add settings(s):
   - `gwen.input.data.readOnly`
 - Add implicit variable(s):
