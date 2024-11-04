@@ -16,7 +16,14 @@
   - Replace internal stack of data caches with a single data cache
   - Manage settings internally without exposing them as system properties
   - Manage implicits at lifecycle level and use scoped boundaries
-- Update selenium from v4.25.0 to v4.26.0
+- Update dependencies
+  - Update scala from v3.5.0 to v3.5.2
+  - Update selenium from v4.25.0 to v4.26.0
+  - Update gherkin from v29.0.0 to v30.0.0
+  - Update jlink from v3.26.3 to v3.27.1
+  - Update logback-core from v1.5.9 to v1.5.12
+  - Update logback-classic from v1.5.9 to v1.5.12
+  - Update jackson-databind from v2.17.2 to v2.18.1
 - Add settings(s):
   - `gwen.input.data.readOnly`
 - Add implicit variable(s):

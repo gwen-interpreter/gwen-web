@@ -30,7 +30,7 @@ lazy val projectSettings = Seq(
   licenses += "Apache License, Version 2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0.html"),
   homepage := Some(url("https://gweninterpreter.org")),
   versionScheme := Some("semver-spec"),
-  scalaVersion := "3.5.0",
+  scalaVersion := "3.5.2",
   crossPaths := false,
   trapExit := false,
   scalacOptions ++= Seq(
@@ -56,9 +56,9 @@ lazy val mainDependencies = {
 
 lazy val testDependencies = {
   Seq(
-    "org.scalatest" %% "scalatest" % "3.2.18",
-    "org.scalatestplus" %% "mockito-4-2" % "3.2.11.0",
-    "org.mockito" % "mockito-core" % "4.11.0"
+    "org.scalatest" %% "scalatest" % "3.2.19",
+    "org.scalatestplus" %% "mockito-4-5" % "3.2.12.0",
+    "org.mockito" % "mockito-core" % "5.14.2"
   ).map(_ % Test)
 }
 
