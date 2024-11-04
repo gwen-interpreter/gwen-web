@@ -31,6 +31,7 @@
   - `-p|--properties` option
   - Report portal integration
   - Matrix tables
+  - WebDriverManager support
   - IE browser integration
   - `gwen-web-accept-untrusted-certs` setting (use `acceptInsecureCerts` capability instead)
   - DSL steps
@@ -110,10 +111,11 @@
   | `gwen.cli.options.meta`      | `gwen.launch.options.meta`     |
   | `gwen.cli.options.report`    | `gwen.launch.options.report`   |
   | `gwen.cli.options.tags`      | `gwen.launch.options.tags`     |
-  | Removed Settings               | Use this instead           |
-  | :----------------------------- | :--------------------------|
-  | `gwen.auto.discover.data.csv`  | `-i|--input` launch option |
-  | `gwen.auto.discover.data.json` | `-i|--input` launch option |
+  | Removed Settings               | Use this instead              |
+  | :----------------------------- | :-----------------------------------|
+  | `gwen.auto.discover.data.csv`  | `-i|--input` launch option          |
+  | `gwen.auto.discover.data.json` | `-i|--input` launch option          |
+  | `gwen.web.driver.manager`      | N/A - SeleniumManager only used now |
 - | Deprecated Implicit values            | Use this instead                              |
   | :------------------------------------ | :-------------------------------------------- |
   | `gwen.eval.status.keyword`            | `gwen.feature.eval.status.keyword`            |
