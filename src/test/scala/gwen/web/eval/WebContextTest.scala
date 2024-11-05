@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2023 Brady Wood, Branko Juric
+ * Copyright 2014-2024 Brady Wood, Branko Juric
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.

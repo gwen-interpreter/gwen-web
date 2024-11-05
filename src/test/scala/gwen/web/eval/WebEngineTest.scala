@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2021 Brady Wood, Branko Juric
+ * Copyright 2016-2024 Brady Wood, Branko Juric
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -966,18 +966,14 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     verify(mockTopScope, times(3)).set("<attribute>", "value", false)
   }
 
-  """my <name> property <is|will be> "<value>"""" should "evaluate" in {
-    List("is", "will be").zipWithIndex.foreach { case (x, i) =>
-      evaluate(s"""my gwen.property-$i property $x "value-$i"""")
-      Settings.get(s"gwen.property-$i") should be (s"value-$i")
-    }
+  """my <name> property is "<value>"""" should "evaluate" in {
+    evaluate(s"""my gwen.property-0 property is "value-0"""")
+    Settings.get(s"gwen.property-0") should be (s"value-0")
   }
 
-  """my <name> setting <is|will be> "<value>"""" should "evaluate" in {
-    List("is", "will be").zipWithIndex.foreach { case (x, i) =>
-      evaluate(s"""my gwen.setting-$i setting $x "value-$i"""")
-      Settings.get(s"gwen.setting-$i") should be (s"value-$i")
-    }
+  """my <name> setting is "<value>"""" should "evaluate" in {
+    evaluate(s"""my gwen.setting-0 setting is "value-0"""")
+    Settings.get(s"gwen.setting-0") should be (s"value-0")
   }
 
   "I reset my <name> property" should "evaluate" in {
@@ -990,55 +986,43 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     Settings.getOpt(s"gwen.web") should be (None)
   }
 
-  """<attribute> <is|will> be defined by javascript "<expression>"""" should "evaluate" in {
+  """<attribute> is defined by javascript "<expression>"""" should "evaluate" in {
     doReturn(mockTopScope).when(envState).topScope
-    List("is", "will be").zipWithIndex.foreach { case (x, i) =>
-      evaluate(s"""attribute-$i $x defined by javascript "expression-$i"""")
-      verify(mockTopScope).set(s"attribute-$i/javascript", s"expression-$i", false)
+    evaluate(s"""attribute-0 is defined by javascript "expression-0"""")
+    verify(mockTopScope).set(s"attribute-0/javascript", s"expression-0", false)
+  }
+
+  """<attribute> is defined by property "<name>"""" should "evaluate" in {
+    withSetting(s"name-0", "0") {
+      evaluate(s"""attribute-0 is defined by property "name-0"""")
+      verify(mockTopScope).set(s"attribute-0", "0", false)
     }
   }
 
-  """<attribute> <is|will> be defined by property "<name>"""" should "evaluate" in {
-    List("is", "will be").zipWithIndex.foreach { case (x, i) =>
-      withSetting(s"name-$i", s"$i") {
-        evaluate(s"""attribute-$i $x defined by property "name-$i"""")
-        verify(mockTopScope).set(s"attribute-$i", s"$i", false)
-      }
+  """<attribute> is defined by setting "<name>"""" should "evaluate" in {
+    withSetting(s"name-0", "0") {
+      evaluate(s"""attribute-0 is defined by setting "name-0"""")
+      verify(mockTopScope).set(s"attribute-0", "0", false)
     }
   }
 
-  """<attribute> <is|will> be defined by setting "<name>"""" should "evaluate" in {
-    List("is", "will be").zipWithIndex.foreach { case (x, i) =>
-      withSetting(s"name-$i", s"$i") {
-        evaluate(s"""attribute-$i $x defined by setting "name-$i"""")
-        verify(mockTopScope).set(s"attribute-$i", s"$i", false)
-      }
-    }
-  }
-
-   """<attribute> <is|will> be defined by system process "<process>"""" should "evaluate" in {
+   """<attribute> is defined by system process "<process>"""" should "evaluate" in {
     doReturn(mockTopScope).when(envState).topScope
-    List("is", "will be").zipWithIndex.foreach { case (x, i) =>
-      evaluate(s"""attribute-$i $x defined by system process "process-$i"""")
-      verify(mockTopScope).set(s"attribute-$i/sysproc", s"process-$i", false)
-    }
+    evaluate(s"""attribute-0 is defined by system process "process-0"""")
+    verify(mockTopScope).set(s"attribute-0/sysproc", s"process-0", false)
   }
 
-   """<attribute> <is|will> be defined by system process "<process>" delimited by "<delimiter>"""" should "evaluate" in {
+   """<attribute> is defined by system process "<process>" delimited by "<delimiter>"""" should "evaluate" in {
       doReturn(mockTopScope).when(envState).topScope
-      List("is", "will be").zipWithIndex.foreach { case (x, i) =>
-        evaluate(s"""attribute-$i $x defined by system process "process-$i" delimited by ","""")
-        verify(mockTopScope).set(s"attribute-$i/sysproc", s"process-$i", false)
-        verify(mockTopScope).set(s"attribute-$i/delimiter", s",", false)
-      }
+      evaluate(s"""attribute-0 is defined by system process "process-0" delimited by ","""")
+      verify(mockTopScope).set(s"attribute-0/sysproc", s"process-0", false)
+      verify(mockTopScope).set(s"attribute-0/delimiter", s",", false)
     }
 
-  """<attribute> <is|will> be defined by file "<filepath>"""" should "evaluate" in {
+  """<attribute> is defined by file "<filepath>"""" should "evaluate" in {
     doReturn(mockTopScope).when(envState).topScope
-    List("is", "will be").zipWithIndex.foreach { case (x, i) =>
-      evaluate(s"""attribute-$i $x defined by file "filepath-$i"""")
-      verify(mockTopScope).set(s"attribute-$i/file", s"filepath-$i", false)
-    }
+    evaluate(s"""attribute-0 is defined by file "filepath-0"""")
+    verify(mockTopScope).set(s"attribute-0/file", s"filepath-0", false)
   }
 
   """<attribute> is defined by the <text|node|nodeset> in <reference> by xpath "<expression>"""" should "evaluate" in {
@@ -1048,42 +1032,27 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
       verify(mockTopScope).set("<attribute>/xpath/source", s"<reference-$i>", false)
       verify(mockTopScope).set("<attribute>/xpath/targetType", x, false)
       verify(mockTopScope).set("<attribute>/xpath/expression", s"<expression-$i>", false)
+      reset(mockTopScope)
     }
   }
 
-  """<attribute> will be defined by the <text|node|nodeset> in <reference> by xpath "<expression>"""" should "evaluate" in {
+  """<attribute> is defined in <reference> by regex "<expression>"""" should "evaluate" in {
     doReturn(mockTopScope).when(envState).topScope
-    List("text", "node", "nodeset").zipWithIndex.foreach { case (x, i) =>
-      evaluate(s"""<attribute> will be defined by the $x in <reference-$i> by xpath "<expression-$i>"""")
-      verify(mockTopScope).set("<attribute>/xpath/source", s"<reference-$i>", false)
-      verify(mockTopScope).set("<attribute>/xpath/targetType", x, false)
-      verify(mockTopScope).set("<attribute>/xpath/expression", s"<expression-$i>", false)
-    }
+    evaluate(s"""<attribute> is defined in <reference-0> by regex "<expression-0>"""")
+    verify(mockTopScope).set(s"<attribute>/regex/source", s"<reference-0>", false)
+    verify(mockTopScope).set(s"<attribute>/regex/expression", s"<expression-0>", false)
   }
 
-  """<attribute> <is|will be> defined in <reference> by regex "<expression>"""" should "evaluate" in {
+  """<attribute> is defined in <reference> by json path "<expression>"""" should "evaluate" in {
     doReturn(mockTopScope).when(envState).topScope
-    List("is", "will be").zipWithIndex.foreach { case (x, i) =>
-      evaluate(s"""<attribute> $x defined in <reference-$i> by regex "<expression-$i>"""")
-      verify(mockTopScope).set(s"<attribute>/regex/source", s"<reference-$i>", false)
-      verify(mockTopScope).set(s"<attribute>/regex/expression", s"<expression-$i>", false)
-    }
+    evaluate(s"""<attribute> is defined in <reference-0> by json path "<expression-0>"""")
+    verify(mockTopScope).set(s"<attribute>/json path/source", s"<reference-0>", false)
+    verify(mockTopScope).set(s"<attribute>/json path/expression", s"<expression-0>", false)
   }
 
-  """<attribute> <is|will be> defined in <reference> by json path "<expression>"""" should "evaluate" in {
-    doReturn(mockTopScope).when(envState).topScope
-    List("is", "will be").zipWithIndex.foreach { case (x, i) =>
-      evaluate(s"""<attribute> $x defined in <reference-$i> by json path "<expression-$i>"""")
-      verify(mockTopScope).set(s"<attribute>/json path/source", s"<reference-$i>", false)
-      verify(mockTopScope).set(s"<attribute>/json path/expression", s"<expression-$i>", false)
-    }
-  }
-
-  """<attribute> <is|will be> "<value>"""" should "evaluate" in {
-    List("is", "will be").zipWithIndex.foreach { case (x, i) =>
-      evaluate(s"""<attribute-$i> $x "<value-$i>"""")
-      verify(mockTopScope).set(s"<attribute-$i>", s"<value-$i>", false)
-    }
+  """<attribute> is "<value>"""" should "evaluate" in {
+    evaluate(s"""<attribute-0> is "<value-0>"""")
+    verify(mockTopScope).set(s"<attribute-0>", s"<value-0>", false)
   }
 
   "@Timeout('1s') I wait for <element> text" should "evaluate" in {
@@ -1604,28 +1573,24 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     }
   }
 
-  """<reference> <is|will be> defined by sql "<selectStmt>" in the <dbName> database""" should "evaluate" in {
+  """<reference> is defined by sql "<selectStmt>" in the <dbName> database""" should "evaluate" in {
     doReturn(mockTopScope).when(envState).topScope
     withSetting("gwen.db.<dbName>.driver", "driver") {
       withSetting("gwen.db.<dbName>.url", "url") {
-        List("is", "will be").foreach { x =>
-          evaluate(s"""<reference> $x defined by sql "<selectStmt>" in the <dbName> database""")
-        }
-        verify(mockTopScope, times(2)).set(s"<reference>/sql/selectStmt", "<selectStmt>", false)
-        verify(mockTopScope, times(2)).set(s"<reference>/sql/dbName", "<dbName>", false)
+        evaluate(s"""<reference> is defined by sql "<selectStmt>" in the <dbName> database""")
+        verify(mockTopScope).set(s"<reference>/sql/selectStmt", "<selectStmt>", false)
+        verify(mockTopScope).set(s"<reference>/sql/dbName", "<dbName>", false)
       }
     }
   }
 
-  """<reference> <is|will be> defined in the <dbName> database by sql "<selectStmt>"""" should "evaluate" in {
+  """<reference> is defined in the <dbName> database by sql "<selectStmt>"""" should "evaluate" in {
     doReturn(mockTopScope).when(envState).topScope
     withSetting("gwen.db.<dbName>.driver", "driver") {
       withSetting("gwen.db.<dbName>.url", "url") {
-        List("is", "will be").foreach { x =>
-          evaluate(s"""<reference> $x defined in the <dbName> database by sql "<selectStmt>"""")
-        }
-        verify(mockTopScope, times(2)).set(s"<reference>/sql/selectStmt", "<selectStmt>", false)
-        verify(mockTopScope, times(2)).set(s"<reference>/sql/dbName", "<dbName>", false)
+        evaluate(s"""<reference> is defined in the <dbName> database by sql "<selectStmt>"""")
+        verify(mockTopScope).set(s"<reference>/sql/selectStmt", "<selectStmt>", false)
+        verify(mockTopScope).set(s"<reference>/sql/dbName", "<dbName>", false)
       }
     }
   }

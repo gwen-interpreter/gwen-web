@@ -71,3 +71,5 @@ Compile / packageBin / mappings ++= Seq(
 )
 
 Test / parallelExecution := false
+
+Test / testOptions += Tests.Argument("-oF")
