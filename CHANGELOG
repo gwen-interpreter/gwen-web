@@ -1,6 +1,6 @@
 4.0.0
 =====
-5 November 2024
+8 November 2024
 - Introduce profiles to support multiple launch configurations
   - `-p|--profile` option
 - Require Java 17+ instead of Java 11+
