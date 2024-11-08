@@ -26,7 +26,7 @@ import gwen.core.behavior.BehaviorMode
 import gwen.core.behavior.FeatureMode
 import gwen.core.node.NodeType
 import gwen.core.report.ReportFormat
-import gwen.core.report.results.ResultField
+import gwen.core.result.ResultField
 import gwen.core.state.StateLevel
 import gwen.core.status.StatusKeyword
 
