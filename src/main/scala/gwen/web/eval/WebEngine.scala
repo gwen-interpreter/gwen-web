@@ -19,15 +19,15 @@ package gwen.web.eval
 import gwen.core.ValueLiteral
 import gwen.web.eval.binding._
 import gwen.web.eval.driver.DriverManager
-import gwen.web.eval.lambda.composite._
-import gwen.web.eval.lambda.unit._
+import gwen.web.eval.action.composite._
+import gwen.web.eval.action.unit._
 
 import gwen.core._
 import gwen.core.behavior.BehaviorType
 import gwen.core.eval.ComparisonOperator
 import gwen.core.eval.EvalEngine
-import gwen.core.eval.lambda.CompositeStep
-import gwen.core.eval.lambda.UnitStep
+import gwen.core.eval.action.CompositeStepAction
+import gwen.core.eval.action.UnitStepAction
 import gwen.core.node.gherkin.Step
 import gwen.core.state.EnvState
 
@@ -72,7 +72,7 @@ class WebEngine extends EvalEngine[WebContext] {
   /**
     * Translates composite web engine steps.
     */
-  override def translateCompositeStep(step: Step): Option[CompositeStep[WebContext]] = {
+  override def translateCompositeStep(step: Step): Option[CompositeStepAction[WebContext]] = {
     step.expression.match {
       case r"""(.+)$doStep if(?:(?!\bif\b)) (.+?)$element is( not)?$negation (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$state""" =>
         Some(new IfElementCondition(doStep, element, ElementState.valueOf(state), Option(negation).nonEmpty, this))
@@ -102,7 +102,7 @@ class WebEngine extends EvalEngine[WebContext] {
     * @param step the step to evaluate
     * @param ctx the web evaluation context
     */
-  override def translateStep(step: Step): UnitStep[WebContext] = {
+  override def translateStep(step: Step): UnitStepAction[WebContext] = {
     step.expression match {
       case r"""I wait for (.+?)$element text""" =>
         new WaitForText(element, None)

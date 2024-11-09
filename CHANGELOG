@@ -16,6 +16,7 @@
   - Replace internal stack of data caches with a single data cache
   - Manage settings internally without exposing them as system properties
   - Manage implicits at lifecycle level and use scoped boundaries
+  - Renamed step function layer from lambda to action
 - Update dependencies
   - Update scala from v3.5.0 to v3.5.2
   - Update selenium from v4.25.0 to v4.26.0
