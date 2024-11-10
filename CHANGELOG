@@ -36,7 +36,7 @@
   - `I attach "<filepath>"`
     - For attaching files to Gwen reports (where the name of the attachment will be the name of the file)
   - `I log record to <resultsFileId> file`
-     - For explicitly logging records to configured results files
+    - For explicitly logging records to configured results files
 - Drop deprecated features:
   - Gwen Workspaces warning
   - `-p|--properties` option

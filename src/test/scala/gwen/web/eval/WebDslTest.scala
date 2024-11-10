@@ -106,6 +106,7 @@ class WebDslTest extends BaseTest with Matchers with MockitoSugar {
               .replace("<pixels>", "100")
               .replace("<percentage>", "80")
               .replace("<filepathRef file>", "<filepathRef> file")
+              .replace("<resultFileId>", "test")
           } foreach { dsl =>
             val iStep = Step(None, StepKeyword.Given.toString, dsl.replaceAll("<step>", """a is "b""""), Nil, None, Nil, None, Pending, Nil, Nil, Nil, None, Nil)
             engine.evaluateStep(parent, iStep, ctx).evalStatus match {

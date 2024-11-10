@@ -352,7 +352,7 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
       withSetting("gwen.initDir", "gwen") {
         val resDir = "gwen/output/reports/results"
         val resFiles = GwenSettings.`gwen.report.results.files`(GwenOptions())
-        resFiles.size should be (7)
+        resFiles.size should be (8)
         val fPassed = resFiles.find(_.id == "feature.passed").get
         fPassed.id should be ("feature.passed")
         fPassed.file should be (new File(s"$resDir/feature-results-PASSED.csv"))
@@ -451,6 +451,13 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
           ResultField("STEPDEF_NAME", "gwen.stepDef.displayName", None),
           ResultField("EVAL_DURATION", "gwen.stepDef.eval.duration", None),
           ResultField("EVAL_MESSAGE", "gwen.stepDef.eval.status.message", None)))
+        val test = resFiles.find(_.id == "test").get
+        test.id should be ("test")
+        test.file should be (new File(s"target/dsl/test.csv"))
+        test.scope should be (None)
+        test.status should be (None)
+        test.fields should be (List(
+          ResultField("test", "test", Some("test"))))
       }
     }
   }

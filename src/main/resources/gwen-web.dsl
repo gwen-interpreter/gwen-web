@@ -820,6 +820,7 @@ I maximise the window
 <step> for each <entry> in <textRef> delimited by "<delimiter>"
 <step> for each <entry> in <arrayRef> array
 I drag and drop <sourceElement> to <targetElement>
+I log record to <resultFileId> file
 I append "<text>" to <element>
 I append <reference> to <element>
 I insert a new line in <element>
