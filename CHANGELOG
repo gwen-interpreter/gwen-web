@@ -1,6 +1,6 @@
 4.0.0
 =====
-9 November 2024
+10 November 2024
 - Introduce profiles to support multiple launch configurations
   - `-p|--profile` option
 - Require Java 17+ instead of Java 11+
@@ -11,6 +11,7 @@
 - Add `--repl` option to open REPL regardless of batch and feature options
 - Change ignore placeholder syntax in template matcher from `!{}` to `@{*}`
 - Add `@{**}` placeholder to template matcher to support ignoring multiple lines
+- Print gwen launch arguments on startup (including discovered brownser and env settings)
 - Put samples in features/samples when initialising new project
 - Internal engine enhancements
   - Replace internal stack of data caches with a single data cache

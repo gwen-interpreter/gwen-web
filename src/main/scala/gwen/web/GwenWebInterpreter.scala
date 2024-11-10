@@ -26,6 +26,8 @@ import gwen.web.eval.WebBrowser
 import gwen.web.eval.WebEngine
 import gwen.web.eval.WebSettings
 
+import scala.util.chaining._
+
 import java.io.File
 
 /**
@@ -70,8 +72,27 @@ object GwenWebInterpreter extends GwenInterpreter(new WebEngine()) with WebProje
           }
         } else None
       }
-      val allSettings = (options.settingsFiles ++ browserConf.toList ++ envConf.toList).distinct
-      options.copy(settingsFiles = allSettings)
+      val projSettings = browserConf.toList ++ envConf.toList
+      val allSettings = (options.settingsFiles ++ projSettings).distinct
+      var insert = false
+      options.copy(
+        settingsFiles = allSettings,
+        args = if (projSettings.isEmpty) {
+          options.args
+        } else {
+          options.args map { as =>
+            as.zipWithIndex flatMap { (arg, i) => 
+              (
+                if (insert)  List((List(arg) ++ browserConf.toList ++ envConf.toList).mkString(","))
+                else if (i == (as.length - 1) && as.filter(a => a == "-c" || a == "--conf").isEmpty) List(arg, "-c", (browserConf.toList ++ envConf.toList).mkString(","))
+                else List(arg)
+              ) tap { _ =>
+                insert = (arg == "-c" || arg == "--conf")
+              }
+            }
+          }
+        } 
+      )
     } else {
       options
     }
