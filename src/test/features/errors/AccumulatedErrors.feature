@@ -5,6 +5,7 @@ Feature: Accumulated errors
       And z is true
      When I capture x as y
       And I reset accumulated errors
+      And I log record to test file
      Then there should be no accumulated errors
       And x should not be blank
       And y should be "1"

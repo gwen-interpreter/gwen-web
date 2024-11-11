@@ -12,6 +12,7 @@
 - Add `@{**}` placeholder to template matcher to support ignoring multiple lines
 - Print gwen launch arguments on startup (including discovered brownser and env settings)
 - Synchronise system process bindings when resolving value from output stream
+- Only log results file records if results format is sepcified in launch options
 - Put samples in features/samples when initialising new project
 - Internal engine enhancements
   - Replace redundant multi scoped data caches with one single scoped cache

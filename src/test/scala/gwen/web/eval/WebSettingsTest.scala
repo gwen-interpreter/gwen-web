@@ -457,7 +457,7 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
         test.scope should be (None)
         test.status should be (None)
         test.fields should be (List(
-          ResultField("test", "test", Some("test"))))
+          ResultField("header", "header", Some("record"))))
       }
     }
   }
