@@ -1,6 +1,6 @@
 Feature: Data Load
       
-  @Examples('src/test/features-data/Data.csv')
+  @Examples('../../../features-data/Data.csv')
   Scenario Outline: CSV examples should load
     Given the website is "${WEBSITE}"
       And @Eager the secret is defined by js "'secret'"

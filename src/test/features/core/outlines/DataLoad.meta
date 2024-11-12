@@ -1,7 +1,7 @@
 Feature: Data Load Meta
       
   @StepDef
-  @Examples('src/test/features-data/Data.json')
+  @Examples('../../../features-data/Data.json')
   @Assertion
   @Parallel
   Scenario Outline: JSON examples should load

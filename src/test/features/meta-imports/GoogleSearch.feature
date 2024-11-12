@@ -1,4 +1,3 @@
-@Import('src/test/features/google/Google.meta')
 Feature: Google search
 
   Scenario: Perform a google search
