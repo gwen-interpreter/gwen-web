@@ -22,6 +22,7 @@
   - and disable calling step when logged via DSL
 - Log unresolved field value if interpolation fails during result file logging
 - Support relative file locations in `@Import` and `@Examples` annotations
+- Load all associative meta if features are specified with `--repl` option
 - Put samples in features/samples when initialising new project
 - Update Gwen core from v3.66.0 to v[4.0.0](https://github.com/gwen-interpreter/gwen/releases/tag/v4.0.0)
 - Update dependencies
