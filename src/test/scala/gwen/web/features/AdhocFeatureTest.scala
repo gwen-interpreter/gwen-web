@@ -17,7 +17,7 @@ package gwen.web.features
 
 class AdhocFeatureTest extends BaseFeatureTest {
 
-  val feature = "src/test/features/flow/RepeatUntil.feature"
+  val feature = "src/test/features/errors/AccumulatedErrors.feature"
 
   s"Feature should" should "execute" in {
     evaluate(

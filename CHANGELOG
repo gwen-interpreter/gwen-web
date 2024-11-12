@@ -1,8 +1,12 @@
 4.0.0
 =====
-11 November 2024
+12 November 2024
 - Introduce profiles to support multiple launch configurations
   - `-p|--profile` option
+- Internal engine enhancements
+  - Replace redundant multi scoped data caches with one single scoped cache
+  - Manage settings internally without exposing them as system properties
+  - Manage implicits at lifecycle level using boundary level caching
 - Require Java 17+ instead of Java 11+
 - Use logback instead of log4j for logging
 - Support `empty` literal in DSLs wherever `blank` is accepted
@@ -12,13 +16,12 @@
 - Add `@{**}` placeholder to template matcher to support ignoring multiple lines
 - Print gwen launch arguments on startup (including discovered brownser and env settings)
 - Synchronise system process bindings when resolving value from output stream
-- Only log results file records if results format is sepcified in launch options
+- Do not permit scope attribute on results file configuration when logging with annoation or DSL
+- Only log results file records if results format is specified in launch options
+- Skip logging to result file if the scope or status don't match
+  - and disable calling step when logged via DSL
 - Put samples in features/samples when initialising new project
-- Internal engine enhancements
-  - Replace redundant multi scoped data caches with one single scoped cache
-  - Manage settings internally without exposing them as system properties
-  - Manage implicits at lifecycle level using boundary level caching
-  - Rename step lambdas to step actions
+- Update Gwen core from v3.66.0 to v[4.0.0](https://github.com/gwen-interpreter/gwen/releases/tag/v4.0.0)
 - Update dependencies
   - Update scala from v3.5.0 to v3.5.2
   - Update selenium from v4.25.0 to v4.26.0
@@ -38,6 +41,46 @@
     - For attaching files to Gwen reports (where the name of the attachment will be the name of the file)
   - `I log record to <resultsFileId> file`
     - For explicitly logging records to configured results files
+- Raise deprecations as errors by default instead of logging them as warnings
+  | Setting                     | Old default | New default |
+  | :-------------------------- | :---------: | :---------: |
+  | `gwen.logLevel.deprecations`|   `warn`    |   `error`   |
+- | Deprecated Settings          | Use this instead               |
+  | :--------------------------- | :----------------------------- |
+  | `gwen.cli.options.batch`     | `gwen.launch.options.batch`    |
+  | `gwen.cli.options.format`    | `gwen.launch.options.format`   |
+  | `gwen.cli.options.inputData` | `gwen.launch.options.inputData`|
+  | `gwen.cli.options.dryRun`    | `gwen.launch.options.dryRun`   |
+  | `gwen.cli.options.features`  | `gwen.launch.options.features` |
+  | `gwen.cli.options.parallel`  | `gwen.launch.options.parallel` |
+  | `gwen.cli.options.meta`      | `gwen.launch.options.meta`     |
+  | `gwen.cli.options.report`    | `gwen.launch.options.report`   |
+  | `gwen.cli.options.tags`      | `gwen.launch.options.tags`     |
+  | Removed Settings               | Use this instead              |
+  | :----------------------------- | :-----------------------------------|
+  | `gwen.auto.discover.data.csv`  | `-i|--input` launch option          |
+  | `gwen.auto.discover.data.json` | `-i|--input` launch option          |
+  | `gwen.web.driver.manager`      | N/A - SeleniumManager only used now |
+- | Deprecated Implicit values            | Use this instead                              |
+  | :------------------------------------ | :-------------------------------------------- |
+  | `gwen.eval.status.keyword`            | `gwen.feature.eval.status.keyword`            |
+  | `gwen.eval.status.keyword.upperCased` | `gwen.feature.eval.status.keyword.upperCased` |
+  | `gwen.eval.status.keyword.lowerCased` | `gwen.feature.eval.status.keyword.lowerCased` |
+  | `gwen.eval.status.keyword.isPassed`   | `gwen.feature.eval.status.keyword.isPassed`   |
+  | `gwen.eval.status.keyword.isFailed`   | `gwen.feature.eval.status.keyword.isFailed`   |
+  | `gwen.eval.status.message`            | `gwen.feature.eval.status.message`            |
+  | `gwen.eval.status.message.escaped`    | `gwen.feature.eval.status.message.escaped`    |
+  | `gwen.eval.status.message.csvEscaped` | `gwen.feature.eval.status.message.csvEscaped` |
+  | `gwen.eval.duration`                  | `gwen.feature.eval.duration`                  |
+  | `gwen.eval.duration.msecs`            | `gwen.feature.eval.duration.msecs`            |
+  | `gwen.eval.duration.secs`             | `gwen.feature.eval.duration.secs`             |
+  | `data record number`                  | `gwen.data.record.number`                     |
+  | `data.record.number`                  | `gwen.data.record.number`                     |
+  | `data.record.index`                   | `gwen.data.record.index`                      |
+  | `record.number`                       | `gwen.table.record.number`                    |
+  | `record.index`                        | `gwen.table.record.index`                     |
+  | `iteration.number`                    | `gwen.iteration.number`                       |
+  | `iteration.index`                     | `gwen.iteration.index`                        |
 - Drop deprecated features:
   - Gwen Workspaces warning
   - `-p|--properties` option
@@ -108,47 +151,6 @@
         |      ..      |       ..       |
         | <selector n> | <expression n> |
       ```
-- Raise deprecations as errors by default instead of logging them as warnings
-  | Setting                     | Old default | New default |
-  | :-------------------------- | :---------: | :---------: |
-  | `gwen.logLevel.deprecations`|   `warn`    |   `error`   |
-- | Deprecated Settings          | Use this instead               |
-  | :--------------------------- | :----------------------------- |
-  | `gwen.cli.options.batch`     | `gwen.launch.options.batch`    |
-  | `gwen.cli.options.format`    | `gwen.launch.options.format`   |
-  | `gwen.cli.options.inputData` | `gwen.launch.options.inputData`|
-  | `gwen.cli.options.dryRun`    | `gwen.launch.options.dryRun`   |
-  | `gwen.cli.options.features`  | `gwen.launch.options.features` |
-  | `gwen.cli.options.parallel`  | `gwen.launch.options.parallel` |
-  | `gwen.cli.options.meta`      | `gwen.launch.options.meta`     |
-  | `gwen.cli.options.report`    | `gwen.launch.options.report`   |
-  | `gwen.cli.options.tags`      | `gwen.launch.options.tags`     |
-  | Removed Settings               | Use this instead              |
-  | :----------------------------- | :-----------------------------------|
-  | `gwen.auto.discover.data.csv`  | `-i|--input` launch option          |
-  | `gwen.auto.discover.data.json` | `-i|--input` launch option          |
-  | `gwen.web.driver.manager`      | N/A - SeleniumManager only used now |
-- | Deprecated Implicit values            | Use this instead                              |
-  | :------------------------------------ | :-------------------------------------------- |
-  | `gwen.eval.status.keyword`            | `gwen.feature.eval.status.keyword`            |
-  | `gwen.eval.status.keyword.upperCased` | `gwen.feature.eval.status.keyword.upperCased` |
-  | `gwen.eval.status.keyword.lowerCased` | `gwen.feature.eval.status.keyword.lowerCased` |
-  | `gwen.eval.status.keyword.isPassed`   | `gwen.feature.eval.status.keyword.isPassed`   |
-  | `gwen.eval.status.keyword.isFailed`   | `gwen.feature.eval.status.keyword.isFailed`   |
-  | `gwen.eval.status.message`            | `gwen.feature.eval.status.message`            |
-  | `gwen.eval.status.message.escaped`    | `gwen.feature.eval.status.message.escaped`    |
-  | `gwen.eval.status.message.csvEscaped` | `gwen.feature.eval.status.message.csvEscaped` |
-  | `gwen.eval.duration`                  | `gwen.feature.eval.duration`                  |
-  | `gwen.eval.duration.msecs`            | `gwen.feature.eval.duration.msecs`            |
-  | `gwen.eval.duration.secs`             | `gwen.feature.eval.duration.secs`             |
-  | `data record number`                  | `gwen.data.record.number`                     |
-  | `data.record.number`                  | `gwen.data.record.number`                     |
-  | `data.record.index`                   | `gwen.data.record.index`                      |
-  | `record.number`                       | `gwen.table.record.number`                    |
-  | `record.index`                        | `gwen.table.record.index`                     |
-  | `iteration.number`                    | `gwen.iteration.number`                       |
-  | `iteration.index`                     | `gwen.iteration.index`                        |
-- Update Gwen core from v3.66.0 to v[4.0.0](https://github.com/gwen-interpreter/gwen/releases/tag/v4.0.0)
 
 3.77.1
 ======

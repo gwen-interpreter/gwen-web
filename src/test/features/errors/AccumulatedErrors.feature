@@ -17,6 +17,7 @@ Feature: Accumulated errors
     Then @Soft @Try w should be "2"
     Then @Soft w should be "3"
 
+  @Results(['test'])
   Scenario: Two accumulated errors
     Given w is "1"
       And x is blank
