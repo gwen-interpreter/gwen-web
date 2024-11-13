@@ -43,9 +43,7 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
   "Default Gwen core settings" should "should load" in {
     Settings.exclusively {
       GwenSettings.`gwen.assertion.mode` should be (AssertionMode.hard)
-      GwenSettings.`gwen.associative.meta` should be (true)
       GwenSettings.`gwen.auto.bind.tableData.outline.examples` should be (true)
-      GwenSettings.`gwen.auto.discover.meta` should be (true)
       GwenSettings.`gwen.auto.trim.data.csv` should be (false)
       GwenSettings.`gwen.auto.trim.data.json` should be (false)
       GwenSettings.`gwen.behavior.rules` should be (BehaviorMode.lenient)
@@ -161,9 +159,7 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
   private def assertInitConf(): Unit = {
 
     GwenSettings.`gwen.assertion.mode` should be (AssertionMode.hard)
-    GwenSettings.`gwen.associative.meta` should be (true)
     GwenSettings.`gwen.auto.bind.tableData.outline.examples` should be (true)
-    GwenSettings.`gwen.auto.discover.meta` should be (true)
     GwenSettings.`gwen.auto.trim.data.csv` should be (false)
     GwenSettings.`gwen.auto.trim.data.json` should be (false)
     GwenSettings.`gwen.feature.dialect` should be ("en")
@@ -252,9 +248,7 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
 
   private def assertMigrationSample(): Unit = {
     GwenSettings.`gwen.assertion.mode` should be (AssertionMode.hard)
-    GwenSettings.`gwen.associative.meta` should be (true)
     GwenSettings.`gwen.auto.bind.tableData.outline.examples` should be (true)
-    GwenSettings.`gwen.auto.discover.meta` should be (true)
     GwenSettings.`gwen.auto.trim.data.csv` should be (false)
     GwenSettings.`gwen.auto.trim.data.json` should be (false)
     GwenSettings.`gwen.behavior.rules` should be (BehaviorMode.strict)

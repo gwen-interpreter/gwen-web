@@ -1,0 +1,2 @@
+@Import('../TodoMVC.meta')
+Feature: Add new todos Meta

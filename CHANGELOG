@@ -23,6 +23,7 @@
 - Log unresolved field value if interpolation fails during result file logging
 - Support relative file locations in `@Import` and `@Examples` annotations
 - Load all associative meta if features are specified with `--repl` option
+- Only auto discover associative meta
 - Put samples in features/samples when initialising new project
 - Update Gwen core from v3.66.0 to v[4.0.0](https://github.com/gwen-interpreter/gwen/releases/tag/v4.0.0)
 - Update dependencies
@@ -64,6 +65,8 @@
   | `gwen.auto.discover.data.csv`  | `-i|--input` launch option          |
   | `gwen.auto.discover.data.json` | `-i|--input` launch option          |
   | `gwen.web.driver.manager`      | N/A - SeleniumManager only used now |
+  | `gwen.auto.discover.meta`      | `-m|--meta` launch option           |
+  | `gwen.associative.meta`        | This is now always on               |
 - | Deprecated Implicit values            | Use this instead                              |
   | :------------------------------------ | :-------------------------------------------- |
   | `gwen.eval.status.keyword`            | `gwen.feature.eval.status.keyword`            |

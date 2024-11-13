@@ -1,0 +1,2 @@
+@Import('../TodoMVC.meta')
+Feature: Clear completed todos

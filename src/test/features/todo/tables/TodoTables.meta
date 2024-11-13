@@ -1,3 +1,4 @@
+@Import('../Todo.meta')
 Feature: TodoMVC tables meta
 
   @StepDef
