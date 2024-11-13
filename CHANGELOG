@@ -1,6 +1,6 @@
 4.0.0
 =====
-12 November 2024
+14 November 2024
 - Introduce profiles to support multiple launch configurations
   - `-p|--profile` option
 - Internal engine enhancements
