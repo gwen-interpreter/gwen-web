@@ -14,8 +14,8 @@ Feature: Accumulated errors
 
   @StepDef
   Scenario: failed assertions in try scope should not be accumlated
-    Then @Soft @Try w should be "2"
-    Then @Soft w should be "3"
+     Then @Soft @Try w should be "2"
+     Then @Soft w should be "3"
 
   @Results(['test'])
   Scenario: Two accumulated errors
@@ -30,13 +30,13 @@ Feature: Accumulated errors
       And @Try w should be "4"
       And @Sustained z should be true
       And @Try failed assertions in try scope should not be accumlated
-      And gwen.accumulated.errors should be 
-         """
-         2 errors:
-         (1) x should not be blank
-         (2) z should be true but got false
-         """
-      And gwen.accumulated.errors:JSONArray should be 
-         """
-         ["x should not be blank","z should be true but got false"]
-         """
+      And gwen.accumulated.errors should be
+          """
+          2 errors:
+          (1) x should not be blank
+          (2) z should be true but got false
+          """
+      And gwen.accumulated.errors:JSONArray should be
+          """
+          ["x should not be blank","z should be true but got false"]
+          """

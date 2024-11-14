@@ -1,5 +1,5 @@
 Feature: Data Load
-      
+
   @Examples('../../../features-data/Data.csv')
   Scenario Outline: CSV examples should load
     Given the website is "${WEBSITE}"
@@ -7,4 +7,3 @@ Feature: Data Load
      When I capture the text in the website by regex "(.+?):.*" as the protocol
      Then the protocol should be "https"
       And JSON examples should load
-

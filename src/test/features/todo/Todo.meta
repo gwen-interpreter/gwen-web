@@ -84,7 +84,7 @@ Feature: TodoMVC meta
      When I add a <todo.Item.Status> "<todo.Item.Name>" item
 
   @StepDef
-  @Examples("src/test/features-data/TodoItems5.json")
+  @Examples('src/test/features-data/TodoItems5.json')
   @Action
   Scenario Outline: I load items from deep JSON array
      When I add a ${item[1].Status} "${item[0].Name}" item
@@ -92,11 +92,11 @@ Feature: TodoMVC meta
       And I capture status history count as count
 
   @StepDef
-  @Examples("src/test/features-data/TodoItems6.json")
+  @Examples('src/test/features-data/TodoItems6.json')
   @Action
   Scenario Outline: I load items by looping over nested JSON array
-    When I add nested item for each item in todo.items array
-     
+     When I add nested item for each item in todo.items array
+
   @StepDef
   Scenario: I add nested item
      When I add a ${item.Status} "${item.Name}" item

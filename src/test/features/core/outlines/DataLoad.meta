@@ -1,5 +1,5 @@
 Feature: Data Load Meta
-      
+
   @StepDef
   @Examples('../../../features-data/Data.json')
   @Assertion
