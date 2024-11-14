@@ -44,16 +44,5 @@ class FeaturesTest extends BaseFeatureTest {
         None)
     }
   }
-
-  "Implicit javascript locators" should "evaluate" in {
-    withSetting("gwen.web.implicit.js.locators", "true") {
-      evaluate(
-        List("src/test/features/samples/se-test"),
-        parallel = true, 
-        dryRun = false, 
-        "implicit-js-locators",
-        None)
-    }
-  }
   
 }

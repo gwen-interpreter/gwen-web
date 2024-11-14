@@ -60,13 +60,14 @@
   | `gwen.cli.options.meta`      | `gwen.launch.options.meta`     |
   | `gwen.cli.options.report`    | `gwen.launch.options.report`   |
   | `gwen.cli.options.tags`      | `gwen.launch.options.tags`     |
-  | Removed Settings               | Use this instead              |
-  | :----------------------------- | :-----------------------------------|
-  | `gwen.auto.discover.data.csv`  | `-i|--input` launch option          |
-  | `gwen.auto.discover.data.json` | `-i|--input` launch option          |
-  | `gwen.web.driver.manager`      | N/A - SeleniumManager only used now |
-  | `gwen.auto.discover.meta`      | `-m|--meta` launch option           |
-  | `gwen.associative.meta`        | This is now always on               |
+  | Removed Settings                | Use this instead                    |
+  | :------------------------------ | :-----------------------------------|
+  | `gwen.auto.discover.data.csv`   | `-i|--input` launch option          |
+  | `gwen.auto.discover.data.json`  | `-i|--input` launch option          |
+  | `gwen.web.driver.manager`       | N/A - SeleniumManager only used now |
+  | `gwen.auto.discover.meta`       | `-m|--meta` launch option           |
+  | `gwen.associative.meta`         | This is now always on               |
+  | `gwen.web.implicit.js.locators` | JS locators                         |
 - | Deprecated Implicit values            | Use this instead                              |
   | :------------------------------------ | :-------------------------------------------- |
   | `gwen.eval.status.keyword`            | `gwen.feature.eval.status.keyword`            |

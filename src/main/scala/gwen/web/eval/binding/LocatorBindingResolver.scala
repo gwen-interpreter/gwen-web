@@ -100,12 +100,7 @@ class LocatorBindingResolver(ctx: WebContext) extends LazyLogging {
               }
             }
             if (selectors.nonEmpty) {
-              val binding = new LocatorBinding(name, selectors.toList, ctx)
-              if (WebSettings.`gwen.web.implicit.js.locators`) {
-                Some(binding.jsEquivalent)
-              } else {
-                Some(binding)
-              }
+              Some(new LocatorBinding(name, selectors.toList, ctx))
             }
             else None
           case None => if (optional) None else locatorBindingError(s"Undefined selector for: $name")

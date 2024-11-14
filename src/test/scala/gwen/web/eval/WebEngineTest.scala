@@ -616,7 +616,6 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
   "I wait until <element> is <state>" should "evaluate" in {
     val mockBinding = mock[LocatorBinding]
     doReturn(mockBinding).when(ctx).getLocatorBinding("<element>")
-    doReturn(mockBinding).when(mockBinding).jsEquivalent
     elemStates.foreach { state =>
       doReturn(None).when(mockTopScope).getOpt(s"<element> is $state/javascript")
       doNothing().when(ctx).waitForElementState(mockBinding, state, false)
@@ -628,7 +627,6 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
   "I wait until <element> is not <state>" should "evaluate" in {
     val mockBinding = mock[LocatorBinding]
     doReturn(mockBinding).when(ctx).getLocatorBinding("<element>")
-    doReturn(mockBinding).when(mockBinding).jsEquivalent
     elemStates.foreach { state =>
       doReturn(None).when(mockTopScope).getOpt(s"<element> is not $state/javascript")
       doNothing().when(ctx).waitForElementState(mockBinding, state, true)

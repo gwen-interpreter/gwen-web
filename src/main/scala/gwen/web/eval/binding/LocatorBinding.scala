@@ -49,41 +49,8 @@ class LocatorBinding(val name: String, val selectors: List[Selector], ctx: WebCo
   lazy val timeoutSeconds: Long = selectors.map(_.timeoutSeconds).sum
 
   override def resolve(): WebElement = ctx.webElementlocator.locate(this)
-  def resolveAll(): List[WebElement] = ctx.webElementlocator.locateAll(this)
-  
-  /** Gets the javascript equivalent of this locator binding (used as fallback on stale element reference). */
-  def jsEquivalent: LocatorBinding = {
-    val jsSelectors = selectors.map { loc =>
-      val isListSelector = name.endsWith("/list")
-      val jsExpression = loc.selectorType match {
-        case SelectorType.id =>
-          if (!isListSelector) s"document.getElementById('${loc.expression}')"
-          else s"document.querySelectorAll('#${loc.expression}')"
-        case SelectorType.`css selector` =>
-          s"document.querySelector${if (isListSelector) "All" else ""}('${StringEscapeUtils.escapeEcmaScript(loc.expression)}')"
-        case SelectorType.xpath =>
-          s"document.evaluate('${StringEscapeUtils.escapeEcmaScript(loc.expression)}', document, null, XPathResult.${if (isListSelector) "ORDERED_NODE_ITERATOR_TYPE" else "FIRST_ORDERED_NODE_TYPE"}, null)${if (isListSelector) "" else ".singleNodeValue"}"
-        case SelectorType.name =>
-          s"document.getElementsByName('${loc.expression}')${if (isListSelector) "" else "[0]"}"
-        case SelectorType.`class name` =>
-          s"document.getElementsByClassName('${loc.expression}')${if (isListSelector) "" else "[0]"}"
-        case SelectorType.`tag name` =>
-          s"document.getElementsByTagName('${loc.expression}')${if (isListSelector) "" else "[0]"}"
-        case SelectorType.`link text` =>
-          s"""document.evaluate('//a[text()="${StringEscapeUtils.escapeEcmaScript(loc.expression)}"]', document, null, XPathResult.${if (isListSelector) "ORDERED_NODE_ITERATOR_TYPE" else "FIRST_ORDERED_NODE_TYPE"}, null)${if (isListSelector) "" else ".singleNodeValue"}"""
-        case SelectorType.`partial link text` =>
-          s"""document.evaluate('//a[contains(text(), "${StringEscapeUtils.escapeEcmaScript(loc.expression)}")]', document, null, XPathResult.${if (isListSelector) "ORDERED_NODE_ITERATOR_TYPE" else "FIRST_ORDERED_NODE_TYPE"}, null)${if (isListSelector) "" else ".singleNodeValue"}"""
-        case _ => loc.expression
-      }
-      Selector(SelectorType.javascript, jsExpression, loc.relative, Some(loc.timeout), loc.index)
-    }
-    new LocatorBinding(name, jsSelectors, ctx)
-  }
-
-  def withJSEquivalent = new LocatorBinding(name, selectors ++ List(jsEquivalent.selectors.head), ctx)
-
+  def resolveAll(): List[WebElement] = ctx.webElementlocator.locateAll(this)  
   def withFastTimeout: LocatorBinding = withTimeout(Duration(200, TimeUnit.MILLISECONDS))
-
   def withTimeout(timeout: Option[Duration]): LocatorBinding = timeout.map(withTimeout).getOrElse(this)
   private def withTimeout(timeout: Duration): LocatorBinding = {
     val newSelectors = selectors map { s => 
