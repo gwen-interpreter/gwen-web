@@ -301,30 +301,6 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     }
   }
 
-    /**
-    * Waits for any bound post conditions to be satisfied.
-    *
-    * @param element the element to bind the value to
-    * @param action the action to bind the value to
-    */
-  def evaluatePostAction(element: String, action: String): Unit = {
-
-    // sleep if wait time is configured for this action
-    topScope.getOpt(s"$element/$action/wait") foreach { secs =>
-      logger.info(s"Waiting for $secs second(s) (post-$action wait)")
-      Thread.sleep(secs.toLong * 1000)
-    }
-
-    // wait for javascript post condition if one is configured for this action
-    topScope.getOpt(s"$element/$action/condition") foreach { condition =>
-      val bCondition = BooleanCondition(condition, false, WebSettings.`gwen.web.wait.seconds`, this)
-      logger.info(s"waiting until ${bCondition.name} (post-$action condition)")
-      waitUntil(s"waiting for true return from condition: ${bCondition.name}") {
-        bCondition.evaluate()
-      }
-    }
-  }
-
   /**
     * Gets the actual value of an attribute and compares it with an expected value or condition.
     *
@@ -754,9 +730,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
   /** Gets the title of the current page in the browser.*/
   def getTitle: String =
     withWebDriver { driver =>
-      driver.getTitle tap { title =>
-        evaluatePostAction("page", "title")
-      }
+      driver.getTitle
     }.getOrElse(DryValueBinding.unresolved("title"))
 
   /**
@@ -786,10 +760,8 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
         createActions(driver).moveToElement(webElement).sendKeys(plainValue).perform()
         }
       }
-      evaluatePostAction(element, ElementAction.`type`.toString)
       if (sendEnterKey) {
         createActions(driver).sendKeys(webElement, Keys.RETURN).perform()
-        evaluatePostAction(element, ElementAction.enter.toString)
       }
     }
   }
@@ -806,7 +778,6 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     withWebElement(binding, s"trying to select option in ${binding.displayName} by visible text") { webElement =>
       logger.debug(s"Selecting '$value' in $binding by text")
       createSelect(webElement).selectByVisibleText(value)
-      evaluatePostAction(binding.name, ElementAction.select.toString)
     }
   }
 
@@ -820,7 +791,6 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     withWebElement(binding, s"trying to select option in ${binding.displayName} by value") { webElement =>
       logger.debug(s"Selecting '$value' in $binding by value")
       createSelect(webElement).selectByValue(value)
-      evaluatePostAction(binding.name, ElementAction.select.toString)
     }
   }
 
@@ -835,7 +805,6 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
       logger.debug(s"Selecting option in $binding by index: $index")
       val select = createSelect(webElement)
       select.selectByIndex(index)
-      evaluatePostAction(binding.name, ElementAction.select.toString)
     }
   }
 
@@ -849,7 +818,6 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     withWebElement(binding, s"trying to deselect option in ${binding.displayName} by visible text") { webElement =>
       logger.debug(s"Deselecting '$value' in $binding by text")
       createSelect(webElement).deselectByVisibleText(value)
-      evaluatePostAction(binding.name, ElementAction.deselect.toString)
     }
   }
 
@@ -863,7 +831,6 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     withWebElement(binding, s"trying to deselect option in ${binding.displayName} by value") { webElement =>
       logger.debug(s"Deselecting '$value' in $binding by value")
       createSelect(webElement).deselectByValue(value)
-      evaluatePostAction(binding.name, ElementAction.deselect.toString)
     }
   }
 
@@ -878,7 +845,6 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
       logger.debug(s"Deselecting option in $binding by index: $index")
       val select = createSelect(webElement)
       select.deselectByIndex(index)
-      evaluatePostAction(binding.name, ElementAction.deselect.toString)
     }
   }
 
@@ -914,7 +880,6 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
             case _ => WebErrors.invalidActionError(action)
           }
         }
-        evaluatePostAction(binding.name, action. toString)
     }
   }
 
@@ -989,7 +954,6 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
       keys.reverse.foreach { key => actions = actions.keyUp(key) }
       actions.build().perform()
     }
-    evaluatePostAction(binding.name, clickAction.toString)
   }
 
   def sendKeys(keysToSend: Array[String]): Unit = {
@@ -1043,7 +1007,6 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
         moveToAndCapture(driver, webElement)
       }
       applyJS(jsFunctionWrapper("element", "arguments[0]", javascript), webElement)
-      evaluatePostAction(binding.name, action.toString)
     }
   }
 
@@ -1086,7 +1049,6 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
           case ElementAction.`move to` => perform(webElement, contextElement) { action => action }
           case _ => WebErrors.invalidContextActionError(action)
         }
-        evaluatePostAction(binding.name, action.toString)
       }
     }
   }
@@ -1213,7 +1175,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
   private def getSelectedElementText(name: String): Option[String] = {
     val binding = getLocatorBinding(name)
     withWebElement(binding, s"trying to get selected text of ${binding.displayName}") { webElement =>
-      (getElementSelectionByJS(webElement, DropdownSelection.text) match {
+      getElementSelectionByJS(webElement, DropdownSelection.text) match {
         case None =>
           Try(createSelect(webElement)) map { select =>
             Option(select.getAllSelectedOptions.asScala.map(_.getText()).mkString(",")) match {
@@ -1223,8 +1185,6 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
             }
           } getOrElse null
         case Some(value) => value
-      }) tap { text =>
-        evaluatePostAction(binding.name, "selectedText")
       }
     } tap { value =>
       logger.debug(s"getSelectedElementText($binding)='$value'")
@@ -1252,9 +1212,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
       getElementSelectionByJS(webElement, DropdownSelection.value) match {
         case None =>
           Try(createSelect(webElement)) map { select =>
-            select.getAllSelectedOptions.asScala.map(_.getAttribute("value")).mkString(",") tap { value =>
-              evaluatePostAction(binding.name, "selectedValue")
-            }
+            select.getAllSelectedOptions.asScala.map(_.getAttribute("value")).mkString(",")
           } getOrElse null
         case Some(value) => value
       }

@@ -1102,10 +1102,8 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     doReturn(mockBinding).when(ctx).getLocatorBinding("<element>")
     List("enter", "tab").foreach { key =>
       doNothing().when(ctx).sendKeys(mockBinding, Array(key))
-      doNothing().when(ctx).evaluatePostAction("<element>", key)
       evaluate(s"I press $key in <element>")
       verify(ctx).sendKeys(mockBinding, Array(key))
-      verify(ctx).evaluatePostAction("<element>", key)
     }
   }
 

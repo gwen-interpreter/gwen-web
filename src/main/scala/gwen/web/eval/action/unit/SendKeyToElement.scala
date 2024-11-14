@@ -32,7 +32,6 @@ class SendKeyToElement(element: String, key: String) extends UnitStepAction[WebC
       checkStepRules(step, BehaviorType.Action, ctx)
       val binding = ctx.getLocatorBinding(element)
       ctx.sendKeys(binding, Array[String](key))
-      ctx.evaluatePostAction(element, key)
     }
   }
 
