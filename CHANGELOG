@@ -1,3 +1,9 @@
+4.0.1
+=====
+15 November 2024
+- Update Gwen core from v4.0.0 to v[4.0.1](https://github.com/gwen-interpreter/gwen/releases/tag/v4.0.1)
+  - Load associative meta after common meta
+
 4.0.0
 =====
 15 November 2024
