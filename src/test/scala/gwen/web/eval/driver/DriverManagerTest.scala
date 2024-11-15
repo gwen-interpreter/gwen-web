@@ -200,7 +200,7 @@ class DriverManagerTest extends BaseTest with Matchers with MockitoSugar with Be
     verify(mockTargetLocator).defaultContent()
   }
 
-  private def newDriverManager(): DriverManager ={
+  private def newDriverManager(): DriverManager = {
     new DriverManager {
       override private [eval] def chrome(): WebDriver = createMockLocalDriver() tap { driver =>
         mockChromeDriver = driver

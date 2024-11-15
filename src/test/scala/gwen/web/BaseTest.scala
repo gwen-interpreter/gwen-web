@@ -32,16 +32,14 @@ abstract class BaseTest extends AnyFlatSpec {
   val levels = Table ( ("level"), ("feature"), ("scenario") )
 
   def withSetting[T](name: String, value: String)(body: => T):T = {
-    synchronized {
-      Settings.exclusively {
-        val original = Settings.getOpt(name)
-        try {
-          Settings.set(name, value)
-          body
-        } finally {
-          original foreach { v =>
-            Settings.set(name, v)
-          }
+    Settings.exclusively {
+      val original = Settings.getOpt(name)
+      try {
+        Settings.set(name, value)
+        body
+      } finally {
+        original foreach { v =>
+          Settings.set(name, v)
         }
       }
     }
