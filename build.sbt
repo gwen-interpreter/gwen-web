@@ -48,7 +48,7 @@ lazy val projectSettings = Seq(
 
 lazy val mainDependencies = {
   Seq(
-    "org.seleniumhq.selenium" % "selenium-java" % "4.26.0",
+    "org.seleniumhq.selenium" % "selenium-java" % "4.27.0",
     "io.github.bonigarcia" % "webdrivermanager" % "5.9.2" excludeAll(
       ExclusionRule(organization = "org.slf4j")
     )
