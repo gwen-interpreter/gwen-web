@@ -1,3 +1,9 @@
+4.0.2
+=====
+27 November 2024
+- Update selenium-java from v4.26.0 to v4.27.0
+- Use getDomAttribute and getDomProperty instead of deprecated getAttribute method of web element
+
 4.0.1
 =====
 15 November 2024

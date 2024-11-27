@@ -753,7 +753,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
         webElement.clear()
       }
       SensitiveData.withValue(value) { plainValue =>
-        if ("file" == webElement.getAttribute("type")) {
+        if ("file" == webElement.getDomAttribute("type")) {
           createActions(driver).moveToElement(webElement).perform()
           webElement.sendKeys(plainValue)
         } else {
@@ -1149,12 +1149,20 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     withWebElement(binding, s"trying to get ${binding.displayName} text") { webElement =>
       Option(webElement.getText) match {
         case None | Some("") =>
-          Option(webElement.getAttribute("text")) match {
+          Option(webElement.getDomAttribute("text")) match {
             case None | Some("") =>
-              Option(webElement.getAttribute("value")) match {
+              Option(webElement.getDomProperty("text")) match {
                 case None | Some("") =>
-                  val value = applyJS(jsFunctionWrapper("element", "arguments[0]", "return element.innerText || element.textContent || ''"), webElement).asInstanceOf[String]
-                  if (value != null) value else ""
+                  Option(webElement.getDomAttribute("value")) match {
+                    case None | Some("") =>
+                      Option(webElement.getDomProperty("value")) match {
+                        case None | Some("") =>
+                          val value = applyJS(jsFunctionWrapper("element", "arguments[0]", "return element.innerText || element.textContent || ''"), webElement).asInstanceOf[String]
+                          if (value != null) value else ""
+                        case Some(value) => value
+                      }
+                    case Some(value) => value
+                  }
                 case Some(value) => value
               }
             case Some(value) => value
@@ -1180,7 +1188,11 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
           Try(createSelect(webElement)) map { select =>
             Option(select.getAllSelectedOptions.asScala.map(_.getText()).mkString(",")) match {
               case None | Some("") =>
-                select.getAllSelectedOptions.asScala.map(_.getAttribute("text")).mkString(",")
+                Option(select.getAllSelectedOptions.asScala.map(_.getDomAttribute("text")).mkString(",")) match {
+                  case None | Some("") =>
+                    select.getAllSelectedOptions.asScala.map(_.getDomProperty("text")).mkString(",")
+                  case Some(value) => value
+                }
               case Some(value) => value
             }
           } getOrElse null
@@ -1194,7 +1206,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
   def getElementAttribute(binding: LocatorBinding, name: String): String = {
     evaluate(Some(DryValueBinding.unresolved(s"WebElementAttribute"))) {
       withWebElement(binding, s"trying to get $name attribute of ${binding.displayName}") { webElement => 
-        Option(webElement.getAttribute(name)) getOrElse ""
+        Option(webElement.getDomAttribute(name)).orElse(Option(webElement.getDomProperty(name))) getOrElse ""
       }
     } getOrElse ""
   }
@@ -1212,7 +1224,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
       getElementSelectionByJS(webElement, DropdownSelection.value) match {
         case None =>
           Try(createSelect(webElement)) map { select =>
-            select.getAllSelectedOptions.asScala.map(_.getAttribute("value")).mkString(",")
+            select.getAllSelectedOptions.asScala.flatMap(s => Option(s.getDomAttribute("value")).orElse(Option(s.getDomProperty("value")))).mkString(",")
           } getOrElse null
         case Some(value) => value
       }

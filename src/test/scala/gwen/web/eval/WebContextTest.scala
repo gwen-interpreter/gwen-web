@@ -1565,8 +1565,9 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     doReturn(elemBinding).when(ctx).getLocatorBinding("element")
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     when(mockElement.getText).thenReturn(null)
-    when(mockElement.getAttribute("text")).thenReturn(null)
-    when(mockElement.getAttribute("value")).thenReturn(null)
+    when(mockElement.getDomAttribute("text")).thenReturn(null)
+    when(mockElement.getDomProperty("text")).thenReturn(null)
+    when(mockElement.getDomAttribute("value")).thenReturn(null)
     doReturn(null).when(ctx).applyJS("(function(element) { return element.innerText || element.textContent || '' })(arguments[0])", mockElement)(takeScreenShot = false)
     ctx.getElementText(elemBinding) should be (Some(""))
   }
@@ -1577,8 +1578,9 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     doReturn(elemBinding).when(ctx).getLocatorBinding("element")
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     when(mockElement.getText).thenReturn("")
-    when(mockElement.getAttribute("text")).thenReturn("")
-    when(mockElement.getAttribute("value")).thenReturn("")
+    when(mockElement.getDomAttribute("text")).thenReturn("")
+    when(mockElement.getDomProperty("text")).thenReturn("")
+    when(mockElement.getDomAttribute("value")).thenReturn("")
     doReturn("").when(ctx).applyJS("return (function(element) { return element.innerText || element.textContent || '' })(arguments[0])", mockElement)(takeScreenShot = false)
     ctx.getElementText(elemBinding) should be (Some(""))
   }
@@ -1589,8 +1591,9 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     doReturn(elemBinding).when(ctx).getLocatorBinding("element")
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     when(mockElement.getText).thenReturn(null)
-    when(mockElement.getAttribute("text")).thenReturn(null)
-    when(mockElement.getAttribute("value")).thenReturn(null)
+    when(mockElement.getDomAttribute("text")).thenReturn(null)
+    when(mockElement.getDomProperty("text")).thenReturn(null)
+    when(mockElement.getDomAttribute("value")).thenReturn(null)
     doReturn("JSValue").when(ctx).applyJS("(function(element) { return element.innerText || element.textContent || '' })(arguments[0])", mockElement)(takeScreenShot = false)
     ctx.getElementText(elemBinding) should be (Some("JSValue"))
   }
@@ -1601,8 +1604,9 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     doReturn(elemBinding).when(ctx).getLocatorBinding("element")
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     when(mockElement.getText).thenReturn(null)
-    when(mockElement.getAttribute("text")).thenReturn(null)
-    when(mockElement.getAttribute("value")).thenReturn("valueAttr")
+    when(mockElement.getDomAttribute("text")).thenReturn(null)
+    when(mockElement.getDomProperty("text")).thenReturn(null)
+    when(mockElement.getDomAttribute("value")).thenReturn("valueAttr")
     ctx.getElementText(elemBinding) should be (Some("valueAttr"))
   }
 
@@ -1612,7 +1616,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     doReturn(elemBinding).when(ctx).getLocatorBinding("element")
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     when(mockElement.getText).thenReturn(null)
-    when(mockElement.getAttribute("text")).thenReturn("textAttr")
+    when(mockElement.getDomAttribute("text")).thenReturn("textAttr")
     ctx.getElementText(elemBinding) should be (Some("textAttr"))
   }
 
@@ -1646,8 +1650,8 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     doReturn(mockSelect).when(ctx).createSelect(mockElement)
     when(mockSelect.getAllSelectedOptions).thenReturn(List[WebElement]().asJava).thenReturn(List[WebElement](mockOptionElement1, mockOptionElement2).asJava)
-    when(mockOptionElement1.getAttribute("text")).thenReturn("one")
-    when(mockOptionElement2.getAttribute("text")).thenReturn("two")
+    when(mockOptionElement1.getDomAttribute("text")).thenReturn("one")
+    when(mockOptionElement2.getDomAttribute("text")).thenReturn("two")
     ctx.getElementSelection("element", DropdownSelection.text) should be (Some("one,two"))
   }
 
@@ -1687,8 +1691,8 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     doReturn(mockSelect).when(ctx).createSelect(mockElement)
     when(mockSelect.getAllSelectedOptions).thenReturn(List[WebElement](mockOptionElement1, mockOptionElement2).asJava)
-    when(mockOptionElement1.getAttribute("value")).thenReturn("one")
-    when(mockOptionElement2.getAttribute("value")).thenReturn("two")
+    when(mockOptionElement1.getDomAttribute("value")).thenReturn("one")
+    when(mockOptionElement2.getDomAttribute("value")).thenReturn("two")
     ctx.getElementSelection("element", DropdownSelection.value) should be (Some("one,two"))
   }
 
