@@ -1256,7 +1256,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
       getElementSelectionByJS(webElement, DropdownSelection.value) match {
         case None =>
           Try(createSelect(webElement)) map { select =>
-            select.getAllSelectedOptions.asScala.map(s => Option(s.getDomAttribute("value")).getOrElse(s.getDomProperty("value"))).mkString(",") tap { value =>
+            select.getAllSelectedOptions.asScala.flatMap(s => Option(s.getDomAttribute("value")).orElse(Option(s.getDomProperty("value")))).mkString(",") tap { value =>
               evaluatePostAction(binding.name, "selectedValue")
             }
           } getOrElse null

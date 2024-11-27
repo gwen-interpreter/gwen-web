@@ -1,3 +1,8 @@
+3.77.3
+======
+27 November 2024
+- Fix getDomAttribute and getDomProperty usage
+
 3.77.2
 ======
 27 November 2024
