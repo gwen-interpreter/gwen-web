@@ -1,3 +1,9 @@
+4.0.3
+=====
+10 December 2024
+- Update Gwen core from v4.0.1 to v[4.0.3](https://github.com/gwen-interpreter/gwen/releases/tag/v4.0.3)
+  - Resolve guard references in dry runs
+
 4.0.2
 =====
 27 November 2024
