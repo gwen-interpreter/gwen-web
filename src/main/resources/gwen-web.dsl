@@ -616,6 +616,28 @@ I base64 decode <reference>
 <step> until <filepathRef file> is empty
 <step> while "<filepath>" file is not empty
 <step> until <filepathRef file> is not empty
+<step> while <element> is blank
+<step> while <element> is empty
+<step> while <element> is "<expression>"
+<step> while <element> contains "<expression>"
+<step> while <element> starts with "<expression>"
+<step> while <element> ends with "<expression>"
+<step> while <element> matches regex "<expression>"
+<step> while <element> matches xpath "<expression>"
+<step> while <element> matches json path "<expression>"
+<step> while <element> matches template "<expression>"
+<step> while <element> matches template file "<filepath>"
+<step> until <element> is blank
+<step> until <element> is empty
+<step> until <element> is "<expression>"
+<step> until <element> contains "<expression>"
+<step> until <element> starts with "<expression>"
+<step> until <element> ends with "<expression>"
+<step> until <element> matches regex "<expression>"
+<step> until <element> matches xpath "<expression>"
+<step> until <element> matches json path "<expression>"
+<step> until <element> matches template "<expression>"
+<step> until <element> matches template file "<filepath>"
 I close the current browser
 I close the browser
 I start a new browser
@@ -787,7 +809,7 @@ I maximise the window
 <step> if <attribute> is not defined
 <step> if <element> is blank
 <step> if <element> is empty
-<step> if <element> iss "<expression>"
+<step> if <element> is "<expression>"
 <step> if <element> contains "<expression>"
 <step> if <element> starts with "<expression>"
 <step> if <element> ends with "<expression>"
