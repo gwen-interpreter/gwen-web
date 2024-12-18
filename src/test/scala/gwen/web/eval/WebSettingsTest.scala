@@ -75,6 +75,7 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
       GwenSettings.`gwen.logLevel.deprecations` should be (Level.SEVERE)
       GwenSettings.`gwen.launch.options.format` should be (List(ReportFormat.html, ReportFormat.results))
       GwenSettings.`gwen.input.data.readOnly` should be (true)
+      GwenSettings.`gwen.input.data.maskFields` should be (Nil)
     }
   }
 
@@ -181,6 +182,7 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
     GwenSettings.`gwen.console.repl.tabCompletion` should be (true)
     GwenSettings.`gwen.logLevel.deprecations` should be (Level.SEVERE)
     GwenSettings.`gwen.input.data.readOnly` should be (true)
+    GwenSettings.`gwen.input.data.maskFields` should be (Nil)
 
     GwenSettings.`gwen.launch.options.format` should be (List(ReportFormat.html))
 
@@ -273,6 +275,7 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
     GwenSettings.`gwen.console.repl.tabCompletion` should be (true)
     GwenSettings.`gwen.logLevel.deprecations` should be (Level.SEVERE)
     GwenSettings.`gwen.input.data.readOnly` should be (true)
+    GwenSettings.`gwen.input.data.maskFields` should be (Nil)
 
     WebSettings.`gwen.target.browser` should be (WebBrowser.chrome)
     WebSettings.`gwen.target.env` should be ("test")
@@ -351,12 +354,12 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
         fPassed.scope.flatMap(_.nodeName) should be (None)
         fPassed.status should be (Some(StatusKeyword.Passed))
         fPassed.fields should be (List(
-          ResultField("EVAL_STATUS", "gwen.feature.eval.status.keyword.upperCased", None),
-          ResultField("EVAL_STARTED", "gwen.feature.eval.started", None),
-          ResultField("EVAL_FINISHED", "gwen.feature.eval.finished", None),
-          ResultField("FEATURE_FILE", "gwen.feature.file.path", None),
-          ResultField("FEATURE_NAME", "gwen.feature.displayName", None),
-          ResultField("EVAL_DURATION", "gwen.feature.eval.duration", None)))
+          ResultField("EVAL_STATUS", "gwen.feature.eval.status.keyword.upperCased", None, false),
+          ResultField("EVAL_STARTED", "gwen.feature.eval.started", None, false),
+          ResultField("EVAL_FINISHED", "gwen.feature.eval.finished", None, false),
+          ResultField("FEATURE_FILE", "gwen.feature.file.path", None, false),
+          ResultField("FEATURE_NAME", "gwen.feature.displayName", None, false),
+          ResultField("EVAL_DURATION", "gwen.feature.eval.duration", None, false)))
         val fFailed = resFiles.find(_.id == "feature.failed").get
         fFailed.id should be ("feature.failed")
         fFailed.file should be (new File(s"$resDir/feature-results-FAILED.csv"))
@@ -364,13 +367,13 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
         fFailed.scope.flatMap(_.nodeName) should be (None)
         fFailed.status should be (Some(StatusKeyword.Failed))
         fFailed.fields should be (List(
-          ResultField("EVAL_STATUS", "gwen.feature.eval.status.keyword.upperCased", None),
-          ResultField("EVAL_STARTED", "gwen.feature.eval.started", None),
-          ResultField("EVAL_FINISHED", "gwen.feature.eval.finished", None),
-          ResultField("FEATURE_FILE", "gwen.feature.file.path", None),
-          ResultField("FEATURE_NAME", "gwen.feature.displayName", None),
-          ResultField("EVAL_DURATION", "gwen.feature.eval.duration", None),
-          ResultField("EVAL_MESSAGE", "gwen.feature.eval.status.message", None)))
+          ResultField("EVAL_STATUS", "gwen.feature.eval.status.keyword.upperCased", None, false),
+          ResultField("EVAL_STARTED", "gwen.feature.eval.started", None, false),
+          ResultField("EVAL_FINISHED", "gwen.feature.eval.finished", None, false),
+          ResultField("FEATURE_FILE", "gwen.feature.file.path", None, false),
+          ResultField("FEATURE_NAME", "gwen.feature.displayName", None, false),
+          ResultField("EVAL_DURATION", "gwen.feature.eval.duration", None, false),
+          ResultField("EVAL_MESSAGE", "gwen.feature.eval.status.message", None, false)))
         val fAll = resFiles.find(_.id == "feature.all").get
         fAll.id should be ("feature.all")
         fAll.file should be (new File(s"$resDir/feature-results-ALL.csv"))
@@ -378,13 +381,13 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
         fAll.scope.flatMap(_.nodeName) should be (None)
         fAll.status should be (None)
         fAll.fields should be (List(
-          ResultField("EVAL_STATUS", "gwen.feature.eval.status.keyword.upperCased", None),
-          ResultField("EVAL_STARTED", "gwen.feature.eval.started", None),
-          ResultField("EVAL_FINISHED", "gwen.feature.eval.finished", None),
-          ResultField("FEATURE_FILE", "gwen.feature.file.path", None),
-          ResultField("FEATURE_NAME", "gwen.feature.displayName", None),
-          ResultField("EVAL_DURATION", "gwen.feature.eval.duration", None),
-          ResultField("EVAL_MESSAGE", "gwen.feature.eval.status.message", None)))
+          ResultField("EVAL_STATUS", "gwen.feature.eval.status.keyword.upperCased", None, false),
+          ResultField("EVAL_STARTED", "gwen.feature.eval.started", None, false),
+          ResultField("EVAL_FINISHED", "gwen.feature.eval.finished", None, false),
+          ResultField("FEATURE_FILE", "gwen.feature.file.path", None, false),
+          ResultField("FEATURE_NAME", "gwen.feature.displayName", None, false),
+          ResultField("EVAL_DURATION", "gwen.feature.eval.duration", None, false),
+          ResultField("EVAL_MESSAGE", "gwen.feature.eval.status.message", None, false)))
         val sPassed = resFiles.find(_.id == "scenario.passed").get
         sPassed.id should be ("scenario.passed")
         sPassed.file should be (new File(s"$resDir/scenario-results-PASSED.csv"))
@@ -392,13 +395,13 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
         sPassed.scope.flatMap(_.nodeName) should be (None)
         sPassed.status should be (Some(StatusKeyword.Passed))
         sPassed.fields should be (List(
-          ResultField("EVAL_STATUS", "gwen.scenario.eval.status.keyword.upperCased", None),
-          ResultField("EVAL_STARTED", "gwen.scenario.eval.started", None),
-          ResultField("EVAL_FINISHED", "gwen.scenario.eval.finished", None),
-          ResultField("FEATURE_FILE", "gwen.feature.file.path", None),
-          ResultField("FEATURE_NAME", "gwen.feature.displayName", None),
-          ResultField("SCENARIO_NAME", "gwen.scenario.displayName", None),
-          ResultField("EVAL_DURATION", "gwen.scenario.eval.duration", None)))
+          ResultField("EVAL_STATUS", "gwen.scenario.eval.status.keyword.upperCased", None, false),
+          ResultField("EVAL_STARTED", "gwen.scenario.eval.started", None, false),
+          ResultField("EVAL_FINISHED", "gwen.scenario.eval.finished", None, false),
+          ResultField("FEATURE_FILE", "gwen.feature.file.path", None, false),
+          ResultField("FEATURE_NAME", "gwen.feature.displayName", None, false),
+          ResultField("SCENARIO_NAME", "gwen.scenario.displayName", None, false),
+          ResultField("EVAL_DURATION", "gwen.scenario.eval.duration", None, false)))
         val sFailed = resFiles.find(_.id == "scenario.failed").get
         sFailed.id should be ("scenario.failed")
         sFailed.file should be (new File(s"$resDir/scenario-results-FAILED.csv"))
@@ -406,14 +409,14 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
         sFailed.scope.flatMap(_.nodeName) should be (None)
         sFailed.status should be (Some(StatusKeyword.Failed))
         sFailed.fields should be (List(
-          ResultField("EVAL_STATUS", "gwen.scenario.eval.status.keyword.upperCased", None),
-          ResultField("EVAL_STARTED", "gwen.scenario.eval.started", None),
-          ResultField("EVAL_FINISHED", "gwen.scenario.eval.finished", None),
-          ResultField("FEATURE_FILE", "gwen.feature.file.path", None),
-          ResultField("FEATURE_NAME", "gwen.feature.displayName", None),
-          ResultField("SCENARIO_NAME", "gwen.scenario.displayName", None),
-          ResultField("EVAL_DURATION", "gwen.scenario.eval.duration", None),
-          ResultField("EVAL_MESSAGE", "gwen.scenario.eval.status.message", None)))
+          ResultField("EVAL_STATUS", "gwen.scenario.eval.status.keyword.upperCased", None, false),
+          ResultField("EVAL_STARTED", "gwen.scenario.eval.started", None, false),
+          ResultField("EVAL_FINISHED", "gwen.scenario.eval.finished", None, false),
+          ResultField("FEATURE_FILE", "gwen.feature.file.path", None, false),
+          ResultField("FEATURE_NAME", "gwen.feature.displayName", None, false),
+          ResultField("SCENARIO_NAME", "gwen.scenario.displayName", None, false),
+          ResultField("EVAL_DURATION", "gwen.scenario.eval.duration", None, false),
+          ResultField("EVAL_MESSAGE", "gwen.scenario.eval.status.message", None, false)))
         val sAll = resFiles.find(_.id == "scenario.all").get
         sAll.id should be ("scenario.all")
         sAll.file should be (new File(s"$resDir/scenario-results-ALL.csv"))
@@ -421,14 +424,14 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
         sAll.scope.flatMap(_.nodeName) should be (None)
         sAll.status should be (None)
         sAll.fields should be (List(
-          ResultField("EVAL_STATUS", "gwen.scenario.eval.status.keyword.upperCased", None),
-          ResultField("EVAL_STARTED", "gwen.scenario.eval.started", None),
-          ResultField("EVAL_FINISHED", "gwen.scenario.eval.finished", None),
-          ResultField("FEATURE_FILE", "gwen.feature.file.path", None),
-          ResultField("FEATURE_NAME", "gwen.feature.displayName", None),
-          ResultField("SCENARIO_NAME", "gwen.scenario.displayName", None),
-          ResultField("EVAL_DURATION", "gwen.scenario.eval.duration", None),
-          ResultField("EVAL_MESSAGE", "gwen.scenario.eval.status.message", None)))
+          ResultField("EVAL_STATUS", "gwen.scenario.eval.status.keyword.upperCased", None, false),
+          ResultField("EVAL_STARTED", "gwen.scenario.eval.started", None, false),
+          ResultField("EVAL_FINISHED", "gwen.scenario.eval.finished", None, false),
+          ResultField("FEATURE_FILE", "gwen.feature.file.path", None, false),
+          ResultField("FEATURE_NAME", "gwen.feature.displayName", None, false),
+          ResultField("SCENARIO_NAME", "gwen.scenario.displayName", None, false),
+          ResultField("EVAL_DURATION", "gwen.scenario.eval.duration", None, false),
+          ResultField("EVAL_MESSAGE", "gwen.scenario.eval.status.message", None, false)))
         val sdAll = resFiles.find(_.id == "stepDef.all").get
         sdAll.id should be ("stepDef.all")
         sdAll.file should be (new File(s"$resDir/stepDef-results-ALL.csv"))
@@ -436,19 +439,19 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
         sdAll.scope.flatMap(_.nodeName) should be (None)
         sdAll.status should be (None)
         sdAll.fields should be (List(
-          ResultField("EVAL_STATUS", "gwen.stepDef.eval.status.keyword.upperCased", None),
-          ResultField("EVAL_STARTED", "gwen.stepDef.eval.started", None),
-          ResultField("EVAL_FINISHED", "gwen.stepDef.eval.finished", None),
-          ResultField("STEPDEF_NAME", "gwen.stepDef.displayName", None),
-          ResultField("EVAL_DURATION", "gwen.stepDef.eval.duration", None),
-          ResultField("EVAL_MESSAGE", "gwen.stepDef.eval.status.message", None)))
+          ResultField("EVAL_STATUS", "gwen.stepDef.eval.status.keyword.upperCased", None, false),
+          ResultField("EVAL_STARTED", "gwen.stepDef.eval.started", None, false),
+          ResultField("EVAL_FINISHED", "gwen.stepDef.eval.finished", None, false),
+          ResultField("STEPDEF_NAME", "gwen.stepDef.displayName", None, false),
+          ResultField("EVAL_DURATION", "gwen.stepDef.eval.duration", None, false),
+          ResultField("EVAL_MESSAGE", "gwen.stepDef.eval.status.message", None, false)))
         val test = resFiles.find(_.id == "test").get
         test.id should be ("test")
         test.file should be (new File(s"target/dsl/test.csv"))
         test.scope should be (None)
         test.status should be (None)
         test.fields should be (List(
-          ResultField("header", "header", Some("record"))))
+          ResultField("header", "header", Some("record"), false)))
       }
     }
   }

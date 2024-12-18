@@ -1,3 +1,10 @@
+4.1.0
+=====
+19 December 2024
+- Update Gwen core from v4.0.3 to v[4.1.0](https://github.com/gwen-interpreter/gwen/releases/tag/v4.1.0)
+  - Add support for masking input data fields
+  - Ensure masked fields are unmasked when evaluating javascript
+
 4.0.3
 =====
 10 December 2024

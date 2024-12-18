@@ -171,13 +171,15 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
   private def evaluateJSWeb(javascript: String, params: List[Any])(implicit takeScreenShot: Boolean = false): Any = {
     withWebDriver { webDriver =>
       try {
-        webDriver.asInstanceOf[JavascriptExecutor].executeScript(formatJSReturn(parseJS(javascript)), params.map(_.asInstanceOf[AnyRef])*) tap { result =>
-          if (takeScreenShot && WebSettings.`gwen.web.capture.screenshots.enabled`) {
-            captureScreenshot(false)
-          }
-          logger.debug(s"Evaluated javascript: $javascript, result='$result'")
-          if (result.isInstanceOf[Boolean] && result.asInstanceOf[Boolean]) {
-            Thread.sleep(150) // observed volatile results for booleans without wait
+        SensitiveData.withValue(javascript) { js =>
+          webDriver.asInstanceOf[JavascriptExecutor].executeScript(formatJSReturn(parseJS(js)), params.map(_.asInstanceOf[AnyRef])*) tap { result =>
+            if (takeScreenShot && WebSettings.`gwen.web.capture.screenshots.enabled`) {
+              captureScreenshot(false)
+            }
+            logger.debug(s"Evaluated javascript: $javascript, result='$result'")
+            if (result.isInstanceOf[Boolean] && result.asInstanceOf[Boolean]) {
+              Thread.sleep(150) // observed volatile results for booleans without wait
+            }
           }
         }
       } catch {
