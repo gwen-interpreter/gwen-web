@@ -9,6 +9,7 @@
     - `<step> <while|until> <name> is[ not] "<value>"`
     - `<step> <while|until> <name> <match> "<expression>"`
     - `<step> <while|until> <name> does not <match> "<expression>"`
+  - Do not honor `@Try` annotation in dry run mode when a reference is invalid
 
 4.0.3
 =====
