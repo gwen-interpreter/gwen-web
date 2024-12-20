@@ -725,7 +725,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     * @param negate whether or not to negate the check
     */
   def waitForElementState(binding: LocatorBinding, state: ElementState, negate: Boolean): Unit =
-    waitUntil(s"waiting for ${binding.displayName} to${if (negate) " not" else""} be $state") {
+    waitUntil(binding.timeoutSeconds, s"waiting for ${binding.displayName} to${if (negate) " not" else""} be $state") {
       isElementState(binding, state, negate)
     }
 

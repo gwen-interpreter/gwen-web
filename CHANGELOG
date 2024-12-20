@@ -1,6 +1,7 @@
 4.1.0
 =====
-19 December 2024
+20 December 2024
+- Spend at most 2 seconds evaluating element state in guard conditions
 - Update Gwen core from v4.0.3 to v[4.1.0](https://github.com/gwen-interpreter/gwen/releases/tag/v4.1.0)
   - Add support for masking input data fields
   - Ensure masked fields are unmasked when evaluating javascript
