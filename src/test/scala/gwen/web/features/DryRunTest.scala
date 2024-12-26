@@ -59,7 +59,6 @@ class DryRunTest extends BaseFeatureTest {
           evaluate(
             List(
               "src/test/features/flow",
-              "src/test/features/locators",
               "src/test/features/functions",
               "src/test/features/samples/todo/scenario-level",
               "src/test/features/samples/todo/single-scenario"), 
@@ -80,7 +79,6 @@ class DryRunTest extends BaseFeatureTest {
             List(
               "src/test/features/errors",
               "src/test/features/flow",
-              "src/test/features/locators",
               "src/test/features/functions",
               "src/test/features/samples/todo/scenario-level",
               "src/test/features/samples/todo/single-scenario"), 

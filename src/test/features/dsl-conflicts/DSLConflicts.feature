@@ -45,13 +45,6 @@ Feature: DSL conflicts
      When some function "${str}" for each str in strings delimited by ","
      Then attr should not be ""
 
-  Scenario: Test
-    Given add roles textfield can be located by name "q"
-      And role not added is defined by javascript "true"
-     When I navigate to "https://google.com"
-      And I enter "RoleName" in add roles textfield if role not added
-     Then role not added should be "true"
-
   Scenario: Test similar step defs
     Given listOfSubMenu is "TEST1,TEST3,TEST3"
      When I select "${submenu}" for each submenu in listOfSubMenu delimited by ","

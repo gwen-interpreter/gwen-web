@@ -75,10 +75,6 @@ trait WebProjectInitialiser extends ProjectInitialiser {
         FileIO.copyClasspathTextResourceToFile("/init/features/README.md", dir, allowReplace = force)
         new File(dir, "samples") tap { dir =>
           FileIO.copyClasspathTextResourceToFile("/init/features/samples/README.md", dir, allowReplace = force)
-          new File(dir, "google") tap { dir =>
-            FileIO.copyClasspathTextResourceToFile("/init/features/samples/google/Google.feature", dir, allowReplace = force)
-            FileIO.copyClasspathTextResourceToFile("/init/features/samples/google/Google.meta", dir, allowReplace = force)
-          }
           new File(dir, "todo") tap { dir =>
             FileIO.copyClasspathTextResourceToFile("/init/features/samples/todo/Todo.feature", dir, allowReplace = force)
             FileIO.copyClasspathTextResourceToFile("/init/features/samples/todo/Todo.meta", dir, allowReplace = force)
