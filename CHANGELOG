@@ -1,3 +1,16 @@
+4.1.2
+=====
+27 December 2024
+
+- Update Gwen core from v4.1.1 to v[4.1.2](https://github.com/gwen-interpreter/gwen/releases/tag/v4.1.2)
+  - Update dependencies
+    - Update scala from v3.5.2 to v3.6.2
+    - Update gherkin from v30.0.0 to v30.0.4
+    - Update jline from v3.27.1 to v3.28.0
+    - Update logback-core from v1.5.12 to v1.5.15
+    - Update commons-text from v1.12.0 to v1.13.0
+    - Update jackson-databind from v2.18.1 to v2.18.2
+
 4.1.1
 =====
 23 December 2024

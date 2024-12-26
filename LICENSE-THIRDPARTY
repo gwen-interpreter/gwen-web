@@ -8,19 +8,19 @@ com.google.code.findbugs
   +-jsr305:3.0.2
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
 org.scala-lang
-  +-scala-library:2.13.14
+  +-scala-library:2.13.15
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0
-  +-scala3-library_3:3.5.2
+  +-scala3-library_3:3.6.2
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0
-  +-scaladoc_3:3.5.2
+  +-scaladoc_3:3.6.2
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0
-  +-tasty-core_3:3.5.2
+  +-tasty-core_3:3.6.2
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0
-  +-scala3-compiler_3:3.5.2
+  +-scala3-compiler_3:3.6.2
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0
-  +-scala3-interfaces:3.5.2
+  +-scala3-interfaces:3.6.2
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0
-  +-scala3-tasty-inspector_3:3.5.2
+  +-scala3-tasty-inspector_3:3.6.2
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0
 com.jayway.jsonpath
   +-json-path:2.9.0
@@ -67,15 +67,15 @@ io.opentelemetry.semconv
   +-opentelemetry-semconv:1.25.0-alpha
   | +-The Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
 org.jline
-  +-jline:3.27.1
+  +-jline:3.28.0
   | +-no license specified
-  +-jline-terminal-jna:3.25.1
+  +-jline-terminal-jna:3.27.0
   | +-no license specified
-  +-jline-native:3.25.1
+  +-jline-native:3.27.0
   | +-no license specified
-  +-jline-terminal:3.25.1
+  +-jline-terminal:3.27.0
   | +-no license specified
-  +-jline-reader:3.25.1
+  +-jline-reader:3.27.0
   | +-no license specified
 net.minidev
   +-json-smart:2.5.0
@@ -88,11 +88,11 @@ org.scala-sbt
   +-compiler-interface:1.9.6
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0
 com.fasterxml.jackson.core
-  +-jackson-annotations:2.18.1
+  +-jackson-annotations:2.18.2
   | +-The Apache Software License, Version 2.0 - https://www.apache.org/licenses/LICENSE-2.0.txt
-  +-jackson-core:2.18.1
+  +-jackson-core:2.18.2
   | +-The Apache Software License, Version 2.0 - https://www.apache.org/licenses/LICENSE-2.0.txt
-  +-jackson-databind:2.18.1
+  +-jackson-databind:2.18.2
   | +-The Apache Software License, Version 2.0 - https://www.apache.org/licenses/LICENSE-2.0.txt
   +-jackson-annotations:2.15.1
   | +-The Apache Software License, Version 2.0 - https://www.apache.org/licenses/LICENSE-2.0.txt
@@ -104,7 +104,7 @@ dev.failsafe
   +-failsafe:3.3.2
   | +-no license specified
 net.java.dev.jna
-  +-jna:5.14.0
+  +-jna:5.15.0
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0.txt
 org.yaml
   +-snakeyaml:2.0
@@ -134,9 +134,9 @@ com.fasterxml.jackson.dataformat
 org.apache.commons
   +-commons-exec:1.4.0
   | +-no license specified
-  +-commons-lang3:3.14.0
+  +-commons-lang3:3.17.0
   | +-no license specified
-  +-commons-text:1.12.0
+  +-commons-text:1.13.0
   | +-no license specified
 com.google.j2objc
   +-j2objc-annotations:3.0.0
@@ -261,7 +261,6 @@ com.google.guava
   | +-no license specified
   +-failureaccess:1.0.2
   | +-no license specified
-
 org.scala-lang.modules
   +-scala-asm:9.7.0-scala-2
   | +-BSD 3-clause - http://opensource.org/licenses/BSD-3-Clause
@@ -276,9 +275,9 @@ org.apache.pdfbox
   +-pdfbox:3.0.3
   | +-no license specified
 io.cucumber
-  +-gherkin:30.0.0
+  +-gherkin:30.0.4
   | +-no license specified
-  +-messages:26.0.1
+  +-messages:27.0.2
   | +-no license specified
 commons-codec
   +-commons-codec:1.17.1
@@ -287,7 +286,7 @@ com.typesafe.scala-logging
   +-scala-logging_3:3.9.5
   | +-Apache 2.0 License - http://www.apache.org/licenses/LICENSE-2.0.html
 ch.qos.logback
-  +-logback-classic:1.5.12
+  +-logback-classic:1.5.15
   | +-no license specified
-  +-logback-core:1.5.12
+  +-logback-core:1.5.15
   | +-no license specified
