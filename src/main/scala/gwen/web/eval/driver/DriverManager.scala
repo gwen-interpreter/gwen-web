@@ -116,16 +116,17 @@ class DriverManager() extends LazyLogging {
   }
 
   def retry[T](body: => T): T = {
+    val maxRetries = 10
     def retry(attempts: Int): T = {
       try {
         body
       } catch {
         case e: Exception if attempts > 0 =>
-          Thread.sleep((WebSettings.maxRetries + 1 - attempts) * 1000)
+          Thread.sleep((maxRetries - attempts + 1) * 1000)
           retry(attempts - 1)
       }
     }
-    retry(if (WebSettings.`gwen.web.remote.sessionRetries`) WebSettings.maxRetries else 0)
+    retry(if (WebSettings.`gwen.web.remote.sessionRetries`) maxRetries else 0)
   }
 
    /**

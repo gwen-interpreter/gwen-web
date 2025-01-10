@@ -508,6 +508,4 @@ object WebSettings extends LazyLogging {
   val enableVideoKey1 = "gwen.web.capabilities.selenoid:options.enableVideo"
   val enableVideoKey2 = "gwen.web.capability.selenoid:options.enableVideo"
 
-  lazy val maxRetries: Int = GwenSettings.availableProcessors / 4
-
 }
