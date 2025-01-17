@@ -71,7 +71,7 @@ System Requirements
 License
 -------
 
-Copyright 2014-2024 Brady Wood, Branko Juric.
+Copyright 2014-2025 Brady Wood, Branko Juric.
 
 This software is open sourced under the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt).
 
@@ -102,40 +102,3 @@ Maintainers
 - [Branko Juric](https://github.com/bjuric)
 - [Brady Wood](https://github.com/bradywood)
 - [Ruby Juric](https://github.com/Sorixelle)
-
-Credits
--------
-
-### Contributors
-
-- [Ruby Juric](https://github.com/Sorixelle)
-| [Alexandru Cuciureanu](https://github.com/acuciureanu)
-
-### Users who raised issues
-
-- [Rebecca Abriam](https://github.com/mairbar)
-| [George Tsihitas](https://github.com/gtsihitas)
-| [Zoltan Penzeli](https://github.com/siaynoq)
-| [inkbleed](https://github.com/inkbleed)
-| [Pradeep Thawani](https://github.com/pradeep-thawani)
-| [anshu781126](https://github.com/anshu781126)
-| [ketu4u2010](https://github.com/ketu4u2010)
-| [Rahul9844](https://github.com/Rahul9844)
-| [rkevin99](https://github.com/rkevin99)
-| [Sergio Freire](https://github.com/bitcoder)
-| [dfriquet](https://github.com/dfriquet)
-| [charleslcso](https://github.com/charleslcso)
-| [Alexandre Friquet](https://github.com/afriqs)
-| [Sergio Freire](https://github.com/bitcoder)
-| [sse2ebdd](https://github.com/sse2ebdd)
-| [Gunasekaran](https://github.com/gunajoker)
-
-### Projects we heavily rely on
-
-- [Cucumber/Gherkin](https://docs.cucumber.io/gherkin/reference/)
-- [Selenium](https://www.selenium.dev/)
-
-### Supporters
-
-- [Arun Datta](https://github.com/SAINFY) for giving us valuable feedback and advice
-- [Nascent Creative](https://nascentcreative.com.au/) for developing our [logo](https://gweninterpreter.org/docs/logo)

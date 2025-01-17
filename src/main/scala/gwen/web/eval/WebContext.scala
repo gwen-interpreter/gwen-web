@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2024 Brady Wood, Branko Juric
+ * Copyright 2015-2025 Brady Wood, Branko Juric
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -68,8 +68,10 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
 
   override def sessionOpened(event: WebSessionEvent): Unit = { 
     driverManager.getSessionId(event.driver) foreach { sessionId =>
-      if (WebSettings.videoEnabled) {
-        addVideo(new File(GwenSettings.`gwen.video.dir`, s"$sessionId.mp4"))
+      Grid.impl.foreach { grid =>
+        if (grid.videoEnabled) {
+          addVideo(grid.videoFile(sessionId), sessionId)
+        }
       }
       envState.topScope.set(`gwen.web.sessionId`, sessionId)
     }

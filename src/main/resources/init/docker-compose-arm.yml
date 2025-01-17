@@ -4,7 +4,7 @@ services:
     volumes:
       - $PWD/${gwen.initDir}${slash}output/.assets:/opt/selenium/assets
       - $PWD/${gwen.initDir}${slash}output/downloads:/home/seluser/Downloads
-      - $PWD/${gwen.initDir}${slash}conf/browsers/grid.toml:/opt/selenium/docker.toml
+      - $PWD/${gwen.initDir}${slash}conf/browsers/grid-arm.toml:/opt/selenium/docker.toml
       - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
       - selenium-hub
@@ -25,10 +25,7 @@ services:
       - "4444:4444"
 
   chrome:
-    image: selenium/standalone-chrome:latest
-
-  edge:
-    image: selenium/standalone-edge:latest
+    image: selenium/standalone-chromium:latest
 
   firefox:
     image: selenium/standalone-firefox:latest

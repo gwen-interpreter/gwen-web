@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2024 Branko Juric, Brady Wood
+ * Copyright 2014-2025 Branko Juric, Brady Wood
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,10 +55,13 @@ class WebEngine extends EvalEngine[WebContext] {
     */
   override def init(options: GwenOptions, envState: EnvState): WebContext = {
     WebSettings.check()
-    val disableVideo = sys.env.get("GWEN_VIDEO").map(v => v.trim != "true").getOrElse(false)
-    if (disableVideo || ((options.parallel || !options.batch) && WebSettings.videoEnabled)) {
-      logger.info(s"Disabling video in ${if (options.parallel) "parallel" else "interactive"} mode")
-      sys.props.put(WebSettings.enableVideoKey1, "false")
+    Grid.impl.foreach { grid =>
+      val disableVideo = sys.env.get("GWEN_VIDEO").map(v => v.trim != "true").getOrElse(false)
+      val selenoidParallel = grid == Grid.selenoid && options.parallel
+      if (disableVideo || ((selenoidParallel || !options.batch) && grid.videoEnabled)) {
+        logger.info(s"Disabling video in ${if (selenoidParallel) "parallel" else "interactive"} mode")
+        sys.props.put(grid.enableVideoKey, "false")
+      }
     }
     if (WebSettings.`gwen.web.capture.screenshots.highlighting`) {
       val fps = GwenSettings.`gwen.report.slideshow.framespersecond`

@@ -8,10 +8,10 @@ pipeline {
     choice(name: 'process', choices: [''], description: 'Target process')
     choice(name: 'browser', choices: ['chrome', 'firefox', 'edge'], description: 'Target web browser')
     booleanParam(name: 'dry_run', defaultValue: false, description: 'Validate without executing')
-    booleanParam(name: 'parallel', defaultValue: false, description: 'Enable parallel execution')
+    booleanParam(name: 'parallel', defaultValue: false, description: 'Enable parallel batch execution across cores')
     choice(name: 'threads', choices: ['auto', '2', '4', '8', '12', '16', '24', '32', '48', '64'], description: 'Number of parallel threads (auto = one thread per available core)')
     booleanParam(name: 'headless', defaultValue: false, description: 'Enable headless browser') 
-    booleanParam(name: 'video', defaultValue: true, description: 'Enable video capture (not available with parallel or headless)') 
+    booleanParam(name: 'video', defaultValue: false, description: 'Enable video recording') 
   }
   environment {
     GWEN_ENV = "${params.env}"
@@ -38,7 +38,7 @@ pipeline {
         script {
           try {
             // Spin up environment and execute Gwen in docker
-            sh "docker-compose -p ${env.BUILD_TAG.toLowerCase()}${docker.compose.options} run gwen"
+            sh "docker-compose${docker.compose.options} -p ${env.BUILD_TAG.toLowerCase()} run gwen"
             if (!fileExists('${gwen.initDir}${slash}output/reports/html/index.html')) {
               error 'Evaluation report not generated'
             }
@@ -53,8 +53,7 @@ pipeline {
       }
       post {
         always {
-          sh "docker-compose -p ${env.BUILD_TAG.toLowerCase()}${docker.compose.options} down || true"
-          archiveArtifacts artifacts: '${gwen.initDir}${slash}output/reports/**'
+          sh "docker-compose${docker.compose.options} -p ${env.BUILD_TAG.toLowerCase()} down || true"
           publishHTML(target: [
                         allowMissing          : true,
                         alwaysLinkToLastBuild : false,

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2024 Brady Wood, Branko Juric
+ * Copyright 2015-2025 Brady Wood, Branko Juric
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -78,7 +78,7 @@ object WebSettings extends LazyLogging {
     `gwen.web.useragent`
     `gwen.web.wait.seconds`
 
-    videoEnabled
+    Grid.impl.foreach(_.videoEnabled)
 
   }
 
@@ -500,12 +500,5 @@ object WebSettings extends LazyLogging {
     val auto = Settings.getOpt("gwen.web.remote.sessionRetries").exists(_ == "auto")
     (auto && `gwen.web.remote.url`.nonEmpty) || (!auto && Settings.getBoolean("gwen.web.remote.sessionRetries"))
   }
-
-  def videoEnabled: Boolean = {
-    Settings.getBooleanOpt(enableVideoKey1).orElse(Settings.getBooleanOpt(enableVideoKey2)).getOrElse(false)
-  }
-
-  val enableVideoKey1 = "gwen.web.capabilities.selenoid:options.enableVideo"
-  val enableVideoKey2 = "gwen.web.capability.selenoid:options.enableVideo"
 
 }

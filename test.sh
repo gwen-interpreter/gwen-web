@@ -5,6 +5,7 @@ cd target
 rm -rf project
 mkdir project
 cd project
+yarn add -D @gweninterpreter/gwen-web
 ../universal/stage/bin/gwen init --docker --jenkins
 ../universal/stage/bin/gwen -p samples --parallel -b
 ../universal/stage/bin/gwen --profile samples --dry-run --batch

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 Brady Wood, Branko Juric
+ * Copyright 2021-2025 Brady Wood, Branko Juric
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -320,22 +320,20 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
 
   }
 
-  "Selenoid capabilties" should "load" in {
+  "Selenium grid capabilties" should "load" in {
     Settings.exclusively {
       withSetting("gwen.initDir", ".") {
         Settings.init(
           List(
             new File("src/main/resources/init/gwen.conf"),
             new File("src/main/resources/init/conf/browsers/chrome.conf"),
-            new File("src/main/resources/init/conf/browsers/selenoid.conf")
+            new File("src/main/resources/init/conf/browsers/grid.conf")
           )
         )
         val caps = WebSettings.`gwen.web.capabilities`.asMap.asScala
-        caps.size should be (1)
-        val options = caps("selenoid:options").asInstanceOf[java.util.HashMap[String, Object]]
-        options.get("enableVNC").toString should be ("true")
-        options.get("enableVideo").toString should be ("true")
-        caps.get("\"selenoid:options\"") should be (None)
+        caps.size should be (2)
+        caps.get("se:recordVideo") should be (Some(false))
+        caps.get("se:screenResolution") should be (Some("1920x1080"))
       }
     }
   }

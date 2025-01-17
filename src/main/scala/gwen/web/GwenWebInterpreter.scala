@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 Branko Juric, Brady Wood
+ * Copyright 2021-2025 Branko Juric, Brady Wood
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,10 +21,11 @@ import gwen.core.Settings
 import gwen.core.GwenOptions
 import gwen.core.GwenSettings
 
-import gwen.web.init.WebProjectInitialiser
+import gwen.web.eval.Grid
 import gwen.web.eval.WebBrowser
 import gwen.web.eval.WebEngine
 import gwen.web.eval.WebSettings
+import gwen.web.init.WebProjectInitialiser
 
 import scala.util.chaining._
 
@@ -41,9 +42,13 @@ object GwenWebInterpreter extends GwenInterpreter(new WebEngine()) with WebProje
   Settings.addEnvOverrides(
     `gwen.target.env` -> "GWEN_ENV", 
     `gwen.target.browser` -> "GWEN_BROWSER", 
-    "gwen.web.browser.headless" -> "GWEN_HEADLESS",
-    WebSettings.enableVideoKey1 -> "GWEN_VIDEO"
+    "gwen.web.browser.headless" -> "GWEN_HEADLESS"
   )
+  Grid.impl.foreach { grid => 
+    Settings.addEnvOverrides(
+      grid.enableVideoKey -> "GWEN_VIDEO"
+    )
+  }
   
   override def init(options: GwenOptions): GwenOptions = {
     val opts = if (!options.init && !options.pretty) {

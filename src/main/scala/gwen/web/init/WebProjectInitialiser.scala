@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 Branko Juric, Brady Wood
+ * Copyright 2022-2025 Branko Juric, Brady Wood
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,11 @@ import gwen.core.init.InitOption
 import gwen.core.init.ProjectInitialiser
 
 import scala.io.Source
+import scala.sys.process.stringToProcess
+import scala.sys.process.stringSeqToProcess
+
 import scala.util.chaining._
+import scala.util.Try
 
 import java.io.File
 import java.nio.file.Files
@@ -98,38 +102,38 @@ trait WebProjectInitialiser extends ProjectInitialiser {
       println(
         s"""|Project directory initialised${if (force) " (forced)" else ""}
             |
-            |  ./            $filler           # Project root${if (!copyRootGitIgnore) "" else {
+            |  ./            $filler             # Project root${if (!copyRootGitIgnore) "" else {
         s"""|
-            |   ├── .gitignore$filler          # Git ignore file""".stripMargin}}${if (!copyRootReadme) "" else {
+            |   ├── .gitignore$filler            # Git ignore file""".stripMargin}}${if (!copyRootReadme) "" else {
         s"""|
             |   ├── README.md""".stripMargin}}
-            |   ├── gwen.conf$filler           # Common settings${if (flat) "" else {
+            |   ├── gwen.conf$filler             # Common settings${if (flat) "" else {
         s"""|
             |   └── /${dir.getPath}""".stripMargin}}${if (copyRootReadme) "" else {
         s"""|
             |$filler├── README.md""".stripMargin}}
-            |$filler├── .gitignore             # Git ignore file
+            |$filler├── .gitignore               # Git ignore file
             |$filler├── /conf
-            |$filler│   ├── /browsers          # Browser settings
+            |$filler│   ├── /browsers            # Browser settings
             |$filler│   |   ├── chrome.conf
             |$filler│   |   ├── edge.conf
             |$filler│   |   ├── firefox.conf
             |$filler│   |   ├── README.md
             |$filler│   |   └── safari.conf
-            |$filler│   ├──/env                # Environment settings
+            |$filler│   ├──/env                  # Environment settings
             |$filler│   |  ├── dev.conf
             |$filler│   |  ├── local.conf
             |$filler│   |  ├── prod.conf
             |$filler│   |  ├── README.md
             |$filler│   |  ├── staging.conf
             |$filler│   |  └── test.conf
-            |$filler│   └──/profiles           # Profile settings
+            |$filler│   └──/profiles             # Profile settings
             |$filler│      ├── README.md
             |$filler│      └── samples.conf
-            |$filler├── /features              # Features (and associative meta)
+            |$filler├── /features                # Features (and associative meta)
             |$filler│   ├── README.md
-            |$filler│   └── /samples           # Samples
-            |$filler└── /meta                  # Common meta
+            |$filler│   └── /samples             # Samples
+            |$filler└── /meta                    # Common meta
             |$filler    └── README.md
             |
             |""".stripMargin
@@ -138,24 +142,31 @@ trait WebProjectInitialiser extends ProjectInitialiser {
     if (options.initOptions.contains(InitOption.docker)) {
       FileIO.copyClasspathTextResourceToFile("/init/docker_env", dir, Some(".env"), allowReplace = force)
       FileIO.copyClasspathTextResourceToFile("/init/Dockerfile", dir, allowReplace = force)
+      FileIO.copyClasspathTextResourceToFile("/init/wait4grid.sh", dir, allowReplace = force)
+      Try(Seq("/bin/sh", "-c", s"chmod u+x ./$dir/wait4grid.sh").!)
       copyClasspathResourceAndInject("/init/docker-compose.yml", dir, flat, allowReplace = force)
+      copyClasspathResourceAndInject("/init/docker-compose-arm.yml", dir, flat, allowReplace = force)
       new File(confDir, "browsers") tap { dir =>
-        FileIO.copyClasspathTextResourceToFile("/init/conf/browsers/browsers.json", dir, allowReplace = force)
-        FileIO.copyClasspathTextResourceToFile("/init/conf/browsers/selenoid.conf", dir, allowReplace = force)
+        FileIO.copyClasspathTextResourceToFile("/init/conf/browsers/grid.conf", dir, allowReplace = force)
+        FileIO.copyClasspathTextResourceToFile("/init/conf/browsers/grid.toml", dir, allowReplace = force)
+        FileIO.copyClasspathTextResourceToFile("/init/conf/browsers/grid-arm.toml", dir, allowReplace = force)
       }
       println(
         s"""|Docker files initialised${if (force) " (forced)" else ""}
             |
-            |  ./            $filler            # Project root${if (flat) "" else {
+            |  ./            $filler             # Project root${if (flat) "" else {
         s"""|
             |   └── /${dir.getPath}""".stripMargin}}
-            |$filler├── .env                    # Docker env file
-            |$filler├── docker-compose.yml      # Docker compose file
-            |$filler├── Dockerfile              # Docker image file
+            |$filler├── .env                     # Docker env file
+            |$filler├── docker-compose.yml       # Se Grid docker compose file
+            |$filler├── docker-compose-arm.yml   # Se Grid docker compose file for ARMs
+            |$filler├── Dockerfile               # Docker file for Gwen
+            |$filler├── wait4grid.sh             # Se Grid wait script
             |$filler└── /conf
-            |$filler    └── /browsers           # Browser settings
-            |$filler        ├── browsers.json   # Selenoid browsers file
-            |$filler        └── selenoid.conf   # Selenoid settings
+            |$filler    └── /browsers            # Browser settings
+            |$filler        ├── grid.conf        # Se Grid remote driver settings
+            |$filler        ├── grid.toml        # Se Grid docker config
+            |$filler        └── grid-arm.toml    # Se Grid docker config for ARMs
             |
             |""".stripMargin
       )
@@ -165,10 +176,10 @@ trait WebProjectInitialiser extends ProjectInitialiser {
       println(
         s"""|Jenkinsfile initialised${if (force) " (forced)" else ""}
             |
-            |  ./            $filler            # Project root${if (flat) "" else {
+            |  ./            $filler             # Project root${if (flat) "" else {
         s"""|
             |   └── /${dir.getPath}""".stripMargin}}
-            |$filler└── Jenkinsfile             # Jenkins pipeline file
+            |$filler└── Jenkinsfile              # Jenkins pipeline file
             |
             |""".stripMargin
       )

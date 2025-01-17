@@ -25,6 +25,7 @@ jobs:
         cache: sbt
     - name: Setup Chrome
       uses: browser-actions/setup-chrome@latest
+    - uses: sbt/setup-sbt@v1
     - name: Build and Test
       working-directory: ./gwen-web
       run: sbt -v -Dfile.encoding=UTF-8 -Dgwen.web.browser.headless=true +test
