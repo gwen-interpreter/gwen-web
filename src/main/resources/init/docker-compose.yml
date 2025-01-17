@@ -1,4 +1,5 @@
 services:
+
   node-docker:
     image: selenium/node-docker:latest
     volumes:
@@ -23,18 +24,6 @@ services:
       - "4442:4442"
       - "4443:4443"
       - "4444:4444"
-
-  chrome:
-    image: selenium/standalone-chrome:latest
-
-  edge:
-    image: selenium/standalone-edge:latest
-
-  firefox:
-    image: selenium/standalone-firefox:latest
-
-  video:
-    image: selenium/video:ffmpeg-6.1-20231219
 
   gwen:
     depends_on:
