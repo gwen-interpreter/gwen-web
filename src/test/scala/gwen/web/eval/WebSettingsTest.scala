@@ -331,9 +331,10 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
           )
         )
         val caps = WebSettings.`gwen.web.capabilities`.asMap.asScala
-        caps.size should be (2)
+        caps.size should be (3)
         caps.get("se:recordVideo") should be (Some(false))
         caps.get("se:screenResolution") should be (Some("1920x1080"))
+        caps.get("se:timeZone") should be (Some("Australia/Melbourne"))
       }
     }
   }

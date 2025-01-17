@@ -1,3 +1,10 @@
+4.2.2
+=====
+18 January 2025
+- Enable VNC by default in docker
+- Set default TZ in docker
+- Include tzdata in DockerFile
+
 4.2.1
 =====
 17 January 2025

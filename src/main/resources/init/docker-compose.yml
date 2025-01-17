@@ -14,7 +14,8 @@ services:
       - SE_EVENT_BUS_PUBLISH_PORT=4442
       - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
       - SE_NODE_DOCKER_CONFIG_FILENAME=docker.toml
-      - SE_START_VNC=false
+      - SE_START_VNC=true
+      - TZ
     shm_size: 2gb
 
   selenium-hub:

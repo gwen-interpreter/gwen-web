@@ -6,4 +6,5 @@ RUN apk update \
     && apk add bash \
     && apk add jq \
     && apk add curl \
+    && apk add tzdata \
     && apk add openjdk17-jre
