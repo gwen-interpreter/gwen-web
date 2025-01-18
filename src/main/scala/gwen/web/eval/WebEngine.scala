@@ -56,6 +56,7 @@ class WebEngine extends EvalEngine[WebContext] {
   override def init(options: GwenOptions, envState: EnvState): WebContext = {
     WebSettings.check()
     Grid.impl.foreach { grid =>
+      grid.waitFor()
       val disableVideo = sys.env.get("GWEN_VIDEO").map(v => v.trim != "true").getOrElse(false)
       val selenoidParallel = grid == Grid.selenoid && options.parallel
       if (disableVideo || ((selenoidParallel || !options.batch) && grid.videoEnabled)) {

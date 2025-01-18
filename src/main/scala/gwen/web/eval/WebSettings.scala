@@ -71,6 +71,7 @@ object WebSettings extends LazyLogging {
     `gwen.web.maximize`
     `gwen.web.remote.localFileDetector`
     `gwen.web.remote.url`
+    `gwen.web.remote.connectTimeout.seconds`
     `gwen.web.sendKeys.clearFirst`
     `gwen.web.sendKeys.clickFirst`
     `gwen.web.suppress.images`
@@ -499,6 +500,13 @@ object WebSettings extends LazyLogging {
   def `gwen.web.remote.sessionRetries`: Boolean = {
     val auto = Settings.getOpt("gwen.web.remote.sessionRetries").exists(_ == "auto")
     (auto && `gwen.web.remote.url`.nonEmpty) || (!auto && Settings.getBoolean("gwen.web.remote.sessionRetries"))
+  }
+
+  /**
+   * The maximum time to wait for a remote server connection.
+   */
+  def `gwen.web.remote.connectTimeout.seconds`: Long = {
+    Settings.getLong("gwen.web.remote.connectTimeout.seconds")
   }
 
 }

@@ -18,9 +18,16 @@ package gwen.web.eval
 import gwen.core.Settings
 import gwen.core.GwenSettings
 
-import java.io.File
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.typesafe.scalalogging.LazyLogging
 
-enum Grid:
+import scala.io.Source
+import scala.util.Try
+
+import java.io.File
+import java.util.HashMap
+
+enum Grid extends LazyLogging:
   case selenium, selenoid
   private def enableVideoKeys: List[String] = {
     if (this == selenium) List(
@@ -40,6 +47,38 @@ enum Grid:
       new File(dir, s"$filename.mp4")
     } else {
       new File(GwenSettings.`gwen.video.dir`, s"$sessionId.mp4")
+    }
+  }
+  def waitFor(): Unit = {
+    if (this == selenium) {
+      val remoteUrl = WebSettings.`gwen.web.remote.url`.get
+      val statusUrl = s"$remoteUrl/status"
+      val mapper = new ObjectMapper()
+      val isReady = () => {
+        Try(
+          mapper
+            .readValue(Source.fromURL(statusUrl).mkString, classOf[HashMap[String, Object]])
+            .get("value").asInstanceOf[HashMap[String, Object]]
+            .get("ready").asInstanceOf[Boolean]
+        ).getOrElse(false)
+      }
+      var ready = isReady()
+      val timeoutSecs = WebSettings.`gwen.web.remote.connectTimeout.seconds`
+      var waitSecs = timeoutSecs
+      if (!ready) {
+        logger.info(s"Remote url is $remoteUrl")
+        print(s"Waiting for Grid")
+        while(!ready && waitSecs > 0) {
+          if (!ready) {
+            waitSecs = waitSecs - 1
+            Thread.sleep(1000)
+            print(".")
+          }
+          ready = isReady()
+        }
+      }
+      if (waitSecs < timeoutSecs) println(s"${timeoutSecs - waitSecs}s")
+      if (ready) println(s"Grid is UP\n") else WebErrors.gridWaitTimeout(timeoutSecs)
     }
   }
 

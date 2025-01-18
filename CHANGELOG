@@ -1,3 +1,11 @@
+4.2.3
+=====
+18 January 2025
+- Wait for grid service to be ready before connecting with remote web driver
+- Pin docker images to Selenium 4
+- Update Gwen core from v4.2.1 to v[4.2.2](https://github.com/gwen-interpreter/gwen/releases/tag/v4.2.2)
+  - Set env.TZ setting to default timezone if not already set
+
 4.2.2
 =====
 18 January 2025

@@ -2,4 +2,3 @@
 -J-Dsbt.sourcemode=true
 -J-Djansi.passthrough=true
 -J-Xshare:off
--J-Denv.TZ=Australia/Melbourne

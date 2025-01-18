@@ -19,6 +19,7 @@ package gwen.web.eval.driver
 import gwen.core._
 import gwen.core.state.SensitiveData
 
+import gwen.web.eval.Grid
 import gwen.web.eval.WebBrowser
 import gwen.web.eval.WebSettings
 import gwen.web.eval.WebErrors

@@ -44,6 +44,7 @@ object WebErrors {
     def invalidSelectorTypeError(selectorType: String) = throw new InvalidSelectorTypeException(selectorType)
     def multipleBrowserSettingsError(settingsFiles: List[File]) = throw new MultipleBrowserSettingsException(settingsFiles)
     def illegalSessionNameError(name: String, msg: Option[String]) = throw new IllegalSessionNameException(name, msg)
+    def gridWaitTimeout(secs: Long) = throw new GridWaitTimeout(secs)
 
     /** Thrown when a locator binding error is detected . */
     class LocatorBindingException(msg: String) extends GwenException(msg)
@@ -93,5 +94,9 @@ object WebErrors {
     /** Thrown when an unsupported web driver is detected. */
     class IllegalSessionNameException(name: String, msg: Option[String])
       extends GwenException(s"Illegal (reserved) browser session name: $name${msg.map(m => s". $m").getOrElse("")}")
+
+    /** Thrown when waiting for a remote Grid times out. */
+    class GridWaitTimeout(secs: Long)
+      extends GwenException(s"Timed out after ${secs}s waiting for Grid")
 
 }

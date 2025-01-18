@@ -2,9 +2,9 @@
 # Configs have a mapping between the Docker image to use and the capabilities that need to be matched to
 # start a container with the given image.
 configs = [
-    "selenium/standalone-chrome:latest", '{"browserName": "chrome"}',
-    "selenium/standalone-edge:latest", '{"browserName": "edge"}',
-    "selenium/standalone-firefox:latest", '{"browserName": "firefox"}'
+    "selenium/standalone-chrome:4", '{"browserName": "chrome"}',
+    "selenium/standalone-edge:4", '{"browserName": "edge"}',
+    "selenium/standalone-firefox:4", '{"browserName": "firefox"}'
 ]
 
 host-config-keys = ["Dns", "DnsOptions", "DnsSearch", "ExtraHosts", "Binds", "Mounts"]

@@ -37,6 +37,7 @@ import scala.jdk.CollectionConverters._
 
 import java.io.File
 import java.util.logging.Level
+import java.util.TimeZone
 
 class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
 
@@ -110,6 +111,7 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
       WebSettings.`gwen.web.maximize` should be (false)
       WebSettings.`gwen.web.remote.localFileDetector` should be (false)
       WebSettings.`gwen.web.remote.url` should be (None)
+      WebSettings.`gwen.web.remote.connectTimeout.seconds` should be (30L)
       WebSettings.`gwen.web.remote.sessionRetries` should be (false)
       WebSettings.`gwen.web.sendKeys.clearFirst` should be (false)
       WebSettings.`gwen.web.sendKeys.clickFirst` should be (false)
@@ -216,6 +218,7 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
     WebSettings.`gwen.web.maximize` should be (false)
     WebSettings.`gwen.web.remote.localFileDetector` should be (false)
     WebSettings.`gwen.web.remote.url` should be (None)
+    WebSettings.`gwen.web.remote.connectTimeout.seconds` should be (30L)
     WebSettings.`gwen.web.remote.sessionRetries` should be (false)
     WebSettings.`gwen.web.sendKeys.clearFirst` should be (false)
     WebSettings.`gwen.web.sendKeys.clickFirst` should be (false)
@@ -310,6 +313,7 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
     WebSettings.`gwen.web.maximize` should be (false)
     WebSettings.`gwen.web.remote.localFileDetector` should be (false)
     WebSettings.`gwen.web.remote.url` should be (None)
+    WebSettings.`gwen.web.remote.connectTimeout.seconds` should be (30L)
     WebSettings.`gwen.web.remote.sessionRetries` should be (false)
     WebSettings.`gwen.web.sendKeys.clearFirst` should be (false)
     WebSettings.`gwen.web.sendKeys.clickFirst` should be (false)
@@ -334,7 +338,7 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
         caps.size should be (3)
         caps.get("se:recordVideo") should be (Some(false))
         caps.get("se:screenResolution") should be (Some("1920x1080"))
-        caps.get("se:timeZone") should be (Some("Australia/Melbourne"))
+        caps.get("se:timeZone") should be (Some(TimeZone.getDefault().getID()))
       }
     }
   }

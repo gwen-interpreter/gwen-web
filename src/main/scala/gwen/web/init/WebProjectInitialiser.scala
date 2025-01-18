@@ -25,7 +25,6 @@ import scala.sys.process.stringToProcess
 import scala.sys.process.stringSeqToProcess
 
 import scala.util.chaining._
-import scala.util.Try
 
 import java.io.File
 import java.nio.file.Files
@@ -142,8 +141,6 @@ trait WebProjectInitialiser extends ProjectInitialiser {
     if (options.initOptions.contains(InitOption.docker)) {
       FileIO.copyClasspathTextResourceToFile("/init/docker_env", dir, Some(".env"), allowReplace = force)
       FileIO.copyClasspathTextResourceToFile("/init/Dockerfile", dir, allowReplace = force)
-      FileIO.copyClasspathTextResourceToFile("/init/wait4grid.sh", dir, allowReplace = force)
-      Try(Seq("/bin/sh", "-c", s"chmod u+x ./$dir/wait4grid.sh").!)
       copyClasspathResourceAndInject("/init/docker-compose.yml", dir, flat, allowReplace = force)
       copyClasspathResourceAndInject("/init/docker-compose-arm.yml", dir, flat, allowReplace = force)
       new File(confDir, "browsers") tap { dir =>
@@ -161,7 +158,6 @@ trait WebProjectInitialiser extends ProjectInitialiser {
             |$filler├── docker-compose.yml       # Se Grid docker compose file
             |$filler├── docker-compose-arm.yml   # Se Grid docker compose file for ARMs
             |$filler├── Dockerfile               # Docker file for Gwen
-            |$filler├── wait4grid.sh             # Se Grid wait script
             |$filler└── /conf
             |$filler    └── /browsers            # Browser settings
             |$filler        ├── grid.conf        # Se Grid remote driver settings

@@ -1,7 +1,7 @@
 services:
 
   node-docker:
-    image: selenium/node-docker:latest
+    image: selenium/node-docker:4
     volumes:
       - $PWD/${gwen.initDir}${slash}output/.assets:/opt/selenium/assets
       - $PWD/${gwen.initDir}${slash}output/downloads:/home/seluser/Downloads
@@ -19,7 +19,7 @@ services:
     shm_size: 2gb
 
   selenium-hub:
-    image: selenium/hub:latest
+    image: selenium/hub:4
     container_name: selenium-hub
     ports:
       - "4442:4442"
@@ -48,7 +48,7 @@ services:
     volumes:
       - "$PWD:/project"
     working_dir: /project
-    command: bash -c "./${gwen.initDir}${slash}wait4grid.sh && yarn install && yarn gwen -b -c ${gwen.initDir}${slash}conf/browsers/grid.conf ${gwen.initDir}${slash}features"
+    command: bash -c "yarn install && yarn gwen -b -c ${gwen.initDir}${slash}conf/browsers/grid.conf ${gwen.initDir}${slash}features"
 
   gwen-dry-run:
     build:
