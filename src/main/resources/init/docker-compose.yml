@@ -62,7 +62,7 @@ services:
       - NO_COLOR
       - TZ
     volumes:
-      - "$PWD:/project"
+      - $PWD:/project
     working_dir: /project
     command: bash -c "yarn install && yarn gwen -bn --parallel ${gwen.initDir}${slash}features"
 

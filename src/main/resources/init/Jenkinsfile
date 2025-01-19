@@ -27,9 +27,12 @@ pipeline {
     stage("Prepare") {
       steps {
         script {
+          // Clean up docker
+          sh 'docker rm -f $(docker ps -a -q) || true'
+          sh 'docker volume rm gwen_assets gwen_downloads || true'
           // Prepare output dir
-          sh 'mkdir -p ${gwen.initDir}${slash}output'
           sh 'rm -rf ${gwen.initDir}${slash}output/**'
+          sh 'mkdir -p ${gwen.initDir}${slash}output'
         }
       }
     }
@@ -54,6 +57,8 @@ pipeline {
       post {
         always {
           sh "docker-compose${docker.compose.options} -p ${env.BUILD_TAG.toLowerCase()} down || true"
+          sh 'docker rm -f $(docker ps -a -q) || true'
+          sh 'docker volume rm gwen_assets gwen_downloads || true'
           publishHTML(target: [
                         allowMissing          : true,
                         alwaysLinkToLastBuild : false,

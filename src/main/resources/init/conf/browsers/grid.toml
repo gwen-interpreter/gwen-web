@@ -20,7 +20,7 @@ host-config-keys = ["Dns", "DnsOptions", "DnsSearch", "ExtraHosts", "Binds", "Mo
 url = "http://127.0.0.1:2375"
 
 # Docker image used for video recording
-video-image = "selenium/video:ffmpeg-6.1-20231219"
+video-image = "selenium/video:ffmpeg-7.1-20250101"
 
 # Uncomment the following section if you are running the node on a separate VM
 # Fill out the placeholders with appropriate values
