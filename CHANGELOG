@@ -1,3 +1,9 @@
+4.2.4
+=====
+19 January 2025
+- Use `video.dir` setting to locate generated videos in docker
+- Use top level docker mounts for Downloads and Selenium assets
+
 4.2.3
 =====
 18 January 2025

@@ -41,13 +41,18 @@ enum Grid extends LazyLogging:
   def enableVideoKey: String = enableVideoKeys(0)
   def videoEnabled: Boolean = enableVideoKeys.flatMap(key => Settings.getBooleanOpt(key)).headOption.getOrElse(false)
   def videoFile(sessionId: String): File = {
-    if (this == selenium) {
-      val dir = new File(new File(GwenSettings.`gwen.outDir`, ".assets"), sessionId)
-      val filename = Settings.getOpt("gwen.web.capabilities.se:name").orElse(Settings.getOpt("gwen.web.capability.se:name")).getOrElse("video")
-      new File(dir, s"$filename.mp4")
-    } else {
-      new File(GwenSettings.`gwen.video.dir`, s"$sessionId.mp4")
+    val dirname = GwenSettings.`gwen.video.dir`
+      .getPath
+      .replaceAll("""\$<user.home>""", sys.props("user.home"))
+      .replaceAll("""\$<gwen.web.sessionId>""", sessionId)
+    val filename = {
+      if (this == selenium) {
+        Settings.getOpt("gwen.web.capabilities.se:name").orElse(Settings.getOpt("gwen.web.capability.se:name")).getOrElse("video")
+      } else {
+        sessionId
+      }
     }
+    new File(new File(dirname), s"$filename.mp4")
   }
   def waitFor(): Unit = {
     if (this == selenium) {
