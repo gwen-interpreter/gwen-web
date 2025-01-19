@@ -23,9 +23,9 @@ import org.scalatest.matchers.should.Matchers
 import scala.sys.process.stringToProcess
 import scala.sys.process.stringSeqToProcess
 
-class SamplesProjectTest extends BaseTest with Matchers {
+class ProjectTest extends BaseTest with Matchers {
   "Newly initialised project" should "should run" in {
-    Seq("/bin/sh", "-c", "./project-test.sh").! should be (0)
+    Seq("/bin/sh", "-c", "./project.sh test").! should be (0)
   }
 
 }
