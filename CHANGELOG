@@ -1,3 +1,8 @@
+4.2.5
+=====
+20 January 2025
+- Wait for remote grid service to be ready when initialising web interpter for remote sessions
+
 4.2.4
 =====
 19 January 2025

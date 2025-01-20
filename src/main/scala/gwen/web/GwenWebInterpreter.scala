@@ -87,7 +87,11 @@ object GwenWebInterpreter extends GwenInterpreter(new WebEngine()) with WebProje
     } else {
       options
     }
-    super.init(opts)
+    super.init(opts) tap { _ =>
+      Grid.impl.foreach { grid => 
+        grid.waitFor()
+      }
+    }
   }
 
 }
