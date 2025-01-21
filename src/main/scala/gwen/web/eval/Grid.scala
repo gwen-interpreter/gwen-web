@@ -72,7 +72,7 @@ enum Grid extends LazyLogging:
       var waitSecs = timeoutSecs
       if (!ready) {
         logger.info(s"Remote url is $remoteUrl")
-        print(s"Waiting for Grid")
+        println(s"Waiting for Grid")
         while(!ready && waitSecs > 0) {
           if (!ready) {
             waitSecs = waitSecs - 1
@@ -83,7 +83,7 @@ enum Grid extends LazyLogging:
         }
       }
       if (waitSecs < timeoutSecs) println(s"${timeoutSecs - waitSecs}s")
-      if (ready) println(s"Grid is UP\n") else WebErrors.gridWaitTimeout(timeoutSecs)
+      if (ready) println(s"Grid is ready\n") else WebErrors.gridWaitTimeout(timeoutSecs)
     }
   }
 

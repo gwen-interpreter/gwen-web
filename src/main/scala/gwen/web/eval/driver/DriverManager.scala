@@ -166,14 +166,13 @@ class DriverManager() extends LazyLogging {
     val caps = WebSettings.`gwen.web.capabilities`
     val browserName = Option(caps.getBrowserName).map(_.trim).filter(_.nonEmpty).getOrElse(WebSettings.`gwen.target.browser`.toString).toLowerCase
     val browser = WebBrowser.parse(browserName)
-    val options = browser match {
-      case WebBrowser.firefox => firefoxOptions(true)
-      case WebBrowser.chrome => chromeOptions(true)
-      case WebBrowser.edge => edgeOptions(true)
-      case WebBrowser.safari => safariOptions()
-    }
     logger.info(s"Starting remote $browser session${ if(session == "primary") "" else s": $session"}")
-    remote(addr, options)
+    browser match {
+      case WebBrowser.firefox => remote(addr, firefoxOptions(true))
+      case WebBrowser.chrome => remote(addr, chromeOptions(true))
+      case WebBrowser.edge => remote(addr, edgeOptions(true))
+      case WebBrowser.safari => remote(addr, safariOptions())
+    }
   }
 
   /**
