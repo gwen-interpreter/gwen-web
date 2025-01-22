@@ -12,5 +12,5 @@ RUN apk update \
 # Run as a non root gwen user
 RUN addgroup -S gwen && adduser -S gwen -G gwen -u 4936
 USER gwen
-RUN mkdir -p ~/Downloads
-RUN mkdir -p ~/.assets
+
+RUN mkdir /tmp/assets

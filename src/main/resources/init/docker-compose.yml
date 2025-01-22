@@ -3,8 +3,7 @@ services:
   node-docker:
     image: selenium/node-docker:4
     volumes:
-      - assets:/opt/selenium/assets
-      - downloads:/home/seluser/Downloads
+      - $PWD/${gwen.initDir}${slash}output/assets:/opt/selenium/assets
       - $PWD/${gwen.initDir}${slash}conf/browsers/grid.toml:/opt/selenium/docker.toml
       - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
@@ -47,8 +46,7 @@ services:
       - TZ
     volumes:
       - $PWD:/project
-      - assets:/home/gwen/.assets
-      - downloads:/home/gwen/Downloads
+      - $PWD/${gwen.initDir}${slash}output/assets:/tmp/assets
     working_dir: /project
     command: bash -c "yarn install && yarn gwen -b -c ${gwen.initDir}${slash}conf/browsers/grid.conf ${gwen.initDir}${slash}features"
 
@@ -65,7 +63,3 @@ services:
       - $PWD:/project
     working_dir: /project
     command: bash -c "yarn install && yarn gwen -bn --parallel ${gwen.initDir}${slash}features"
-
-volumes:
-  assets: 
-  downloads:

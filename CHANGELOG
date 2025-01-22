@@ -1,3 +1,9 @@
+4.2.7
+=====
+22 January 2025
+- Set default gwen.remote.connectTimeout.seconds to 60
+- Simplified docker setup
+
 4.2.6
 =====
 22 January 2025
