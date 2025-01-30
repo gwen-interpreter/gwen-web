@@ -1,3 +1,9 @@
+4.2.8
+=====
+31 January 2025
+- Enable arbitrary remote web driver browser names
+- Update selenium-java from v4.28.0 to v4.28.1
+
 4.2.7
 =====
 22 January 2025
