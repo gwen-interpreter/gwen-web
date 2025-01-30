@@ -29,6 +29,8 @@ import gwen.web.eval.driver.event.WebSessionEventListener
 import scala.jdk.CollectionConverters._
 import scala.collection.mutable
 import scala.util.chaining._
+import scala.util.Success
+import scala.util.Try
 
 import com.typesafe.scalalogging.LazyLogging
 import org.openqa.selenium.{Dimension, Capabilities, MutableCapabilities, WebDriver, WindowType}
@@ -165,13 +167,17 @@ class DriverManager() extends LazyLogging {
   private def remoteDriver(addr: String): WebDriver = {
     val caps = WebSettings.`gwen.web.capabilities`
     val browserName = Option(caps.getBrowserName).map(_.trim).filter(_.nonEmpty).getOrElse(WebSettings.`gwen.target.browser`.toString).toLowerCase
-    val browser = WebBrowser.parse(browserName)
-    logger.info(s"Starting remote $browser session${ if(session == "primary") "" else s": $session"}")
-    browser match {
-      case WebBrowser.firefox => remote(addr, firefoxOptions(true))
-      case WebBrowser.chrome => remote(addr, chromeOptions(true))
-      case WebBrowser.edge => remote(addr, edgeOptions(true))
-      case WebBrowser.safari => remote(addr, safariOptions())
+    logger.info(s"Starting remote $browserName session${ if(session == "primary") "" else s": $session"}")
+    Try(WebBrowser.parse(browserName)) match {
+      case Success(browser) =>
+        browser match {
+          case WebBrowser.firefox => remote(addr, firefoxOptions(true))
+          case WebBrowser.chrome => remote(addr, chromeOptions(true))
+          case WebBrowser.edge => remote(addr, edgeOptions(true))
+          case WebBrowser.safari => remote(addr, safariOptions())
+        }
+      case _ =>
+        remote(addr, caps)
     }
   }
 
