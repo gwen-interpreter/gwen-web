@@ -1,8 +1,8 @@
 enablePlugins(GitVersioning)
 
 // gwen core & web versions
-val gwenVersion = "4.2.3"
-val gwenWebVersion = "4.2.9"
+val gwenVersion = "4.2.4"
+val gwenWebVersion = "4.2.10"
 
 git.baseVersion := gwenWebVersion
 git.useGitDescribe := true
@@ -30,7 +30,7 @@ lazy val projectSettings = Seq(
   licenses += "Apache License, Version 2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0.html"),
   homepage := Some(url("https://gweninterpreter.org")),
   versionScheme := Some("semver-spec"),
-  scalaVersion := "3.6.2",
+  scalaVersion := "3.6.3",
   crossPaths := false,
   trapExit := false,
   scalacOptions ++= Seq(
@@ -57,8 +57,8 @@ lazy val mainDependencies = {
 lazy val testDependencies = {
   Seq(
     "org.scalatest" %% "scalatest" % "3.2.19",
-    "org.scalatestplus" %% "mockito-4-5" % "3.2.12.0",
-    "org.mockito" % "mockito-core" % "5.14.2"
+    "org.scalatestplus" %% "mockito-5-12" % "3.2.19.0",
+    "org.mockito" % "mockito-core" % "5.15.2"
   ).map(_ % Test)
 }
 

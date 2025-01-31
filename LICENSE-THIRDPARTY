@@ -10,17 +10,17 @@ com.google.code.findbugs
 org.scala-lang
   +-scala-library:2.13.15
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0
-  +-scala3-library_3:3.6.2
+  +-scala3-library_3:3.6.3
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0
-  +-scaladoc_3:3.6.2
+  +-scaladoc_3:3.6.3
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0
-  +-tasty-core_3:3.6.2
+  +-tasty-core_3:3.6.3
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0
-  +-scala3-compiler_3:3.6.2
+  +-scala3-compiler_3:3.6.3
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0
-  +-scala3-interfaces:3.6.2
+  +-scala3-interfaces:3.6.3
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0
-  +-scala3-tasty-inspector_3:3.6.2
+  +-scala3-tasty-inspector_3:3.6.3
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0
 com.jayway.jsonpath
   +-json-path:2.9.0
@@ -69,13 +69,13 @@ io.opentelemetry.semconv
 org.jline
   +-jline:3.28.0
   | +-no license specified
-  +-jline-terminal-jna:3.27.0
+  +-jline-native:3.27.1
   | +-no license specified
-  +-jline-native:3.27.0
+  +-jline-terminal:3.27.1
   | +-no license specified
-  +-jline-terminal:3.27.0
+  +-jline-terminal-jni:3.27.1
   | +-no license specified
-  +-jline-reader:3.27.0
+  +-jline-reader:3.27.1
   | +-no license specified
 net.minidev
   +-json-smart:2.5.0
@@ -100,9 +100,6 @@ com.fasterxml.jackson.core
   | +-The Apache Software License, Version 2.0 - https://www.apache.org/licenses/LICENSE-2.0.txt
   +-jackson-databind:2.15.1
   | +-The Apache Software License, Version 2.0 - https://www.apache.org/licenses/LICENSE-2.0.txt
-net.java.dev.jna
-  +-jna:5.15.0
-  | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0.txt
 org.yaml
   +-snakeyaml:2.0
   | +-Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
@@ -177,7 +174,7 @@ com.google.auto.service
   +-auto-service-annotations:1.1.1
   | +-no license specified
 commons-logging
-  +-commons-logging:1.3.3
+  +-commons-logging:1.3.4
   | +-no license specified
 io.opentelemetry
   +-opentelemetry-exporter-logging:1.46.0
@@ -265,25 +262,25 @@ ua.co.k
   +-strftime4j:1.0.5
   | +-MIT License - http://www.opensource.org/licenses/mit-license.php
 org.apache.pdfbox
-  +-pdfbox-io:3.0.3
+  +-pdfbox-io:3.0.4
   | +-no license specified
-  +-fontbox:3.0.3
+  +-fontbox:3.0.4
   | +-no license specified
-  +-pdfbox:3.0.3
+  +-pdfbox:3.0.4
   | +-no license specified
 io.cucumber
-  +-gherkin:30.0.4
+  +-gherkin:31.0.0
   | +-no license specified
-  +-messages:27.1.0
+  +-messages:27.2.0
   | +-no license specified
 commons-codec
-  +-commons-codec:1.17.1
+  +-commons-codec:1.18.0
   | +-no license specified
 com.typesafe.scala-logging
   +-scala-logging_3:3.9.5
   | +-Apache 2.0 License - http://www.apache.org/licenses/LICENSE-2.0.html
 ch.qos.logback
-  +-logback-classic:1.5.15
+  +-logback-classic:1.5.16
   | +-no license specified
-  +-logback-core:1.5.15
+  +-logback-core:1.5.16
   | +-no license specified
