@@ -1,3 +1,9 @@
+4.2.9
+=====
+31 January 2025
+- Update Gwen core from v4.2.2 to v[4.2.3](https://github.com/gwen-interpreter/gwen/releases/tag/v4.2.3)
+  - Synchronise masked value cache 
+
 4.2.8
 =====
 31 January 2025
