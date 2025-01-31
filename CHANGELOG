@@ -2,7 +2,7 @@
 ======
 1 February 2025
 - Update Gwen core from v4.2.3 to v[4.2.4](https://github.com/gwen-interpreter/gwen/releases/tag/v4.2.4)
-  - Use semaphore to control access to masked value cache
+  - Use threadsafe masked value cache
   - Update dependencies
     - Update scala from v3.6.2 to v3.6.3
     - Update gherkin from v30.0.4 to v31.0.0
