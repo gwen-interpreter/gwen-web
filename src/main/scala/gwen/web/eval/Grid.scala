@@ -56,34 +56,35 @@ enum Grid extends LazyLogging:
   }
   def waitFor(): Unit = {
     if (this == selenium) {
-      val remoteUrl = WebSettings.`gwen.web.remote.url`.get
-      val statusUrl = s"$remoteUrl/status"
-      val mapper = new ObjectMapper()
-      val isReady = () => {
-        Try(
-          mapper
-            .readValue(Source.fromURL(statusUrl).mkString, classOf[HashMap[String, Object]])
-            .get("value").asInstanceOf[HashMap[String, Object]]
-            .get("ready").asInstanceOf[Boolean]
-        ).getOrElse(false)
-      }
-      var ready = isReady()
-      val timeoutSecs = WebSettings.`gwen.web.remote.connectTimeout.seconds`
-      var waitSecs = timeoutSecs
-      if (!ready) {
-        logger.info(s"Remote url is $remoteUrl")
-        println(s"Waiting for Grid")
-        while(!ready && waitSecs > 0) {
-          if (!ready) {
-            waitSecs = waitSecs - 1
-            Thread.sleep(1000)
-            print(".")
-          }
-          ready = isReady()
+      WebSettings.`gwen.web.remote.url` foreach { remoteUrl =>
+        val statusUrl = s"$remoteUrl/status"
+        val mapper = new ObjectMapper()
+        val isReady = () => {
+          Try(
+            mapper
+              .readValue(Source.fromURL(statusUrl).mkString, classOf[HashMap[String, Object]])
+              .get("value").asInstanceOf[HashMap[String, Object]]
+              .get("ready").asInstanceOf[Boolean]
+          ).getOrElse(false)
         }
+        var ready = isReady()
+        val timeoutSecs = WebSettings.`gwen.web.remote.connectTimeout.seconds`
+        var waitSecs = timeoutSecs
+        if (!ready) {
+          logger.info(s"Remote url is $remoteUrl")
+          println(s"Waiting for Grid")
+          while(!ready && waitSecs > 0) {
+            if (!ready) {
+              waitSecs = waitSecs - 1
+              Thread.sleep(1000)
+              print(".")
+            }
+            ready = isReady()
+          }
+        }
+        if (waitSecs < timeoutSecs) println(s"${timeoutSecs - waitSecs}s")
+        if (ready) println(s"Grid is ready\n") else WebErrors.gridWaitTimeout(timeoutSecs)
       }
-      if (waitSecs < timeoutSecs) println(s"${timeoutSecs - waitSecs}s")
-      if (ready) println(s"Grid is ready\n") else WebErrors.gridWaitTimeout(timeoutSecs)
     }
   }
 

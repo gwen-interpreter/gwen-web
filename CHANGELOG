@@ -1,3 +1,8 @@
+4.2.11
+======
+3 February 2025
+- Only wait for grid if remote url is set
+
 4.2.10
 ======
 1 February 2025
