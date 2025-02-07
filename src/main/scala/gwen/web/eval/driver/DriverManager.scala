@@ -28,10 +28,12 @@ import gwen.web.eval.driver.event.WebSessionEventListener
 
 import scala.jdk.CollectionConverters._
 import scala.collection.mutable
+import scala.io.Source
 import scala.util.chaining._
 import scala.util.Success
 import scala.util.Try
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.typesafe.scalalogging.LazyLogging
 import org.openqa.selenium.{Dimension, Capabilities, MutableCapabilities, WebDriver, WindowType}
 import org.openqa.selenium.chrome.ChromeDriver
@@ -41,6 +43,8 @@ import org.openqa.selenium.chromium.ChromiumOptions
 import org.openqa.selenium.edge.EdgeDriver
 import org.openqa.selenium.edge.EdgeOptions
 import org.openqa.selenium.firefox.{FirefoxDriver, FirefoxOptions, FirefoxProfile}
+import org.openqa.selenium.logging.LogEntry
+import org.openqa.selenium.logging.LogType
 import org.openqa.selenium.remote.HttpCommandExecutor
 import org.openqa.selenium.remote.LocalFileDetector
 import org.openqa.selenium.remote.RemoteWebDriver
@@ -510,6 +514,24 @@ class DriverManager() extends LazyLogging {
       Some(driver.asInstanceOf[RemoteWebDriver].getSessionId.toString)
     } else {
       None
+    }
+  }
+
+  def performanceLog(url: String, driver: WebDriver): String = {
+    StringPrinter.withPrinter { pw =>
+      pw.println("{")
+      pw.println(s"""  "url": "$url",""")
+      pw.println(s"""  "trace": [""")
+      val logs = driver.manage().logs().get(LogType.PERFORMANCE).asScala
+      val count = logs.size
+      logs.zipWithIndex foreach { (log, i) => 
+        val mapper = new ObjectMapper()
+        Source.fromString(s"${mapper.readTree(log.getMessage).toPrettyString()}${if (i < ( count - 1)) "," else ""}").getLines foreach { line =>
+          pw.println(s"    $line")
+        }
+      }
+      pw.println("  ]")
+      pw.println("}")
     }
   }
 

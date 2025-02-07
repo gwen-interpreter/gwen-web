@@ -35,7 +35,6 @@ import gwen.core.state.EnvState
 import gwen.core.state.SensitiveData
 import gwen.core.status.Failed
 
-
 import scala.concurrent.duration.Duration
 import scala.collection.SeqView
 import scala.io.Source
@@ -1383,10 +1382,13 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     *
     * @param url the URL to navigate to
     */
-  def navigateTo(url: String): Unit = {
+  def navigateTo(url: String): Option[String] = {
     withWebDriver { driver =>
       SensitiveData.withValue(url) { u =>
         driver.get(u)
+        Settings.getOpt("gwen.web.capabilities.goog:loggingPrefs.performance") map { _ =>
+          driverManager.performanceLog(u, driver)
+        } orNull
       }
     } (WebSettings.`gwen.web.capture.screenshots.enabled`)
   }
