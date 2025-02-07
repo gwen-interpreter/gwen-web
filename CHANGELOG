@@ -1,14 +1,15 @@
 4.3.0
 =====
-7 February 2025
-- Add support for logging chrome performace log through capabilities option:
+8 February 2025
+- Add support for logging chrome performace traces for navigations through capabilities option:
   - `gwen.web.capabilities.goog:loggingPrefs.performance`
 - Use 1 second incremental waits for remote session retries
-- Remove semaphore used to prvent number of web driver sessions exceeding maxThreads
+- Remove semaphore used to prevent number of web driver sessions from exceeding maxThreads
 - Update Gwen core from v4.2.4 to v[4.3.0](https://github.com/gwen-interpreter/gwen/releases/tag/v4.3.0)
   - `gwen.parallel.maxThreads` can now be set to a percentage of total cores available
     - example: 80% for utilisation of 8 of 10 cores available for parallel processing
   - Clean up attachment file number prefix (avoid doubling up)
+  - Refactored wait-until logic and step durations
 
 4.2.11
 ======
