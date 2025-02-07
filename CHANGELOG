@@ -4,6 +4,7 @@
 - Update Gwen core from v4.2.4 to v[4.3.0](https://github.com/gwen-interpreter/gwen/releases/tag/v4.3.0)
   - `gwen.parallel.maxThreads` can now be set to a percentage of total cores available
     - example: 80% for utilisation of 8 of 10 cores available for parallel processing
+  - Clean up attachment file number prefix (avoid doubling up)
 
 4.2.11
 ======
