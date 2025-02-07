@@ -83,7 +83,7 @@ enum Grid extends LazyLogging:
           }
         }
         if (waitSecs < timeoutSecs) println(s"${timeoutSecs - waitSecs}s")
-        if (ready) println(s"Grid is ready\n") else WebErrors.gridWaitTimeout(timeoutSecs)
+        if (ready) println(s"Grid is ready ✔\n") else WebErrors.gridWaitTimeout(timeoutSecs)
       }
     }
   }
