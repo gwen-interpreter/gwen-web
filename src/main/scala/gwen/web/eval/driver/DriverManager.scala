@@ -123,13 +123,13 @@ class DriverManager() extends LazyLogging {
   }
 
   def retry[T](body: => T): T = {
-    val maxRetries = 10
+    val maxRetries = 60
     def retry(attempts: Int): T = {
       try {
         body
       } catch {
         case e: Exception if attempts > 0 =>
-          Thread.sleep((maxRetries - attempts + 1) * 1000)
+          Thread.sleep(1000)
           retry(attempts - 1)
       }
     }
