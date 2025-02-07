@@ -1382,13 +1382,13 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     *
     * @param url the URL to navigate to
     */
-  def navigateTo(url: String): Option[String] = {
+  def navigateTo(url: String): Unit = {
     withWebDriver { driver =>
       SensitiveData.withValue(url) { u =>
         driver.get(u)
-        Settings.getOpt("gwen.web.capabilities.goog:loggingPrefs.performance") map { _ =>
-          driverManager.performanceLog(u, driver)
-        } orNull
+        Settings.getOpt("gwen.web.capabilities.goog:loggingPrefs.performance") foreach { _ =>
+          addAttachment("performance-trace", "json", driverManager.performanceTrace(u, driver))
+        }
       }
     } (WebSettings.`gwen.web.capture.screenshots.enabled`)
   }

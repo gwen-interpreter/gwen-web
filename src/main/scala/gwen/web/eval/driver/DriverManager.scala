@@ -489,16 +489,16 @@ class DriverManager() extends LazyLogging {
     }
   }
 
-  def performanceLog(url: String, driver: WebDriver): String = {
+  def performanceTrace(url: String, driver: WebDriver): String = {
     StringPrinter.withPrinter { pw =>
       pw.println("{")
       pw.println(s"""  "url": "$url",""")
       pw.println(s"""  "trace": [""")
-      val logs = driver.manage().logs().get(LogType.PERFORMANCE).asScala
-      val count = logs.size
-      logs.zipWithIndex foreach { (log, i) => 
+      val entries = driver.manage().logs().get(LogType.PERFORMANCE).asScala
+      val count = entries.size
+      entries.zipWithIndex foreach { (entry, i) => 
         val mapper = new ObjectMapper()
-        Source.fromString(s"${mapper.readTree(log.getMessage).toPrettyString()}${if (i < ( count - 1)) "," else ""}").getLines foreach { line =>
+        Source.fromString(s"${mapper.readTree(entry.getMessage).toPrettyString()}${if (i < ( count - 1)) "," else ""}").getLines foreach { line =>
           pw.println(s"    $line")
         }
       }

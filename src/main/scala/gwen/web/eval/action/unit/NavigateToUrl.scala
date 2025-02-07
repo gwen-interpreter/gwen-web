@@ -30,9 +30,7 @@ class NavigateToUrl(url: String) extends UnitStepAction[WebContext] {
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     step tap { _ =>
       checkStepRules(step, BehaviorType.Action, ctx)
-      ctx.navigateTo(url) foreach { log => 
-        ctx.addAttachment("performance-log", "json", log)
-      }
+      ctx.navigateTo(url)
     }
   }
 
