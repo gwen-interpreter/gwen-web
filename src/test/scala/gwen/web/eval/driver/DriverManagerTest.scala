@@ -32,12 +32,12 @@ import org.openqa.selenium.WebDriver.Timeouts
 import org.openqa.selenium.WebDriver.Window
 import org.openqa.selenium.remote.RemoteWebDriver
 import org.scalatest.BeforeAndAfterEach
+import org.scalatest.matchers.should.Matchers
 import org.scalatestplus.mockito.MockitoSugar
 
 import scala.compiletime.uninitialized
 import scala.collection.mutable
 import scala.jdk.CollectionConverters._
-import org.scalatest.matchers.should.Matchers
 
 class DriverManagerTest extends BaseTest with Matchers with MockitoSugar with BeforeAndAfterEach {
 
@@ -47,10 +47,6 @@ class DriverManagerTest extends BaseTest with Matchers with MockitoSugar with Be
   var mockEdgeDriver: WebDriver = uninitialized
   var mockSafariDriver: WebDriver = uninitialized
   var mockRemoteDriver: RemoteWebDriver = uninitialized
-
-  override def afterEach(): Unit = {
-    DriverManager.releaseDriverPermit()
-  }
 
   "Firefox setting" should "load firefox driver" in {
     withSetting("gwen.target.browser", WebBrowser.firefox.toString) {

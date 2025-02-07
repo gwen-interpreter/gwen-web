@@ -54,23 +54,6 @@ import java.io.File
 import java.net.URL
 import java.{time => jt}
 import java.util.concurrent.TimeUnit
-import java.util.concurrent.Semaphore
-
-/** Driver manager companion. */
-object DriverManager extends LazyLogging {
-
-  /** Semaphore to limit number of permitted web drivers to max threads setting. */
-  private lazy val totalPermits = GwenSettings.`gwen.parallel.maxThreads`
-  private lazy val driverPermits = new Semaphore(totalPermits, true)
-  
-  def acquireDriverPermit(): Unit = driverPermits.acquire()
-  def releaseDriverPermit(): Unit = {
-    if (driverPermits.availablePermits() < totalPermits) {
-      driverPermits.release()
-    }
-  }
-
-}
 
 /**
   * Provides and manages access to the web drivers.
@@ -111,13 +94,9 @@ class DriverManager() extends LazyLogging {
   /** Quits a named browser and associated web driver instance. */
   def quit(name: String): Unit = {
     drivers.remove(name) foreach { driver =>
-      try {
-        logger.info(s"Closing browser session${ if(name == "primary") "" else s": $name"}")
-        driver.quit()
-        eventDispatcher.sessionClosed(driver)
-      } finally {
-        DriverManager.releaseDriverPermit()
-      }
+      logger.info(s"Closing browser session${ if(name == "primary") "" else s": $name"}")
+      driver.quit()
+      eventDispatcher.sessionClosed(driver)
     }
     session = "primary"
   }
@@ -147,24 +126,17 @@ class DriverManager() extends LazyLogging {
 
   /** Loads the selenium webdriver. */
   private [eval] def loadWebDriver: WebDriver = withGlobalSettings {
-    DriverManager.acquireDriverPermit()
-    try {
-      (WebSettings.`gwen.web.remote.url` match {
-        case Some(addr) =>
-          remoteDriver(addr)
-        case None =>
-          localDriver(WebSettings.`gwen.target.browser`)
-      }) tap { driver =>
-        eventDispatcher.sessionOpened(driver)
-        WebSettings.`gwen.web.browser.size` foreach { case (width, height) =>
-          logger.info(s"Resizing browser window to width $width and height $height")
-          driver.manage().window().setSize(new Dimension(width, height))
-        }
+    (WebSettings.`gwen.web.remote.url` match {
+      case Some(addr) =>
+        remoteDriver(addr)
+      case None =>
+        localDriver(WebSettings.`gwen.target.browser`)
+    }) tap { driver =>
+      eventDispatcher.sessionOpened(driver)
+      WebSettings.`gwen.web.browser.size` foreach { case (width, height) =>
+        logger.info(s"Resizing browser window to width $width and height $height")
+        driver.manage().window().setSize(new Dimension(width, height))
       }
-    } catch {
-      case e: Throwable =>
-        DriverManager.releaseDriverPermit()
-        throw e
     }
   }
 
