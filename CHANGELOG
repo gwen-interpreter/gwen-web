@@ -1,3 +1,11 @@
+4.3.1
+=====
+8 February 2025
+- Update Gwen core from v4.3.0 to v[4.3.2](https://github.com/gwen-interpreter/gwen/releases/tag/v4.3.2)
+  - Override dependencies (security update)
+    - Update json-smart from v2.5.0 to v2.5.1
+  - Add dependency overrides to main dependencies
+
 4.3.0
 =====
 8 February 2025

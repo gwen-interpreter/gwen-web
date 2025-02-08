@@ -1,8 +1,8 @@
 enablePlugins(GitVersioning)
 
 // gwen core & web versions
-val gwenVersion = "4.3.0"
-val gwenWebVersion = "4.3.0"
+val gwenVersion = "4.3.2"
+val gwenWebVersion = "4.3.1"
 
 git.baseVersion := gwenWebVersion
 git.useGitDescribe := true
@@ -51,6 +51,12 @@ lazy val mainDependencies = {
     "org.seleniumhq.selenium" % "selenium-java" % "4.28.1" excludeAll(
       ExclusionRule("org.seleniumhq.selenium", "selenium-ie-driver")
     )
+  ) ++ mainOverrides
+}
+
+lazy val mainOverrides = {
+  Seq(
+    "net.minidev" % "json-smart" % "2.5.1"
   )
 }
 
