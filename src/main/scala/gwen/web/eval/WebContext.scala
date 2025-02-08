@@ -558,6 +558,19 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     * Waits until a given condition is ready for a given number of seconds.
     * Errors on given timeout out seconds.
     *
+    * @param pollMsecs the polling interval in milliseconds
+    * @param timeoutSecs the number of seconds to wait before timing out
+    * @param reason a description of what is being waited on
+    * @param condition the boolean condition to wait for (until true)
+    */
+  override def waitUntil(pollMsecs: Long, timeoutSecs: Long, reason: String)(condition: => Boolean): Unit = {
+    waitUntil(Some(pollMsecs), Some(timeoutSecs), reason)(condition)
+  }
+
+  /**
+    * Waits until a given condition is ready for a given number of seconds.
+    * Errors on given timeout out seconds.
+    *
     * @param timeoutSecs the number of seconds to wait before timing out
     * @param reason a description of what is being waited on
     * @param condition the boolean condition to wait for (until true)
