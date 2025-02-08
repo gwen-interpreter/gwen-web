@@ -492,7 +492,7 @@ class DriverManager() extends LazyLogging {
   def performanceTrace(url: String, driver: WebDriver): String = {
     StringPrinter.withPrinter { pw =>
       pw.println("{")
-      pw.println(s"""  "url": "$url",""")
+      pw.println(s"""  "location": "$url",""")
       pw.println(s"""  "trace": [""")
       val entries = driver.manage().logs().get(LogType.PERFORMANCE).asScala
       val count = entries.size
