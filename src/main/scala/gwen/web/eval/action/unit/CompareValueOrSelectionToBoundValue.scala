@@ -24,6 +24,7 @@ import gwen.core.Formatting
 import gwen.core.behavior.BehaviorType
 import gwen.core.eval.ComparisonOperator
 import gwen.core.eval.action.UnitStepAction
+import gwen.core.eval.action.unit.Compare
 import gwen.core.node.GwenNode
 import gwen.core.node.gherkin.Step
 
@@ -39,23 +40,27 @@ class CompareValueOrSelectionToBoundValue(element: String, selection: Option[Dro
       val url = ctx.captureCurrentUrl
       ctx.topScope.set(element, url)
     }
-    val timeoutOverride = {
-      if (ctx.getLocatorBindingOpt(source).nonEmpty || ctx.getLocatorBindingOpt(element).nonEmpty) {
-        timeout
-      } else {
-        Some(Duration.Zero)
+    if (ctx.isWebBinding(element) || ctx.isWebBinding(source)) {
+      val timeoutOverride = {
+        if (ctx.getLocatorBindingOpt(source).nonEmpty || ctx.getLocatorBindingOpt(element).nonEmpty) {
+          timeout
+        } else {
+          Some(Duration.Zero)
+        }
       }
-    }
-    val expected = ctx.getBoundValue(source, timeout)
-    val actual = () => ctx.boundAttributeOrSelection(element, selection, timeout)
-    val formattedActual = () => Formatting.format(ctx.boundAttributeOrSelection(element, selection, timeout), trim, ignoreCase)
-    step tap { _ =>
-      ctx.perform {
-        val nameSuffix = selection.map(sel => s" $sel")
-        ctx.compare(s"$element${nameSuffix.getOrElse("")}", Formatting.format(expected, trim, ignoreCase), formattedActual, operator, negate, nameSuffix, message, timeoutOverride.map(_.toSeconds), step.assertionMode)
-      } getOrElse  {
-        actual()
+      val expected = ctx.getBoundValue(source, timeout)
+      val actual = () => ctx.boundAttributeOrSelection(element, selection, timeout)
+      val formattedActual = () => Formatting.format(ctx.boundAttributeOrSelection(element, selection, timeout), trim, ignoreCase)
+      step tap { _ =>
+        ctx.perform {
+          val nameSuffix = selection.map(sel => s" $sel")
+          ctx.compare(s"$element${nameSuffix.getOrElse("")}", Formatting.format(expected, trim, ignoreCase), formattedActual, operator, negate, nameSuffix, message, timeoutOverride.map(_.toSeconds), step.assertionMode)
+        } getOrElse  {
+          actual()
+        }
       }
+    } else {
+      new Compare(element, source, operator, negate, message, trim, ignoreCase).apply(parent, step, ctx)
     }
   }
 

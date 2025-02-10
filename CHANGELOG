@@ -1,3 +1,8 @@
+4.3.2
+=====
+10 February 2025
+- Do not run assertions in web browser when only simple literals and no JS or web elements are involved
+
 4.3.1
 =====
 8 February 2025

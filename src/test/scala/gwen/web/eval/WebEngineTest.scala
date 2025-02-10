@@ -677,6 +677,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
 
   "<reference A> should <operator> <reference B>" should "evaluate" in {
     matchers2.foreach { case (operator, source, expression) =>
+      doReturn(true).when(ctx).isWebBinding("<reference A>")
       doReturn(source).when(ctx).boundAttributeOrSelection("<reference A>", None, None)
       doReturn(expression).when(ctx).getBoundValue("<reference B>", None)
       doReturn(None).when(mockTopScope).getOpt("<reference>")
@@ -687,6 +688,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
   "<reference A> should not <operator> <reference B>" should "evaluate" in {
     matchers2.foreach { case (operator, src, expression) =>
       val source = src.replaceAll("value", "other")
+      doReturn(true).when(ctx).isWebBinding("<reference A>")
       doReturn(source).when(ctx).boundAttributeOrSelection("<reference A>", None, None)
       doReturn(expression).when(ctx).getBoundValue("<reference B>", None)
       doReturn(None).when(mockTopScope).getOpt("<reference>")
@@ -723,6 +725,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     val mockBinding = mock[LocatorBinding]
     doReturn(Some(mockBinding)).when(ctx).getLocatorBinding("<dropdown>", optional = false)
     matchers2.foreach { case (operator, source, expression) =>
+      doReturn(true).when(ctx).isWebBinding("<dropdown>")
       doReturn(source).when(ctx).boundAttributeOrSelection("<dropdown>", Option(DropdownSelection.text), None)
       doReturn(Some("<dropdown>")).when(mockTopScope).getOpt("<dropdown>")
       doReturn(expression).when(ctx).getBoundValue("<reference>", None)
@@ -736,6 +739,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     matchers2.foreach { case (operator, src, expression) =>
       val source = src.replaceAll("value", "other")
       doReturn(None).when(mockTopScope).findEntry(any())
+      doReturn(true).when(ctx).isWebBinding("<dropdown>")
       doReturn(source).when(ctx).boundAttributeOrSelection("<dropdown>", Option(DropdownSelection.text), None)
       doReturn(Some("<dropdown>")).when(mockTopScope).getOpt("<dropdown>")
       doReturn(expression).when(ctx).getBoundValue("<reference>", None)
@@ -772,6 +776,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     val mockBinding = mock[LocatorBinding]
     doReturn(Some(mockBinding)).when(ctx).getLocatorBinding("<dropdown>", optional = false)
     matchers2.foreach { case (operator, source, expression) =>
+      doReturn(true).when(ctx).isWebBinding("<dropdown>")
       doReturn(source).when(ctx).boundAttributeOrSelection("<dropdown>", Option(DropdownSelection.value), None)
       doReturn(Some("<dropdown>")).when(mockTopScope).getOpt("<dropdown>")
       doReturn(expression).when(ctx).getBoundValue("<reference>", None)
@@ -785,6 +790,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     matchers2.foreach { case (operator, src, expression) =>
       val source = src.replaceAll("value", "other")
       doReturn(None).when(mockTopScope).findEntry(any())
+      doReturn(true).when(ctx).isWebBinding("<dropdown>")
       doReturn(source).when(ctx).boundAttributeOrSelection("<dropdown>", Option(DropdownSelection.value), None)
       doReturn(Some("<dropdown>")).when(mockTopScope).getOpt("<dropdown>")
       doReturn(expression).when(ctx).getBoundValue("<reference>", None)

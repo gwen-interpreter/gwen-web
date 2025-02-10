@@ -287,6 +287,16 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
   }
 
   /**
+    * Checks whether or not a name is bound to a JS expresison or web element binding
+    *
+    * @param name the name to check
+    * @return true if is JS or web elmeent binding, false otherwise
+    */
+  def isWebBinding(name: String): Boolean = {
+    Try(getBinding(name).isInstanceOf[JSBinding[?]]).getOrElse(false) || getLocatorBindingOpt(name).nonEmpty
+  }
+
+  /**
     * Add a list of error attachments to the given step including the current
     * screenshot and all current error attachments.
     *
