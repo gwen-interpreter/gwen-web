@@ -22,5 +22,5 @@ package gwen.web.eval.driver.event
 trait WebSessionEventListener {
   
   def sessionOpened(event: WebSessionEvent): Unit = { }
-  def sessionClosed(event: WebSessionEvent): Unit = { }
+  def sessionClosing(event: WebSessionEvent): Unit = { }
 }

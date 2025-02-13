@@ -1,3 +1,11 @@
+4.3.3
+=====
+14 February 2025
+- Dispatch session closeing event before quitting session instead of after
+- Update Gwen core from v4.3.2 to v[4.3.3](https://github.com/gwen-interpreter/gwen/releases/tag/v4.3.3)
+  - Override dependencies (security update)
+    - Update json-smart from v2.5.1 to v2.5.2
+
 4.3.2
 =====
 10 February 2025

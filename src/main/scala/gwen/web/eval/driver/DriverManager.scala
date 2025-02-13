@@ -95,8 +95,11 @@ class DriverManager() extends LazyLogging {
   def quit(name: String): Unit = {
     drivers.remove(name) foreach { driver =>
       logger.info(s"Closing browser session${ if(name == "primary") "" else s": $name"}")
-      driver.quit()
-      eventDispatcher.sessionClosed(driver)
+      try {
+        eventDispatcher.sessionClosing(driver)
+      } finally {
+        driver.quit()
+      }
     }
     session = "primary"
   }

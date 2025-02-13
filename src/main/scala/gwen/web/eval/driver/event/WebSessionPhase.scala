@@ -17,4 +17,4 @@
 package gwen.web.eval.driver.event
 
 enum WebSessionPhase:
-  case opened, closed
+  case opened, closing

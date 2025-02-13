@@ -39,8 +39,8 @@ class WebSessionEventDispatcher extends LazyLogging {
     dispatchEvent(WebSessionPhase.opened, driver)
   }
 
-  def sessionClosed(driver: WebDriver): Unit = {
-    dispatchEvent(WebSessionPhase.closed, driver)
+  def sessionClosing(driver: WebDriver): Unit = {
+    dispatchEvent(WebSessionPhase.closing, driver)
   }
 
   private def dispatchEvent(phase: WebSessionPhase, driver: WebDriver): Unit = {
@@ -48,7 +48,7 @@ class WebSessionEventDispatcher extends LazyLogging {
       WebSessionEvent(phase, driver) tap { event =>
         phase match {
           case WebSessionPhase.opened => listener.sessionOpened(event)
-          case WebSessionPhase.closed => listener.sessionClosed(event)
+          case WebSessionPhase.closing => listener.sessionClosing(event)
         }
       }
     }

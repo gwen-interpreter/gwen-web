@@ -76,7 +76,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     }
   }
 
-  override def sessionClosed(event: WebSessionEvent): Unit = { 
+  override def sessionClosing(event: WebSessionEvent): Unit = { 
     envState.topScope.set(`gwen.web.sessionId`, null)
   }
 
