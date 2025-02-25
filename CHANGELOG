@@ -1,3 +1,15 @@
+4.4.0
+=====
+26 February 2025
+- Update Gwen core from v4.3.4 to v[4.4.0](https://github.com/gwen-interpreter/gwen/releases/tag/v4.4.0)
+  - Introduce elvis operator to support default values for undefined bindings
+    - Examples: 
+      `${unbound.string :? 'defaultValue'}`
+      `${unbound.string :? '${some.bound.value}'}`
+      `${unbound.string :? blank}`
+      `${unbound.boolean :? false}`
+      `${unbound.string1 :? '${unbound.string2 ?: blank}'}`
+
 4.3.4
 =====
 22 February 2025
