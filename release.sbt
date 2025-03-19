@@ -22,7 +22,7 @@ lazy val setReleaseVersion: ReleaseStep = setVersionOnly(_._1)
 releaseVersion := { ver =>
   Version(ver)
     .map(_.withoutQualifier)
-    .map(_.bump(releaseVersionBump.value).string).getOrElse(versionFormatError(ver))
+    .map(_.bump(releaseVersionBump.value).unapply).getOrElse(versionFormatError(ver))
 }
 
 releaseCrossBuild := false
