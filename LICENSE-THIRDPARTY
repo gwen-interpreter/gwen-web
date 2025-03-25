@@ -3,9 +3,6 @@ net.sourceforge.htmlcleaner
   | +-BSD License - http://www.opensource.org/licenses/bsd-license.php
 com.fasterxml.jackson.datatype
   +-jackson-datatype-jsr310:2.12.1
-  | +-no license specified
-com.google.code.findbugs
-  +-jsr305:3.0.2
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
 org.scala-lang
   +-scala-library:2.13.15
@@ -45,12 +42,9 @@ com.github.scopt
   | +-MIT - http://www.opensource.org/licenses/mit-license.php
 org.slf4j
   +-jul-to-slf4j:2.0.17
-  | +-no license specified
+  | +-MIT - https://opensource.org/license/mit
   +-slf4j-api:2.0.17
-  | +-no license specified
-org.checkerframework
-  +-checker-qual:3.43.0
-  | +-The MIT License - http://opensource.org/licenses/MIT
+  | +-MIT - https://opensource.org/license/mit
 org.nibor.autolink
   +-autolink:0.6.0
   | +-MIT License - http://www.opensource.org/licenses/mit-license.php
@@ -63,20 +57,17 @@ org.jetbrains
 com.google.errorprone
   +-error_prone_annotations:2.36.0
   | +-Apache 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-io.opentelemetry.semconv
-  +-opentelemetry-semconv:1.28.0-alpha
-  | +-The Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
 org.jline
   +-jline:3.29.0
-  | +-no license specified
+  | +-The BSD License - https://opensource.org/licenses/BSD-3-Clause
   +-jline-native:3.27.1
-  | +-no license specified
+  | +-The BSD License - https://opensource.org/licenses/BSD-3-Clause
   +-jline-terminal:3.27.1
-  | +-no license specified
+  | +-The BSD License - https://opensource.org/licenses/BSD-3-Clause
   +-jline-terminal-jni:3.27.1
-  | +-no license specified
+  | +-The BSD License - https://opensource.org/licenses/BSD-3-Clause
   +-jline-reader:3.27.1
-  | +-no license specified
+  | +-The BSD License - https://opensource.org/licenses/BSD-3-Clause
 net.minidev
   +-json-smart:2.5.2
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
@@ -115,145 +106,144 @@ com.lihaoyi
   | +-MIT - https://spdx.org/licenses/MIT.html
 org.antlr
   +-antlr4-runtime:4.7.2
-  | +-no license specified
+  | +-The BSD License - http://www.antlr.org/license.html
 org.jdom
   +-jdom2:2.0.6.1
   | +-Similar to Apache License but with the acknowledgment clause removed - https://raw.github.com/hunterhacker/jdom/master/LICENSE.txt
 net.bytebuddy
-  +-byte-buddy:1.15.11
-  | +-no license specified
+  +-byte-buddy:1.17.2
+  | +-Apache License, Version 2.0 - https://www.apache.org/licenses/LICENSE-2.0.txt
 com.fasterxml.jackson.dataformat
   +-jackson-dataformat-yaml:2.15.1
-  | +-no license specified
+  | +-The Apache Software License, Version 2.0 - https://www.apache.org/licenses/LICENSE-2.0.txt
 org.apache.commons
   +-commons-exec:1.4.0
-  | +-no license specified
+  | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0.txt
   +-commons-lang3:3.17.0
-  | +-no license specified
+  | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0.txt
   +-commons-text:1.13.0
-  | +-no license specified
+  | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0.txt
 com.google.j2objc
   +-j2objc-annotations:3.0.0
   | +-Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
 org.seleniumhq.selenium
-  +-selenium-json:4.29.0
+  +-selenium-json:4.30.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-os:4.29.0
+  +-selenium-os:4.30.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-remote-driver:4.29.0
+  +-selenium-remote-driver:4.30.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-devtools-v133:4.29.0
+  +-selenium-devtools-v133:4.30.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-firefox-driver:4.29.0
+  +-selenium-firefox-driver:4.30.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-edge-driver:4.29.0
+  +-selenium-edge-driver:4.30.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-devtools-v132:4.29.0
+  +-selenium-devtools-v132:4.30.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-safari-driver:4.29.0
+  +-selenium-safari-driver:4.30.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-http:4.29.0
+  +-selenium-http:4.30.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-java:4.29.0
+  +-selenium-java:4.30.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-api:4.29.0
+  +-selenium-api:4.30.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-devtools-v85:4.29.0
+  +-selenium-chrome-driver:4.30.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-chrome-driver:4.29.0
+  +-selenium-chromium-driver:4.30.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-chromium-driver:4.29.0
+  +-selenium-manager:4.30.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-manager:4.29.0
+  +-selenium-devtools-v134:4.30.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-support:4.29.0
-  | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-devtools-v131:4.29.0
+  +-selenium-support:4.30.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
 com.google.auto.service
   +-auto-service-annotations:1.1.1
-  | +-no license specified
+  | +-Apache 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
 commons-logging
   +-commons-logging:1.3.4
-  | +-no license specified
+  | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0.txt
 io.opentelemetry
-  +-opentelemetry-exporter-logging:1.46.0
+  +-opentelemetry-exporter-logging:1.48.0
   | +-The Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-opentelemetry-sdk-logs:1.46.0
+  +-opentelemetry-sdk-logs:1.48.0
   | +-The Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-opentelemetry-sdk-common:1.46.0
+  +-opentelemetry-sdk-common:1.48.0
   | +-The Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-opentelemetry-sdk-extension-autoconfigure:1.46.0
+  +-opentelemetry-sdk-extension-autoconfigure:1.48.0
   | +-The Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-opentelemetry-api:1.46.0
+  +-opentelemetry-api:1.48.0
   | +-The Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-opentelemetry-sdk-trace:1.46.0
+  +-opentelemetry-sdk-trace:1.48.0
   | +-The Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-opentelemetry-sdk-extension-autoconfigure-spi:1.46.0
+  +-opentelemetry-sdk-extension-autoconfigure-spi:1.48.0
   | +-The Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-opentelemetry-context:1.46.0
+  +-opentelemetry-context:1.48.0
   | +-The Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-opentelemetry-sdk:1.46.0
+  +-opentelemetry-sdk:1.48.0
   | +-The Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-opentelemetry-sdk-metrics:1.46.0
-  | +-The Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-opentelemetry-api-incubator:1.46.0-alpha
+  +-opentelemetry-sdk-metrics:1.48.0
   | +-The Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
 com.vladsch.flexmark
   +-flexmark-util-options:0.62.2
-  | +-no license specified
+  | +-BSD 2-Clause License - http://opensource.org/licenses/BSD-2-Clause
   +-flexmark-ext-superscript:0.62.2
-  | +-no license specified
+  | +-BSD 2-Clause License - http://opensource.org/licenses/BSD-2-Clause
   +-flexmark-util-misc:0.62.2
-  | +-no license specified
+  | +-BSD 2-Clause License - http://opensource.org/licenses/BSD-2-Clause
   +-flexmark-jira-converter:0.62.2
-  | +-no license specified
+  | +-BSD 2-Clause License - http://opensource.org/licenses/BSD-2-Clause
   +-flexmark-util:0.62.2
-  | +-no license specified
+  | +-BSD 2-Clause License - http://opensource.org/licenses/BSD-2-Clause
   +-flexmark-util-format:0.62.2
-  | +-no license specified
+  | +-BSD 2-Clause License - http://opensource.org/licenses/BSD-2-Clause
   +-flexmark-ext-yaml-front-matter:0.62.2
-  | +-no license specified
+  | +-BSD 2-Clause License - http://opensource.org/licenses/BSD-2-Clause
   +-flexmark-ext-emoji:0.62.2
-  | +-no license specified
+  | +-BSD 2-Clause License - http://opensource.org/licenses/BSD-2-Clause
   +-flexmark-util-builder:0.62.2
-  | +-no license specified
+  | +-BSD 2-Clause License - http://opensource.org/licenses/BSD-2-Clause
   +-flexmark-util-html:0.62.2
-  | +-no license specified
+  | +-BSD 2-Clause License - http://opensource.org/licenses/BSD-2-Clause
   +-flexmark-ext-autolink:0.62.2
-  | +-no license specified
+  | +-BSD 2-Clause License - http://opensource.org/licenses/BSD-2-Clause
   +-flexmark-util-dependency:0.62.2
-  | +-no license specified
+  | +-BSD 2-Clause License - http://opensource.org/licenses/BSD-2-Clause
   +-flexmark-util-ast:0.62.2
-  | +-no license specified
+  | +-BSD 2-Clause License - http://opensource.org/licenses/BSD-2-Clause
   +-flexmark-ext-wikilink:0.62.2
-  | +-no license specified
+  | +-BSD 2-Clause License - http://opensource.org/licenses/BSD-2-Clause
   +-flexmark-ext-ins:0.62.2
-  | +-no license specified
+  | +-BSD 2-Clause License - http://opensource.org/licenses/BSD-2-Clause
   +-flexmark-ext-gfm-strikethrough:0.62.2
-  | +-no license specified
+  | +-BSD 2-Clause License - http://opensource.org/licenses/BSD-2-Clause
   +-flexmark:0.62.2
-  | +-no license specified
+  | +-BSD 2-Clause License - http://opensource.org/licenses/BSD-2-Clause
   +-flexmark-util-sequence:0.62.2
-  | +-no license specified
+  | +-BSD 2-Clause License - http://opensource.org/licenses/BSD-2-Clause
   +-flexmark-util-collection:0.62.2
-  | +-no license specified
+  | +-BSD 2-Clause License - http://opensource.org/licenses/BSD-2-Clause
   +-flexmark-ext-gfm-tasklist:0.62.2
-  | +-no license specified
+  | +-BSD 2-Clause License - http://opensource.org/licenses/BSD-2-Clause
   +-flexmark-util-data:0.62.2
-  | +-no license specified
+  | +-BSD 2-Clause License - http://opensource.org/licenses/BSD-2-Clause
   +-flexmark-ext-anchorlink:0.62.2
-  | +-no license specified
+  | +-BSD 2-Clause License - http://opensource.org/licenses/BSD-2-Clause
   +-flexmark-ext-tables:0.62.2
-  | +-no license specified
+  | +-BSD 2-Clause License - http://opensource.org/licenses/BSD-2-Clause
   +-flexmark-util-visitor:0.62.2
-  | +-no license specified
+  | +-BSD 2-Clause License - http://opensource.org/licenses/BSD-2-Clause
 com.google.guava
   +-listenablefuture:9999.0-empty-to-avoid-conflict-with-guava
-  | +-no license specified
-  +-guava:33.4.0-jre
-  | +-no license specified
-  +-failureaccess:1.0.2
+  | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
+  +-guava:33.4.5-jre
+  | +-Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
+  +-failureaccess:1.0.3
+  | +-Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
+org.gweninterpreter
+  +-gwen:4.4.1-SNAPSHOT
   | +-no license specified
 org.scala-lang.modules
   +-scala-asm:9.7.1-scala-1
@@ -263,24 +253,24 @@ ua.co.k
   | +-MIT License - http://www.opensource.org/licenses/mit-license.php
 org.apache.pdfbox
   +-pdfbox-io:3.0.4
-  | +-no license specified
+  | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0.txt
   +-fontbox:3.0.4
-  | +-no license specified
+  | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0.txt
   +-pdfbox:3.0.4
-  | +-no license specified
+  | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0.txt
 io.cucumber
   +-gherkin:32.0.0
-  | +-no license specified
+  | +-MIT License - http://www.opensource.org/licenses/mit-license
   +-messages:27.2.0
-  | +-no license specified
+  | +-MIT License - http://www.opensource.org/licenses/mit-license
 commons-codec
   +-commons-codec:1.18.0
-  | +-no license specified
+  | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0.txt
 com.typesafe.scala-logging
   +-scala-logging_3:3.9.5
   | +-Apache 2.0 License - http://www.apache.org/licenses/LICENSE-2.0.html
 ch.qos.logback
   +-logback-classic:1.5.17
-  | +-no license specified
+  | +-Eclipse Public License - v 1.0 - http://www.eclipse.org/legal/epl-v10.html
   +-logback-core:1.5.17
-  | +-no license specified
+  | +-Eclipse Public License - v 1.0 - http://www.eclipse.org/legal/epl-v10.html

@@ -1,3 +1,10 @@
+4.4.2
+=====
+25 March 2025
+- Update Gwen core from v4.4.1 to v[4.4.2](https://github.com/gwen-interpreter/gwen/releases/tag/v4.4.2)
+  - Validate step level annotations to ensure name casing is correct
+- Update selenium-java from v4.29.0 to v4.30.0
+
 4.4.1
 =====
 19 March 2025
