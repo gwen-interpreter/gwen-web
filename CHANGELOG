@@ -1,3 +1,9 @@
+4.4.3
+=====
+3 April 2025
+- Update Gwen core from v4.4.2 to v[4.4.3](https://github.com/gwen-interpreter/gwen/releases/tag/v4.4.3)
+  - Introduce scoped iteration boundary to manage iteration implicits
+
 4.4.2
 =====
 25 March 2025
