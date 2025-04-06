@@ -111,7 +111,7 @@ org.jdom
   +-jdom2:2.0.6.1
   | +-Similar to Apache License but with the acknowledgment clause removed - https://raw.github.com/hunterhacker/jdom/master/LICENSE.txt
 net.bytebuddy
-  +-byte-buddy:1.17.2
+  +-byte-buddy:1.17.5
   | +-Apache License, Version 2.0 - https://www.apache.org/licenses/LICENSE-2.0.txt
 com.fasterxml.jackson.dataformat
   +-jackson-dataformat-yaml:2.15.1
@@ -127,37 +127,37 @@ com.google.j2objc
   +-j2objc-annotations:3.0.0
   | +-Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
 org.seleniumhq.selenium
-  +-selenium-json:4.30.0
+  +-selenium-json:4.31.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-os:4.30.0
+  +-selenium-os:4.31.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-remote-driver:4.30.0
+  +-selenium-remote-driver:4.31.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-devtools-v133:4.30.0
+  +-selenium-devtools-v133:4.31.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-firefox-driver:4.30.0
+  +-selenium-firefox-driver:4.31.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-edge-driver:4.30.0
+  +-selenium-edge-driver:4.31.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-devtools-v132:4.30.0
+  +-selenium-safari-driver:4.31.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-safari-driver:4.30.0
+  +-selenium-http:4.31.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-http:4.30.0
+  +-selenium-java:4.31.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-java:4.30.0
+  +-selenium-api:4.31.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-api:4.30.0
+  +-selenium-chrome-driver:4.31.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-chrome-driver:4.30.0
+  +-selenium-devtools-v135:4.31.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-chromium-driver:4.30.0
+  +-selenium-chromium-driver:4.31.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-manager:4.30.0
+  +-selenium-manager:4.31.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-devtools-v134:4.30.0
+  +-selenium-devtools-v134:4.31.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-selenium-support:4.30.0
+  +-selenium-support:4.31.0
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
 com.google.auto.service
   +-auto-service-annotations:1.1.1
@@ -238,13 +238,10 @@ com.vladsch.flexmark
 com.google.guava
   +-listenablefuture:9999.0-empty-to-avoid-conflict-with-guava
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-  +-guava:33.4.5-jre
+  +-guava:33.4.6-jre
   | +-Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
   +-failureaccess:1.0.3
   | +-Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-org.gweninterpreter
-  +-gwen:4.4.1-SNAPSHOT
-  | +-no license specified
 org.scala-lang.modules
   +-scala-asm:9.7.1-scala-1
   | +-BSD 3-clause - http://opensource.org/licenses/BSD-3-Clause
