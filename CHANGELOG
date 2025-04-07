@@ -1,3 +1,9 @@
+4.4.5
+=====
+7 April 2025
+- Update Gwen core from v4.4.3 to v[4.4.4](https://github.com/gwen-interpreter/gwen/releases/tag/v4.4.4)
+  - Fix iteration boundary in ForEach DSL
+
 4.4.4
 =====
 6 April 2025
