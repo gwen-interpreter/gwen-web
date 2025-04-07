@@ -7,11 +7,7 @@ val gwenWebVersion = "4.4.5"
 git.baseVersion := gwenWebVersion
 git.useGitDescribe := true
 
-lazy val gwenSrc = ProjectRef(file("../gwen"), "gwen")
-lazy val gwenLib = "org.gweninterpreter" % "gwen" % gwenVersion
-
 val gwenWeb = (project in file("."))
-  .sourceDependency(gwenSrc, gwenLib)
   .settings(
     projectSettings,
     libraryDependencies ++= mainDependencies ++ testDependencies
@@ -48,6 +44,7 @@ lazy val projectSettings = Seq(
 
 lazy val mainDependencies = {
   Seq(
+    "org.gweninterpreter" % "gwen" % gwenVersion,
     "org.seleniumhq.selenium" % "selenium-java" % "4.31.0" excludeAll(
       ExclusionRule("org.seleniumhq.selenium", "selenium-ie-driver")
     )
@@ -56,7 +53,6 @@ lazy val mainDependencies = {
 
 lazy val mainOverrides = {
   Seq(
-    "net.minidev" % "json-smart" % "2.5.2"
   )
 }
 
