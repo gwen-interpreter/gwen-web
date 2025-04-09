@@ -216,14 +216,14 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
           evaluate(new DryValueBinding(binding.name, "webElementText", this).resolve()) {
             Try(getElementText(binding)) match {
               case Success(text) => 
-                text.getOrElse(getCachedOrBoundValue(name))
+                text.getOrElse(getWebBoundValue(name))
               case Failure(e) => throw e
             }
           }
-        case _ => getCachedOrBoundValue(name)
+        case _ => getWebBoundValue(name)
       }
     } else {
-      getCachedOrBoundValue(name)
+      getWebBoundValue(name)
     }
 
   }
@@ -233,13 +233,21 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     *
     * @param name the name of the bound attribute to find
     */
-  def getCachedOrBoundValue(name: String): String = {
+  def getWebBoundValue(name: String): String = {
     getCachedWebElement(s"${JSBinding.key(name)}/param/webElement") map { webElement =>
       val javascript = interpolate(topScope.get(JSBinding.key(name)))
       val jsFunction = jsFunctionWrapper("element", "arguments[0]", s"return $javascript")
       Option(applyJS(jsFunction, webElement)).map(_.toString).getOrElse("")
     } getOrElse {
-      super.getBoundValue(name)
+      try {
+        super.getBoundValue(name)
+      } catch {
+        case e: UnboundAttributeException =>
+          ElementFunctionBinding.find(name, this) match {
+            case Success(binding) => binding.resolve()
+            case _ => throw e
+          }
+      }
     }
   }
 
@@ -452,6 +460,9 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
               result = Some(Success(res))
               true
             } catch {
+              case e: FunctionException =>
+                result = Some(Failure(e))
+                true
               case e: Throwable =>
                 lapsed = Duration.fromNanos(System.nanoTime() - start).toSeconds
                 if (e.isInstanceOf[InvalidElementStateException] || e.isInstanceOf[NoSuchElementException] || e.isInstanceOf[NotFoundOrInteractableException]) {
@@ -1033,6 +1044,12 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
         moveToAndCapture(driver, webElement)
       }
       applyJS(jsFunctionWrapper("element", "arguments[0]", javascript), webElement)
+    }
+  }
+
+  def evaluateElementFunction(javascript: String, binding: LocatorBinding): Option[String] = {
+    withWebElement(binding, s"trying to apply JS function to web element: ${binding.displayName}") { webElement =>
+      String.valueOf(applyJS(javascript, webElement))
     }
   }
 

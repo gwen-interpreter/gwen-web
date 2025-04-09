@@ -280,7 +280,8 @@ class WebEngine extends EvalEngine[WebContext] {
         new DownloadCurrentUrlToFile(Some(filepath), None, defaultConditionTimeoutSecs)
       case r"""I download the current URL to (.+? file)$filepathRef""" =>
         new DownloadCurrentUrlToFile(None, Some(filepathRef), defaultConditionTimeoutSecs)
-      
+      case r"""(.+?)$attribute is defined by (.+?)$function applied to (.+?)$element""" if !element.contains("\"") =>
+        new BindElementFunction(attribute, function, element, step.isMasked)
       case _ => 
         super.translateStep(step)
     }

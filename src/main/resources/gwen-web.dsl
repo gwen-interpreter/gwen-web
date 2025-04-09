@@ -467,6 +467,7 @@ I reset my <name> setting
 <name> is defined by js "<expression>"
 <name> is defined by <javascriptRef> applied to "<argument>"
 <name> is defined by <javascriptRef> applied to "<arguments>" delimited by "-"
+<name> is defined by <javascriptRef> applied to <element>
 <name> is defined by system process "<process>"
 <name> is defined by system process "<process>" delimited by "<delimiter>"
 <name> is defined by unix system process "<process>"

@@ -44,7 +44,7 @@ class WebEnvironmentTest extends BaseTest with Matchers with MockitoSugar {
   "JavaScript binding on dry run" should "not resolve" in {
     val ctx = newCtx(true)
     ctx.topScope.set("username/javascript", "$('#username').val()")
-    ctx.getCachedOrBoundValue("username") should be ("$[dryValue:javascript]")
+    ctx.getWebBoundValue("username") should be ("$[dryValue:javascript]")
   }
   
   "XPath binding" should "resolve" in {
@@ -53,9 +53,9 @@ class WebEnvironmentTest extends BaseTest with Matchers with MockitoSugar {
     ctx.topScope.set("username/xpath/source", "xml")
     ctx.topScope.set("username/xpath/targetType", "text")
     ctx.topScope.set("username/xpath/expression", "users/user")
-    ctx.getCachedOrBoundValue("username") should be ("Gwen")
+    ctx.getWebBoundValue("username") should be ("Gwen")
     ctx.topScope.set("username/xpath/expression", "users/user[2]")
-    ctx.getCachedOrBoundValue("username") should be ("Stacey")
+    ctx.getWebBoundValue("username") should be ("Stacey")
   }
 
   "XPath binding on dry run" should "not resolve" in {
@@ -64,9 +64,9 @@ class WebEnvironmentTest extends BaseTest with Matchers with MockitoSugar {
     ctx.topScope.set("username/xpath/source", "xml")
     ctx.topScope.set("username/xpath/targetType", "text")
     ctx.topScope.set("username/xpath/expression", "users/user")
-    ctx.getCachedOrBoundValue("username") should be ("$[dryValue:xpath]")
+    ctx.getWebBoundValue("username") should be ("$[dryValue:xpath]")
     ctx.topScope.set("username/xpath/expression", "users/user[2]")
-    ctx.getCachedOrBoundValue("username") should be ("$[dryValue:xpath]")
+    ctx.getWebBoundValue("username") should be ("$[dryValue:xpath]")
   }
   
   "Regex binding" should "resolve" in {
@@ -74,10 +74,10 @@ class WebEnvironmentTest extends BaseTest with Matchers with MockitoSugar {
     ctx.topScope.set("url", "http://www.domain.com?param1=one&param2=two")
     ctx.topScope.set("param1/regex/source", "url")
     ctx.topScope.set("param1/regex/expression", "param1=(.+)&")
-    ctx.getCachedOrBoundValue("param1") should be ("one")
+    ctx.getWebBoundValue("param1") should be ("one")
     ctx.topScope.set("param2/regex/source", "url")
     ctx.topScope.set("param2/regex/expression", "param2=(.+)")
-    ctx.getCachedOrBoundValue("param2") should be ("two")
+    ctx.getWebBoundValue("param2") should be ("two")
   }
 
   "Regex binding on dry run" should "not resolve" in {
@@ -85,10 +85,10 @@ class WebEnvironmentTest extends BaseTest with Matchers with MockitoSugar {
     ctx.topScope.set("url", "http://www.domain.com?param1=one&param2=two")
     ctx.topScope.set("param1/regex/source", "url")
     ctx.topScope.set("param1/regex/expression", "param1=(.+)&")
-    ctx.getCachedOrBoundValue("param1") should be ("$[dryValue:regex]")
+    ctx.getWebBoundValue("param1") should be ("$[dryValue:regex]")
     ctx.topScope.set("param2/regex/source", "url")
     ctx.topScope.set("param2/regex/expression", "param2=(.+)")
-    ctx.getCachedOrBoundValue("param2") should be ("$[dryValue:regex]")
+    ctx.getWebBoundValue("param2") should be ("$[dryValue:regex]")
   }
   
   "Json path binding" should "resolve" in {
@@ -96,7 +96,7 @@ class WebEnvironmentTest extends BaseTest with Matchers with MockitoSugar {
     ctx.topScope.set("ctx", """{"scopes":[{"scope":"login","atts":[{"username":"Gwen"}]}]}""")
     ctx.topScope.set("username/json path/source", "ctx")
     ctx.topScope.set("username/json path/expression", "$.scopes[0].atts[0].username")
-    ctx.getCachedOrBoundValue("username") should be ("Gwen")
+    ctx.getWebBoundValue("username") should be ("Gwen")
   }
 
   "Json path binding on dry run" should "not resolve" in {
@@ -104,25 +104,25 @@ class WebEnvironmentTest extends BaseTest with Matchers with MockitoSugar {
     ctx.topScope.set("ctx", """{"scopes":[{"scope":"login","atts":[{"username":"Gwen"}]}]}""")
     ctx.topScope.set("username/json path/source", "ctx")
     ctx.topScope.set("username/json path/expression", "$.scopes[0].atts[0].username")
-    ctx.getCachedOrBoundValue("username") should be ("$[dryValue:json path]")
+    ctx.getWebBoundValue("username") should be ("$[dryValue:json path]")
   }
   
   "Sysproc binding" should "resolve" in {
     val ctx = newCtx()
     ctx.topScope.set("hostname/sysproc", "hostname")
-    ctx.getCachedOrBoundValue("hostname") should not be ("")
+    ctx.getWebBoundValue("hostname") should not be ("")
   }
 
   "Sysproc binding on dry run" should "not resolve" in {
     val ctx = newCtx(true)
     ctx.topScope.set("hostname/sysproc", "local command")
-    ctx.getCachedOrBoundValue("hostname") should be ("$[dryValue:sysproc]")
+    ctx.getWebBoundValue("hostname") should be ("$[dryValue:sysproc]")
   }
   
   "File binding on dry run" should "not resolve" in {
     val ctx = newCtx(true)
     ctx.topScope.set("xml/file", "path-to/file.xml")
-    ctx.getCachedOrBoundValue("xml") should be ("$[dryValue:file]")
+    ctx.getWebBoundValue("xml") should be ("$[dryValue:file]")
   }
   
   "Sql binding on dry run" should "not resolve" in {
@@ -131,7 +131,7 @@ class WebEnvironmentTest extends BaseTest with Matchers with MockitoSugar {
         val ctx = newCtx(true)
         ctx.topScope.set("username/sql/selectStmt", "select username from users")
         ctx.topScope.set("username/sql/dbName", "subscribers")
-        ctx.getCachedOrBoundValue("username") should be ("$[dryValue:sql]")
+        ctx.getWebBoundValue("username") should be ("$[dryValue:sql]")
       }
     }
   }
