@@ -3,6 +3,7 @@
 10 April 2025
 - Add DSL step to support element function bindings
   `<name> is defined by <javascriptRef> applied to <element>`
+- Change default web element highlight border from 2px to 1px
 - Update Gwen core from v4.4.5 to v[4.5.0](https://github.com/gwen-interpreter/gwen/releases/tag/v4.5.0)
   - Add suppot for creating JS wrapper functions for named argument bindings
 

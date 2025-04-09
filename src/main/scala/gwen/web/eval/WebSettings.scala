@@ -209,7 +209,7 @@ object WebSettings extends LazyLogging {
 
   /**
     * Provides access to the `gwen.web.highlight.style` setting used to control how
-    * elements are highlighted (default value is `background: yellow; border: 2px solid gold;`).
+    * elements are highlighted (default value is `background: yellow; border: 1px solid gold;`).
     */
   def `gwen.web.highlight.style`: String = {
     Settings.get("gwen.web.highlight.style")

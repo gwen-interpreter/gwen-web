@@ -243,7 +243,7 @@ com.google.guava
   +-failureaccess:1.0.3
   | +-Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
 org.gweninterpreter
-  +-gwen:4.4.5
+  +-gwen:4.5.0
   | +-Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.html
 org.scala-lang.modules
   +-scala-asm:9.7.1-scala-1

@@ -453,7 +453,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
             try {
               val webElement = binding.resolve()
               tryMoveTo(webElement)
-              if (!selector.isContainer) {
+              if (!selector.isContainer && selector.index.isEmpty) {
                 highlightElement(webElement)
               }
               val res = operation(webElement)
