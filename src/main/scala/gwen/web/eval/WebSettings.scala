@@ -74,6 +74,7 @@ object WebSettings extends LazyLogging {
     `gwen.web.remote.connectTimeout.seconds`
     `gwen.web.sendKeys.clearFirst`
     `gwen.web.sendKeys.clickFirst`
+    `gwen.web.session.expired.autoReplace`
     `gwen.web.suppress.images`
     `gwen.web.throttle.msecs`
     `gwen.web.useragent`
@@ -190,7 +191,11 @@ object WebSettings extends LazyLogging {
     * or not the web driver should maximize the browser window (default value is `false`).
     */
   def `gwen.web.maximize`: Boolean = {
-    Settings.getBoolean("gwen.web.maximize")
+    Settings.getBoolean("gwen.web.maximize") tap { enabled => 
+      if (enabled) {
+        Deprecation.log("Setting", "gwen.web.maximize = true", Some("gwen.web.browser.size = 1920x1080 (or desired size)"))
+      }
+    }
   }
 
   /**
@@ -432,23 +437,18 @@ object WebSettings extends LazyLogging {
 
   /**
     * Provides access to the `gwen.web.browser.size` setting used to set the browser window size.
-    * Expects value matching `width x height (e:g 1200 x 800 for height 1200 and width 800).
-    * This setting is only applicable if the gwen.web.maximize` is not set to `true`.
+    * Expects value matching `width x height (e:g 1920 x 1080 for height 1920 and width 1080).
     */
   def `gwen.web.browser.size`: Option[(Int, Int)] = {
-    if (!`gwen.web.maximize`) {
-      Settings.getOpt("gwen.web.browser.size") map { value =>
-        val values = value.split('x')
-        if (values != null && values.size == 2) {
-          Try((values(0).trim.toInt, values(1).trim.toInt)) getOrElse {
-            Errors.invalidSettingError("gwen.web.browser.size", value, "width and height must be integers")
-          }
-        } else {
-          Errors.invalidSettingError("gwen.web.browser.size", value, "width x height expected")
+    Settings.getOpt("gwen.web.browser.size") map { value =>
+      val values = value.split('x')
+      if (values != null && values.size == 2) {
+        Try((values(0).trim.toInt, values(1).trim.toInt)) getOrElse {
+          Errors.invalidSettingError("gwen.web.browser.size", value, "width and height must be integers")
         }
+      } else {
+        Errors.invalidSettingError("gwen.web.browser.size", value, "width x height expected")
       }
-    } else {
-      None
     }
   }
 
@@ -466,6 +466,14 @@ object WebSettings extends LazyLogging {
     */
   def `gwen.web.sendKeys.clickFirst`: Boolean = {
     Settings.getBoolean("gwen.web.sendKeys.clickFirst")
+  }
+
+  /**
+    * Provides access to the `gwen.web.session.expired.autoReplace` setting used to control whether
+    * or not Gwen will auto create a new session if current one has expired. (default value is `true`).
+    */
+  def `gwen.web.session.expired.autoReplace`: Boolean = {
+    Settings.getBoolean("gwen.web.session.expired.autoReplace")
   }
 
   /**

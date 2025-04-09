@@ -1,8 +1,8 @@
 enablePlugins(GitVersioning)
 
 // gwen core & web versions
-val gwenVersion = "4.4.4"
-val gwenWebVersion = "4.4.5"
+val gwenVersion = "4.4.5"
+val gwenWebVersion = "4.5.0"
 
 git.baseVersion := gwenWebVersion
 git.useGitDescribe := true
@@ -14,7 +14,7 @@ val gwenWeb = (project in file("."))
   )
 
 resolvers ++= Seq(
-  "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"
+  "Sonatype Snapshots" at "https://s01.oss.sonatype.org/content/repositories/snapshots/"
 )
 
 lazy val projectSettings = Seq(

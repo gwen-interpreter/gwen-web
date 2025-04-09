@@ -45,6 +45,7 @@ import org.openqa.selenium.edge.EdgeOptions
 import org.openqa.selenium.firefox.{FirefoxDriver, FirefoxOptions, FirefoxProfile}
 import org.openqa.selenium.logging.LogEntry
 import org.openqa.selenium.logging.LogType
+import org.openqa.selenium.NoSuchSessionException
 import org.openqa.selenium.remote.HttpCommandExecutor
 import org.openqa.selenium.remote.LocalFileDetector
 import org.openqa.selenium.remote.RemoteWebDriver
@@ -124,7 +125,13 @@ class DriverManager() extends LazyLogging {
     * @param f the function to perform
     */
   def withWebDriver[T](f: WebDriver => T): T = {
-      f(webDriver)
+      try {
+        f(webDriver)
+      } catch {
+        case _: NoSuchSessionException if WebSettings.`gwen.web.session.expired.autoReplace` =>
+          Try(quit(session))
+          f(webDriver)
+      }
   }
 
   /** Loads the selenium webdriver. */
