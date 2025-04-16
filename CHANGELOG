@@ -1,7 +1,7 @@
 4.7.1
 =====
 16 April 2025
-- Use GraphicsEnvironmennt instead of Toolkit to get current screen size
+- Use Selenium maximize function on driver when maximizing windows
 
 4.7.0
 =====

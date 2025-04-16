@@ -50,7 +50,6 @@ import org.openqa.selenium.support.ui.ExpectedConditions
 import org.openqa.selenium.support.ui.FluentWait
 import org.openqa.selenium.support.ui.Select
 
-import java.awt.GraphicsEnvironment
 import java.io.File
 
 /**
@@ -1180,9 +1179,8 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
   def maximizeWindow(): Unit = {
     withWebDriver { driver =>
       logger.info("Maximising browser window")
-      val displayMode = GraphicsEnvironment.getLocalGraphicsEnvironment.getDefaultScreenDevice.getDisplayMode
-      positionWindow(0,0)
-      resizeWindow(displayMode.getWidth, displayMode.getHeight)
+      driver.manage().window().setPosition(new Point(0, 0))
+      driver.manage().window().maximize()
     }
   }
 
