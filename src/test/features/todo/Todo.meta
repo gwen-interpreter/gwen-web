@@ -4,6 +4,7 @@ Feature: TodoMVC meta
   @Context
   Scenario: I launch the Todo app
     Given I resize the window to width 800 and height 800
+      And I set the window position to x 40 and y 40
      When I navigate to "https://todomvc.com/examples/react/dist/"
      Then I should be on the Todo page
 

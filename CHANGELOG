@@ -1,3 +1,14 @@
+4.7.0
+=====
+16 April 2025
+- Add setting to specify main browser window position
+  - `gwen.web.browser.position` = x,y (eg: 0,0 for top left)
+- Add DSL for setting current window position
+  - `I set the window position to x <x> and y <y>`
+- Restore maximise setting and DSL (thsse now explicitly set dimension to screen size and position to top left)
+  - `gwen.web.maximize`
+  - `I <maximize|maximise> the window`
+
 4.6.0
 =====
 10 April 2025

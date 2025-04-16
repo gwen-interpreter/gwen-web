@@ -34,6 +34,7 @@ import org.mockito.Mockito._
 import org.openqa.selenium._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
+import org.scalatest.matchers.should.Matchers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchers.same
 import org.openqa.selenium.interactions.{Action, Actions}
@@ -43,8 +44,8 @@ import scala.compiletime.uninitialized
 import scala.concurrent.duration.Duration
 import scala.jdk.CollectionConverters._
 
+import java.awt.Toolkit
 import java.io.File
-import org.scalatest.matchers.should.Matchers
 
 class WebContextTest extends BaseTest with Matchers with MockitoSugar with BeforeAndAfterEach {
 
@@ -1544,13 +1545,24 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     verify(mockWindow).setSize(new Dimension(300, 400))
   }
 
+  "WebContext.positionWindow" should "position the window" in {
+    val mockDriverOptions = mock[WebDriver.Options]
+    val mockWindow = mock[WebDriver.Window]
+    when(mockWebDriver.manage).thenReturn(mockDriverOptions)
+    when(mockDriverOptions.window).thenReturn(mockWindow)
+    ctx.positionWindow(40, 40)
+    verify(mockWindow).setPosition(new Point(40, 40))
+  }
+
   "WebContext.maximizeWindow" should "maximize the window" in {
     val mockDriverOptions = mock[WebDriver.Options]
     val mockWindow = mock[WebDriver.Window]
     when(mockWebDriver.manage).thenReturn(mockDriverOptions)
     when(mockDriverOptions.window).thenReturn(mockWindow)
     ctx.maximizeWindow()
-    verify(mockWindow).maximize()
+    val screenSize = Toolkit.getDefaultToolkit.getScreenSize
+    verify(mockWindow).setPosition(new Point(0, 0))
+    verify(mockWindow).setSize(new Dimension(screenSize.width, screenSize.height))
   }
 
   "ctx.captureCurrentUrl" should "capture url" in {

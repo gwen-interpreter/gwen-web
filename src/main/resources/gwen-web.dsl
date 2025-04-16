@@ -712,6 +712,7 @@ I capture element screenshot of <element>
 <name> is defined in the <dbName> database by sql "<selectStmt>"
 I update the <dbName> database by sql "<updateStmt>"
 I resize the window to width <w> and height <h>
+I set the window position to x <x> and y <y>
 I maximize the window
 I maximise the window
 <step> for each <element> located by id "<expression>"

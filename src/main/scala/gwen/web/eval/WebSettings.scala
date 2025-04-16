@@ -49,6 +49,7 @@ object WebSettings extends LazyLogging {
     `gwen.web.assertions.maxStrikes`
     `gwen.web.browser.headless`
     `gwen.web.browser.size`
+    `gwen.web.browser.position`
     `gwen.web.capabilities`
     `gwen.web.capture.screenshots.enabled`
     `gwen.web.capture.screenshots.duplicates`
@@ -191,11 +192,7 @@ object WebSettings extends LazyLogging {
     * or not the web driver should maximize the browser window (default value is `false`).
     */
   def `gwen.web.maximize`: Boolean = {
-    Settings.getBoolean("gwen.web.maximize") tap { enabled => 
-      if (enabled) {
-        Deprecation.log("Setting", "gwen.web.maximize = true", Some("gwen.web.browser.size = 1920x1080 (or desired size)"))
-      }
-    }
+    Settings.getBoolean("gwen.web.maximize")
   }
 
   /**
@@ -448,6 +445,23 @@ object WebSettings extends LazyLogging {
         }
       } else {
         Errors.invalidSettingError("gwen.web.browser.size", value, "width x height expected")
+      }
+    }
+  }
+
+  /**
+    * Provides access to the `gwen.web.browser.position` setting used to set the browser window position.
+    * Expects value matching `x,y (e:g 0,0 for top left position).
+    */
+  def `gwen.web.browser.position`: Option[(Int, Int)] = {
+    Settings.getOpt("gwen.web.browser.position") map { value =>
+      val values = value.split(',')
+      if (values != null && values.size == 2) {
+        Try((values(0).trim.toInt, values(1).trim.toInt)) getOrElse {
+          Errors.invalidSettingError("gwen.web.browser.position", value, "x and y must be integers")
+        }
+      } else {
+        Errors.invalidSettingError("gwen.web.browser.position", value, "x,y expected")
       }
     }
   }

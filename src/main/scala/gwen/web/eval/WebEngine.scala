@@ -267,8 +267,9 @@ class WebEngine extends EvalEngine[WebContext] {
         new HandlePopup(PopupAction.valueOf(action))
       case r"""I resize the window to width (\d+?)$width and height (\d+?)$height""" =>
         new ResizeWindow(width.toInt, height.toInt)
+      case r"""I set the window position to x (\d+?)$x and y (\d+?)$y""" =>
+        new PositionWindow(x.toInt, y.toInt)
       case r"""I maximi(?:z|s)e the window""" =>
-        Deprecation.log("Step", step.expression, Some(s"I resize the window to width <w> and height <h>"))
         new MaximiseWindow()
       case r"""I append "(.+?)"$text to (.+?)$element""" if !element.endsWith("file") =>
         new AppendTextToElement(element, text, false)

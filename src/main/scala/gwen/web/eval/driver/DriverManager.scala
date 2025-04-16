@@ -35,7 +35,7 @@ import scala.util.Try
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.typesafe.scalalogging.LazyLogging
-import org.openqa.selenium.{Dimension, Capabilities, MutableCapabilities, WebDriver, WindowType}
+import org.openqa.selenium.{Dimension, Capabilities, MutableCapabilities, Point, WebDriver, WindowType}
 import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.chrome.ChromeDriverService
 import org.openqa.selenium.chrome.ChromeOptions
@@ -51,6 +51,7 @@ import org.openqa.selenium.remote.LocalFileDetector
 import org.openqa.selenium.remote.RemoteWebDriver
 import org.openqa.selenium.safari.{SafariDriver, SafariOptions}
 
+import java.awt.Toolkit
 import java.io.File
 import java.net.URL
 import java.{time => jt}
@@ -146,6 +147,10 @@ class DriverManager() extends LazyLogging {
       WebSettings.`gwen.web.browser.size` foreach { case (width, height) =>
         logger.info(s"Resizing browser window to width $width and height $height")
         driver.manage().window().setSize(new Dimension(width, height))
+      }
+      WebSettings.`gwen.web.browser.position` foreach { case (x, y) =>
+        logger.info(s"Setting browser window (x, y) position to ($x, $y)")
+        driver.manage().window().setPosition(new Point(x, y))
       }
     }
   }
@@ -366,19 +371,10 @@ class DriverManager() extends LazyLogging {
     logger.info(s"Implicit wait (default locator timeout) = ${WebSettings.`gwen.web.locator.wait.seconds`} second(s)")
     driver.manage().timeouts().implicitlyWait(jt.Duration.ofSeconds(WebSettings.`gwen.web.locator.wait.seconds`))
     if (WebSettings.`gwen.web.maximize`) {
-      logger.info(s"Attempting to maximize window")
-      try {
-        driver.manage().window().maximize()
-      } catch {
-        case _: Throwable =>
-          logger.warn(s"Maximizing window not supported on current platform, attempting to go full screen instead")
-          try {
-            driver.manage().window().fullscreen()
-          } catch {
-            case _: Throwable =>
-              logger.warn(s"Could not maximise or go full screen on current platform")
-          }
-      }
+      logger.info(s"Maximizing window")
+      val screenSize = Toolkit.getDefaultToolkit.getScreenSize
+      driver.manage().window().setPosition(new Point(0, 0))
+      driver.manage().window().setSize(new Dimension(screenSize.width, screenSize.height))
     }
     driver
   }

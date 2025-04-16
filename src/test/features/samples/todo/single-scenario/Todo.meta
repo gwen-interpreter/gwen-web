@@ -5,6 +5,7 @@ Feature: Todo meta
   Scenario: I launch the Todo app
     Given I start a new browser
      When I resize the window to width 800 and height 800
+      And I set the window position to x 40 and y 40
       And I navigate to "https://todomvc.com/examples/react/dist/"
      Then I should be on the Todo page
 

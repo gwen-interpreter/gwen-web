@@ -1614,6 +1614,12 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     verify(ctx).resizeWindow(400, 200)
   }
 
+  "I set the window position to x <x> and y <y>" should "evaluate" in {
+    doNothing().when(ctx).positionWindow(40, 20)
+    evaluate("I set the window position to x 40 and y 20")
+    verify(ctx).positionWindow(40, 20)
+  }
+
   "I <maximize|maximise> the window" should "evaluate" in {
     doNothing().when(ctx).maximizeWindow()
     List("maximize", "maximise").foreach { x =>

@@ -51,6 +51,7 @@ import org.openqa.selenium.support.ui.FluentWait
 import org.openqa.selenium.support.ui.Select
 
 import java.io.File
+import java.awt.Toolkit
 
 /**
   * The web evaluatioin context.
@@ -1161,12 +1162,27 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
   }
 
   /**
+    * Positions the browser window to the given co-ordinates.
+    *
+    * @param x the x co-ordinate
+    * @param x the y co-ordinate
+    */
+  def positionWindow(x: Int, y: Int): Unit = {
+    withWebDriver { driver =>
+      logger.info(s"Postioning browser (x, y) position to ($x, $y)")
+      driver.manage().window().setPosition(new Point(x, y))
+    }
+  }
+
+  /**
     * Maximizes the browser window.
     */
   def maximizeWindow(): Unit = {
     withWebDriver { driver =>
       logger.info("Maximising browser window")
-      driver.manage().window().maximize()
+      val screenSize = Toolkit.getDefaultToolkit.getScreenSize
+      positionWindow(0,0)
+      resizeWindow(screenSize.width, screenSize.height)
     }
   }
 
