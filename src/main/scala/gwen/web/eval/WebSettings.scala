@@ -192,7 +192,11 @@ object WebSettings extends LazyLogging {
     * or not the web driver should maximize the browser window (default value is `false`).
     */
   def `gwen.web.maximize`: Boolean = {
-    Settings.getBoolean("gwen.web.maximize")
+    Settings.getBoolean("gwen.web.maximize") tap { maximize =>
+      if (`gwen.web.browser.size`.nonEmpty) {
+        Errors.propertyLoadError("gwen.web.maximize", "cannot specify this and gwen.web.browser.size (choose one or the other)")
+      }
+    }
   }
 
   /**
@@ -438,6 +442,9 @@ object WebSettings extends LazyLogging {
     */
   def `gwen.web.browser.size`: Option[(Int, Int)] = {
     Settings.getOpt("gwen.web.browser.size") map { value =>
+      if (Settings.getBoolean("gwen.web.maximize")) {
+        Errors.propertyLoadError("gwen.web.browser.size", "cannot specify this and gwen.web.maximize (choose one or the other)")
+      }
       val values = value.split('x')
       if (values != null && values.size == 2) {
         Try((values(0).trim.toInt, values(1).trim.toInt)) getOrElse {

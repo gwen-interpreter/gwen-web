@@ -2,6 +2,9 @@
 =====
 16 April 2025
 - Use Selenium maximize function on driver when maximizing windows
+- Make the following two settings mutually exclusive
+  - `gwen.web.maximize`
+  - `gwen.web.browser.size`
 
 4.7.0
 =====
