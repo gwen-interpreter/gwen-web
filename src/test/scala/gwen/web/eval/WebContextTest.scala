@@ -44,7 +44,7 @@ import scala.compiletime.uninitialized
 import scala.concurrent.duration.Duration
 import scala.jdk.CollectionConverters._
 
-import java.awt.Toolkit
+import java.awt.GraphicsEnvironment
 import java.io.File
 
 class WebContextTest extends BaseTest with Matchers with MockitoSugar with BeforeAndAfterEach {
@@ -1560,9 +1560,9 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     when(mockWebDriver.manage).thenReturn(mockDriverOptions)
     when(mockDriverOptions.window).thenReturn(mockWindow)
     ctx.maximizeWindow()
-    val screenSize = Toolkit.getDefaultToolkit.getScreenSize
+    val displayMode = GraphicsEnvironment.getLocalGraphicsEnvironment.getDefaultScreenDevice.getDisplayMode
     verify(mockWindow).setPosition(new Point(0, 0))
-    verify(mockWindow).setSize(new Dimension(screenSize.width, screenSize.height))
+    verify(mockWindow).setSize(new Dimension(displayMode.getWidth, displayMode.getHeight))
   }
 
   "ctx.captureCurrentUrl" should "capture url" in {

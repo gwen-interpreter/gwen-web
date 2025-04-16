@@ -51,7 +51,7 @@ import org.openqa.selenium.remote.LocalFileDetector
 import org.openqa.selenium.remote.RemoteWebDriver
 import org.openqa.selenium.safari.{SafariDriver, SafariOptions}
 
-import java.awt.Toolkit
+import java.awt.GraphicsEnvironment
 import java.io.File
 import java.net.URL
 import java.{time => jt}
@@ -372,9 +372,9 @@ class DriverManager() extends LazyLogging {
     driver.manage().timeouts().implicitlyWait(jt.Duration.ofSeconds(WebSettings.`gwen.web.locator.wait.seconds`))
     if (WebSettings.`gwen.web.maximize`) {
       logger.info(s"Maximizing window")
-      val screenSize = Toolkit.getDefaultToolkit.getScreenSize
+      val displayMode = GraphicsEnvironment.getLocalGraphicsEnvironment.getDefaultScreenDevice.getDisplayMode
       driver.manage().window().setPosition(new Point(0, 0))
-      driver.manage().window().setSize(new Dimension(screenSize.width, screenSize.height))
+      driver.manage().window().setSize(new Dimension(displayMode.getWidth, displayMode.getHeight))
     }
     driver
   }

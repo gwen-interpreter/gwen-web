@@ -1,3 +1,8 @@
+4.7.1
+=====
+16 April 2025
+- Use GraphicsEnvironmennt instead of Toolkit to get current screen size
+
 4.7.0
 =====
 16 April 2025
