@@ -121,7 +121,7 @@ org.apache.commons
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0.txt
   +-commons-lang3:3.17.0
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0.txt
-  +-commons-text:1.13.0
+  +-commons-text:1.13.1
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0.txt
 com.google.j2objc
   +-j2objc-annotations:3.0.0
@@ -243,7 +243,7 @@ com.google.guava
   +-failureaccess:1.0.3
   | +-Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
 org.gweninterpreter
-  +-gwen:4.5.0
+  +-gwen:4.5.1
   | +-Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.html
 org.scala-lang.modules
   +-scala-asm:9.7.1-scala-1
@@ -259,7 +259,7 @@ org.apache.pdfbox
   +-pdfbox:3.0.4
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0.txt
 io.cucumber
-  +-gherkin:32.0.0
+  +-gherkin:32.1.1
   | +-MIT License - http://www.opensource.org/licenses/mit-license
   +-messages:27.2.0
   | +-MIT License - http://www.opensource.org/licenses/mit-license
@@ -270,7 +270,7 @@ com.typesafe.scala-logging
   +-scala-logging_3:3.9.5
   | +-Apache 2.0 License - http://www.apache.org/licenses/LICENSE-2.0.html
 ch.qos.logback
-  +-logback-classic:1.5.17
+  +-logback-classic:1.5.18
   | +-Eclipse Public License - v 1.0 - http://www.eclipse.org/legal/epl-v10.html
-  +-logback-core:1.5.17
+  +-logback-core:1.5.18
   | +-Eclipse Public License - v 1.0 - http://www.eclipse.org/legal/epl-v10.html

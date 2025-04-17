@@ -108,13 +108,13 @@ class WebEngine extends EvalEngine[WebContext] {
   override def translateStep(step: Step): UnitStepAction[WebContext] = {
     step.expression match {
       case r"""I wait for (.+?)$element text""" =>
-        new WaitForText(element, None)
+        new WaitForText(element, step.timeoutOpt.map(_.toSeconds))
       case r"""I wait for (.+?)$element""" =>
-        new WaitForElement(element, None)
+        new WaitForElement(element, step.timeoutOpt.map(_.toSeconds))
       case r"""I wait until "(.+?)$javascript"""" =>
         new WaitForCondition(step.orDocString(javascript), step.delayOpt.map(_.toMillis), step.timeoutOpt.map(_.toSeconds))
       case r"""I wait until (.+?)$element is( not)?$negation (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$state""" =>
-        new WaitForElementState(element, ElementState.valueOf(state), Option(negation).nonEmpty)
+        new WaitForElementState(element, ElementState.valueOf(state), Option(negation).nonEmpty, step.timeoutOpt.map(_.toSeconds))
       case r"""I wait until (.+?)$condition""" if !condition.matches(".+ file (exists|not exists|does not exist|is empty|is not empty)") =>
         new WaitForBoundCondition(condition, step.delayOpt.map(_.toMillis), step.timeoutOpt.map(_.toSeconds))
       case r"""I navigate to "(.+?)"$url""" =>

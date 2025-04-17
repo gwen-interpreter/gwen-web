@@ -31,8 +31,8 @@ class WaitForElement(element: String, waitSecs: Option[Long]) extends UnitStepAc
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     step tap { _ =>
       checkStepRules(step, BehaviorType.Action, ctx)
-      val binding = ctx.getLocatorBinding(element)
-      ctx.waitUntil(waitSecs, s"waiting for ${binding.displayName} to be displayed") {
+      val binding = ctx.getLocatorBinding(element).withTimeoutSeconds(waitSecs)
+      ctx.waitUntil(binding.timeoutSecondsOpt, s"waiting for ${binding.displayName} to be displayed") {
         Try(ctx.locateAndHighlight(binding)).isSuccess
       }
     }

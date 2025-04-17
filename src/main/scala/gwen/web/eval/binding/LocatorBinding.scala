@@ -47,11 +47,13 @@ object LocatorBinding {
 class LocatorBinding(val name: String, val selectors: List[Selector], ctx: WebContext) extends Binding[WebContext, WebElement](name, ctx) {
   
   lazy val timeoutSeconds: Long = selectors.map(_.timeoutSeconds).sum
+  lazy val timeoutSecondsOpt: Option[Long] = Option(timeoutSeconds).filter(_ > 0)
 
   override def resolve(): WebElement = ctx.webElementlocator.locate(this)
   def resolveAll(): List[WebElement] = ctx.webElementlocator.locateAll(this)  
   def withFastTimeout: LocatorBinding = withTimeout(Duration(200, TimeUnit.MILLISECONDS))
   def withTimeout(timeout: Option[Duration]): LocatorBinding = timeout.map(withTimeout).getOrElse(this)
+  def withTimeoutSeconds(timeoutSecs: Option[Long]): LocatorBinding = withTimeout(timeoutSecs.map(s => Duration(s, TimeUnit.SECONDS)))
   private def withTimeout(timeout: Duration): LocatorBinding = {
     val newSelectors = selectors map { s => 
       Selector(s, Some(timeout), s.index)

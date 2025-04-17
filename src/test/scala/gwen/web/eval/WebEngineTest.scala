@@ -616,6 +616,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
   "I wait until <element> is <state>" should "evaluate" in {
     val mockBinding = mock[LocatorBinding]
     doReturn(mockBinding).when(ctx).getLocatorBinding("<element>")
+    doReturn(mockBinding).when(mockBinding).withTimeoutSeconds(None)
     elemStates.foreach { state =>
       doReturn(None).when(mockTopScope).getOpt(s"<element> is $state/javascript")
       doNothing().when(ctx).waitForElementState(mockBinding, state, false)
@@ -627,6 +628,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
   "I wait until <element> is not <state>" should "evaluate" in {
     val mockBinding = mock[LocatorBinding]
     doReturn(mockBinding).when(ctx).getLocatorBinding("<element>")
+    doReturn(mockBinding).when(mockBinding).withTimeoutSeconds(None)
     elemStates.foreach { state =>
       doReturn(None).when(mockTopScope).getOpt(s"<element> is not $state/javascript")
       doNothing().when(ctx).waitForElementState(mockBinding, state, true)
@@ -1062,36 +1064,46 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
   "@Timeout('1s') I wait for <element> text" should "evaluate" in {
     val mockBinding = mock[LocatorBinding]
     doReturn(mockBinding).when(ctx).getLocatorBinding("<element>")
+    doReturn(mockBinding).when(mockBinding).withTimeoutSeconds(Some(1))
+    doReturn(1L).when(mockBinding).timeoutSeconds
     evaluate(List(Tag("@Timeout('1s')")), "I wait for <element>")
   }
 
   "@Timeout('2s') I wait for <element> text" should "evaluate" in {
     val mockBinding = mock[LocatorBinding]
     doReturn(mockBinding).when(ctx).getLocatorBinding("<element>")
+    doReturn(mockBinding).when(mockBinding).withTimeoutSeconds(Some(2))
+    doReturn(2L).when(mockBinding).timeoutSeconds
     evaluate(List(Tag("@Timeout('2s')")), "I wait for <element> text")
   }
 
   "I wait for <element> text" should "evaluate" in {
     val mockBinding = mock[LocatorBinding]
     doReturn(mockBinding).when(ctx).getLocatorBinding("<element>")
+    doReturn(mockBinding).when(mockBinding).withTimeoutSeconds(None)
     evaluate("I wait for <element> text")
   }
 
   "@Timeout('1s') I wait for <element>" should "evaluate" in {
     val mockBinding = mock[LocatorBinding]
     doReturn(mockBinding).when(ctx).getLocatorBinding("<element>")
+    doReturn(mockBinding).when(mockBinding).withTimeoutSeconds(Some(1))
+    doReturn(1L).when(mockBinding).timeoutSeconds
     evaluate(List(Tag("@Timeout('1s')")), "I wait for <element>")
   }
 
   "@Timeout('2s') I wait for <element>" should "evaluate" in {
     val mockBinding = mock[LocatorBinding]
     doReturn(mockBinding).when(ctx).getLocatorBinding("<element>")
+    doReturn(mockBinding).when(mockBinding).withTimeoutSeconds(Some(2))
+    doReturn(2L).when(mockBinding).timeoutSeconds
     evaluate(List(Tag("@Timeout('2s')")), "I wait for <element>")
   }
 
   "I wait for <element>" should "evaluate" in {
     val mockBinding = mock[LocatorBinding]
     doReturn(mockBinding).when(ctx).getLocatorBinding("<element>")
+    doReturn(mockBinding).when(mockBinding).withTimeoutSeconds(None)
     evaluate("I wait for <element>")
   }
 
