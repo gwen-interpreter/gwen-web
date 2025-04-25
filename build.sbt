@@ -1,10 +1,6 @@
 enablePlugins(GitVersioning)
 
-// gwen core & web versions
-val gwenVersion = "4.5.1"
-val gwenWebVersion = "4.7.2"
-
-git.baseVersion := gwenWebVersion
+git.baseVersion := "4.7.3"
 git.useGitDescribe := true
 
 val gwenWeb = (project in file("."))
@@ -23,7 +19,7 @@ lazy val projectSettings = Seq(
   organization := "org.gweninterpreter",
   organizationHomepage := Some(url("https://github.com/gwen-interpreter")),
   startYear := Some(2014),
-  licenses += "Apache License, Version 2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0.html"),
+  licenses += "Apache License, Version 2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0.txt"),
   homepage := Some(url("https://gweninterpreter.org")),
   versionScheme := Some("semver-spec"),
   scalaVersion := "3.6.4",
@@ -44,7 +40,7 @@ lazy val projectSettings = Seq(
 
 lazy val mainDependencies = {
   Seq(
-    "org.gweninterpreter" % "gwen" % gwenVersion,
+    "org.gweninterpreter" % "gwen" % "4.5.2",
     "org.seleniumhq.selenium" % "selenium-java" % "4.31.0" excludeAll(
       ExclusionRule("org.seleniumhq.selenium", "selenium-ie-driver")
     )

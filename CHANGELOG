@@ -1,3 +1,9 @@
+4.7.3
+-----
+25 April 2025
+- Update Gwen core from v4.5.1 to v[4.5.2](https://github.com/gwen-interpreter/gwen/releases/tag/v4.5.2)
+  - Interpolate env vars during spec normalisation
+
 4.7.2
 =====
 18 April 2025

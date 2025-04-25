@@ -243,8 +243,8 @@ com.google.guava
   +-failureaccess:1.0.3
   | +-Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
 org.gweninterpreter
-  +-gwen:4.5.1
-  | +-Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.html
+  +-gwen:4.5.2
+  | +-Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
 org.scala-lang.modules
   +-scala-asm:9.7.1-scala-1
   | +-BSD 3-clause - http://opensource.org/licenses/BSD-3-Clause
