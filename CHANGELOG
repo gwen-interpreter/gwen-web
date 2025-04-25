@@ -1,3 +1,9 @@
+4.7.4
+-----
+26 April 2025
+- Update Gwen core from v4.5.2 to v[4.5.3](https://github.com/gwen-interpreter/gwen/releases/tag/v4.5.3)
+  - Simplify how feature and meta results are handled in engine layer
+
 4.7.3
 -----
 25 April 2025
