@@ -48,7 +48,6 @@ trait WebProjectInitialiser extends ProjectInitialiser {
     val filler = if (flat) "   " else "       "
     val force = options.initOptions.contains(InitOption.force)
     val copyRootGitIgnore = !flat && !(new File(".gitignore").exists())
-    val copyRootReadme = !(new File("README.md").exists())
 
     if (isNew || options.initOptions == List(InitOption.force)) {
 
@@ -56,28 +55,20 @@ trait WebProjectInitialiser extends ProjectInitialiser {
         FileIO.copyClasspathTextResourceToFile("/init/conf/browsers/chrome.conf", dir, allowReplace = force)
         FileIO.copyClasspathTextResourceToFile("/init/conf/browsers/edge.conf", dir, allowReplace = force)
         FileIO.copyClasspathTextResourceToFile("/init/conf/browsers/firefox.conf", dir, allowReplace = force)
-        FileIO.copyClasspathTextResourceToFile("/init/conf/browsers/README.md", dir, allowReplace = force)
         FileIO.copyClasspathTextResourceToFile("/init/conf/browsers/safari.conf", dir, allowReplace = force)
       }
 
       new File(confDir, "env") tap { dir =>
-        FileIO.copyClasspathTextResourceToFile("/init/conf/env/dev.conf", dir, allowReplace = force)
-        FileIO.copyClasspathTextResourceToFile("/init/conf/env/local.conf", dir, allowReplace = force)
         FileIO.copyClasspathTextResourceToFile("/init/conf/env/prod.conf", dir, allowReplace = force)
-        FileIO.copyClasspathTextResourceToFile("/init/conf/env/README.md", dir, allowReplace = force)
-        FileIO.copyClasspathTextResourceToFile("/init/conf/env/staging.conf", dir, allowReplace = force)
         FileIO.copyClasspathTextResourceToFile("/init/conf/env/test.conf", dir, allowReplace = force)
       }
 
       new File(confDir, "profiles") tap { dir =>
         FileIO.copyClasspathTextResourceToFile("/init/conf/profiles/samples.conf", dir, allowReplace = force)
-        FileIO.copyClasspathTextResourceToFile("/init/conf/profiles/README.md", dir, allowReplace = force)
       }  
 
       new File(dir, "features") tap { dir =>
-        FileIO.copyClasspathTextResourceToFile("/init/features/README.md", dir, allowReplace = force)
         new File(dir, "samples") tap { dir =>
-          FileIO.copyClasspathTextResourceToFile("/init/features/samples/README.md", dir, allowReplace = force)
           new File(dir, "todo") tap { dir =>
             FileIO.copyClasspathTextResourceToFile("/init/features/samples/todo/Todo.feature", dir, allowReplace = force)
             FileIO.copyClasspathTextResourceToFile("/init/features/samples/todo/Todo.meta", dir, allowReplace = force)
@@ -86,14 +77,12 @@ trait WebProjectInitialiser extends ProjectInitialiser {
       }
 
       new File(dir, "meta") tap { dir =>
-        FileIO.copyClasspathTextResourceToFile("/init/meta/README.md", dir, allowReplace = force)
+        dir.mkdirs()
       }
 
-      if(copyRootReadme) {
-        FileIO.copyClasspathTextResourceToFile("/init/README.md", new File("."), allowReplace = false)
-      }
       FileIO.copyClasspathTextResourceToFile("/init/gitignore", dir, Some(".gitignore"), allowReplace = force)
       copyClasspathResourceAndInject("/init/gwen.conf", dir, flat, allowReplace = force, targetFile = Some(new File("gwen.conf")), targetPath = Some(if (flat) "." else dir.getPath))
+      copyClasspathResourceAndInject("/init/package.json", dir, flat, allowReplace = force || isNew, targetFile = Some(new File("package.json")), targetPath = Some(if (flat) "." else dir.getPath))
       if(copyRootGitIgnore) {
         FileIO.copyClasspathTextResourceToFile("/init/gitignore_root", new File("."), Some(".gitignore"), allowReplace = false)
       }
@@ -103,37 +92,26 @@ trait WebProjectInitialiser extends ProjectInitialiser {
             |
             |  ./            $filler             # Project root${if (!copyRootGitIgnore) "" else {
         s"""|
-            |   ├── .gitignore$filler            # Git ignore file""".stripMargin}}${if (!copyRootReadme) "" else {
+            |   ├── .gitignore$filler            # Git ignore file""".stripMargin}}
+            |   ├── gwen.conf$filler             # Common settings
+            |   ├── package.json                 # Package json file ${if (flat) "" else {
         s"""|
-            |   ├── README.md""".stripMargin}}
-            |   ├── gwen.conf$filler             # Common settings${if (flat) "" else {
-        s"""|
-            |   └── /${dir.getPath}""".stripMargin}}${if (copyRootReadme) "" else {
-        s"""|
-            |$filler├── README.md""".stripMargin}}
+            |   └── /${dir.getPath}""".stripMargin}}
             |$filler├── .gitignore               # Git ignore file
             |$filler├── /conf
             |$filler│   ├── /browsers            # Browser settings
             |$filler│   |   ├── chrome.conf
             |$filler│   |   ├── edge.conf
             |$filler│   |   ├── firefox.conf
-            |$filler│   |   ├── README.md
             |$filler│   |   └── safari.conf
             |$filler│   ├──/env                  # Environment settings
-            |$filler│   |  ├── dev.conf
-            |$filler│   |  ├── local.conf
             |$filler│   |  ├── prod.conf
-            |$filler│   |  ├── README.md
-            |$filler│   |  ├── staging.conf
             |$filler│   |  └── test.conf
             |$filler│   └──/profiles             # Profile settings
-            |$filler│      ├── README.md
             |$filler│      └── samples.conf
             |$filler├── /features                # Features (and associative meta)
-            |$filler│   ├── README.md
             |$filler│   └── /samples             # Samples
             |$filler└── /meta                    # Common meta
-            |$filler    └── README.md
             |
             |""".stripMargin
       )

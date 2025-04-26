@@ -1,3 +1,12 @@
+4.7.5
+-----
+26 April 2025
+- Gwen project init enhancements:
+  - Generate package.json file with standard scripts etc
+  - Do not generate README.md files
+  - Generate conf files for test and prod environments only
+  - Call predefined package json scripts to run Gwen and dry runs in docker
+
 4.7.4
 -----
 26 April 2025

@@ -1,0 +1,15 @@
+{
+  "scripts": {
+    "gwen": "gwen",
+    "gwen:dryRun": "yarn gwen -bn --parallel",
+    "gwen:repl": "yarn gwen --repl",
+    "gwen:grid": "yarn gwen -b -c gwen/conf/browsers/grid.conf",
+    "gwen:format": "gwen format --pretty gwen"
+  },
+  "devDependencies": {
+    "@gweninterpreter/gwen-web": "^2.0.0"
+  },
+  "gwenWeb": {
+    "version": "^4.0.0"
+  }
+}
