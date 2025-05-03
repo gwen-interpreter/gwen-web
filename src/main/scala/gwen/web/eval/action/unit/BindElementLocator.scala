@@ -28,7 +28,7 @@ import gwen.core.node.gherkin.Step
 
 import scala.util.chaining._
 
-class BindElementLocator(name: String, selectorType: SelectorType, expression: String, relative: Option[(RelativeSelectorType, String, Option[Int])], timeoutSecs: Option[Long], index: Option[Int]) extends UnitStepAction[WebContext] {
+class BindElementLocator(name: String, selectorType: SelectorType, expression: String, relative: Option[(RelativeSelectorType, String, Option[Int])], timeoutSecs: Option[Long], index: Option[Int], shadowRoot: Boolean) extends UnitStepAction[WebContext] {
 
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
 
@@ -86,6 +86,15 @@ class BindElementLocator(name: String, selectorType: SelectorType, expression: S
         timeoutSecs foreach { secs =>
           ctx.topScope.set(tKey, secs.toString)
         }
+      }
+
+      val srKey = LocatorKey.shadowRootKey(name, selectorType)
+      if (!shadowRoot) {
+        ctx.topScope.getOpt(srKey) foreach { _ =>
+          ctx.topScope.set(srKey, null)
+        }
+      } else {
+        ctx.topScope.set(srKey, shadowRoot.toString)
       }
 
     }

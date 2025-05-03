@@ -1,3 +1,10 @@
+4.8.0
+-----
+3 May 2025
+- Add `ShadowRoot` annotation to support locating shadow root elements
+- Update Gwen core from v4.5.3 to v[4.6.0](https://github.com/gwen-interpreter/gwen/releases/tag/v4.6.0)
+  - Add ShadowRoot to step level annotations
+
 4.7.5
 -----
 26 April 2025

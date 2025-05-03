@@ -85,9 +85,9 @@ class WebEngine extends EvalEngine[WebContext] {
         super.translateCompositeStep(step) orElse {
           step.expression match {
             case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression in (.+?)$container""" =>
-              Some(new ForEachWebElement(doStep, element, SelectorType.parse(selectorType), expression, Some((RelativeSelectorType.in, container, None)), step.timeoutOpt, this))
+              Some(new ForEachWebElement(doStep, element, SelectorType.parse(selectorType), expression, Some((RelativeSelectorType.in, container, None)), step.timeoutOpt, step.isShadowRoot, this))
             case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression""" =>
-              Some(new ForEachWebElement(doStep, element, SelectorType.parse(selectorType), step.orDocString(expression), None, step.timeoutOpt, this))
+              Some(new ForEachWebElement(doStep, element, SelectorType.parse(selectorType), step.orDocString(expression), None, step.timeoutOpt, step.isShadowRoot, this))
             case r"""(.+?)$doStep for each (.+?)$element in (.+?)$iteration""" =>
               Some(new ForEachWebElementInIteration(doStep, element, iteration, this))
             case _ => 
@@ -124,19 +124,19 @@ class WebEngine extends EvalEngine[WebContext] {
       case r"""I scroll to the (top|bottom)$position of (.+?)$element""" =>
         new ScrollToElement(element, ScrollTo.valueOf(position))
       case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression at index (\d+)$index in (.+?)$container""" =>
-        new BindElementLocator(element, SelectorType.parse(selectorType), expression, Some((RelativeSelectorType.in, container, None)), step.timeoutOpt.map(_.toSeconds), Some(index.toInt))
+        new BindElementLocator(element, SelectorType.parse(selectorType), expression, Some((RelativeSelectorType.in, container, None)), step.timeoutOpt.map(_.toSeconds), Some(index.toInt), step.isShadowRoot)
       case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression in (.+?)$container""" =>
-        new BindElementLocator(element, SelectorType.parse(selectorType), expression, Some((RelativeSelectorType.in, container, None)), step.timeoutOpt.map(_.toSeconds), None)
+        new BindElementLocator(element, SelectorType.parse(selectorType), expression, Some((RelativeSelectorType.in, container, None)), step.timeoutOpt.map(_.toSeconds), None, step.isShadowRoot)
       case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text)$selectorType "(.+?)"$expression near and within (\d+)$pixels pixel(?:s?) of (.+?)$rElement""" =>
-        new BindElementLocator(element, SelectorType.parse(selectorType), expression, Some((RelativeSelectorType.near, rElement, Some(pixels.toInt))), step.timeoutOpt.map(_.toSeconds), None)
+        new BindElementLocator(element, SelectorType.parse(selectorType), expression, Some((RelativeSelectorType.near, rElement, Some(pixels.toInt))), step.timeoutOpt.map(_.toSeconds), None, step.isShadowRoot)
       case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text)$selectorType "(.+?)"$expression (above|below|near|to left of|to right of)$rSelectorType (.+?)$rElement""" =>
-        new BindElementLocator(element, SelectorType.parse(selectorType), expression, Some((RelativeSelectorType.valueOf(rSelectorType), rElement, None)), step.timeoutOpt.map(_.toSeconds), None)
+        new BindElementLocator(element, SelectorType.parse(selectorType), expression, Some((RelativeSelectorType.valueOf(rSelectorType), rElement, None)), step.timeoutOpt.map(_.toSeconds), None, step.isShadowRoot)
       case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression at index (\d+)$index""" =>
-        new BindElementLocator(element, SelectorType.parse(selectorType), expression, None, step.timeoutOpt.map(_.toSeconds), Some(index.toInt))
+        new BindElementLocator(element, SelectorType.parse(selectorType), expression, None, step.timeoutOpt.map(_.toSeconds), Some(index.toInt), step.isShadowRoot)
       case r"""(.+?)$element can be located at index (\d+)$index by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression""" =>
-        new BindElementLocator(element, SelectorType.parse(selectorType), step.orDocString(expression), None, step.timeoutOpt.map(_.toSeconds), Some(index.toInt))
+        new BindElementLocator(element, SelectorType.parse(selectorType), step.orDocString(expression), None, step.timeoutOpt.map(_.toSeconds), Some(index.toInt), step.isShadowRoot)
       case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression""" =>
-        new BindElementLocator(element, SelectorType.parse(selectorType), step.orDocString(expression), None, step.timeoutOpt.map(_.toSeconds), None)
+        new BindElementLocator(element, SelectorType.parse(selectorType), step.orDocString(expression), None, step.timeoutOpt.map(_.toSeconds), None, step.isShadowRoot)
       case r"""(.+?)$element can be located at index (\d+)$index in (.+?)$container by""" if step.hasDualColumnTable =>
         new BindMultipleElementLocators(element, Some(container), step.timeoutOpt.map(_.toSeconds), Some(index.toInt))
       case r"""(.+?)$element can be located in (.+?)$container by""" if step.hasDualColumnTable =>

@@ -45,7 +45,7 @@ class BindMultipleElementLocators(name: String, container: Option[String], timeo
           case Success(value) => Some(value)
         } map { selectorType => 
           val expression = row(1)
-          new BindElementLocator(name, selectorType, expression, container.map(c => (RelativeSelectorType.in, c, None)), timeoutSecs, index).apply(parent, step, ctx)
+          new BindElementLocator(name, selectorType, expression, container.map(c => (RelativeSelectorType.in, c, None)), timeoutSecs, index, false).apply(parent, step, ctx)
           selectorType
         }
       }

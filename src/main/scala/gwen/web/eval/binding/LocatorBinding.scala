@@ -30,12 +30,12 @@ import java.util.concurrent.TimeUnit
 
 object LocatorBinding {
 
-  def apply(name: String, selectorType: SelectorType, expression: String, relative: Option[(RelativeSelectorType, LocatorBinding, Option[Int])], timeout: Option[Duration], index: Option[Int], ctx: WebContext): LocatorBinding = {
-    new LocatorBinding(name, List(Selector(selectorType, expression, relative, timeout, index)), ctx)
+  def apply(name: String, selectorType: SelectorType, expression: String, relative: Option[(RelativeSelectorType, LocatorBinding, Option[Int])], timeout: Option[Duration], index: Option[Int], isShadowRoot: Boolean, ctx: WebContext): LocatorBinding = {
+    new LocatorBinding(name, List(Selector(selectorType, expression, relative, timeout, index, isShadowRoot)), ctx)
   }
   
-  def apply(name: String, selectorType: SelectorType, expression: String, relative: Option[(RelativeSelectorType, LocatorBinding, Option[Int])], index: Option[Int], ctx: WebContext): LocatorBinding = {
-    new LocatorBinding(name, List(Selector(selectorType, expression, relative, None, index)), ctx)
+  def apply(name: String, selectorType: SelectorType, expression: String, relative: Option[(RelativeSelectorType, LocatorBinding, Option[Int])], index: Option[Int], isShadowRoot: Boolean, ctx: WebContext): LocatorBinding = {
+    new LocatorBinding(name, List(Selector(selectorType, expression, relative, None, index, isShadowRoot)), ctx)
   }
   
   def apply(binding: LocatorBinding, selector: Selector, ctx: WebContext): LocatorBinding = {
@@ -56,7 +56,7 @@ class LocatorBinding(val name: String, val selectors: List[Selector], ctx: WebCo
   def withTimeoutSeconds(timeoutSecs: Option[Long]): LocatorBinding = withTimeout(timeoutSecs.map(s => Duration(s, TimeUnit.SECONDS)))
   private def withTimeout(timeout: Duration): LocatorBinding = {
     val newSelectors = selectors map { s => 
-      Selector(s, Some(timeout), s.index)
+      Selector(s, Some(timeout), s.index, s.isShadowRoot)
     }
     new LocatorBinding(name, newSelectors, ctx)
   }

@@ -94,7 +94,8 @@ class LocatorBindingResolver(ctx: WebContext) extends LazyLogging {
                     Duration.create(timeoutSecs.toLong, TimeUnit.SECONDS)
                   }
                   val index = ctx.topScope.getOpt(ctx.interpolate(LocatorKey.indexKey(name, selectorType))).map(_.toInt)
-                  Some(Selector(selectorType, selector, relative, timeout, index))
+                  val isShadowRoot = ctx.topScope.getOpt(ctx.interpolate(LocatorKey.shadowRootKey(name, selectorType))).map(_.toBoolean).getOrElse(false)
+                  Some(Selector(selectorType, selector, relative, timeout, index, isShadowRoot))
                 case None =>
                   if (optional) None else locatorBindingError(s"Undefined selector for: $name")
               }
@@ -105,7 +106,7 @@ class LocatorBindingResolver(ctx: WebContext) extends LazyLogging {
             else None
           case None => if (optional) None else locatorBindingError(s"Undefined selector for: $name")
         }
-      case Some(x) if x.isInstanceOf[WebElement] || ctx.options.dryRun => Some(LocatorBinding(name, SelectorType.cache, name, None, None, None, ctx))
+      case Some(x) if x.isInstanceOf[WebElement] || ctx.options.dryRun => Some(LocatorBinding(name, SelectorType.cache, name, None, None, None, false, ctx))
       case _ => None
     }
   } tap { binding =>

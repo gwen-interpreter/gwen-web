@@ -170,6 +170,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     selectorTypes.foreach { case (selectorType, pSelectorType) =>
       when(mockTopScope.getOpt(s"<element>/locator/$pSelectorType/timeoutSecs")).thenReturn(None)
       when(mockTopScope.getOpt(s"<element>/locator/$pSelectorType/index")).thenReturn(None)
+      when(mockTopScope.getOpt(s"<element>/locator/$pSelectorType/shadowRoot")).thenReturn(None)
       evaluate(s"""<element> can be located by $selectorType "<value>" in <container>""")
       verify(mockTopScope, atLeastOnce()).set("<element>/locator", pSelectorType.toString())
       verify(mockTopScope, atLeastOnce()).set(s"<element>/locator/$pSelectorType", "<value>")
@@ -194,6 +195,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
         }
         when(mockTopScope.getOpt(s"<element>/locator/$pSelectorType/timeoutSecs")).thenReturn(None)
         when(mockTopScope.getOpt(s"<element>/locator/$pSelectorType/index")).thenReturn(None)
+        when(mockTopScope.getOpt(s"<element>/locator/$pSelectorType/shadowRoot")).thenReturn(None)
         evaluate(s"""<element> can be located by $selectorType "<value>" $rSelectorType <otherElement>""")
         verify(mockTopScope, atLeastOnce()).set("<element>/locator", pSelectorType.toString())
         verify(mockTopScope, atLeastOnce()).set(s"<element>/locator/$pSelectorType", "<value>")
@@ -213,6 +215,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
       }
       when(mockTopScope.getOpt(s"<element>/locator/$pSelectorType/timeoutSecs")).thenReturn(None)
       when(mockTopScope.getOpt(s"<element>/locator/$pSelectorType/index")).thenReturn(None)
+      when(mockTopScope.getOpt(s"<element>/locator/$pSelectorType/shadowRoot")).thenReturn(None)
       evaluate(s"""<element> can be located by $selectorType "<value>" near and within 100 pixels of <otherElement>""")
       verify(mockTopScope, atLeastOnce()).set("<element>/locator", pSelectorType.toString())
       verify(mockTopScope, atLeastOnce()).set(s"<element>/locator/$pSelectorType", "<value>")
@@ -227,6 +230,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     selectorTypes.foreach { case (selectorType, pSelectorType) =>
       when(mockTopScope.getOpt(s"<element>/locator/$pSelectorType/timeoutSecs")).thenReturn(None)
       when(mockTopScope.getOpt(s"<element>/locator/$pSelectorType/index")).thenReturn(Some("2"))
+      when(mockTopScope.getOpt(s"<element>/locator/$pSelectorType/shadowRoot")).thenReturn(None)
       evaluate(s"""<element> can be located by $selectorType "<value>" at index 2 in <container>""")
       verify(mockTopScope, atLeastOnce()).set("<element>/locator", pSelectorType.toString())
       verify(mockTopScope, atLeastOnce()).set(s"<element>/locator/$pSelectorType", "<value>")
@@ -240,6 +244,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     doReturn(mockBinding).when(ctx).getLocatorBinding("<container>")
     selectorTypes.foreach { case (selectorType, pSelectorType) =>
       when(mockTopScope.getOpt(s"<element>/locator/$pSelectorType/index")).thenReturn(None)
+      when(mockTopScope.getOpt(s"<element>/locator/$pSelectorType/shadowRoot")).thenReturn(None)
       evaluate(List(Tag("@Timeout('0s')")), s"""<element> can be located by $selectorType "<value>" in <container>""")
       verify(mockTopScope, atLeastOnce()).set("<element>/locator", pSelectorType.toString())
       verify(mockTopScope, atLeastOnce()).set(s"<element>/locator/$pSelectorType", "<value>")
@@ -265,6 +270,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
           }
         }
         when(mockTopScope.getOpt(s"<element>/locator/$pSelectorType/index")).thenReturn(None)
+        when(mockTopScope.getOpt(s"<element>/locator/$pSelectorType/shadowRoot")).thenReturn(None)
         evaluate(List(Tag("@Timeout('0s')")), s"""<element> can be located by $selectorType "<value>" $rSelectorType <otherElement>""")
         verify(mockTopScope, atLeastOnce()).set("<element>/locator", pSelectorType.toString())
         verify(mockTopScope, atLeastOnce()).set(s"<element>/locator/$pSelectorType", "<value>")
@@ -285,6 +291,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
         when(mockTopScope.getOpt(s"<element>/locator/$pSelectorType/$rSelectorType2")).thenReturn(None)
       }
       when(mockTopScope.getOpt(s"<element>/locator/$pSelectorType/index")).thenReturn(None)
+      when(mockTopScope.getOpt(s"<element>/locator/$pSelectorType/shadowRoot")).thenReturn(None)
       evaluate(List(Tag("@Timeout('0s')")), s"""<element> can be located by $selectorType "<value>" near and within 100 pixels of <otherElement>""")
       verify(mockTopScope, atLeastOnce()).set("<element>/locator", pSelectorType.toString())
       verify(mockTopScope, atLeastOnce()).set(s"<element>/locator/$pSelectorType", "<value>")
@@ -300,6 +307,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     doReturn(mockBinding).when(ctx).getLocatorBinding("<container>")
     selectorTypes.foreach { case (selectorType, pSelectorType) =>
       when(mockTopScope.getOpt(s"<element>/locator/$pSelectorType/index")).thenReturn(None)
+      when(mockTopScope.getOpt(s"<element>/locator/$pSelectorType/shadowRoot")).thenReturn(None)
       evaluate(List(Tag("@Timeout('0s')")), s"""<element> can be located by $selectorType "<value>" at index 2 in <container>""")
       verify(mockTopScope, atLeastOnce()).set("<element>/locator", pSelectorType.toString())
       verify(mockTopScope, atLeastOnce()).set(s"<element>/locator/$pSelectorType", "<value>")
@@ -315,6 +323,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     doReturn(mockBinding).when(ctx).getLocatorBinding("<container>")
     selectorTypes.foreach { case (selectorType, pSelectorType) =>
       when(mockTopScope.getOpt(s"<element>/locator/$pSelectorType/index")).thenReturn(None)
+      when(mockTopScope.getOpt(s"<element>/locator/$pSelectorType/shadowRoot")).thenReturn(None)
       evaluate(List(Tag("@Timeout('2s')")), s"""<element> can be located by $selectorType "<value>" in <container>""")
       verify(mockTopScope, atLeastOnce()).set("<element>/locator", pSelectorType.toString())
       verify(mockTopScope, atLeastOnce()).set(s"<element>/locator/$pSelectorType", "<value>")
@@ -339,6 +348,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
           }
         }
         when(mockTopScope.getOpt(s"<element>/locator/$pSelectorType/index")).thenReturn(None)
+        when(mockTopScope.getOpt(s"<element>/locator/$pSelectorType/shadowRoot")).thenReturn(None)
         evaluate(List(Tag("@Timeout('2s')")), s"""<element> can be located by $selectorType "<value>" $rSelectorType <otherElement>""")
         verify(mockTopScope, atLeastOnce()).set("<element>/locator", pSelectorType.toString())
         verify(mockTopScope, atLeastOnce()).set(s"<element>/locator/$pSelectorType", "<value>")
@@ -358,6 +368,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
         when(mockTopScope.getOpt(s"<element>/locator/$pSelectorType/$rSelectorType2")).thenReturn(None)
       }
       when(mockTopScope.getOpt(s"<element>/locator/$pSelectorType/index")).thenReturn(None)
+      when(mockTopScope.getOpt(s"<element>/locator/$pSelectorType/shadowRoot")).thenReturn(None)
       evaluate(List(Tag("@Timeout('2s')")), s"""<element> can be located by $selectorType "<value>" near and within 100 pixels of <otherElement>""")
       verify(mockTopScope, atLeastOnce()).set("<element>/locator", pSelectorType.toString())
       verify(mockTopScope, atLeastOnce()).set(s"<element>/locator/$pSelectorType", "<value>")
@@ -372,6 +383,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     doReturn(mockBinding).when(ctx).getLocatorBinding("<container>")
     selectorTypes.foreach { case (selectorType, pSelectorType) =>
       when(mockTopScope.getOpt(s"<element>/locator/$pSelectorType/index")).thenReturn(Some("2"))
+      when(mockTopScope.getOpt(s"<element>/locator/$pSelectorType/shadowRoot")).thenReturn(None)
       evaluate(List(Tag("@Timeout('2s')")), s"""<element> can be located by $selectorType "<value>" at index 2 in <container>""")
       verify(mockTopScope, atLeastOnce()).set("<element>/locator", pSelectorType.toString())
       verify(mockTopScope, atLeastOnce()).set(s"<element>/locator/$pSelectorType", "<value>")
@@ -392,6 +404,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
       when(mockTopScope.getOpt(s"<element>/locator/$pSelectorType/to right of")).thenReturn(None)
       when(mockTopScope.getOpt(s"<element>/locator/$pSelectorType/timeoutSecs")).thenReturn(Some("2"))
       when(mockTopScope.getOpt(s"<element>/locator/$pSelectorType/index")).thenReturn(Some("2"))
+      when(mockTopScope.getOpt(s"<element>/locator/$pSelectorType/shadowRoot")).thenReturn(None)
       evaluate(s"""<element> can be located by $selectorType "<value>"""")
       verify(mockTopScope, atLeastOnce()).set("<element>/locator", pSelectorType.toString())
       verify(mockTopScope, atLeastOnce()).set(s"<element>/locator/$pSelectorType", "<value>")
@@ -412,6 +425,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
       when(mockTopScope.getOpt(s"<element>/locator/$pSelectorType/to right of")).thenReturn(None)
       when(mockTopScope.getOpt(s"<element>/locator/$pSelectorType/timeoutSecs")).thenReturn(Some("2"))
       when(mockTopScope.getOpt(s"<element>/locator/$pSelectorType/index")).thenReturn(Some("2"))
+      when(mockTopScope.getOpt(s"<element>/locator/$pSelectorType/shadowRoot")).thenReturn(None)
       evaluate(s"""<element> can be located by $selectorType "<value>" at index 2""")
       verify(mockTopScope, atLeastOnce()).set("<element>/locator", pSelectorType.toString())
       verify(mockTopScope, atLeastOnce()).set(s"<element>/locator/$pSelectorType", "<value>")
@@ -432,6 +446,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
       when(mockTopScope.getOpt(s"<element>/locator/$pSelectorType/to right of")).thenReturn(None)
       when(mockTopScope.getOpt(s"<element>/locator/$pSelectorType/timeoutSecs")).thenReturn(Some("2"))
       when(mockTopScope.getOpt(s"<element>/locator/$pSelectorType/index")).thenReturn(Some("2"))
+      when(mockTopScope.getOpt(s"<element>/locator/$pSelectorType/shadowRoot")).thenReturn(None)
       evaluate(List(Tag("@Timeout('0s')")), s"""<element> can be located by $selectorType "<value>"""")
       verify(mockTopScope, atLeastOnce()).set("<element>/locator", pSelectorType.toString())
       verify(mockTopScope, atLeastOnce()).set(s"<element>/locator/$pSelectorType", "<value>")
@@ -453,6 +468,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
       when(mockTopScope.getOpt(s"<element>/locator/$pSelectorType/to right of")).thenReturn(None)
       when(mockTopScope.getOpt(s"<element>/locator/$pSelectorType/timeoutSecs")).thenReturn(Some("2"))
       when(mockTopScope.getOpt(s"<element>/locator/$pSelectorType/index")).thenReturn(Some("2"))
+      when(mockTopScope.getOpt(s"<element>/locator/$pSelectorType/shadowRoot")).thenReturn(None)
       evaluate(List(Tag("@Timeout('0s')")), s"""<element> can be located by $selectorType "<value>" at index 2""")
       verify(mockTopScope, atLeastOnce()).set("<element>/locator", pSelectorType.toString())
       verify(mockTopScope, atLeastOnce()).set(s"<element>/locator/$pSelectorType", "<value>")
@@ -474,6 +490,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
       when(mockTopScope.getOpt(s"<element>/locator/$pSelectorType/to right of")).thenReturn(None)
       when(mockTopScope.getOpt(s"<element>/locator/$pSelectorType/timeoutSecs")).thenReturn(Some("2"))
       when(mockTopScope.getOpt(s"<element>/locator/$pSelectorType/index")).thenReturn(Some("2"))
+      when(mockTopScope.getOpt(s"<element>/locator/$pSelectorType/shadowRoot")).thenReturn(None)
       evaluate(List(Tag("@Timeout('2s')")), s"""<element> can be located by $selectorType "<value>"""")
       verify(mockTopScope, atLeastOnce()).set("<element>/locator", pSelectorType.toString())
       verify(mockTopScope, atLeastOnce()).set(s"<element>/locator/$pSelectorType", "<value>")
@@ -495,6 +512,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
       when(mockTopScope.getOpt(s"<element>/locator/$pSelectorType/to right of")).thenReturn(None)
       when(mockTopScope.getOpt(s"<element>/locator/$pSelectorType/timeoutSecs")).thenReturn(Some("2"))
       when(mockTopScope.getOpt(s"<element>/locator/$pSelectorType/index")).thenReturn(Some("2"))
+      when(mockTopScope.getOpt(s"<element>/locator/$pSelectorType/shadowRoot")).thenReturn(None)
       evaluate(List(Tag("@Timeout('2s')")), s"""<element> can be located by $selectorType "<value>" at index 2""")
       verify(mockTopScope, atLeastOnce()).set("<element>/locator", pSelectorType.toString())
       verify(mockTopScope, atLeastOnce()).set(s"<element>/locator/$pSelectorType", "<value>")

@@ -28,11 +28,10 @@ import java.util.concurrent.TimeUnit
   * @param selectorType the seletor type
   * @param expression the selector expression
   * @param relative optional relative selector and binding
-  * @param isContainer true if this is a selector for a container element, false otherwise
   * @param timeout optional timeout
   * @param index optional index (if selector returns more than one element then index is required)
   */
-case class Selector(selectorType: SelectorType, expression: String, relative: Option[(RelativeSelectorType, LocatorBinding, Option[Int])], isContainer: Boolean, timeout: Duration, index: Option[Int]) {
+case class Selector(selectorType: SelectorType, expression: String, relative: Option[(RelativeSelectorType, LocatorBinding, Option[Int])], timeout: Duration, index: Option[Int], isShadowRoot: Boolean) {
 
   def hasTimeoutOverride = timeout.toMillis != Selector.DefaultTimeout.toMillis
   override def toString: String =
@@ -48,16 +47,16 @@ object Selector {
 
   val DefaultTimeout = Duration(WebSettings.`gwen.web.locator.wait.seconds`, TimeUnit.SECONDS)
 
-  def apply(selectorType: SelectorType, expression: String, relative: Option[(RelativeSelectorType, LocatorBinding, Option[Int])], timeout: Option[Duration], index: Option[Int]): Selector = {
-    Selector(selectorType, expression, relative, isContainer = false, timeout.getOrElse(DefaultTimeout), index)
+  def apply(selectorType: SelectorType, expression: String, relative: Option[(RelativeSelectorType, LocatorBinding, Option[Int])], timeout: Option[Duration], index: Option[Int], isShadowRoot: Boolean): Selector = {
+    Selector(selectorType, expression, relative, timeout.getOrElse(DefaultTimeout), index, isShadowRoot)
   }
 
-  def apply(selectorType: SelectorType, expression: String): Selector = {
-    Selector(selectorType, expression, None, isContainer = false, DefaultTimeout, None)
+  def apply(selectorType: SelectorType, expression: String, isShadowRoot: Boolean): Selector = {
+    Selector(selectorType, expression, None, DefaultTimeout, None, isShadowRoot)
   }
 
-  def apply(selector: Selector, timeout: Option[Duration], index: Option[Int]): Selector = {
-    Selector(selector.selectorType, selector.expression, selector.relative, selector.isContainer, timeout.getOrElse(DefaultTimeout), index)
+  def apply(selector: Selector, timeout: Option[Duration], index: Option[Int], isShadowRoot: Boolean): Selector = {
+    Selector(selector.selectorType, selector.expression, selector.relative, timeout.getOrElse(DefaultTimeout), index, isShadowRoot)
   }
 
 }

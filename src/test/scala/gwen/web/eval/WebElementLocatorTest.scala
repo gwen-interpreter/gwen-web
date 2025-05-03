@@ -84,7 +84,7 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
 
     val e = intercept[WebElementNotFoundException] {
       try {
-        locator.locate(LocatorBinding("middleName", SelectorType.id, "mname", None, None, ctx))
+        locator.locate(LocatorBinding("middleName", SelectorType.id, "mname", None, None, false, ctx))
       } catch {
         case e: Throwable =>
           e.printStackTrace()
@@ -274,7 +274,7 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
     doReturn(mockWebElement).when(mockWebDriver).executeScript(s"return $lookup")
     when(mockWebElement.isDisplayed).thenReturn(true)
 
-    locator.locate(LocatorBinding("username", selectorType, lookup, None, None, ctx)) should be (mockWebElement)
+    locator.locate(LocatorBinding("username", selectorType, lookup, None, None, false, ctx)) should be (mockWebElement)
 
     verify(mockWebDriver, times(1)).executeScript(s"return $lookup")
     verifyNoInteractions(mockWebDriverTimeouts)
@@ -294,7 +294,7 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
     doReturn(mockWebElement).when(mockWebDriver).executeScript(s"return $lookup")
     when(mockWebElement.isDisplayed).thenReturn(true)
 
-    locator.locate(LocatorBinding("username", selectorType, lookup, None, Some(0), ctx)) should be (mockWebElement)
+    locator.locate(LocatorBinding("username", selectorType, lookup, None, Some(0), false, ctx)) should be (mockWebElement)
 
     verify(mockWebDriver, times(1)).executeScript(s"return $lookup")
     verifyNoInteractions(mockWebDriverTimeouts)
@@ -319,7 +319,7 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
     doReturn(elements).when(mockWebDriver).executeScript(s"return $lookup")
     when(mockWebElement.isDisplayed).thenReturn(true)
 
-    locator.locate(LocatorBinding("username", selectorType, lookup, None, Some(1), ctx)) should be (mockWebElement)
+    locator.locate(LocatorBinding("username", selectorType, lookup, None, Some(1), false, ctx)) should be (mockWebElement)
 
     verify(mockWebDriver, times(1)).executeScript(s"return $lookup")
     verifyNoInteractions(mockWebDriverTimeouts)
@@ -339,7 +339,7 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
     doReturn(mockWebElement).when(mockWebDriver).executeScript(s"return $lookup")
     when(mockWebElement.isDisplayed).thenReturn(true)
 
-    locator.locate(LocatorBinding("username", selectorType, lookup, None, Some(Duration.Zero), None, ctx)) should be (mockWebElement)
+    locator.locate(LocatorBinding("username", selectorType, lookup, None, Some(Duration.Zero), None, false, ctx)) should be (mockWebElement)
 
     verify(mockWebDriver, times(1)).executeScript(s"return $lookup")
     verify(mockWebDriverTimeouts, times(1)).implicitlyWait(jt.Duration.ofMillis(200L))
@@ -360,7 +360,7 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
     doReturn(mockWebElement).when(mockWebDriver).executeScript(s"return $lookup")
     when(mockWebElement.isDisplayed).thenReturn(true)
 
-    locator.locate(LocatorBinding("username", selectorType, lookup, None, Some(Duration.Zero), Some(0), ctx)) should be (mockWebElement)
+    locator.locate(LocatorBinding("username", selectorType, lookup, None, Some(Duration.Zero), Some(0), false, ctx)) should be (mockWebElement)
 
     verify(mockWebDriver, times(1)).executeScript(s"return $lookup")
     verify(mockWebDriverTimeouts, times(1)).implicitlyWait(jt.Duration.ofMillis(200L))
@@ -385,7 +385,7 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
     doReturn(elements).when(mockWebDriver).executeScript(s"return $lookup")
     when(mockWebElement.isDisplayed).thenReturn(true)
 
-    locator.locate(LocatorBinding("username", selectorType, lookup, None, Some(Duration.Zero), Some(1), ctx)) should be (mockWebElement)
+    locator.locate(LocatorBinding("username", selectorType, lookup, None, Some(Duration.Zero), Some(1), false, ctx)) should be (mockWebElement)
 
     verify(mockWebDriver, times(1)).executeScript(s"return $lookup")
     verify(mockWebDriverTimeouts, times(1)).implicitlyWait(jt.Duration.ofMillis(200L))
@@ -406,7 +406,7 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
     doReturn(mockWebElement).when(mockWebDriver).executeScript(s"return $lookup")
     when(mockWebElement.isDisplayed).thenReturn(true)
 
-    locator.locate(LocatorBinding("username", selectorType, lookup, None, Some(Duration.create(2, TimeUnit.SECONDS)), None, ctx)) should be (mockWebElement)
+    locator.locate(LocatorBinding("username", selectorType, lookup, None, Some(Duration.create(2, TimeUnit.SECONDS)), None, false, ctx)) should be (mockWebElement)
 
     verify(mockWebDriver, times(1)).executeScript(s"return $lookup")
     verify(mockWebDriverTimeouts, times(1)).implicitlyWait(jt.Duration.ofMillis(2000L))
@@ -427,7 +427,7 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
     doReturn(mockWebElement).when(mockWebDriver).executeScript(s"return $lookup")
     when(mockWebElement.isDisplayed).thenReturn(true)
 
-    locator.locate(LocatorBinding("username", selectorType, lookup, None, Some(Duration.create(2, TimeUnit.SECONDS)), Some(0), ctx)) should be (mockWebElement)
+    locator.locate(LocatorBinding("username", selectorType, lookup, None, Some(Duration.create(2, TimeUnit.SECONDS)), Some(0), false, ctx)) should be (mockWebElement)
 
     verify(mockWebDriver, times(1)).executeScript(s"return $lookup")
     verify(mockWebDriverTimeouts, times(1)).implicitlyWait(jt.Duration.ofMillis(2000L))
@@ -452,7 +452,7 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
     doReturn(elements).when(mockWebDriver).executeScript(s"return $lookup")
     when(mockWebElement.isDisplayed).thenReturn(true)
 
-    locator.locate(LocatorBinding("username", selectorType, lookup, None, Some(Duration.create(2, TimeUnit.SECONDS)), Some(1), ctx)) should be (mockWebElement)
+    locator.locate(LocatorBinding("username", selectorType, lookup, None, Some(Duration.create(2, TimeUnit.SECONDS)), Some(1), false, ctx)) should be (mockWebElement)
 
     verify(mockWebDriver, times(1)).executeScript(s"return $lookup")
     verify(mockWebDriverTimeouts, times(1)).implicitlyWait(jt.Duration.ofMillis(2000L))
@@ -473,7 +473,7 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
     doReturn(null).when(mockWebDriver).executeScript(same(s"return $lookup"), any())
 
     intercept[WebElementNotFoundException] {
-      locator.locate(LocatorBinding("username", selectorType, lookup, None, None, ctx))
+      locator.locate(LocatorBinding("username", selectorType, lookup, None, None, false, ctx))
     }
 
     verify(mockWebDriver, atLeastOnce()).executeScript(s"return $lookup")
@@ -493,7 +493,7 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
     doReturn(null).when(mockWebDriver).executeScript(same(s"return $lookup"), any())
 
     intercept[WebElementNotFoundException] {
-      locator.locate(LocatorBinding("username", selectorType, lookup, None, Some(0), ctx))
+      locator.locate(LocatorBinding("username", selectorType, lookup, None, Some(0), false, ctx))
     }
 
     verify(mockWebDriver, atLeastOnce()).executeScript(s"return $lookup")
@@ -513,7 +513,7 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
     doReturn(null).when(mockWebDriver).executeScript(same(s"return $lookup"), any())
 
     intercept[WebErrors.WebElementNotFoundException] {
-      locator.locate(LocatorBinding("username", selectorType, lookup, None, Some(1), ctx))
+      locator.locate(LocatorBinding("username", selectorType, lookup, None, Some(1), false, ctx))
     }
 
     verify(mockWebDriver, atLeastOnce()).executeScript(s"return $lookup")
@@ -563,10 +563,10 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
     envState.topScope.set("frame/locator", SelectorType.id.toString)
     envState.topScope.set("frame/locator/id", "frame")
 
-    locator.locate(LocatorBinding("username", selectorType, lookup, None, timeout, index, ctx)) should be (mockWebElement)
-    locator.locate(LocatorBinding("username", selectorType, lookup, Some((RelativeSelectorType.in, new LocatorBinding("container", List(Selector(SelectorType.id, "container")), ctx), None)), timeout, index, ctx)) should be (mockWebElement)
-    locator.locate(LocatorBinding("username", selectorType, lookup, Some((RelativeSelectorType.in, new LocatorBinding("iframe", List(Selector(SelectorType.id, "iframe")), ctx), None)), timeout, index, ctx)) should be (mockWebElement)
-    locator.locate(LocatorBinding("username", selectorType, lookup, Some((RelativeSelectorType.in, new LocatorBinding("frame", List(Selector(SelectorType.id, "frame")), ctx), None)), timeout, index, ctx)) should be (mockWebElement)
+    locator.locate(LocatorBinding("username", selectorType, lookup, None, timeout, index, false, ctx)) should be (mockWebElement)
+    locator.locate(LocatorBinding("username", selectorType, lookup, Some((RelativeSelectorType.in, new LocatorBinding("container", List(Selector(SelectorType.id, "container", false)), ctx), None)), timeout, index, false, ctx)) should be (mockWebElement)
+    locator.locate(LocatorBinding("username", selectorType, lookup, Some((RelativeSelectorType.in, new LocatorBinding("iframe", List(Selector(SelectorType.id, "iframe", false)), ctx), None)), timeout, index, false, ctx)) should be (mockWebElement)
+    locator.locate(LocatorBinding("username", selectorType, lookup, Some((RelativeSelectorType.in, new LocatorBinding("frame", List(Selector(SelectorType.id, "frame", false)), ctx), None)), timeout, index, false, ctx)) should be (mockWebElement)
 
     index match {
       case Some(idx) if idx > 0 =>
@@ -596,7 +596,7 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
     when(mockWebDriverOptions.timeouts()).thenReturn(mockWebDriverTimeouts)
     when(mockWebDriver.findElements(By.cssSelector(".mname"))).thenReturn(new java.util.ArrayList[WebElement]())
 
-    locator.locateAll(LocatorBinding("middleNames", SelectorType.`css selector`, ".mname", None, Some(0), ctx)) should be (Nil)
+    locator.locateAll(LocatorBinding("middleNames", SelectorType.`css selector`, ".mname", None, Some(0), false, ctx)) should be (Nil)
   }
 
   "Attempt to locate all non existent elements" should "return an empty list when null is returned" in {
@@ -609,7 +609,7 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
     when(mockWebDriverOptions.timeouts()).thenReturn(mockWebDriverTimeouts)
     when(mockWebDriver.findElements(By.cssSelector(".mname"))).thenReturn(null)
 
-    locator.locateAll(LocatorBinding("middleNames", SelectorType.`css selector`, ".mname", None, Some(1), ctx)) should be (Nil)
+    locator.locateAll(LocatorBinding("middleNames", SelectorType.`css selector`, ".mname", None, Some(1), false, ctx)) should be (Nil)
   }
 
   "Attempt to locate existing elements by id" should "return the elements" in {
@@ -725,7 +725,7 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
     doReturn(mockWebElementsArrayList).when(mockWebDriver).executeScript(s"return $lookup")
     when(mockWebElement.isDisplayed).thenReturn(true)
 
-    locator.locateAll(LocatorBinding("username", selectorType, lookup, None, None, ctx)) should be (mockWebElements)
+    locator.locateAll(LocatorBinding("username", selectorType, lookup, None, None, false, ctx)) should be (mockWebElements)
 
     verify(mockWebDriver, times(1)).executeScript(s"return $lookup")
     verifyNoInteractions(mockWebDriverTimeouts)
@@ -749,7 +749,7 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
     doReturn(mockWebElementsArrayList).when(mockWebDriver).executeScript(s"return $lookup")
     when(mockWebElement.isDisplayed).thenReturn(true)
 
-    locator.locateAll(LocatorBinding("username", selectorType, lookup, None, Some(Duration.Zero), None, ctx)) should be (mockWebElements)
+    locator.locateAll(LocatorBinding("username", selectorType, lookup, None, Some(Duration.Zero), None, false, ctx)) should be (mockWebElements)
 
     verify(mockWebDriver, times(1)).executeScript(s"return $lookup")
     verify(mockWebDriverTimeouts, times(1)).implicitlyWait(jt.Duration.ofMillis(200L))
@@ -774,7 +774,7 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
     doReturn(mockWebElementsArrayList).when(mockWebDriver).executeScript(s"return $lookup")
     when(mockWebElement.isDisplayed).thenReturn(true)
 
-    locator.locateAll(LocatorBinding("username", selectorType, lookup, None, Some(Duration.create(2, TimeUnit.SECONDS)), None, ctx)) should be (mockWebElements)
+    locator.locateAll(LocatorBinding("username", selectorType, lookup, None, Some(Duration.create(2, TimeUnit.SECONDS)), None, false, ctx)) should be (mockWebElements)
 
     verify(mockWebDriver, times(1)).executeScript(s"return $lookup")
     verify(mockWebDriverTimeouts, times(1)).implicitlyWait(jt.Duration.ofMillis(2000L))
@@ -795,7 +795,7 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
     doReturn(null).when(mockWebDriver).executeScript(same(s"return $lookup"), any())
 
     intercept[WebElementNotFoundException] {
-      locator.locate(LocatorBinding("username", selectorType, lookup, None, None, ctx))
+      locator.locate(LocatorBinding("username", selectorType, lookup, None, None, false, ctx))
     }
 
     verify(mockWebDriver, atLeastOnce()).executeScript(s"return $lookup")
@@ -838,10 +838,10 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
     envState.topScope.set("frame/locator", SelectorType.id.toString)
     envState.topScope.set("frame/locator/id", "frame")
 
-    locator.locateAll(LocatorBinding("username", selectorType, lookup, None, timeout, None, ctx)) should be (mockWebElements)
-    locator.locateAll(LocatorBinding("username", selectorType, lookup, Some((RelativeSelectorType.in, new LocatorBinding("container", List(Selector(SelectorType.id, "container")), ctx), None)), timeout, None, ctx)) should be (mockWebElements)
-    locator.locateAll(LocatorBinding("username", selectorType, lookup, Some((RelativeSelectorType.in, new LocatorBinding("iframe", List(Selector(SelectorType.id, "iframe")), ctx), None)), timeout, None, ctx)) should be (mockWebElements)
-    locator.locateAll(LocatorBinding("username", selectorType, lookup, Some((RelativeSelectorType.in, new LocatorBinding("frame", List(Selector(SelectorType.id, "frame")), ctx), None)), timeout, None, ctx)) should be (mockWebElements)
+    locator.locateAll(LocatorBinding("username", selectorType, lookup, None, timeout, None, false, ctx)) should be (mockWebElements)
+    locator.locateAll(LocatorBinding("username", selectorType, lookup, Some((RelativeSelectorType.in, new LocatorBinding("container", List(Selector(SelectorType.id, "container", false)), ctx), None)), timeout, None, false, ctx)) should be (mockWebElements)
+    locator.locateAll(LocatorBinding("username", selectorType, lookup, Some((RelativeSelectorType.in, new LocatorBinding("iframe", List(Selector(SelectorType.id, "iframe", false)), ctx), None)), timeout, None, false, ctx)) should be (mockWebElements)
+    locator.locateAll(LocatorBinding("username", selectorType, lookup, Some((RelativeSelectorType.in, new LocatorBinding("frame", List(Selector(SelectorType.id, "frame", false)), ctx), None)), timeout, None, false, ctx)) should be (mockWebElements)
 
     verify(mockWebDriver, times(3)).findElements(by)
 
@@ -859,9 +859,9 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
   "Attempt to locate existing element by three locators" should "return the element by first one" in {
 
     val selectors = List(
-      Selector(SelectorType.id, "uname"),
-      Selector(SelectorType.name, "username"),
-      Selector(SelectorType.`class name`, ".usrname")
+      Selector(SelectorType.id, "uname", false),
+      Selector(SelectorType.name, "username", false),
+      Selector(SelectorType.`class name`, ".usrname", false)
     )
 
     val mockWebDriver: FirefoxDriver = mock[FirefoxDriver]
@@ -886,9 +886,9 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
   "Attempt to locate existing element by three locators" should "return the element by second one" in {
 
     val selectors = List(
-      Selector(SelectorType.id, "uname"),
-      Selector(SelectorType.name, "username"),
-      Selector(SelectorType.`class name`, ".usrname")
+      Selector(SelectorType.id, "uname", false),
+      Selector(SelectorType.name, "username", false),
+      Selector(SelectorType.`class name`, ".usrname", false)
     )
 
     val mockWebDriver: FirefoxDriver = mock[FirefoxDriver]
@@ -913,9 +913,9 @@ class WebElementLocatorTest extends BaseTest with Matchers with MockitoSugar wit
   "Attempt to locate existing element by three locators" should "return the element by third one" in {
 
     val selectors = List(
-      Selector(SelectorType.id, "uname"),
-      Selector(SelectorType.name, "username"),
-      Selector(SelectorType.`class name`, ".usrname")
+      Selector(SelectorType.id, "uname", false),
+      Selector(SelectorType.name, "username", false),
+      Selector(SelectorType.`class name`, ".usrname", false)
     )
 
     val mockWebDriver: FirefoxDriver = mock[FirefoxDriver]

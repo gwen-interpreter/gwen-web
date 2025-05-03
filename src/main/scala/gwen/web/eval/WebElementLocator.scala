@@ -54,7 +54,7 @@ class WebElementLocator(ctx: WebContext) extends LazyLogging {
       val selector = selectors.head
       try {
         findElementBySelector(name, selector) foreach { webElement =>
-          result = Success(webElement)
+          result = Success(webElement.asInstanceOf[WebElement])
         }
       } catch {
         case e @ (_ :  NoSuchElementException | _ : NotFoundOrInteractableException) =>
@@ -70,7 +70,7 @@ class WebElementLocator(ctx: WebContext) extends LazyLogging {
           // return the first one that resolves
           val iter = selectors.iterator.flatMap(loc => Try(findElementBySelector(name, loc)).getOrElse(None))
           if (iter.hasNext) {
-            result = Success(iter.next())
+            result = Success(iter.next.asInstanceOf[WebElement])
           }
         } finally {
           // restore implicit waits
@@ -174,7 +174,11 @@ class WebElementLocator(ctx: WebContext) extends LazyLogging {
               case RelativeSelectorType.in =>
                 getContainerElement(rBinding) match {
                   case Some(containerElem) =>
-                    containerElem.findElement(by)
+                    if (rBinding.selectors.exists(_.isShadowRoot)) {
+                      containerElem.getShadowRoot().findElement(by)
+                    } else {
+                      containerElem.findElement(by)
+                    }
                   case _ =>
                     driver.findElement(by)
                 }
@@ -298,7 +302,13 @@ class WebElementLocator(ctx: WebContext) extends LazyLogging {
             driver.findElements(by)
           case Some((_, rBinding, _)) => 
             getContainerElement(rBinding) match {
-              case Some(containerElem) => containerElem.findElements(by)
+              case Some(containerElem) => {
+                if (rBinding.selectors.exists(_.isShadowRoot)) {
+                  containerElem.getShadowRoot().findElements(by)
+                } else {
+                  containerElem.findElements(by)
+                }
+              }
               case _ => driver.findElements(by)
             }
         }

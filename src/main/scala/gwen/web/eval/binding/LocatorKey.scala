@@ -24,6 +24,7 @@ object LocatorKey {
   def relativeKeyWithinPixels(name: String, selectorType: SelectorType, relativeSelectorType: RelativeSelectorType) = s"${relativeKey(name, selectorType, relativeSelectorType)}/withinPixels"
   def timeoutSecsKey(name: String, selectorType: SelectorType) = createKey(name, selectorType, "timeoutSecs")
   def indexKey(name: String, selectorType: SelectorType) = createKey(name, selectorType, "index")
+  def shadowRootKey(name: String, selectorType: SelectorType) = createKey(name, selectorType, "shadowRoot")
 
   private def createKey(name: String, selectorType: SelectorType, suffix: String) = s"${selectorKey(name, selectorType)}/$suffix"
 
