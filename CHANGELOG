@@ -1,3 +1,11 @@
+4.9.0
+-----
+8 May 2025
+- Add DSL to support reading text from base64 encoded PDF blobs
+  - `I capture the base64 encoded PDF text from <blobRef>`
+- Update Gwen core from v4.6.0 to v[4.7.0](https://github.com/gwen-interpreter/gwen/releases/tag/v4.7.0)
+  - Add support for capturing text from base64 encoded PDF blobs
+
 4.8.0
 -----
 3 May 2025
