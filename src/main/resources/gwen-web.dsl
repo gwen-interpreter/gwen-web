@@ -898,6 +898,7 @@ I capture the PDF text from url "<url>" as <name>
 I capture the PDF text from file "<filepath>"
 I capture the PDF text from file "<filepath>" as <name>
 I capture the base64 encoded PDF text from <blobRef>
+I capture the base64 encoded PDF text from <blobRef> as <name>
 I lookup <name> in the "<csvFilepath>" file where "<predicate>"
 I lookup <name> in <csvFilepathRef> file where "<predicate>"
 I lookup <column> in the "<csvFilepath>" file as <name> where "<predicate>"
