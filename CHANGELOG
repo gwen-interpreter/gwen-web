@@ -3,6 +3,7 @@
 9 May 2025
 - Add DSL to support reading text from base64 encoded PDF blobs and bindiung it to a given name
   - `I capture the base64 encoded PDF text from <blobRef> as <name>`
+- Make timeouts for web elements in guards one tenth of timeout for element
 - Update Gwen core from v4.7.1 to v[4.7.2](https://github.com/gwen-interpreter/gwen/releases/tag/v4.7.2)
   - Add support for binding capturing text from base64 encoded PDF blobs to given names
 

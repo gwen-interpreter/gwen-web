@@ -58,7 +58,8 @@ import scala.util.Failure
           val iStepDef = Scenario(None, tags, ifTag.toString, cond, None, Nil, None, List(step.copy(withName = doStep)), Nil, Nil, Nil)
           val sdCall = () => engine.callStepDef(step, iStepDef, iStep, ctx)
           ctx.evaluate(sdCall()) {
-            val satisfied = Try(ctx.waitForElementState(binding.withTimeout(Some(Duration(2, TimeUnit.SECONDS))), state, negate)).map(_ => true).getOrElse(false)
+            var timeoutSecs = binding.timeoutSecondsOpt.map(_ / 10L).filter(_ > 0).getOrElse(if (binding.timeoutSeconds > 0) 1L else 0)
+            val satisfied = Try(ctx.waitForElementState(binding.withTimeout(Some(Duration(timeoutSecs, TimeUnit.SECONDS))), state, negate)).map(_ => true).getOrElse(false)
             LoadStrategyBinding.bindIfLazy(binding.name, satisfied.toString, ctx)
             if (satisfied) {
               logger.info(s"Processing conditional step ($cond = true): ${step.keyword} $doStep")
