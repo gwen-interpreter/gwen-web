@@ -1,4 +1,5 @@
 import sbtrelease._
+import xerial.sbt.Sonatype.sonatypeCentralHost
 
 // we hide the existing definition for setReleaseVersion to replace it with our own
 import sbtrelease.ReleaseStateTransformations.{setReleaseVersion=>_,_}
@@ -27,8 +28,7 @@ releaseVersion := { ver =>
 
 releaseCrossBuild := false
 releasePublishArtifactsAction := PgpKeys.publishSigned.value
-sonatypeCredentialHost := "s01.oss.sonatype.org"
-sonatypeRepository := "https://s01.oss.sonatype.org/service/local"
+ThisBuild / sonatypeCredentialHost := sonatypeCentralHost
 
 publishTo := sonatypePublishToBundle.value
 

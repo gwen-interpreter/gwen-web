@@ -10,7 +10,7 @@ val gwenWeb = (project in file("."))
   )
 
 resolvers ++= Seq(
-  "Sonatype Snapshots" at "https://s01.oss.sonatype.org/content/repositories/snapshots/"
+  "Sonatype Snapshots" at "https://central.sonatype.com/repository/maven-snapshots/"
 )
 
 lazy val projectSettings = Seq(
