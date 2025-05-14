@@ -1,3 +1,9 @@
+4.9.3
+-----
+14 May 2025
+- Update Gwen core from v4.7.3 to v[4.7.4](https://github.com/gwen-interpreter/gwen/releases/tag/v4.7.4)
+  - Ignore parallel option if the number of input features does not exceed one
+
 4.9.2
 -----
 12 May 2025
