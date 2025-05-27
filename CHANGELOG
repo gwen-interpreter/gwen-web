@@ -1,3 +1,8 @@
+4.10.1
+------
+27 May 2025
+- Ignore exceptions when quitting webdriver (for cases where driver session has already ended)
+
 4.10.0
 ------
 27 May 2025

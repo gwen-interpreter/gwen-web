@@ -99,7 +99,7 @@ class DriverManager() extends LazyLogging {
       try {
         eventDispatcher.sessionClosing(driver)
       } finally {
-        driver.quit()
+        Try(driver.quit())
       }
     }
     session = "primary"
