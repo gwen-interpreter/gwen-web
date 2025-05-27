@@ -1,7 +1,16 @@
+4.10.0
+------
+27 May 2025
+- Update Gwen core from v4.7.5 to v[4.8.0](https://github.com/gwen-interpreter/gwen/releases/tag/v4.8.0)
+  - Add implicit variable to capture the evaluated feature sequence number:
+    - `gwen.feature.eval.sequenceNo`
+  - Update selenium from v4.32.0 to v4.33.0
+
 4.9.4
 -----
 16 May 2025
-- Fix console reporting when parallel option is ignored
+- Update Gwen core from v4.7.4 to v[4.7.5](https://github.com/gwen-interpreter/gwen/releases/tag/v4.7.5)
+  - Fix console reporting when parallel option is ignored
 
 4.9.3
 -----
