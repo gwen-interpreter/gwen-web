@@ -359,7 +359,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
           }
         } else false
         attempts = attempts + 1
-        result || !(attempts < WebSettings.`gwen.web.assertions.maxStrikes`)
+        result || maxStrikesExhausted(attempts, timeoutSecs)
       }
     } catch {
       case _: WaitTimeoutException => result = false
@@ -689,7 +689,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
           waitUntil(binding.timeoutSeconds, s"waiting for ${binding.displayName} to ${if(negate) "not " else ""}be '$state'") {
             result = isElementState(binding, state, negate)
             attempts = attempts + 1
-            result || !(attempts < WebSettings.`gwen.web.assertions.maxStrikes`)
+            result || maxStrikesExhausted(attempts, binding.timeoutSecondsOpt)
           }
         } catch {
           case _: WaitTimeoutException =>
@@ -697,6 +697,14 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
         }
         assertWithError(result, message, s"${binding.displayName} should${if(negate) " not" else ""} be $state", mode)
     }
+  }
+
+  private def maxStrikesExhausted(attempt: Int, timeoutSecs: Option[Long]): Boolean = {
+    timeoutSecs filter { ts => 
+      ts == WebSettings.`gwen.web.wait.seconds`
+    } map { ts => 
+      !(attempt < WebSettings.`gwen.web.assertions.maxStrikes`)
+    } getOrElse false
   }
 
   /**

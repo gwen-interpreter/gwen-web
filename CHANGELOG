@@ -1,3 +1,8 @@
+4.10.2
+------
+5 Jun 2025
+- Honor timeout overrides on assertions
+
 4.10.1
 ------
 27 May 2025
