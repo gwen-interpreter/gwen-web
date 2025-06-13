@@ -30,7 +30,10 @@ releaseCrossBuild := false
 releasePublishArtifactsAction := PgpKeys.publishSigned.value
 ThisBuild / sonatypeCredentialHost := sonatypeCentralHost
 
-publishTo := sonatypePublishToBundle.value
+ThisBuild / publishTo := {
+  if (isSnapshot.value) Some("central-snapshots" at "https://central.sonatype.com/repository/maven-snapshots/")
+  else sonatypePublishToBundle.value
+}
 
 releaseProcess := Seq(
   checkSnapshotDependencies,

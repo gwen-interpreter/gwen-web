@@ -1,6 +1,6 @@
 enablePlugins(GitVersioning)
 
-git.baseVersion := "4.10.2"
+git.baseVersion := "4.10.3"
 git.useGitDescribe := true
 
 val gwenWeb = (project in file("."))

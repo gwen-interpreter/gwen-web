@@ -451,10 +451,16 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
           var lapsed = 0L
           waitUntil(timeoutSecs, reason) {
             try {
-              val webElement = binding.resolve()
+              var webElement = binding.resolve()
               tryMoveTo(webElement)
               if (selector.index.isEmpty) {
-                highlightElement(webElement)
+                try {
+                  highlightElement(webElement)
+                } catch {
+                  case e: FunctionException if e.getCause != null && e.getCause.isInstanceOf[StaleElementReferenceException] =>
+                    webElement = binding.resolve()
+                    highlightElement(webElement)
+                }
               }
               val res = operation(webElement)
               result = Some(Success(res))
