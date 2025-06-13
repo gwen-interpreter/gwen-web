@@ -1,7 +1,7 @@
 4.10.3
 ------
 13 Jun 2025
-- Resolve element again and retry highliting if it goes stale at that point
+- Resolve element again and retry highlighting if it goes stale at that point
 
 4.10.2
 ------
