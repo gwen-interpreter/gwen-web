@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 Branko Juric, Brady Wood
+ * Copyright 2025 Branko Juric, Brady Wood
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 package gwen.web.eval.action.unit
 
 import gwen.web.eval.WebContext
-import gwen.web.eval.PopupAction
 
 import gwen.core.behavior.BehaviorType
 import gwen.core.eval.action.UnitStepAction
@@ -26,12 +25,12 @@ import gwen.core.node.gherkin.Step
 
 import scala.util.chaining._
 
-class HandlePopup(action: PopupAction, timeoutSecs: Option[Long]) extends UnitStepAction[WebContext] {
+class AssertPopupDisplayed(negate: Boolean, message: Option[String], waitSecs: Option[Long]) extends UnitStepAction[WebContext] {
 
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     step tap { _ =>
-      checkStepRules(step, BehaviorType.Action, ctx)
-      ctx.handlePopup(action == PopupAction.accept, timeoutSecs)
+      checkStepRules(step, BehaviorType.Assertion, ctx)
+      ctx.checkPopupDisplayed(waitSecs, negate, message, step.assertionMode)
     }
   }
 

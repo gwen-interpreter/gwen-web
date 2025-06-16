@@ -1,3 +1,10 @@
+4.11.0
+======
+16 Jun 2025
+- Add DSLs for working with alert/confirmation popups
+  - `I wait for the <alert|confirmation> popup`
+  - `the <alert|confirmation> popup should[ not] be displayed` 
+
 4.10.3
 ------
 13 Jun 2025
@@ -2889,6 +2896,8 @@ Jan 16, 2021
 - Add DSLs to support dealing with multiple tabs and child windows
   - `I switch to child <window|tab> <occurrence>`
   - `I close child <window|tab> <occurrence>`
+  - `I should have 1 open <tab|window>`
+  - `I should have <count> open <tab|window>s`
 - Add DSL to support binding file paths of screenshots to named attributes
   - `I capture the current screenshot as <name>`
 - Update webdrivermanager from v4.2.2 to v4.3.0

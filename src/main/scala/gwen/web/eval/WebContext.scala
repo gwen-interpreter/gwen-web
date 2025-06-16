@@ -638,7 +638,11 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
   }
 
   def waitUntil[T](reason: String, condition: ExpectedCondition[T]): Unit = {
-    val timeout = WebSettings.`gwen.web.wait.seconds`
+    waitUntil(None, reason, condition)
+  }
+
+  def waitUntil[T](timeoutSecs: Option[Long], reason: String, condition: ExpectedCondition[T]): Unit = {
+    val timeout = timeoutSecs.getOrElse(WebSettings.`gwen.web.wait.seconds`)
     try {
       withWebDriver { webDriver =>
         new FluentWait(webDriver)
@@ -703,6 +707,25 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
         }
         assertWithError(result, message, s"${binding.displayName} should${if(negate) " not" else ""} be $state", mode)
     }
+  }
+
+  /**
+    * Checks the current state of an element.
+    *
+    * @param binding the locator binding of the element
+    * @param state the state to check
+    * @param negate whether or not to negate the check
+    * @param message optional assertion error message
+    * @param mode the assertion mode
+    */
+  def checkPopupDisplayed(waitSecs: Option[Long], negate: Boolean, message: Option[String], mode: AssertionMode): Unit = {
+    val result = Try(waitForPopup(waitSecs: Option[Long])) match {
+      case Success(_) => true
+      case Failure(e) => 
+        if (e.isInstanceOf[WaitTimeoutException]) false
+        else throw e
+    }
+    assertWithError(result, message, s"Alert/confirmation popup should${if(negate) " not" else ""} be displayed", mode)
   }
 
   private def maxStrikesExhausted(attempt: Int, timeoutSecs: Option[Long]): Boolean = {
@@ -1434,15 +1457,19 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     *
     * @param accept true to accept; false to dismiss
     */
-  def handleAlert(accept: Boolean): Unit = {
+  def handlePopup(accept: Boolean, waitSecs: Option[Long]): Unit = {
     withWebDriver { driver =>
-      waitUntil("waiting for alert popup", ExpectedConditions.alertIsPresent())
+      waitForPopup(waitSecs)
       if (accept) {
         driver.switchTo().alert().accept()
       } else {
         driver.switchTo().alert().dismiss()
       }
     }
+  }
+
+  def waitForPopup(waitSecs: Option[Long]): Unit = {
+    waitUntil(waitSecs, "waiting for alert popup", ExpectedConditions.alertIsPresent())
   }
 
   /**

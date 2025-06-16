@@ -107,6 +107,8 @@ class WebEngine extends EvalEngine[WebContext] {
     */
   override def translateStep(step: Step): UnitStepAction[WebContext] = {
     step.expression match {
+      case r"I wait for the (?:alert|confirmation) popup" =>
+        new WaitForPopup(step.timeoutOpt.map(_.toSeconds))
       case r"""I wait for (.+?)$element text""" =>
         new WaitForText(element, step.timeoutOpt.map(_.toSeconds))
       case r"""I wait for (.+?)$element""" =>
@@ -159,6 +161,8 @@ class WebEngine extends EvalEngine[WebContext] {
         new ComparePopupMessage(name, step.orDocString(expression), false, ComparisonOperator.valueOf(operator), Option(negation).nonEmpty, step.message, step.timeoutOpt, step.isTrim, step.isIgnoreCase)
       case r"""the (alert|confirmation)$name popup message should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$attribute""" =>
         new ComparePopupMessage(name, attribute, true, ComparisonOperator.valueOf(operator), Option(negation).nonEmpty, step.message, step.timeoutOpt, step.isTrim, step.isIgnoreCase)
+      case r"""the (?:alert|confirmation) popup should( not)?$negation be displayed""" =>
+        new AssertPopupDisplayed(Option(negation).nonEmpty, step.message, step.timeoutOpt.map(_.toSeconds))
       case r"""(.+?)$element should( not)?$negation be (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$state""" =>
         new CompareElementState(element, ElementState.valueOf(state), Option(negation).nonEmpty, step.message, step.timeoutOpt)
       case r"""(.+?)$element( text| value)?$selection should( not)?$negation be (blank|empty|true|false)$literal""" if !element.matches(".+at (json path|xpath).+") && !element.matches(".+? file") =>
@@ -264,7 +268,7 @@ class WebEngine extends EvalEngine[WebContext] {
       case r"""I switch to (.+?)$session""" =>
         new SwitchToBrowserSession(session)
       case r"I (accept|dismiss)$action the (?:alert|confirmation) popup" =>
-        new HandlePopup(PopupAction.valueOf(action))
+        new HandlePopup(PopupAction.valueOf(action), step.timeoutOpt.map(_.toSeconds))
       case r"""I resize the window to width (\d+?)$width and height (\d+?)$height""" =>
         new ResizeWindow(width.toInt, height.toInt)
       case r"""I set the window position to x (\d+?)$x and y (\d+?)$y""" =>

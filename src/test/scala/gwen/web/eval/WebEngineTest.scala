@@ -1489,13 +1489,13 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
   "I <accept|dismiss> the <alert|confirmation> popup" should "evaluate" in {
     List("accept", "dismiss").foreach { action =>
       val accept = action == "accept"
-      doNothing().when(ctx).handleAlert(accept)
+      doNothing().when(ctx).handlePopup(accept, None)
       List("alert", "confirmation").foreach { mode =>
         evaluate(s"I $action the $mode popup")
       }
     }
-    verify(ctx, times(2)).handleAlert(true)
-    verify(ctx, times(2)).handleAlert(false)
+    verify(ctx, times(2)).handlePopup(true, None)
+    verify(ctx, times(2)).handlePopup(false, None)
   }
 
   "I switch to the child <window|tab>" should "evaluate" in {

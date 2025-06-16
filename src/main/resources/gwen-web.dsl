@@ -269,6 +269,10 @@ the confirmation popup message should not end with <expressionRef>
 the confirmation popup message should not match regex <expressionRef>
 the confirmation popup message should not match xpath <expressionRef>
 the confirmation popup message should not match json path <expressionRef>
+the alert popup should be displayed
+the alert popup should not be displayed
+the confirmation popup should be displayed
+the confirmation popup should not be displayed
 <element> should be displayed
 <element> should be hidden
 <element> should be checked
@@ -481,6 +485,8 @@ I reset my <name> setting
 <name> is defined in <textRef> by regex "<expression>"
 <name> is defined in <jsonRef> by json path "<expression>"
 <name> is "<value>"
+I wait for the alert popup
+I wait for the confirmation popup
 I wait for <element> text
 I wait for <element>
 I clear <element>

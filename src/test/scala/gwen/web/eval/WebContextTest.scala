@@ -1744,21 +1744,21 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     verify(mockNavigation).refresh()
   }
 
-  "WebContext.handleAlert" should "handle accept alert" in {
+  "WebContext.handlePopup" should "handle accept alert" in {
     val mockTargetLocator = mock[WebDriver.TargetLocator]
     val mockAlert = mock[Alert]
     when(mockWebDriver.switchTo()).thenReturn(mockTargetLocator)
     when(mockTargetLocator.alert()).thenReturn(mockAlert)
-    ctx.handleAlert(true)
+    ctx.handlePopup(true, None)
     verify(mockAlert).accept()
   }
 
-  "WebContext.handleAlert" should "handle dismiss alert" in {
+  "WebContext.handlePopup" should "handle dismiss alert" in {
     val mockTargetLocator = mock[WebDriver.TargetLocator]
     val mockAlert = mock[Alert]
     when(mockWebDriver.switchTo()).thenReturn(mockTargetLocator)
     when(mockTargetLocator.alert()).thenReturn(mockAlert)
-    ctx.handleAlert(false)
+    ctx.handlePopup(false, None)
     verify(mockAlert).dismiss()
   }
 
