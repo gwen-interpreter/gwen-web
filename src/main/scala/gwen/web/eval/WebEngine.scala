@@ -238,9 +238,9 @@ class WebEngine extends EvalEngine[WebContext] {
       case r"""I start a browser for (.+?)$session""" =>
         new StartBrowserSession(session)
       case r"""I should have (\d+?)$count open browser(?:s?)""" =>
-        new AssertBrowserCount(count.toInt, step.message)
+        new AssertBrowserCount(count.toInt, step.message, step.timeoutOpt)
       case r"""I should have (\d+?)$count open (?:window|tab)(?:s?)""" =>
-        new AssertBrowserWindowCount(count.toInt, step.message)
+        new AssertBrowserWindowCount(count.toInt, step.message, step.timeoutOpt)
       case r"I have (no|an)$open open browser" =>
         new OpenOrCloseBrowser(open == "an", None, BehaviorType.Context)
       case r"I close the(?: current)? browser" =>

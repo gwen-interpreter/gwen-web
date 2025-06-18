@@ -4,6 +4,7 @@
 - Add DSLs for working with alert/confirmation popups
   - `I wait for the <alert|confirmation> popup`
   - `the <alert|confirmation> popup should[ not] be displayed` 
+- Honor timeouts on browser and window count assertion steps
 
 4.10.3
 ------
