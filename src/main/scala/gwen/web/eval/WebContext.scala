@@ -670,13 +670,13 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
       if (msecs > 0) {
         val style = WebSettings.`gwen.web.highlight.style`
         val origStyle = applyJS(
-          jsFunctionWrapper("element", "arguments[0]", s"type = element.getAttribute('type'); if (('radio' == type || 'checkbox' == type) && element.parentElement.getElementsByTagName('input').length == 1) { element = element.parentElement; } original_style = element.getAttribute('style'); element.setAttribute('style', original_style + '; $style'); return original_style;"), element)(WebSettings.`gwen.web.capture.screenshots.highlighting`)
+          jsFunctionWrapper("element", "arguments[0]", s"type = element.getAttribute('type'); if (('radio' == type || 'checkbox' == type) && element.parentElement.getElementsByTagName('input').length == 1) { element = element.parentElement; } original_style = element.getAttribute('style'); element.setAttribute('style', original_style + '; $style'); return original_style;"), element)(using WebSettings.`gwen.web.capture.screenshots.highlighting`)
         try {
           if (!WebSettings.`gwen.web.capture.screenshots.highlighting` || !WebSettings.`gwen.web.capture.screenshots.enabled`) {
             Thread.sleep(msecs)
           }
         } finally {
-          applyJS(jsFunctionWrapper("element", "arguments[0]", s"type = element.getAttribute('type'); if (('radio' == type || 'checkbox' == type) && element.parentElement.getElementsByTagName('input').length == 1) { element = element.parentElement; } element.setAttribute('style', '$origStyle');"), element)(false)
+          applyJS(jsFunctionWrapper("element", "arguments[0]", s"type = element.getAttribute('type'); if (('radio' == type || 'checkbox' == type) && element.parentElement.getElementsByTagName('input').length == 1) { element = element.parentElement; } element.setAttribute('style', '$origStyle');"), element)(using false)
         }
       }
     }
@@ -1485,7 +1485,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
           addAttachment("performance-trace", "json", driverManager.performanceTrace(u, driver))
         }
       }
-    } (WebSettings.`gwen.web.capture.screenshots.enabled`)
+    } (using WebSettings.`gwen.web.capture.screenshots.enabled`)
   }
 
   /**

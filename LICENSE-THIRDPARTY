@@ -5,19 +5,19 @@ com.fasterxml.jackson.datatype
   +-jackson-datatype-jsr310:2.12.1
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
 org.scala-lang
-  +-scala-library:2.13.15
+  +-scala-library:2.13.16
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0
-  +-scala3-library_3:3.6.4
+  +-scala3-library_3:3.7.1
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0
-  +-scaladoc_3:3.6.4
+  +-scaladoc_3:3.7.1
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0
-  +-tasty-core_3:3.6.4
+  +-tasty-core_3:3.7.1
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0
-  +-scala3-compiler_3:3.6.4
+  +-scala3-compiler_3:3.7.1
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0
-  +-scala3-interfaces:3.6.4
+  +-scala3-interfaces:3.7.1
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0
-  +-scala3-tasty-inspector_3:3.6.4
+  +-scala3-tasty-inspector_3:3.7.1
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0
 com.jayway.jsonpath
   +-json-path:2.9.0
@@ -60,13 +60,13 @@ com.google.errorprone
 org.jline
   +-jline:3.29.0
   | +-The BSD License - https://opensource.org/licenses/BSD-3-Clause
-  +-jline-native:3.27.1
+  +-jline-native:3.29.0
   | +-The BSD License - https://opensource.org/licenses/BSD-3-Clause
-  +-jline-terminal:3.27.1
+  +-jline-terminal:3.29.0
   | +-The BSD License - https://opensource.org/licenses/BSD-3-Clause
-  +-jline-terminal-jni:3.27.1
+  +-jline-terminal-jni:3.29.0
   | +-The BSD License - https://opensource.org/licenses/BSD-3-Clause
-  +-jline-reader:3.27.1
+  +-jline-reader:3.29.0
   | +-The BSD License - https://opensource.org/licenses/BSD-3-Clause
 net.minidev
   +-json-smart:2.5.2
@@ -74,9 +74,9 @@ net.minidev
   +-accessors-smart:2.5.2
   | +-The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
 org.scala-sbt
-  +-util-interface:1.10.4
+  +-util-interface:1.10.7
   | +-Apache-2.0 - https://github.com/sbt/sbt/blob/develop/LICENSE
-  +-compiler-interface:1.10.4
+  +-compiler-interface:1.10.7
   | +-Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0
 com.fasterxml.jackson.core
   +-jackson-annotations:2.18.3
@@ -246,7 +246,7 @@ org.gweninterpreter
   +-gwen:4.8.1
   | +-Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
 org.scala-lang.modules
-  +-scala-asm:9.7.1-scala-1
+  +-scala-asm:9.8.0-scala-1
   | +-BSD 3-clause - http://opensource.org/licenses/BSD-3-Clause
 ua.co.k
   +-strftime4j:1.0.5

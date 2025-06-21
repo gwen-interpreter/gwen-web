@@ -141,15 +141,15 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val oStyle = ""
     val js1 = s"(function(element) { type = element.getAttribute('type'); if (('radio' == type || 'checkbox' == type) && element.parentElement.getElementsByTagName('input').length == 1) { element = element.parentElement; } original_style = element.getAttribute('style'); element.setAttribute('style', original_style + '; $hStyle'); return original_style; })(arguments[0])"
     val js2 = s"(function(element) { type = element.getAttribute('type'); if (('radio' == type || 'checkbox' == type) && element.parentElement.getElementsByTagName('input').length == 1) { element = element.parentElement; } element.setAttribute('style', '$oStyle'); })(arguments[0])"
-    doReturn(oStyle).when(ctx).applyJS(js1, mockElement)(WebSettings.`gwen.web.capture.screenshots.highlighting`)
+    doReturn(oStyle).when(ctx).applyJS(js1, mockElement)(using WebSettings.`gwen.web.capture.screenshots.highlighting`)
     ctx.highlightElement(mockElement)
     val msecs = WebSettings`gwen.web.throttle.msecs`;
     if (msecs > 0) {
-      verify(ctx).applyJS(js1, mockElement)(WebSettings.`gwen.web.capture.screenshots.highlighting`)
-      verify(ctx).applyJS(js2,mockElement)(WebSettings.`gwen.web.capture.screenshots.highlighting`)
+      verify(ctx).applyJS(js1, mockElement)(using WebSettings.`gwen.web.capture.screenshots.highlighting`)
+      verify(ctx).applyJS(js2,mockElement)(using WebSettings.`gwen.web.capture.screenshots.highlighting`)
     } else {
-      verify(ctx, never()).applyJS(js1, mockElement)(WebSettings.`gwen.web.capture.screenshots.highlighting`)
-      verify(ctx, never()).applyJS(js2, mockElement)(WebSettings.`gwen.web.capture.screenshots.highlighting`)
+      verify(ctx, never()).applyJS(js1, mockElement)(using WebSettings.`gwen.web.capture.screenshots.highlighting`)
+      verify(ctx, never()).applyJS(js2, mockElement)(using WebSettings.`gwen.web.capture.screenshots.highlighting`)
     }
   }
 
@@ -1035,7 +1035,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     ctx.topScope.set(JSBinding.key("element/action/click"), "element.click()")
     ctx.performAction(ElementAction.click, elemBinding)
     verify(mockElement, never()).clear()
-    verify(ctx).applyJS("(function(element) { element.click() })(arguments[0])", mockElement)(WebSettings.`gwen.web.capture.screenshots.highlighting`)
+    verify(ctx).applyJS("(function(element) { element.click() })(arguments[0])", mockElement)(using WebSettings.`gwen.web.capture.screenshots.highlighting`)
   }
 
   "WebContext.dragAndDrop" should "drag source to target" in {
@@ -1522,7 +1522,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val mockElement = mock[WebElement]
     doReturn(elemBinding).when(ctx).getLocatorBinding("element")
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
-    doReturn(null).when(ctx).applyJS(s"var elem = arguments[0]; if (typeof elem !== 'undefined' && elem != null) { elem.scrollIntoView(true); }", mockElement)(takeScreenShot = false)
+    doReturn(null).when(ctx).applyJS(s"var elem = arguments[0]; if (typeof elem !== 'undefined' && elem != null) { elem.scrollIntoView(true); }", mockElement)(using takeScreenShot = false)
     ctx.scrollIntoView(elemBinding, ScrollTo.top)
   }
 
@@ -1531,7 +1531,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val mockElement = mock[WebElement]
     doReturn(elemBinding).when(ctx).getLocatorBinding("element")
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
-    doReturn(null).when(ctx).applyJS(s"var elem = arguments[0]; if (typeof elem !== 'undefined' && elem != null) { elem.scrollIntoView(false); }", mockElement)(takeScreenShot = false)
+    doReturn(null).when(ctx).applyJS(s"var elem = arguments[0]; if (typeof elem !== 'undefined' && elem != null) { elem.scrollIntoView(false); }", mockElement)(using takeScreenShot = false)
     ctx.scrollIntoView(elemBinding, ScrollTo.bottom)
   }
 
@@ -1578,7 +1578,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     when(mockElement.getDomAttribute("text")).thenReturn(null)
     when(mockElement.getDomProperty("text")).thenReturn(null)
     when(mockElement.getDomAttribute("value")).thenReturn(null)
-    doReturn(null).when(ctx).applyJS("(function(element) { return element.innerText || element.textContent || '' })(arguments[0])", mockElement)(takeScreenShot = false)
+    doReturn(null).when(ctx).applyJS("(function(element) { return element.innerText || element.textContent || '' })(arguments[0])", mockElement)(using takeScreenShot = false)
     ctx.getElementText(elemBinding) should be (Some(""))
   }
 
@@ -1591,7 +1591,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     when(mockElement.getDomAttribute("text")).thenReturn("")
     when(mockElement.getDomProperty("text")).thenReturn("")
     when(mockElement.getDomAttribute("value")).thenReturn("")
-    doReturn("").when(ctx).applyJS("return (function(element) { return element.innerText || element.textContent || '' })(arguments[0])", mockElement)(takeScreenShot = false)
+    doReturn("").when(ctx).applyJS("return (function(element) { return element.innerText || element.textContent || '' })(arguments[0])", mockElement)(using takeScreenShot = false)
     ctx.getElementText(elemBinding) should be (Some(""))
   }
 
@@ -1604,7 +1604,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     when(mockElement.getDomAttribute("text")).thenReturn(null)
     when(mockElement.getDomProperty("text")).thenReturn(null)
     when(mockElement.getDomAttribute("value")).thenReturn(null)
-    doReturn("JSValue").when(ctx).applyJS("(function(element) { return element.innerText || element.textContent || '' })(arguments[0])", mockElement)(takeScreenShot = false)
+    doReturn("JSValue").when(ctx).applyJS("(function(element) { return element.innerText || element.textContent || '' })(arguments[0])", mockElement)(using takeScreenShot = false)
     ctx.getElementText(elemBinding) should be (Some("JSValue"))
   }
 

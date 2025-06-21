@@ -3,6 +3,12 @@
 21 Jun 2025
 - Update Gwen core from v4.8.0 to v[4.8.1](https://github.com/gwen-interpreter/gwen/releases/tag/v4.8.1)
   - Refactor: decouple engine from step level annotation overrides
+  - Update dependencies
+    - Update scala from v3.6.4 to v3.7.1
+    - Update jline from v3.29.0 to v3.30.4
+    - Update jansi from v2.4.1 to v2.4.2
+    - Update jackson-databind from v2.18.3 to v2.19.1
+    - Update pdfbox from v3.0.4 to v3.0.5
 
 4.11.0
 ======
