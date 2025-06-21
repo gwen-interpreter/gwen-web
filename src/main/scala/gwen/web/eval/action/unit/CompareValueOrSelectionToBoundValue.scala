@@ -31,7 +31,7 @@ import gwen.core.node.gherkin.Step
 import scala.concurrent.duration.Duration
 import scala.util.chaining._
 
-class CompareValueOrSelectionToBoundValue(element: String, selection: Option[DropdownSelection], source: String, operator: ComparisonOperator, negate: Boolean, message: Option[String], timeout: Option[Duration], trim: Boolean, ignoreCase: Boolean) extends UnitStepAction[WebContext] {
+class CompareValueOrSelectionToBoundValue(element: String, selection: Option[DropdownSelection], source: String, operator: ComparisonOperator, negate: Boolean) extends UnitStepAction[WebContext] {
 
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     checkStepRules(step, BehaviorType.Assertion, ctx)
@@ -40,6 +40,10 @@ class CompareValueOrSelectionToBoundValue(element: String, selection: Option[Dro
       val url = ctx.captureCurrentUrl
       ctx.topScope.set(element, url)
     }
+    val message = step.message
+    val timeout = step.timeoutOpt
+    val trim = step.isTrim
+    val ignoreCase = step.isIgnoreCase
     if (ctx.isWebBinding(element) || ctx.isWebBinding(source)) {
       val timeoutOverride = {
         if (ctx.getLocatorBindingOpt(source).nonEmpty || ctx.getLocatorBindingOpt(element).nonEmpty) {
@@ -60,7 +64,7 @@ class CompareValueOrSelectionToBoundValue(element: String, selection: Option[Dro
         }
       }
     } else {
-      new Compare(element, source, operator, negate, message, trim, ignoreCase).apply(parent, step, ctx)
+      new Compare(element, source, operator, negate).apply(parent, step, ctx)
     }
   }
 

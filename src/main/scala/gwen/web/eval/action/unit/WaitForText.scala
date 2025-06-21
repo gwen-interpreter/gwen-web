@@ -25,13 +25,13 @@ import gwen.core.node.gherkin.Step
 
 import scala.util.chaining._
 
-class WaitForText(element: String, waitSecs: Option[Long]) extends UnitStepAction[WebContext] {
+class WaitForText(element: String) extends UnitStepAction[WebContext] {
 
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     step tap { _ =>
       checkStepRules(step, BehaviorType.Action, ctx)
       val binding = ctx.getLocatorBinding(element)
-      ctx.waitUntil(waitSecs, s"waiting for ${binding.displayName} text") {
+      ctx.waitUntil(step.timeoutOpt.map(_.toSeconds), s"waiting for ${binding.displayName} text") {
         ctx.waitForText(binding)
       }
     }

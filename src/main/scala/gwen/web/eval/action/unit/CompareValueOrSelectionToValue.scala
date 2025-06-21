@@ -35,7 +35,7 @@ import scala.util.Failure
 import scala.util.Success
 import scala.util.chaining._
 
-class CompareValueOrSelectionToValue(element: String, selection: Option[DropdownSelection], expression: String, operator: ComparisonOperator, negate: Boolean, message: Option[String], timeout: Option[Duration], trim: Boolean, ignoreCase: Boolean) extends UnitStepAction[WebContext] {
+class CompareValueOrSelectionToValue(element: String, selection: Option[DropdownSelection], expression: String, operator: ComparisonOperator, negate: Boolean) extends UnitStepAction[WebContext] {
 
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     checkStepRules(step, BehaviorType.Assertion, ctx)
@@ -44,6 +44,10 @@ class CompareValueOrSelectionToValue(element: String, selection: Option[Dropdown
       val url = ctx.captureCurrentUrl
       ctx.topScope.set(element, url)
     }
+    val message = step.message
+    val timeout = step.timeoutOpt
+    val trim = step.isTrim
+    val ignoreCase = step.isIgnoreCase
     if (ctx.isWebBinding(element) || !ValueLiteral.values.exists(_.value == expression)) {
       val expected = ctx.parseExpression(operator, expression)
       val actual = () => ctx.boundAttributeOrSelection(element, selection, timeout)
@@ -73,7 +77,7 @@ class CompareValueOrSelectionToValue(element: String, selection: Option[Dropdown
         }
       }
     } else {
-      new Compare(element, expression, operator, negate, message, trim, ignoreCase).apply(parent, step, ctx)
+      new Compare(element, expression, operator, negate).apply(parent, step, ctx)
     }
   }
 

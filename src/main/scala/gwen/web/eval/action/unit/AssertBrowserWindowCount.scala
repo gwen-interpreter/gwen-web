@@ -27,12 +27,14 @@ import gwen.core.node.gherkin.Step
 import scala.concurrent.duration.Duration
 import scala.util.chaining._
 
-class AssertBrowserWindowCount(expectedCount: Int, message: Option[String], timeout: Option[Duration]) extends UnitStepAction[WebContext] {
+class AssertBrowserWindowCount(expectedCount: Int) extends UnitStepAction[WebContext] {
 
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     step tap { _ =>
       checkStepRules(step, BehaviorType.Assertion, ctx)
       ctx.perform {
+        val message = step.message
+        val timeout = step.timeoutOpt
         ctx.compare("open windows/tabs", expectedCount.toString, () => ctx.noOfWindows().toString, ComparisonOperator.be, false, None, message, timeout.map(_.toSeconds), step.assertionMode)
       }
     }

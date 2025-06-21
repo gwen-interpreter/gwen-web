@@ -23,11 +23,12 @@ import gwen.web.eval.WebEngine
 import gwen.core.eval.action.composite.Repeat
 
 import scala.concurrent.duration.Duration
+import gwen.core.node.gherkin.Step
 
-class RepeatElementState(doStep: String, operation: String, element: String, state: ElementState, negate: Boolean, delay: Duration, timeout: Duration, engine: WebEngine)
-    extends Repeat[WebContext](doStep, operation, s"$element is${if (negate) " not" else ""} $state", delay, timeout, engine) {
+class RepeatElementState(doStep: String, operation: String, element: String, state: ElementState, negate: Boolean, engine: WebEngine)
+    extends Repeat[WebContext](doStep, operation, s"$element is${if (negate) " not" else ""} $state", engine) {
 
-  override def evaluteCondition(ctx: WebContext): Boolean = {
+  override def evaluteCondition(step: Step, ctx: WebContext): Boolean = {
     val binding = ctx.getLocatorBinding(element)
     ctx.evaluate(true) {
       ctx.isElementState(binding, state, negate)

@@ -29,11 +29,11 @@ import gwen.core.node.gherkin.Step
 
 import scala.concurrent.duration.Duration
 
-class ForEachWebElement(doStep: String, element: String, selectorType: SelectorType, lookupExpr: String, relative: Option[(RelativeSelectorType, String, Option[Int])], timeout: Option[Duration], isShadowRoot: Boolean, engine: EvalEngine[WebContext]) extends ForEach[WebContext](engine, doStep) {
+class ForEachWebElement(doStep: String, element: String, selectorType: SelectorType, lookupExpr: String, relative: Option[(RelativeSelectorType, String, Option[Int])], engine: EvalEngine[WebContext]) extends ForEach[WebContext](engine, doStep) {
 
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     val relativeSelectorAndBinding = relative.map((s, b, p) => (s, ctx.getLocatorBinding(b), p))
-    val binding = LocatorBinding(s"$element/list", selectorType, lookupExpr, relativeSelectorAndBinding, timeout, None, isShadowRoot, ctx)
+    val binding = LocatorBinding(s"$element/list", selectorType, lookupExpr, relativeSelectorAndBinding, step.timeoutOpt, None, step.isShadowRoot, ctx)
     ctx.evaluate(evaluateForEach(() => List(DryValueBinding.unresolved("webElements")), element, parent, step, ctx)) {
       evaluateForEach(() => binding.resolveAll(), element, parent, step, ctx)
     }

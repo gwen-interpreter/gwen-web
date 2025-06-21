@@ -29,12 +29,12 @@ import gwen.core.node.gherkin.Step
 
 import scala.util.chaining._
 
-class BindElementFunction(target: String, function: String, element: String, masked: Boolean) extends UnitStepAction[WebContext] {
+class BindElementFunction(target: String, function: String, element: String) extends UnitStepAction[WebContext] {
 
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     step tap { _ =>
       ctx.getLocatorBinding(element)
-      ElementFunctionBinding.bind(target, function, element, masked, ctx)
+      ElementFunctionBinding.bind(target, function, element, step.isMasked, ctx)
       step.loadStrategy foreach { strategy =>
         val value = {
           if (strategy == LoadStrategy.Eager) Option(

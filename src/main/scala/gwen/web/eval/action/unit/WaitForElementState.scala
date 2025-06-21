@@ -27,7 +27,7 @@ import gwen.core.node.gherkin.Step
 
 import scala.util.chaining._
 
-class WaitForElementState(element: String, state: ElementState, negate: Boolean, waitSecs: Option[Long]) extends UnitStepAction[WebContext] {
+class WaitForElementState(element: String, state: ElementState, negate: Boolean) extends UnitStepAction[WebContext] {
 
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     step tap { _ =>
@@ -35,10 +35,10 @@ class WaitForElementState(element: String, state: ElementState, negate: Boolean,
       ctx.topScope.getOpt(JSBinding.key(bCondition)) match {
         case None =>
           checkStepRules(step, BehaviorType.Action, ctx)
-          val binding = ctx.getLocatorBinding(element).withTimeoutSeconds(waitSecs)
+          val binding = ctx.getLocatorBinding(element).withTimeoutSeconds(step.timeoutOpt.map(_.toSeconds))
           ctx.waitForElementState(binding, state, negate)
         case Some(javascript) =>
-          new WaitForCondition(javascript, None, None).apply(parent, step, ctx)
+          new WaitForCondition(javascript).apply(parent, step, ctx)
       }
     }
   }

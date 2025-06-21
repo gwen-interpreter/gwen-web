@@ -37,8 +37,6 @@ import scala.concurrent.duration._
 import scala.jdk.CollectionConverters._
 import scala.util.chaining._
 
-import java.util.concurrent.TimeUnit
-
 /**
   * A web engine that uses the Selenium web driver
   * API to automate various web operations.
@@ -80,14 +78,14 @@ class WebEngine extends EvalEngine[WebContext] {
       case r"""(.+)$doStep if(?:(?!\bif\b)) (.+?)$element is( not)?$negation (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$state""" =>
         Some(new IfElementCondition(doStep, element, ElementState.valueOf(state), Option(negation).nonEmpty, this))
       case r"""(.+?)$doStep (until|while)$operation (.+?)$element is( not)?$negation (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$state""" if (doStep != "I wait" && !step.expression.matches(""".*".*(until|while).*".*""")) =>
-        Some(new RepeatElementState(doStep, operation, element, ElementState.valueOf(state), Option(negation).nonEmpty, step.delayOpt.getOrElse(Duration(1, TimeUnit.SECONDS)), step.timeoutOpt.getOrElse(Duration(1, TimeUnit.MINUTES)), this))
+        Some(new RepeatElementState(doStep, operation, element, ElementState.valueOf(state), Option(negation).nonEmpty, this))
       case _ =>
         super.translateCompositeStep(step) orElse {
           step.expression match {
             case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression in (.+?)$container""" =>
-              Some(new ForEachWebElement(doStep, element, SelectorType.parse(selectorType), expression, Some((RelativeSelectorType.in, container, None)), step.timeoutOpt, step.isShadowRoot, this))
+              Some(new ForEachWebElement(doStep, element, SelectorType.parse(selectorType), expression, Some((RelativeSelectorType.in, container, None)), this))
             case r"""(.+?)$doStep for each (.+?)$element located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression""" =>
-              Some(new ForEachWebElement(doStep, element, SelectorType.parse(selectorType), step.orDocString(expression), None, step.timeoutOpt, step.isShadowRoot, this))
+              Some(new ForEachWebElement(doStep, element, SelectorType.parse(selectorType), step.orDocString(expression), None, this))
             case r"""(.+?)$doStep for each (.+?)$element in (.+?)$iteration""" =>
               Some(new ForEachWebElementInIteration(doStep, element, iteration, this))
             case _ => 
@@ -108,17 +106,17 @@ class WebEngine extends EvalEngine[WebContext] {
   override def translateStep(step: Step): UnitStepAction[WebContext] = {
     step.expression match {
       case r"I wait for the (?:alert|confirmation) popup" =>
-        new WaitForPopup(step.timeoutOpt.map(_.toSeconds))
+        new WaitForPopup()
       case r"""I wait for (.+?)$element text""" =>
-        new WaitForText(element, step.timeoutOpt.map(_.toSeconds))
+        new WaitForText(element)
       case r"""I wait for (.+?)$element""" =>
-        new WaitForElement(element, step.timeoutOpt.map(_.toSeconds))
+        new WaitForElement(element)
       case r"""I wait until "(.+?)$javascript"""" =>
-        new WaitForCondition(step.orDocString(javascript), step.delayOpt.map(_.toMillis), step.timeoutOpt.map(_.toSeconds))
+        new WaitForCondition(step.orDocString(javascript))
       case r"""I wait until (.+?)$element is( not)?$negation (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$state""" =>
-        new WaitForElementState(element, ElementState.valueOf(state), Option(negation).nonEmpty, step.timeoutOpt.map(_.toSeconds))
+        new WaitForElementState(element, ElementState.valueOf(state), Option(negation).nonEmpty)
       case r"""I wait until (.+?)$condition""" if !condition.matches(".+ file (exists|not exists|does not exist|is empty|is not empty)") =>
-        new WaitForBoundCondition(condition, step.delayOpt.map(_.toMillis), step.timeoutOpt.map(_.toSeconds))
+        new WaitForBoundCondition(condition)
       case r"""I navigate to "(.+?)"$url""" =>
         new NavigateToUrl(step.orDocString(url))
       case r"""I scroll to the (top|bottom)$position of the page""" =>
@@ -126,51 +124,51 @@ class WebEngine extends EvalEngine[WebContext] {
       case r"""I scroll to the (top|bottom)$position of (.+?)$element""" =>
         new ScrollToElement(element, ScrollTo.valueOf(position))
       case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression at index (\d+)$index in (.+?)$container""" =>
-        new BindElementLocator(element, SelectorType.parse(selectorType), expression, Some((RelativeSelectorType.in, container, None)), step.timeoutOpt.map(_.toSeconds), Some(index.toInt), step.isShadowRoot)
+        new BindElementLocator(element, SelectorType.parse(selectorType), expression, Some((RelativeSelectorType.in, container, None)), Some(index.toInt))
       case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression in (.+?)$container""" =>
-        new BindElementLocator(element, SelectorType.parse(selectorType), expression, Some((RelativeSelectorType.in, container, None)), step.timeoutOpt.map(_.toSeconds), None, step.isShadowRoot)
+        new BindElementLocator(element, SelectorType.parse(selectorType), expression, Some((RelativeSelectorType.in, container, None)), None)
       case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text)$selectorType "(.+?)"$expression near and within (\d+)$pixels pixel(?:s?) of (.+?)$rElement""" =>
-        new BindElementLocator(element, SelectorType.parse(selectorType), expression, Some((RelativeSelectorType.near, rElement, Some(pixels.toInt))), step.timeoutOpt.map(_.toSeconds), None, step.isShadowRoot)
+        new BindElementLocator(element, SelectorType.parse(selectorType), expression, Some((RelativeSelectorType.near, rElement, Some(pixels.toInt))), None)
       case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text)$selectorType "(.+?)"$expression (above|below|near|to left of|to right of)$rSelectorType (.+?)$rElement""" =>
-        new BindElementLocator(element, SelectorType.parse(selectorType), expression, Some((RelativeSelectorType.valueOf(rSelectorType), rElement, None)), step.timeoutOpt.map(_.toSeconds), None, step.isShadowRoot)
+        new BindElementLocator(element, SelectorType.parse(selectorType), expression, Some((RelativeSelectorType.valueOf(rSelectorType), rElement, None)), None)
       case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression at index (\d+)$index""" =>
-        new BindElementLocator(element, SelectorType.parse(selectorType), expression, None, step.timeoutOpt.map(_.toSeconds), Some(index.toInt), step.isShadowRoot)
+        new BindElementLocator(element, SelectorType.parse(selectorType), expression, None, Some(index.toInt))
       case r"""(.+?)$element can be located at index (\d+)$index by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression""" =>
-        new BindElementLocator(element, SelectorType.parse(selectorType), step.orDocString(expression), None, step.timeoutOpt.map(_.toSeconds), Some(index.toInt), step.isShadowRoot)
+        new BindElementLocator(element, SelectorType.parse(selectorType), step.orDocString(expression), None, Some(index.toInt))
       case r"""(.+?)$element can be located by (id|name|tag name|tag|css selector|css|xpath|class name|class|link text|partial link text|javascript|js)$selectorType "(.+?)"$expression""" =>
-        new BindElementLocator(element, SelectorType.parse(selectorType), step.orDocString(expression), None, step.timeoutOpt.map(_.toSeconds), None, step.isShadowRoot)
+        new BindElementLocator(element, SelectorType.parse(selectorType), step.orDocString(expression), None, None)
       case r"""(.+?)$element can be located at index (\d+)$index in (.+?)$container by""" if step.hasDualColumnTable =>
-        new BindMultipleElementLocators(element, Some(container), step.timeoutOpt.map(_.toSeconds), Some(index.toInt))
+        new BindMultipleElementLocators(element, Some(container), Some(index.toInt))
       case r"""(.+?)$element can be located in (.+?)$container by""" if step.hasDualColumnTable =>
-        new BindMultipleElementLocators(element, Some(container), step.timeoutOpt.map(_.toSeconds), None)
+        new BindMultipleElementLocators(element, Some(container), None)
       case r"""(.+?)$element can be located at index (\d+)$index by""" if step.hasDualColumnTable =>
-        new BindMultipleElementLocators(element, None, step.timeoutOpt.map(_.toSeconds), Some(index.toInt))
+        new BindMultipleElementLocators(element, None, Some(index.toInt))
       case r"""(.+?)$element can be located by""" if step.hasDualColumnTable =>
-        new BindMultipleElementLocators(element, None, step.timeoutOpt.map(_.toSeconds), None)
+        new BindMultipleElementLocators(element, None, None)
       case r"""(.+?)$element can be (clicked|right clicked|double clicked|submitted|checked|ticked|unchecked|unticked|selected|deselected|typed|entered|tabbed|cleared|moved to)$event by (?:javascript|js) "(.+?)"$expression""" =>
         new BindActionHandler(element, ElementEvent.valueOf(event), step.orDocString(expression))
       case r"""the page title should( not)?$negation be (blank|empty|true|false)$literal""" =>
-        new CompareTitle("title", ValueLiteral.valueOf(literal).value, false, ComparisonOperator.be, Option(negation).nonEmpty, step.message, step.timeoutOpt, step.isTrim, step.isIgnoreCase)
+        new CompareTitle("title", ValueLiteral.valueOf(literal).value, false, ComparisonOperator.be, Option(negation).nonEmpty)
       case r"""the page title should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file)$operator "(.*?)"$expression""" =>
-        new CompareTitle("title", step.orDocString(expression), false, ComparisonOperator.valueOf(operator), Option(negation).nonEmpty, step.message, step.timeoutOpt, step.isTrim, step.isIgnoreCase)
+        new CompareTitle("title", step.orDocString(expression), false, ComparisonOperator.valueOf(operator), Option(negation).nonEmpty)
       case r"""the page title should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$attribute""" =>
-        new CompareTitle("title", attribute, true, ComparisonOperator.valueOf(operator), Option(negation).nonEmpty, step.message, step.timeoutOpt, step.isTrim, step.isIgnoreCase)
+        new CompareTitle("title", attribute, true, ComparisonOperator.valueOf(operator), Option(negation).nonEmpty)
       case r"""the (alert|confirmation)$name popup message should( not)?$negation be (blank|empty|true|false)$literal""" =>
-        new ComparePopupMessage(name, ValueLiteral.valueOf(literal).value, false, ComparisonOperator.be, Option(negation).nonEmpty, step.message, step.timeoutOpt, step.isTrim, step.isIgnoreCase)
+        new ComparePopupMessage(name, ValueLiteral.valueOf(literal).value, false, ComparisonOperator.be, Option(negation).nonEmpty)
       case r"""the (alert|confirmation)$name popup message should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file)$operator "(.*?)"$expression""" =>
-        new ComparePopupMessage(name, step.orDocString(expression), false, ComparisonOperator.valueOf(operator), Option(negation).nonEmpty, step.message, step.timeoutOpt, step.isTrim, step.isIgnoreCase)
+        new ComparePopupMessage(name, step.orDocString(expression), false, ComparisonOperator.valueOf(operator), Option(negation).nonEmpty)
       case r"""the (alert|confirmation)$name popup message should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$attribute""" =>
-        new ComparePopupMessage(name, attribute, true, ComparisonOperator.valueOf(operator), Option(negation).nonEmpty, step.message, step.timeoutOpt, step.isTrim, step.isIgnoreCase)
+        new ComparePopupMessage(name, attribute, true, ComparisonOperator.valueOf(operator), Option(negation).nonEmpty)
       case r"""the (?:alert|confirmation) popup should( not)?$negation be displayed""" =>
-        new AssertPopupDisplayed(Option(negation).nonEmpty, step.message, step.timeoutOpt.map(_.toSeconds))
+        new AssertPopupDisplayed(Option(negation).nonEmpty)
       case r"""(.+?)$element should( not)?$negation be (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$state""" =>
-        new CompareElementState(element, ElementState.valueOf(state), Option(negation).nonEmpty, step.message, step.timeoutOpt)
+        new CompareElementState(element, ElementState.valueOf(state), Option(negation).nonEmpty)
       case r"""(.+?)$element( text| value)?$selection should( not)?$negation be (blank|empty|true|false)$literal""" if !element.matches(".+at (json path|xpath).+") && !element.matches(".+? file") =>
-        new CompareValueOrSelectionToValue(element, Option(selection).map(_.trim).map(DropdownSelection.valueOf), ValueLiteral.valueOf(literal).value, ComparisonOperator.be, Option(negation).nonEmpty, step.message, step.timeoutOpt, step.isTrim, step.isIgnoreCase)
+        new CompareValueOrSelectionToValue(element, Option(selection).map(_.trim).map(DropdownSelection.valueOf), ValueLiteral.valueOf(literal).value, ComparisonOperator.be, Option(negation).nonEmpty)
       case r"""(.+?)$element( text| value)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file)$operator "(.*?)"$expression""" if !element.matches(".+at (json path|xpath).+") =>
-        new CompareValueOrSelectionToValue(element, Option(selection).map(_.trim).map(DropdownSelection.valueOf), step.orDocString(expression), ComparisonOperator.valueOf(operator), Option(negation).nonEmpty, step.message, step.timeoutOpt, step.isTrim, step.isIgnoreCase)
+        new CompareValueOrSelectionToValue(element, Option(selection).map(_.trim).map(DropdownSelection.valueOf), step.orDocString(expression), ComparisonOperator.valueOf(operator), Option(negation).nonEmpty)
       case r"""(.+?)$element( text| value)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$attribute""" if !attribute.matches("(absent|defined|empty|no accumulated errors)") && !attribute.contains("% similar to ") && !attribute.contains('"') && !element.matches(".+at (json path|xpath).+") =>
-        new CompareValueOrSelectionToBoundValue(element, Option(selection).map(_.trim).map(DropdownSelection.valueOf), attribute, ComparisonOperator.valueOf(operator), Option(negation).nonEmpty, step.message, step.timeoutOpt, step.isTrim, step.isIgnoreCase)
+        new CompareValueOrSelectionToBoundValue(element, Option(selection).map(_.trim).map(DropdownSelection.valueOf), attribute, ComparisonOperator.valueOf(operator), Option(negation).nonEmpty)
       case r"""I capture (.+?)$attribute (?:of|on|in) (.+?)$element by (?:javascript|js) "(.+?)"$expression""" =>
         new CaptureElementAttribute(element, attribute, step.orDocString(expression))
       case r"""I capture the current URL""" =>
@@ -238,9 +236,9 @@ class WebEngine extends EvalEngine[WebContext] {
       case r"""I start a browser for (.+?)$session""" =>
         new StartBrowserSession(session)
       case r"""I should have (\d+?)$count open browser(?:s?)""" =>
-        new AssertBrowserCount(count.toInt, step.message, step.timeoutOpt)
+        new AssertBrowserCount(count.toInt)
       case r"""I should have (\d+?)$count open (?:window|tab)(?:s?)""" =>
-        new AssertBrowserWindowCount(count.toInt, step.message, step.timeoutOpt)
+        new AssertBrowserWindowCount(count.toInt)
       case r"I have (no|an)$open open browser" =>
         new OpenOrCloseBrowser(open == "an", None, BehaviorType.Context)
       case r"I close the(?: current)? browser" =>
@@ -268,7 +266,7 @@ class WebEngine extends EvalEngine[WebContext] {
       case r"""I switch to (.+?)$session""" =>
         new SwitchToBrowserSession(session)
       case r"I (accept|dismiss)$action the (?:alert|confirmation) popup" =>
-        new HandlePopup(PopupAction.valueOf(action), step.timeoutOpt.map(_.toSeconds))
+        new HandlePopup(PopupAction.valueOf(action))
       case r"""I resize the window to width (\d+?)$width and height (\d+?)$height""" =>
         new ResizeWindow(width.toInt, height.toInt)
       case r"""I set the window position to x (\d+?)$x and y (\d+?)$y""" =>
@@ -282,21 +280,14 @@ class WebEngine extends EvalEngine[WebContext] {
       case r"I insert a new line in (.+?)$element" =>
         new AppendNewLineToElement(element)
       case r"""I download the current URL to "(.+?)"$filepath""" =>
-        new DownloadCurrentUrlToFile(Some(filepath), None, defaultConditionTimeoutSecs)
+        new DownloadCurrentUrlToFile(Some(filepath), None)
       case r"""I download the current URL to (.+? file)$filepathRef""" =>
-        new DownloadCurrentUrlToFile(None, Some(filepathRef), defaultConditionTimeoutSecs)
+        new DownloadCurrentUrlToFile(None, Some(filepathRef))
       case r"""(.+?)$attribute is defined by (.+?)$function applied to (.+?)$element""" if !element.contains("\"") =>
-        new BindElementFunction(attribute, function, element, step.isMasked)
+        new BindElementFunction(attribute, function, element)
       case _ => 
         super.translateStep(step)
     }
-  }
-  
-  override def defaultConditionTimeoutSecs: Long = WebSettings.`gwen.web.wait.seconds`
-
-  override def defaultRepeatDelay: Duration = {
-    val waitSecs = WebSettings.`gwen.web.wait.seconds` 
-    if (waitSecs > 9 && waitSecs % 10 == 0) Duration(waitSecs / 10, SECONDS) else Duration(waitSecs * 100, MILLISECONDS)
   }
   
 }

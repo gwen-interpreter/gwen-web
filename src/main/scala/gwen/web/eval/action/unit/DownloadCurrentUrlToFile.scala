@@ -23,10 +23,10 @@ import gwen.core.eval.action.unit.DownloadToFile
 import gwen.core.node.GwenNode
 import gwen.core.node.gherkin.Step
 
-class DownloadCurrentUrlToFile(filepath: Option[String], filepathRef: Option[String], timeoutSecs: Long) extends UnitStepAction[WebContext] {
+class DownloadCurrentUrlToFile(filepath: Option[String], filepathRef: Option[String]) extends UnitStepAction[WebContext] {
 
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
-    new DownloadToFile(ctx.captureCurrentUrl, filepath, filepathRef, timeoutSecs).apply(parent, step, ctx)
+    new DownloadToFile(ctx.captureCurrentUrl, filepath, filepathRef).apply(parent, step, ctx)
   }
 
 }

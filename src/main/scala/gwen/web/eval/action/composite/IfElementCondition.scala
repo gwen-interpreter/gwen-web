@@ -43,7 +43,7 @@ import scala.util.Failure
  class IfElementCondition[T <: EvalContext](doStep: String, element: String, state: ElementState, negate: Boolean, engine: StepDefEngine[WebContext]) extends CompositeStepAction[WebContext](doStep) {
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     val cond = s"$element is${if (negate) " not" else ""} $state"
-    val ifCondition = IfCondition(doStep, cond, false, 0, engine)
+    val ifCondition = IfCondition(doStep, cond, false, engine)
     Try(ifCondition.apply(parent, step, ctx)) match {
       case Success(s) => s
       case Failure(e) => 

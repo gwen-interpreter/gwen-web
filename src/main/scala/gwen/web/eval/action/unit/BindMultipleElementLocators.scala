@@ -31,7 +31,7 @@ import scala.util.Try
 import scala.util.Failure
 import scala.util.Success
 
-class BindMultipleElementLocators(name: String, container: Option[String], timeoutSecs: Option[Long], index: Option[Int]) extends UnitStepAction[WebContext] {
+class BindMultipleElementLocators(name: String, container: Option[String], index: Option[Int]) extends UnitStepAction[WebContext] {
 
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     step tap { _ =>
@@ -45,7 +45,7 @@ class BindMultipleElementLocators(name: String, container: Option[String], timeo
           case Success(value) => Some(value)
         } map { selectorType => 
           val expression = row(1)
-          new BindElementLocator(name, selectorType, expression, container.map(c => (RelativeSelectorType.in, c, None)), timeoutSecs, index, false).apply(parent, step, ctx)
+          new BindElementLocator(name, selectorType, expression, container.map(c => (RelativeSelectorType.in, c, None)), index).apply(parent, step, ctx)
           selectorType
         }
       }

@@ -25,12 +25,12 @@ import gwen.core.node.gherkin.Step
 
 import scala.util.chaining._
 
-class WaitForPopup(waitSecs: Option[Long]) extends UnitStepAction[WebContext] {
+class WaitForPopup() extends UnitStepAction[WebContext] {
 
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     step tap { _ =>
       checkStepRules(step, BehaviorType.Action, ctx)
-      ctx.waitForPopup(waitSecs: Option[Long])
+      ctx.waitForPopup(step.timeoutOpt.map(_.toSeconds))
     }
   }
 

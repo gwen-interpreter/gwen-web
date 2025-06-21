@@ -26,12 +26,12 @@ import gwen.core.node.gherkin.Step
 import scala.util.Try
 import scala.util.chaining._
 
-class WaitForElement(element: String, waitSecs: Option[Long]) extends UnitStepAction[WebContext] {
+class WaitForElement(element: String) extends UnitStepAction[WebContext] {
 
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     step tap { _ =>
       checkStepRules(step, BehaviorType.Action, ctx)
-      val binding = ctx.getLocatorBinding(element).withTimeoutSeconds(waitSecs)
+      val binding = ctx.getLocatorBinding(element).withTimeoutSeconds(step.timeoutOpt.map(_.toSeconds))
       ctx.waitUntil(binding.timeoutSecondsOpt, s"waiting for ${binding.displayName} to be displayed") {
         Try(ctx.locateAndHighlight(binding)).isSuccess
       }

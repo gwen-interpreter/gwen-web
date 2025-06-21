@@ -35,7 +35,7 @@ import gwen.core.state.EnvState
 import gwen.core.state.SensitiveData
 import gwen.core.status.Failed
 
-import scala.concurrent.duration.Duration
+import scala.concurrent.duration._
 import scala.collection.SeqView
 import scala.io.Source
 import scala.jdk.CollectionConverters._
@@ -1520,5 +1520,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
   private def isInViewport(webElement: WebElement): Boolean = {
     applyJS(jsFunctionWrapper("elem", "arguments[0]", "var b=elem.getBoundingClientRect(); return b.top>=0 && b.left>=0 && b.bottom<=(window.innerHeight || document.documentElement.clientHeight) && b.right<=(window.innerWidth || document.documentElement.clientWidth);"), webElement).asInstanceOf[Boolean]
   }
+
+  override def defaultWait: Duration = Duration(WebSettings.`gwen.web.wait.seconds`, SECONDS)
 
 }

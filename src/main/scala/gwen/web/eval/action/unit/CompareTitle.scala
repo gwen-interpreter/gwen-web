@@ -29,18 +29,22 @@ import gwen.core.node.gherkin.Step
 import scala.concurrent.duration.Duration
 import scala.util.chaining._
 
-class CompareTitle(name: String, value: String, bound: Boolean, operator: ComparisonOperator, negate: Boolean, message: Option[String], timeout: Option[Duration], trim: Boolean, ignoreCase: Boolean) extends UnitStepAction[WebContext] {
+class CompareTitle(name: String, value: String, bound: Boolean, operator: ComparisonOperator, negate: Boolean) extends UnitStepAction[WebContext] {
 
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     step tap { _ =>
       checkStepRules(step, BehaviorType.Assertion, ctx)
+      val message = step.message
+      val timeout = step.timeoutOpt
+      val trim = step.isTrim
+      val ignoreCase = step.isIgnoreCase
       val expected = if (bound) {
         ctx.getBoundValue(value, timeout)
       } else {
         ctx.parseExpression(operator, value)
       }
       ctx.perform {
-        ctx.compare(name, Formatting.format(expected, trim, ignoreCase), () => Formatting.format(ctx.getTitle, trim, ignoreCase), operator, negate, None, message, timeout.map(_.toSeconds), step.assertionMode)
+        ctx.compare(name, Formatting.format(expected, trim, ignoreCase), () => Formatting.format(ctx.getTitle, trim, ignoreCase), operator, negate, None, message, step.timeoutOpt.map(_.toSeconds), step.assertionMode)
       }
     }
   }

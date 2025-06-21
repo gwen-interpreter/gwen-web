@@ -25,12 +25,12 @@ import gwen.core.node.gherkin.Step
 
 import scala.util.chaining._
 
-class AssertPopupDisplayed(negate: Boolean, message: Option[String], waitSecs: Option[Long]) extends UnitStepAction[WebContext] {
+class AssertPopupDisplayed(negate: Boolean) extends UnitStepAction[WebContext] {
 
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     step tap { _ =>
       checkStepRules(step, BehaviorType.Assertion, ctx)
-      ctx.checkPopupDisplayed(waitSecs, negate, message, step.assertionMode)
+      ctx.checkPopupDisplayed(step.timeoutOpt.map(_.toSeconds), negate, step.message, step.assertionMode)
     }
   }
 

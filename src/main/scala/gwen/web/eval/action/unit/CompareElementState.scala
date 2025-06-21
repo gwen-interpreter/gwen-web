@@ -27,11 +27,13 @@ import gwen.core.node.gherkin.Step
 import scala.concurrent.duration.Duration
 import scala.util.chaining._
 
-class CompareElementState(element: String, state: ElementState, negate: Boolean, message: Option[String], timeout: Option[Duration]) extends UnitStepAction[WebContext] {
+class CompareElementState(element: String, state: ElementState, negate: Boolean) extends UnitStepAction[WebContext] {
 
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     step tap { _ =>
       checkStepRules(step, BehaviorType.Assertion, ctx)
+      val message = step.message
+      val timeout = step.timeoutOpt
       val binding = ctx.getLocatorBinding(element).withTimeout(timeout)
       ctx.checkElementState(binding, state, negate, message, step.assertionMode)
     }

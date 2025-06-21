@@ -1,3 +1,9 @@
+4.11.1
+======
+21 Jun 2025
+- Update Gwen core from v4.8.0 to v[4.8.1](https://github.com/gwen-interpreter/gwen/releases/tag/v4.8.1)
+  - Refactor: decouple engine from step level annotation overrides
+
 4.11.0
 ======
 16 Jun 2025
@@ -7,22 +13,22 @@
 - Honor timeouts on browser and window count assertion steps
 
 4.10.3
-------
+======
 13 Jun 2025
 - Resolve element again and retry highlighting if it goes stale at that point
 
 4.10.2
-------
+======
 5 Jun 2025
 - Honor timeout overrides on assertions
 
 4.10.1
-------
+======
 27 May 2025
 - Ignore exceptions when quitting webdriver (for cases where driver session has already ended)
 
 4.10.0
-------
+======
 27 May 2025
 - Update Gwen core from v4.7.5 to v[4.8.0](https://github.com/gwen-interpreter/gwen/releases/tag/v4.8.0)
   - Add implicit variable to capture the evaluated feature sequence number:
