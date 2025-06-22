@@ -33,7 +33,7 @@ class WaitForBoundCondition(condition: String) extends UnitStepAction[WebContext
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     step tap { _ =>
       checkStepRules(step, BehaviorType.Action, ctx)
-      val bCondition = BooleanCondition(condition, false, WebSettings.`gwen.web.wait.seconds`, ctx)
+      val bCondition = BooleanCondition(condition, false, ctx.defaultWait.toSeconds, ctx)
       ctx.waitUntil(step.delayOpt.map(_.toMillis), step.timeoutOpt.map(_.toSeconds), s"waiting for true return from condition: ${bCondition.name}") {
         bCondition.evaluate()
       }

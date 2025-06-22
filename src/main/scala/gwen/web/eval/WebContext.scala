@@ -485,7 +485,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
           }
         } catch {
           case _: WaitTimeoutException if result.exists(_.isFailure) =>
-            waitTimeoutError(WebSettings.`gwen.web.wait.seconds`, reason, result.get.failed.get)
+            waitTimeoutError(timeoutSecs, reason, result.get.failed.get)
         }
         result.map {
           case Success(res) =>
@@ -551,13 +551,13 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
 
   /**
     * Waits for a given condition to be true. Errors on time out
-    * after "gwen.web.wait.seconds" (default is 10 seconds)
+    * after default wait time.
     *
     * @param reason a description of what is being waited on
     * @param condition the boolean condition to wait for (until true)
     */
   def waitUntil(reason: String)(condition: => Boolean): Unit = {
-    waitUntil(WebSettings.`gwen.web.wait.seconds`, reason) { condition }
+    waitUntil(defaultWait.toSeconds, reason) { condition }
   }
 
   /**
@@ -610,7 +610,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     * @param condition the boolean condition to wait for (until true)
     */
   def waitUntil(delayMsecs: Option[Long], timeoutSecs: Option[Long], reason: String)(condition: => Boolean): Unit = {
-    val timeout = timeoutSecs.getOrElse(WebSettings.`gwen.web.wait.seconds`)
+    val timeout = timeoutSecs.getOrElse(defaultWait.toSeconds)
     try {
       withWebDriver { webDriver =>
         delayMsecs match {
@@ -636,7 +636,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
   }
 
   def waitUntil[T](timeoutSecs: Option[Long], reason: String, condition: ExpectedCondition[T]): Unit = {
-    val timeout = timeoutSecs.getOrElse(WebSettings.`gwen.web.wait.seconds`)
+    val timeout = timeoutSecs.getOrElse(defaultWait.toSeconds)
     try {
       withWebDriver { webDriver =>
         new FluentWait(webDriver)
@@ -724,7 +724,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
 
   private def maxStrikesExhausted(attempt: Int, timeoutSecs: Option[Long]): Boolean = {
     timeoutSecs filter { ts => 
-      ts == WebSettings.`gwen.web.wait.seconds`
+      ts == defaultWait.toSeconds
     } map { ts => 
       !(attempt < WebSettings.`gwen.web.assertions.maxStrikes`)
     } getOrElse false
