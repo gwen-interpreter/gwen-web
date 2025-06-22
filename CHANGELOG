@@ -1,6 +1,8 @@
 4.11.1
 ======
 21 Jun 2025
+- Wait for elements to be enabled before attempting to interact
+- Ignore element highlighting errors
 - Update Gwen core from v4.8.0 to v[4.8.1](https://github.com/gwen-interpreter/gwen/releases/tag/v4.8.1)
   - Refactor: decouple engine from step level annotation overrides
   - Update dependencies

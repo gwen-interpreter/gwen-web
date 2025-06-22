@@ -593,6 +593,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("name", SelectorType.id, "name", None, None, false, ctx)
     val mockElement = mock[WebElement]
     val mockActions = mock[Actions]
+    doReturn(true).when(mockElement).isEnabled()
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     doReturn(mockActions).when(ctx).createActions(mockWebDriver)
     doReturn(mockActions).when(mockActions).moveToElement(mockElement)
@@ -608,6 +609,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("name", SelectorType.id, "name", None, None, false, ctx)
     val mockElement = mock[WebElement]
     val mockActions = mock[Actions]
+    doReturn(true).when(mockElement).isEnabled()
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     doReturn(mockActions).when(ctx).createActions(mockWebDriver)
     doReturn(mockActions).when(mockActions).moveToElement(mockElement)
@@ -622,6 +624,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("name", SelectorType.id, "name", None, None, false, ctx)
     val mockElement = mock[WebElement]
     val mockActions = mock[Actions]
+    doReturn(true).when(mockElement).isEnabled()
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     doReturn(mockActions).when(ctx).createActions(mockWebDriver)
     doReturn(mockActions).when(mockActions).moveToElement(mockElement)
@@ -637,6 +640,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("name", SelectorType.id, "name", None, None, false, ctx)
     val mockElement = mock[WebElement]
     val mockActions = mock[Actions]
+    doReturn(true).when(mockElement).isEnabled()
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     doReturn(mockActions).when(ctx).createActions(mockWebDriver)
     doReturn(mockActions).when(mockActions).moveToElement(mockElement)
@@ -653,6 +657,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
       val elemBinding = LocatorBinding("name", SelectorType.id, "name", None, None, false, ctx)
       val mockElement = mock[WebElement]
       val mockActions = mock[Actions]
+      doReturn(true).when(mockElement).isEnabled()
       doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
       doReturn(mockActions).when(ctx).createActions(mockWebDriver)
       doReturn(mockActions).when(mockActions).moveToElement(mockElement)
@@ -669,6 +674,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
       val elemBinding = LocatorBinding("name", SelectorType.id, "name", None, None, false, ctx)
       val mockElement = mock[WebElement]
       val mockActions = mock[Actions]
+      doReturn(true).when(mockElement).isEnabled()
       doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
       doReturn(mockActions).when(ctx).createActions(mockWebDriver)
       doReturn(mockActions).when(mockActions).moveToElement(mockElement)
@@ -685,6 +691,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("names", SelectorType.id, "names", None, None, false, ctx)
     val mockElement = mock[WebElement]
     val mockSelect = mock[Select]
+    doReturn(true).when(mockElement).isEnabled()
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     doReturn(mockSelect).when(ctx).createSelect(mockElement)
     ctx.selectByVisibleText(elemBinding, "Gwen")
@@ -695,6 +702,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("names", SelectorType.id, "names", None, None, false, ctx)
     val mockElement = mock[WebElement]
     val mockSelect = mock[Select]
+    doReturn(true).when(mockElement).isEnabled()
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     doReturn(mockSelect).when(ctx).createSelect(mockElement)
     ctx.selectByValue(elemBinding, "G")
@@ -706,6 +714,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val mockElement = mock[WebElement]
     val mockSelect = mock[Select]
     val mockOption = mock[WebElement]
+    doReturn(true).when(mockElement).isEnabled()
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     doReturn(mockSelect).when(ctx).createSelect(mockElement)
     when(mockSelect.getOptions).thenReturn(List(mockOption).asJava)
@@ -718,6 +727,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("names", SelectorType.id, "names", None, None, false, ctx)
     val mockElement = mock[WebElement]
     val mockSelect = mock[Select]
+    doReturn(true).when(mockElement).isEnabled()
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     doReturn(mockSelect).when(ctx).createSelect(mockElement)
     ctx.deselectByVisibleText(elemBinding, "Gwen")
@@ -728,6 +738,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("names", SelectorType.id, "names", None, None, false, ctx)
     val mockElement = mock[WebElement]
     val mockSelect = mock[Select]
+    doReturn(true).when(mockElement).isEnabled()
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     doReturn(mockSelect).when(ctx).createSelect(mockElement)
     ctx.deselectByValue(elemBinding, "G")
@@ -739,6 +750,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val mockElement = mock[WebElement]
     val mockSelect = mock[Select]
     val mockOption = mock[WebElement]
+    doReturn(true).when(mockElement).isEnabled()
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     doReturn(mockSelect).when(ctx).createSelect(mockElement)
     when(mockSelect.getOptions).thenReturn(List(mockOption).asJava)
@@ -751,6 +763,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("element", SelectorType.id, "elem", None, None, false, ctx)
     val mockElement = mock[WebElement]
     val mockActions = mock[Actions]
+    doReturn(true).when(mockElement).isEnabled()
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     doReturn(mockActions).when(ctx).createActions(mockWebDriver)
     when(mockActions.moveToElement(mockElement)).thenReturn(mockActions)
@@ -762,6 +775,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("element", SelectorType.id, "elem", None, None, false, ctx)
     val mockElement = mock[WebElement]
     val mockActions = mock[Actions]
+    doReturn(true).when(mockElement).isEnabled()
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     doReturn(mockActions).when(ctx).createActions(mockWebDriver)
     when(mockActions.moveToElement(mockElement)).thenReturn(mockActions)
@@ -774,6 +788,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("element", SelectorType.id, "elem", None, None, false, ctx)
     val mockElement = mock[WebElement]
     val mockActions = mock[Actions]
+    doReturn(true).when(mockElement).isEnabled()
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     doReturn(mockActions).when(ctx).createActions(mockWebDriver)
     when(mockActions.moveToElement(mockElement)).thenReturn(mockActions)
@@ -797,6 +812,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("element", SelectorType.id, "elem", None, None, false, ctx)
     val mockElement = mock[WebElement]
     val mockActions = mock[Actions]
+    doReturn(true).when(mockElement).isEnabled()
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     doReturn(mockActions).when(ctx).createActions(mockWebDriver)
     when(mockActions.moveToElement(mockElement)).thenReturn(mockActions)
@@ -808,6 +824,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("element", SelectorType.id, "elem", None, None, false, ctx)
     val mockElement = mock[WebElement]
     val mockActions = mock[Actions]
+    doReturn(true).when(mockElement).isEnabled()
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     doReturn(mockActions).when(ctx).createActions(mockWebDriver)
     doReturn(true).when(ctx).applyJS("(function(element) { element.click() })(arguments[0])", mockElement)
@@ -822,6 +839,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("element", SelectorType.id, "elem", None, None, false, ctx)
     val mockElement = mock[WebElement]
     val mockActions = mock[Actions]
+    doReturn(true).when(mockElement).isEnabled()
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     doReturn(mockActions).when(ctx).createActions(mockWebDriver)
     doReturn(false).when(ctx).applyJS("(function(element) { element.click() })(arguments[0])", mockElement)
@@ -837,6 +855,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("element", SelectorType.id, "elem", None, None, false, ctx)
     val mockElement = mock[WebElement]
     val mockActions = mock[Actions]
+    doReturn(true).when(mockElement).isEnabled()
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     doReturn(mockActions).when(ctx).createActions(mockWebDriver)
     when(mockElement.isSelected).thenReturn(false).thenReturn(true)
@@ -850,6 +869,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("element", SelectorType.id, "elem", None, None, false, ctx)
     val mockElement = mock[WebElement]
     val mockActions = mock[Actions]
+    doReturn(true).when(mockElement).isEnabled()
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     doReturn(mockActions).when(ctx).createActions(mockWebDriver)
     when(mockActions.moveToElement(mockElement)).thenReturn(mockActions)
@@ -862,6 +882,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("element", SelectorType.id, "elem", None, None, false, ctx)
     val mockElement = mock[WebElement]
     val mockActions = mock[Actions]
+    doReturn(true).when(mockElement).isEnabled()
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     doReturn(mockActions).when(ctx).createActions(mockWebDriver)
     doReturn(false).when(ctx).applyJS("(function(element) { element.click() })(arguments[0])", mockElement)
@@ -876,6 +897,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("element", SelectorType.id, "elem", None, None, false, ctx)
     val mockElement = mock[WebElement]
     val mockActions = mock[Actions]
+    doReturn(true).when(mockElement).isEnabled()
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     doReturn(mockActions).when(ctx).createActions(mockWebDriver)
     doReturn(false).when(ctx).applyJS("(function(element) { element.click() })(arguments[0])",  mockElement)
@@ -891,6 +913,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("element", SelectorType.id, "elem", None, None, false, ctx)
     val mockElement = mock[WebElement]
     val mockActions = mock[Actions]
+    doReturn(true).when(mockElement).isEnabled()
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     doReturn(mockActions).when(ctx).createActions(mockWebDriver)
     doReturn(false).when(ctx).applyJS("(function(element) { element.click() })(arguments[0])", mockElement)
@@ -906,6 +929,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("element", SelectorType.id, "elem", None, None, false, ctx)
     val mockElement = mock[WebElement]
     val mockActions = mock[Actions]
+    doReturn(true).when(mockElement).isEnabled()
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     doReturn(mockActions).when(ctx).createActions(mockWebDriver)
     when(mockActions.moveToElement(mockElement)).thenReturn(mockActions)
@@ -918,6 +942,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("element", SelectorType.id, "elem", None, None, false, ctx)
     val mockElement = mock[WebElement]
     val mockActions = mock[Actions]
+    doReturn(true).when(mockElement).isEnabled()
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     doReturn(mockActions).when(ctx).createActions(mockWebDriver)
     doReturn(true).when(ctx).applyJS("(function(element) { element.click() })(arguments[0])", mockElement)
@@ -932,6 +957,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("element", SelectorType.id, "elem", None, None, false, ctx)
     val mockElement = mock[WebElement]
     val mockActions = mock[Actions]
+    doReturn(true).when(mockElement).isEnabled()
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     doReturn(mockActions).when(ctx).createActions(mockWebDriver)
     doReturn(false).when(ctx).applyJS("(function(element) { element.click() })(arguments[0])", mockElement)
@@ -947,6 +973,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("element", SelectorType.id, "elem", None, None, false, ctx)
     val mockElement = mock[WebElement]
     val mockActions = mock[Actions]
+    doReturn(true).when(mockElement).isEnabled()
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     doReturn(mockActions).when(ctx).createActions(mockWebDriver)
     when(mockElement.isSelected).thenReturn(true).thenReturn(false).thenReturn(false)
@@ -960,6 +987,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("element", SelectorType.id, "elem", None, None, false, ctx)
     val mockElement = mock[WebElement]
     val mockActions = mock[Actions]
+    doReturn(true).when(mockElement).isEnabled()
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     when(mockElement.isSelected).thenReturn(false).thenReturn(false).thenReturn(false)
     doReturn(mockActions).when(ctx).createActions(mockWebDriver)
@@ -974,6 +1002,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("element", SelectorType.id, "elem", None, None, false, ctx)
     val mockElement = mock[WebElement]
     val mockActions = mock[Actions]
+    doReturn(true).when(mockElement).isEnabled()
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     doReturn(mockActions).when(ctx).createActions(mockWebDriver)
     doReturn(false).when(ctx).applyJS("(function(element) { element.click() })(arguments[0])", mockElement)
@@ -989,6 +1018,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("element", SelectorType.id, "elem", None, None, false, ctx)
     val mockElement = mock[WebElement]
     val mockActions = mock[Actions]
+    doReturn(true).when(mockElement).isEnabled()
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     doReturn(mockActions).when(ctx).createActions(mockWebDriver)
     doReturn(false).when(ctx).applyJS("(function(element) { element.click() })(arguments[0])", mockElement)
@@ -1005,6 +1035,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("element", SelectorType.id, "elem", None, None, false, ctx)
     val mockElement = mock[WebElement]
     val mockActions = mock[Actions]
+    doReturn(true).when(mockElement).isEnabled()
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     doReturn(mockActions).when(ctx).createActions(mockWebDriver)
     when(mockActions.moveToElement(mockElement)).thenReturn(mockActions)
@@ -1018,6 +1049,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("element", SelectorType.id, "elem", None, None, false, ctx)
     val mockElement = mock[WebElement]
     val mockActions = mock[Actions]
+    doReturn(true).when(mockElement).isEnabled()
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     doReturn(mockActions).when(ctx).createActions(mockWebDriver)
     when(mockActions.moveToElement(mockElement)).thenReturn(mockActions)
@@ -1029,6 +1061,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("element", SelectorType.id, "elem", None, None, false, ctx)
     val mockElement = mock[WebElement]
     val mockActions = mock[Actions]
+    doReturn(true).when(mockElement).isEnabled()
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     doReturn(mockActions).when(ctx).createActions(mockWebDriver)
     when(mockActions.moveToElement(mockElement)).thenReturn(mockActions)
@@ -1045,6 +1078,8 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val targetElement = mock[WebElement]
     val mockActions = mock[Actions]
     val mockAction = mock[Action]
+    doReturn(true).when(sourceElement).isEnabled()
+    doReturn(true).when(targetElement).isEnabled()
     doReturn(sourceElement).when(mockLocator).locate(sourceBinding)
     doReturn(targetElement).when(mockLocator).locate(targetBinding)
     doReturn(mockActions).when(ctx).createActions(mockWebDriver)
@@ -1062,6 +1097,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val modifierKeys = Array("COMMAND", "SHIFT")
     val mockActions = mock[Actions]
     val mockAction = mock[Action]
+    doReturn(true).when(mockElement).isEnabled()
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     doReturn(mockActions).when(ctx).createActions(mockWebDriver)
     when(mockActions.moveToElement(mockElement)).thenReturn(mockActions)
@@ -1081,6 +1117,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val modifierKeys = Array("command")
     val mockActions = mock[Actions]
     val mockAction = mock[Action]
+    doReturn(true).when(mockElement).isEnabled()
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     doReturn(mockActions).when(ctx).createActions(mockWebDriver)
     when(mockActions.moveToElement(mockElement)).thenReturn(mockActions)
@@ -1098,6 +1135,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val modifierKeys = Array("Command", "Shift")
     val mockActions = mock[Actions]
     val mockAction = mock[Action]
+    doReturn(true).when(mockElement).isEnabled()
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     doReturn(mockActions).when(ctx).createActions(mockWebDriver)
     when(mockActions.moveToElement(mockElement)).thenReturn(mockActions)
@@ -1134,6 +1172,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("element", SelectorType.id, "elem", None, None, false, ctx)
     val mockElement = mock[WebElement]
     val keys = Array("Command", "C")
+    doReturn(true).when(mockElement).isEnabled()
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     doNothing().when(mockElement).sendKeys(Keys.chord(Keys.COMMAND, "C"))
     ctx.sendKeys(elemBinding, keys)
@@ -1147,6 +1186,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val mockContext = mock[WebElement]
     val mockActions = mock[Actions]
     val mockAction = mock[Action]
+    doReturn(true).when(mockElement).isEnabled()
     doReturn(elemBinding).when(ctx).getLocatorBinding("element")
     doReturn(ctxBinding).when(ctx).getLocatorBinding("context")
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
@@ -1167,6 +1207,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val mockContext = mock[WebElement]
     val mockActions = mock[Actions]
     val mockAction = mock[Action]
+    doReturn(true).when(mockElement).isEnabled()
     doReturn(elemBinding).when(ctx).getLocatorBinding("element")
     doReturn(ctxBinding).when(ctx).getLocatorBinding("context")
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
@@ -1187,6 +1228,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val mockContext = mock[WebElement]
     val mockActions = mock[Actions]
     val mockAction = mock[Action]
+    doReturn(true).when(mockElement).isEnabled()
     doReturn(elemBinding).when(ctx).getLocatorBinding("element")
     doReturn(ctxBinding).when(ctx).getLocatorBinding("context")
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
@@ -1207,6 +1249,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val mockContext = mock[WebElement]
     val mockActions = mock[Actions]
     val mockAction = mock[Action]
+    doReturn(true).when(mockElement).isEnabled()
     doReturn(elemBinding).when(ctx).getLocatorBinding("element")
     doReturn(ctxBinding).when(ctx).getLocatorBinding("context")
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
@@ -1230,6 +1273,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val mockContext = mock[WebElement]
     val mockActions = mock[Actions]
     val mockAction = mock[Action]
+    doReturn(true).when(mockElement).isEnabled()
     doReturn(elemBinding).when(ctx).getLocatorBinding("element")
     doReturn(ctxBinding).when(ctx).getLocatorBinding("context")
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
@@ -1252,6 +1296,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val mockContext = mock[WebElement]
     val mockActions = mock[Actions]
     val mockAction = mock[Action]
+    doReturn(true).when(mockElement).isEnabled()
     doReturn(elemBinding).when(ctx).getLocatorBinding("element")
     doReturn(ctxBinding).when(ctx).getLocatorBinding("context")
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
@@ -1272,6 +1317,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val mockContext = mock[WebElement]
     val mockActions = mock[Actions]
     val mockAction = mock[Action]
+    doReturn(true).when(mockElement).isEnabled()
     doReturn(elemBinding).when(ctx).getLocatorBinding("element")
     doReturn(ctxBinding).when(ctx).getLocatorBinding("context")
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
@@ -1295,6 +1341,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val mockContext = mock[WebElement]
     val mockActions = mock[Actions]
     val mockAction = mock[Action]
+    doReturn(true).when(mockElement).isEnabled()
     doReturn(elemBinding).when(ctx).getLocatorBinding("element")
     doReturn(ctxBinding).when(ctx).getLocatorBinding("context")
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
@@ -1316,6 +1363,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val mockContext = mock[WebElement]
     val mockActions = mock[Actions]
     val mockAction = mock[Action]
+    doReturn(true).when(mockElement).isEnabled()
     doReturn(elemBinding).when(ctx).getLocatorBinding("element")
     doReturn(ctxBinding).when(ctx).getLocatorBinding("context")
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
@@ -1336,6 +1384,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val mockContext = mock[WebElement]
     val mockActions = mock[Actions]
     val mockAction = mock[Action]
+    doReturn(true).when(mockElement).isEnabled()
     doReturn(elemBinding).when(ctx).getLocatorBinding("element")
     doReturn(ctxBinding).when(ctx).getLocatorBinding("context")
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
@@ -1359,6 +1408,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val mockContext = mock[WebElement]
     val mockActions = mock[Actions]
     val mockAction = mock[Action]
+    doReturn(true).when(mockElement).isEnabled()
     doReturn(elemBinding).when(ctx).getLocatorBinding("element")
     doReturn(ctxBinding).when(ctx).getLocatorBinding("context")
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
@@ -1381,6 +1431,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val mockContext = mock[WebElement]
     val mockActions = mock[Actions]
     val mockAction = mock[Action]
+    doReturn(true).when(mockElement).isEnabled()
     doReturn(elemBinding).when(ctx).getLocatorBinding("element")
     doReturn(ctxBinding).when(ctx).getLocatorBinding("context")
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
@@ -1401,6 +1452,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val mockContext = mock[WebElement]
     val mockActions = mock[Actions]
     val mockAction = mock[Action]
+    doReturn(true).when(mockElement).isEnabled()
     doReturn(elemBinding).when(ctx).getLocatorBinding("element")
     doReturn(ctxBinding).when(ctx).getLocatorBinding("context")
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
@@ -1424,6 +1476,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val mockContext = mock[WebElement]
     val mockActions = mock[Actions]
     val mockAction = mock[Action]
+    doReturn(true).when(mockElement).isEnabled()
     doReturn(elemBinding).when(ctx).getLocatorBinding("element")
     doReturn(ctxBinding).when(ctx).getLocatorBinding("context")
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
@@ -1446,6 +1499,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val mockContext = mock[WebElement]
     val mockActions = mock[Actions]
     val mockAction = mock[Action]
+    doReturn(true).when(mockElement).isEnabled()
     doReturn(elemBinding).when(ctx).getLocatorBinding("element")
     doReturn(ctxBinding).when(ctx).getLocatorBinding("context")
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
@@ -1466,6 +1520,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val mockContext = mock[WebElement]
     val mockActions = mock[Actions]
     val mockAction = mock[Action]
+    doReturn(true).when(mockElement).isEnabled()
     doReturn(elemBinding).when(ctx).getLocatorBinding("element")
     doReturn(ctxBinding).when(ctx).getLocatorBinding("context")
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
@@ -1482,6 +1537,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("element", SelectorType.id, "elem", None, None, false, ctx)
     val mockElement = mock[WebElement]
     val mockActions = mock[Actions]
+    doReturn(true).when(mockElement).isEnabled()
     doThrow(new LocatorBindingException("element not bound")).when(ctx).getLocatorBinding("element")
     doReturn(elemBinding).when(ctx).getLocatorBinding("element of context")
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
@@ -1572,6 +1628,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
   "WebContext.getElementText" should "return blank on element with null text value, null text attribute, null value attribute, and null JS value" in {
     val elemBinding = LocatorBinding("element", SelectorType.id, "elem", None, None, false, ctx)
     val mockElement = mock[WebElement]
+    doReturn(true).when(mockElement).isEnabled()
     doReturn(elemBinding).when(ctx).getLocatorBinding("element")
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     when(mockElement.getText).thenReturn(null)
@@ -1585,6 +1642,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
   "WebContext.getElementText" should "return blank on element with blank text value, blank text attribute, blank value attribute, and blank JS value" in {
     val elemBinding = LocatorBinding("element", SelectorType.id, "elem", None, None, false, ctx)
     val mockElement = mock[WebElement]
+    doReturn(true).when(mockElement).isEnabled()
     doReturn(elemBinding).when(ctx).getLocatorBinding("element")
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     when(mockElement.getText).thenReturn("")
@@ -1598,6 +1656,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
   "WebContext.getElementText" should "return JS value on element with null text value, null text attribute, null value attribute, and non null JS value" in {
     val elemBinding = LocatorBinding("element", SelectorType.id, "elem", None, None, false, ctx)
     val mockElement = mock[WebElement]
+    doReturn(true).when(mockElement).isEnabled()
     doReturn(elemBinding).when(ctx).getLocatorBinding("element")
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     when(mockElement.getText).thenReturn(null)
@@ -1611,6 +1670,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
   "WebContext.getElementText" should "return value attribute on element with null text value, null text attribute, and non null value attribute" in {
     val elemBinding = LocatorBinding("element", SelectorType.id, "elem", None, None, false, ctx)
     val mockElement = mock[WebElement]
+    doReturn(true).when(mockElement).isEnabled()
     doReturn(elemBinding).when(ctx).getLocatorBinding("element")
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     when(mockElement.getText).thenReturn(null)
@@ -1623,6 +1683,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
   "WebContext.getElementText" should "return text attribute on element with null text value, and non null text attribute" in {
     val elemBinding = LocatorBinding("element", SelectorType.id, "elem", None, None, false, ctx)
     val mockElement = mock[WebElement]
+    doReturn(true).when(mockElement).isEnabled()
     doReturn(elemBinding).when(ctx).getLocatorBinding("element")
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     when(mockElement.getText).thenReturn(null)
@@ -1633,6 +1694,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
   "WebContext.getElementText" should "return text on element with non null text value" in {
     val elemBinding = LocatorBinding("element", SelectorType.id, "elem", None, None, false, ctx)
     val mockElement = mock[WebElement]
+    doReturn(true).when(mockElement).isEnabled()
     doReturn(elemBinding).when(ctx).getLocatorBinding("element")
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     when(mockElement.getText).thenReturn("text")
@@ -1643,6 +1705,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("element", SelectorType.id, "elem", None, None, false, ctx)
     val mockElement = mock[WebElement]
     val mockSelect = mock[Select]
+    doReturn(true).when(mockElement).isEnabled()
     doReturn(elemBinding).when(ctx).getLocatorBinding("element")
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     doReturn(mockSelect).when(ctx).createSelect(mockElement)
@@ -1656,6 +1719,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val mockSelect = mock[Select]
     val mockOptionElement1 = mock[WebElement]
     val mockOptionElement2 = mock[WebElement]
+    doReturn(true).when(mockElement).isEnabled()
     doReturn(elemBinding).when(ctx).getLocatorBinding("element")
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     doReturn(mockSelect).when(ctx).createSelect(mockElement)
@@ -1671,6 +1735,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val mockSelect = mock[Select]
     val mockOptionElement1 = mock[WebElement]
     val mockOptionElement2 = mock[WebElement]
+    doReturn(true).when(mockElement).isEnabled()
     doReturn(elemBinding).when(ctx).getLocatorBinding("element")
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     doReturn(mockSelect).when(ctx).createSelect(mockElement)
@@ -1684,6 +1749,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val elemBinding = LocatorBinding("element", SelectorType.id, "elem", None, None, false, ctx)
     val mockElement = mock[WebElement]
     val mockSelect = mock[Select]
+    doReturn(true).when(mockElement).isEnabled()
     doReturn(elemBinding).when(ctx).getLocatorBinding("element")
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     doReturn(mockSelect).when(ctx).createSelect(mockElement)
@@ -1697,6 +1763,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     val mockSelect = mock[Select]
     val mockOptionElement1 = mock[WebElement]
     val mockOptionElement2 = mock[WebElement]
+    doReturn(true).when(mockElement).isEnabled()
     doReturn(elemBinding).when(ctx).getLocatorBinding("element")
     doReturn(mockElement).when(mockLocator).locate(any[LocatorBinding])
     doReturn(mockSelect).when(ctx).createSelect(mockElement)

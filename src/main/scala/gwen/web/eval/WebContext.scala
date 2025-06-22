@@ -454,13 +454,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
               var webElement = binding.resolve()
               tryMoveTo(webElement)
               if (selector.index.isEmpty) {
-                try {
-                  highlightElement(webElement)
-                } catch {
-                  case e: FunctionException if e.getCause != null && e.getCause.isInstanceOf[StaleElementReferenceException] =>
-                    webElement = binding.resolve()
-                    highlightElement(webElement)
-                }
+                highlightElement(webElement)
               }
               val res = operation(webElement)
               result = Some(Success(res))
@@ -669,14 +663,14 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
       val msecs = WebSettings`gwen.web.throttle.msecs`; // need semi-colon (compiler bug?)
       if (msecs > 0) {
         val style = WebSettings.`gwen.web.highlight.style`
-        val origStyle = applyJS(
-          jsFunctionWrapper("element", "arguments[0]", s"type = element.getAttribute('type'); if (('radio' == type || 'checkbox' == type) && element.parentElement.getElementsByTagName('input').length == 1) { element = element.parentElement; } original_style = element.getAttribute('style'); element.setAttribute('style', original_style + '; $style'); return original_style;"), element)(using WebSettings.`gwen.web.capture.screenshots.highlighting`)
-        try {
-          if (!WebSettings.`gwen.web.capture.screenshots.highlighting` || !WebSettings.`gwen.web.capture.screenshots.enabled`) {
-            Thread.sleep(msecs)
+        Try(applyJS(jsFunctionWrapper("element", "arguments[0]", s"type = element.getAttribute('type'); if (('radio' == type || 'checkbox' == type) && element.parentElement.getElementsByTagName('input').length == 1) { element = element.parentElement; } original_style = element.getAttribute('style'); element.setAttribute('style', original_style + '; $style'); return original_style;"), element)(using WebSettings.`gwen.web.capture.screenshots.highlighting`)) map { origStyle =>
+          try {
+            if (!WebSettings.`gwen.web.capture.screenshots.highlighting` || !WebSettings.`gwen.web.capture.screenshots.enabled`) {
+              Thread.sleep(msecs)
+            }
+          } finally {
+            applyJS(jsFunctionWrapper("element", "arguments[0]", s"type = element.getAttribute('type'); if (('radio' == type || 'checkbox' == type) && element.parentElement.getElementsByTagName('input').length == 1) { element = element.parentElement; } element.setAttribute('style', '$origStyle');"), element)(using false)
           }
-        } finally {
-          applyJS(jsFunctionWrapper("element", "arguments[0]", s"type = element.getAttribute('type'); if (('radio' == type || 'checkbox' == type) && element.parentElement.getElementsByTagName('input').length == 1) { element = element.parentElement; } element.setAttribute('style', '$origStyle');"), element)(using false)
         }
       }
     }
@@ -819,6 +813,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
   def sendValue(binding: LocatorBinding, value: String, clearFirst: Boolean, clickFirst: Boolean, sendEnterKey: Boolean): Unit = {
     val element = binding.name
     withDriverAndElement(binding, s"trying to send value to $element") { (driver, webElement) =>
+      waitUntilEnabled(binding, webElement)
       createActions(driver)
       if (clickFirst) {
         click(webElement)
@@ -850,6 +845,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     */
   def selectByVisibleText(binding: LocatorBinding, value: String): Unit = {
     withWebElement(binding, s"trying to select option in ${binding.displayName} by visible text") { webElement =>
+      waitUntilEnabled(binding, webElement)
       logger.debug(s"Selecting '$value' in $binding by text")
       createSelect(webElement).selectByVisibleText(value)
     }
@@ -863,6 +859,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     */
   def selectByValue(binding: LocatorBinding, value: String): Unit = {
     withWebElement(binding, s"trying to select option in ${binding.displayName} by value") { webElement =>
+      waitUntilEnabled(binding, webElement)
       logger.debug(s"Selecting '$value' in $binding by value")
       createSelect(webElement).selectByValue(value)
     }
@@ -876,6 +873,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     */
   def selectByIndex(binding: LocatorBinding, index: Int): Unit = {
     withWebElement(binding, s"trying to select option in ${binding.displayName} at index $index") { webElement =>
+      waitUntilEnabled(binding, webElement)
       logger.debug(s"Selecting option in $binding by index: $index")
       val select = createSelect(webElement)
       select.selectByIndex(index)
@@ -890,6 +888,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     */
   def deselectByVisibleText(binding: LocatorBinding, value: String): Unit = {
     withWebElement(binding, s"trying to deselect option in ${binding.displayName} by visible text") { webElement =>
+      waitUntilEnabled(binding, webElement)
       logger.debug(s"Deselecting '$value' in $binding by text")
       createSelect(webElement).deselectByVisibleText(value)
     }
@@ -903,6 +902,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     */
   def deselectByValue(binding: LocatorBinding, value: String): Unit = {
     withWebElement(binding, s"trying to deselect option in ${binding.displayName} by value") { webElement =>
+      waitUntilEnabled(binding, webElement)
       logger.debug(s"Deselecting '$value' in $binding by value")
       createSelect(webElement).deselectByValue(value)
     }
@@ -916,6 +916,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     */
   def deselectByIndex(binding: LocatorBinding, index: Int): Unit = {
     withWebElement(binding, s"trying to deselect option in ${binding.displayName} at index $index") { webElement =>
+      waitUntilEnabled(binding, webElement)
       logger.debug(s"Deselecting option in $binding by index: $index")
       val select = createSelect(webElement)
       select.deselectByIndex(index)
@@ -933,6 +934,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
         withDriverAndElement(binding, s"trying to $action ${binding.displayName}") { (driver, webElement) =>
           if (action != ElementAction.`move to`) {
             moveToAndCapture(driver, webElement)
+            waitUntilEnabled(binding, webElement)
           }
           action match {
             case ElementAction.click =>
@@ -1003,7 +1005,9 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
   def dragAndDrop(sourceBinding: LocatorBinding, targetBinding: LocatorBinding): Unit = {
     withWebDriver { driver =>
       withWebElement(sourceBinding, s"trying to drag $sourceBinding to $targetBinding") { source =>
+        waitUntilEnabled(sourceBinding, source)
         withWebElement(targetBinding, s"trying to drag $sourceBinding to $targetBinding") { target =>
+          waitUntilEnabled(targetBinding, target)
           createActions(driver).clickAndHold(source)
             .moveToElement(target)
             .release(target)
@@ -1017,12 +1021,16 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     val keys = modifierKeys.map(_.trim).map(key => Try(Keys.valueOf(key.toUpperCase)).getOrElse(unsupportedModifierKeyError(key)))
     withDriverAndElement(binding, s"trying to $clickAction ${binding.displayName}") { (driver, webElement) =>
       moveToAndCapture(driver, webElement)
+      waitUntilEnabled(binding, webElement)
       var actions = createActions(driver)
       keys.foreach { key => actions = actions.keyDown(key) }
       actions = clickAction match {
-        case ElementAction.click => actions.click(webElement)
-        case ElementAction.`right click` => actions.contextClick(webElement)
-        case ElementAction.`double click` => actions.doubleClick(webElement)
+        case ElementAction.click => 
+          actions.click(webElement)
+        case ElementAction.`right click` => 
+          actions.contextClick(webElement)
+        case ElementAction.`double click` => 
+          actions.doubleClick(webElement)
         case _ => WebErrors.invalidClickActionError(clickAction)
       }
       keys.reverse.foreach { key => actions = actions.keyUp(key) }
@@ -1043,6 +1051,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     elementBindingOpt match {
       case Some(binding) =>
         withDriverAndElement(binding, s"trying to send key(s) to ${binding.displayName}") { (driver, webElement) =>
+          waitUntilEnabled(binding, webElement)
           if (keys.size > 1) {
             webElement.sendKeys(Keys.chord(keys*))
           } else {
@@ -1079,6 +1088,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     withDriverAndElement(binding, reason) { (driver, webElement) =>
       if (action != ElementAction.`move to`) {
         moveToAndCapture(driver, webElement)
+        waitUntilEnabled(binding, webElement)
       }
       applyJS(jsFunctionWrapper("element", "arguments[0]", javascript), webElement)
     }
@@ -1114,14 +1124,28 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
       }
   }
 
+  private def waitUntilEnabled(binding: LocatorBinding, webElement: WebElement): Unit = {
+    if(!webElement.isEnabled) { 
+      waitUntil(binding.timeoutSecondsOpt, s"waiting for ${binding.displayName} to be enabled") {
+        webElement.isEnabled
+      }
+    }
+  }
+
   private def performActionIn(action: ElementAction, binding: LocatorBinding, contextBinding: LocatorBinding): Unit = {
     val reason = s"trying to $action ${binding.displayName}"
     withWebElement(contextBinding, reason) { contextElement =>
       withWebElement(binding, reason) { webElement =>
+        if (action != ElementAction.`move to`) {
+          waitUntilEnabled(binding, webElement)
+        }
         action match {
-          case ElementAction.click => perform(webElement, contextElement) { _.click() }
-          case ElementAction.`right click` => perform(webElement, contextElement) { _.contextClick() }
-          case ElementAction.`double click` => perform(webElement, contextElement) { _.doubleClick() }
+          case ElementAction.click => 
+            perform(webElement, contextElement) { _.click() }
+          case ElementAction.`right click` => 
+            perform(webElement, contextElement) { _.contextClick() }
+          case ElementAction.`double click` => 
+            perform(webElement, contextElement) { _.doubleClick() }
           case ElementAction.check | ElementAction.tick =>
             clickCheckbox(webElement, Some(contextElement), true)
           case ElementAction.uncheck | ElementAction.untick =>
@@ -1315,6 +1339,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
   private def getSelectedElementValue(name: String): Option[String] = {
     val binding = getLocatorBinding(name)
     withWebElement(binding, s"trying to get selected value of ${binding.displayName}") { webElement =>
+      waitUntilEnabled(binding, webElement)
       getElementSelectionByJS(webElement, DropdownSelection.value) match {
         case None =>
           Try(createSelect(webElement)) map { select =>
