@@ -33,9 +33,8 @@ class AssertBrowserCount(expectedCount: Int) extends UnitStepAction[WebContext] 
     step tap { _ =>
       checkStepRules(step, BehaviorType.Assertion, ctx)
       ctx.perform {
-        val message = step.message
         val timeout = step.timeoutOpt
-        ctx.compare("open browser sessions", expectedCount.toString, () => ctx.noOfSessions().toString, ComparisonOperator.be, false, None, message, timeout.map(_.toSeconds), step.assertionMode)
+        ctx.compare("open browser sessions", expectedCount.toString, () => ctx.noOfSessions().toString, ComparisonOperator.be, false, None, timeout.map(_.toSeconds), step.assertionMode)
       }
     }
   }

@@ -32,10 +32,9 @@ class CompareElementState(element: String, state: ElementState, negate: Boolean)
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     step tap { _ =>
       checkStepRules(step, BehaviorType.Assertion, ctx)
-      val message = step.message
       val timeout = step.timeoutOpt
       val binding = ctx.getLocatorBinding(element).withTimeout(timeout)
-      ctx.checkElementState(binding, state, negate, message, step.assertionMode)
+      ctx.checkElementState(binding, state, negate, step.assertionMode)
     }
   }
 

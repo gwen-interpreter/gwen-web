@@ -40,7 +40,6 @@ class CompareValueOrSelectionToBoundValue(element: String, selection: Option[Dro
       val url = ctx.captureCurrentUrl
       ctx.topScope.set(element, url)
     }
-    val message = step.message
     val timeout = step.timeoutOpt
     val trim = step.isTrim
     val ignoreCase = step.isIgnoreCase
@@ -58,7 +57,7 @@ class CompareValueOrSelectionToBoundValue(element: String, selection: Option[Dro
       step tap { _ =>
         ctx.perform {
           val nameSuffix = selection.map(sel => s" $sel")
-          ctx.compare(s"$element${nameSuffix.getOrElse("")}", Formatting.format(expected, trim, ignoreCase), formattedActual, operator, negate, nameSuffix, message, timeoutOverride.map(_.toSeconds), step.assertionMode)
+          ctx.compare(s"$element${nameSuffix.getOrElse("")}", Formatting.format(expected, trim, ignoreCase), formattedActual, operator, negate, nameSuffix, timeoutOverride.map(_.toSeconds), step.assertionMode)
         } getOrElse  {
           actual()
         }

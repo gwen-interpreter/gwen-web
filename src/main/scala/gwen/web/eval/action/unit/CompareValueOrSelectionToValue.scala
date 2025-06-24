@@ -44,7 +44,6 @@ class CompareValueOrSelectionToValue(element: String, selection: Option[Dropdown
       val url = ctx.captureCurrentUrl
       ctx.topScope.set(element, url)
     }
-    val message = step.message
     val timeout = step.timeoutOpt
     val trim = step.isTrim
     val ignoreCase = step.isIgnoreCase
@@ -56,7 +55,7 @@ class CompareValueOrSelectionToValue(element: String, selection: Option[Dropdown
         ctx.perform {
           if (ctx.topScope.findEntry { case (n, _) => n.startsWith(element) } forall { case (n, _) => n != element }) {
             val nameSuffix = selection.map(sel => s" $sel")
-            ctx.compare(s"$element${nameSuffix.getOrElse("")}", Formatting.format(expected, trim, ignoreCase), formattedActual, operator, negate, nameSuffix, message, timeout.map(_.toSeconds), step.assertionMode)
+            ctx.compare(s"$element${nameSuffix.getOrElse("")}", Formatting.format(expected, trim, ignoreCase), formattedActual, operator, negate, nameSuffix, timeout.map(_.toSeconds), step.assertionMode)
           } else {
             val actualValue = ctx.topScope.getOpt(element).getOrElse(actual())
             val result = ctx.compare(element, Formatting.format(expected, trim, ignoreCase), Formatting.format(actualValue, trim, ignoreCase), operator, negate)
@@ -65,11 +64,10 @@ class CompareValueOrSelectionToValue(element: String, selection: Option[Dropdown
                 val binding = ctx.getLocatorBinding(element, optional = true)
                 ctx.assertWithError(
                   assertion, 
-                  message, 
                   Assert.formatFailed(binding.map(_.toString).getOrElse(element), expected, actualValue, negate, operator),
                   step.assertionMode)
               case Failure(error) =>
-                ctx.assertWithError(assertion = false, message, error.getMessage, step.assertionMode)
+                ctx.assertWithError(assertion = false, error.getMessage, step.assertionMode)
             }
           }
         } getOrElse {

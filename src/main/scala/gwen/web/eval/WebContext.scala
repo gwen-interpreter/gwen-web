@@ -331,12 +331,11 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     * @param operator the comparison operator
     * @param negate true to negate the result
     * @param nameSuffix optional name suffix
-    * @param message optional error message to use
     * @param timeoutSecs the number of seconds to wait before timing out
     * @param mode the assertion mode
     * @return true if the actual value matches the expected value
     */
-  def compare(name: String, expected: String, actual: () => String, operator: ComparisonOperator, negate: Boolean, nameSuffix: Option[String], message: Option[String], timeoutSecs: Option[Long], mode: AssertionMode): Unit = {
+  def compare(name: String, expected: String, actual: () => String, operator: ComparisonOperator, negate: Boolean, nameSuffix: Option[String], timeoutSecs: Option[Long], mode: AssertionMode): Unit = {
     Thread.sleep(WebSettings.`gwen.web.assertions.delayMillisecs`)
     var result = false
     var error: Option[String] = None
@@ -366,7 +365,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     }
     error match {
       case Some(msg) =>
-        assertWithError(assertion = false, message, msg, mode)
+        assertWithError(assertion = false, msg, mode)
       case None =>
         if (!polled) {
           result = super.compare(name, expected, actualValue, operator, negate).getOrElse(result)
@@ -378,7 +377,6 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
         ).map(_.displayName).getOrElse(name)
         assertWithError(
           result, 
-          message, 
           Assert.formatFailed(binding, expected, actualValue, negate, operator),
           mode)
     }
@@ -682,10 +680,9 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     * @param binding the locator binding of the element
     * @param state the state to check
     * @param negate whether or not to negate the check
-    * @param message optional assertion error message
     * @param mode the assertion mode
     */
-  def checkElementState(binding: LocatorBinding, state: ElementState, negate: Boolean, message: Option[String], mode: AssertionMode): Unit = {
+  def checkElementState(binding: LocatorBinding, state: ElementState, negate: Boolean, mode: AssertionMode): Unit = {
     perform {
         var result = false
         var attempts = 0
@@ -699,7 +696,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
           case _: WaitTimeoutException =>
             result = false  
         }
-        assertWithError(result, message, s"${binding.displayName} should${if(negate) " not" else ""} be $state", mode)
+        assertWithError(result, s"${binding.displayName} should${if(negate) " not" else ""} be $state", mode)
     }
   }
 
@@ -712,14 +709,14 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     * @param message optional assertion error message
     * @param mode the assertion mode
     */
-  def checkPopupDisplayed(waitSecs: Option[Long], negate: Boolean, message: Option[String], mode: AssertionMode): Unit = {
+  def checkPopupDisplayed(waitSecs: Option[Long], negate: Boolean, mode: AssertionMode): Unit = {
     val result = Try(waitForPopup(waitSecs: Option[Long])) match {
       case Success(_) => true
       case Failure(e) => 
         if (e.isInstanceOf[WaitTimeoutException]) false
         else throw e
     }
-    assertWithError(result, message, s"Alert/confirmation popup should${if(negate) " not" else ""} be displayed", mode)
+    assertWithError(result, s"Alert/confirmation popup should${if(negate) " not" else ""} be displayed", mode)
   }
 
   private def maxStrikesExhausted(attempt: Int, timeoutSecs: Option[Long]): Boolean = {

@@ -30,7 +30,7 @@ class AssertPopupDisplayed(negate: Boolean) extends UnitStepAction[WebContext] {
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     step tap { _ =>
       checkStepRules(step, BehaviorType.Assertion, ctx)
-      ctx.checkPopupDisplayed(step.timeoutOpt.map(_.toSeconds), negate, step.message, step.assertionMode)
+      ctx.checkPopupDisplayed(step.timeoutOpt.map(_.toSeconds), negate, step.assertionMode)
     }
   }
 

@@ -139,14 +139,14 @@ class WebEnvironmentTest extends BaseTest with Matchers with MockitoSugar {
   "Timeout on compare" should "result in assertion error" in {
     val ctx = newCtx()
     intercept[AssertionError] {
-      ctx.compare("a", "2", () => "1", ComparisonOperator.be, negate = false, None, None, None, AssertionMode.hard)
+      ctx.compare("a", "2", () => "1", ComparisonOperator.be, negate = false, None, None, AssertionMode.hard)
     }
   }
 
   "Timeout on negated compare" should "result in assertion error" in {
     val ctx = newCtx()
     intercept[AssertionError] {
-      ctx.compare("a", "2", () => "2", ComparisonOperator.be, negate = true, None, None, None, AssertionMode.hard)
+      ctx.compare("a", "2", () => "2", ComparisonOperator.be, negate = true, None, None, AssertionMode.hard)
     }
   }
 
