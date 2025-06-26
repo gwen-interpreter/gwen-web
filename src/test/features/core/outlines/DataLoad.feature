@@ -7,3 +7,4 @@ Feature: Data Load
      When I capture the text in the website by regex "(.+?):.*" as the protocol
      Then the protocol should be "https"
       And JSON examples should load
+      And WEBSITE should be unique in the "src/test/features-data/Data.csv" file

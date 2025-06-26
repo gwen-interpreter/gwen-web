@@ -26,3 +26,4 @@ Feature: Data Load Meta
       And @Soft website should not be "${gwen.scenario.eval.duration}"
       And @Soft website should not be "${gwen.scenario.eval.duration.msecs}"
       And @Soft website should not be "${gwen.scenario.eval.duration.secs}"
+      And website should be unique in the "src/test/features-data/Data.json" file
