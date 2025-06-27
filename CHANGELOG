@@ -1,3 +1,10 @@
+4.12.1
+======
+27 Jun 2025
+- Update Gwen core from v4.9.0 to v[4.9.1](https://github.com/gwen-interpreter/gwen/releases/tag/v4.9.1)
+  - Deprecate meta level initialisation scenarios
+    - Users should make them StepDefs and call them were needed instead
+
 4.12.0
 ======
 26 Jun 2025

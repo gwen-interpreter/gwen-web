@@ -1,8 +1,5 @@
 Feature: Dry Run Annotations Meta
 
-  Scenario: Init sequence
-    Given sequence is ""
-
   @StepDef
   @Action
   Scenario: I perform step 1

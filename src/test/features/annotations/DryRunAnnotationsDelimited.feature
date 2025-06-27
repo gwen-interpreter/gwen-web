@@ -1,7 +1,8 @@
 Feature: Dry Run Annotations - Delimited
 
   Scenario: Perform all steps
-    Given numbers is defined by js    @DryRun(name='numbers',value='1 2 3')
+    Given sequence is ""
+      And numbers is defined by js    @DryRun(name='numbers',value='1 2 3')
           """
           ['1', '2', '3'].join(' ')
           """
