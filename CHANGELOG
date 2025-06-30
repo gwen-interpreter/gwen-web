@@ -1,7 +1,10 @@
 4.12.1
 ======
-27 Jun 2025
+30 Jun 2025
+- Fix bound value assertions
 - Update Gwen core from v4.9.0 to v[4.9.1](https://github.com/gwen-interpreter/gwen/releases/tag/v4.9.1)
+  - Allow aggregated data columns in unique assertion DSLs
+  - Honor Message annotations for assertions only
   - Deprecate meta level initialisation scenarios
     - Users should make them StepDefs and call them were needed instead
 
