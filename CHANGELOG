@@ -1,6 +1,7 @@
 4.12.2
 ======
 1 Jul 2025
+- Update selenium from v4.33.0 to v4.34.0
 - Update Gwen core from v4.9.1 to v[4.9.2](https://github.com/gwen-interpreter/gwen/releases/tag/v4.9.2)
   - Fix honoring of Message annotations for assertions only
   - Undo deprecation of meta level initialisation scenarios
