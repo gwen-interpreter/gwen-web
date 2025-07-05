@@ -1,3 +1,9 @@
+4.12.4
+======
+5 Jul 2025
+- Update Gwen core from v4.9.3 to v[4.9.4](https://github.com/gwen-interpreter/gwen/releases/tag/v4.9.4)
+  - Add eager and lazy binding values as attachments to results and reports
+
 4.12.3
 ======
 1 Jul 2025
