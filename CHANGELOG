@@ -1,3 +1,9 @@
+4.12.5
+======
+3 Aug 2025
+- Update Gwen core from v4.9.4 to v[4.9.5](https://github.com/gwen-interpreter/gwen/releases/tag/v4.9.5)
+  - Suppress empty implict scope when dumping env
+
 4.12.4
 ======
 5 Jul 2025
