@@ -41,7 +41,7 @@ lazy val projectSettings = Seq(
 lazy val mainDependencies = {
   Seq(
     "org.gweninterpreter" % "gwen" % "4.9.5",
-    "org.seleniumhq.selenium" % "selenium-java" % "4.34.0" excludeAll(
+    "org.seleniumhq.selenium" % "selenium-java" % "4.35.0" excludeAll(
       ExclusionRule("org.seleniumhq.selenium", "selenium-ie-driver")
     )
   ) ++ mainOverrides
