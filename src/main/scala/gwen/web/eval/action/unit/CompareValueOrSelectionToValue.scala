@@ -75,7 +75,7 @@ class CompareValueOrSelectionToValue(element: String, selection: Option[Dropdown
         }
       }
     } else {
-      new Compare(element, expression, operator, negate).apply(parent, step, ctx)
+      new Compare(element, expression, operator, negate, None).apply(parent, step, ctx)
     }
   }
 

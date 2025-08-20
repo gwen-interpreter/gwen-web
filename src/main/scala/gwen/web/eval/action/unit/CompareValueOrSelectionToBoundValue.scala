@@ -63,7 +63,7 @@ class CompareValueOrSelectionToBoundValue(element: String, selection: Option[Dro
         }
       }
     } else {
-      new Compare(element, ctx.getBoundValue(source), operator, negate).apply(parent, step, ctx)
+      new Compare(element, ctx.getBoundValue(source), operator, negate, None).apply(parent, step, ctx)
     }
   }
 
