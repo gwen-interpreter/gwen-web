@@ -1072,11 +1072,20 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
 
   private def withDriverAndElement(binding: LocatorBinding, reason: String)(doActions: (WebDriver, WebElement) => Unit): Unit = {
     withWebDriver { driver =>
-      withWebElement(binding, reason) { webElement =>
-        if (WebSettings.`gwen.web.implicit.element.focus`) {
-          applyJS(jsFunctionWrapper("element", "arguments[0]", "element.focus()"), webElement)
+      if (WebSettings.`gwen.web.implicit.element.focus`) {
+        withWebElement(binding, reason) { webElement =>
+          try {
+            applyJS(jsFunctionWrapper("element", "arguments[0]", "element.focus()"), webElement)
+          } catch {
+            case _ => 
+              Thread.sleep(1000) // give element time to recover
+          }
+          doActions(driver, webElement)
         }
-        doActions(driver, webElement)
+      } else {
+        withWebElement(binding, reason) { webElement =>
+          doActions(driver, webElement)
+        }
       }
     }
   }
