@@ -245,7 +245,7 @@ com.google.guava
   +-failureaccess:1.0.3
   | +-Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
 org.gweninterpreter
-  +-gwen:4.10.0
+  +-gwen:4.10.1
   | +-Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
 org.scala-lang.modules
   +-scala-asm:9.8.0-scala-1

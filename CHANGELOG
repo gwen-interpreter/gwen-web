@@ -1,3 +1,9 @@
+4.13.1
+======
+2 Sep 2025
+- Update Gwen core from v4.10.0 to v[4.10.1](https://github.com/gwen-interpreter/gwen/releases/tag/v4.10.1)
+  - Remove dangling println
+
 4.13.0
 ======
 1 Sep 2025
