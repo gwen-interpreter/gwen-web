@@ -34,7 +34,7 @@ class AssertBrowserWindowCount(expectedCount: Int) extends UnitStepAction[WebCon
       checkStepRules(step, BehaviorType.Assertion, ctx)
       ctx.perform {
         val timeout = step.timeoutOpt
-        ctx.compare("open windows/tabs", expectedCount.toString, () => ctx.noOfWindows().toString, ComparisonOperator.be, false, None, timeout.map(_.toSeconds), step.assertionMode)
+        ctx.compare("open windows/tabs", expectedCount.toString, () => ctx.noOfWindows().toString, ComparisonOperator.be, false, false, None, timeout.map(_.toSeconds), step.assertionMode)
       }
     }
   }

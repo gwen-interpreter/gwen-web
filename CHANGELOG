@@ -1,3 +1,9 @@
+4.13.0
+======
+1 Sep 2025
+- Update Gwen core from v4.9.6 to v[4.10.0](https://github.com/gwen-interpreter/gwen/releases/tag/v4.10.0)
+  - Add support for masking on template match extractions
+
 4.12.7
 ======
 22 Aug 2025

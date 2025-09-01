@@ -335,7 +335,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     * @param mode the assertion mode
     * @return true if the actual value matches the expected value
     */
-  def compare(name: String, expected: String, actual: () => String, operator: ComparisonOperator, negate: Boolean, nameSuffix: Option[String], timeoutSecs: Option[Long], mode: AssertionMode): Unit = {
+  def compare(name: String, expected: String, actual: () => String, operator: ComparisonOperator, negate: Boolean, mask: Boolean, nameSuffix: Option[String], timeoutSecs: Option[Long], mode: AssertionMode): Unit = {
     Thread.sleep(WebSettings.`gwen.web.assertions.delayMillisecs`)
     var result = false
     var error: Option[String] = None
@@ -350,7 +350,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
         }
         polled = true
         result = if (actualValue != null) {
-          super.compare(name, expected, actualValue, operator, negate) match {
+          super.compare(name, expected, actualValue, operator, negate, mask) match {
             case Success(condition) => condition
             case Failure(e) =>
               error = Some(e.getMessage)
@@ -368,7 +368,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
         assertWithError(assertion = false, msg, mode)
       case None =>
         if (!polled) {
-          result = super.compare(name, expected, actualValue, operator, negate).getOrElse(result)
+          result = super.compare(name, expected, actualValue, operator, negate, mask).getOrElse(result)
         }
         val binding = Try(
           getLocatorBinding(name.substring(0, name.length - nameSuffix.map(_.length).getOrElse(0)), optional = true) getOrElse {

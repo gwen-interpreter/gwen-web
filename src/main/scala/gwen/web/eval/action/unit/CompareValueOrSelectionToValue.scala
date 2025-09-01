@@ -47,6 +47,7 @@ class CompareValueOrSelectionToValue(element: String, selection: Option[Dropdown
     val timeout = step.timeoutOpt
     val trim = step.isTrim
     val ignoreCase = step.isIgnoreCase
+    val mask = step.isMasked
     if (ctx.isWebBinding(element) || !ValueLiteral.values.exists(_.value == expression)) {
       val expected = ctx.parseExpression(operator, expression)
       val actual = () => ctx.boundAttributeOrSelection(element, selection, timeout)
@@ -55,10 +56,10 @@ class CompareValueOrSelectionToValue(element: String, selection: Option[Dropdown
         ctx.perform {
           if (ctx.topScope.findEntry { case (n, _) => n.startsWith(element) } forall { case (n, _) => n != element }) {
             val nameSuffix = selection.map(sel => s" $sel")
-            ctx.compare(s"$element${nameSuffix.getOrElse("")}", Formatting.format(expected, trim, ignoreCase), formattedActual, operator, negate, nameSuffix, timeout.map(_.toSeconds), step.assertionMode)
+            ctx.compare(s"$element${nameSuffix.getOrElse("")}", Formatting.format(expected, trim, ignoreCase), formattedActual, operator, negate, mask, nameSuffix, timeout.map(_.toSeconds), step.assertionMode)
           } else {
             val actualValue = ctx.topScope.getOpt(element).getOrElse(actual())
-            val result = ctx.compare(element, Formatting.format(expected, trim, ignoreCase), Formatting.format(actualValue, trim, ignoreCase), operator, negate)
+            val result = ctx.compare(element, Formatting.format(expected, trim, ignoreCase), Formatting.format(actualValue, trim, ignoreCase), operator, negate, mask)
             result match {
               case Success(assertion) =>
                 val binding = ctx.getLocatorBinding(element, optional = true)

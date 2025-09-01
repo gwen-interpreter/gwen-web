@@ -43,6 +43,7 @@ class CompareValueOrSelectionToBoundValue(element: String, selection: Option[Dro
     val timeout = step.timeoutOpt
     val trim = step.isTrim
     val ignoreCase = step.isIgnoreCase
+    val mask = step.isMasked
     if (ctx.isWebBinding(element) || ctx.isWebBinding(source)) {
       val timeoutOverride = {
         if (ctx.getLocatorBindingOpt(source).nonEmpty || ctx.getLocatorBindingOpt(element).nonEmpty) {
@@ -57,7 +58,7 @@ class CompareValueOrSelectionToBoundValue(element: String, selection: Option[Dro
       step tap { _ =>
         ctx.perform {
           val nameSuffix = selection.map(sel => s" $sel")
-          ctx.compare(s"$element${nameSuffix.getOrElse("")}", Formatting.format(expected, trim, ignoreCase), formattedActual, operator, negate, nameSuffix, timeoutOverride.map(_.toSeconds), step.assertionMode)
+          ctx.compare(s"$element${nameSuffix.getOrElse("")}", Formatting.format(expected, trim, ignoreCase), formattedActual, operator, negate, mask, nameSuffix, timeoutOverride.map(_.toSeconds), step.assertionMode)
         } getOrElse  {
           actual()
         }

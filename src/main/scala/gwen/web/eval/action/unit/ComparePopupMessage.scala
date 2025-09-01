@@ -36,13 +36,14 @@ class ComparePopupMessage(name: String, value: String, bound: Boolean, operator:
       val timeout = step.timeoutOpt
       val trim = step.isTrim
       val ignoreCase = step.isIgnoreCase
+      val mask = step.isMasked
       val expected = if (bound) {
         ctx.getBoundValue(value, timeout)
       } else {
         ctx.parseExpression(operator, value)
       }
       ctx.perform {
-        ctx.compare(name, Formatting.format(expected, trim, ignoreCase), () => Formatting.format(ctx.getPopupMessage, trim, ignoreCase), operator, negate, None, timeout.map(_.toSeconds), step.assertionMode)
+        ctx.compare(name, Formatting.format(expected, trim, ignoreCase), () => Formatting.format(ctx.getPopupMessage, trim, ignoreCase), operator, negate, mask, None, timeout.map(_.toSeconds), step.assertionMode)
       }
     }
   }
