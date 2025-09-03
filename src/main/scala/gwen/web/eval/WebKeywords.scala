@@ -47,6 +47,18 @@ enum ElementAction:
 
 enum ElementState:
   case displayed, hidden, checked, ticked, unchecked, unticked, enabled, disabled
+  def toggle: ElementState = {
+    this match {
+      case ElementState.displayed => hidden
+      case ElementState.hidden => displayed
+      case ElementState.checked => unchecked
+      case ElementState.ticked => unticked
+      case ElementState.unchecked => checked
+      case ElementState.unticked => ticked
+      case ElementState.enabled => disabled
+      case ElementState.disabled => enabled
+    }
+  }
 
 enum ScrollTo:
  case top, bottom

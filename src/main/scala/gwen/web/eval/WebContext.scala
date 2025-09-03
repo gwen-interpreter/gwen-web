@@ -738,34 +738,20 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     var result = false
     perform {
       Thread.sleep(WebSettings.`gwen.web.assertions.delayMillisecs`)
-      val fastBinding = binding.withFastTimeout
-      state match {
-        case ElementState.displayed => 
-          result = if (!negate) isDisplayed(fastBinding) else !isDisplayed(fastBinding)
-        case ElementState.hidden =>
-          result = if (!negate) !isDisplayed(fastBinding) else isDisplayed(fastBinding)
+      val targetState = if (negate) state.toggle else state
+      targetState match {
+        case ElementState.displayed => result = isDisplayed(binding)
+        case ElementState.hidden => result = !isDisplayed(binding)
         case _ =>
           try {  
-            withWebElement(fastBinding, s"waiting for ${binding.displayName} to${if (negate) " not" else ""} be $state") { webElement =>
-              result = state match {
-                case ElementState.checked =>
-                  if (!negate) webElement.isSelected
-                  else !webElement.isSelected
-                case ElementState.ticked =>
-                  if (!negate) webElement.isSelected
-                  else !webElement.isSelected
-                case ElementState.unchecked =>
-                  if (!negate) !webElement.isSelected
-                  else webElement.isSelected
-                case ElementState.unticked =>
-                  if (!negate) !webElement.isSelected
-                  else webElement.isSelected
-                case ElementState.enabled =>
-                  if (!negate) webElement.isEnabled
-                  else!webElement.isEnabled
-                case ElementState.disabled =>
-                  if (!negate) !webElement.isEnabled
-                  else webElement.isEnabled
+            withWebElement(binding, s"waiting for ${binding.displayName} to${if (negate) " not" else ""} be $state") { webElement =>
+              result = targetState match {
+                case ElementState.checked => webElement.isSelected
+                case ElementState.ticked => webElement.isSelected
+                case ElementState.unchecked => !webElement.isSelected
+                case ElementState.unticked => !webElement.isSelected
+                case ElementState.enabled => webElement.isEnabled
+                case ElementState.disabled => !webElement.isEnabled
                 case _ => false //never
               }
             }
