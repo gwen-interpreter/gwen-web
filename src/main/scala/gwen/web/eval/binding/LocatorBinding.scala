@@ -51,7 +51,7 @@ class LocatorBinding(val name: String, val selectors: List[Selector], ctx: WebCo
 
   override def resolve(): WebElement = ctx.webElementlocator.locate(this)
   def resolveAll(): List[WebElement] = ctx.webElementlocator.locateAll(this)  
-  def withFastTimeout: LocatorBinding = withTimeout(Duration(200, TimeUnit.MILLISECONDS))
+  def withFastTimeout: LocatorBinding = withTimeout(Duration(500, TimeUnit.MILLISECONDS))
   def withTimeout(timeout: Option[Duration]): LocatorBinding = timeout.map(withTimeout).getOrElse(this)
   def withTimeoutSeconds(timeoutSecs: Option[Long]): LocatorBinding = withTimeout(timeoutSecs.map(s => Duration(s, TimeUnit.SECONDS)))
   private def withTimeout(timeout: Duration): LocatorBinding = {
