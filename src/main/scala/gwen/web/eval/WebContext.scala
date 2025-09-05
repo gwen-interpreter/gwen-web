@@ -749,8 +749,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
               result = targetState match {
                 case ElementState.checked => webElement.isSelected
                 case ElementState.ticked => webElement.isSelected
-                case ElementState.unchecked => 
-                  !webElement.isSelected
+                case ElementState.unchecked => !webElement.isSelected
                 case ElementState.unticked => !webElement.isSelected
                 case ElementState.enabled => webElement.isEnabled
                 case ElementState.disabled => !webElement.isEnabled

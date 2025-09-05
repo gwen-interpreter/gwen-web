@@ -1,6 +1,13 @@
+4.13.4
+======
+5 Sep 2025
+- Update Gwen core from v4.10.1 to v[4.10.2](https://github.com/gwen-interpreter/gwen/releases/tag/v4.10.2)
+  - Generate names for unnamed CSV data columns
+    - Use naming convention `unnamed_<index>` where `<index>` is col index of unnamed header
+
 4.13.3
 ======
-4 Sep 2025
+5 Sep 2025
 - Further optimise negated element state assertions using fast timeout
 
 4.13.2
