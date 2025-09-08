@@ -1404,10 +1404,13 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
   def noOfWindows(): Int = driverManager.noOfWindows()
 
   /**
-    * Switches to the first child window if one was just opened.
+    * Switches to the last opened child window if one was just opened.
     */
   def switchToChild(): Unit = {
-    switchToWindow(1)
+    waitUntil(s"trying to switch to child window") {
+      driverManager.windows().size > 1
+    }
+    switchToWindow(driverManager.windows().size - 1)
   }
 
   /**
