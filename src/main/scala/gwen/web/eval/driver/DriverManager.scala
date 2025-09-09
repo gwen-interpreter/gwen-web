@@ -479,7 +479,7 @@ class DriverManager() extends LazyLogging {
     }
   }
 
-  def windows(): List[String] = withWebDriver(_.getWindowHandles.asScala.toList)
+  def windows(): List[String] = withWebDriver(_.getWindowHandles.toArray.toList.map(_.toString))
 
   def getSessionId: Option[String] = {
     withWebDriver { getSessionId }
