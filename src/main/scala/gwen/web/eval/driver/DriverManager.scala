@@ -418,19 +418,48 @@ class DriverManager() extends LazyLogging {
       switchToWindow(handle, isChild = (occurrence > 0))
       logger.info(s"Closing window occurrence $occurrence ($handle)")
       webDriver.close()
-      switchToParent()
+      if (occurrence > 0) {
+        switchToWindow(occurrence - 1)
+      } else {
+        Try(switchToWindow(0))
+      }
     } getOrElse {
       WebErrors.noSuchWindowError(s"Cannot close window $occurrence: no such occurrence")
     }
   }
 
-  /** Switches to the parent window. */
-  def switchToParent(): Unit = {
-    windows() match {
-      case parent::_ =>
-        switchToWindow(parent, isChild = false)
-      case _ =>
-        logger.warn("Bypassing switch to parent window: no child windows open")
+  /** Switches to the parent window of the current window. */
+  def switchToParent(): Boolean = {
+    withWebDriver { driver => 
+      switchToNext(windows(driver).reverse, driver)
+    }
+  }
+
+  def switchToChild(): Boolean = {    
+    withWebDriver { driver => 
+      switchToNext(windows(driver), driver)
+    }
+  }
+
+  private def switchToNext(handles: List[String], driver: WebDriver): Boolean = {
+    withWebDriver { driver => 
+      val currentHandle = Try(driver.getWindowHandle) match {
+        case Success(handle) => Some(handle)
+        case _ => None
+      }
+      val targetHandle = currentHandle map { handle =>
+        handles.dropWhile(_ != handle) match {
+          case Nil => handles.head
+          case head :: Nil => head
+          case _ :: tail => tail.head
+        }
+      }
+      targetHandle.flatMap(th => currentHandle.map(_ != th)).getOrElse(false) tap { _ => 
+        targetHandle match {
+          case Some(handle) => driver.switchTo.window(handle)
+          case None => handles.headOption.foreach(driver.switchTo.window)
+        }
+      }
     }
   }
 
@@ -479,7 +508,9 @@ class DriverManager() extends LazyLogging {
     }
   }
 
-  def windows(): List[String] = withWebDriver(_.getWindowHandles.toArray.toList.map(_.toString))
+  def windows(): List[String] = withWebDriver(windows)
+
+  private def windows(driver: WebDriver): List[String] = driver.getWindowHandles.toArray.toList.map(_.toString)
 
   def getSessionId: Option[String] = {
     withWebDriver { getSessionId }

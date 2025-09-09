@@ -1407,10 +1407,9 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     * Switches to the last opened child window if one was just opened.
     */
   def switchToChild(): Unit = {
-    waitUntil(s"trying to switch to child window") {
-      driverManager.windows().size > 1
+    waitUntil(s"trying to switch to child tab/window") {
+      driverManager.switchToChild()
     }
-    switchToWindow(driverManager.windows().size - 1)
   }
 
   /**

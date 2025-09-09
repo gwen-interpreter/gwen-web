@@ -25,12 +25,12 @@ import gwen.core.node.gherkin.Step
 
 import scala.util.chaining._
 
-class SwitchToRootWindow extends UnitStepAction[WebContext] {
+class SwitchToParentWindow extends UnitStepAction[WebContext] {
 
   override def apply(parent: GwenNode, step: Step, ctx: WebContext): Step = {
     step tap { _ =>
       checkStepRules(step, BehaviorType.Action, ctx)
-      ctx.switchToWindow(0)
+      ctx.switchToParent()
     }
   }
 

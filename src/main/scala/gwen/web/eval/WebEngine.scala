@@ -257,7 +257,9 @@ class WebEngine extends EvalEngine[WebContext] {
         new OpenOrCloseWindow(false, Some(occurrence.toInt))
       case r"""I close (?:window|tab) (\d+?)$occurrence""" =>
         new OpenOrCloseWindow(false, Some(occurrence.toInt))
-      case r"""I switch to the (?:root|parent) (?:window|tab)""" =>
+      case r"""I switch to the parent (?:window|tab)""" =>
+        new SwitchToParentWindow()
+      case r"""I switch to the root (?:window|tab)""" =>
         new SwitchToRootWindow()
       case """I switch to the default content""" =>
         new SwitchToDefaultContent()
