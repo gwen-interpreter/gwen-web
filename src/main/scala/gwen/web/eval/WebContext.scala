@@ -1421,7 +1421,9 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     waitUntil(s"trying to switch to tab/window occurrence $occurrence") {
       driverManager.windows().lift(occurrence).nonEmpty
     }
-    driverManager.switchToWindow(occurrence)
+    perform {
+      driverManager.switchToWindow(occurrence)
+    }
   }
 
   /**

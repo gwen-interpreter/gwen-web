@@ -1,16 +1,21 @@
+4.14.1
+======
+10 Sep 2025
+- Do not switch to root window or tab in dry run mode
+
 4.14.0
 ======
 9 Sep 2025
 - Improved tab and window switching
   - Switching to child or parent switches to the next or previous tab or window in the current driver list
-  - Split out parant and root tab or window switching DSLs
+  - Split out parent and root tab or window switching DSLs
     - `I switch to parent tab|window` switches to parent tab or window (and stays on the root window if there are no other windows open)
     - `I switch to root tab|window` switches to the topmost tab or window
 
 4.13.5
 ======
 9 Sep 2025
-- Select the most recently opened child tab/window when swithing to child window.
+- Select the most recently opened child tab/window when switching to child window.
 
 4.13.4
 ======
