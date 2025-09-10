@@ -182,7 +182,7 @@ class DriverManagerTest extends BaseTest with Matchers with MockitoSugar with Be
     when(mockWebDriver.switchTo()).thenReturn(mockTargetLocator)
     when(mockWebDriver.getWindowHandles).thenReturn(Set("root", "child").asJava)
     manager.closeChild()
-    verify(mockTargetLocator, times(2)).window("child")
+    verify(mockTargetLocator).window("child")
     //verify(mockTargetLocator).window("root")
     verify(mockWebDriver).close()
   }

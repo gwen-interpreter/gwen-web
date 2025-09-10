@@ -1,3 +1,8 @@
+4.14.2
+======
+10 Sep 2025
+- Skip closed windows and tabs when navigating to next parent or child
+
 4.14.1
 ======
 10 Sep 2025

@@ -443,22 +443,14 @@ class DriverManager() extends LazyLogging {
 
   private def switchToNext(handles: List[String], driver: WebDriver): Boolean = {
     withWebDriver { driver => 
-      val currentHandle = Try(driver.getWindowHandle) match {
-        case Success(handle) => Some(handle)
-        case _ => None
-      }
-      val targetHandle = currentHandle map { handle =>
-        handles.dropWhile(_ != handle) match {
-          case Nil => handles.head
-          case head :: Nil => head
-          case _ :: tail => tail.head
+      Try(driver.getWindowHandle) map { handle =>
+        handles.dropWhile(_ != handle).drop(1).foldLeft(false) { (result, h) => 
+          if (!result) {
+            Try(driver.switchTo.window(h)).isSuccess
+          } else result
         }
-      }
-      targetHandle.flatMap(th => currentHandle.map(_ != th)).getOrElse(false) tap { _ => 
-        targetHandle match {
-          case Some(handle) => driver.switchTo.window(handle)
-          case None => handles.headOption.foreach(driver.switchTo.window)
-        }
+      } getOrElse {
+        Try(handles.headOption.foreach(driver.switchTo.window)).isSuccess
       }
     }
   }
