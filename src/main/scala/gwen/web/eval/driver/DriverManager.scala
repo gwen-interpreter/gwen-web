@@ -64,8 +64,11 @@ class DriverManager() extends LazyLogging {
   /** The current web browser session. */
   private var session = "primary"
 
-  /** Map of web driver instances (keyed by name). */
+  /** Map of web driver instances (keyed by session name). */
   private [eval] val drivers: mutable.Map[String, WebDriver] = mutable.Map()
+
+  /** Map of open window handles (keyed by session name). */
+  private [eval] val windowHandles: mutable.Map[String, List[String]] = mutable.Map()
 
   private val eventDispatcher = new WebSessionEventDispatcher()
 
@@ -79,6 +82,7 @@ class DriverManager() extends LazyLogging {
         loadWebDriver
       }
       drivers += (session -> driver)
+      windowHandles += (session -> List(driver.getWindowHandle))
       driver
     })
 
@@ -94,6 +98,7 @@ class DriverManager() extends LazyLogging {
 
   /** Quits a named browser and associated web driver instance. */
   def quit(name: String): Unit = {
+    windowHandles.remove(name)
     drivers.remove(name) foreach { driver =>
       logger.info(s"Closing browser session${ if(name == "primary") "" else s": $name"}")
       try {
@@ -414,10 +419,12 @@ class DriverManager() extends LazyLogging {
   }
 
   def closeWindow(occurrence: Int): Unit = {
-    windows().lift(occurrence) map { handle =>
+    val handles = windows()
+    handles.lift(occurrence) map { handle =>
       switchToWindow(handle, isChild = (occurrence > 0))
       logger.info(s"Closing window occurrence $occurrence ($handle)")
       webDriver.close()
+      windowHandles += (session -> handles.filterNot(_ == handle))
       if (occurrence > 0) {
         switchToWindow(occurrence - 1)
       } else {
@@ -502,7 +509,19 @@ class DriverManager() extends LazyLogging {
 
   def windows(): List[String] = withWebDriver(windows)
 
-  private def windows(driver: WebDriver): List[String] = driver.getWindowHandles.toArray.toList.map(_.toString)
+  private def windows(driver: WebDriver): List[String] = { 
+    val dHandles = driver.getWindowHandles.toArray.toList.map(_.toString)
+    val sHandles = windowHandles.get(session).getOrElse(Nil).filter(dHandles.contains)
+    val newHandles = dHandles.filterNot(sHandles.contains)
+    val newHandles2 = Try(driver.getWindowHandle()) match {
+      case Success(handle) if newHandles.contains(handle) => handle :: newHandles.filter(_ != handle)
+      case _ => newHandles
+    }
+    (sHandles ++ newHandles2) tap { handles => 
+      windowHandles += (session -> handles)
+    }
+  }
+
 
   def getSessionId: Option[String] = {
     withWebDriver { getSessionId }
