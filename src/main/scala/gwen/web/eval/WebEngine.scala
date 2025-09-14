@@ -77,6 +77,10 @@ class WebEngine extends EvalEngine[WebContext] {
     step.expression.match {
       case r"""(.+)$doStep if(?:(?!\bif\b)) (.+?)$element is( not)?$negation (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$state""" =>
         Some(new IfElementCondition(doStep, element, ElementState.valueOf(state), Option(negation).nonEmpty, this))
+      case r"""(.+)$doStep if(?:(?!\bif\b)) there is 1 open (tab|window)$winType""" =>
+        Some(new IfWindowCount(doStep, 1, WindowType.valueOf(winType.toUpperCase), this))
+      case r"""(.+)$doStep if(?:(?!\bif\b)) there are (\d+?)$count open (tab|window)${winType}s""" =>
+        Some(new IfWindowCount(doStep, count.toInt, WindowType.valueOf(winType.toUpperCase), this))
       case r"""(.+?)$doStep (until|while)$operation (.+?)$element is( not)?$negation (displayed|hidden|checked|ticked|unchecked|unticked|enabled|disabled)$state""" if (doStep != "I wait" && !step.expression.matches(""".*".*(until|while).*".*""")) =>
         Some(new RepeatElementState(doStep, operation, element, ElementState.valueOf(state), Option(negation).nonEmpty, this))
       case _ =>

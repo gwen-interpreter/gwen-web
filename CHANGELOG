@@ -1,3 +1,10 @@
+4.15.0
+======
+15 Sep 2025
+- Add DSLs for conditionally evaluatng steps if a given number of tabs or windows are open
+  - `<step> if there is 1 open <tab|window>`
+  - `<step> if there are <count> open <tab|window>s`
+    
 4.14.3
 ======
 11 Sep 2025

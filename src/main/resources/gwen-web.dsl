@@ -847,6 +847,10 @@ I maximise the window
 <step> if <filepathRef file> does not exist
 <step> if <filepathRef file> is empty
 <step> if <filepathRef file> is not empty
+<step> if there is 1 open window
+<step> if there is 1 open tab
+<step> if there are <count> open windows
+<step> if there are <count> open tabs
 <step> for each <entry> in <textRef> delimited by "<delimiter>"
 <step> for each <entry> in <arrayRef> array
 I drag and drop <sourceElement> to <targetElement>

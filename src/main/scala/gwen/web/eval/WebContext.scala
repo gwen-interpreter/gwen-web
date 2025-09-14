@@ -777,7 +777,20 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
   def waitForElementState(binding: LocatorBinding, state: ElementState, negate: Boolean): Unit =
     waitUntil(binding.timeoutSeconds, s"waiting for ${binding.displayName} to${if (negate) " not" else""} be $state") {
       isElementState(binding, state, negate)
+  }
+
+  /**
+    * Waits for a number of tabs/windows to be open.
+    *
+    * @param count the number of tabs or windwos to wait for
+    */
+  def waitForWindows(count: Int, winType: WindowType): Unit = {
+    val waitSecs = WebSettings.`gwen.web.wait.seconds`
+    val timeoutSecs = Option(waitSecs / 10L).filter(_ > 0).getOrElse(if (waitSecs > 0) 1L else 0)
+    waitUntil(timeoutSecs, s"waiting for number of ${winType.name.toLowerCase}s to be $count") {
+      noOfWindows() == count
     }
+  }
 
   /** Gets the title of the current page in the browser.*/
   def getTitle: String =
