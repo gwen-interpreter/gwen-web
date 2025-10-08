@@ -1,3 +1,21 @@
+4.15.1
+======
+8 Oct 2025
+- Update selenium from v4.35.0 to v4.36.0
+- Update Gwen core from v4.10.2 to v[4.10.3](https://github.com/gwen-interpreter/gwen/releases/tag/v4.10.3)
+  - Update dependencies
+    - Update scala from v3.7.1 to v3.7.3
+    - Update gherkin from v32.1.1 v35.1.0
+    - Update jline from v3.30.4 to v3.30.6
+    - Update logback from v1.5.18 to v1.5.19
+    - Update commons-text from v1.13.1 to v1.14.0
+    - Update jackson-databind from v2.19.1 to v2.20.0
+    - Update json-smart from v2.5.2 to v2.6.0
+  - Update test dependencies
+    - Update mockito from v5.18.0 to v5.20.0
+    - Update js-scriptengine from v24.2.1 to v25.0.0
+    - Update js from v24.2.1 to v25.0.0
+
 4.15.0
 ======
 15 Sep 2025

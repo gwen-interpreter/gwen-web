@@ -1,6 +1,6 @@
 enablePlugins(GitVersioning)
 
-git.baseVersion := "4.15.0"
+git.baseVersion := "4.15.1"
 git.useGitDescribe := true
 
 val gwenWeb = (project in file("."))
@@ -22,7 +22,7 @@ lazy val projectSettings = Seq(
   licenses += "Apache License, Version 2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0.txt"),
   homepage := Some(url("https://gweninterpreter.org")),
   versionScheme := Some("semver-spec"),
-  scalaVersion := "3.7.1",
+  scalaVersion := "3.7.3",
   crossPaths := false,
   trapExit := false,
   scalacOptions ++= Seq(
@@ -40,8 +40,8 @@ lazy val projectSettings = Seq(
 
 lazy val mainDependencies = {
   Seq(
-    "org.gweninterpreter" % "gwen" % "4.10.2",
-    "org.seleniumhq.selenium" % "selenium-java" % "4.35.0" excludeAll(
+    "org.gweninterpreter" % "gwen" % "4.10.3",
+    "org.seleniumhq.selenium" % "selenium-java" % "4.36.0" excludeAll(
       ExclusionRule("org.seleniumhq.selenium", "selenium-ie-driver")
     )
   ) ++ mainOverrides
@@ -56,7 +56,7 @@ lazy val testDependencies = {
   Seq(
     "org.scalatest" %% "scalatest" % "3.2.19",
     "org.scalatestplus" %% "mockito-5-12" % "3.2.19.0",
-    "org.mockito" % "mockito-core" % "5.18.0"
+    "org.mockito" % "mockito-core" % "5.20.0"
   ).map(_ % Test)
 }
 
