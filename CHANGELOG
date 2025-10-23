@@ -6,6 +6,7 @@
   - `I execute <functionRef> on <element>`
 - Deprecate following DSL in favor of above
   - `<element> can be <actioned> by <javascript|js> "<script>"`
+- Update selenium from v4.36.0 to v4.37.0
 
 4.15.1
 ======

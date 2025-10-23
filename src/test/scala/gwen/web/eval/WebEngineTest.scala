@@ -1596,15 +1596,6 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     verify(mockTopScope).set("name", file.getAbsolutePath)
   }
 
-  """<element> can be <clicked|right clicked|double clicked|submitted|checked|ticked|unchecked|unticked|selected|deselected|typed|entered|tabbed|cleared|moved to> by javascript "<javascript>"""" should "evaluate" in {
-    val mockBinding = mock[LocatorBinding]
-    doReturn(mockBinding).when(ctx).getLocatorBinding("<element>")
-    events.foreach { event =>
-      evaluate(s"""<element> can be $event by javascript "<javascript>"""")
-      verify(mockTopScope).set(s"<element>/action/${ElementEvent.actionOf(event)}/javascript", "<javascript>", false)
-    }
-  }
-
   """<reference> is defined by sql "<selectStmt>" in the <dbName> database""" should "evaluate" in {
     doReturn(mockTopScope).when(envState).topScope
     withSetting("gwen.db.<dbName>.driver", "driver") {

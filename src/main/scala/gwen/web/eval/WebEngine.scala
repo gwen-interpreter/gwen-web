@@ -150,7 +150,7 @@ class WebEngine extends EvalEngine[WebContext] {
       case r"""(.+?)$element can be located by""" if step.hasDualColumnTable =>
         new BindMultipleElementLocators(element, None, None)
       case r"""(.+?)$element can be (clicked|right clicked|double clicked|submitted|checked|ticked|unchecked|unticked|selected|deselected|typed|entered|tabbed|cleared|moved to)$event by (?:javascript|js) "(.+?)"$expression""" =>
-        Deprecation.log("DSL step", """<element> can be <actioned> by <javascript|js> "<script>"""", Some(s"""I execute <js|javascript> "function" on <element>, or I execute <functionRef>  on <element>"""))
+        Deprecation.log("DSL step", """<element> can be <actioned> by <javascript|js> "<script>"""", Some(s"""I execute <js|javascript> "function" on <element>, or I execute <functionRef> on <element>"""))
         new BindActionHandler(element, ElementEvent.valueOf(event), step.orDocString(expression))
       case r"""the page title should( not)?$negation be (blank|empty|true|false)$literal""" =>
         new CompareTitle("title", ValueLiteral.valueOf(literal).value, false, ComparisonOperator.be, Option(negation).nonEmpty)
