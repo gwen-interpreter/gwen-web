@@ -14,18 +14,18 @@ Feature: If Conditionals
   @Action
   Scenario: I conditionally perform this
     Given I perform this if this condition
-      And I perform that if not this condition
+      And I perform that step if not this condition
 
   @StepDef
   @Action
-  Scenario: I perform that
-    Given the called step is "that step"
+  Scenario: I perform that <param>
+    Given the called step is "that step" if <param> is "step"
 
   Scenario: Perform this
     Given the target is "this"
       And this condition is defined by javascript ""${the target}" === "this""
      When I perform this if this condition
-      And I perform that if not this condition
+      And I perform that step if not this condition
      Then the called step should be "this step"
 
   Scenario: Perform this 2
@@ -37,7 +37,7 @@ Feature: If Conditionals
   Scenario: Perform that
     Given the target is "that"
       And that condition is defined by javascript ""${the target}" === "that""
-     When I perform that if that condition
+     When I perform that step if that condition
      Then the called step should be "that step"
 
   Scenario: Do not perform this
@@ -65,7 +65,7 @@ Feature: If Conditionals
       And toBoolean is defined by js "arguments[0]"
       And this condition is defined by toBoolean applied to "true"
      When I perform this if this condition
-      And I perform that if not this condition
+      And I perform that step if not this condition
      Then the called step should be "this step"
 
   Scenario: Perform this using applied function as conditional (negated)
@@ -73,7 +73,7 @@ Feature: If Conditionals
       And toBoolean is defined by js "arguments[0]"
       And this condition is defined by toBoolean applied to "false"
      When I perform this if not this condition
-      And I perform that if this condition
+      And I perform that step if this condition
      Then the called step should be "this step"
 
   Scenario: If condition with blank check
@@ -109,14 +109,14 @@ Feature: If Conditionals
   Scenario: Perform this if filepath exists
     Given the target is "this"
      When I perform this if "gwen.conf" file exists
-      And I perform that if "gwen.conf" file does not exist
+      And I perform that step if "gwen.conf" file does not exist
      Then the called step should be "this step"
       And the called step should not be "that step"
 
   Scenario: Perform this if fileref exists
     Given the target is "that"
       And the file is "gwen.conf"
-     When I perform that if the file exists
+     When I perform that step if the file exists
       And I perform this if the file not exists
      Then the called step should be "that step"
       And the called step should not be "this step"
@@ -124,14 +124,14 @@ Feature: If Conditionals
   Scenario: Perform this if file empty or not
     Given the target is "this"
      When I perform this if "gwen.conf" file is not empty
-      And I perform that if "gwen.conf" file is empty
+      And I perform that step if "gwen.conf" file is empty
      Then the called step should be "this step"
       And the called step should not be "that step"
 
   Scenario: Perform this if fileref emtpy or not
     Given the target is "that"
       And the file is "gwen.conf"
-     When I perform that if the file is not empty
+     When I perform that step if the file is not empty
       And I perform this if the file is empty
      Then the called step should be "that step"
       And the called step should not be "this step"

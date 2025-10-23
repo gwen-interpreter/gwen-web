@@ -7,6 +7,8 @@
 - Deprecate following DSL in favor of above
   - `<element> can be <actioned> by <javascript|js> "<script>"`
 - Update selenium from v4.36.0 to v4.37.0
+- Update Gwen core from v4.10.3 to v[4.11.0](https://github.com/gwen-interpreter/gwen/releases/tag/v4.11.0)
+  - Check param scope when resolving bound values
 
 4.15.1
 ======
