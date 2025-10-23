@@ -236,8 +236,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
   def getWebBoundValue(name: String): String = {
     getCachedWebElement(s"${JSBinding.key(name)}/param/webElement") map { webElement =>
       val javascript = interpolate(topScope.get(JSBinding.key(name)))
-      val jsFunction = jsFunctionWrapper("element", "arguments[0]", s"return $javascript")
-      Option(applyJS(jsFunction, webElement)).map(_.toString).getOrElse("")
+      Option(applyJSToElement("element", s"return $javascript", webElement)).map(_.toString).getOrElse("")
     } getOrElse {
       try {
         super.getBoundValue(name)
@@ -661,13 +660,13 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
       val msecs = WebSettings`gwen.web.throttle.msecs`; // need semi-colon (compiler bug?)
       if (msecs > 0) {
         val style = WebSettings.`gwen.web.highlight.style`
-        Try(applyJS(jsFunctionWrapper("element", "arguments[0]", s"type = element.getAttribute('type'); if (('radio' == type || 'checkbox' == type) && element.parentElement.getElementsByTagName('input').length == 1) { element = element.parentElement; } original_style = element.getAttribute('style'); element.setAttribute('style', original_style + '; $style'); return original_style;"), element)(using WebSettings.`gwen.web.capture.screenshots.highlighting`)) map { origStyle =>
+        Try(applyJSToElement("element", s"type = element.getAttribute('type'); if (('radio' == type || 'checkbox' == type) && element.parentElement.getElementsByTagName('input').length == 1) { element = element.parentElement; } original_style = element.getAttribute('style'); element.setAttribute('style', original_style + '; $style'); return original_style;", element)(using WebSettings.`gwen.web.capture.screenshots.highlighting`)) map { origStyle =>
           try {
             if (!WebSettings.`gwen.web.capture.screenshots.highlighting` || !WebSettings.`gwen.web.capture.screenshots.enabled`) {
               Thread.sleep(msecs)
             }
           } finally {
-            applyJS(jsFunctionWrapper("element", "arguments[0]", s"type = element.getAttribute('type'); if (('radio' == type || 'checkbox' == type) && element.parentElement.getElementsByTagName('input').length == 1) { element = element.parentElement; } element.setAttribute('style', '$origStyle');"), element)(using false)
+            applyJSToElement("element", s"type = element.getAttribute('type'); if (('radio' == type || 'checkbox' == type) && element.parentElement.getElementsByTagName('input').length == 1) { element = element.parentElement; } element.setAttribute('style', '$origStyle');", element)(using false)
           }
         }
       }
@@ -989,7 +988,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
   }
 
   private def jsClick(webElement: WebElement): Unit = {
-    applyJS(jsFunctionWrapper("element", "arguments[0]", "element.click()"), webElement)
+    applyJSToElement("element", "element.click()", webElement)
   }
 
   def moveToAndCapture(driver: WebDriver, webElement: WebElement): Unit = {
@@ -1075,7 +1074,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
       if (WebSettings.`gwen.web.implicit.element.focus`) {
         withWebElement(binding, reason) { webElement =>
           try {
-            applyJS(jsFunctionWrapper("element", "arguments[0]", "element.focus()"), webElement)
+            applyJSToElement("element", "element.focus()", webElement)
           } catch {
             case _ => 
               Thread.sleep(1000) // give element time to recover
@@ -1096,7 +1095,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
         moveToAndCapture(driver, webElement)
         waitUntilEnabled(binding, webElement)
       }
-      applyJS(jsFunctionWrapper("element", "arguments[0]", javascript), webElement)
+      applyJSToElement("element", javascript, webElement)
     }
   }
 
@@ -1199,7 +1198,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
    * @param offset offset to scroll by (default is zero)
    */
   def scrollIntoView(webElement: WebElement, scrollTo: ScrollTo, offset: Int = 0): Unit = {
-    applyJS(jsFunctionWrapper("elem", "arguments[0]", s"if (typeof elem !== 'undefined' && elem != null) { elem.scrollIntoView(${scrollTo == ScrollTo.top});${if (offset != 0) s" window.scroll(0, window.scrollY + $offset);" else ""}}"), webElement)
+    applyJSToElement("elem", s"if (typeof elem !== 'undefined' && elem != null) { elem.scrollIntoView(${scrollTo == ScrollTo.top});${if (offset != 0) s" window.scroll(0, window.scrollY + $offset);" else ""}}", webElement)
   }
 
   /**
@@ -1281,7 +1280,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
                     case None | Some("") =>
                       Option(webElement.getDomProperty("value")) match {
                         case None | Some("") =>
-                          val value = applyJS(jsFunctionWrapper("element", "arguments[0]", "return element.innerText || element.textContent || ''"), webElement).asInstanceOf[String]
+                          val value = applyJSToElement("element", "return element.innerText || element.textContent || ''", webElement).asInstanceOf[String]
                           if (value != null) value else ""
                         case Some(value) => value
                       }
@@ -1359,7 +1358,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
   }
 
   private def getElementSelectionByJS(webElement: WebElement, by: DropdownSelection): Option[String] = {
-    Option(applyJS(jsFunctionWrapper("select", "arguments[0]", s"try{var byText=${by == DropdownSelection.text};var result='';var options=select && select.options;if(!!options){var opt;for(var i=0,iLen=options.length;i<iLen;i++){opt=options[i];if(opt.selected){if(result.length>0){result=result+',';}if(byText){result=result+opt.text;}else{result=result+opt.value;}}}return result;}else{return null;}}catch(e){return null;}"), webElement).asInstanceOf[String])
+    Option(applyJSToElement("select", s"try{var byText=${by == DropdownSelection.text};var result='';var options=select && select.options;if(!!options){var opt;for(var i=0,iLen=options.length;i<iLen;i++){opt=options[i];if(opt.selected){if(result.length>0){result=result+',';}if(byText){result=result+opt.text;}else{result=result+opt.value;}}}return result;}else{return null;}}catch(e){return null;}", webElement).asInstanceOf[String])
   }
 
   /**
@@ -1553,8 +1552,19 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
 
   /** Checks if an element is not in the view port. */
   private def isInViewport(webElement: WebElement): Boolean = {
-    applyJS(jsFunctionWrapper("elem", "arguments[0]", "var b=elem.getBoundingClientRect(); return b.top>=0 && b.left>=0 && b.bottom<=(window.innerHeight || document.documentElement.clientHeight) && b.right<=(window.innerWidth || document.documentElement.clientWidth);"), webElement).asInstanceOf[Boolean]
+    applyJSToElement("elem", "var b=elem.getBoundingClientRect(); return b.top>=0 && b.left>=0 && b.bottom<=(window.innerHeight || document.documentElement.clientHeight) && b.right<=(window.innerWidth || document.documentElement.clientWidth);", webElement).asInstanceOf[Boolean]
   }
+
+  def applyJSToElement(argName: String, body: String, binding: LocatorBinding): Any = {
+    withWebElement(binding, s"trying to apply JS function to web element: ${binding.displayName}") { webElement =>
+      applyJSToElement(argName, body, webElement)
+    }
+  }
+
+  def applyJSToElement(argName: String, body: String, webElement: WebElement)(implicit takeScreenShot: Boolean = false): Any = {
+    applyJS(jsFunctionWrapper(argName, "arguments[0]", body), webElement)
+  }
+  
 
   override def defaultWait: Duration = Duration(WebSettings.`gwen.web.wait.seconds`, SECONDS)
 

@@ -831,7 +831,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     when(mockElement.isSelected).thenReturn(false).thenReturn(false).thenReturn(true)
     when(mockActions.moveToElement(mockElement)).thenReturn(mockActions)
     ctx.performAction(ElementAction.check, elemBinding)
-    verify(mockActions, times(2)).perform()
+    verify(mockActions).perform()
     verify(mockElement).click()
   }
 
@@ -949,7 +949,7 @@ class WebContextTest extends BaseTest with Matchers with MockitoSugar with Befor
     when(mockElement.isSelected).thenReturn(true).thenReturn(true).thenReturn(false)
     when(mockActions.moveToElement(mockElement)).thenReturn(mockActions)
     ctx.performAction(ElementAction.uncheck, elemBinding)
-    verify(mockActions, times(2)).perform()
+    verify(mockActions).perform()
     verify(mockElement).click()
   }
 

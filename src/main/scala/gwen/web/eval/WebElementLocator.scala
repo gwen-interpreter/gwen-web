@@ -238,7 +238,7 @@ class WebElementLocator(ctx: WebContext) extends LazyLogging {
       case Some((_, rBinding, _)) =>
         getContainerElement(rBinding) match {
           case Some(containerElem) =>
-            ctx.applyJS(s"(function(containerElem) { return ${ctx.parseJS(javascript)} })(arguments[0])", containerElem)
+            ctx.applyJSToElement("containerElem", s"return ${ctx.parseJS(javascript)}", containerElem)
           case _ =>
             ctx.executeJS(javascript)
         }

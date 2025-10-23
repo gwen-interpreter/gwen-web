@@ -150,6 +150,7 @@ class WebEngine extends EvalEngine[WebContext] {
       case r"""(.+?)$element can be located by""" if step.hasDualColumnTable =>
         new BindMultipleElementLocators(element, None, None)
       case r"""(.+?)$element can be (clicked|right clicked|double clicked|submitted|checked|ticked|unchecked|unticked|selected|deselected|typed|entered|tabbed|cleared|moved to)$event by (?:javascript|js) "(.+?)"$expression""" =>
+        Deprecation.log("DSL step", """<element> can be <actioned> by <javascript|js> "<script>"""", Some(s"""I execute <js|javascript> "function" on <element>, or I execute <functionRef>  on <element>"""))
         new BindActionHandler(element, ElementEvent.valueOf(event), step.orDocString(expression))
       case r"""the page title should( not)?$negation be (blank|empty|true|false)$literal""" =>
         new CompareTitle("title", ValueLiteral.valueOf(literal).value, false, ComparisonOperator.be, Option(negation).nonEmpty)
@@ -227,6 +228,10 @@ class WebEngine extends EvalEngine[WebContext] {
         new PerformElementAction(element, ElementAction.valueOf(action), Some(context))
       case r"""I (click|right click|double click|submit|check|tick|uncheck|untick|move to)$action (.+?)$element""" =>
         new PerformElementAction(element, ElementAction.valueOf(action), None)
+      case r"""I execute (?:javascript|js) on (.+?)$element "(.+?)"$function""" =>
+        new PerformElementActionByJS(Some(step.orDocString(function)), None, element)
+      case r"""I execute (.+?)$function on (.+?)$element""" =>
+        new PerformElementActionByJS(None, Some(function), element)
       case r"""I (.+?)$modifiers (click|right click|double click)$clickAction (.+?)$element""" =>
         new HoldAndClick(element, modifiers.split("\\+"), ElementAction.valueOf(clickAction))
       case r"""I (?:highlight|locate) (.+?)$element""" =>

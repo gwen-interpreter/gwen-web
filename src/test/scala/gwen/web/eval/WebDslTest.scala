@@ -50,6 +50,7 @@ class WebDslTest extends BaseTest with Matchers with MockitoSugar {
     envState.topScope.set("<expressionRef>", "expression")
     envState.topScope.set("<predicate>/javascript", "true")
     envState.topScope.set("<javascriptRef>/javascript", "identity")
+    envState.topScope.set("<elemFunctionRef>/javascript", "(elem) => identity")
     envState.topScope.set("identity", "arguments[0]")
     envState.topScope.set("<argument>", "arg0")
     envState.topScope.set("<arguments>", "arg0")
@@ -110,6 +111,7 @@ class WebDslTest extends BaseTest with Matchers with MockitoSugar {
               .replace("<filepathRef file>", "<filepathRef> file")
               .replace("<resultFileId>", "test")
               .replace("<blobRef>", "blob")
+              .replace("<elemFunction>", "(elem) => identity")
           } foreach { dsl =>
             val iStep = Step(None, StepKeyword.Given.toString, dsl.replaceAll("<step>", """a is "b""""), Nil, None, Nil, None, Pending, Nil, Nil, Nil, None, Nil)
             engine.evaluateStep(parent, iStep, ctx).evalStatus match {

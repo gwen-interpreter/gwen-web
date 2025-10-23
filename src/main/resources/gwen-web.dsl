@@ -566,6 +566,9 @@ I wait 1 second
 I wait <duration> seconds
 I highlight <element>
 I locate <element>
+I execute javascript on <element> "<elemFunction>"
+I execute js on <element> "<elemFunction>"
+I execute <elemFunctionRef> on <element>
 I execute javascript "<javascript>"
 I execute js "<javascript>"
 I execute system process "<command>"
@@ -686,34 +689,6 @@ I capture the current screenshot
 I capture the current screenshot as <name>
 I capture element screenshot of <element> as <name>
 I capture element screenshot of <element>
-<element> can be clicked by javascript "<javascript>"
-<element> can be right clicked by javascript "<javascript>"
-<element> can be double clicked by javascript "<javascript>"
-<element> can be moved to by javascript "<javascript>"
-<element> can be submitted by javascript "<javascript>"
-<element> can be checked by javascript "<javascript>"
-<element> can be ticked by javascript "<javascript>"
-<element> can be unchecked by javascript "<javascript>"
-<element> can be unticked by javascript "<javascript>"
-<element> can be selected by javascript "<javascript>"
-<element> can be deselected by javascript "<javascript>"
-<element> can be typed by javascript "<javascript>"
-<element> can be entered by javascript "<javascript>"
-<element> can be tabbed by javascript "<javascript>"
-<element> can be clicked by javascript "<javascript>"
-<element> can be right clicked by js "<javascript>"
-<element> can be double clicked by js "<javascript>"
-<element> can be moved to by js "<javascript>"
-<element> can be submitted by js "<javascript>"
-<element> can be checked by js "<javascript>"
-<element> can be ticked by js "<javascript>"
-<element> can be unchecked by js "<javascript>"
-<element> can be unticked by js "<javascript>"
-<element> can be selected by js "<javascript>"
-<element> can be deselected by js "<javascript>"
-<element> can be typed by js "<javascript>"
-<element> can be entered by js "<javascript>"
-<element> can be tabbed by js "<javascript>"
 <name> is defined by sql "<selectStmt>" in the <dbName> database
 <name> is defined in the <dbName> database by sql "<selectStmt>"
 I update the <dbName> database by sql "<updateStmt>"

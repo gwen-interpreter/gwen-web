@@ -44,7 +44,8 @@ object WebErrors {
     def invalidSelectorTypeError(selectorType: String) = throw new InvalidSelectorTypeException(selectorType)
     def multipleBrowserSettingsError(settingsFiles: List[File]) = throw new MultipleBrowserSettingsException(settingsFiles)
     def illegalSessionNameError(name: String, msg: Option[String]) = throw new IllegalSessionNameException(name, msg)
-    def functionSignatureError(name: String, expectedMsg: String) = throw new FunctionSignatureException(name, expectedMsg)
+    def functionSignatureError(name: String, expectedMsg: String) = throw new FunctionSignatureException(Some(name), expectedMsg)
+    def functionSignatureError(expectedMsg: String) = throw new FunctionSignatureException(None, expectedMsg)
     def gridWaitTimeout(secs: Long) = throw new GridWaitTimeout(secs)
 
     /** Thrown when a locator binding error is detected . */
@@ -97,8 +98,8 @@ object WebErrors {
       extends GwenException(s"Illegal (reserved) browser session name: $name${msg.map(m => s". $m").getOrElse("")}")
 
     /** Thrown when an unexpected function signature is provided. */
-    class FunctionSignatureException(name: String, expectedMsg: String)
-      extends GwenException(s"Unexpected function signature refernced by $name: $expectedMsg")
+    class FunctionSignatureException(name: Option[String], expectedMsg: String)
+      extends GwenException(s"${name.map(n => "Unexpected function signature referenced by $n: ").getOrElse("")}$expectedMsg")
 
     /** Thrown when waiting for a remote Grid times out. */
     class GridWaitTimeout(secs: Long)
