@@ -1,3 +1,9 @@
+4.17.1
+======
+7 Jan 2026
+- Update Gwen core from v4.12.0 to v[4.12.1](https://github.com/gwen-interpreter/gwen/releases/tag/v4.12.1)
+  - Escape sorted CSV results if necessary
+
 4.17.0
 ======
 7 Jan 2026
