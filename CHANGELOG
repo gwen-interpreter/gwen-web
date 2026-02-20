@@ -1,7 +1,13 @@
+4.17.3
+======
+21 Feb 2026
+- Update selenium video version to latest in grid template
+- Update selenium from v4.39.0 to v4.40.0
+
 4.17.2
 ======
 21 Jan 2026
-- Update selenium from v4.39.0 to v4.40.0
+- Update selenium from v4.40.0 to v4.41.0
 
 4.17.1
 ======
