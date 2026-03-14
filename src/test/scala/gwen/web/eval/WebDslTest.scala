@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2024 Brady Wood, Branko Juric
+ * Copyright 2014-2026 Brady Wood, Branko Juric
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,9 @@ import gwen.web.eval.driver.DriverManager
 
 import gwen.core.GwenOptions
 import gwen.core.node.GwenNode
+import gwen.core.node.gherkin.Annotations
 import gwen.core.node.gherkin.Step
+import gwen.core.node.gherkin.Tag
 import gwen.core.node.gherkin.table.DataTable
 import gwen.core.node.gherkin.StepKeyword
 import gwen.core.node.gherkin.table.TableOrientation
@@ -113,7 +115,9 @@ class WebDslTest extends BaseTest with Matchers with MockitoSugar {
               .replace("<blobRef>", "blob")
               .replace("<elemFunction>", "(elem) => identity")
           } foreach { dsl =>
-            val iStep = Step(None, StepKeyword.Given.toString, dsl.replaceAll("<step>", """a is "b""""), Nil, None, Nil, None, Pending, Nil, Nil, Nil, None, Nil)
+            val tags = if (dsl.contains("source-format")) List(Tag(None, Annotations.DateTime.toString, None)) else Nil
+            val stepExpression = dsl.replaceAll("<step>", """a is "b"""")
+            val iStep = Step(None, StepKeyword.Given.toString, stepExpression, Nil, None, Nil, None, Pending, Nil, Nil, tags, None, Nil)
             engine.evaluateStep(parent, iStep, ctx).evalStatus match {
               case Failed(_, error) => 
                 error.printStackTrace

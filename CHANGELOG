@@ -1,3 +1,11 @@
+4.18.0
+======
+14 Mar 2026
+- Update Gwen core from v4.12.1 to v[4.13.0](https://github.com/gwen-interpreter/gwen/releases/tag/v4.13.0)
+  - Add DSLs to support date/time and number formatting
+    - `@DateTime I format <valueRef> from "<source-format>" to "<target-format>" as <name>`
+    - `@Number I format <valueRef> from "<source-format>" to "<target-format>" as <name>`
+
 4.17.3
 ======
 21 Feb 2026

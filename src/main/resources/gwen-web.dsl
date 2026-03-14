@@ -463,6 +463,7 @@ I capture the alert popup message
 I capture the confirmation popup message
 I capture the alert popup message as <name>
 I capture the confirmation popup message as <name>
+I format <textRef> from "source-format" to "target-format" as <name>
 my <name> property is "<value>"
 my <name> setting is "<value>"
 I reset my <name> property
