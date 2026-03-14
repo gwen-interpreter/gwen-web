@@ -5,6 +5,15 @@
   - Add DSLs to support date/time and number formatting
     - `@DateTime I format <valueRef> from "<source-format>" to "<target-format>" as <name>`
     - `@Number I format <valueRef> from "<source-format>" to "<target-format>" as <name>`
+  - Update dependencies
+    - Update scala from v3.7.4 to v3.8.2
+    - Update gherkin from v37.0.0 to v39.0.0
+    - Update jline from v3.30.6 to v4.0.4
+    - Update logback from v1.5.22 to 1.5.32
+    - Update commons-codec from v1.20.0 to v1.21.0
+    - Update json-path from v2.10.0 to v3.0.0
+    - Update jackson-databind from v2.20.1 to v3.1.0
+    - Update pdfbox from v3.0.6 to v3.0.7
 
 4.17.3
 ======
