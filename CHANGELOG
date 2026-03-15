@@ -1,3 +1,9 @@
+4.18.1
+======
+15 Mar 2026
+- Update Gwen core from v4.13.0 to v[4.13.1](https://github.com/gwen-interpreter/gwen/releases/tag/v4.13.1)
+  - Add formatted text values to step attachments
+
 4.18.0
 ======
 14 Mar 2026
