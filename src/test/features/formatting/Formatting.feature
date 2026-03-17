@@ -29,3 +29,13 @@ Feature: Formatter bindings
     Given ordingal number is "1st"
      When @Number I format ordingal number from "#(st|nd|rd|th)" to "00" as leading zero number
      Then leading zero number should be "01"
+
+  Scenario: I capture the current date and time
+    Given day is "${gwen.now:E}"
+      And the current date is "${gwen.now:d(st|nd|rd|th) MMM yyyy}"
+      And the current time is "${gwen.now:h:mm a}"
+     When @DateTime I format day from "E" to "E" as day name
+      And I capture the current date
+      And I capture the current time
+     Then day should be "${day name}"
+      And gwen.now should start with "${day}"
