@@ -1,6 +1,6 @@
 enablePlugins(GitVersioning)
 
-git.baseVersion := "4.19.0"
+git.baseVersion := "4.19.1"
 git.useGitDescribe := true
 
 val gwenWeb = (project in file("."))
@@ -41,7 +41,7 @@ lazy val projectSettings = Seq(
 lazy val mainDependencies = {
   Seq(
     "org.gweninterpreter" % "gwen" % "4.14.1",
-    "org.seleniumhq.selenium" % "selenium-java" % "4.41.0" excludeAll(
+    "org.seleniumhq.selenium" % "selenium-java" % "4.42.0" excludeAll(
       ExclusionRule("org.seleniumhq.selenium", "selenium-ie-driver")
     )
   ) ++ mainOverrides
