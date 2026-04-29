@@ -1,3 +1,14 @@
+4.19.3
+======
+29 Mar 2026
+- Update Gwen core from v4.14.1 to v[4.14.2](https://github.com/gwen-interpreter/gwen/releases/tag/v4.14.2)
+  - Update dependencies
+    - Update scala from v3.8.2 to v3.8.3
+    - Update jline from v4.0.4 to v4.0.12
+    - Update commons-codec from v1.21.0 to v1.22.0
+    - Update jansi from v2.4.2 to v2.4.3
+    - Update jackson-databind from v2.20.1 to v2.21.2
+
 4.19.2
 ======
 10 Apr 2026

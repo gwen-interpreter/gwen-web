@@ -70,7 +70,7 @@ class WebElementLocator(ctx: WebContext) extends LazyLogging {
           // return the first one that resolves
           val iter = selectors.iterator.flatMap(loc => Try(findElementBySelector(name, loc)).getOrElse(None))
           if (iter.hasNext) {
-            result = Success(iter.next.asInstanceOf[WebElement])
+            result = Success(iter.next().asInstanceOf[WebElement])
           }
         } finally {
           // restore implicit waits

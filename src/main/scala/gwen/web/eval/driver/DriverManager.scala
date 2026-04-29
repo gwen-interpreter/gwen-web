@@ -544,7 +544,7 @@ class DriverManager() extends LazyLogging {
       val count = entries.size
       entries.zipWithIndex foreach { (entry, i) => 
         val mapper = new ObjectMapper()
-        Source.fromString(s"${mapper.readTree(entry.getMessage).toPrettyString()}${if (i < ( count - 1)) "," else ""}").getLines foreach { line =>
+        Source.fromString(s"${mapper.readTree(entry.getMessage).toPrettyString()}${if (i < ( count - 1)) "," else ""}").getLines() foreach { line =>
           pw.println(s"    $line")
         }
       }
