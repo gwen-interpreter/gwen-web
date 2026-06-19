@@ -162,6 +162,8 @@ the page title should match xpath "<expression>"
 the page title should match json path "<expression>"
 the page title should match template "<expression>"
 the page title should match template file "<filepath>"
+the page title should match datetime format "<datetimePattern>"
+the page title should match number format "<numberPattern>"
 the page title should not be blank
 the page title should not be empty
 the page title should not be true
@@ -175,6 +177,8 @@ the page title should not match xpath "<expression>"
 the page title should not match json path "<expression>"
 the page title should not match template "<expression>"
 the page title should not match template file "<filepath>"
+the page title should not match datetime format "<datetimePattern>"
+the page title should not match number format "<numberPattern>"
 the page title should be <expressionRef>
 the page title should contain <expressionRef>
 the page title should start with <expressionRef>
@@ -202,6 +206,8 @@ the alert popup message should match xpath "<expression>"
 the alert popup message should match json path "<expression>"
 the alert popup message should match template "<expression>"
 the alert popup message should match template file "<filepath>"
+the alert popup message should match datetime format "<datetimePattern>"
+the alert popup message should match number format "<numberPattern>"
 the alert popup message should not be blank
 the alert popup message should not be empty
 the alert popup message should not be true
@@ -215,6 +221,8 @@ the alert popup message should not match xpath "<expression>"
 the alert popup message should not match json path "<expression>"
 the alert popup message should not match template "<expression>"
 the alert popup message should not match template file "<filepath>"
+the alert popup message should not match datetime format "<datetimePattern>"
+the alert popup message should not match number format "<numberPattern>"
 the alert popup message should be <expressionRef>
 the alert popup message should contain <expressionRef>
 the alert popup message should start with <expressionRef>
@@ -242,6 +250,8 @@ the confirmation popup message should match xpath "<expression>"
 the confirmation popup message should match json path "<expression>"
 the confirmation popup message should match template "<expression>"
 the confirmation popup message should match template file "<filepath>"
+the confirmation popup message should match datetime format "<datetimePattern>"
+the confirmation popup message should match number format "<numberPattern>"
 the confirmation popup message should not be blank
 the confirmation popup message should not be empty
 the confirmation popup message should not be true
@@ -255,6 +265,8 @@ the confirmation popup message should not match xpath "<expression>"
 the confirmation popup message should not match json path "<expression>"
 the confirmation popup message should not match template "<expression>"
 the confirmation popup message should not match template file "<filepath>"
+the confirmation popup message should not match datetime format "<datetimePattern>"
+the confirmation popup message should not match number format "<numberPattern>"
 the confirmation popup message should be <expressionRef>
 the confirmation popup message should contain <expressionRef>
 the confirmation popup message should start with <expressionRef>
@@ -302,6 +314,8 @@ the confirmation popup should not be displayed
 <reference> should match json path "<expression>"
 <reference> should match template "<expression>"
 <reference> should match template file "<filepath>"
+<reference> should match datetime format "<datetimePattern>"
+<reference> should match number format "<numberPattern>"
 <reference> should not be blank
 <reference> should not be empty
 <reference> should not be true
@@ -315,6 +329,8 @@ the confirmation popup should not be displayed
 <reference> should not match json path "<expression>"
 <reference> should not match template "<expression>"
 <reference> should not match template file "<filepath>"
+<reference> should not match datetime format "<datetimePattern>"
+<reference> should not match number format "<numberPattern>"
 <reference> should be <expressionRef>
 <reference> should contain <expressionRef>
 <reference> should start with <expressionRef>
@@ -342,6 +358,8 @@ the confirmation popup should not be displayed
 <dropdown> text should match json path "<expression>"
 <dropdown> text should match template "<expression>"
 <dropdown> text should match template file "<filepath>"
+<dropdown> text should match datetime format "<datetimePattern>"
+<dropdown> text should match number format "<numberPattern>"
 <dropdown> text should not be blank
 <dropdown> text should not be empty
 <dropdown> text should not be true
@@ -355,6 +373,8 @@ the confirmation popup should not be displayed
 <dropdown> text should not match json path "<expression>"
 <dropdown> text should not match template "<expression>"
 <dropdown> text should not match template file "<filepath>"
+<dropdown> text should not match datetime format "<datetimePattern>"
+<dropdown> text should not match number format "<numberPattern>"
 <dropdown> text should be <expressionRef>
 <dropdown> text should contain <expressionRef>
 <dropdown> text should start with <expressionRef>
@@ -382,6 +402,8 @@ the confirmation popup should not be displayed
 <dropdown> value should match json path "<expression>"
 <dropdown> value should match template "<expression>"
 <dropdown> value should match template file "<filepath>"
+<dropdown> value should match datetime format "<datetimePattern>"
+<dropdown> value should match number format "<numberPattern>"
 <dropdown> value should not be blank
 <dropdown> value should not be empty
 <dropdown> value should not be true
@@ -395,6 +417,8 @@ the confirmation popup should not be displayed
 <dropdown> value should not match json path "<expression>"
 <dropdown> value should not match template "<expression>"
 <dropdown> value should not match template file "<filepath>"
+<dropdown> value should not match datetime format "<datetimePattern>"
+<dropdown> value should not match number format "<numberPattern>"
 <dropdown> value should be <expressionRef>
 <dropdown> value should contain <expressionRef>
 <dropdown> value should start with <expressionRef>
@@ -418,6 +442,8 @@ the current URL should end with "<expression>"
 the current URL should match regex "<expression>"
 the current URL should match template "<expression>"
 the current URL should match template file "<filepath>"
+the current URL should match datetime format "<datetimePattern>"
+the current URL should match number format "<numberPattern>"
 the current URL should not be blank
 the current URL should not be empty
 the current URL should not be "<expression>"
@@ -427,6 +453,8 @@ the current URL should not end with "<expression>"
 the current URL should not match regex "<expression>"
 the current URL should not match template "<expression>"
 the current URL should not match template file "<filepath>"
+the current URL should not match datetime format "<datetimePattern>"
+the current URL should not match number format "<numberPattern>"
 the current URL should be <expressionRef>
 the current URL should contain <expressionRef>
 the current URL should start with <expressionRef>
@@ -638,6 +666,8 @@ I base64 decode <reference>
 <step> while <element> matches json path "<expression>"
 <step> while <element> matches template "<expression>"
 <step> while <element> matches template file "<filepath>"
+<step> while <element> matches datetime format "<datetimePattern>"
+<step> while <element> matches number format "<numberPattern>"
 <step> until <element> is blank
 <step> until <element> is empty
 <step> until <element> is "<expression>"
@@ -649,6 +679,8 @@ I base64 decode <reference>
 <step> until <element> matches json path "<expression>"
 <step> until <element> matches template "<expression>"
 <step> until <element> matches template file "<filepath>"
+<step> until <element> matches datetime format "<datetimePattern>"
+<step> until <element> matches number format "<numberPattern>"
 I close the current browser
 I close the browser
 I start a new browser
@@ -739,6 +771,8 @@ I maximise the window
 <jsonRef> at json path "<path>" should match regex "<expression>"
 <jsonRef> at json path "<path>" should match template "<expression>"
 <jsonRef> at json path "<path>" should match template file "<filepath>"
+<jsonRef> at json path "<path>" should match datetime format "<datetimePattern>"
+<jsonRef> at json path "<path>" should match number format "<numberPattern>"
 <jsonRef> at json path "<path>" should not be blank
 <jsonRef> at json path "<path>" should not be empty
 <jsonRef> at json path "<path>" should not be true
@@ -750,6 +784,8 @@ I maximise the window
 <jsonRef> at json path "<path>" should not match regex "<expression>"
 <jsonRef> at json path "<path>" should not match template "<expression>"
 <jsonRef> at json path "<path>" should not match template file "<filepath>"
+<jsonRef> at json path "<path>" should not match datetime format "<datetimePattern>"
+<jsonRef> at json path "<path>" should not match number format "<numberPattern>"
 <xmlRef> at xpath "<path>" should be blank
 <xmlRef> at xpath "<path>" should be empty
 <xmlRef> at xpath "<path>" should be true
@@ -761,6 +797,8 @@ I maximise the window
 <xmlRef> at xpath "<path>" should match regex "<expression>"
 <xmlRef> at xpath "<path>" should match template "<expression>"
 <xmlRef> at xpath "<path>" should match template file "<filepath>"
+<xmlRef> at xpath "<path>" should match datetime format "<datetimePattern>"
+<xmlRef> at xpath "<path>" should match number format "<numberPattern>"
 <xmlRef> at xpath "<path>" should not be blank
 <xmlRef> at xpath "<path>" should not be empty
 <xmlRef> at xpath "<path>" should not be true
@@ -772,6 +810,8 @@ I maximise the window
 <xmlRef> at xpath "<path>" should not match regex "<expression>"
 <xmlRef> at xpath "<path>" should not match template "<expression>"
 <xmlRef> at xpath "<path>" should not match template file "<filepath>"
+<xmlRef> at xpath "<path>" should not match datetime format "<datetimePattern>"
+<xmlRef> at xpath "<path>" should not match number format "<numberPattern>"
 <step> if <condition>
 <step> if <element> is displayed
 <step> if <element> is hidden
@@ -802,6 +842,8 @@ I maximise the window
 <step> if <element> matches json path "<expression>"
 <step> if <element> matches template "<expression>"
 <step> if <element> matches template file "<filepath>"
+<step> if <element> matches datetime format "<datetimePattern>"
+<step> if <element> matches number format "<numberPattern>"
 <step> if <element> is not blank
 <step> if <element> is not empty
 <step> if <element> is not "<expression>"
@@ -813,6 +855,8 @@ I maximise the window
 <step> if <element> does not match json path "<expression>"
 <step> if <element> does not match template "<expression>"
 <step> if <element> does not match template file "<filepath>"
+<step> if <element> does not match datetime format "<datetimePattern>"
+<step> if <element> does not match number format "<numberPattern>"
 <step> if "<filepath>" file exists
 <step> if "<filepath>" file not exists
 <step> if "<filepath>" file does not exist

@@ -154,13 +154,13 @@ class WebEngine extends EvalEngine[WebContext] {
         new BindActionHandler(element, ElementEvent.valueOf(event), step.orDocString(expression))
       case r"""the page title should( not)?$negation be (blank|empty|true|false)$literal""" =>
         new CompareTitle("title", ValueLiteral.valueOf(literal).value, false, ComparisonOperator.be, Option(negation).nonEmpty)
-      case r"""the page title should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file)$operator "(.*?)"$expression""" =>
+      case r"""the page title should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file|match datetime format|match number format)$operator "(.*?)"$expression""" =>
         new CompareTitle("title", step.orDocString(expression), false, ComparisonOperator.valueOf(operator), Option(negation).nonEmpty)
       case r"""the page title should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$attribute""" =>
         new CompareTitle("title", attribute, true, ComparisonOperator.valueOf(operator), Option(negation).nonEmpty)
       case r"""the (alert|confirmation)$name popup message should( not)?$negation be (blank|empty|true|false)$literal""" =>
         new ComparePopupMessage(name, ValueLiteral.valueOf(literal).value, false, ComparisonOperator.be, Option(negation).nonEmpty)
-      case r"""the (alert|confirmation)$name popup message should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file)$operator "(.*?)"$expression""" =>
+      case r"""the (alert|confirmation)$name popup message should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file|match datetime format|match number format)$operator "(.*?)"$expression""" =>
         new ComparePopupMessage(name, step.orDocString(expression), false, ComparisonOperator.valueOf(operator), Option(negation).nonEmpty)
       case r"""the (alert|confirmation)$name popup message should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$attribute""" =>
         new ComparePopupMessage(name, attribute, true, ComparisonOperator.valueOf(operator), Option(negation).nonEmpty)
@@ -170,9 +170,9 @@ class WebEngine extends EvalEngine[WebContext] {
         new CompareElementState(element, ElementState.valueOf(state), Option(negation).nonEmpty)
       case r"""(.+?)$element( text| value)?$selection should( not)?$negation be (blank|empty|true|false)$literal""" if !element.matches(".+at (json path|xpath).+") && !element.matches(".+? file") =>
         new CompareValueOrSelectionToValue(element, Option(selection).map(_.trim).map(DropdownSelection.valueOf), ValueLiteral.valueOf(literal).value, ComparisonOperator.be, Option(negation).nonEmpty)
-      case r"""(.+?)$element( text| value)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file)$operator "(.*?)"$expression""" if !element.matches(".+at (json path|xpath).+") =>
+      case r"""(.+?)$element( text| value)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match template|match template file|match datetime format|match number format)$operator "(.*?)"$expression""" if !element.matches(".+at (json path|xpath).+") =>
         new CompareValueOrSelectionToValue(element, Option(selection).map(_.trim).map(DropdownSelection.valueOf), step.orDocString(expression), ComparisonOperator.valueOf(operator), Option(negation).nonEmpty)
-      case r"""(.+?)$element( text| value)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path)$operator (.+?)$attribute""" if !attribute.matches("(absent|defined|empty|no accumulated errors)") && !attribute.contains("% similar to ") && !attribute.startsWith("unique in ") && !attribute.contains('"') && !element.matches(".+at (json path|xpath).+") =>
+      case r"""(.+?)$element( text| value)?$selection should( not)?$negation (be|contain|start with|end with|match regex|match xpath|match json path|match datetime format|match number format)$operator (.+?)$attribute""" if !attribute.matches("(absent|defined|empty|no accumulated errors)") && !attribute.contains("% similar to ") && !attribute.startsWith("unique in ") && !attribute.contains('"') && !element.matches(".+at (json path|xpath).+") =>
         new CompareValueOrSelectionToBoundValue(element, Option(selection).map(_.trim).map(DropdownSelection.valueOf), attribute, ComparisonOperator.valueOf(operator), Option(negation).nonEmpty)
       case r"""I capture (.+?)$attribute (?:of|on|in) (.+?)$element by (?:javascript|js) "(.+?)"$expression""" =>
         new CaptureElementAttribute(element, attribute, step.orDocString(expression))

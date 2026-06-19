@@ -104,6 +104,8 @@ class WebDslTest extends BaseTest with Matchers with MockitoSugar {
               .replace("<filepath>", "src/test/features/templates/json/StaticMultiLineTemplate.json")
               .replace("<csvFilepath>", "src/test/features-data/TodoItems0.csv")
               .replace("<jsonFilepath>", "src/test/features-data/TodoItems0.json")
+              .replace("<datetimePattern>", "yyyy-MM-dd")
+              .replace("<numberPattern>", "#")
               .replace("<name> setting", "gwen.web setting")
               .replace("<name> property", "gwen.web property")
               .replace("<index>", "1")

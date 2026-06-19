@@ -1,3 +1,57 @@
+4.20.0
+======
+19 Jun 2026
+- Update Gwen core from v4.14.2 to v[4.15.0](https://github.com/gwen-interpreter/gwen/releases/tag/v4.15.0)
+  - Add datetime and number format pattern matching to all assertion and guard DSLs:
+    - `<reference> should match datetime format "<datetimePattern>"`
+    - `<reference> should match number format "<numberPattern>"`
+    - `<reference> should not match datetime format "<datetimePattern>"`
+    - `<reference> should not match number format "<numberPattern>"`
+    - `the page title should match datetime format "<datetimePattern>"`
+    - `the page title should match number format "<numberPattern>"`
+    - `the page title should not match datetime format "<datetimePattern>"`
+    - `the page title should not match number format "<numberPattern>"`
+    - `the alert popup message should match datetime format "<datetimePattern>"`
+    - `the alert popup message should match number format "<numberPattern>"`
+    - `the alert popup message should not match datetime format "<datetimePattern>"`
+    - `the alert popup message should not match number format "<numberPattern>"`
+    - `the confirmation popup message should match datetime format "<datetimePattern>"`
+    - `the confirmation popup message should match number format "<numberPattern>"`
+    - `the confirmation popup message should not match datetime format "<datetimePattern>"`
+    - `the confirmation popup message should not match number format "<numberPattern>"`
+    - `<dropdown> text should match datetime format "<datetimePattern>"`
+    - `<dropdown> text should match number format "<numberPattern>"`
+    - `<dropdown> text should not match datetime format "<datetimePattern>"`
+    - `<dropdown> text should not match number format "<numberPattern>"`
+    - `<dropdown> value should match datetime format "<datetimePattern>"`
+    - `<dropdown> value should match number format "<numberPattern>"`
+    - `<dropdown> value should not match datetime format "<datetimePattern>"`
+    - `<dropdown> value should not match number format "<numberPattern>"`
+    - `the current URL should match datetime format "<datetimePattern>"`
+    - `the current URL should match number format "<numberPattern>"`
+    - `the current URL should not match datetime format "<datetimePattern>"`
+    - `the current URL should not match number format "<numberPattern>"`
+    - `<jsonRef> at json path "<path>" should match datetime format "<datetimePattern>"`
+    - `<jsonRef> at json path "<path>" should match number format "<numberPattern>"`
+    - `<jsonRef> at json path "<path>" should not match datetime format "<datetimePattern>"`
+    - `<jsonRef> at json path "<path>" should not match number format "<numberPattern>"`
+    - `<xmlRef> at xpath "<path>" should match datetime format "<datetimePattern>"`
+    - `<xmlRef> at xpath "<path>" should match number format "<numberPattern>"`
+    - `<xmlRef> at xpath "<path>" should not match datetime format "<datetimePattern>"`
+    - `<xmlRef> at xpath "<path>" should not match number format "<numberPattern>"`
+    - `<step> if <element> matches datetime format "<datetimePattern>"`
+    - `<step> if <element> matches number format "<numberPattern>"`
+    - `<step> if <element> does not match datetime format "<datetimePattern>"`
+    - `<step> if <element> does not match number format "<numberPattern>"`
+    - `<step> while <element> matches datetime format "<datetimePattern>"`
+    - `<step> while <element> matches number format "<numberPattern>"`
+    - `<step> while <element> does not match datetime format "<datetimePattern>"`
+    - `<step> while <element> does not match number format "<numberPattern>"`
+    - `<step> until <element> matches datetime format "<datetimePattern>"`
+    - `<step> until <element> matches number format "<numberPattern>"`
+    - `<step> until <element> does not match datetime format "<datetimePattern>"`
+    - `<step> until <element> does not match number format "<numberPattern>"`
+
 4.19.4
 ======
 19 May 2026

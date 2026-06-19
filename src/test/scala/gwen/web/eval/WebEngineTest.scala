@@ -79,21 +79,13 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
       (ComparisonOperator.`match xpath`, "<value>x</value>", "/value"),
       (ComparisonOperator.`match json path`, """{value:"x"}""", "$.value"),
       (ComparisonOperator.`match template`, "value", "value"),
-      (ComparisonOperator.`match template file`, "value", templateFile.getPath)
+      (ComparisonOperator.`match template file`, "value", templateFile.getPath),
+      (ComparisonOperator.`match datetime format`, "2026-06-19", "yyyy-MM-dd"),
+      (ComparisonOperator.`match number format`, "8", "#")
     )
   private val matchers2 = matchers.filter(!_._1.toString.contains("template"))
   private val matchers3 = matchers.filter(!_._1.toString.contains("path"))
-    List(
-      (ComparisonOperator.be, "value", "value"),
-      (ComparisonOperator.contain, "value", "a"),
-      (ComparisonOperator.`start with`, "value", "v"),
-      (ComparisonOperator.`end with`, "value", "e"),
-      (ComparisonOperator.`match regex`, "value", "value"),
-      (ComparisonOperator.`match xpath`, "<value>x</value>", "/value"),
-      (ComparisonOperator.`match json path`, """{value:"x"}""", "$.value"),
-      (ComparisonOperator.`match template`, "value", "value"),
-      (ComparisonOperator.`match template file`, "value", templateFile.getPath)
-    )
+    
   private val elemStates = ElementState.values.toList
   private val events = ElementEvent.values.toList
   private val timeUnits1 = List("s", "ms")
@@ -533,7 +525,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
 
   """the page title should not <operator> "<value>"""" should "evaluate" in {
     matchers.foreach { case (operator, src, expression) =>
-      val source = src.replaceAll("value", "other")
+      val source = src.replaceAll("value", "other").replaceAll("2026-06-19", "19/06/2026").replaceAll("8", "X").replaceAll("2026-06-19", "19/06/2026").replaceAll("8", "X")
       doReturn(source).when(ctx).getTitle
       evaluate(s"""the page title should not $operator "$expression"""")
       verify(ctx).parseExpression(operator, expression)
@@ -551,7 +543,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
 
   "the page title should not <operator> <reference>" should "evaluate" in {
     matchers2.foreach { case (operator, src, expression) =>
-      val source = src.replaceAll("value", "other")
+      val source = src.replaceAll("value", "other").replaceAll("2026-06-19", "19/06/2026").replaceAll("8", "X")
       doReturn(source).when(ctx).getTitle
       doReturn(expression).when(ctx).getBoundValue("<reference>", None)
       evaluate(s"""the page title should not $operator "$expression"""")
@@ -569,7 +561,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
 
   """the alert popup message should not <operator> "<value>"""" should "evaluate" in {
     matchers.foreach { case (operator, src, expression) =>
-      val source = src.replaceAll("value", "other")
+      val source = src.replaceAll("value", "other").replaceAll("2026-06-19", "19/06/2026").replaceAll("8", "X")
       doReturn(source).when(ctx).getPopupMessage
       evaluate(s"""the alert popup message should not $operator "$expression"""")
       verify(ctx).parseExpression(operator, expression)
@@ -587,7 +579,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
 
   "the alert popup message should not <operator> <reference>" should "evaluate" in {
     matchers2.foreach { case (operator, src, expression) =>
-      val source = src.replaceAll("value", "other")
+      val source = src.replaceAll("value", "other").replaceAll("2026-06-19", "19/06/2026").replaceAll("8", "X")
       doReturn(source).when(ctx).getPopupMessage
       doReturn(expression).when(ctx).getBoundValue("<reference>", None)
       evaluate(s"""the alert popup message should not $operator "$expression"""")
@@ -605,7 +597,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
 
   """the confirmation popup message should not <operator> "<value>"""" should "evaluate" in {
     matchers.foreach { case (operator, src, expression) =>
-      val source = src.replaceAll("value", "other")
+      val source = src.replaceAll("value", "other").replaceAll("2026-06-19", "19/06/2026").replaceAll("8", "X")
       doReturn(source).when(ctx).getPopupMessage
       evaluate(s"""the confirmation popup message should not $operator "$expression"""")
       verify(ctx).parseExpression(operator, expression)
@@ -623,7 +615,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
 
   "the confirmation popup message should not <operator> <reference>" should "evaluate" in {
     matchers2.foreach { case (operator, src, expression) =>
-      val source = src.replaceAll("value", "other")
+      val source = src.replaceAll("value", "other").replaceAll("2026-06-19", "19/06/2026").replaceAll("8", "X")
       doReturn(source).when(ctx).getPopupMessage
       doReturn(expression).when(ctx).getBoundValue("<reference>", None)
       evaluate(s"""the confirmation popup message should not $operator "$expression"""")
@@ -667,7 +659,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
 
   """<reference> should not <operator> "<value>"""" should "evaluate" in {
     matchers.foreach { case (operator, src, expression) =>
-      val source = src.replaceAll("value", "other")
+      val source = src.replaceAll("value", "other").replaceAll("2026-06-19", "19/06/2026").replaceAll("8", "X")
       doReturn(None).when(mockTopScope).findEntry(any())
       doReturn(source).when(ctx).boundAttributeOrSelection("<reference>", None, None)
       doReturn(None).when(mockTopScope).getOpt("<reference>")
@@ -687,7 +679,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
 
   """<captured> should not <operator> "<value>"""" should "evaluate" in {
     matchers.foreach { case (operator, src, expression) =>
-      val source = src.replaceAll("value", "other")
+      val source = src.replaceAll("value", "other").replaceAll("2026-06-19", "19/06/2026").replaceAll("8", "X")
       doReturn(Some(("<captured>", src))).when(mockTopScope).findEntry(any())
       doReturn(Some(source)).when(mockTopScope).getOpt("<captured>")
       evaluate(s"""<captured> should not $operator "$expression"""")
@@ -707,7 +699,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
 
   "<reference A> should not <operator> <reference B>" should "evaluate" in {
     matchers2.foreach { case (operator, src, expression) =>
-      val source = src.replaceAll("value", "other")
+      val source = src.replaceAll("value", "other").replaceAll("2026-06-19", "19/06/2026").replaceAll("8", "X")
       doReturn(true).when(ctx).isWebBinding("<reference A>")
       doReturn(source).when(ctx).boundAttributeOrSelection("<reference A>", None, None)
       doReturn(expression).when(ctx).getBoundValue("<reference B>", None)
@@ -732,7 +724,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     val mockBinding = mock[LocatorBinding]
     doReturn(Some(mockBinding)).when(ctx).getLocatorBinding("<dropdown>", optional = false)
     matchers.foreach { case (operator, src, expression) =>
-      val source = src.replaceAll("value", "other")
+      val source = src.replaceAll("value", "other").replaceAll("2026-06-19", "19/06/2026").replaceAll("8", "X")
       doReturn(None).when(mockTopScope).findEntry(any())
       doReturn(source).when(ctx).boundAttributeOrSelection("<dropdown>", Option(DropdownSelection.text), None)
       doReturn(Some("<dropdown>")).when(mockTopScope).getOpt("<dropdown>")
@@ -757,7 +749,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     val mockBinding = mock[LocatorBinding]
     doReturn(Some(mockBinding)).when(ctx).getLocatorBinding("<dropdown>", optional = false)
     matchers2.foreach { case (operator, src, expression) =>
-      val source = src.replaceAll("value", "other")
+      val source = src.replaceAll("value", "other").replaceAll("2026-06-19", "19/06/2026").replaceAll("8", "X")
       doReturn(None).when(mockTopScope).findEntry(any())
       doReturn(true).when(ctx).isWebBinding("<dropdown>")
       doReturn(source).when(ctx).boundAttributeOrSelection("<dropdown>", Option(DropdownSelection.text), None)
@@ -783,7 +775,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     val mockBinding = mock[LocatorBinding]
     doReturn(Some(mockBinding)).when(ctx).getLocatorBinding("<dropdown>", optional = false)
     matchers.foreach { case (operator, src, expression) =>
-      val source = src.replaceAll("value", "other")
+      val source = src.replaceAll("value", "other").replaceAll("2026-06-19", "19/06/2026").replaceAll("8", "X")
       doReturn(None).when(mockTopScope).findEntry(any())
       doReturn(source).when(ctx).boundAttributeOrSelection("<dropdown>", Option(DropdownSelection.value), None)
       doReturn(Some("<dropdown>")).when(mockTopScope).getOpt("<dropdown>")
@@ -808,7 +800,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
     val mockBinding = mock[LocatorBinding]
     doReturn(Some(mockBinding)).when(ctx).getLocatorBinding("<dropdown>", optional = false)
     matchers2.foreach { case (operator, src, expression) =>
-      val source = src.replaceAll("value", "other")
+      val source = src.replaceAll("value", "other").replaceAll("2026-06-19", "19/06/2026").replaceAll("8", "X")
       doReturn(None).when(mockTopScope).findEntry(any())
       doReturn(true).when(ctx).isWebBinding("<dropdown>")
       doReturn(source).when(ctx).boundAttributeOrSelection("<dropdown>", Option(DropdownSelection.value), None)
@@ -831,7 +823,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
 
   """the current URL should not <operator> "<value>"""" should "evaluate" in {
     matchers.foreach { case (operator, src, expression) =>
-      val source = src.replaceAll("value", "other")
+      val source = src.replaceAll("value", "other").replaceAll("2026-06-19", "19/06/2026").replaceAll("8", "X")
       doReturn("http://site.com").when(ctx).captureCurrentUrl
       doReturn(None).when(mockTopScope).findEntry(any())
       doReturn(source).when(ctx).boundAttributeOrSelection("the current URL", None, None)
@@ -855,7 +847,7 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
 
   "the current URL should not <operator> <reference>" should "evaluate" in {
     matchers2.foreach { case (operator, src, expression) =>
-      val source = src.replaceAll("value", "other")
+      val source = src.replaceAll("value", "other").replaceAll("2026-06-19", "19/06/2026").replaceAll("8", "X")
       doReturn("http://site.com").when(ctx).captureCurrentUrl
       doReturn(None).when(mockTopScope).findEntry(any())
       doReturn(source).when(ctx).boundAttributeOrSelection("the current URL", None, None)
@@ -1718,8 +1710,13 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
 
   """<source> at json path "<path>" should be "<expression>"""" should "evaluate" in {
     doReturn(mockTopScope).when(envState).topScope
-    matchers3.foreach { case (operator, _, expression) =>
-      doReturn("""{x:"value"}""").when(mockTopScope).get("<source>")
+    matchers3.foreach { case (operator, source, expression) =>
+      val sourceValue = operator match {
+        case ComparisonOperator.`match datetime format` => source
+        case ComparisonOperator.`match number format` => source
+        case _ => "value"
+      }
+      doReturn(s"""{x:"${sourceValue}"}""").when(mockTopScope).get("<source>")
       doReturn(None).when(mockTopScope).getOpt("<source>")
       evaluate(s"""<source> at json path "$$.x" should $operator "$expression"""")
     }
@@ -1736,8 +1733,13 @@ class WebEngineTest extends BaseTest with Matchers with MockitoSugar with Before
 
   """<source> at xpath "<path>" should be "<expression>"""" should "evaluate" in {
     doReturn(mockTopScope).when(envState).topScope
-    matchers3.foreach { case (operator, _, expression) =>
-      doReturn("""<x>value</x>""").when(mockTopScope).get("<source>")
+    matchers3.foreach { case (operator, source, expression) =>
+      val sourceValue = operator match {
+        case ComparisonOperator.`match datetime format` => source
+        case ComparisonOperator.`match number format` => source
+        case _ => "value"
+      }
+      doReturn(s"""<x>${sourceValue}</x>""").when(mockTopScope).get("<source>")
       doReturn(None).when(mockTopScope).getOpt("<source>")
       evaluate(s"""<source> at xpath "x" should $operator "$expression"""")
     }
