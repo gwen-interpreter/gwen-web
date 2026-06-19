@@ -22,7 +22,7 @@ lazy val projectSettings = Seq(
   licenses += "Apache License, Version 2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0.txt"),
   homepage := Some(url("https://gweninterpreter.org")),
   versionScheme := Some("semver-spec"),
-  scalaVersion := "3.8.3",
+  scalaVersion := "3.8.4",
   crossPaths := false,
   trapExit := false,
   scalacOptions ++= Seq(
@@ -41,7 +41,7 @@ lazy val projectSettings = Seq(
 lazy val mainDependencies = {
   Seq(
     "org.gweninterpreter" % "gwen" % "4.15.0",
-    "org.seleniumhq.selenium" % "selenium-java" % "4.44.0" excludeAll(
+    "org.seleniumhq.selenium" % "selenium-java" % "4.45.0" excludeAll(
       ExclusionRule("org.seleniumhq.selenium", "selenium-ie-driver")
     )
   ) ++ mainOverrides

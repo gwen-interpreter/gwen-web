@@ -51,6 +51,14 @@
     - `<step> until <element> matches number format "<numberPattern>"`
     - `<step> until <element> does not match datetime format "<datetimePattern>"`
     - `<step> until <element> does not match number format "<numberPattern>"`
+  - Update dependencies
+    - Update scala fromo v3.8.3 to v3.8.4
+    - Update gherkin from v39.0.0 to v40.0.0
+    - Update jliine from v4.0.12 to v4.2.0
+    - Update jul-to-slf4j from v2.0.17 to v2.0.18
+    - Update logback-core from v1.5.32 to v1.5.34
+    - Update jackson-databind from v2.21.2 to v2.22.0
+    - Update selenium from v4.44.0 to v4.45.0
 
 4.19.4
 ======
