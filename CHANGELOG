@@ -1,3 +1,10 @@
+4.20.1
+======
+26 Jun 2026
+- Update Gwen core from v4.15.0 to v[4.15.1](https://github.com/gwen-interpreter/gwen/releases/tag/v4.15.1)
+  - Include all settings in interpolation when normalising specs
+  - Assign implicit profile property at launch time
+
 4.20.0
 ======
 19 Jun 2026
