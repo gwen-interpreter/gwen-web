@@ -1,3 +1,9 @@
+4.21.0
+======
+2 Jul 2026
+- Update Gwen core from v4.15.1 to v[4.16.0](https://github.com/gwen-interpreter/gwen/releases/tag/v4.16.0)
+  - Add support for launching multiple profiles one after the other
+
 4.20.1
 ======
 26 Jun 2026
