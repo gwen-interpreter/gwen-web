@@ -12,6 +12,12 @@ Universal / mappings ++= Seq(
   file("CHANGELOG") -> "CHANGELOG.txt"
 )
 
+Universal / javaOptions ++= Seq(
+  "-J-XX:+IgnoreUnrecognizedVMOptions",
+  "-J--enable-native-access=ALL-UNNAMED",
+  "-J--sun-misc-unsafe-memory-access=allow"
+)
+
 // include GWEN_CLASSPATH variable in app classpath of universal script
 val bashClasspathPattern = "declare -r app_classpath=\"(.*)\"\n".r
 bashScriptDefines := bashScriptDefines.value.map {
