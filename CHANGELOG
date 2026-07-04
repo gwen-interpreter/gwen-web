@@ -1,3 +1,9 @@
+4.21.2
+======
+4 Jul 2026
+- Update Gwen core from v4.16.1 to v[4.16.2](https://github.com/gwen-interpreter/gwen/releases/tag/v4.16.2)
+  - Refactor profile processing and report each result
+
 4.21.1
 ======
 3 Jul 2026
