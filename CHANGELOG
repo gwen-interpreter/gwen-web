@@ -1,6 +1,14 @@
+4.22.0
+======
+15 Jul 2026
+- Update Gwen core from v4.16.2 to v[4.17.0](https://github.com/gwen-interpreter/gwen/releases/tag/v4.17.0)
+  - Introduce setting for configuring the locale used for date/time formatting
+    - `gwen.format.date.locale` (default is `en-US` - so that MMM formats June as Jun and July as Jul)
+
+
 4.21.3
 ======
-4 Jul 2026
+11 Jul 2026
 - Update selenium from v4.45.0 to v4.46.0
 
 4.21.2
