@@ -1,10 +1,20 @@
+4.22.1
+======
+16 Jul 2026
+- Update Gwen core from v4.17.0 to v[4.17.2](https://github.com/gwen-interpreter/gwen/releases/tag/v4.17.2)
+  - Introduce setting for configuring the locale used for number formatting
+    - `gwen.format.locale.number`
+    - Default value is `en-US`
+    - Synchronize number formatters for thread safety
+  - Rename `gwen.format.date.locale` to `gwen.format.locale.date` (and deprecate former)
+    - Default value is `en-US` so that MMM formats June/July as Jun/Jul
+
 4.22.0
 ======
 15 Jul 2026
 - Update Gwen core from v4.16.2 to v[4.17.0](https://github.com/gwen-interpreter/gwen/releases/tag/v4.17.0)
   - Introduce setting for configuring the locale used for date/time formatting
     - `gwen.format.date.locale` (default is `en-US` - so that MMM formats June as Jun and July as Jul)
-
 
 4.21.3
 ======

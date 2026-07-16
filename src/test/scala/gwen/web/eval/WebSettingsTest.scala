@@ -78,7 +78,8 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
       GwenSettings.`gwen.launch.options.format` should be (List(ReportFormat.html, ReportFormat.results))
       GwenSettings.`gwen.input.data.readOnly` should be (true)
       GwenSettings.`gwen.input.data.maskFields` should be (Nil)
-      GwenSettings.`gwen.format.date.locale` should be (Locale.US)
+      GwenSettings.`gwen.format.locale.date` should be (Locale.US)
+      GwenSettings.`gwen.format.locale.number` should be (Locale.US)
     }
   }
 
@@ -123,7 +124,8 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
       WebSettings.`gwen.web.throttle.msecs` should be (100)
       WebSettings.`gwen.web.useragent` should be (None)
       WebSettings.`gwen.web.wait.seconds` should be (10L)
-      GwenSettings.`gwen.format.date.locale` should be (Locale.US)
+      GwenSettings.`gwen.format.locale.date` should be (Locale.US)
+      GwenSettings.`gwen.format.locale.number` should be (Locale.US)
     }
   }
 
@@ -286,7 +288,8 @@ class WebSettingsTest extends BaseTest with Matchers with MockitoSugar {
     GwenSettings.`gwen.logLevel.deprecations` should be (Level.WARNING)
     GwenSettings.`gwen.input.data.readOnly` should be (true)
     GwenSettings.`gwen.input.data.maskFields` should be (Nil)
-    GwenSettings.`gwen.format.date.locale` should be (Locale.US)
+    GwenSettings.`gwen.format.locale.date` should be (Locale.US)
+    GwenSettings.`gwen.format.locale.number` should be (Locale.US)
 
     WebSettings.`gwen.target.browser` should be (WebBrowser.chrome)
     WebSettings.`gwen.target.env` should be ("test")
