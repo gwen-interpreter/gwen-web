@@ -538,4 +538,11 @@ object WebSettings extends LazyLogging {
     Settings.getLong("gwen.web.remote.connectTimeout.seconds")
   }
 
+  /**
+    * Regex pattern for filtering out (exclude) special characters from text captured in browsers
+    */
+  def `gwen.web.browser.text.filter.exclude`: Option[String] = {
+    Settings.getOpt("gwen.web.browser.text.filter.exclude")
+  }
+
 }

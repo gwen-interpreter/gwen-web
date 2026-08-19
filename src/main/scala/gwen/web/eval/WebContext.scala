@@ -173,15 +173,16 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     withWebDriver { webDriver =>
       try {
         SensitiveData.withValue(javascript) { js =>
-          webDriver.asInstanceOf[JavascriptExecutor].executeScript(formatJSReturn(parseJS(js)), params.map(_.asInstanceOf[AnyRef])*) tap { result =>
+          val result = webDriver.asInstanceOf[JavascriptExecutor].executeScript(formatJSReturn(parseJS(js)), params.map(_.asInstanceOf[AnyRef])*) tap { res =>
             if (takeScreenShot && WebSettings.`gwen.web.capture.screenshots.enabled`) {
               captureScreenshot(false)
             }
-            logger.debug(s"Evaluated javascript: $javascript, result='$result'")
-            if (result.isInstanceOf[Boolean] && result.asInstanceOf[Boolean]) {
+            logger.debug(s"Evaluated javascript: $javascript, result='$res'")
+            if (res.isInstanceOf[Boolean] && res.asInstanceOf[Boolean]) {
               Thread.sleep(150) // observed volatile results for booleans without wait
             }
           }
+          Option(result).filter(_.isInstanceOf[String]).map(_.asInstanceOf[String]).map(applyTextFilter).getOrElse(result)
         }
       } catch {
         case e: GwenException => throw e
@@ -794,7 +795,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
   /** Gets the title of the current page in the browser.*/
   def getTitle: String =
     withWebDriver { driver =>
-      driver.getTitle
+      applyTextFilter(driver.getTitle)
     }.getOrElse(DryValueBinding.unresolved("title"))
 
   /**
@@ -1270,15 +1271,15 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     */
   def getElementText(binding: LocatorBinding): Option[String] =
     withWebElement(binding, s"trying to get ${binding.displayName} text") { webElement =>
-      Option(webElement.getText) match {
+      Option(applyTextFilter(webElement.getText)) match {
         case None | Some("") =>
-          Option(webElement.getDomAttribute("text")) match {
+          Option(applyTextFilter(webElement.getDomAttribute("text"))) match {
             case None | Some("") =>
-              Option(webElement.getDomProperty("text")) match {
+              Option(applyTextFilter(webElement.getDomProperty("text"))) match {
                 case None | Some("") =>
-                  Option(webElement.getDomAttribute("value")) match {
+                  Option(applyTextFilter(webElement.getDomAttribute("value"))) match {
                     case None | Some("") =>
-                      Option(webElement.getDomProperty("value")) match {
+                      Option(applyTextFilter(webElement.getDomProperty("value"))) match {
                         case None | Some("") =>
                           val value = applyJSToElement("element", "return element.innerText || element.textContent || ''", webElement).asInstanceOf[String]
                           if (value != null) value else ""
@@ -1295,6 +1296,14 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
     } tap { value =>
       logger.debug(s"getElementText($binding)='$value'")
     }
+  
+  private def applyTextFilter(value: String): String = {
+    WebSettings.`gwen.web.browser.text.filter.exclude` map { filter => 
+      Option(value).map(_.replaceAll(filter, "")).getOrElse(value)
+    } getOrElse {
+      value
+    }
+  }
 
   /**
     * Gets the selected text of a dropdown web element on the current page.
@@ -1309,11 +1318,11 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
       getElementSelectionByJS(webElement, DropdownSelection.text) match {
         case None =>
           Try(createSelect(webElement)) map { select =>
-            Option(select.getAllSelectedOptions.asScala.map(_.getText()).mkString(",")) match {
+            Option(select.getAllSelectedOptions.asScala.map(o => applyTextFilter(o.getText())).mkString(",")) match {
               case None | Some("") =>
-                Option(select.getAllSelectedOptions.asScala.map(_.getDomAttribute("text")).mkString(",")) match {
+                Option(select.getAllSelectedOptions.asScala.map(o => applyTextFilter(o.getDomAttribute("text"))).mkString(",")) match {
                   case None | Some("") =>
-                    select.getAllSelectedOptions.asScala.map(_.getDomProperty("text")).mkString(",")
+                    select.getAllSelectedOptions.asScala.map(o => applyTextFilter(o.getDomProperty("text"))).mkString(",")
                   case Some(value) => value
                 }
               case Some(value) => value
@@ -1329,7 +1338,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
   def getElementAttribute(binding: LocatorBinding, name: String): String = {
     evaluate(Some(DryValueBinding.unresolved(s"WebElementAttribute"))) {
       withWebElement(binding, s"trying to get $name attribute of ${binding.displayName}") { webElement => 
-        Option(webElement.getDomAttribute(name)).orElse(Option(webElement.getDomProperty(name))) getOrElse ""
+        Option(webElement.getDomAttribute(name)).orElse(Option(webElement.getDomProperty(name))).map(applyTextFilter) getOrElse ""
       }
     } getOrElse ""
   }
@@ -1348,7 +1357,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
       getElementSelectionByJS(webElement, DropdownSelection.value) match {
         case None =>
           Try(createSelect(webElement)) map { select =>
-            select.getAllSelectedOptions.asScala.flatMap(s => Option(s.getDomAttribute("value")).orElse(Option(s.getDomProperty("value")))).mkString(",")
+            select.getAllSelectedOptions.asScala.flatMap(s => Option(s.getDomAttribute("value")).orElse(Option(s.getDomProperty("value"))).map(applyTextFilter)).mkString(",")
           } getOrElse null
         case Some(value) => value
       }
@@ -1530,7 +1539,7 @@ class WebContext(options: GwenOptions, envState: EnvState, driverManager: Driver
   def getPopupMessage: String = {
     withWebDriver { driver =>
       waitUntil("waiting for alert popup", ExpectedConditions.alertIsPresent())
-      driver.switchTo().alert().getText
+      applyTextFilter(driver.switchTo().alert().getText)
     } getOrElse DryValueBinding.unresolved("popupMessage")
   }
 
