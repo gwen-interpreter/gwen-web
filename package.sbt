@@ -1,16 +1,53 @@
 import NativePackagerHelper._
+import java.nio.file.Files
+import java.security.MessageDigest
+import scala.util.chaining._
 
 enablePlugins(JavaAppPackaging)
 enablePlugins(ClasspathJarPlugin)
 
+val thinPackage = sys.env.get("THIN_PACKAGE").map(_.toBoolean).getOrElse(true)
+
+Universal / mappings := {
+  (Universal / mappings).value.filter { case (file, name) => 
+    if (thinPackage) !name.startsWith("lib") || name.contains("gwen-web") else true
+  }
+}
+
 // add general files to universal zip
 Universal / mappings ++= Seq(
-  file("README.md") -> "README.txt",
-  file("LICENSE") -> "LICENSE.txt",
-  file("NOTICE") -> "NOTICE.txt",
-  file("LICENSE-THIRDPARTY") -> "LICENSE-THIRDPARTY.txt",
-  file("CHANGELOG") -> "CHANGELOG.txt"
-)
+  Some(file("README.md") -> "README.txt"),
+  Some(file("LICENSE") -> "LICENSE.txt"),
+  Some(file("NOTICE") -> "NOTICE.txt"),
+  Some(file("LICENSE-THIRDPARTY") -> "LICENSE-THIRDPARTY.txt"),
+  Some(file("CHANGELOG") -> "CHANGELOG.txt"),
+  if (thinPackage) { 
+    val configs = (Compile / update).value.configuration(ConfigRef("compile"))
+    val deps = configs.toSeq flatMap { config => 
+      config.modules flatMap { moduleConfig => 
+        moduleConfig.artifacts map { case (artifact, file) =>
+          val m = moduleConfig.module
+          val buff = new Array[Byte](8192)
+          val md = MessageDigest.getInstance("SHA-1")
+          val fis = Files.newInputStream(file.toPath)
+          try {
+            while((fis.read(buff) tap { b => if (b != -1) md.update(buff, 0, b) }) != -1) { }
+          } finally {
+            fis.close()
+          }
+          val hash = md.digest().map("%02x".format(_)).mkString
+          s"""{ "groupId": "${m.organization}", "artifactId": "${m.name}", "version": "${m.revision}", "packaging": "jar", "sha1": "$hash" }"""
+        }
+      }
+    }
+    val depsFile = (target.value / "dependencies.json") tap { file =>
+      IO.write(file, s"""|[
+                         |  ${deps.sorted.mkString(",\n  ")}
+                         |]""".stripMargin)
+    }
+    Some(depsFile -> "DEPENDENCIES.json")
+  } else None
+).flatten
 
 Universal / javaOptions ++= Seq(
   "-J-XX:+IgnoreUnrecognizedVMOptions",

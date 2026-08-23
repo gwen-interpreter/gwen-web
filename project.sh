@@ -1,6 +1,6 @@
 #!/bin/sh
 
-sbt universal:stage
+THIN_PACKAGE=false sbt universal:stage
 cd target
 rm -rf project
 mkdir project

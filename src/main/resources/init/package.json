@@ -1,5 +1,6 @@
 {
   "scripts": {
+    "gwen": "gwen",
     "gwen:dryRun": "gwen -bn --parallel",
     "gwen:grid": "gwen -b -c gwen/conf/browsers/grid.conf",
     "gwen:format": "gwen format --pretty gwen"

@@ -1,8 +1,9 @@
 4.23.0
 ======
-19 Aug 2025
-- Introduce optional setting for stripping out unwanted characters from browser rendered text capture based on a regex exclusion filter
-  - `gwen.web.browser.text.filter.exclude`
+22 Aug 2025
+- Introduce regex exclusion filter setting for stripping out unwanted (special and/or invisible) characters from captured text rendered in browsers
+  - `gwen.web.browser.text.filter.exclude` (optional)
+- Bundle package as thin zip and add dependendency manifest for dowloading dependencies
 
 4.22.2
 ======
