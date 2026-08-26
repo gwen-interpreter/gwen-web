@@ -75,8 +75,6 @@ This software is open sourced under the [Apache License, Version 2.0](http://www
 
 See also: [LICENSE](LICENSE).
 
-This project has dependencies on the core [Gwen](https://github.com/gwen-interpreter/gwen) interpreter and other open source projects. All distributed third party dependencies and their licenses are listed in the [LICENSE-THIRDPARTY](LICENSE-THIRDPARTY) file.
-
 Open sourced 28 June 2014 03:27 pm AEST
 
 Contributions

@@ -41,6 +41,7 @@ releaseProcess := Seq(
   setReleaseVersion,
   runClean,
   runTest,
+  releaseStepCommand("licenseCheck"),
   tagRelease,
   publishArtifacts,
   releaseStepCommandAndRemaining("publishSigned"),

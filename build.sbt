@@ -40,7 +40,7 @@ lazy val projectSettings = Seq(
 
 lazy val mainDependencies = {
   Seq(
-    "org.gweninterpreter" % "gwen" % "4.17.3",
+    "org.gweninterpreter" % "gwen" % "4.17.4",
     "org.seleniumhq.selenium" % "selenium-java" % "4.47.0" excludeAll(
       ExclusionRule("org.seleniumhq.selenium", "selenium-ie-driver")
     )
@@ -64,10 +64,12 @@ Compile / packageBin / mappings ++= Seq(
   file("README.md") -> "README.txt",
   file("LICENSE") -> "LICENSE.txt",
   file("NOTICE") -> "NOTICE.txt",
-  file("LICENSE-THIRDPARTY") -> "LICENSE-THIRDPARTY.txt",
+  ((Compile / dumpLicenseReport).value / "gwen-web-licenses.md") -> "LICENSE-THIRDPARTY.txt",
   file("CHANGELOG") -> "CHANGELOG.txt"
 )
 
 Test / parallelExecution := false
 
 Test / testOptions += Tests.Argument("-oF")
+
+licenseConfigurations := Set("compile", "provided")

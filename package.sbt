@@ -19,7 +19,7 @@ Universal / mappings ++= Seq(
   Some(file("README.md") -> "README.txt"),
   Some(file("LICENSE") -> "LICENSE.txt"),
   Some(file("NOTICE") -> "NOTICE.txt"),
-  Some(file("LICENSE-THIRDPARTY") -> "LICENSE-THIRDPARTY.txt"),
+  Some(((Compile / dumpLicenseReport).value / "gwen-web-licenses.md") -> "LICENSE-THIRDPARTY.txt"),
   Some(file("CHANGELOG") -> "CHANGELOG.txt"),
   if (thinPackage) { 
     val configs = (Compile / update).value.configuration(ConfigRef("compile"))

@@ -4,6 +4,10 @@
 - Introduce regex exclusion filter setting for stripping out unwanted (special and/or invisible) characters from captured text rendered in browsers
   - `gwen.web.browser.text.filter.exclude` (optional)
 - Bundle package as thin zip and add dependendency manifest for dowloading dependencies
+- Update Gwen core from v4.17.3 to v[4.17.4](https://github.com/gwen-interpreter/gwen/releases/tag/v4.17.4)
+  - Use slf4jsimple logger instead of logback
+  - Check third party licenses at package time
+  - Auto generate third party licenses file
 
 4.22.2
 ======
