@@ -1,3 +1,8 @@
+4.23.1
+======
+Sep 2, 2026
+- Update node to v24 in bundled DockerFile
+
 4.23.0
 ======
 22 Aug 2025

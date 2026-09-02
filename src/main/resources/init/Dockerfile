@@ -1,5 +1,5 @@
 # base alpine image with node
-FROM node:21-alpine
+FROM node:24-alpine
 
 # install bash and java
 RUN apk update \
