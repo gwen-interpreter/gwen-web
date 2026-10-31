@@ -46,7 +46,6 @@ import org.openqa.selenium.firefox.{FirefoxDriver, FirefoxOptions, FirefoxProfil
 import org.openqa.selenium.logging.LogEntry
 import org.openqa.selenium.logging.LogType
 import org.openqa.selenium.NoSuchSessionException
-import org.openqa.selenium.remote.HttpCommandExecutor
 import org.openqa.selenium.remote.LocalFileDetector
 import org.openqa.selenium.remote.RemoteWebDriver
 import org.openqa.selenium.safari.{SafariDriver, SafariOptions}
@@ -365,7 +364,7 @@ class DriverManager() extends LazyLogging {
   }
 
   private [eval] def remote(hubUrl: String, capabilities: Capabilities): WebDriver =
-    new RemoteWebDriver(new HttpCommandExecutor(new URL(hubUrl)), capabilities) tap { driver =>
+    new RemoteWebDriver(new URL(hubUrl), capabilities) tap { driver =>
       if (WebSettings`gwen.web.remote.localFileDetector`) {
         driver.setFileDetector(new LocalFileDetector())
       }
